@@ -36,3 +36,5 @@
   export/prepare CLI и проверка полного режима через ST GDB Server.
 - [ ] Разделить адаптеры toolchain, MCU memory/identity и архитектурную диагностику;
   текущая доработка не объявляет production-поддержку RISC-V.
+
+- [x] Проверить профиль Cortex-M0 через J-Link STLink: F030R8, существующие API/schema, host65 и 17 HW-сценариев потребителя.

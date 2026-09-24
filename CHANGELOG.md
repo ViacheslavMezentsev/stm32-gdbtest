@@ -8,6 +8,10 @@
 
 ### Added
 
+- J-Link mapping STM32F030R8T6 → STM32F030R8: Nucleo/J-Link STLink/SWD,
+  проверены 17 сценариев потребителя, Flash/readback и reset/run; host65.
+
+
 - Опциональный --image-policy / STM32_GDBTEST_IMAGE_POLICY: полный BIN с явным
   диапазоном/fill, транспортный ELF для GDB, сравнение всех байтов и CRC-32/ISO-HDLC
   по readback на ПК. Verify-only обнаруживает неверный хвост без записи.

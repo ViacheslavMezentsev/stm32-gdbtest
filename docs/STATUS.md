@@ -74,3 +74,11 @@ Host65/65. На F411CE/ST-Link/OpenOCD и F103C8/J-Link проверены по�
 Полные прежние 22-сценарные наборы в этом этапе не повторялись; они проверены
 на предыдущем этапе секций. ST server/RISC-V полный режим не проверены.
 Подробности — [IMAGES](IMAGES.md), протокол FULL_IMAGE_CRC.md у потребителя.
+
+
+F030R8/Cortex-M0: J-Link mapping STM32F030R8, J-Link GDB Server V8.32,
+встроенный J-Link STLink, SWD. В стендовом проекте прошли 17 сценариев,
+Flash/readback/reset-run; host65. Используется существующая схема профиля с
+HardFault и доступными M0 диагностическими регистрами, без CFSR/HFSR.
+Это не проверка всех Cortex-M0 или F0 backend-комбинаций.
+[Протокол потребителя](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/F030_JLINK_VALIDATION.md).

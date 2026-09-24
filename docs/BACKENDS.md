@@ -45,7 +45,8 @@ Runtime-проверка GDB API выполняется до подключен�
 
 ## J-Link
 
-Реализован и проверен mapping STM32F103C8T6 → STM32F103C8. Другие MCU отклоняются
+Реализованы и проверены mappings STM32F103C8T6 → STM32F103C8 и
+STM32F030R8T6 → STM32F030R8 (Nucleo с J-Link STLink, V8.32, SWD). Другие MCU отклоняются
 до запуска сервера, пока mapping не проверен. SWD, явный USB serial, localhost;
 SWO/Telnet/RTT-порты выключены. Setup отключает Flash breakpoints. Reset/halt:
 monitor reset; finish: monitor reset, monitor go, disconnect. Используются hardware BP.

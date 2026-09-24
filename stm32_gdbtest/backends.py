@@ -44,7 +44,7 @@ def load_stand(path):
 
 def server_spec(stand, port, profile, out):
     if stand["backend"] == "jlink":
-        devices = {"STM32F103C8T6": "STM32F103C8"}
+        devices = {"STM32F103C8T6": "STM32F103C8", "STM32F030R8T6": "STM32F030R8"}
         if profile["mcu"] not in devices:
             raise ValueError("J-Link device mapping not validated for this MCU")
         return dict(
