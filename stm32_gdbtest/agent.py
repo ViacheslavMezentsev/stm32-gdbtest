@@ -15,6 +15,7 @@ sys.path.insert(0, str(ROOT))
 from stm32_gdbtest.target import Target, CheckFailed
 from stm32_gdbtest.compatibility import inspect_gdb_api, require_gdb_api
 from stm32_gdbtest.identity import check_target
+from stm32_gdbtest.image import compare_regions, validate_regions
 
 
 def main():
@@ -31,6 +32,8 @@ def main():
                         "set remotetimeout 5", "set python print-stack full"):
             gdb.execute(command)
         image = Path(session["image"]).read_bytes()
+        regions = session["load_regions"]
+        validate_regions(regions, profile["flash_start"], profile["flash_size"], len(image))
         report["elf_sha256"] = hashlib.sha256(Path(session["elf"]).read_bytes()).hexdigest()
         report["bin_sha256"] = hashlib.sha256(image).hexdigest()
         report["gdb_api_checks"] = inspect_gdb_api(gdb)
@@ -47,11 +50,17 @@ def main():
                      session.get("identity_policy", "warn"), report)
         for warning in report.get("warnings", []):
             print("WARNING: " + warning)
-        matches = bytes(inferior.read_memory(profile["flash_start"], len(image))) == image
+        def verify_image():
+            results = compare_regions(inferior.read_memory, image, regions,
+                                      profile["flash_start"], profile["flash_size"])
+            report["image_verification"] = dict(scope="elf-load-sections", bin_gap_fill=255,
+                gaps_verified=False, full_region_crc_verified=False, regions=results)
+            return all(region["matches"] for region in results)
+        matches = verify_image()
         if not matches and session["flash"] == "if-different":
             gdb.execute("load")
             report["flashed"] = True
-            matches = bytes(inferior.read_memory(profile["flash_start"], len(image))) == image
+            matches = verify_image()
         if not matches:
             raise RuntimeError("Flash does not match the selected ELF image")
         report["image_verified"] = True

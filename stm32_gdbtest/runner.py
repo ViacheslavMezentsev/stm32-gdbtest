@@ -18,6 +18,7 @@ from stm32_gdbtest.reports import CODES, write_reports
 from stm32_gdbtest.compatibility import runtime_manifest
 from stm32_gdbtest.build_manifest import load_verified
 from stm32_gdbtest.contracts import select_contracts
+from stm32_gdbtest.image import parse_sections, validate_regions
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -122,14 +123,20 @@ def execute(session, test, stand, out, report, timeout, profile):
                 report["contracts"]["status"] = "ERROR"
                 raise RuntimeError("ELF contract preflight failed; see contracts and contract-preflight.log")
         with (out / "prepare.log").open("wb") as log:
-            subprocess.run([str(gdb.parent / "arm-none-eabi-objcopy.exe"), "-O", "binary",
+            section_text = subprocess.check_output(
+                [str(gdb.parent / "arm-none-eabi-objdump.exe"), "-h", str(elf)],
+                timeout=15, env=dict(env, LC_ALL="C"), stderr=log, creationflags=FLAGS).decode("utf-8")
+            (out / "elf-sections.txt").write_text(section_text, encoding="utf-8")
+            regions = parse_sections(section_text, profile["flash_start"], profile["flash_size"])
+            subprocess.run([str(gdb.parent / "arm-none-eabi-objcopy.exe"), "-O", "binary", "--gap-fill=0xFF",
                             str(elf), str(image)], check=True, timeout=15, env=env,
                            stdout=log, stderr=subprocess.STDOUT, creationflags=FLAGS)
             subprocess.run(gdb_base + ["-ex", "python import gdb, json; print(gdb.VERSION)"],
                            check=True, timeout=10, env=env, stdout=log,
                            stderr=subprocess.STDOUT, creationflags=FLAGS)
-        if not 0 < image.stat().st_size <= profile["flash_size"]:
-            raise ValueError("Firmware image is empty or exceeds profile Flash")
+        validate_regions(regions, profile["flash_start"], profile["flash_size"], image.stat().st_size)
+        report["image_verification"] = dict(scope="elf-load-sections", bin_gap_fill=255,
+            gaps_verified=False, full_region_crc_verified=False, regions=regions)
         with socket.socket() as sock:
             sock.bind(("127.0.0.1", 0))
             port = sock.getsockname()[1]
@@ -139,7 +146,7 @@ def execute(session, test, stand, out, report, timeout, profile):
                                           setup=backend.get("setup", []))
         run_data = dict(test=test, elf=str(elf), image=str(image), result=str(agent_result),
                         identity_policy=session.get("identity_policy", "warn"), root=str(project_root),
-                        endpoint=endpoint, flash=stand["flash"], profile=profile,
+                        endpoint=endpoint, flash=stand["flash"], profile=profile, load_regions=regions,
                         reset_halt=backend["reset_halt"], finish=backend["finish"],
                         setup=backend.get("setup", []))
         run_file = out / "run.json"

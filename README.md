@@ -77,7 +77,7 @@ GDB-Python — отдельный интерпретатор, не автома�
 ## Документация и связанные проекты
 
 - [API и CMake/CLI](docs/API.md), [ELF/HAL-контракты](docs/CONTRACTS.md), [HAL-макросы](docs/HAL_MACRO_GUIDE.md).
-- [GDB-серверы](docs/BACKENDS.md), [identity и Flash](docs/TARGET_IDENTITY.md), [владение отладчиком](docs/DEBUGGER_OWNERSHIP.md), [manifest](docs/MANIFESTS.md).
+- [GDB-серверы](docs/BACKENDS.md), [identity и Flash](docs/TARGET_IDENTITY.md), [владение отладчиком](docs/DEBUGGER_OWNERSHIP.md), [manifest](docs/MANIFESTS.md), [образы ELF/BIN и CRC](docs/IMAGES.md).
 - [Текущее состояние](docs/STATUS.md), [версии](docs/VERSIONING.md), [планы](TODO.md), [изменения](CHANGELOG.md).
 - [stm32-hwtest-blackpill](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill) — прошивки, аппаратные проверки, общая архитектура и практика применения.
 - [stm32-cmake-yml](https://github.com/ViacheslavMezentsev/stm32-cmake-yml) — связанный проект сборки STM32; для работы модуля он не обязателен.
