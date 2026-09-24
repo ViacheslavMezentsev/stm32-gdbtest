@@ -30,7 +30,9 @@
 
 - [x] Проверять Flash по ELF load sections/LMA, пропуская незагружаемые промежутки.
 - [x] Явный BIN gap-fill 0xFF, границы/перекрытия до сервера, отрицательные host-тесты.
-- [ ] Отдельный полный образ: диапазон/заполнение/политика записи, readback gaps/tail,
-  CRC с параметрами и правилами поля CRC; единый артефакт debug/programming.
+- [x] Полный образ с явным диапазоном/fill: BIN → односекционный ELF, readback
+  gaps/tail, CRC-32/ISO-HDLC на ПК, единый payload debug/programming; без CRC-поля.
+- [ ] CRC-поле/исключения и другие алгоритмы, сверка с MCU CRC, отдельный offline
+  export/prepare CLI и проверка полного режима через ST GDB Server.
 - [ ] Разделить адаптеры toolchain, MCU memory/identity и архитектурную диагностику;
   текущая доработка не объявляет production-поддержку RISC-V.

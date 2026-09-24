@@ -6,6 +6,14 @@
 
 ## [Unreleased]
 
+### Added
+
+- Опциональный --image-policy / STM32_GDBTEST_IMAGE_POLICY: полный BIN с явным
+  диапазоном/fill, транспортный ELF для GDB, сравнение всех байтов и CRC-32/ISO-HDLC
+  по readback на ПК. Verify-only обнаруживает неверный хвост без записи.
+- 12 host-регрессий; full-image режим проверен на F411/OpenOCD и F103/J-Link
+  с A5/FF хвостом, ожидаемым ERROR, восстановлением и HAL-макросами после load.
+
 ### Fixed
 
 - Flash сравнивается по загружаемым ELF-секциям/LMA: отличия незагружаемых

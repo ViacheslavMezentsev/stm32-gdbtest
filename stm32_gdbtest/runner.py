@@ -19,6 +19,7 @@ from stm32_gdbtest.compatibility import runtime_manifest
 from stm32_gdbtest.build_manifest import load_verified
 from stm32_gdbtest.contracts import select_contracts
 from stm32_gdbtest.image import parse_sections, validate_regions
+from stm32_gdbtest.full_image import load_policy, canonical_image
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -32,7 +33,7 @@ def local_directory(path, root=ROOT):
     return path
 
 
-def run(session, test, stand_path=None, timeout=None, identity_policy=None):
+def run(session, test, stand_path=None, timeout=None, identity_policy=None, image_policy=None):
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
     project_root = Path(session.get("root", ROOT)).resolve()
     out = local_directory(Path(session["out"]) / f"{stamp}-{test['id']}-{os.getpid()}", project_root)
@@ -45,7 +46,8 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None):
         policy = identity_policy or os.environ.get("STM32_GDBTEST_IDENTITY_POLICY", "warn")
         if policy not in ("warn", "strict"):
             raise ValueError("Identity policy must be warn or strict")
-        session = dict(session, identity_policy=policy)
+        session = dict(session, identity_policy=policy,
+                       image_policy_path=image_policy or os.environ.get("STM32_GDBTEST_IMAGE_POLICY"))
         report["identity_policy"] = policy
         if os.name != "nt":
             raise RuntimeError("This MVP supports Windows only")
@@ -96,6 +98,13 @@ def execute(session, test, stand, out, report, timeout, profile):
     gdb_base = [str(gdb), "-nx", "-batch", "-q", "-iex", "set auto-load off"]
     endpoint = None
     try:
+        full_policy = None
+        program_elf = None
+        program_sha = None
+        if session.get("image_policy_path"):
+            full_policy, policy_sha = load_policy(session["image_policy_path"], profile)
+            report["image_policy"] = dict(full_policy, source_sha256=policy_sha)
+            (out / "image-policy.json").write_text(json.dumps(report["image_policy"], indent=2), encoding="utf-8")
         # All clients consume this immutable per-run snapshot, never a changing build ELF.
         elf.write_bytes(Path(session["elf"]).read_bytes())
         report["elf_sha256"] = hashlib.sha256(elf.read_bytes()).hexdigest()
@@ -137,6 +146,33 @@ def execute(session, test, stand, out, report, timeout, profile):
         validate_regions(regions, profile["flash_start"], profile["flash_size"], image.stat().st_size)
         report["image_verification"] = dict(scope="elf-load-sections", bin_gap_fill=255,
             gaps_verified=False, full_region_crc_verified=False, regions=regions)
+        if full_policy:
+            image.write_bytes(canonical_image(image.read_bytes(), regions, full_policy, profile))
+            program_elf = out / "program.elf"
+            tool = str(gdb.parent / "arm-none-eabi-objcopy.exe")
+            with (out / "prepare.log").open("ab") as log:
+                subprocess.run([tool, "-I", "binary", "-O", "elf32-littlearm", "-B", "arm",
+                    "--rename-section", ".data=.firmware,alloc,load,readonly,data,contents",
+                    "--change-section-address", f".data=0x{full_policy['start']:x}",
+                    str(image), str(program_elf)], check=True, timeout=15, env=env,
+                    stdout=log, stderr=subprocess.STDOUT, creationflags=FLAGS)
+                carrier_text = subprocess.check_output(
+                    [str(gdb.parent / "arm-none-eabi-objdump.exe"), "-h", str(program_elf)],
+                    timeout=15, env=dict(env, LC_ALL="C"), stderr=log, creationflags=FLAGS).decode("utf-8")
+                (out / "program-sections.txt").write_text(carrier_text, encoding="utf-8")
+                carrier = parse_sections(carrier_text, profile["flash_start"], profile["flash_size"])
+                if len(carrier) != 1 or carrier[0]["size"] != image.stat().st_size:
+                    raise ValueError("Programming ELF does not contain the complete BIN")
+                roundtrip = out / "program-roundtrip.bin"
+                subprocess.run([tool, "-O", "binary", str(program_elf), str(roundtrip)],
+                    check=True, timeout=15, env=env, stdout=log, stderr=subprocess.STDOUT, creationflags=FLAGS)
+                if roundtrip.read_bytes() != image.read_bytes():
+                    raise ValueError("Programming ELF payload differs from BIN")
+            program_sha = hashlib.sha256(program_elf.read_bytes()).hexdigest()
+            report["program_elf_sha256"] = program_sha
+            report["image_verification"] = dict(scope="full-image", policy=full_policy,
+                gaps_verified=False, full_region_crc_verified=False)
+        report["bin_sha256"] = hashlib.sha256(image.read_bytes()).hexdigest()
         with socket.socket() as sock:
             sock.bind(("127.0.0.1", 0))
             port = sock.getsockname()[1]
@@ -147,6 +183,8 @@ def execute(session, test, stand, out, report, timeout, profile):
         run_data = dict(test=test, elf=str(elf), image=str(image), result=str(agent_result),
                         identity_policy=session.get("identity_policy", "warn"), root=str(project_root),
                         endpoint=endpoint, flash=stand["flash"], profile=profile, load_regions=regions,
+                        full_image_policy=full_policy, program_elf=str(program_elf) if program_elf else None,
+                        program_elf_sha256=program_sha, expected_bin_sha256=report["bin_sha256"],
                         reset_halt=backend["reset_halt"], finish=backend["finish"],
                         setup=backend.get("setup", []))
         run_file = out / "run.json"
@@ -173,6 +211,7 @@ def execute(session, test, stand, out, report, timeout, profile):
             raise RuntimeError(f"GDB exited {returncode} without report; see gdb.log")
         result = json.loads(agent_result.read_text(encoding="utf-8"))
         if (result.get("id") != test["id"] or result.get("elf_sha256") != report["elf_sha256"]
+                or result.get("bin_sha256") != report["bin_sha256"]
                 or result.get("status") not in CODES or returncode != CODES[result["status"]]):
             raise RuntimeError("Invalid or inconsistent GDB report")
         report.update(result)

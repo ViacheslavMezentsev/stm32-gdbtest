@@ -130,3 +130,12 @@ Flash сравнивается по загружаемым ELF-секциям (L
 BIN формируется с заполнением 0xFF. Требуется GNU arm-none-eabi-objdump рядом
 с GDB; детали отчёта и ограничения — [IMAGES](IMAGES.md). Это не проверка CRC
 полной области. API сценариев и schema профиля/manifest сохранены.
+
+## Полный образ (опционально)
+
+`run --image-policy file.toml` выбирает полный диапазон из `[image]` schema1.
+Альтернатива для CTest — абсолютный `STM32_GDBTEST_IMAGE_POLICY`, CLI приоритетнее.
+По умолчанию сохранены ELF load sections. Канонический BIN, транспортный ELF,
+CRC-32/ISO-HDLC readback, поля отчёта и ограничения: [IMAGES](IMAGES.md).
+Новый режим не добавляет код/CRC-поле в firmware; API Target и target/build schema
+не меняются. CRC считается на ПК, а не периферией MCU.

@@ -16,6 +16,7 @@ from stm32_gdbtest.target import Target, CheckFailed
 from stm32_gdbtest.compatibility import inspect_gdb_api, require_gdb_api
 from stm32_gdbtest.identity import check_target
 from stm32_gdbtest.image import compare_regions, validate_regions
+from stm32_gdbtest.full_image import compare_full, validate_image
 
 
 def main():
@@ -33,9 +34,18 @@ def main():
             gdb.execute(command)
         image = Path(session["image"]).read_bytes()
         regions = session["load_regions"]
-        validate_regions(regions, profile["flash_start"], profile["flash_size"], len(image))
+        full_policy = session.get("full_image_policy")
+        if full_policy:
+            validate_image(image, regions, full_policy, profile)
+            program_elf = Path(session["program_elf"])
+            if hashlib.sha256(program_elf.read_bytes()).hexdigest() != session["program_elf_sha256"]:
+                raise ValueError("Programming ELF differs from host snapshot")
+        else:
+            validate_regions(regions, profile["flash_start"], profile["flash_size"], len(image))
         report["elf_sha256"] = hashlib.sha256(Path(session["elf"]).read_bytes()).hexdigest()
         report["bin_sha256"] = hashlib.sha256(image).hexdigest()
+        if report["bin_sha256"] != session["expected_bin_sha256"]:
+            raise ValueError("BIN differs from host snapshot")
         report["gdb_api_checks"] = inspect_gdb_api(gdb)
         require_gdb_api(report["gdb_api_checks"])
         report["connection_attempted"] = True
@@ -51,6 +61,9 @@ def main():
         for warning in report.get("warnings", []):
             print("WARNING: " + warning)
         def verify_image():
+            if full_policy:
+                report["image_verification"] = compare_full(inferior.read_memory, image, full_policy, profile)
+                return report["image_verification"]["full_region_crc_verified"]
             results = compare_regions(inferior.read_memory, image, regions,
                                       profile["flash_start"], profile["flash_size"])
             report["image_verification"] = dict(scope="elf-load-sections", bin_gap_fill=255,
@@ -58,7 +71,10 @@ def main():
             return all(region["matches"] for region in results)
         matches = verify_image()
         if not matches and session["flash"] == "if-different":
-            gdb.execute("load")
+            report["image_before_programming"] = report["image_verification"]
+            gdb.execute("load " + json.dumps(program_elf.as_posix()) if full_policy else "load")
+            if full_policy:
+                gdb.execute("symbol-file " + json.dumps(Path(session["elf"]).as_posix()))
             report["flashed"] = True
             matches = verify_image()
         if not matches:

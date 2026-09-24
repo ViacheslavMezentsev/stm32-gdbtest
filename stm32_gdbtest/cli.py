@@ -29,6 +29,7 @@ def main():
     run_parser.add_argument("--stand", type=Path)
     run_parser.add_argument("--timeout", type=float)
     run_parser.add_argument("--identity-policy", choices=("warn", "strict"))
+    run_parser.add_argument("--image-policy", type=Path)
     args = parser.parse_args()
     if args.command == "collect":
         tests = collect(args.tests)
@@ -48,7 +49,7 @@ def main():
     from stm32_gdbtest.runner import run
     session = json.loads(args.session.read_text(encoding="utf-8"))
     tests = {t["id"]: t for t in collect(session["tests"])}
-    return run(session, tests[args.test], args.stand, args.timeout, args.identity_policy)
+    return run(session, tests[args.test], args.stand, args.timeout, args.identity_policy, args.image_policy)
 
 
 if __name__ == "__main__":

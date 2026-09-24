@@ -60,3 +60,7 @@ flags и содержимое предсобранных runtime-библиот�
 Список load sections извлекается из проверенного снимка ELF до сервера. Он
 передаётся GDB-agent и отражается в image_verification результата; схема build
 manifest не менялась. [Секции, BIN и границы проверки CRC](IMAGES.md).
+
+Полный режим дополнительно фиксирует `image_policy.source_sha256`, `bin_sha256`
+и `program_elf_sha256`. Политика не является частью build manifest: это отдельный
+вход подготовки/загрузки образа. Исходный ELF не модифицируется. [IMAGES](IMAGES.md).
