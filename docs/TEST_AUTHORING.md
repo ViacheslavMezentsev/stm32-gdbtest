@@ -57,3 +57,13 @@ check записывает результат и даёт FAIL при несов
 Внешние приборы/питание — отложенный интерфейс host-контроллера в TODO. Пока нет
 стандартного API согласованного power-cycle/reconnect; не имитировать его скрытыми
 вызовами из фонового GDB потока.
+
+## Документация модуля
+
+- [API и подключение](API.md).
+- [ELF/HAL-контракты](CONTRACTS.md).
+- [Макросы HAL](HAL_MACRO_GUIDE.md).
+- [Manifest и ограничения](MANIFESTS.md).
+- [GDB-серверы](BACKENDS.md).
+- [Владение отладчиком](DEBUGGER_OWNERSHIP.md).
+- [Identity и Flash](TARGET_IDENTITY.md).

@@ -37,7 +37,7 @@ ctest --preset offline
 
 ## Подключение к проекту
 
-После отправки начального коммита в репозиторий:
+В проекте потребителя:
 
 ```powershell
 git submodule add https://github.com/ViacheslavMezentsev/stm32-gdbtest.git modules/stm32-gdbtest
@@ -80,3 +80,15 @@ mutex после crash не гарантирует завершения доче
 
 Внешний контроллер стенда (питание, реле, кнопки) запланирован, пока не реализован.
 Публикация pip/console executable и поддержка произвольных STM32 не заявляются.
+
+## Документация модуля
+
+- [API и подключение](docs/API.md).
+- [ELF/HAL-контракты](docs/CONTRACTS.md).
+- [Макросы HAL](docs/HAL_MACRO_GUIDE.md).
+- [Manifest и ограничения](docs/MANIFESTS.md).
+- [GDB-серверы](docs/BACKENDS.md).
+- [Владение отладчиком](docs/DEBUGGER_OWNERSHIP.md).
+- [Identity и Flash](docs/TARGET_IDENTITY.md).
+[Стендовый проект](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/README.md) содержит прошивки, MCU-профили,
+аппаратные протоколы и общую методику. Они не входят в универсальное ядро.
