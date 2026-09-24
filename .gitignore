@@ -1,0 +1,6 @@
+/build/
+/examples/minimal-consumer/build/
+**/CMakeUserPresets.json
+*.local.toml
+__pycache__/
+*.pyc

@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "contracts": {
+    "rcc_error": {
+      "type_context": "fixture_function",
+      "functions": {
+        "fixture_function": {
+          "returns": "int",
+          "arguments": []
+        }
+      }
+    },
+    "rcc_osc_null": {
+      "type_context": "fixture_function",
+      "functions": {
+        "fixture_function": {
+          "returns": "int",
+          "arguments": []
+        }
+      },
+      "source_reviews": [
+        {
+          "file": "fixture.c",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "reason": "Synthetic selector fixture, not reviewed HAL evidence"
+        }
+      ]
+    },
+    "clock_macros": {
+      "macros": {
+        "context": "loop",
+        "expressions": [
+          "FIXTURE_CLOCK()"
+        ]
+      }
+    }
+  }
+}

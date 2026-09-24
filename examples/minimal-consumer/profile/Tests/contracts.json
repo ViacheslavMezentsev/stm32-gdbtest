@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "contracts": {
+    "consumer_gpio": {
+      "macros": {
+        "context": "app_loop",
+        "expressions": [
+          "RCC",
+          "RCC_AHB1ENR_GPIOCEN",
+          "GPIOC",
+          "GPIO_MODER_MODER13",
+          "GPIO_MODER_MODER13_0"
+        ]
+      }
+    }
+  }
+}

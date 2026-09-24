@@ -1,0 +1,22 @@
+# Validated on BluePill via SWD: GCC13 Debug, 22 hardware scenarios.
+schema = 1
+name = "f103c8"
+mcu = "STM32F103C8T6"
+openocd_target = "target/stm32f1x.cfg"
+flash_start = 0x08000000
+flash_size = 65536
+flash_size_address = 0x1FFFF7E0
+breakpoint_limit = 6
+fault_handlers = ["HardFault_Handler", "MemManage_Handler", "BusFault_Handler", "UsageFault_Handler"]
+core_registers = ["pc", "lr", "sp", "xPSR"]
+reset_halt = "monitor reset halt"
+reset_run = "monitor reset run"
+
+[identity]
+address = 0xE0042000
+mask = 0xFFF
+value = 0x410
+
+[diagnostic_registers]
+CFSR = 0xE000ED28
+HFSR = 0xE000ED2C

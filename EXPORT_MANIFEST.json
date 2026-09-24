@@ -1,0 +1,213 @@
+{
+  "source_commit": "285152020ee4cef516fb74d96d81193c01fccfab",
+  "source_worktree_dirty": false,
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "50f44581d01859ebd9b7580507f9585f1c5f01263db0f7054c5293d8514bf0db"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "804f57f3f55e32f651abb61f0b55b24c1376c6945889c691f1b2c694ae6d466b"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "b83c8681c3f235ad2a3eb8228aceda6a25518f89b195a891ca2cd1ff19df7e39"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "e29a806aacc4a1e0dc99378b7b4b9c1e3d37596f58e12ffd57273f431efe804b"
+    },
+    {
+      "path": "README.md",
+      "sha256": "81658acbf8d894369641c221381ae1cbeefdf94e9a91b57489359acaea3f5a9c"
+    },
+    {
+      "path": "TODO.md",
+      "sha256": "1c5868d30568c77a3168722cccdf1a468d8b12d8f18e611864abef99a5bcc7bc"
+    },
+    {
+      "path": "Tests/fixtures/README.md",
+      "sha256": "8ac8936da5023497b46cfcb97d8eff101075b7b2ff90d79d383f40bb4d666036"
+    },
+    {
+      "path": "Tests/fixtures/f103c8/Tests/contracts.json",
+      "sha256": "6f5ca99bd20d7c4e5602e0bed75321c5cfbebd92e133c4f5f09ae4f6b8a82c5a"
+    },
+    {
+      "path": "Tests/fixtures/f103c8/target.toml",
+      "sha256": "89b520c9fe8a51b4dfb1062588b4162da13255ea8f82be6caa34799d0b45e335"
+    },
+    {
+      "path": "Tests/fixtures/f411ce/target.toml",
+      "sha256": "b306ef08bc9185326503a83195b2876d45c0edc6d60c9baae63b32255cb13863"
+    },
+    {
+      "path": "Tests/host/test_build_manifest.py",
+      "sha256": "ab4f7aff5af928ee120493d68d09c0abceddbf327585957c783971c69ea93cdf"
+    },
+    {
+      "path": "Tests/host/test_contracts.py",
+      "sha256": "9926bbc21e4fdc939f0f1a45ea9576eeb740331ac953930124339dc634f9c87f"
+    },
+    {
+      "path": "Tests/host/test_hwtest.py",
+      "sha256": "bce41c557a795ef01020ba23ad2525ee14b4a0e02b3c583f69148330cfbb2323"
+    },
+    {
+      "path": "Tests/host/test_identity.py",
+      "sha256": "dc97db1eb517969e72290a1442facd3801758b2532893bc72f55853ccc9a5afc"
+    },
+    {
+      "path": "Tests/host/test_probe_lock.py",
+      "sha256": "63746bb0b9e8700dd23a8b0029dfc22daa1b39d4b66638e424c4122ec428d4ec"
+    },
+    {
+      "path": "Tests/host/test_public_api.py",
+      "sha256": "baef3a881b91cde7f2757e6ced91c8299f89bf157600490ee434ce7c280dfcf2"
+    },
+    {
+      "path": "docs/API.md",
+      "sha256": "8499e756595240251cf5d597cc36f033729c5c6011fdc05e29c7a821dc11b2be"
+    },
+    {
+      "path": "docs/TEST_AUTHORING.md",
+      "sha256": "6d3ccf3ae2f706e2596882f9f7d7726b0ff60f0b9cde1a1d359eb1f35fcf8654"
+    },
+    {
+      "path": "docs/VERSIONING.md",
+      "sha256": "b5fd1431709ec82f3afaccd6ddb8d640a01c142e12a6b9202e464671016096ed"
+    },
+    {
+      "path": "examples/minimal-consumer/CMakeLists.txt",
+      "sha256": "6118291e33cba501184bb5e3d3f3dab5fd0cac4b906a64a207792147907bf435"
+    },
+    {
+      "path": "examples/minimal-consumer/CMakePresets.json",
+      "sha256": "5611298e00d54048c51ef3afccf08cf8ec9fd0daa93ec83aa0dbdd71d0aba659"
+    },
+    {
+      "path": "examples/minimal-consumer/README.md",
+      "sha256": "8bea1b408d10f086160ea44cf9b1bb552e1da8b0861dc3ea53f4d5c6d999f5cc"
+    },
+    {
+      "path": "examples/minimal-consumer/cmake/arm-gcc.cmake",
+      "sha256": "885376f38f25a0b02931a5bf1d58afd19522b19aa75f2fed2b88ee9c05a705a3"
+    },
+    {
+      "path": "examples/minimal-consumer/consumer_support.py",
+      "sha256": "6b2aac706431493069e81e04941a71806645b08676a0f4fbde42f28f33f023e0"
+    },
+    {
+      "path": "examples/minimal-consumer/profile/Tests/board/test_blink.py",
+      "sha256": "b2788247931421d528cc69280a8d45a2136f1bec32d76d51b1e5582d5f963f85"
+    },
+    {
+      "path": "examples/minimal-consumer/profile/Tests/contracts.json",
+      "sha256": "37114d94552efb0a24fabf6e971d41f495bf915ed445f9df85b525951a0e6498"
+    },
+    {
+      "path": "examples/minimal-consumer/profile/Tests/requirements.md",
+      "sha256": "bbf51873e533980eeef2231e18e73657fb7114ee094d7732f96711b5e8e289b4"
+    },
+    {
+      "path": "examples/minimal-consumer/profile/consumer_FLASH.ld",
+      "sha256": "d857854267a920ec8044ea98391d724d8152400c14986f1bab474db1483b8460"
+    },
+    {
+      "path": "examples/minimal-consumer/profile/target.toml",
+      "sha256": "262a0140041c32dfe2ba51e64c56dbde5697372bafa59dbb3a46a24678cbbfa2"
+    },
+    {
+      "path": "examples/minimal-consumer/src/main.c",
+      "sha256": "627312e599b946fd1ca548463df4570d2900984d7fa784baff20f2bfa7b7d970"
+    },
+    {
+      "path": "examples/minimal-consumer/src/startup.c",
+      "sha256": "b27c0be66199fc3c4693b2bd4c4c94ffe9a80713d1ba47bb0c9dd8779b4c27a3"
+    },
+    {
+      "path": "examples/minimal-consumer/verify_offline.py",
+      "sha256": "7b4165ff3f4c52312b2d6000ac60eba005470099a880871b0e88563a36ef8222"
+    },
+    {
+      "path": "examples/stands/stlink.example.toml",
+      "sha256": "e3b597bf486a919fef5d1e3ef33564e9cb697209ff3c412c0e19c4f9b979a057"
+    },
+    {
+      "path": "stm32_gdbtest/__init__.py",
+      "sha256": "f1682ad4b39b82cb1a46565e9ca8b6395d44d780c67a7730a0e3be916e7c5315"
+    },
+    {
+      "path": "stm32_gdbtest/__main__.py",
+      "sha256": "07bb221d3355bb1b2a2e242032903c8ef35ad43ca389110a7ebaae052a2955ba"
+    },
+    {
+      "path": "stm32_gdbtest/agent.py",
+      "sha256": "d0788d5735531c7acfe4d567ae65d9e4d64830dc818dc8644c49ae3489581c31"
+    },
+    {
+      "path": "stm32_gdbtest/backends.py",
+      "sha256": "42486c2fb940f898c66d2f6a2ce5332d424610060835dbcac9bfa04115968c92"
+    },
+    {
+      "path": "stm32_gdbtest/build_manifest.py",
+      "sha256": "f8894fe8d66f04e3a00db7dbbb7fba3975317136a67b7d943a559717b069c8c2"
+    },
+    {
+      "path": "stm32_gdbtest/cli.py",
+      "sha256": "885ec2b816a04e32cf0cc9bc1fada04c69ee891a05983e59db94e2db4eeb9518"
+    },
+    {
+      "path": "stm32_gdbtest/cmake/STM32GDBTest.cmake",
+      "sha256": "cce0d40afda54e252b647f07fc37cb69ca89214f17e5e0a0d7ff81fe924ee22b"
+    },
+    {
+      "path": "stm32_gdbtest/collect.py",
+      "sha256": "0a3073bb5c03a8d9d31435ba89cfb68015f1046b9b8879ac8e765740bd8fcc25"
+    },
+    {
+      "path": "stm32_gdbtest/compatibility.py",
+      "sha256": "c2df583f487232df16911d1eddf7e26074b8d0e21a7cae0a356e1dc76c744293"
+    },
+    {
+      "path": "stm32_gdbtest/contract_preflight.py",
+      "sha256": "ec055a50edc8366e2c3db5999e4a590bc753414953e01658f589e2adb00b9055"
+    },
+    {
+      "path": "stm32_gdbtest/contracts.py",
+      "sha256": "5628eb57675502e7463cbb6fddbf099f1ef6217c3c4241526542a629790085d1"
+    },
+    {
+      "path": "stm32_gdbtest/identity.py",
+      "sha256": "d30620d1c2a4568b0362872d84937aaa53735a1808f0b67e908196405640afe7"
+    },
+    {
+      "path": "stm32_gdbtest/openocd.py",
+      "sha256": "3986ef740784b3270681d6d74fc069ee70f367b6803a12320094dcbdab3b9a4d"
+    },
+    {
+      "path": "stm32_gdbtest/processes.py",
+      "sha256": "5b3c960df2dc31b4739591eb586d1317a98675f07fce5f0087a1e1187d04337b"
+    },
+    {
+      "path": "stm32_gdbtest/profile.py",
+      "sha256": "b79d2eb9a07cf93669612f8d96d676e3cc812f7714d98a389d12391084996a21"
+    },
+    {
+      "path": "stm32_gdbtest/reports.py",
+      "sha256": "a373de45810c8728ac69a10e06abd6f52848c148fc5849d35b0bcdd201958d65"
+    },
+    {
+      "path": "stm32_gdbtest/runner.py",
+      "sha256": "6718d82875973fccca6023b8d248fa06b51f3b1e54257d2aeb47d82c5e6cc174"
+    },
+    {
+      "path": "stm32_gdbtest/target.py",
+      "sha256": "38a9be78c6b53c550ed3f1cc35ed861150827897dcc007abdb68f33b10d6b5c8"
+    }
+  ],
+  "preparation_notes": [
+    "README repository URL supplied by owner; runtime sources unchanged from verified export."
+  ]
+}

@@ -1,0 +1,8 @@
+[probe]
+backend = "openocd"
+serial = "REPLACE_WITH_STLINK_SERIAL"
+executable = "openocd"
+speed_khz = 1000
+# if-different: прошить ELF только при несовпадении Flash, затем проверить.
+# verify-only: не прошивать, несовпадение считать ERROR.
+flash = "if-different"

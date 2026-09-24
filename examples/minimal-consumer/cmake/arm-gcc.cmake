@@ -1,0 +1,5 @@
+set(CMAKE_SYSTEM_NAME Generic)
+set(CMAKE_SYSTEM_PROCESSOR arm)
+set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+set(ARM_TOOLCHAIN_ROOT "$ENV{USERPROFILE}/xpack-arm-none-eabi-gcc-13.3.1-1.1" CACHE PATH "ARM GCC installation")
+set(CMAKE_C_COMPILER "${ARM_TOOLCHAIN_ROOT}/bin/arm-none-eabi-gcc.exe")
