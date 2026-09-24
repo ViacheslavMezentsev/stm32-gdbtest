@@ -1,94 +1,85 @@
 # stm32-gdbtest
 
-Проверки STM32 в runtime через GDB-Python. Общая инфраструктура отделена от
-прошивки, MCU-профиля и проектных тестов. Основной способ подключения — Git-подмодуль
-с закреплённым коммитом. Текущий исходный прототип: 0.1.0.dev0, API_VERSION1;
-первый релиз ещё не выпущен. [Версионирование](docs/VERSIONING.md).
+**stm32-gdbtest автоматизирует проверки работающей прошивки на реальном STM32
+через GDB-Python и SWD-отладчик.** Это не симулятор MCU и не обычный unit-test
+фреймворк, запускающий тестовые функции внутри прошивки или на ПК: Python-сценарии
+выполняются в GDB на компьютере и управляют приложением на плате через GDB-сервер.
+Для них нужны собранный ELF с отладочной информацией, профиль MCU и аппаратный стенд.
 
-## Состав
+## Зачем нужен этот подход
 
-- stm32_gdbtest/: runner, GDB agent, Target API, contracts, backends и CMake.
-- Tests/host и Tests/fixtures: проверки инфраструктуры без платы.
-- examples/minimal-consumer: отдельный CMSIS F411 blink и его Python-тест.
-- docs/: подключение, написание тестов человеком/агентом и ограничения.
+При работе со STM32 важно проверять не только вычисления, но и настройку
+периферии, обработку прерываний и реакцию приложения на ошибки HAL. Многое из
+этого разработчик уже проверяет вручную в отладчике. Модуль позволяет описать
+такие действия на Python, повторять их после изменений и получать отчёт.
 
-HAL/CMSIS, Cube-пакеты, toolchains, GDB-серверы, SVD и прошивка основного проекта
-не входят в поставку. [LICENSE](LICENSE) — MIT; внешние инструменты/библиотеки
-поставляются отдельно. Происхождение исходников: [SOURCE](SOURCE.md).
+Проект вырос из практических опытов GDB-Python на платах F1/F4. Инфраструктура
+выделена из [стендового проекта](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill),
+чтобы подключать её к другим приложениям, добавляя собственные профили и тесты.
 
-## Требования и проверка без платы
+## Как это работает
 
-Windows, Python>=3.11, CMake>=3.25, Ninja. Для примера нужны xPack ARM GCC13
-с GDB-Python и установленный CubeF4 V1.28.3. Другие MCU/версии требуют проверки.
-
-Из корня модуля:
-
-```powershell
-python -B -m stm32_gdbtest --version
-python -B -m unittest discover -s Tests/host -v
-cd examples/minimal-consumer
-cmake --preset debug
-cmake --build --preset debug
-ctest --preset offline
+```mermaid
+flowchart LR
+    I["ELF + профиль MCU + Python-тесты"] --> H["Host runner на ПК"]
+    H --> A["GDB-Python: сценарий и Target API"]
+    A <--> S["GDB-сервер"]
+    S <--> D["ST-Link / J-Link"]
+    D <-->|SWD| M["STM32 с прошивкой приложения"]
+    A --> R["JSON / JUnit"]
+    H --> R
 ```
 
-Пути toolchain и Cube задаются ARM_TOOLCHAIN_ROOT/CUBE_F4_ROOT. Пример по умолчанию
-ищет их относительно USERPROFILE, локальные настройки не коммитить.
+Runner проверяет входные артефакты, запускает сервер и GDB, ограничивает время
+выполнения и сохраняет результаты. Сценарий достигает нужной точки программы,
+читает переменные, структуры и регистры, сравнивает их с ожиданиями. При необходимости
+он может изменить значение или принудительно завершить функцию для проверки
+реакции вызывающего кода. Тестовая логика не добавляется в прошивку.
 
-## Подключение к проекту
+Отладчик влияет на выполнение: halt, reset и инъекции меняют состояние и время.
+Модуль не заменяет измерительные приборы, не вычисляет автоматически покрытие кода
+и не проверяет «всё HAL» сам по себе. Автор сценария задаёт требования и ожидания;
+доступны только символы и возможности, сохранившиеся в собранном ELF.
 
-В проекте потребителя:
+## Возможности и зрелость
 
-```powershell
-git submodule add https://github.com/ViacheslavMezentsev/stm32-gdbtest.git modules/stm32-gdbtest
-```
+Реализованы запуск через OpenOCD, ST-LINK GDB Server и J-Link GDB Server,
+проверка/запись образа, hardware breakpoints, чтение значений и контролируемые
+инъекции, выборочные ELF/HAL-контракты, таймауты с попыткой восстановления,
+JSON/JUnit и интеграция с CMake/CTest.
 
-Закрепить проверенный commit/tag в gitlink родительского проекта; не обновлять
-зависимость автоматически при configure. В CMake после создания firmware target:
+Это прототип до первого релиза. На стендах проверены сценарии F103/J-Link и
+F411/ST-Link/OpenOCD, включая восстановление после таймаута; есть более ранние
+проверки F401 и ST-сервера. Поддержка зависит от конкретной комбинации MCU,
+HAL, GDB и backend. [Точная матрица и ограничения](docs/STATUS.md).
 
-```cmake
-include(CTest)
-include("${PROJECT_SOURCE_DIR}/modules/stm32-gdbtest/stm32_gdbtest/cmake/STM32GDBTest.cmake")
-stm32_gdbtest_attach(firmware_target
-    PROFILE_DIR "${PROJECT_SOURCE_DIR}/profiles/myboard"
-    MANIFEST_INPUTS "${PROJECT_SOURCE_DIR}/profiles/myboard/firmware_FLASH.ld")
-```
+В плане развития — надзор за дочерними процессами, развитие схемы профиля и
+метаданных совместимости. Отдельно запланировано согласованное управление
+питанием, реле и другими приборами через host-контроллер; сейчас такого API нет.
+Python-упаковка рассматривается как дополнительный способ поставки. [Дорожная карта](TODO.md).
 
-Свой профиль содержит target.toml и Tests/{board,requirements.md,contracts.json}.
-Тесты создаются в проекте, не внутри подмодуля. Выбор локального стенда:
-STM32_GDBTEST_STAND либо CLI --stand. Шаблон OpenOCD: examples/stands/stlink.example.toml;
-заменить serial и при необходимости executable, сохранить как *.local.toml в проекте.
-CLI из любого cwd можно вызывать абсолютным путём stm32_gdbtest/cli.py.
+## Состав и зависимости
 
-[Автору тестов](docs/TEST_AUTHORING.md): пошаговый процесс для человека и агента.
-[API](docs/API.md): публичные операции и ограничения. [AGENTS](AGENTS.md): правила
-изменения ядра. Форматы target/contracts: пример и валидаторы profile.py/contracts.py.
+- `stm32_gdbtest/` — runner, GDB-агент, Target API, backend, контракты и CMake-интеграция.
+- `Tests/host`, `Tests/fixtures` — проверки инфраструктуры без платы.
+- `examples/minimal-consumer/` — самостоятельный пример прошивки и теста для F411.
+- `docs/` — подключение, написание сценариев и описание механизмов.
 
-## Что доказано и что ограничено
+Проверенная среда — Windows, host Python 3.11+, ARM GCC/GDB с Python, CMake 3.25+
+и Ninja для интеграции сборки. Нужны SWD-отладчик, его GDB-сервер и библиотеки
+прошивки; HAL/CMSIS, Cube-пакеты и vendor tools в модуль не входят.
+GDB-Python — отдельный интерпретатор, не автоматически окружение Python вашего ПК.
 
-Прототип проверялся в исходном стендовом проекте на F103/J-Link и F411/ST-Link/OpenOCD,
-включая Flash/verify-only, timeout/recovery. F401 также проверялся ранее; аппаратная
-совместимость не следует из одного лишь названия семейства. Подробные исторические
-доказательства остаются в репозитории происхождения. Consumer F411 имеет собственную
-прошивку; его запуск заменяет содержимое Flash, обычный CTest включает HW-тест.
+Модуль подключается как **Git-подмодуль**. Настройки MCU, тесты приложения и
+локальный стенд остаются у потребителя. Начните с [подключения и примера](docs/GETTING_STARTED.md),
+затем перейдите к [написанию тестов](docs/TEST_AUTHORING.md) — вручную или с помощью агента.
 
-Один firmware target, Windows/Ninja; manifest требует Cube/CMSIS metadata.
--g3 нужен для macros, но не сохраняет неиспользуемые функции. Остановки MCU влияют
-на время/IRQ/энергопотребление. Межпроектный mutex действует в одной Windows-сессии
-и только для участвующих runner. Vendor tools им не управляются; освобождение
-mutex после crash не гарантирует завершения дочернего сервера.
+## Документация и связанные проекты
 
-Внешний контроллер стенда (питание, реле, кнопки) запланирован, пока не реализован.
-Публикация pip/console executable и поддержка произвольных STM32 не заявляются.
+- [API и CMake/CLI](docs/API.md), [ELF/HAL-контракты](docs/CONTRACTS.md), [HAL-макросы](docs/HAL_MACRO_GUIDE.md).
+- [GDB-серверы](docs/BACKENDS.md), [identity и Flash](docs/TARGET_IDENTITY.md), [владение отладчиком](docs/DEBUGGER_OWNERSHIP.md), [manifest](docs/MANIFESTS.md).
+- [Текущее состояние](docs/STATUS.md), [версии](docs/VERSIONING.md), [планы](TODO.md), [изменения](CHANGELOG.md).
+- [stm32-hwtest-blackpill](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill) — прошивки, аппаратные проверки, общая архитектура и практика применения.
+- [stm32-cmake-yml](https://github.com/ViacheslavMezentsev/stm32-cmake-yml) — связанный проект сборки STM32; для работы модуля он не обязателен.
 
-## Документация модуля
-
-- [API и подключение](docs/API.md).
-- [ELF/HAL-контракты](docs/CONTRACTS.md).
-- [Макросы HAL](docs/HAL_MACRO_GUIDE.md).
-- [Manifest и ограничения](docs/MANIFESTS.md).
-- [GDB-серверы](docs/BACKENDS.md).
-- [Владение отладчиком](docs/DEBUGGER_OWNERSHIP.md).
-- [Identity и Flash](docs/TARGET_IDENTITY.md).
-[Стендовый проект](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/README.md) содержит прошивки, MCU-профили,
-аппаратные протоколы и общую методику. Они не входят в универсальное ядро.
+Лицензия — [MIT](LICENSE). [Происхождение](SOURCE.md), [правила для разработчиков и агентов](AGENTS.md).

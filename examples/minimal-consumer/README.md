@@ -7,6 +7,6 @@ ctest --preset offline. Настройки путей — ARM_TOOLCHAIN_ROOT/CUB
 Stand по умолчанию пустой. Обычный CTest включает HW и может записать прошивку;
 после опыта восстановить образ, согласованный с владельцем.
 
-[Подключение](../../README.md), [автору тестов](../../docs/TEST_AUTHORING.md),
+[Подключение](../../docs/GETTING_STARTED.md), [автору тестов](../../docs/TEST_AUTHORING.md),
 [API](../../docs/API.md). Пример — демонстрация GPIO clock/mode, не универсальное
 приложение: core vectors без peripheral IRQ, busy-wait без калиброванного времени.

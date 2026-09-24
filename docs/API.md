@@ -89,7 +89,7 @@ run-каталога не гарантируют JSON/JUnit. Ожидаемый 
 Target schema1, контрактная registry schema1, build manifest schema1 и runtime
 compatibility schema1 сохраняются. Session — внутренний генерируемый артефакт,
 без обещания отдельной стабильной схемы. Источники деталей:
-[Подключение](../README.md), [Manifest](MANIFESTS.md),
+[Подключение](GETTING_STARTED.md), [Manifest](MANIFESTS.md),
 [TARGET_IDENTITY](TARGET_IDENTITY.md), [GDB_BACKENDS](BACKENDS.md),
 [DEBUGGER_OWNERSHIP](DEBUGGER_OWNERSHIP.md). Прямые вызовы runner/contracts/processes
 в experiments/host tests — внутренний API разработки; потребителям использовать
