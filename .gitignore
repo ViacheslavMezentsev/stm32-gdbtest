@@ -1,5 +1,6 @@
 /build/
 /examples/minimal-consumer/build/
+/Tests/firmware/build/
 **/CMakeUserPresets.json
 *.local.toml
 __pycache__/

@@ -1,5 +1,8 @@
 # stm32-gdbtest
 
+[![Docs](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/stm32-gdbtest/docs.yml?branch=main&label=Docs&style=flat-square)](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/workflows/docs.yml)
+[![Offline](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/stm32-gdbtest/offline.yml?branch=main&label=Offline&style=flat-square)](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/workflows/offline.yml)
+
 **stm32-gdbtest автоматизирует проверки работающей прошивки на реальном STM32
 через GDB-Python и SWD-отладчик.** Это не симулятор MCU и не обычный unit-test
 фреймворк, запускающий тестовые функции внутри прошивки или на ПК: Python-сценарии
@@ -46,7 +49,9 @@ Runner проверяет входные артефакты, запускает 
 Реализованы запуск через OpenOCD, ST-LINK GDB Server и J-Link GDB Server,
 проверка/запись образа, hardware breakpoints, чтение значений и контролируемые
 инъекции, выборочные ELF/HAL-контракты, таймауты с попыткой восстановления,
-JSON/JUnit и интеграция с CMake/CTest.
+JSON/JUnit и интеграция с CMake/CTest. Команда `run --prepare-only` выполняет
+все проверки до GDB-сервера без оборудования; на них основан CI
+([проверки и CI](docs/ru/testing.md)).
 
 Это прототип до первого релиза. На стендах проверены сценарии F103/J-Link и
 F411/ST-Link/OpenOCD, включая восстановление после таймаута; есть более ранние
@@ -62,11 +67,13 @@ Python-упаковка рассматривается как дополните
 
 - `stm32_gdbtest/` — runner, GDB-агент, Target API, backend, контракты и CMake-интеграция.
 - `Tests/host`, `Tests/fixtures` — проверки инфраструктуры без платы.
+- `Tests/firmware`, `ci/` — CI-прошивки F030R8/F103C8/F411CE, Docker-образ и сценарий проверок.
 - `examples/minimal-consumer/` — самостоятельный пример прошивки и теста для F411.
 - `docs/` — подключение, написание сценариев и описание механизмов.
 
-Проверенная среда — Windows, host Python 3.11+, ARM GCC/GDB с Python, CMake 3.25+
-и Ninja для интеграции сборки. Нужны SWD-отладчик, его GDB-сервер и библиотеки
+Проверенная среда аппаратного запуска — Windows, host Python 3.11+, ARM GCC/GDB
+с Python, CMake 3.25+ и Ninja для интеграции сборки; сборка и подготовка без
+оборудования работают также на Linux. Нужны SWD-отладчик, его GDB-сервер и библиотеки
 прошивки; HAL/CMSIS, Cube-пакеты и vendor tools в модуль не входят.
 GDB-Python — отдельный интерпретатор, не автоматически окружение Python вашего ПК.
 

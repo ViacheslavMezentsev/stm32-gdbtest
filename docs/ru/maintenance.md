@@ -67,7 +67,7 @@
 ветка сливается в main обычным `git merge` (конфликты разрешаются, затронутые
 проверки повторяются), затем main отправляется. Force push и переписывание
 опубликованной истории запрещены. Успешные проверки старого коммита не считаются проверками новых изменений.
-Если CI появится с фильтром веток, новый префикс добавляется в фильтр workflow.
+Workflows CI запускаются для любой ветки, поэтому новый префикс не требует правки workflow.
 
 ## Коммиты
 
@@ -103,17 +103,22 @@
 
 ## Проверки
 
-1. Host-тесты модуля: `python -B -m unittest discover -s Tests/host -v` (Windows).
-2. Пример потребителя без платы: из `examples/minimal-consumer` — `cmake --preset debug`,
+1. Offline-проверки в Docker-образе CI: `python3 ci/run_checks.py` — уровни docs, host
+   и firmware ([проверки и CI](testing.md)). Перед push выполняются уровни,
+   затронутые изменением.
+2. Host-тесты модуля без Docker: `python -B -m unittest discover -s Tests/host -v`;
+   блокировка отладчика проверяется только на Windows.
+3. Пример потребителя без платы (Windows): из `examples/minimal-consumer` — `cmake --preset debug`,
    `cmake --build --preset debug`, `ctest --preset offline`.
-3. CLI: `python -B -m stm32_gdbtest --version`, `collect`, `trace`.
-4. ТЗ: `check_spec.py --strict`.
-5. Аппаратные проверки — только по правилам раздела «Работа с оборудованием».
+4. CLI: `python -B -m stm32_gdbtest --version`, `collect`, `trace`, `run --prepare-only`.
+5. ТЗ: `check_spec.py --strict`.
+6. Аппаратные проверки — только по правилам раздела «Работа с оборудованием».
    Полный `ctest` примера прошивает MCU.
 
 Сборка и host PASS не означают HW PASS. В отчёте о проверке указываются точные
 MCU, HAL, GDB, backend, ELF и manifest, влияние halt/reset и границы доказательства.
-Автоматического CI пока нет (вопрос 11.2.1 ТЗ).
+CI GitHub Actions (workflows Docs и Offline) проверяет модуль до GDB-сервера;
+результат относится к конкретному коммиту и не заменяет аппаратную проверку.
 
 ## Работа с оборудованием
 

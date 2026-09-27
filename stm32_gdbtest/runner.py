@@ -33,12 +33,20 @@ def local_directory(path, root=ROOT):
     return path
 
 
-def run(session, test, stand_path=None, timeout=None, identity_policy=None, image_policy=None):
+def tool(gdb, name):
+    """GNU binutils next to the selected GDB; Windows installations carry an .exe suffix."""
+    gdb = Path(gdb)
+    return str(gdb.parent / (name + (gdb.suffix if gdb.suffix.lower() == ".exe" else "")))
+
+
+def run(session, test, stand_path=None, timeout=None, identity_policy=None, image_policy=None,
+        prepare_only=False):
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
     project_root = Path(session.get("root", ROOT)).resolve()
     out = local_directory(Path(session["out"]) / f"{stamp}-{test['id']}-{os.getpid()}", project_root)
     started = time.monotonic()
-    report = {"id": test["id"], "status": "ERROR", "checks": [], "started_utc": stamp}
+    report = {"id": test["id"], "status": "ERROR", "checks": [], "started_utc": stamp,
+              "mode": "prepare" if prepare_only else "hardware"}
     try:
         legacy = [name for name in ("HWTEST_STAND", "HWTEST_IDENTITY_POLICY") if os.environ.get(name)]
         if legacy:
@@ -49,20 +57,26 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
         session = dict(session, identity_policy=policy,
                        image_policy_path=image_policy or os.environ.get("STM32_GDBTEST_IMAGE_POLICY"))
         report["identity_policy"] = policy
-        if os.name != "nt":
-            raise RuntimeError("This MVP supports Windows only")
         limit = test["timeout_s"] if timeout is None else timeout
         if not math.isfinite(limit) or not 0 < limit <= 300:
             raise ValueError("Timeout must be positive and <= 300 seconds")
         path = stand_path or os.environ.get("STM32_GDBTEST_STAND") or session.get("stand")
-        if not path:
+        if not path and not prepare_only:
             raise RuntimeError("Select a local stand with STM32_GDBTEST_STAND or --stand")
-        stand = load_stand(path)
-        report["backend"] = stand["backend"]
+        # ТЗ 5.16.2: preparation validates a stand only when one is selected.
+        stand = load_stand(path) if path else None
+        if stand:
+            report["backend"] = stand["backend"]
         profile = load_profile(session["profile"])
         report["profile"] = profile
-        with probe_lock(project_root, stand["serial"], stand["backend"]):
-            execute(session, test, stand, out, report, limit, profile)
+        if prepare_only:
+            # ТЗ 5.16.1: no debugger ownership, server or GDB connection in preparation.
+            execute(session, test, stand, out, report, limit, profile, prepare_only=True)
+        else:
+            if os.name != "nt":
+                raise RuntimeError("Hardware runs support Windows only")
+            with probe_lock(project_root, stand["serial"], stand["backend"]):
+                execute(session, test, stand, out, report, limit, profile)
     except BaseException:
         report.update(status="ERROR", error=traceback.format_exc())
     server_log = ""
@@ -81,7 +95,7 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
     return CODES[report["status"]]
 
 
-def execute(session, test, stand, out, report, timeout, profile):
+def execute(session, test, stand, out, report, timeout, profile, prepare_only=False):
     server = client = None
     ready = False
     env = os.environ.copy()
@@ -133,11 +147,11 @@ def execute(session, test, stand, out, report, timeout, profile):
                 raise RuntimeError("ELF contract preflight failed; see contracts and contract-preflight.log")
         with (out / "prepare.log").open("wb") as log:
             section_text = subprocess.check_output(
-                [str(gdb.parent / "arm-none-eabi-objdump.exe"), "-h", str(elf)],
+                [tool(gdb, "arm-none-eabi-objdump"), "-h", str(elf)],
                 timeout=15, env=dict(env, LC_ALL="C"), stderr=log, creationflags=FLAGS).decode("utf-8")
             (out / "elf-sections.txt").write_text(section_text, encoding="utf-8")
             regions = parse_sections(section_text, profile["flash_start"], profile["flash_size"])
-            subprocess.run([str(gdb.parent / "arm-none-eabi-objcopy.exe"), "-O", "binary", "--gap-fill=0xFF",
+            subprocess.run([tool(gdb, "arm-none-eabi-objcopy"), "-O", "binary", "--gap-fill=0xFF",
                             str(elf), str(image)], check=True, timeout=15, env=env,
                            stdout=log, stderr=subprocess.STDOUT, creationflags=FLAGS)
             subprocess.run(gdb_base + ["-ex", "python import gdb, json; print(gdb.VERSION)"],
@@ -149,22 +163,22 @@ def execute(session, test, stand, out, report, timeout, profile):
         if full_policy:
             image.write_bytes(canonical_image(image.read_bytes(), regions, full_policy, profile))
             program_elf = out / "program.elf"
-            tool = str(gdb.parent / "arm-none-eabi-objcopy.exe")
+            objcopy = tool(gdb, "arm-none-eabi-objcopy")
             with (out / "prepare.log").open("ab") as log:
-                subprocess.run([tool, "-I", "binary", "-O", "elf32-littlearm", "-B", "arm",
+                subprocess.run([objcopy, "-I", "binary", "-O", "elf32-littlearm", "-B", "arm",
                     "--rename-section", ".data=.firmware,alloc,load,readonly,data,contents",
                     "--change-section-address", f".data=0x{full_policy['start']:x}",
                     str(image), str(program_elf)], check=True, timeout=15, env=env,
                     stdout=log, stderr=subprocess.STDOUT, creationflags=FLAGS)
                 carrier_text = subprocess.check_output(
-                    [str(gdb.parent / "arm-none-eabi-objdump.exe"), "-h", str(program_elf)],
+                    [tool(gdb, "arm-none-eabi-objdump"), "-h", str(program_elf)],
                     timeout=15, env=dict(env, LC_ALL="C"), stderr=log, creationflags=FLAGS).decode("utf-8")
                 (out / "program-sections.txt").write_text(carrier_text, encoding="utf-8")
                 carrier = parse_sections(carrier_text, profile["flash_start"], profile["flash_size"])
                 if len(carrier) != 1 or carrier[0]["size"] != image.stat().st_size:
                     raise ValueError("Programming ELF does not contain the complete BIN")
                 roundtrip = out / "program-roundtrip.bin"
-                subprocess.run([tool, "-O", "binary", str(program_elf), str(roundtrip)],
+                subprocess.run([objcopy, "-O", "binary", str(program_elf), str(roundtrip)],
                     check=True, timeout=15, env=env, stdout=log, stderr=subprocess.STDOUT, creationflags=FLAGS)
                 if roundtrip.read_bytes() != image.read_bytes():
                     raise ValueError("Programming ELF payload differs from BIN")
@@ -173,6 +187,15 @@ def execute(session, test, stand, out, report, timeout, profile):
             report["image_verification"] = dict(scope="full-image", policy=full_policy,
                 gaps_verified=False, full_region_crc_verified=False)
         report["bin_sha256"] = hashlib.sha256(image.read_bytes()).hexdigest()
+        if prepare_only:
+            # ТЗ 5.16.3: every host-side check has passed; the debugger is never touched.
+            if stand:
+                backend = server_spec(stand, 0, profile, out)
+                report["backend_commands"] = dict(reset_halt=backend["reset_halt"], finish=backend["finish"],
+                                                  setup=backend.get("setup", []))
+            report.update(status="PASS", connection_attempted=False, hardware_accessed=False,
+                          artifacts=sorted(item.name for item in out.iterdir()))
+            return
         with socket.socket() as sock:
             sock.bind(("127.0.0.1", 0))
             port = sock.getsockname()[1]

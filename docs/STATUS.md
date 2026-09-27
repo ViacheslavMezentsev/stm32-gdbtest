@@ -9,7 +9,8 @@
 
 | Область | Доказанный объём |
 | --- | --- |
-| Host-инфраструктура | 44 unittest без MCU |
+| Host-инфраструктура | 70 unittest без MCU (на Linux 5 тестов блокировки Windows пропускаются) |
+| CI (GitHub Actions, Docker) | Сборка CI-прошивок F030R8/F103C8/F411CE на GCC 13.3.1, 14.2.1, 15.2.1 с CMake 3.28.3, build manifest, `prepare`, offline-контракты с 10 отрицательными вариантами; host-тесты на Windows и Linux ([проверки и CI](ru/testing.md)) |
 | ELF/HAL preflight | Положительный случай и 11 отрицательных вариантов на ELF F103C8/F401CC/F411CE |
 | F411CE / ST-Link / OpenOCD | После отделения модуля 24/24 CTest в стендовом проекте: 22 HW + 2 host |
 | F103C8 / J-Link | После отделения модуля 24/24 CTest: 22 HW + 2 host |
@@ -30,10 +31,11 @@ F4 использует CubeF4 1.28.3, F1 — CubeF1 1.8.7. Номер GCC не 
 
 ## Ограничения реализации
 
-- Windows/Ninja, один firmware target и один MCU/отладчик на запуск.
+- Аппаратный запуск — Windows; сборка, manifest и подготовка — также Linux. Ninja,
+  один firmware target и один MCU/отладчик на запуск.
 - Build manifest использует Cube/CMSIS metadata; универсальная сборочная система
   и поддержка произвольного toolchain не заявлены.
-- J-Link device mapping проверен только для STM32F103C8T6 → STM32F103C8.
+- J-Link device mapping проверен для STM32F103C8T6 → STM32F103C8 и STM32F030R8T6 → STM32F030R8.
 - Target schema пока содержит обязательные OpenOCD-поля. H503 не поддержан проверками.
 - -g3 нужен для macro debug info, но не сохраняет неиспользуемые функции.
   Контракты проверяют выбранные символы/типы/раскрытия, не всю семантику HAL.

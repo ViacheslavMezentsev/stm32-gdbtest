@@ -16,7 +16,8 @@ stm32_gdbtest_attach(firmware_target
 `STM32_GDBTEST_SOURCE_DIR` — корень checkout, содержащий пакет stm32_gdbtest;
 в примере consumer это cache PATH. CMake проект обязан включить CTest/enable_testing
 и создать firmware target до attach. Поддерживается один target верхнего CMake
-каталога, Windows/Ninja, build внутри PROJECT_SOURCE_DIR. PROFILE_DIR и пути
+каталога, Ninja, build внутри PROJECT_SOURCE_DIR. Сборка, manifest и подготовка
+работают на Windows и Linux; аппаратный запуск — только на Windows. PROFILE_DIR и пути
 MANIFEST_INPUTS задавать абсолютными. В PROFILE_DIR находятся target.toml и
 Tests/board/test_*.py, Tests/requirements.md, Tests/contracts.json (если нужны контракты).
 MANIFEST_INPUTS добавляет файлы в snapshot и зависимости relink. SELF_TESTS
@@ -82,6 +83,12 @@ CLI имеет логическое имя stm32-gdbtest; отдельный con
 --identity-policy warn|strict. Stand выбирается --stand → STM32_GDBTEST_STAND →
 session.stand. Identity: CLI → STM32_GDBTEST_IDENTITY_POLICY → warn.
 collect --cmake/--workspace — интерфейс CMake-генерации, обычно вручную не нужен.
+run --prepare-only выполняет все шаги до GDB-сервера (стенд при наличии, профиль,
+снимок ELF, manifest, запрошенные контракты, секции и образ, включая полный режим)
+без блокировки отладчика, сервера и подключения; отчёт получает `mode: prepare`,
+`hardware_accessed: false`. Стенд в этом режиме необязателен; если выбран, он
+проверяется целиком. CMake регистрирует для каждого сценария тест `prepare.<ID>`
+с метками host и prepare, поэтому `ctest --preset offline` включает подготовку.
 Коды run: PASS0 / FAIL1 / ERROR2; ошибка аргументов также2. Ошибки до создания
 run-каталога не гарантируют JSON/JUnit. Ожидаемый отказный опыт сохраняет ERROR,
 не превращается в PASS самого теста.

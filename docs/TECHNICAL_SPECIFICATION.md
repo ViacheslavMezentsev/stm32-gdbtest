@@ -5,13 +5,13 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.2 (черновик для согласования) |
+| **Ревизия** | 0.3 (черновик для согласования) |
 | **Дата формирования** | 28.09.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `Tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0-rc.1 (текущая версия разработки `0.1.0.dev0`, `API_VERSION = 1`) |
-| **Целевая платформа** | Хост Windows; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя |
-| **Связанные документы** | README.md; AGENTS.md; docs/ru/maintenance.md, docs/en/maintenance.md; docs/API.md, BACKENDS.md, CONTRACTS.md, DEBUGGER_OWNERSHIP.md, GETTING_STARTED.md, HAL_MACRO_GUIDE.md, IMAGES.md, MANIFESTS.md, STATUS.md, TARGET_IDENTITY.md, TEST_AUTHORING.md, VERSIONING.md; TODO.md; CHANGELOG.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
-| **Связанные файлы кода** | `stm32_gdbtest/*.py` (19 модулей), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `Tests/host/*.py`, `examples/minimal-consumer/*` |
+| **Целевая платформа** | Хост Windows; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows; сборка, manifest и подготовка — также Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
+| **Связанные документы** | README.md; AGENTS.md; docs/ru/maintenance.md, docs/en/maintenance.md; docs/ru/testing.md, docs/en/testing.md; docs/API.md, BACKENDS.md, CONTRACTS.md, DEBUGGER_OWNERSHIP.md, GETTING_STARTED.md, HAL_MACRO_GUIDE.md, IMAGES.md, MANIFESTS.md, STATUS.md, TARGET_IDENTITY.md, TEST_AUTHORING.md, VERSIONING.md; TODO.md; CHANGELOG.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
+| **Связанные файлы кода** | `stm32_gdbtest/*.py` (19 модулей), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `Tests/host/*.py`, `examples/minimal-consumer/*`; `Tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)` |
 
 ### История ревизий
 
@@ -19,6 +19,25 @@
 | :---: | :---: | :--- |
 | 0.1 | 28.09.2026 | Первая редакция. Требования восстановлены по коду `main` @ `a371d80`, host-тестам (65) и документации модуля; назначение и границы уточнены по стендовому проекту stm32-hwtest-blackpill. Тест-кейсы привязаны к существующим host-тестам и аппаратным проверкам. Зафиксированы расхождения документации и кода, открытые вопросы по CI и сопроводительной документации. |
 | 0.2 | 28.09.2026 | Учтены решения владельца о порядке сопровождения: ветки `<агент>/<задача>` для нескольких агентов, слияние обычным `git merge` без PR, подписанные коммиты Conventional Commits без ссылок на сессии, документация на русском и английском (`docs/ru`, `docs/en`), ТЗ только на русском. Порядок работы вынесен в docs/ru/maintenance.md и docs/en/maintenance.md. Закрыт вопрос 11.2.12; по 11.2.2 решена часть о языках и расположении документов. |
+| 0.3 | 28.09.2026 | Подготовка к 0.1.0 по решениям владельца: CI на GitHub Actions с Docker-образом без stm32-cmake-yml; offline-часть модуля (сборка, build manifest, контракты, подготовка образа) переносима на Linux, аппаратный запуск остаётся на Windows; новая команда `run --prepare-only` и CTest-тесты `prepare.<ID>`; CI-прошивки F030R8, F103C8, F411CE на CMSIS, матрица GCC 13.3.1/14.2.1/15.2.1 × CMake 3.28.3. Закрыты вопросы 11.2.1, 11.2.3, 11.2.10; добавлены 11.2.16, 11.2.17. |
+
+### Изменения ревизии 0.3
+
+Изменённые и новые пункты ревизии 0.3 помечены `(р.0.3)`.
+
+| Пункты | Тип | Суть |
+| :--- | :---: | :--- |
+| Реквизиты, 1.2.1, 1.2.3, 1.3.4, 2.5.1 | изм. | CI, Linux для offline-части, новые файлы |
+| 3.9.2 | изм. | Поля `mode`, `hardware_accessed`, `artifacts` |
+| 5.3.4 | изм. | Отказ аппаратного запуска вне Windows — после выбора стенда и профиля, до блокировки |
+| 5.13.14 | нов. | CTest-тесты `prepare.<ID>` |
+| 5.14.6 | нов. | Разбор команд компилятора на Windows и POSIX |
+| 5.16.1–5.16.5 | нов. | Подготовка без оборудования `run --prepare-only` |
+| 6.2.1, 7.4.1 | изм. | Имена binutils по суффиксу GDB; переносимость |
+| 8.10 | изм. | CI введён |
+| 8.11–8.16 | нов. | Уровни, окружение, матрица и запуск CI |
+| 9.2 | изм./нов. | TC-04, TC-06, TC-24 изменены; TC-74…TC-83 |
+| 10, 11.2, приложения A, B, C, F | изм. | Матрица; вопросы 11.2.1, 11.2.3, 11.2.10 закрыты, 11.2.16, 11.2.17 добавлены; константы, CI, артефакты подготовки, расхождения |
 
 ### Изменения ревизии 0.2
 
@@ -67,11 +86,11 @@
 
 ### 1.2. Область применения
 
-1.2.1. Требования применимы к пакету `stm32_gdbtest/` (host runner, CLI, GDB-агент, Target API, backend GDB-серверов, контракты, проверка образа, build manifest, отчёты), CMake-интеграции `stm32_gdbtest/cmake/STM32GDBTest.cmake`, host-тестам `Tests/host` и примеру `examples/minimal-consumer`.
+1.2.1. Требования применимы к пакету `stm32_gdbtest/` (host runner, CLI, GDB-агент, Target API, backend GDB-серверов, контракты, проверка образа, build manifest, отчёты), CMake-интеграции `stm32_gdbtest/cmake/STM32GDBTest.cmake`, host-тестам `Tests/host`, примеру `examples/minimal-consumer`, CI-прошивкам `Tests/firmware`, окружению и сценариям CI `ci/`, `.github/workflows/`. (р.0.3)
 
 1.2.2. Документ не описывает прошивки, MCU-профили, сценарии и требования конкретных приложений: они принадлежат проектам-потребителям (прежде всего stm32-hwtest-blackpill). Требования к взаимодействию с потребителем приведены в п. 6.8.1–6.8.5.
 
-1.2.3. Документ не описывает конвейер CI и структуру сопроводительной документации: в ревизии 0.1 CI отсутствует, их реструктуризация — предмет следующих ревизий (вопросы 11.2.1, 11.2.2).
+1.2.3. Структура сопроводительной документации описывается только в части п. 7.7.10, 7.7.11; остальная её реструктуризация — предмет следующих ревизий (вопрос 11.2.2). (р.0.3)
 
 ### 1.3. Метод формирования
 
@@ -81,7 +100,7 @@
 
 1.3.3. Целевой реализацией считается код `main` @ `a371d80`. В случае расхождения между этим документом и кодом расхождение считается дефектом одного из них и разрешается пересмотром ревизии документа. Известные расхождения документации и кода перечислены в приложении F.
 
-1.3.4. Аппаратные результаты взяты из документации модуля и стендового проекта; при формировании ревизии 0.1 оборудование не использовалось. Host-тесты запущены в среде формирования (Linux, Python 3.11.15): 57 PASS, 3 FAIL из-за Windows-зависимого кода, 5 пропущено (Windows mutex); на Windows по документации — 65/65.
+1.3.4. Аппаратные результаты взяты из документации модуля и стендового проекта; при формировании ревизии 0.1 оборудование не использовалось. Host-тесты запущены в среде формирования (Linux, Python 3.11.15): 57 PASS, 3 FAIL из-за Windows-зависимого кода, 5 пропущено (Windows mutex); на Windows по документации — 65/65. В ревизии 0.3 host-тестов 70: в Docker-образе CI (Linux, Python 3.12) 65 PASS и 5 пропущено; уровни host и firmware CI (10 проверок) прошли в образе, собранном в среде формирования на локальной копии Ubuntu 24.04 вместо образа Docker Hub; workflows GitHub при формировании ревизии не запускались. (р.0.3)
 
 ### 1.4. Термины и сокращения
 
@@ -218,7 +237,7 @@ flowchart LR
 
 ### 2.5. Ограничения платформы
 
-2.5.1. Хост — Windows (named mutex, `msvcrt`, `taskkill`, `CommandLineToArgvW`, `.exe` binutils). Другие ОС runner отклоняет (п. 5.3.4).
+2.5.1. Хост аппаратного запуска — Windows (named mutex, `msvcrt`, `taskkill`). Сборка, build manifest, offline-контракты и подготовка (п. 5.16) работают на Windows и Linux; аппаратный запуск на другой ОС отклоняется (п. 5.3.4). (р.0.3)
 
 2.5.2. Host Python ≥ 3.11 (`tomllib`); GDB-Python — отдельный интерпретатор ≥ 3.11, не окружение Python компьютера.
 
@@ -374,7 +393,7 @@ flowchart LR
 
 3.9.1. Исход запуска ДОЛЖЕН быть одним из `PASS`, `FAIL`, `ERROR` с кодами возврата `0`, `1`, `2` соответственно. `[R]`
 
-3.9.2. `result.json` ДОЛЖЕН содержать как минимум `id`, `status`, `checks`, `started_utc`, `duration_s`, `compatibility`, а также накопленные к моменту завершения блоки: `identity_policy`, `backend`, `profile`, `elf_sha256`, `bin_sha256`, `build_manifest`, `contracts`, `image_verification`, `identity`, `flash_capacity`, `warnings`, `flashed`, `image_verified`, `mutations`, `stops`, `diagnostics`, `backtrace`, `teardown` и поля ошибок `error`, `teardown_error`, `cleanup_error`. `[R]`
+3.9.2. `result.json` ДОЛЖЕН содержать как минимум `id`, `status`, `checks`, `started_utc`, `duration_s`, `compatibility`, а также накопленные к моменту завершения блоки: `identity_policy`, `backend`, `profile`, `elf_sha256`, `bin_sha256`, `build_manifest`, `contracts`, `image_verification`, `identity`, `flash_capacity`, `warnings`, `flashed`, `image_verified`, `mutations`, `stops`, `diagnostics`, `backtrace`, `teardown`, режим `mode` (`hardware` или `prepare`), для подготовки — `hardware_accessed` и `artifacts`, и поля ошибок `error`, `teardown_error`, `cleanup_error`. `[U]` (р.0.3)
 
 3.9.3. `junit.xml` ДОЛЖЕН содержать `testsuite` (`name="hwtest"`, `tests="1"`, `failures`, `errors`, `time`) с одним `testcase` (`name` = ID); для FAIL — элемент `failure`, для ERROR — `error` с текстом ошибки; `system-out` — полный JSON отчёта. Атрибут `classname` — см. приложение F, вопрос 11.2.9. `[R]`
 
@@ -480,7 +499,7 @@ flowchart LR
 
 5.3.3. Политика identity ДОЛЖНА выбираться: CLI → `STM32_GDBTEST_IDENTITY_POLICY` → `warn`; иное значение — ERROR. `[R]`
 
-5.3.4. На ОС, отличной от Windows, запуск ДОЛЖЕН завершаться ERROR с отчётом. См. вопрос 11.2.3. `[R]`
+5.3.4. Аппаратный запуск на ОС, отличной от Windows, ДОЛЖЕН завершаться ERROR с отчётом после выбора стенда и профиля и до захвата блокировки отладчика. Режим подготовки (п. 5.16) от ОС не зависит. `[U]` (р.0.3)
 
 5.3.5. Внешний предел времени GDB — `--timeout` либо `timeout_s` сценария; значение ДОЛЖНО быть конечным, `0 < t ≤ MAX_TIMEOUT_S` (`MAX_TIMEOUT_S = 300` с). `[R]`
 
@@ -654,6 +673,8 @@ flowchart LR
 
 5.13.13. `stm32_gdbtest_register` и прочие переменные `STM32_GDBTEST_*`, кроме п. 6.9.2, — внутренние. `[R]`
 
+5.13.14. Для каждого сценария ДОЛЖЕН регистрироваться CTest-тест `prepare.<ID>` (`run --prepare-only`, `LABELS "host;prepare"`, `TIMEOUT 90`), чтобы подготовка входила в offline-набор потребителя. `[N]` (р.0.3)
+
 ### 5.14. Генерация build manifest
 
 5.14.1. Каталог сборки ДОЛЖЕН лежать внутри корня проекта, файл manifest — внутри каталога сборки; иначе ошибка. `[R]`
@@ -666,6 +687,8 @@ flowchart LR
 
 5.14.5. Прежний manifest ДОЛЖЕН удаляться до снимка, новый — записываться через временный файл с атомарной заменой. `[R]`
 
+5.14.6. Команда компилятора из `compile_commands.json` ДОЛЖНА разбираться по правилам `CommandLineToArgvW` на Windows и по правилам POSIX shell (`shlex`) на других ОС. `[U]` (р.0.3)
+
 ### 5.15. Версия и способы вызова
 
 5.15.1. `--version` ДОЛЖЕН выводить `stm32-gdbtest <__version__>`. `[R]`
@@ -673,6 +696,18 @@ flowchart LR
 5.15.2. CLI ДОЛЖЕН вызываться как `python -B -m stm32_gdbtest` из корня модуля и по абсолютному пути `stm32_gdbtest/cli.py` из любого каталога. `[R]`
 
 5.15.3. Источник версии — `stm32_gdbtest/__init__.py`: `__version__ = "0.1.0.dev0"`, `API_VERSION = 1`. `[R]`
+
+### 5.16. Подготовка без оборудования (`run --prepare-only`) (р.0.3)
+
+5.16.1. `run --prepare-only` ДОЛЖЕН выполнять проверки п. 5.3 (кроме обязательности стенда), п. 5.5–5.7 и при заданной политике — п. 4.2.1–4.2.4; он НЕ ДОЛЖЕН захватывать блокировку отладчика, запускать GDB-сервер и агента и подключаться к цели. `[N]` (р.0.3)
+
+5.16.2. Стенд в режиме подготовки необязателен. Если стенд выбран по п. 5.3.6, он ДОЛЖЕН проверяться по п. 3.4, а команды диалекта backend, включая mapping J-Link (п. 6.5.1), — вычисляться и сохраняться в `backend_commands`. `[N]` (р.0.3)
+
+5.16.3. Успешная подготовка ДОЛЖНА давать PASS с `mode = prepare`, `connection_attempted = false`, `hardware_accessed = false` и списком `artifacts` каталога запуска; любой отказ — ERROR с отчётами по п. 5.3.8. `[N]` (р.0.3)
+
+5.16.4. Отчёт аппаратного запуска ДОЛЖЕН содержать `mode = hardware`. `[N]` (р.0.3)
+
+5.16.5. Режим подготовки ДОЛЖЕН работать на Windows и Linux. Причина: CI и агенты проверяют модуль до GDB-сервера в Linux-контейнере без оборудования. `[N]` (р.0.3)
 
 ---
 
@@ -690,7 +725,7 @@ flowchart LR
 
 ### 6.2. GNU Binutils
 
-6.2.1. `arm-none-eabi-objdump.exe` и `arm-none-eabi-objcopy.exe` ДОЛЖНЫ находиться в каталоге выбранного GDB. `[R]`
+6.2.1. `arm-none-eabi-objdump` и `arm-none-eabi-objcopy` ДОЛЖНЫ находиться в каталоге выбранного GDB и иметь суффикс его исполняемого файла (`.exe` на Windows). `[U]` (р.0.3)
 
 ### 6.3. Backend OpenOCD
 
@@ -782,7 +817,7 @@ flowchart LR
 
 ### 7.4. Переносимость
 
-7.4.1. Поддерживаемый хост — Windows (п. 2.5.1). Поддержка Linux — вопрос 11.2.3. `[R]`
+7.4.1. Аппаратный запуск ДОЛЖЕН поддерживаться на Windows; сборка, build manifest, offline-контракты, подготовка и host-тесты — на Windows и Linux (п. 2.5.1, 5.16.5). `[U]` (р.0.3)
 
 7.4.2. Поддерживаемая архитектура цели — ARM Cortex-M (`elf32-littlearm`); RISC-V не поддерживается, несмотря на успешный эксперимент К1921ВГ015. `[R]`
 
@@ -846,7 +881,19 @@ flowchart LR
 
 8.9. Перед релизом ДОЛЖНЫ быть выполнены: host и offline проверки, подключение потребителя настоящим подмодулем, согласованные HW- и recovery-проверки, обновление документации и миграции, проверка LICENSE и отсутствия локальных артефактов, обновление `__version__` и датированного раздела CHANGELOG. Публикацию тега выполняет владелец. `[R]`
 
-8.10. Автоматический CI в ревизии 0.1 отсутствует; проверка изменений выполняется локально по п. 7.7.5 и в стендовом проекте. Требования к CI — вопрос 11.2.1. `[R]`
+8.10. Изменения ДОЛЖНЫ проверяться CI по п. 8.11–8.16 и локально по п. 7.7.5; аппаратные проверки выполняются отдельно в стендовом проекте. `[U]` (р.0.3)
+
+8.11. CI ДОЛЖЕН без отладчика и платы выполнять уровни: docs — `check_spec.py --strict` для ТЗ, локальные ссылки Markdown и пары RU/EN; host — host-тесты `Tests/host`; firmware — сборка и проверка CI-прошивок до GDB-сервера. `[N]` (р.0.3)
+
+8.12. Окружение CI ДОЛЖНО задаваться lock-файлом `ci/dependencies.lock.json`: базовый образ Ubuntu 24.04 по digest, архивы по SHA-256, репозитории по коммиту; сборка образа ДОЛЖНА проверять наличие GDB-Python ≥ 3.11 у каждого GCC. stm32-cmake-yml в окружение и CI-прошивки не входит. `[N]` (р.0.3)
+
+8.13. Уровень firmware ДОЛЖЕН собирать CI-прошивки `Tests/firmware` (CMSIS без HAL) для профилей F030R8, F103C8, F411CE каждым GCC lock-файла (13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1) с CMake 3.28.3 и для каждой пары проверять: build manifest (единицы, входы, версия компилятора, отсутствие абсолютных путей), CTest `host` (traceability, `prepare.<ID>` с запрошенными контрактами), подготовку полного образа, отказ политики, меньшей образа, и отказ каждого из 10 отрицательных вариантов ELF-контрактов. `[N]` (р.0.3)
+
+8.14. Host-тесты ДОЛЖНЫ выполняться на Windows (Python 3.11 и 3.13) и в Linux-образе CI. `[N]` (р.0.3)
+
+8.15. Workflows ДОЛЖНЫ запускаться при push в любую ветку без фильтра префиксов; проверки уровней host и firmware МОГУТ пропускаться для изменений только Markdown, `LICENSE` и `.github/FUNDING.yml`; контейнер CI ДОЛЖЕН работать без сети. `[N]` (р.0.3)
+
+8.16. Те же проверки ДОЛЖНЫ запускаться локально одной командой `python3 ci/run_checks.py` в образе CI с итогом `build/ci/summary.json`. `[N]` (р.0.3)
 
 ---
 
@@ -863,16 +910,16 @@ flowchart LR
 
 ### 9.2. Тест-кейсы
 
-TC-01…TC-65 соответствуют host-тестам `Tests/host` (имя теста указано в сценарии), TC-66…TC-73 — offline- и аппаратным проверкам. Результаты D взяты из документации модуля и стендового проекта (п. 1.3.4).
+TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tests/host` (имя теста указано в сценарии), TC-66…TC-73 — offline- и аппаратным проверкам, TC-79…TC-83 — проверкам CI (р.0.3). Результаты D взяты из документации модуля и стендового проекта (п. 1.3.4).
 
 | TC | Сценарий | Ожидаемый результат |
 | :---: | :--- | :--- |
 | TC-01 | `test_mismatched_artifacts_and_incomplete_schema_are_rejected`: manifest с чужим ELF, неверной схемой, пустыми списками; отсутствующий файл | `ValueError` на каждый вариант; `FileNotFoundError` |
 | TC-02 | `test_runtime_uses_snapshot_without_rereading_build_sources`: изменение исходника после сборки; изменение `target.toml` | Manifest принят без чтения исходников; изменённый профиль отклонён («target profile») |
 | TC-03 | `test_invalid_manifest_stops_runner_before_any_process_start` | ERROR «does not match ELF»; `subprocess.run`/`Popen` не вызваны; нет `server.log` |
-| TC-04 | `test_dependency_parser_preserves_spaces_and_stale_state`: вывод `ninja -t deps` с пробелами в путях и `STALE` | Пути с пробелами сохранены; `STALE` → `None` (Windows-пути) |
+| TC-04 | `test_dependency_parser_preserves_spaces_and_stale_state`: вывод `ninja -t deps` с пробелами в путях и `STALE` | Пути с пробелами сохранены; `STALE` → `None`; пути строятся от временного каталога и не зависят от ОС (р.0.3) |
 | TC-05 | `test_versions_are_literal_declarations_not_macro_evaluation`: CRLF-заголовок с макросами версий | Извлечены только литералы `__STM32F1xx_HAL_VERSION_MAIN = 1`, `__CM_CMSIS_VERSION_SUB = 1` |
-| TC-06 | `test_display_metadata_does_not_copy_installation_paths` | Флаги `-Og -g3 -mcpu=cortex-m3` без путей; метки `STM32Cube_FW_F1_V1.8.7/header.h`, `external/header.h` |
+| TC-06 | `test_display_metadata_does_not_copy_installation_paths` | Флаги `-Og -g3 -mcpu=cortex-m3` без путей; метки `STM32Cube_FW_F1_V1.8.7/header.h`, `external/header.h` для абсолютного пути вне checkout на любой ОС (р.0.3) |
 | TC-07 | `test_literal_selection_does_not_import_tests`: файл с `raise` на верхнем уровне; повтор, вызов функции, строка вместо кортежа в `contracts` | Контракты собраны без импорта; три варианта отклонены |
 | TC-08 | `test_missing_and_unreviewed_source_fail_closed`: manifest отсутствует, без записи, с другим хэшем; неизвестное имя | «Reviewed source mismatch» ×3; при совпадении выбран контракт; `KeyError` |
 | TC-09 | `test_unrequested_contracts_do_not_require_registry` | Пустой выбор при отсутствующем файле реестра |
@@ -890,7 +937,7 @@ TC-01…TC-65 соответствуют host-тестам `Tests/host` (имя 
 | TC-21 | `test_short_or_failed_read_is_error` | Короткое чтение → `RuntimeError`; исключение чтения передаётся |
 | TC-22 | `test_bad_policy_stops_before_any_subprocess` | ERROR до любого `subprocess` |
 | TC-23 | `test_policy_loader_rejects_other_tables_and_records_hash` | Лишняя таблица отклонена; SHA-256 исходного файла возвращён |
-| TC-24 | `test_consumer_session_scopes_reports_and_rejects_escape`: пустой стенд; выход каталога за корень | ERROR «Select a local stand» с одним `result.json`; `execute` не вызван; каталог вне корня не создан (Windows) |
+| TC-24 | `test_consumer_session_scopes_reports_and_rejects_escape`: пустой стенд; выход каталога за корень | ERROR «Select a local stand» с одним `result.json`; `execute` не вызван; каталог вне корня не создан (Windows и Linux) (р.0.3) |
 | TC-25 | `test_legacy_stand_environment_is_not_silently_ignored`: `HWTEST_STAND` задан | Код 2; стенд не читается; «Rename legacy environment» |
 | TC-26 | `test_collection_does_not_execute_code` | Файл с `raise` на верхнем уровне собран, ID найден |
 | TC-27 | `test_gdb_api_checks_do_not_infer_support_from_version`: `VERSION = 999.0`, удалён `Breakpoint.pending` | Полный набор принят; без `pending` — ошибка с его именем |
@@ -940,6 +987,16 @@ TC-01…TC-65 соответствуют host-тестам `Tests/host` (имя 
 | TC-71 | D: полный образ 16 KiB на F411/OpenOCD и F103/J-Link: хвост A5, повтор, verify-only с политикой FF, восстановление FF | Запись и совпадение; повтор без записи; ожидаемый ERROR; восстановление PASS; HAL-макросы после `load program.elf` |
 | TC-72 | D: регрессия стендового проекта: F411CE/OpenOCD, F103C8/J-Link, F030R8/J-Link STLink, F429ZI/OpenOCD и ST | 22/22, 22/22, 17/17, 22/22 HW PASS; MCU оставлены running |
 | TC-73 | T/D: offline preflight на реальных ELF F103C8/F401CC/F411CE: положительный и 11 отрицательных вариантов | Положительный PASS; каждый отрицательный — ERROR до сервера |
+| TC-74 | `test_prepare_passes_without_stand_lock_server_or_connection` (р.0.3) | PASS, `mode = prepare`; блокировка и `Popen` не вызваны; `connection_attempted`, `hardware_accessed` = false; контракты `NOT_REQUESTED`; регионы и `image.bin` в отчёте |
+| TC-75 | `test_prepare_with_stand_records_backend_and_rejects_unmapped_jlink`: стенд J-Link, MCU F103 и H503 (р.0.3) | F103 — PASS с `backend_commands`; H503 — ERROR «mapping not validated»; сервер не запускается |
+| TC-76 | `test_prepare_failure_is_error_before_server`: ELF отсутствует (р.0.3) | Код 2, ERROR; `Popen` не вызван |
+| TC-77 | `test_hardware_run_outside_windows_is_error_before_lock` (не Windows) (р.0.3) | Код 2, «Windows only»; блокировка и `execute` не вызваны |
+| TC-78 | `test_binutils_follow_gdb_suffix_and_posix_command_lines` (р.0.3) | `.exe` у binutils при GDB `.exe`, без суффикса иначе; POSIX-команда разобрана с кавычками и экранированием |
+| TC-79 | CI firmware: configure и сборка профиля × GCC; проверка session и build manifest (р.0.3) | GDB из выбранного GCC; единицы `src/startup.c`, `src/app.c`, `src/board.c`; скрипт компоновщика во входах; версия компилятора; нет абсолютных путей |
+| TC-80 | CI firmware: `ctest -L host` и `run --prepare-only` для `HW_CI_BOOT`, `HW_CI_GPIO` (р.0.3) | traceability PASS; `prepare.<ID>` PASS; контракты `PASS`, макросы раскрыты в контексте `board_led_toggle`; оборудование не затронуто |
+| TC-81 | CI firmware: подготовка с `full-image.toml` (16 KiB) и с политикой 256 байт (р.0.3) | Полный режим: `scope = full-image`, `program_elf_sha256`; малая политика — код 2, «exceeds full image range» |
+| TC-82 | CI firmware: 10 отрицательных вариантов контрактов (нет макроса, неверный контекст, тип возврата, имя и тип аргумента, арность, тип и отсутствие поля, значение enum, отсутствующая функция) (р.0.3) | Каждый — код 2, `status = ERROR`, `connection_attempted = false` |
+| TC-83 | CI docs: `check_spec.py --strict`, локальные ссылки, пары RU/EN (р.0.3) | Ошибок и предупреждений нет; битых ссылок и непарных страниц нет |
 
 ---
 
@@ -972,7 +1029,7 @@ TC-01…TC-65 соответствуют host-тестам `Tests/host` (имя 
 | 3.8.1 | CK: `file(GENERATE)` session | A, TC-66 |
 | 3.8.2 | RU: `execute` (`run.json`, `contract-request.json`) | I |
 | 3.9.1 | RP: `CODES`; AG: `quit` | TC-40, TC-41 |
-| 3.9.2 | RU: `run`, `execute`; AG: `main` | TC-24, TC-41, D |
+| 3.9.2 | RU: `run`, `execute`; AG: `main` | TC-24, TC-41, TC-74, D |
 | 3.9.3 ⚠ | RP: `write_reports` (`classname="blackpill"`) | TC-40 |
 | 3.9.4–3.9.6 | CM: `runtime_manifest` | TC-28–TC-30, TC-34 |
 | 3.9.7 | RU: `execute`; CT: `inspect_contracts` | TC-09, TC-11, TC-66 |
@@ -1000,7 +1057,7 @@ TC-01…TC-65 соответствуют host-тестам `Tests/host` (имя 
 | 5.3.1 | CL: `argparse` | I |
 | 5.3.2 | RU: `run` (legacy) | TC-25 |
 | 5.3.3 | RU: `run`; ID: `check_target` | TC-50 |
-| 5.3.4 ⚠ | RU: `os.name != "nt"` | TC-24, вопрос 11.2.3 |
+| 5.3.4 | RU: `run` (`os.name` перед `probe_lock`) | TC-24, TC-77 |
 | 5.3.5 | RU: `run` (`limit`) | I |
 | 5.3.6 | RU: `run` (`path`) | TC-24, TC-41 |
 | 5.3.7 | RU: `local_directory` | TC-24, TC-66 |
@@ -1032,8 +1089,14 @@ TC-01…TC-65 соответствуют host-тестам `Tests/host` (имя 
 | 5.11.1–5.11.3 | AG: `finally` | TC-70, TC-72, I |
 | 5.12.1–5.12.6 | RU: `execute` (`finally`); PS: `stop_tree` | TC-70 |
 | 5.13.1–5.13.13 | CK: `stm32_gdbtest_attach`, `stm32_gdbtest_register` | A, TC-66, TC-67, TC-72 |
-| 5.14.1–5.14.5 | BM: `main`, `snapshot`, `dependency_map` | TC-04, TC-66, A |
+| 5.13.14 | CK: `stm32_gdbtest_register` (`prepare.${id}`) | TC-80 |
+| 5.14.1–5.14.5 | BM: `main`, `snapshot`, `dependency_map` | TC-04, TC-66, TC-79, A |
+| 5.14.6 | BM: `command_args` | TC-78, TC-79 |
 | 5.15.1–5.15.3 | IN; CL; MA | TC-64, TC-65 |
+| 5.16.1, 5.16.3 | RU: `run`, `execute` (`prepare_only`); CL: `--prepare-only` | TC-74, TC-76, TC-80 |
+| 5.16.2 | RU: `run`, `execute`; BE: `server_spec` | TC-75 |
+| 5.16.4 | RU: `run` (`mode`) | TC-74 |
+| 5.16.5 | RU; BM; ci/run_checks.py | TC-79–TC-82 |
 
 ### 10.3. Интерфейсы, нефункциональные требования, эволюция (разделы 6–8)
 
@@ -1043,7 +1106,7 @@ TC-01…TC-65 соответствуют host-тестам `Tests/host` (имя 
 | 6.1.2 | CM: `REQUIRED_GDB_API`, `inspect_gdb_api`, `require_gdb_api` | TC-27 |
 | 6.1.3 | TG; AG (без потоков) | I |
 | 6.1.4 | RU: `execute` (`env`, `gdb_base`) | I |
-| 6.2.1 | RU: `gdb.parent / "arm-none-eabi-*.exe"` | TC-72 |
+| 6.2.1 | RU: `tool` | TC-72, TC-78, TC-79 |
 | 6.3.1, 6.3.2 | OC: `server_command`; BE: `server_spec` | TC-32, TC-35 |
 | 6.4.1–6.4.3 | BE: `server_spec` (stlink) | TC-32, TC-72 |
 | 6.5.1–6.5.3 | BE: `server_spec` (jlink) | TC-33, TC-72 |
@@ -1058,7 +1121,7 @@ TC-01…TC-65 соответствуют host-тестам `Tests/host` (имя 
 | 7.2.3 | PS: `probe_mutex_name` | TC-63 |
 | 7.2.4 | `.gitignore`; AGENTS.md | I |
 | 7.3.1, 7.3.2 | RU; CK; приложение A | I |
-| 7.4.1 ⚠ | RU: `os.name` | вопрос 11.2.3 |
+| 7.4.1 | RU; BM; `.github/workflows/offline.yml` | TC-77, TC-79 |
 | 7.4.2 | RU: `elf32-littlearm` | I |
 | 7.5.1 | CK: `RESOURCE_LOCK stm32_swd` | A |
 | 7.5.2, 7.5.3 | PS | TC-60, TC-61 |
@@ -1073,7 +1136,11 @@ TC-01…TC-65 соответствуют host-тестам `Tests/host` (имя 
 | 8.5 | RU: legacy env; DOC: API.md | TC-25 |
 | 8.7 | Приложение G | I |
 | 8.8 | DOC: STATUS.md | I |
-| 8.10 | — (CI отсутствует) | вопрос 11.2.1 |
+| 8.10, 8.11 | ci/run_checks.py; `.github/workflows/docs.yml`, `offline.yml` | TC-79–TC-83 |
+| 8.12 | ci/dependencies.lock.json; ci/docker | A (сборка образа, `verify.py`) |
+| 8.13 | ci/run_checks.py (`firmware_pair`); Tests/firmware | TC-79–TC-82 |
+| 8.14, 8.15 | `.github/workflows/offline.yml`, `docs.yml` | I |
+| 8.16 | ci/run_checks.py | T |
 
 ---
 
@@ -1093,21 +1160,23 @@ TC-01…TC-65 соответствуют host-тестам `Tests/host` (имя 
 
 | № | Вопрос | Статус | Решение / комментарий | Пункты |
 | :---: | :--- | :---: | :--- | :--- |
-| 11.2.1 | CI модуля: платформа (GitHub Actions?), состав уровней (host unittest на `windows-latest`, offline-сборка примера, проверка документации и ссылок, `check_spec.py` для ТЗ), нужен ли self-hosted runner со стендом для D-проверок | Открыт | Обсуждается в следующей ревизии | 8.10, 7.7.5 |
+| 11.2.1 | CI модуля: платформа (GitHub Actions?), состав уровней (host unittest на `windows-latest`, offline-сборка примера, проверка документации и ссылок, `check_spec.py` для ТЗ), нужен ли self-hosted runner со стендом для D-проверок | Закрыт | GitHub Actions: workflows Docs и Offline; Docker-образ без stm32-cmake-yml; host-тесты Windows и Linux; CI-прошивки F030R8/F103C8/F411CE × GCC 13/14/15 × CMake 3.28.3; стенд в CI — вопрос 11.2.16 (р.0.3) | 8.10–8.16 |
 | 11.2.2 | Структура сопроводительной документации: роль ТЗ относительно README, docs/API.md, docs/STATUS.md, CHANGELOG.md, TODO.md; место ТЗ (`docs/` как в stm32-cmake-yml или корень); какие документы становятся производными от ТЗ | Открыт | Решено (р.0.2): документация на русском и английском в `docs/ru` и `docs/en`, ТЗ в `docs/` только на русском, порядок сопровождения — maintenance.md. Остаются роль ТЗ относительно README, STATUS, CHANGELOG, TODO и план переноса страниц `docs/*.md` | 1.2.3, 7.7.1, 7.7.2, 7.7.10, 7.7.11 |
-| 11.2.3 | Поддержка хоста Linux: сейчас `run` отказывает, 3 host-теста падают, 5 пропускаются. Нужна ли переносимость (хотя бы host-тестов для CI на Linux)? | Открыт | — | 2.5.1, 5.3.4, 7.4.1 |
+| 11.2.3 | Поддержка хоста Linux: сейчас `run` отказывает, 3 host-теста падают, 5 пропускаются. Нужна ли переносимость (хотя бы host-тестов для CI на Linux)? | Закрыт | Offline-часть (сборка, manifest, контракты, подготовка, host-тесты) — на Linux; аппаратный запуск — только Windows (р.0.3) | 2.5.1, 5.3.4, 5.14.6, 5.16.5, 6.2.1, 7.4.1 |
 | 11.2.4 | Target schema 2 без обязательных OpenOCD-полей (`openocd_target`, `reset_halt`, `reset_run`) для ST/J-Link-профилей (TODO.md) | Открыт | — | 3.3.1, 3.3.3, 3.3.7 |
 | 11.2.5 | Надзор за дочерними процессами при аварии host (Job Object): включать ли требование в 0.1.0-rc.1 | Открыт | TODO.md; сейчас освобождение mutex не доказывает завершения серверов | 5.4.4, 5.12.4 |
 | 11.2.6 | Профиль F429ZI проверен в стендовом проекте (OpenOCD и ST, 22/22), но не отражён в docs/STATUS.md модуля. Внести? Нужны ли J-Link mapping для F401/F411/F429 | Открыт | — | 6.5.1, 8.8, приложение B |
 | 11.2.7 | Сбой USB (`LIBUSB_ERROR_NOT_FOUND`) после серии запусков на F429: нужна ли доработка штатного завершения сервера вместо `taskkill /F` с контролируемым A/B-опытом | Открыт | Причина не установлена (F429_SERVER_STABILITY.md) | 5.12.4 |
 | 11.2.8 | Статусы SKIP / NOT_APPLICABLE и выбор сценариев по возможностям профиля и стенда (PERIPHERAL_PLAN.md) | Открыт | Сейчас только PASS/FAIL/ERROR | 3.9.1 |
 | 11.2.9 | JUnit `classname="blackpill"` унаследован от стенда; заменить на имя профиля или `stm32-gdbtest`? | Открыт | — | 3.9.3 |
-| 11.2.10 | Исправить устаревшие утверждения docs/STATUS.md (приложение F, строки F.1, F.2) при реструктуризации документации? | Открыт | — | 8.8 |
+| 11.2.10 | Исправить устаревшие утверждения docs/STATUS.md (приложение F, строки F.1, F.2) при реструктуризации документации? | Закрыт | Исправлено вместе с добавлением CI (р.0.3) | 8.8 |
 | 11.2.11 | Нормализация концов строк: нет `.gitattributes`, в рабочей копии Windows все 66 файлов показываются изменёнными из-за CRLF | Открыт | Кандидат для реструктуризации CI | 7.2.4 |
 | 11.2.12 | Правило веток AGENTS.md (`codex/...`) и подпись коммитов: новое правило для веток и Verified-коммитов | Закрыт | Ветки `<агент>/<задача>` для любых агентов, слияние без PR, Conventional Commits, подпись ключом Signing Key (р.0.2) | 7.7.6–7.7.9 |
 | 11.2.13 | Управление питанием, реле и приборами через host-контроллер, power-cycle с reconnect | Отложен | Вне 0.1.0; вернуться после релиза 0.1.0 (TODO.md) | 2.4.2 |
 | 11.2.14 | Python-упаковка и console entry point `stm32-gdbtest` | Отложен | Дополнительный способ поставки после 0.1.0; до PyPI проверить имя | 5.15.2 |
 | 11.2.15 | Соответствие ревизий ТЗ версиям модуля (например, ТЗ 1.0 ↔ v0.1.0) | Открыт | — | 1.6.6 |
+| 11.2.16 | Аппаратные проверки в CI: self-hosted runner со стендом (плата, отладчик), согласование доступа и восстановления | Отложен | После выпуска 0.1.0; до этого аппаратные проверки выполняются в стендовом проекте (р.0.3) | 8.10, 8.11 |
+| 11.2.17 | Пустая загружаемая секция с LMA вне Flash (например, пустая `.data` в RAM) не входит в регионы, но `objcopy -O binary` включает её адрес: BIN вырастает до сотен мегабайт до отказа п. 4.1.5. Формировать BIN только из выбранных секций (`objcopy -j …`) или отклонять такие секции до `objcopy`? | Открыт | Обнаружено при создании CI-прошивок: BIN 384 MiB, затем ERROR «BIN extent differs»; в CI-прошивке `.data` сделана непустой (р.0.3) | 4.1.2, 4.1.5 |
 
 ### 11.3. Примечания на будущее (информативно)
 
@@ -1147,6 +1216,10 @@ TC-01…TC-65 соответствуют host-тестам `Tests/host` (имя 
 | Файловая блокировка | `build/probe-locks/<sha256(serial)>.lock` | 5.4.6 |
 | Каталог временных файлов | `build/hwtest-tmp` | 6.1.4 |
 | `__version__` / `API_VERSION` | `0.1.0.dev0` / `1` | 5.15.3 |
+| `prepare.<ID>` TIMEOUT | 90 с (р.0.3) | 5.13.14 |
+| GCC CI | xPack 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1 (р.0.3) | 8.13 |
+| CMake CI / Ninja | 3.28.3 / 1.12.1 (р.0.3) | 8.13 |
+| Cube-пакеты CMSIS CI | F0 1.11.6, F1 1.8.7, F4 1.28.3 (р.0.3) | 8.13 |
 | ID сценария | `HW_[A-Z0-9_]+` | 3.1.2 |
 
 ---
@@ -1164,6 +1237,7 @@ TC-01…TC-65 соответствуют host-тестам `Tests/host` (имя 
 | STM32F401CCU6 / BlackPill v3.0 | ST-Link / OpenOCD, ST | Ранние проверки | Новые macro-сценарии после отделения модуля не повторялись |
 | STM32H503CBT6 | — | Не поддержан | Профиль приостановлен владельцем |
 | К1921ВГ015 (RISC-V) | J-Link / JTAG | Эксперимент | Не штатный профиль; мотивировал проверку load sections |
+| F030R8, F103C8, F411CE (CI-прошивки) | — (без отладчика) | Сборка и подготовка на GCC 13/14/15 (р.0.3) | Только до GDB-сервера (п. 8.13); на оборудовании не запускались |
 
 ---
 
@@ -1184,6 +1258,8 @@ TC-01…TC-65 соответствуют host-тестам `Tests/host` (имя 
 | `server.log`, `stlink.log`, `jlink.log` | Журналы сервера | При запуске сервера |
 | `gdb.log`, `agent-result.json` | Журнал и отчёт агента | При запуске GDB |
 | `recovery.log` | Восстановление | При recovery |
+
+В режиме подготовки (п. 5.16) создаются файлы до `image.bin` или `program.elf` включительно; `run.json`, журналы сервера и GDB отсутствуют (р.0.3).
 
 Прочие каталоги потребителя: `build/<preset>/hwtest/session.json`, `tests.cmake`, `build-manifest.json`, `ctest-junit.xml`; `build/hwtest-tmp`; `build/probe-locks`.
 
@@ -1228,6 +1304,7 @@ D.5. В ревизии 0.1 ссылки в коде отсутствуют; их
 | `Tests/host/*.py` (65) | Тест-кейсы | TC-01…TC-65 |
 | stm32-hwtest-blackpill: HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md, профили | Назначение, аппаратные результаты, открытые вопросы | 2.1, 8.7, TC-68…TC-73, 11.2.6–11.2.8 |
 | stm32-cmake-yml: README.md | Понятие профиля сборки | 1.4, 8.7 |
+| Решения владельца 28.09.2026; stm32-cmake-yml: ci/ (образец окружения) | CI, Docker, Linux для offline-части, prepare, матрица (р.0.3) | 5.16, 8.10–8.16 |
 
 ---
 
@@ -1235,12 +1312,12 @@ D.5. В ревизии 0.1 ссылки в коде отсутствуют; их
 
 | № | Пункты ТЗ | Документация / ожидание | Состояние кода | Доработка |
 | :---: | :--- | :--- | :--- | :--- |
-| F.1 | 7.7.5, 11.1.3 | docs/STATUS.md, таблица «Проверки»: «44 unittest без MCU» | 65 host-тестов (так же указано ниже в STATUS.md и в CHANGELOG.md) | Исправить STATUS.md (вопрос 11.2.10) |
-| F.2 | 6.5.1 | docs/STATUS.md, «Ограничения»: «J-Link device mapping проверен только для STM32F103C8T6» | Mapping также `STM32F030R8T6` (TC-33), проверен 17/17 | Исправить STATUS.md (вопрос 11.2.10) |
+| F.1 | 7.7.5, 11.1.3 | docs/STATUS.md, таблица «Проверки»: «44 unittest без MCU» | 65 host-тестов (так же указано ниже в STATUS.md и в CHANGELOG.md) | Исправлено: 70 host-тестов (р.0.3) |
+| F.2 | 6.5.1 | docs/STATUS.md, «Ограничения»: «J-Link device mapping проверен только для STM32F103C8T6» | Mapping также `STM32F030R8T6` (TC-33), проверен 17/17 | Исправлено (р.0.3) |
 | F.3 | 3.9.3 | Модуль не привязан к стенду BlackPill | `junit.xml`: `classname="blackpill"`, `testsuite name="hwtest"` | Решение по вопросу 11.2.9 |
 | F.4 | 3.3.7 | Профиль общий для всех backend (docs/BACKENDS.md) | Обязательные OpenOCD-поля в schema 1 | Schema 2 (вопрос 11.2.4) |
-| F.5 | 5.3.4, 7.4.1 | — | `run` отклоняет не-Windows; 3 host-теста падают на Linux | Решение по вопросу 11.2.3 |
-| F.6 | 8.10 | TODO/CHANGELOG описывают проверки как ручные | Нет CI (`.github` содержит только FUNDING.yml) | Вопрос 11.2.1 |
+| F.5 | 5.3.4, 7.4.1 | — | `run` отклоняет не-Windows; 3 host-теста падают на Linux | Внесено: offline-часть и host-тесты на Linux, аппаратный запуск — Windows (р.0.3) |
+| F.6 | 8.10 | TODO/CHANGELOG описывают проверки как ручные | Нет CI (`.github` содержит только FUNDING.yml) | Внесено: workflows Docs и Offline (р.0.3) |
 | F.7 | 7.2.4 | — | Нет `.gitattributes`; при `core.autocrlf` Windows рабочая копия расходится с индексом по концам строк | Вопрос 11.2.11 |
 | F.8 | — | docs/API.md, VERSIONING.md: пропущенные пробелы («целое1..300s», «PASS0 / FAIL1 / ERROR2», «SemVer2.0.0») | — | Редакторская правка при реструктуризации документации |
 
