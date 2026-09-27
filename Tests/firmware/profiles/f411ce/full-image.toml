@@ -1,0 +1,8 @@
+# Explicit 16 KiB firmware region; end is exclusive. No embedded CRC field.
+[image]
+schema = 1
+mode = "full"
+start = 0x08000000
+end = 0x08004000
+fill = 255
+crc = "crc32-iso-hdlc"

@@ -1,0 +1,25 @@
+name: Docs
+
+on:
+  push:
+    branches: ['**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Fetch pinned check_spec.py (embedded-tech-spec skill)
+        run: |
+          commit=$(python3 -c "import json; print(next(s['commit'] for s in json.load(open('ci/dependencies.lock.json'))['sources'] if s['name'] == 'demo-stm32-skills'))")
+          git init -q "$RUNNER_TEMP/skills"
+          git -C "$RUNNER_TEMP/skills" fetch -q --depth=1 https://github.com/ViacheslavMezentsev/demo-stm32-skills.git "$commit"
+          git -C "$RUNNER_TEMP/skills" checkout -q FETCH_HEAD
+          echo "CHECK_SPEC=$RUNNER_TEMP/skills/embedded-tech-spec/scripts/check_spec.py" >> "$GITHUB_ENV"
+      - name: Specification, links and RU/EN pairs
+        run: python3 ci/run_checks.py docs

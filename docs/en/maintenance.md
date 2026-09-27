@@ -70,7 +70,7 @@ work starts a new branch from the updated main. Pull requests are not used: afte
 the checks the branch is merged into main with a regular `git merge` (conflicts are
 resolved and affected checks repeated), then main is pushed. Force push and
 rewriting published history are not allowed. Successful checks of an older commit do not count for new changes.
-If CI is added with a branch filter, a new prefix is added to the workflow filter.
+CI workflows run for any branch, so a new prefix needs no workflow change.
 
 ## Commits
 
@@ -107,17 +107,23 @@ If CI is added with a branch filter, a new prefix is added to the workflow filte
 
 ## Checks
 
-1. Module host tests: `python -B -m unittest discover -s Tests/host -v` (Windows).
-2. Consumer example without a board: in `examples/minimal-consumer` —
+1. Offline checks in the CI Docker image: `python3 ci/run_checks.py` — the docs, host
+   and firmware levels ([checks and CI](testing.md)). Before a push run the levels
+   affected by the change.
+2. Module host tests without Docker: `python -B -m unittest discover -s Tests/host -v`;
+   debugger locking is tested on Windows only.
+3. Consumer example without a board (Windows): in `examples/minimal-consumer` —
    `cmake --preset debug`, `cmake --build --preset debug`, `ctest --preset offline`.
-3. CLI: `python -B -m stm32_gdbtest --version`, `collect`, `trace`.
-4. Specification: `check_spec.py --strict`.
-5. Hardware checks only under the rules of "Working with hardware". The example's
+4. CLI: `python -B -m stm32_gdbtest --version`, `collect`, `trace`, `run --prepare-only`.
+5. Specification: `check_spec.py --strict`.
+6. Hardware checks only under the rules of "Working with hardware". The example's
    full `ctest` programs the MCU.
 
 A build or host PASS is not a hardware PASS. A check report states the exact MCU,
 HAL, GDB, backend, ELF and manifest, the effect of halt/reset and the limits of the
-evidence. There is no automated CI yet (spec question 11.2.1).
+evidence. GitHub Actions CI (Docs and Offline workflows) checks the module up to
+the GDB server; a result belongs to a specific commit and does not replace a
+hardware check.
 
 ## Working with hardware
 
@@ -153,5 +159,7 @@ evidence. There is no automated CI yet (spec question 11.2.1).
   installed libraries and tools are read and run, not modified without a task.
 - Do not commit local stand TOML files, serial numbers, absolute personal paths,
   ELF files, build output or caches.
-- In a Windows working copy files may have CRLF (`core.autocrlf`); keep the line
-  endings of the file you edit. `.gitattributes` rules are spec question 11.2.11.
+- Files under `ci/**`, `.github/**` and `*.sh` are kept with LF in every working
+  copy (`.gitattributes`): the CI image is also built on Windows. Other files in a
+  Windows working copy may have CRLF (`core.autocrlf`) — keep the line endings of
+  the file you edit.

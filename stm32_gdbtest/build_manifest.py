@@ -1,4 +1,4 @@
-"""Post-link snapshot for the Windows/Ninja build; runtime never reads build sources."""
+"""Post-link snapshot for a Ninja build; runtime never reads build sources."""
 
 import argparse
 import ctypes
@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shlex
 import subprocess
 
 
@@ -15,8 +16,9 @@ def digest(path):
 
 
 def command_args(command):
+    # ТЗ 5.14.6: Windows command lines follow CommandLineToArgvW, POSIX ones shell quoting.
     if os.name != "nt":
-        raise RuntimeError("Build manifest currently requires Windows/Ninja")
+        return shlex.split(command)
     count = ctypes.c_int()
     split = ctypes.windll.shell32.CommandLineToArgvW
     split.argtypes = [ctypes.c_wchar_p, ctypes.POINTER(ctypes.c_int)]

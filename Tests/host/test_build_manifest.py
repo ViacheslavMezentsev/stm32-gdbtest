@@ -64,9 +64,11 @@ class BuildManifestTests(unittest.TestCase):
         self.assertFalse((out / "server.log").exists())
 
     def test_dependency_parser_preserves_spaces_and_stale_state(self):
-        text = "obj file.obj: #deps 1, deps mtime 123 (VALID)\n    C:/directory with spaces/a.h\nother.obj: #deps 1, deps mtime 123 (STALE)\n    stale.h\n"
+        header = (self.directory / "directory with spaces" / "a.h").resolve()
+        text = ("obj file.obj: #deps 1, deps mtime 123 (VALID)\n    " + header.as_posix()
+                + "\nother.obj: #deps 1, deps mtime 123 (STALE)\n    stale.h\n")
         result = dependency_map(text, self.directory)
-        self.assertEqual(result[self.directory / "obj file.obj"], [Path("C:/directory with spaces/a.h").resolve()])
+        self.assertEqual(result[self.directory / "obj file.obj"], [header])
         self.assertIsNone(result[self.directory / "other.obj"])
 
     def test_versions_are_literal_declarations_not_macro_evaluation(self):
@@ -76,6 +78,7 @@ class BuildManifestTests(unittest.TestCase):
     def test_display_metadata_does_not_copy_installation_paths(self):
         flags = selected_flags(["-Og", "-g3", "-mcpu=cortex-m3", "-IC:/Users/PRIVATE", '-DHOME="C:/PRIVATE"'])
         self.assertEqual(flags, ["-Og", "-g3", "-mcpu=cortex-m3"])
-        self.assertEqual(label(Path("C:/PRIVATE/STM32Cube_FW_F1_V1.8.7/header.h"), ROOT),
+        private = Path(ROOT.anchor) / "PRIVATE"  # absolute and outside the checkout on any host
+        self.assertEqual(label(private / "STM32Cube_FW_F1_V1.8.7/header.h", ROOT),
                          "STM32Cube_FW_F1_V1.8.7/header.h")
-        self.assertEqual(label(Path("C:/PRIVATE/header.h"), ROOT), "external/header.h")
+        self.assertEqual(label(private / "header.h", ROOT), "external/header.h")

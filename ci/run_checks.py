@@ -1,0 +1,253 @@
+"""Offline CI checks of stm32-gdbtest: everything up to the GDB server, no debugger.
+
+Levels (spec 8.11):
+  docs      specification consistency, local Markdown links, RU/EN documentation pairs
+  host      module host tests (unittest)
+  firmware  CI firmware per GCC x profile: configure, build, build manifest, CTest host
+            tests (traceability, prepare with offline contracts), full-image prepare,
+            negative contract and image-policy cases
+
+Usage inside the CI image (see docs/ru/testing.md):
+  python3 ci/run_checks.py [docs] [host] [firmware] [--gcc VERSION ...] [--profile NAME ...]
+Without levels all three run. Results: build/ci/summary.json.
+"""
+
+import argparse
+import copy
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import subprocess
+import sys
+import time
+
+ROOT = Path(__file__).resolve().parents[1]
+LOCK = json.loads((ROOT / "ci/dependencies.lock.json").read_text(encoding="utf-8"))
+FIRMWARE = ROOT / "Tests/firmware"
+OUT = ROOT / "build/ci"
+sys.path.insert(0, str(ROOT))
+from stm32_gdbtest.contracts import select_contracts  # noqa: E402
+
+
+class CheckError(RuntimeError):
+    pass
+
+
+def run(args, *, cwd=ROOT, env=None, expect=0, timeout=600, log=None):
+    """Run a command, keep its output in the log file and require the exit code."""
+    started = time.monotonic()
+    result = subprocess.run([str(a) for a in args], cwd=cwd, env=env, timeout=timeout,
+                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
+    if log:
+        with open(log, "a", encoding="utf-8") as stream:
+            stream.write(f"$ {' '.join(map(str, args))}\n{result.stdout}\n[exit {result.returncode}, "
+                         f"{time.monotonic() - started:.1f}s]\n\n")
+    if result.returncode != expect:
+        tail = "\n".join(result.stdout.splitlines()[-30:])
+        raise CheckError(f"{' '.join(map(str, args))}: exit {result.returncode}, expected {expect}\n{tail}")
+    return result.stdout
+
+
+# --- docs -----------------------------------------------------------------------------------
+
+LINK = re.compile(r"\]\(([^)\s]+)\)")
+
+
+def check_links():
+    broken = []
+    for path in sorted(ROOT.rglob("*.md")):
+        if any(part in ("build", ".git") for part in path.relative_to(ROOT).parts):
+            continue
+        for target in LINK.findall(path.read_text(encoding="utf-8")):
+            if re.match(r"[a-z]+:", target) or target.startswith("#"):
+                continue
+            if not (path.parent / target.split("#", 1)[0]).exists():
+                broken.append(f"{path.relative_to(ROOT)} -> {target}")
+    if broken:
+        raise CheckError("Broken local links:\n" + "\n".join(broken))
+
+
+def check_pairs():
+    ru = {p.name for p in (ROOT / "docs/ru").glob("*.md")}
+    en = {p.name for p in (ROOT / "docs/en").glob("*.md")}
+    missing = sorted(f"docs/en/{n}" for n in ru - en) + sorted(f"docs/ru/{n}" for n in en - ru)
+    # CHANGELOG is bilingual already; README.en.md is added with the docs/*.md move (spec 11.2.2).
+    for base, required in (("CHANGELOG", True), ("README", False)):
+        present = [(ROOT / name).exists() for name in (f"{base}.md", f"{base}.en.md")]
+        if present[0] != present[1] and (required or present[1]):
+            missing.append(f"{base}.md / {base}.en.md")
+    if missing:
+        raise CheckError("Missing RU/EN pair: " + ", ".join(missing))
+
+
+def level_docs(record):
+    check_spec = os.environ.get("CHECK_SPEC")
+    if not check_spec or not Path(check_spec).is_file():
+        raise CheckError("Set CHECK_SPEC to embedded-tech-spec/scripts/check_spec.py (preinstalled in the CI image)")
+    record("docs.spec", lambda: run([sys.executable, check_spec, ROOT / "docs/TECHNICAL_SPECIFICATION.md", "--strict"]))
+    record("docs.links", check_links)
+    record("docs.pairs", check_pairs)
+
+
+# --- host -----------------------------------------------------------------------------------
+
+def level_host(record):
+    record("host.unittest", lambda: run([sys.executable, "-B", "-m", "unittest", "discover", "-s", "Tests/host", "-v"],
+                                        log=OUT / "host.log"))
+
+
+# --- firmware -------------------------------------------------------------------------------
+
+NEGATIVE_CONTRACTS = {
+    "missing_macro": lambda c: c["ci_gpio_macros"]["macros"]["expressions"].append("MISSING_CI_MACRO"),
+    "wrong_macro_context": lambda c: c["ci_gpio_macros"]["macros"].update(context="missing_context"),
+    "wrong_return_type": lambda c: c["ci_app_api"]["functions"]["app_step"].update(returns="uint8_t"),
+    "wrong_argument_name": lambda c: c["ci_app_api"]["functions"]["app_step"]["arguments"][0].update(name="st"),
+    "wrong_argument_type": lambda c: c["ci_app_api"]["functions"]["app_step"]["arguments"][1].update(type="uint32_t"),
+    "wrong_arity": lambda c: c["ci_app_api"]["functions"]["app_loop"]["arguments"].append(
+        dict(name="value", type="uint32_t")),
+    "wrong_field_type": lambda c: c["ci_app_api"]["fields"]["app_state_t"].update(led="uint32_t"),
+    "missing_field": lambda c: c["ci_app_api"]["fields"]["app_state_t"].update(missing="uint32_t"),
+    "wrong_enum_value": lambda c: c["ci_app_api"]["enums"]["app_mode_t"].update(APP_MODE_BLINK=2),
+    "missing_function": lambda c: c["ci_app_api"]["functions"].update(absent_function=dict(returns="void", arguments=[])),
+}
+
+
+def gdb_env(build):
+    env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", TMP=str(build), TEMP=str(build))
+    env.pop("PYTHONHOME", None)
+    env.pop("PYTHONPATH", None)
+    env.pop("STM32_GDBTEST_STAND", None)
+    env.pop("STM32_GDBTEST_IMAGE_POLICY", None)
+    return env
+
+
+def prepare(build, session, test_id, env, expect=0):
+    run([sys.executable, "-B", ROOT / "stm32_gdbtest/cli.py", "run", "--session", session, "--test", test_id,
+         "--prepare-only"], env=env, expect=expect, log=build / "ci.log")
+    reports = sorted((build / "hwtest/runs").glob(f"*-{test_id}-*/result.json"), key=lambda p: p.stat().st_mtime)
+    return json.loads(reports[-1].read_text(encoding="utf-8"))
+
+
+def firmware_pair(gcc, profile):
+    toolchain = Path(f"/opt/xpack-arm-none-eabi-gcc-{gcc}")
+    build = FIRMWARE / "build" / f"{profile}-gcc{gcc.split('-')[0]}"
+    shutil.rmtree(build, ignore_errors=True)
+    build.mkdir(parents=True)
+    log = build / "ci.log"
+    env = gdb_env(build)
+    env["ARM_TOOLCHAIN_ROOT"] = str(toolchain)
+    run(["cmake", "-S", FIRMWARE, "-B", build, "-G", "Ninja", "--toolchain", FIRMWARE / "cmake/arm-gcc.cmake",
+         f"-DCI_PROFILE={profile}", f"-DARM_TOOLCHAIN_ROOT={toolchain}", "-DCMAKE_BUILD_TYPE=Debug",
+         "-DSTM32_GDBTEST_STAND="], env=env, log=log)
+    run(["cmake", "--build", build], env=env, log=log)
+
+    session_path = build / "hwtest/session.json"
+    session = json.loads(session_path.read_text(encoding="utf-8"))
+    if Path(session["gdb"]).parent != toolchain / "bin":
+        raise CheckError(f"GDB from another toolchain: {session['gdb']}")
+    manifest = json.loads((build / "hwtest/build-manifest.json").read_text(encoding="utf-8"))
+    sources = {unit["source"] for unit in manifest["units"]}
+    inputs = {item["file"] for item in manifest["inputs"]}
+    expected_ld = f"profiles/{profile}/firmware_FLASH.ld"
+    if sources != {"src/startup.c", "src/app.c", "src/board.c"} or expected_ld not in inputs:
+        raise CheckError(f"Unexpected manifest units/inputs: {sorted(sources)}; {expected_ld} missing")
+    if manifest["compilers"][0]["version"] != gcc.split("-")[0] or not manifest["cube_packages"]:
+        raise CheckError("Manifest compiler version or Cube package differs")
+    if any(re.match(r"^(/|[A-Za-z]:)", item["file"]) for item in manifest["inputs"]):
+        raise CheckError("Manifest contains absolute paths")
+
+    # CTest host label: traceability and prepare.<ID> with requested offline contracts.
+    ctest = run(["ctest", "--test-dir", build, "-L", "host", "--output-on-failure"], env=env, log=log)
+    if "prepare.HW_CI_GPIO" not in ctest or "prepare.HW_CI_BOOT" not in ctest:
+        raise CheckError("CTest did not run the prepare tests")
+    for test_id in ("HW_CI_BOOT", "HW_CI_GPIO"):
+        report = prepare(build, session_path, test_id, env)
+        if (report["status"], report["mode"], report["contracts"]["status"]) != ("PASS", "prepare", "PASS"):
+            raise CheckError(f"{test_id}: unexpected prepare report")
+        if report["connection_attempted"] or report["hardware_accessed"]:
+            raise CheckError(f"{test_id}: preparation touched the debugger")
+
+    # Full image policy: canonical BIN and transport ELF are prepared and checked.
+    policy = FIRMWARE / f"profiles/{profile}/full-image.toml"
+    report = prepare(build, session_path, "HW_CI_GPIO", dict(env, STM32_GDBTEST_IMAGE_POLICY=str(policy)))
+    if report["image_verification"]["scope"] != "full-image" or not report.get("program_elf_sha256"):
+        raise CheckError("Full-image preparation report is incomplete")
+    small = build / "small-image.toml"
+    small.write_text(policy.read_text(encoding="utf-8").replace("end = 0x08004000", "end = 0x08000100"),
+                     encoding="utf-8")
+    report = prepare(build, session_path, "HW_CI_GPIO", dict(env, STM32_GDBTEST_IMAGE_POLICY=str(small)), expect=2)
+    if "exceeds full image range" not in report.get("error", ""):
+        raise CheckError("Too small image policy was not rejected")
+
+    # Negative ELF contracts: each mutation must stop the offline preflight with ERROR.
+    registry = FIRMWARE / f"profiles/{profile}/Tests/contracts.json"
+    base = select_contracts(registry, ["ci_gpio_macros", "ci_app_api"], manifest)
+    negatives = build / "negative"
+    negatives.mkdir()
+    for name, mutate in NEGATIVE_CONTRACTS.items():
+        selected = copy.deepcopy(base)
+        mutate(selected["contracts"])
+        request, result = negatives / f"{name}.request.json", negatives / f"{name}.result.json"
+        request.write_text(json.dumps(dict(elf=session["elf"], result=str(result), selected=selected)),
+                           encoding="utf-8")
+        run([session["gdb"], "-nx", "-batch", "-q", "-iex", "set auto-load off", session["elf"],
+             "-x", ROOT / "stm32_gdbtest/contract_preflight.py"],
+            env=dict(env, STM32_GDBTEST_CONTRACT_REQUEST=str(request)), expect=2, log=log)
+        evidence = json.loads(result.read_text(encoding="utf-8"))
+        if evidence["status"] != "ERROR" or evidence["connection_attempted"]:
+            raise CheckError(f"Negative contract {name} was not rejected")
+    return f"{len(NEGATIVE_CONTRACTS)} negative contracts rejected"
+
+
+def level_firmware(record, gccs, profiles):
+    for gcc in gccs:
+        for profile in profiles:
+            record(f"firmware.{profile}.gcc-{gcc}", lambda g=gcc, p=profile: firmware_pair(g, p))
+
+
+# --- main -----------------------------------------------------------------------------------
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("levels", nargs="*", metavar="{docs,host,firmware}")
+    parser.add_argument("--gcc", action="append", choices=LOCK["gcc_versions"])
+    parser.add_argument("--profile", action="append", choices=LOCK["profiles"])
+    args = parser.parse_args()
+    unknown = sorted(set(args.levels) - {"docs", "host", "firmware"})
+    if unknown:
+        parser.error(f"unknown level: {', '.join(unknown)}")
+    levels = args.levels or ["docs", "host", "firmware"]
+    OUT.mkdir(parents=True, exist_ok=True)
+    results = []
+
+    def record(name, check):
+        started = time.monotonic()
+        try:
+            detail = check()
+            status = "PASS"
+        except Exception as error:  # every failure is reported, the run continues
+            status, detail = "FAIL", str(error)
+        # Failures keep the full message; successful checks keep only a short note.
+        note = detail if isinstance(detail, str) and (status == "FAIL" or len(detail) < 200) else None
+        results.append(dict(name=name, status=status, seconds=round(time.monotonic() - started, 1), detail=note))
+        print(f"{status} {name} ({results[-1]['seconds']}s)" + (f"\n{detail}" if status == "FAIL" else ""),
+              flush=True)
+
+    if "docs" in levels:
+        level_docs(record)
+    if "host" in levels:
+        level_host(record)
+    if "firmware" in levels:
+        level_firmware(record, args.gcc or LOCK["gcc_versions"], args.profile or LOCK["profiles"])
+    summary = dict(schema=1, levels=levels, cmake=os.environ.get("CMAKE_VERSION"),
+                   passed=sum(r["status"] == "PASS" for r in results), total=len(results), results=results)
+    (OUT / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"{summary['passed']}/{summary['total']} checks passed; {OUT / 'summary.json'}")
+    return 0 if summary["passed"] == summary["total"] else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

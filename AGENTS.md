@@ -16,7 +16,8 @@ Instructions for AI agents and new contributors ([English](docs/en/maintenance.m
    создающего ветку агента или участника (`claude/`, `codex/`, `gemini/`, `dev/`, …).
    PR не используются: проверенная ветка сливается в main обычным `git merge`.
 4. Изменение поведения или интерфейса — с host-регрессией, обновлением docs/API.md
-   и миграции, записью в CHANGELOG (RU и EN) и новой ревизией ТЗ.
+   и миграции, записью в CHANGELOG (RU и EN) и новой ревизией ТЗ. Проверки до
+   GDB-сервера — `python3 ci/run_checks.py` в Docker-образе CI ([docs/ru/testing.md](docs/ru/testing.md)).
 5. Коммиты — Conventional Commits на английском, подписанные ключом GitHub
    Signing Key, без ссылок на сессии агентов. Push, теги и релизы — владелец.
 6. Документация ведётся на русском и английском, обе версии обновляются в одном

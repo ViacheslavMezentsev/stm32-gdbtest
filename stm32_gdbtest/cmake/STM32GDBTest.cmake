@@ -8,6 +8,12 @@ function(stm32_gdbtest_register id timeout labels)
     math(EXPR outer_timeout "${timeout} + 90")
     set_tests_properties(hw.${id} PROPERTIES TIMEOUT ${outer_timeout}
         LABELS "hw;${labels}" RESOURCE_LOCK stm32_swd)
+    # ТЗ 5.13.14: host-side preparation of the same scenario, without debugger access.
+    add_test(NAME prepare.${id}
+        COMMAND "${Python3_EXECUTABLE}" -B "${STM32_GDBTEST_MODULE_ROOT}/stm32_gdbtest/cli.py" run
+            --session "${STM32_GDBTEST_SESSION}" --test "${id}" --prepare-only)
+    set_tests_properties(prepare.${id} PROPERTIES TIMEOUT 90 LABELS "host;prepare"
+        ENVIRONMENT "PYTHONDONTWRITEBYTECODE=1")
 endfunction()
 
 function(stm32_gdbtest_attach target)
