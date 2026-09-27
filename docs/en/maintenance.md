@@ -66,9 +66,10 @@ name or `dev/`. A new agent picks its own prefix and does not reuse another's.
 `claude/maintenance-rules`, `codex/job-object-supervision`.
 
 One branch — one task. A merged branch is not reused for another task; follow-up
-work starts a new branch from the updated main. Merging uses a regular merge
-(locally or through a GitHub PR); force push and rewriting published history are
-not allowed. Successful checks of an older commit do not count for new changes.
+work starts a new branch from the updated main. Pull requests are not used: after
+the checks the branch is merged into main with a regular `git merge` (conflicts are
+resolved and affected checks repeated), then main is pushed. Force push and
+rewriting published history are not allowed. Successful checks of an older commit do not count for new changes.
 If CI is added with a branch filter, a new prefix is added to the workflow filter.
 
 ## Commits
@@ -76,7 +77,7 @@ If CI is added with a branch filter, a new prefix is added to the workflow filte
 - Messages follow [Conventional Commits](https://www.conventionalcommits.org/) in English
   (`feat:`, `fix:`, `docs:`, `test:`, `ci:`, `refactor:`, `chore:`) with a body
   explaining what and why.
-- Commit messages, PR descriptions and branch names contain no links to chat or
+- Commit messages, tag messages and branch names contain no links to chat or
   agent sessions or their discussions; describe the change itself. A
   `Co-Authored-By` trailer is allowed.
 - Commits on published branches are signed (SSH or GPG) with a key added to GitHub
@@ -89,15 +90,15 @@ If CI is added with a branch filter, a new prefix is added to the workflow filte
 
 ## Bilingual documentation
 
-- User documentation is kept in Russian and English: `README.md` ↔ `README.en.md`,
+- User documentation is kept in Russian and English (except the specification): `README.md` ↔ `README.en.md`,
   `CHANGELOG.md` ↔ `CHANGELOG.en.md`, `docs/ru/<page>.md` ↔ `docs/en/<page>.md`.
   File names are the same in both languages.
 - The Russian version is the source. The English version is updated in the same
   commit; a difference in content is a documentation defect.
 - Every page starts with a navigation line and a link to the other language.
   Links to sections of the other language use that page's own anchors.
-- Single-language items: the specification (Russian), commit messages (English),
-  code and code comments (English, except `# ТЗ …` references).
+- Single-language items: the specification (Russian only, not translated), commit
+  messages (English), code and code comments (English, except `# ТЗ …` references).
 - Existing `docs/*.md` pages move to `docs/ru/` and get English versions step by
   step (spec question 11.2.2); until then links point to the current paths.
 - Russian texts use the term «отладчик». The README is a short introduction (why,
