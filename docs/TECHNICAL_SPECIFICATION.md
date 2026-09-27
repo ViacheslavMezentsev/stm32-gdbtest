@@ -5,12 +5,12 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.5 (черновик для согласования) |
+| **Ревизия** | 0.6 (черновик для согласования) |
 | **Дата формирования** | 28.09.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `Tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0-rc.1 (текущая версия разработки `0.1.0.dev0`, `API_VERSION = 1`) |
 | **Целевая платформа** | Хост Windows; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows; сборка, manifest и подготовка — также Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
-| **Связанные документы** | README.md; AGENTS.md; docs/ru/maintenance.md, docs/en/maintenance.md; docs/ru/testing.md, docs/en/testing.md; docs/API.md, BACKENDS.md, CONTRACTS.md, DEBUGGER_OWNERSHIP.md, GETTING_STARTED.md, HAL_MACRO_GUIDE.md, IMAGES.md, MANIFESTS.md, STATUS.md, TARGET_IDENTITY.md, TEST_AUTHORING.md, VERSIONING.md; TODO.md; CHANGELOG.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
+| **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, IMAGES, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.6)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (19 модулей), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `Tests/host/*.py`, `examples/minimal-consumer/*`; `Tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)` |
 
 ### История ревизий
@@ -22,6 +22,19 @@
 | 0.3 | 28.09.2026 | Подготовка к 0.1.0 по решениям владельца: CI на GitHub Actions с Docker-образом без stm32-cmake-yml; offline-часть модуля (сборка, build manifest, контракты, подготовка образа) переносима на Linux, аппаратный запуск остаётся на Windows; новая команда `run --prepare-only` и CTest-тесты `prepare.<ID>`; CI-прошивки F030R8, F103C8, F411CE на CMSIS, матрица GCC 13.3.1/14.2.1/15.2.1 × CMake 3.28.3. Файлы CI хранятся с LF. Закрыты вопросы 11.2.1, 11.2.3, 11.2.10, 11.2.11; добавлены 11.2.16, 11.2.17. |
 | 0.4 | 28.09.2026 | Аппаратная проверка CI-прошивок перед 0.1.0 по решению владельца: сценарий `Tests/firmware/run_hw.py`, 4 стенда (F030R8 / NUCLEO-F030R8 / J-Link STLink (J-Link GDB Server 8.32), F103C8 / WeAct BluePill-Plus / J-Link CE (8.32), F411CE / WeAct BlackPill / ST-Link V2J43M28 через OpenOCD 0.12.0 и ST-LINK GDB Server 7.14.0) — по 10/10 шагов на коммите `fbc103d`. Первый прогон F030R8 выявил невыровненный адрес загрузки `.data` (HardFault на Cortex-M0); исправлено, CI проверяет выравнивание. Добавлены стиль `.clang-format` и уровень CI format. |
 | 0.5 | 28.09.2026 | Решён вопрос 11.2.17: BIN формируется только из выбранных секций загрузки (`objcopy -j`), пустая секция с LMA в RAM больше не раздувает его до сотен мегабайт. Добавлены host-тест и регрессия CI на реальном ELF с пустой секцией в RAM. |
+| 0.6 | 28.09.2026 | Документация сверена с текущим функционалом и перенесена в `docs/ru/` с английскими версиями в `docs/en/`, добавлены README.en.md и карты документации. Закрыт вопрос 11.2.2: определены роли ТЗ, README, STATUS, CHANGELOG, TODO и страниц механизмов. Уточнён вопрос 11.2.6: F429ZI отражён в STATUS. |
+
+### Изменения ревизии 0.6
+
+Изменённые и новые пункты ревизии 0.6 помечены `(р.0.6)`.
+
+| Пункты | Тип | Суть |
+| :--- | :---: | :--- |
+| Реквизиты, 1.5.1, 1.5.3, 1.5.5 | изм. | Новое расположение документации |
+| 7.7.1 | изм. | API описывается в обеих локализациях |
+| 7.7.12, 7.7.13 | нов. | Роли документов; карта документации и навигация; сверка с кодом |
+| 9.2 | нов. | TC-89 |
+| 10, 11.2.2, 11.2.6, приложения E, F | изм. | Матрица; вопрос 11.2.2 закрыт; F429ZI в STATUS; пути источников; F.8 исправлено |
 
 ### Изменения ревизии 0.5
 
@@ -152,15 +165,15 @@
 
 ### 1.5. Связанные документы и нормативные ссылки
 
-1.5.1. Документация модуля `docs/*.md` — пользовательские описания механизмов; при расхождении с ТЗ действует п. 1.3.3.
+1.5.1. Документация модуля — страницы `docs/ru/*.md` (исходные) и `docs/en/*.md` (переводы) с картой `index.md`; это пользовательские описания механизмов, при расхождении с ТЗ действует п. 1.3.3. (р.0.6)
 
 1.5.2. GDB Python API и команды целевой системы: [Debugging with GDB](https://sourceware.org/gdb/current/onlinedocs/gdb.html).
 
-1.5.3. Windows `CreateMutexW` и пространства имён объектов ядра — документация Microsoft Learn (ссылки в docs/DEBUGGER_OWNERSHIP.md).
+1.5.3. Windows `CreateMutexW` и пространства имён объектов ядра — документация Microsoft Learn (ссылки в docs/ru/DEBUGGER_OWNERSHIP.md). (р.0.6)
 
 1.5.4. CRC-32/ISO-HDLC — каталог CRC RevEng; параметры заданы в п. 4.3.1.
 
-1.5.5. Semantic Versioning 2.0.0; формат журнала — Keep a Changelog (docs/VERSIONING.md, CHANGELOG.md).
+1.5.5. Semantic Versioning 2.0.0; формат журнала — Keep a Changelog (docs/ru/VERSIONING.md, CHANGELOG.md, CHANGELOG.en.md). (р.0.6)
 
 1.5.6. Стендовый проект [stm32-hwtest-blackpill](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill) — архитектура взаимодействия, аппаратные протоколы, план периферии.
 
@@ -862,7 +875,7 @@ flowchart LR
 
 ### 7.7. Сопровождаемость
 
-7.7.1. Изменение интерфейса ДОЛЖНО сопровождаться обновлением docs/API.md, CHANGELOG.md и CHANGELOG.en.md, TODO.md и описанием миграции. `[U]` (р.0.2)
+7.7.1. Изменение интерфейса ДОЛЖНО сопровождаться обновлением docs/ru/API.md и docs/en/API.md, CHANGELOG.md и CHANGELOG.en.md, TODO.md и описанием миграции. `[U]` (р.0.6)
 
 7.7.2. Документация механизма ведётся в этом репозитории; результаты стендовых проверок — в проекте потребителя со ссылками, без копирования журнала опытов. `[R]`
 
@@ -883,6 +896,10 @@ flowchart LR
 7.7.10. Пользовательская документация ДОЛЖНА вестись на русском и английском языках парами файлов с одинаковыми именами (`README.md`/`README.en.md`, `CHANGELOG.md`/`CHANGELOG.en.md`, `docs/ru/<страница>.md`/`docs/en/<страница>.md`); русская версия исходная, английская обновляется в том же коммите. ТЗ (`docs/TECHNICAL_SPECIFICATION.md`) ведётся только на русском и не переводится. `[N]` (р.0.2)
 
 7.7.11. Порядок сопровождения (ознакомление, рабочий цикл, выпуск, ведение ТЗ, ветки, коммиты, проверки) ДОЛЖЕН описываться в docs/ru/maintenance.md и docs/en/maintenance.md; AGENTS.md — краткая точка входа со ссылкой на них. `[N]` (р.0.2)
+
+7.7.12. Роли документов ДОЛЖНЫ разделяться: ТЗ — нормативные требования и прослеживаемость; README — краткое введение (зачем, что, как, зависимости, ссылки); `docs/*/STATUS.md` — проверенный объём, стенды и ограничения; CHANGELOG — история изменений по версиям; TODO.md — дорожная карта и текущие ветки; остальные страницы `docs/ru|en` — описания механизмов и порядок работы. Одно и то же утверждение не дублируется: второе место ссылается на первое. `[N]` (р.0.6)
+
+7.7.13. Каждая страница `docs/ru` и `docs/en` ДОЛЖНА начинаться строкой навигации со ссылкой на карту `index.md` своей локализации и на ту же страницу другой локализации; новая страница добавляется в обе карты. Перед выпуском версии документация ДОЛЖНА сверяться с текущим функционалом. `[N]` (р.0.6)
 
 ---
 
@@ -1033,6 +1050,7 @@ TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tes
 | TC-86 | CI firmware: прошивка с невыровненным адресом загрузки `.data` (прежний скрипт компоновщика F030R8) (р.0.4) | Проверка отклоняет сборку: «Load sections must include .data and be word-aligned» |
 | TC-87 | `test_bin_uses_only_selected_load_sections`: пустая `.data` с LMA в RAM среди секций (р.0.5) | `objcopy` получает `-j` только для `.isr_vector` и `.text`; подготовка PASS |
 | TC-88 | CI firmware: в ELF добавлена пустая загружаемая секция по адресу `0x20000000`, подготовка без build manifest (р.0.5) | PASS; размер `image.bin` не больше Flash профиля (без исправления — 384 MiB и ERROR) |
+| TC-89 | CI docs: пары `docs/ru`/`docs/en`, README и CHANGELOG в обеих локализациях, ссылки после переноса страниц (р.0.6) | Непарных страниц и битых ссылок нет |
 
 ---
 
@@ -1166,7 +1184,8 @@ TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tes
 | 7.7.4 | Раздел 10 | I |
 | 7.7.5 | `Tests/host` | T |
 | 7.7.6–7.7.9 | AGENTS.md; docs/ru/maintenance.md, docs/en/maintenance.md; история Git (`git log --show-signature`) | I |
-| 7.7.10, 7.7.11 | AGENTS.md; docs/ru/maintenance.md, docs/en/maintenance.md | I |
+| 7.7.10, 7.7.11 | AGENTS.md; docs/ru/maintenance.md, docs/en/maintenance.md | I, TC-83, TC-89 |
+| 7.7.12, 7.7.13 | README.md, README.en.md; docs/ru, docs/en (`index.md`, строки навигации) | I, TC-89 |
 | 8.1–8.3, 8.6, 8.9 | DOC: VERSIONING.md; IN | I |
 | 8.4 | PR; CT; BM; CM; FI | TC-13, TC-29, TC-36 |
 | 8.5 | RU: legacy env; DOC: API.md | TC-25 |
@@ -1200,11 +1219,11 @@ TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tes
 | № | Вопрос | Статус | Решение / комментарий | Пункты |
 | :---: | :--- | :---: | :--- | :--- |
 | 11.2.1 | CI модуля: платформа (GitHub Actions?), состав уровней (host unittest на `windows-latest`, offline-сборка примера, проверка документации и ссылок, `check_spec.py` для ТЗ), нужен ли self-hosted runner со стендом для D-проверок | Закрыт | GitHub Actions: workflows Docs и Offline; Docker-образ без stm32-cmake-yml; host-тесты Windows и Linux; CI-прошивки F030R8/F103C8/F411CE × GCC 13/14/15 × CMake 3.28.3; стенд в CI — вопрос 11.2.16 (р.0.3) | 8.10–8.16 |
-| 11.2.2 | Структура сопроводительной документации: роль ТЗ относительно README, docs/API.md, docs/STATUS.md, CHANGELOG.md, TODO.md; место ТЗ (`docs/` как в stm32-cmake-yml или корень); какие документы становятся производными от ТЗ | Открыт | Решено (р.0.2): документация на русском и английском в `docs/ru` и `docs/en`, ТЗ в `docs/` только на русском, порядок сопровождения — maintenance.md. Остаются роль ТЗ относительно README, STATUS, CHANGELOG, TODO и план переноса страниц `docs/*.md` | 1.2.3, 7.7.1, 7.7.2, 7.7.10, 7.7.11 |
+| 11.2.2 | Структура сопроводительной документации: роль ТЗ относительно README, docs/API.md, docs/STATUS.md, CHANGELOG.md, TODO.md; место ТЗ (`docs/` как в stm32-cmake-yml или корень); какие документы становятся производными от ТЗ | Закрыт | Документация на русском и английском в `docs/ru` и `docs/en`, ТЗ в `docs/` только на русском, порядок сопровождения — maintenance.md (р.0.2). Страницы перенесены, роли документов — п. 7.7.12, навигация и сверка — п. 7.7.13 (р.0.6) | 1.2.3, 7.7.1, 7.7.2, 7.7.10, 7.7.11 |
 | 11.2.3 | Поддержка хоста Linux: сейчас `run` отказывает, 3 host-теста падают, 5 пропускаются. Нужна ли переносимость (хотя бы host-тестов для CI на Linux)? | Закрыт | Offline-часть (сборка, manifest, контракты, подготовка, host-тесты) — на Linux; аппаратный запуск — только Windows (р.0.3) | 2.5.1, 5.3.4, 5.14.6, 5.16.5, 6.2.1, 7.4.1 |
 | 11.2.4 | Target schema 2 без обязательных OpenOCD-полей (`openocd_target`, `reset_halt`, `reset_run`) для ST/J-Link-профилей (TODO.md) | Открыт | — | 3.3.1, 3.3.3, 3.3.7 |
 | 11.2.5 | Надзор за дочерними процессами при аварии host (Job Object): включать ли требование в 0.1.0-rc.1 | Открыт | TODO.md; сейчас освобождение mutex не доказывает завершения серверов | 5.4.4, 5.12.4 |
-| 11.2.6 | Профиль F429ZI проверен в стендовом проекте (OpenOCD и ST, 22/22), но не отражён в docs/STATUS.md модуля. Внести? Нужны ли J-Link mapping для F401/F411/F429 | Открыт | — | 6.5.1, 8.8, приложение B |
+| 11.2.6 | Профиль F429ZI проверен в стендовом проекте (OpenOCD и ST, 22/22), но не отражён в docs/STATUS.md модуля. Внести? Нужны ли J-Link mapping для F401/F411/F429 | Открыт | F429ZI отражён в STATUS со ссылкой на протокол (р.0.6); J-Link mapping для F401/F411/F429 — не решено | 6.5.1, 8.8, приложение B |
 | 11.2.7 | Сбой USB (`LIBUSB_ERROR_NOT_FOUND`) после серии запусков на F429: нужна ли доработка штатного завершения сервера вместо `taskkill /F` с контролируемым A/B-опытом | Открыт | Причина не установлена (F429_SERVER_STABILITY.md) | 5.12.4 |
 | 11.2.8 | Статусы SKIP / NOT_APPLICABLE и выбор сценариев по возможностям профиля и стенда (PERIPHERAL_PLAN.md) | Открыт | Сейчас только PASS/FAIL/ERROR | 3.9.1 |
 | 11.2.9 | JUnit `classname="blackpill"` унаследован от стенда; заменить на имя профиля или `stm32-gdbtest`? | Открыт | — | 3.9.3 |
@@ -1331,14 +1350,14 @@ D.5. В ревизии 0.1 ссылки в коде отсутствуют; их
 | `collect.py`, `__init__.py` | Формат `@case`, AST-сбор, трассировка | 3.1, 3.2, 5.1, 5.2 |
 | `profile.py`, `Tests/fixtures/*/target.toml` | Target schema 1 | 3.3 |
 | `backends.py`, `openocd.py`, `examples/stands/stlink.example.toml` | Стенд и диалекты серверов | 3.4, 6.3–6.6 |
-| `contracts.py`, `contract_preflight.py`, docs/CONTRACTS.md, HAL_MACRO_GUIDE.md | Контракты и preflight | 3.5, 5.6 |
-| `full_image.py`, `image.py`, docs/IMAGES.md | Секции, полный образ, CRC | 3.6, раздел 4 |
-| `build_manifest.py`, docs/MANIFESTS.md | Build manifest | 3.7, 5.14 |
-| `runner.py`, `processes.py`, docs/DEBUGGER_OWNERSHIP.md | Жизненный цикл, блокировка, recovery | 5.3–5.8, 5.12 |
-| `agent.py`, `target.py`, `identity.py`, `compatibility.py`, docs/TARGET_IDENTITY.md | Агент, Target API, identity, GDB API | 5.9–5.11, 6.1 |
+| `contracts.py`, `contract_preflight.py`, docs/ru/CONTRACTS.md, HAL_MACRO_GUIDE.md | Контракты и preflight | 3.5, 5.6 |
+| `full_image.py`, `image.py`, docs/ru/IMAGES.md | Секции, полный образ, CRC | 3.6, раздел 4 |
+| `build_manifest.py`, docs/ru/MANIFESTS.md | Build manifest | 3.7, 5.14 |
+| `runner.py`, `processes.py`, docs/ru/DEBUGGER_OWNERSHIP.md | Жизненный цикл, блокировка, recovery | 5.3–5.8, 5.12 |
+| `agent.py`, `target.py`, `identity.py`, `compatibility.py`, docs/ru/TARGET_IDENTITY.md | Агент, Target API, identity, GDB API | 5.9–5.11, 6.1 |
 | `reports.py`, `compatibility.py` | Отчёты | 3.9 |
 | `cmake/STM32GDBTest.cmake`, `examples/minimal-consumer` | CMake-интеграция | 5.13, 6.8 |
-| docs/API.md, VERSIONING.md, CHANGELOG.md | API, миграция, версии | 5.15, 6.9, раздел 8 |
+| docs/ru/API.md, VERSIONING.md, CHANGELOG.md (пути (р.0.6)) | API, миграция, версии | 5.15, 6.9, раздел 8 |
 | AGENTS.md, README.md, TODO.md | Правила работы, границы, планы | 2.4, 6.6.3, 7.1, 7.2, 7.7 |
 | `Tests/host/*.py` (65) | Тест-кейсы | TC-01…TC-65 |
 | stm32-hwtest-blackpill: HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md, профили | Назначение, аппаратные результаты, открытые вопросы | 2.1, 8.7, TC-68…TC-73, 11.2.6–11.2.8 |
@@ -1358,7 +1377,7 @@ D.5. В ревизии 0.1 ссылки в коде отсутствуют; их
 | F.5 | 5.3.4, 7.4.1 | — | `run` отклоняет не-Windows; 3 host-теста падают на Linux | Внесено: offline-часть и host-тесты на Linux, аппаратный запуск — Windows (р.0.3) |
 | F.6 | 8.10 | TODO/CHANGELOG описывают проверки как ручные | Нет CI (`.github` содержит только FUNDING.yml) | Внесено: workflows Docs и Offline (р.0.3) |
 | F.7 | 7.2.4 | — | Нет `.gitattributes`; при `core.autocrlf` Windows рабочая копия расходится с индексом по концам строк | Внесено для файлов CI (п. 8.17) (р.0.3) |
-| F.8 | — | docs/API.md, VERSIONING.md: пропущенные пробелы («целое1..300s», «PASS0 / FAIL1 / ERROR2», «SemVer2.0.0») | — | Редакторская правка при реструктуризации документации |
+| F.8 | — | docs/API.md, VERSIONING.md: пропущенные пробелы («целое1..300s», «PASS0 / FAIL1 / ERROR2», «SemVer2.0.0») | — | Исправлено при переносе документации (р.0.6) |
 
 ---
 

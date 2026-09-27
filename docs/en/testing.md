@@ -1,11 +1,11 @@
 # Checks and CI
 
-Documentation → Checks and CI · [Русский](../ru/testing.md)
+[Documentation](index.md) → Checks and CI · [Русский](../ru/testing.md)
 
 CI checks the module up to the GDB server: without a debugger, a board or MCU
 access. Hardware scenarios run separately on an agreed stand
 ([maintenance](maintenance.md#working-with-hardware)). CI requirements are items
-8.11–8.16 of the [specification](../TECHNICAL_SPECIFICATION.md) (Russian).
+8.11–8.19 of the [specification](../TECHNICAL_SPECIFICATION.md) (Russian).
 
 ## Check levels
 
@@ -19,7 +19,7 @@ access. Hardware scenarios run separately on an agreed stand
 The CI firmware lives in [Tests/firmware](../../Tests/firmware/README.md): CMSIS without
 HAL and without stm32-cmake-yml, one profile each for Cortex-M0, M3 and M4. The
 scenarios check register state and are not evidence of HAL behaviour. The hardware
-run of 2026-09-28 is recorded in the [status page](../STATUS.md) (Russian).
+run of 2026-09-28 is recorded in the [status page](STATUS.md#hardware-check-of-the-ci-firmware-2026-09-28).
 
 Results go to `build/ci/summary.json`; logs to `Tests/firmware/build/<profile>-gcc<version>/ci.log`.
 On GitHub they are kept as the `offline-results` artifact.

@@ -3,6 +3,8 @@
 [![Docs](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/stm32-gdbtest/docs.yml?branch=main&label=Docs&style=flat-square)](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/workflows/docs.yml)
 [![Offline](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/stm32-gdbtest/offline.yml?branch=main&label=Offline&style=flat-square)](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/workflows/offline.yml)
 
+[English](README.en.md)
+
 **stm32-gdbtest автоматизирует проверки работающей прошивки на реальном STM32
 через GDB-Python и SWD-отладчик.** Это не симулятор MCU и не обычный unit-test
 фреймворк, запускающий тестовые функции внутри прошивки или на ПК: Python-сценарии
@@ -53,10 +55,11 @@ JSON/JUnit и интеграция с CMake/CTest. Команда `run --prepare
 все проверки до GDB-сервера без оборудования; на них основан CI
 ([проверки и CI](docs/ru/testing.md)).
 
-Это прототип до первого релиза. На стендах проверены сценарии F103/J-Link и
-F411/ST-Link/OpenOCD, включая восстановление после таймаута; есть более ранние
-проверки F401 и ST-сервера. Поддержка зависит от конкретной комбинации MCU,
-HAL, GDB и backend. [Точная матрица и ограничения](docs/STATUS.md).
+Это версия разработки перед первым релизом 0.1.0. На оборудовании проверены
+F030R8 и F103C8 через J-Link и F411CE через ST-Link с OpenOCD и ST-LINK GDB Server,
+включая запись, полный образ и восстановление после таймаута; в стендовом проекте
+также F429ZI и более ранние проверки F401. Поддержка зависит от конкретной
+комбинации MCU, HAL, GDB и backend. [Точная матрица и ограничения](docs/ru/STATUS.md).
 
 В плане развития — надзор за дочерними процессами, развитие схемы профиля и
 метаданных совместимости. Отдельно запланировано согласованное управление
@@ -69,7 +72,8 @@ Python-упаковка рассматривается как дополните
 - `Tests/host`, `Tests/fixtures` — проверки инфраструктуры без платы.
 - `Tests/firmware`, `ci/` — CI-прошивки F030R8/F103C8/F411CE, Docker-образ и сценарий проверок.
 - `examples/minimal-consumer/` — самостоятельный пример прошивки и теста для F411.
-- `docs/` — подключение, написание сценариев и описание механизмов.
+- `docs/ru`, `docs/en` — подключение, написание сценариев и описание механизмов;
+  `docs/TECHNICAL_SPECIFICATION.md` — ТЗ.
 
 Проверенная среда аппаратного запуска — Windows, host Python 3.11+, ARM GCC/GDB
 с Python, CMake 3.25+ и Ninja для интеграции сборки; сборка и подготовка без
@@ -78,15 +82,16 @@ Python-упаковка рассматривается как дополните
 GDB-Python — отдельный интерпретатор, не автоматически окружение Python вашего ПК.
 
 Модуль подключается как **Git-подмодуль**. Настройки MCU, тесты приложения и
-локальный стенд остаются у потребителя. Начните с [подключения и примера](docs/GETTING_STARTED.md),
-затем перейдите к [написанию тестов](docs/TEST_AUTHORING.md) — вручную или с помощью агента.
+локальный стенд остаются у потребителя. Начните с [подключения и примера](docs/ru/GETTING_STARTED.md),
+затем перейдите к [написанию тестов](docs/ru/TEST_AUTHORING.md) — вручную или с помощью агента.
 
 ## Документация и связанные проекты
 
-- [API и CMake/CLI](docs/API.md), [ELF/HAL-контракты](docs/CONTRACTS.md), [HAL-макросы](docs/HAL_MACRO_GUIDE.md).
-- [GDB-серверы](docs/BACKENDS.md), [identity и Flash](docs/TARGET_IDENTITY.md), [владение отладчиком](docs/DEBUGGER_OWNERSHIP.md), [manifest](docs/MANIFESTS.md), [образы ELF/BIN и CRC](docs/IMAGES.md).
-- [Текущее состояние](docs/STATUS.md), [версии](docs/VERSIONING.md), [планы](TODO.md), [изменения](CHANGELOG.md).
+- [Карта документации](docs/ru/index.md), [ТЗ](docs/TECHNICAL_SPECIFICATION.md).
+- [API и CMake/CLI](docs/ru/API.md), [ELF/HAL-контракты](docs/ru/CONTRACTS.md), [HAL-макросы](docs/ru/HAL_MACRO_GUIDE.md).
+- [GDB-серверы](docs/ru/BACKENDS.md), [identity и Flash](docs/ru/TARGET_IDENTITY.md), [владение отладчиком](docs/ru/DEBUGGER_OWNERSHIP.md), [manifest](docs/ru/MANIFESTS.md), [образы ELF/BIN и CRC](docs/ru/IMAGES.md).
+- [Текущее состояние](docs/ru/STATUS.md), [проверки и CI](docs/ru/testing.md), [версии](docs/ru/VERSIONING.md), [планы](TODO.md), [изменения](CHANGELOG.md).
 - [stm32-hwtest-blackpill](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill) — прошивки, аппаратные проверки, общая архитектура и практика применения.
 - [stm32-cmake-yml](https://github.com/ViacheslavMezentsev/stm32-cmake-yml) — связанный проект сборки STM32; для работы модуля он не обязателен.
 
-Лицензия — [MIT](LICENSE). [Происхождение](SOURCE.md), [правила для разработчиков и агентов](AGENTS.md).
+Лицензия — [MIT](LICENSE). [Происхождение](SOURCE.md), [правила для разработчиков и агентов](AGENTS.md), [сопровождение](docs/ru/maintenance.md).

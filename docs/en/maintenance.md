@@ -1,6 +1,6 @@
 # Repository maintenance
 
-Documentation → Maintenance · [Русский](../ru/maintenance.md)
+[Documentation](index.md) → Maintenance · [Русский](../ru/maintenance.md)
 
 This page is the shared procedure for people and AI agents; the entry point is
 [AGENTS.md](../../AGENTS.md). Module requirements are not repeated here: their source
@@ -11,29 +11,29 @@ current revision is stated in its header.
 
 **Reading order**
 
-1. [README](../../README.md) (Russian until `README.en.md` is added) — purpose of the
+1. [README](../../README.en.md) — purpose of the
    module, approach and limits.
 2. This page: work cycle, branches, commits, bilingual documentation.
 3. [TODO.md](../../TODO.md) — current branch, merged changes and next steps.
 4. [Technical specification](../TECHNICAL_SPECIFICATION.md): revision history, the
    latest revision's change block, open questions (section 11) and code
    discrepancies (appendix F).
-5. For a specific task — the mechanism description in `docs/` ([API](../API.md),
-   [contracts](../CONTRACTS.md), [images](../IMAGES.md), [backends](../BACKENDS.md), etc.),
-   [current status](../STATUS.md) and the [CHANGELOG](../../CHANGELOG.md).
+5. For a specific task — the mechanism description in `docs/` ([API](API.md),
+   [contracts](CONTRACTS.md), [images](IMAGES.md), [backends](BACKENDS.md), etc.),
+   [current status](STATUS.md) and the [CHANGELOG](../../CHANGELOG.en.md).
 
 **Work cycle**
 
 1. Branch `<agent>/<task>` from current main (section "Branches").
 2. Behaviour or interface changes: host regression for failure paths, updated
-   mechanism description and migration notes ([API](../API.md)), a CHANGELOG entry,
+   mechanism description and migration notes ([API](API.md)), a CHANGELOG entry,
    a new spec revision. Code and tests refer to spec items per appendix D (`# ТЗ 5.9.7`).
 3. Local checks of the affected levels (section "Checks").
 4. Signed commit, push the branch, match check results to the branch's latest
    commit, merge into main.
 5. Record the branch, commit and status in TODO.md.
 
-**Release** (spec 8.9, [versioning rules](../VERSIONING.md)):
+**Release** (spec 8.9, [versioning rules](VERSIONING.md)):
 
 1. `__version__` in `stm32_gdbtest/__init__.py`; `API_VERSION` and schema numbers
    change only when the corresponding contract changes.
@@ -99,8 +99,8 @@ CI workflows run for any branch, so a new prefix needs no workflow change.
   Links to sections of the other language use that page's own anchors.
 - Single-language items: the specification (Russian only, not translated), commit
   messages (English), code and code comments (English, except `# ТЗ …` references).
-- Existing `docs/*.md` pages move to `docs/ru/` and get English versions step by
-  step (spec question 11.2.2); until then links point to the current paths.
+- The documentation map is [docs/en/index.md](index.md); a new page is added to both
+  languages and both maps.
 - Russian texts use the term «отладчик». The README is a short introduction (why,
   what, how, dependencies, links); exact results and limits go to STATUS, history
   to the CHANGELOG and protocols.

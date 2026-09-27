@@ -76,11 +76,15 @@ def check_pairs():
     ru = {p.name for p in (ROOT / "docs/ru").glob("*.md")}
     en = {p.name for p in (ROOT / "docs/en").glob("*.md")}
     missing = sorted(f"docs/en/{n}" for n in ru - en) + sorted(f"docs/ru/{n}" for n in en - ru)
-    # CHANGELOG is bilingual already; README.en.md is added with the docs/*.md move (spec 11.2.2).
-    for base, required in (("CHANGELOG", True), ("README", False)):
-        present = [(ROOT / name).exists() for name in (f"{base}.md", f"{base}.en.md")]
-        if present[0] != present[1] and (required or present[1]):
+    for base in ("README", "CHANGELOG"):
+        if not ((ROOT / f"{base}.md").exists() and (ROOT / f"{base}.en.md").exists()):
             missing.append(f"{base}.md / {base}.en.md")
+    # Spec 7.7.13: every page links its language's map and the same page in the other language.
+    for lang, other in (("ru", "en"), ("en", "ru")):
+        for page in sorted((ROOT / "docs" / lang).glob("*.md")):
+            head = "\n".join(page.read_text(encoding="utf-8").splitlines()[:4])
+            if f"(../{other}/{page.name})" not in head or (page.name != "index.md" and "(index.md)" not in head):
+                missing.append(f"navigation line in docs/{lang}/{page.name}")
     if missing:
         raise CheckError("Missing RU/EN pair: " + ", ".join(missing))
 

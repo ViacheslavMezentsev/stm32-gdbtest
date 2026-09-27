@@ -15,7 +15,7 @@ Instructions for AI agents and new contributors ([English](docs/en/maintenance.m
 3. Работайте в ветке `<агент>/<задача>` от актуального main; префикс — имя
    создающего ветку агента или участника (`claude/`, `codex/`, `gemini/`, `dev/`, …).
    PR не используются: проверенная ветка сливается в main обычным `git merge`.
-4. Изменение поведения или интерфейса — с host-регрессией, обновлением docs/API.md
+4. Изменение поведения или интерфейса — с host-регрессией, обновлением docs/ru/API.md и docs/en/API.md
    и миграции, записью в CHANGELOG (RU и EN) и новой ревизией ТЗ. Проверки до
    GDB-сервера — `python3 ci/run_checks.py` в Docker-образе CI ([docs/ru/testing.md](docs/ru/testing.md)).
 5. Коммиты — Conventional Commits на английском, подписанные ключом GitHub

@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented in this file ([Русский](CHANGELOG.md)).
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
-Versions: [policy](docs/VERSIONING.md) (Russian).
+Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
@@ -42,6 +42,11 @@ Versions: [policy](docs/VERSIONING.md) (Russian).
 
 ### Changed
 
+- Documentation moved to `docs/ru/` with English versions in `docs/en/`, `index.md`
+  documentation maps and navigation lines; README.en.md added. Pages were checked
+  against the current features: preparation without hardware, Linux for the offline
+  part, full image through ST-LINK GDB Server, macro context in the compilation unit,
+  the F030 Flash size address, verified stands; specification revisions 0.5 and 0.6.
 - Build, build manifest, offline contracts and image preparation also work on Linux:
   compiler commands are split by shell rules, binutils names follow the GDB suffix.
   Hardware runs remain Windows-only; the refusal on another OS comes after stand and
