@@ -14,11 +14,12 @@ access. Hardware scenarios run separately on an agreed stand
 | docs | `check_spec.py --strict` for the specification, local Markdown links, RU/EN pairs | `ci/run_checks.py docs`, Docs workflow |
 | format | C/C++ sources match `.clang-format` (`clang-format --dry-run --Werror`, version ≥ 16) | `ci/run_checks.py format` in the Docker image, Offline workflow |
 | host | Module host tests `Tests/host` | Linux in the Docker image and Windows (Python 3.11, 3.13), Offline workflow |
-| firmware | Building the F030R8, F103C8, F411CE CI firmware with every GCC in the lock file; build manifest; CTest `host` (traceability, `prepare.<ID>` with offline contracts); full-image preparation; rejection of a too small image policy; 10 negative ELF contract variants | `ci/run_checks.py firmware` in the Docker image, Offline workflow |
+| firmware | Building the F030R8, F103C8, F411CE CI firmware with every GCC in the lock file; build manifest; CTest `host` (traceability, `prepare.<ID>` with offline contracts); full-image preparation; rejection of a too small image policy; 10 negative ELF contract variants; presence and 4-byte alignment of load sections, including `.data` | `ci/run_checks.py firmware` in the Docker image, Offline workflow |
 
 The CI firmware lives in [Tests/firmware](../../Tests/firmware/README.md): CMSIS without
-HAL and without stm32-cmake-yml, one profile each for Cortex-M0, M3 and M4. Its
-scenarios were not run on hardware and are not evidence of HAL behaviour.
+HAL and without stm32-cmake-yml, one profile each for Cortex-M0, M3 and M4. The
+scenarios check register state and are not evidence of HAL behaviour. The hardware
+run of 2026-09-28 is recorded in the [status page](../STATUS.md) (Russian).
 
 Results go to `build/ci/summary.json`; logs to `Tests/firmware/build/<profile>-gcc<version>/ci.log`.
 On GitHub they are kept as the `offline-results` artifact.

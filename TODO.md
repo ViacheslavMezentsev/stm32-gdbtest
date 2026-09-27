@@ -10,7 +10,9 @@
   проверено локально в Docker-образе (13/13: docs, host, 9 пар firmware); слита в main.
 - `claude/hw-validation` — аппаратная проверка CI-прошивок до v0.1.0 (`Tests/firmware/run_hw.py`:
   F411CE/ST-Link, F103C8/J-Link, F030R8/J-Link STLink), `.clang-format` и уровень format в CI,
-  LED BluePill-Plus на PB2; в работе. После результатов — ТЗ 0.4, STATUS.
+  LED BluePill-Plus на PB2, выравнивание `.data`; 4 стенда × 10/10 шагов на `fbc103d`,
+  ТЗ 0.4, STATUS; ожидает push и слияния. Далее: регрессия stm32-hwtest-blackpill,
+  вопрос 11.2.17, выпуск v0.1.0-rc.1.
 
 ## Этапы
 

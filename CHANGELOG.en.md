@@ -8,6 +8,10 @@ Versions: [policy](docs/VERSIONING.md) (Russian).
 
 ### Added
 
+- Hardware check of the CI firmware `Tests/firmware/run_hw.py` (10 steps: programming,
+  repeat, strict identity, full image, verify-only, timeout/recovery); at commit `fbc103d`
+  F030R8/J-Link STLink, F103C8/J-Link, F411CE/OpenOCD and F411CE/ST-LINK GDB Server passed.
+- `.clang-format` — C/C++ source style; CI format level (`clang-format --dry-run --Werror`).
 - `run --prepare-only`: every step before the GDB server (stand if selected, profile,
   ELF snapshot, build manifest, requested contracts, sections and image, including
   full mode) without debugger locking, server or connection; report with `mode: prepare`.
@@ -52,6 +56,9 @@ Versions: [policy](docs/VERSIONING.md) (Russian).
 
 ### Fixed
 
+- CI firmware and minimal consumer linker scripts: the `.data` load address is
+  4-byte aligned (the unaligned copy caused a HardFault on Cortex-M0); CI rejects
+  unaligned load sections. The F103C8 CI profile uses the PB2 LED (WeAct BluePill-Plus).
 - docs/STATUS.md: the host test count and the F030R8 J-Link mapping match the code.
 - Flash is compared by loadable ELF sections/LMA: differences in non-loaded gaps no
   longer cause a false error or reprogramming.

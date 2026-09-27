@@ -14,11 +14,12 @@ CI проверяет модуль до GDB-сервера: без отладч�
 | docs | `check_spec.py --strict` для ТЗ, локальные ссылки Markdown, пары RU/EN | `ci/run_checks.py docs`, workflow Docs |
 | format | Исходники C/C++ соответствуют `.clang-format` (`clang-format --dry-run --Werror`, версия ≥ 16) | `ci/run_checks.py format` в Docker-образе, workflow Offline |
 | host | Host-тесты модуля `Tests/host` | Linux в Docker-образе и Windows (Python 3.11, 3.13), workflow Offline |
-| firmware | Сборка CI-прошивок F030R8, F103C8, F411CE каждым GCC из lock-файла; build manifest; CTest `host` (traceability, `prepare.<ID>` с offline-контрактами); подготовка полного образа; отказ слишком малой политики образа; 10 отрицательных вариантов ELF-контрактов | `ci/run_checks.py firmware` в Docker-образе, workflow Offline |
+| firmware | Сборка CI-прошивок F030R8, F103C8, F411CE каждым GCC из lock-файла; build manifest; CTest `host` (traceability, `prepare.<ID>` с offline-контрактами); подготовка полного образа; отказ слишком малой политики образа; 10 отрицательных вариантов ELF-контрактов; наличие и выравнивание на 4 байта секций загрузки, включая `.data` | `ci/run_checks.py firmware` в Docker-образе, workflow Offline |
 
 CI-прошивки находятся в [Tests/firmware](../../Tests/firmware/README.md): CMSIS без HAL и
-без stm32-cmake-yml, по профилю на Cortex-M0, M3 и M4. Их сценарии на оборудовании
-не запускались и не являются доказательством поведения HAL.
+без stm32-cmake-yml, по профилю на Cortex-M0, M3 и M4. Сценарии проверяют состояние
+регистров и не являются доказательством поведения HAL. Аппаратный прогон
+28.09.2026 — в [текущем состоянии](../STATUS.md#аппаратная-проверка-ci-прошивок-2026-09-28).
 
 Результаты — `build/ci/summary.json`; журналы — `Tests/firmware/build/<профиль>-gcc<версия>/ci.log`.
 В GitHub они сохраняются артефактом `offline-results`.

@@ -84,3 +84,26 @@ Flash/readback/reset-run; host65. Используется существующ�
 HardFault и доступными M0 диагностическими регистрами, без CFSR/HFSR.
 Это не проверка всех Cortex-M0 или F0 backend-комбинаций.
 [Протокол потребителя](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/F030_JLINK_VALIDATION.md).
+
+## Аппаратная проверка CI-прошивок, 2026-09-28
+
+Коммит `fbc103d`, `Tests/firmware/run_hw.py`, xPack GCC 13.3.1-1.1, GDB 14.2.90
+(Python 3.11.4), CMSIS из STM32CubeF0 1.11.6, F1 1.8.7, F4 1.28.3. На каждом стенде
+прошли все 10 шагов: сборка и CTest host, подготовка со стендом, запись и повтор без
+записи, strict identity, полный образ 16 KiB с хвостом 0xA5, ожидаемый ERROR
+verify-only без записи, восстановление 0xFF, timeout 0,2 с с восстановлением через
+отдельный GDB-клиент и повторный PASS.
+
+| Плата / MCU | Отладчик / backend | Результат |
+| --- | --- | --- |
+| NUCLEO-F030R8 / STM32F030R8 | J-Link STLink (V21), J-Link GDB Server 8.32 | 10/10 |
+| WeAct BluePill-Plus / STM32F103C8 | J-Link CE (V9), J-Link GDB Server 8.32 | 10/10; предупреждение: заводской размер Flash 128 KiB при профиле 64 KiB |
+| WeAct BlackPill / STM32F411CE | ST-Link V2J43M28, OpenOCD 0.12.0 | 10/10 |
+| WeAct BlackPill / STM32F411CE | ST-Link V2J43M28, ST-LINK GDB Server 7.14.0 | 10/10, включая полный режим через ST server |
+
+Первый прогон F030R8 выявил HardFault в `Reset_Handler`: адрес загрузки `.data` был
+невыровнен, а Cortex-M0 не допускает невыровненного чтения слова. Скрипты
+компоновщика CI-прошивок и минимального примера исправлены, CI проверяет
+выравнивание секций загрузки. Это пример ошибки выполнения, которую не видят
+проверки без оборудования. Стендовый набор stm32-hwtest-blackpill на этом коммите
+не повторялся.
