@@ -203,6 +203,22 @@ def firmware_pair(gcc, profile):
     if "exceeds full image range" not in report.get("error", ""):
         raise CheckError("Too small image policy was not rejected")
 
+    # An empty loadable section with a RAM LMA must not stretch the BIN (spec 4.1.5, TC-88).
+    empty, stretched = build / "empty.bin", build / "empty-ram-section.elf"
+    empty.write_bytes(b"")
+    run([toolchain / "bin/arm-none-eabi-objcopy", "--add-section", f".ci_empty={empty}",
+         "--set-section-flags", ".ci_empty=alloc,load,contents,data",
+         "--change-section-address", ".ci_empty=0x20000000", session["elf"], stretched], env=env, log=log)
+    if ".ci_empty" not in run([toolchain / "bin/arm-none-eabi-objdump", "-h", stretched], env=env, log=log):
+        raise CheckError("objcopy did not add the empty RAM section")
+    stretched_session = build / "hwtest/session-empty-ram-section.json"
+    variant = {key: value for key, value in session.items() if key != "build_manifest"}
+    stretched_session.write_text(json.dumps(dict(variant, elf=str(stretched))), encoding="utf-8")
+    report = prepare(build, stretched_session, "HW_CI_BOOT", env)
+    bins = sorted((build / "hwtest/runs").glob("*-HW_CI_BOOT-*/image.bin"), key=lambda p: p.stat().st_mtime)
+    if report["status"] != "PASS" or bins[-1].stat().st_size > profile_data["flash_size"]:
+        raise CheckError(f"Empty RAM section stretched the BIN: {bins[-1].stat().st_size} bytes")
+
     # Negative ELF contracts: each mutation must stop the offline preflight with ERROR.
     registry = FIRMWARE / f"profiles/{profile}/Tests/contracts.json"
     base = select_contracts(registry, ["ci_gpio_macros", "ci_app_api"], manifest)

@@ -111,6 +111,26 @@ class PrepareTests(unittest.TestCase):
             execute.assert_not_called()
         self.assertIn("Windows only", self.report()["error"])
 
+    def test_bin_uses_only_selected_load_sections(self):
+        # TC-87: ТЗ 4.1.5 — an empty .data with a RAM LMA must not reach objcopy.
+        sections = SECTIONS + """  2 .data         00000000  20000000  20000000  00001030  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+"""
+        calls = []
+
+        def run_tool(args, **kwargs):
+            calls.append([str(a) for a in args])
+            if "--gap-fill=0xFF" in args:
+                Path(args[-1]).write_bytes(bytes(range(32)))
+            return type("Process", (), {"returncode": 0})()
+        with patch.dict(os.environ, {"STM32_GDBTEST_STAND": ""}), \
+                patch("stm32_gdbtest.runner.subprocess.check_output", return_value=sections.encode()), \
+                patch("stm32_gdbtest.runner.subprocess.run", side_effect=run_tool):
+            self.assertEqual(run(self.session, self.test, prepare_only=True), 0)
+        objcopy = next(c for c in calls if "--gap-fill=0xFF" in c)
+        selected = [objcopy[i + 1] for i, item in enumerate(objcopy) if item == "-j"]
+        self.assertEqual(selected, [".isr_vector", ".text"])
+
     def test_binutils_follow_gdb_suffix_and_posix_command_lines(self):
         # TC-78: ТЗ 5.14.6, 6.2.1
         self.assertTrue(tool("C:/xpack/bin/arm-none-eabi-gdb-py3.exe", "arm-none-eabi-objdump").endswith(

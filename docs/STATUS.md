@@ -9,7 +9,7 @@
 
 | Область | Доказанный объём |
 | --- | --- |
-| Host-инфраструктура | 70 unittest без MCU (на Linux 5 тестов блокировки Windows пропускаются) |
+| Host-инфраструктура | 71 unittest без MCU (на Linux 5 тестов блокировки Windows пропускаются) |
 | CI (GitHub Actions, Docker) | Сборка CI-прошивок F030R8/F103C8/F411CE на GCC 13.3.1, 14.2.1, 15.2.1 с CMake 3.28.3, build manifest, `prepare`, offline-контракты с 10 отрицательными вариантами; host-тесты на Windows и Linux ([проверки и CI](ru/testing.md)) |
 | ELF/HAL preflight | Положительный случай и 11 отрицательных вариантов на ELF F103C8/F401CC/F411CE |
 | F411CE / ST-Link / OpenOCD | После отделения модуля 24/24 CTest в стендовом проекте: 22 HW + 2 host |

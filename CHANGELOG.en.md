@@ -56,6 +56,9 @@ Versions: [policy](docs/VERSIONING.md) (Russian).
 
 ### Fixed
 
+- The BIN is built only from the selected load sections (`objcopy -j`): an empty section
+  with a RAM address (for example an empty `.data`) no longer stretches it to hundreds of
+  MiB before the "BIN extent differs" refusal. Host test and a CI regression on a real ELF.
 - CI firmware and minimal consumer linker scripts: the `.data` load address is
   4-byte aligned (the unaligned copy caused a HardFault on Cortex-M0); CI rejects
   unaligned load sections. The F103C8 CI profile uses the PB2 LED (WeAct BluePill-Plus).

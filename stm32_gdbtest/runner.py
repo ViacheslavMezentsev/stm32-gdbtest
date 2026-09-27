@@ -151,7 +151,10 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                 timeout=15, env=dict(env, LC_ALL="C"), stderr=log, creationflags=FLAGS).decode("utf-8")
             (out / "elf-sections.txt").write_text(section_text, encoding="utf-8")
             regions = parse_sections(section_text, profile["flash_start"], profile["flash_size"])
-            subprocess.run([tool(gdb, "arm-none-eabi-objcopy"), "-O", "binary", "--gap-fill=0xFF",
+            # ТЗ 4.1.5: only the selected load sections form the BIN; an empty section with an
+            # LMA outside Flash (e.g. empty .data in RAM) must not stretch it to hundreds of MiB.
+            selection = [item for region in regions for item in ("-j", region["name"])]
+            subprocess.run([tool(gdb, "arm-none-eabi-objcopy"), "-O", "binary", "--gap-fill=0xFF", *selection,
                             str(elf), str(image)], check=True, timeout=15, env=env,
                            stdout=log, stderr=subprocess.STDOUT, creationflags=FLAGS)
             subprocess.run(gdb_base + ["-ex", "python import gdb, json; print(gdb.VERSION)"],
