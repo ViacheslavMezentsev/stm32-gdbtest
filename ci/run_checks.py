@@ -23,6 +23,7 @@ import shutil
 import subprocess
 import sys
 import time
+import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
 LOCK = json.loads((ROOT / "ci/dependencies.lock.json").read_text(encoding="utf-8"))
@@ -30,6 +31,7 @@ FIRMWARE = ROOT / "Tests/firmware"
 OUT = ROOT / "build/ci"
 sys.path.insert(0, str(ROOT))
 from stm32_gdbtest.contracts import select_contracts  # noqa: E402
+from stm32_gdbtest.image import parse_sections  # noqa: E402
 
 
 class CheckError(RuntimeError):
@@ -170,6 +172,13 @@ def firmware_pair(gcc, profile):
         raise CheckError("Manifest compiler version or Cube package differs")
     if any(re.match(r"^(/|[A-Za-z]:)", item["file"]) for item in manifest["inputs"]):
         raise CheckError("Manifest contains absolute paths")
+    # Startup copies .data word by word: an unaligned load address faults on Cortex-M0.
+    profile_data = tomllib.loads((FIRMWARE / f"profiles/{profile}/target.toml").read_text(encoding="utf-8"))
+    sections = run([toolchain / "bin/arm-none-eabi-objdump", "-h", session["elf"]], env=env, log=log)
+    regions = parse_sections(sections, profile_data["flash_start"], profile_data["flash_size"])
+    unaligned = [r["name"] for r in regions if r["address"] % 4]
+    if unaligned or ".data" not in {r["name"] for r in regions}:
+        raise CheckError(f"Load sections must include .data and be word-aligned: unaligned {unaligned}")
 
     # CTest host label: traceability and prepare.<ID> with requested offline contracts.
     ctest = run(["ctest", "--test-dir", build, "-L", "host", "--output-on-failure"], env=env, log=log)
