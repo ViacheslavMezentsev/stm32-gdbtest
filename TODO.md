@@ -7,7 +7,8 @@
   ТЗ ревизии 0.2; слита в main.
 - `claude/offline-ci` — подготовка к 0.1.0: `run --prepare-only`, offline-часть на Linux,
   CI-прошивки F030R8/F103C8/F411CE, Docker-образ, workflows Docs и Offline, ТЗ 0.3;
-  проверено локально в Docker-образе (10/10), ожидает push и CI GitHub.
+  проверено локально в Docker-образе (13/13: docs, host, 9 пар firmware),
+  ожидает push и CI GitHub.
 
 ## Этапы
 

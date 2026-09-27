@@ -159,5 +159,7 @@ hardware check.
   installed libraries and tools are read and run, not modified without a task.
 - Do not commit local stand TOML files, serial numbers, absolute personal paths,
   ELF files, build output or caches.
-- In a Windows working copy files may have CRLF (`core.autocrlf`); keep the line
-  endings of the file you edit. `.gitattributes` rules are spec question 11.2.11.
+- Files under `ci/**`, `.github/**` and `*.sh` are kept with LF in every working
+  copy (`.gitattributes`): the CI image is also built on Windows. Other files in a
+  Windows working copy may have CRLF (`core.autocrlf`) — keep the line endings of
+  the file you edit.

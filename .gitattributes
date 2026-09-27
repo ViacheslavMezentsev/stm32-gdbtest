@@ -1,0 +1,4 @@
+# CI files run in Linux containers and on GitHub runners: LF in every checkout.
+ci/** text eol=lf
+.github/** text eol=lf
+*.sh text eol=lf
