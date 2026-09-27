@@ -17,6 +17,10 @@ def main():
     assert output("ninja", "--version") == lock["ninja_version"]
     python = tuple(int(x) for x in output("python3", "-c", "import sys; print(*sys.version_info[:2])").split())
     assert python >= (3, 11), python
+    # .clang-format uses SeparateDefinitionBlocks (clang-format 16+).
+    version = output("clang-format", "--version")
+    assert int(version.split("version ")[1].split(".")[0]) >= 16, version
+    print(version, flush=True)
     for cmake in lock["cmake_versions"]:
         assert output(f"/opt/cmake-{cmake}/bin/cmake", "--version").splitlines()[0] == f"cmake version {cmake}"
     for gcc in lock["gcc_versions"]:

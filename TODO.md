@@ -7,8 +7,10 @@
   ТЗ ревизии 0.2; слита в main.
 - `claude/offline-ci` — подготовка к 0.1.0: `run --prepare-only`, offline-часть на Linux,
   CI-прошивки F030R8/F103C8/F411CE, Docker-образ, workflows Docs и Offline, ТЗ 0.3;
-  проверено локально в Docker-образе (13/13: docs, host, 9 пар firmware),
-  ожидает push и CI GitHub.
+  проверено локально в Docker-образе (13/13: docs, host, 9 пар firmware); слита в main.
+- `claude/hw-validation` — аппаратная проверка CI-прошивок до v0.1.0 (`Tests/firmware/run_hw.py`:
+  F411CE/ST-Link, F103C8/J-Link, F030R8/J-Link STLink), `.clang-format` и уровень format в CI,
+  LED BluePill-Plus на PB2; в работе. После результатов — ТЗ 0.4, STATUS.
 
 ## Этапы
 

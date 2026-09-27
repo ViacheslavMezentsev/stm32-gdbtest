@@ -6,11 +6,11 @@
         "context": "board_led_toggle",
         "expressions": [
           "RCC",
-          "RCC_APB2ENR_IOPCEN",
-          "GPIOC",
-          "GPIO_CRH_MODE13",
-          "GPIO_CRH_MODE13_1",
-          "GPIO_CRH_CNF13"
+          "RCC_APB2ENR_IOPBEN",
+          "GPIOB",
+          "GPIO_CRL_MODE2",
+          "GPIO_CRL_MODE2_1",
+          "GPIO_CRL_CNF2"
         ]
       }
     },

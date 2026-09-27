@@ -12,6 +12,7 @@ access. Hardware scenarios run separately on an agreed stand
 | Level | What is checked | Where |
 | --- | --- | --- |
 | docs | `check_spec.py --strict` for the specification, local Markdown links, RU/EN pairs | `ci/run_checks.py docs`, Docs workflow |
+| format | C/C++ sources match `.clang-format` (`clang-format --dry-run --Werror`, version ≥ 16) | `ci/run_checks.py format` in the Docker image, Offline workflow |
 | host | Module host tests `Tests/host` | Linux in the Docker image and Windows (Python 3.11, 3.13), Offline workflow |
 | firmware | Building the F030R8, F103C8, F411CE CI firmware with every GCC in the lock file; build manifest; CTest `host` (traceability, `prepare.<ID>` with offline contracts); full-image preparation; rejection of a too small image policy; 10 negative ELF contract variants | `ci/run_checks.py firmware` in the Docker image, Offline workflow |
 
@@ -66,6 +67,24 @@ CI firmware — the presets in `Tests/firmware` (`cmake --preset f411ce`,
 There is no branch-prefix filter: branches of new agents are checked without
 editing the workflows. A check result belongs to a specific commit; match it to
 the branch's latest commit before merging.
+
+## Hardware check of the CI firmware (development)
+
+Separately from CI the same firmware is checked on a local Windows stand with
+`Tests/firmware/run_hw.py`. It builds a profile, runs the scenarios through the
+regular runner and GDB server and checks the expected outcome of every step:
+programming and a repeat without programming, strict identity, a full image with an
+0xA5 tail, the expected verify-only ERROR, 0xFF restore, timeout with recovery and a
+PASS afterwards.
+
+```powershell
+python -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stands/f411ce-openocd.local.toml
+```
+
+The stand is a local copy of a template from `Tests/firmware/stands/*.example.toml`
+(`*.local.toml` is not committed). Toolchain and Cube — `--toolchain`, `--cube` or
+`ARM_TOOLCHAIN_ROOT`, `STM32CUBE_REPOSITORY`. The result is `build/hw/<profile>-<stand>/summary.json`.
+The script reprograms Flash: use only boards agreed for experiments.
 
 ## What CI does not check
 

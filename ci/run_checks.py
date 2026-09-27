@@ -2,14 +2,15 @@
 
 Levels (spec 8.11):
   docs      specification consistency, local Markdown links, RU/EN documentation pairs
+  format    C/C++ sources match .clang-format (clang-format --dry-run --Werror)
   host      module host tests (unittest)
   firmware  CI firmware per GCC x profile: configure, build, build manifest, CTest host
             tests (traceability, prepare with offline contracts), full-image prepare,
             negative contract and image-policy cases
 
 Usage inside the CI image (see docs/ru/testing.md):
-  python3 ci/run_checks.py [docs] [host] [firmware] [--gcc VERSION ...] [--profile NAME ...]
-Without levels all three run. Results: build/ci/summary.json.
+  python3 ci/run_checks.py [docs] [format] [host] [firmware] [--gcc VERSION ...] [--profile NAME ...]
+Without levels all of them run. Results: build/ci/summary.json.
 """
 
 import argparse
@@ -89,6 +90,17 @@ def level_docs(record):
     record("docs.spec", lambda: run([sys.executable, check_spec, ROOT / "docs/TECHNICAL_SPECIFICATION.md", "--strict"]))
     record("docs.links", check_links)
     record("docs.pairs", check_pairs)
+
+
+# --- format ---------------------------------------------------------------------------------
+
+def level_format(record):
+    def check():
+        sources = [p for p in sorted(ROOT.rglob("*")) if p.suffix in (".c", ".h", ".cpp", ".hpp")
+                   and not any(part in ("build", ".git") for part in p.relative_to(ROOT).parts)]
+        run(["clang-format", "--dry-run", "--Werror", *sources], log=OUT / "format.log")
+        return f"{len(sources)} files"
+    record("format.clang-format", check)
 
 
 # --- host -----------------------------------------------------------------------------------
@@ -212,14 +224,14 @@ def level_firmware(record, gccs, profiles):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("levels", nargs="*", metavar="{docs,host,firmware}")
+    parser.add_argument("levels", nargs="*", metavar="{docs,format,host,firmware}")
     parser.add_argument("--gcc", action="append", choices=LOCK["gcc_versions"])
     parser.add_argument("--profile", action="append", choices=LOCK["profiles"])
     args = parser.parse_args()
-    unknown = sorted(set(args.levels) - {"docs", "host", "firmware"})
+    unknown = sorted(set(args.levels) - {"docs", "format", "host", "firmware"})
     if unknown:
         parser.error(f"unknown level: {', '.join(unknown)}")
-    levels = args.levels or ["docs", "host", "firmware"]
+    levels = args.levels or ["docs", "format", "host", "firmware"]
     OUT.mkdir(parents=True, exist_ok=True)
     results = []
 
@@ -238,6 +250,8 @@ def main():
 
     if "docs" in levels:
         level_docs(record)
+    if "format" in levels:
+        level_format(record)
     if "host" in levels:
         level_host(record)
     if "firmware" in levels:

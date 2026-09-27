@@ -12,6 +12,7 @@ CI проверяет модуль до GDB-сервера: без отладч�
 | Уровень | Что проверяется | Где |
 | --- | --- | --- |
 | docs | `check_spec.py --strict` для ТЗ, локальные ссылки Markdown, пары RU/EN | `ci/run_checks.py docs`, workflow Docs |
+| format | Исходники C/C++ соответствуют `.clang-format` (`clang-format --dry-run --Werror`, версия ≥ 16) | `ci/run_checks.py format` в Docker-образе, workflow Offline |
 | host | Host-тесты модуля `Tests/host` | Linux в Docker-образе и Windows (Python 3.11, 3.13), workflow Offline |
 | firmware | Сборка CI-прошивок F030R8, F103C8, F411CE каждым GCC из lock-файла; build manifest; CTest `host` (traceability, `prepare.<ID>` с offline-контрактами); подготовка полного образа; отказ слишком малой политики образа; 10 отрицательных вариантов ELF-контрактов | `ci/run_checks.py firmware` в Docker-образе, workflow Offline |
 
@@ -65,6 +66,23 @@ CI-прошивка — presets в `Tests/firmware` (`cmake --preset f411ce`,
 Фильтра по префиксу веток нет: ветки новых агентов проверяются без правки workflow.
 Результат проверки относится к конкретному коммиту; сверяйте его с последним
 коммитом ветки перед слиянием.
+
+## Аппаратная проверка CI-прошивок (разработка)
+
+Отдельно от CI те же прошивки проверяются на локальном Windows-стенде сценарием
+`Tests/firmware/run_hw.py`. Он собирает профиль, запускает сценарии через штатный
+runner и GDB-сервер и сверяет ожидаемый исход каждого шага: запись и повтор без
+записи, strict identity, полный образ с хвостом 0xA5, ожидаемый ERROR в verify-only,
+восстановление 0xFF, timeout с восстановлением и повторный PASS.
+
+```powershell
+python -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stands/f411ce-openocd.local.toml
+```
+
+Стенд — локальная копия шаблона из `Tests/firmware/stands/*.example.toml`
+(`*.local.toml` не коммитится). Toolchain и Cube — `--toolchain`, `--cube` или
+`ARM_TOOLCHAIN_ROOT`, `STM32CUBE_REPOSITORY`. Итог — `build/hw/<профиль>-<стенд>/summary.json`.
+Сценарий перезаписывает Flash: используйте только платы, согласованные для опытов.
 
 ## Чего CI не проверяет
 

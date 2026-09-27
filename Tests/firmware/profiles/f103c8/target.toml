@@ -1,4 +1,4 @@
-# CI profile (BluePill, LED on PC13); CMSIS-only firmware, not a HAL evidence.
+# CI profile (WeAct BluePill-Plus, LED on PB2); CMSIS-only firmware, not a HAL evidence.
 schema = 1
 name = "cif103c8"
 mcu = "STM32F103C8T6"

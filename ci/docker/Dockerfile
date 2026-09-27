@@ -7,7 +7,7 @@ FROM ${BASE_IMAGE}
 RUN test "$(dpkg --print-architecture)" = amd64 \
     && apt-get -o Acquire::Retries=3 -o APT::Update::Error-Mode=any update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        ca-certificates curl git python3 unzip xz-utils libexpat1 libgmp10 \
+        ca-certificates clang-format curl git python3 unzip xz-utils libexpat1 libgmp10 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ci/dependencies.lock.json /opt/stm32-gdbtest-ci/dependencies.lock.json

@@ -13,5 +13,5 @@ def boot(target):
 def gpio(target):
     # CMSIS macros are visible in board.c, the translation unit that includes the device header.
     target.reach("board_led_toggle")
-    target.check("PC13 clock", target.value("(RCC->APB2ENR & RCC_APB2ENR_IOPCEN) != 0"), 1)
-    target.check("PC13 output", target.value("(GPIOC->CRH & (GPIO_CRH_MODE13 | GPIO_CRH_CNF13)) == GPIO_CRH_MODE13_1"), 1)
+    target.check("PB2 clock", target.value("(RCC->APB2ENR & RCC_APB2ENR_IOPBEN) != 0"), 1)
+    target.check("PB2 output", target.value("(GPIOB->CRL & (GPIO_CRL_MODE2 | GPIO_CRL_CNF2)) == GPIO_CRL_MODE2_1"), 1)

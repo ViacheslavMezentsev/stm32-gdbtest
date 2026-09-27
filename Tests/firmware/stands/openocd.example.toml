@@ -1,0 +1,7 @@
+# ST-Link through OpenOCD. Copy to <profile>-openocd.local.toml; local files are not committed.
+[probe]
+backend = "openocd"
+serial = "REPLACE_WITH_STLINK_SERIAL"
+executable = "openocd"
+speed_khz = 1000
+flash = "if-different"
