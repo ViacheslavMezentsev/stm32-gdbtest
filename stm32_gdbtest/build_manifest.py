@@ -139,8 +139,12 @@ def load_verified(path, elf_hash, profile):
         raise ValueError("Build manifest does not match ELF; rebuild the selected firmware")
     if data.get("profile_sha256") != digest(profile):
         raise ValueError("Build manifest does not match target profile; rebuild firmware")
-    for key in ("compilers", "units", "inputs", "library_versions", "cube_packages"):
+    for key in ("compilers", "units", "inputs"):
         if not isinstance(data.get(key), list) or not data[key]:
+            raise ValueError("Incomplete build manifest: " + key)
+    # ТЗ 3.7.7: descriptive lists may be empty, e.g. HAL/CMSIS of Arduino Core instead of STM32Cube_FW_*.
+    for key in ("library_versions", "cube_packages"):
+        if not isinstance(data.get(key), list):
             raise ValueError("Incomplete build manifest: " + key)
     return data
 

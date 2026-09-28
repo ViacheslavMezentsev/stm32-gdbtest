@@ -106,6 +106,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Fixed
 
+- A build manifest with empty `cube_packages` and `library_versions` is no longer
+  rejected: HAL and CMSIS may come from outside an `STM32Cube_FW_*` package (Arduino Core STM32).
 - Remote server: the runner sends a heartbeat into the SSH session every 2 s; when the link
   is lost without closing the connection (Wi-Fi, cable, sleep), the server on the stand
   host stops and the debugger is freed after 15 s instead of hours. Checked on Orange Pi 5

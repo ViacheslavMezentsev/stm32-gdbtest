@@ -42,7 +42,9 @@ Contents:
   the hash of the full command without publishing personal paths;
 - the STM32Cube package name separately from the numeric HAL and CMSIS version
   declarations with the source file and its hash — literals are read, the
-  preprocessor is not run.
+  preprocessor is not run. When HAL and CMSIS do not come from an `STM32Cube_FW_*`
+  package (for example Arduino Core STM32), the package list is empty and the
+  versions hold only the literals found; this is not an error.
 
 The runner copies the ELF and compares its SHA-256 and the current `target.toml` with
 the manifest. A mismatch, a missing file or an unsupported schema gives ERROR before

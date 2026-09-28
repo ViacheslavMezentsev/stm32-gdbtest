@@ -29,7 +29,7 @@ class BuildManifestTests(unittest.TestCase):
 
     def test_mismatched_artifacts_and_incomplete_schema_are_rejected(self):
         for key, value in (("schema", True), ("schema", 2), ("elf_sha256", "stale"),
-                           ("profile_sha256", "stale"), ("units", [])):
+                           ("profile_sha256", "stale"), ("units", []), ("cube_packages", None)):
             with self.subTest(key=key, value=value):
                 changed = dict(self.data, **{key: value})
                 self.manifest.write_text(json.dumps(changed))
@@ -38,6 +38,13 @@ class BuildManifestTests(unittest.TestCase):
         self.manifest.unlink()
         with self.assertRaises(FileNotFoundError):
             load_verified(self.manifest, digest(self.elf), self.profile)
+
+    def test_descriptive_lists_may_be_empty(self):
+        # TC-113: ТЗ 3.7.7 — HAL/CMSIS of Arduino Core, not an STM32Cube_FW_* package
+        self.data.update(cube_packages=[], library_versions=[])
+        self.save()
+        manifest = load_verified(self.manifest, digest(self.elf), self.profile)
+        self.assertEqual((manifest["cube_packages"], manifest["library_versions"]), ([], []))
 
     def test_runtime_uses_snapshot_without_rereading_build_sources(self):
         self.data["inputs"] = [{"file": "missing/source.c", "sha256": "historical"}]
