@@ -20,7 +20,7 @@ the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 - [GDB servers](BACKENDS.md) — OpenOCD, ST-LINK GDB Server, J-Link; the stand.
 - [Identity and Flash](TARGET_IDENTITY.md) — DEV_ID and the factory Flash size.
 - [Debugger ownership](DEBUGGER_OWNERSHIP.md) — cross-project locking on Windows and Linux.
-- [Linux stand](LINUX_STAND.md) — environment without root (Ubuntu 20.04, Orange Pi 5), USB, J-Link, WSL2.
+- [Linux stand](LINUX_STAND.md) — environment without root (Ubuntu 20.04, Orange Pi 5), USB, J-Link, remote GDB server over SSH, WSL2.
 
 ## Status and maintenance
 

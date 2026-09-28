@@ -67,7 +67,8 @@ name or `dev/`. A new agent picks its own prefix and does not reuse another's.
 
 One branch — one task. A merged branch is not reused for another task; follow-up
 work starts a new branch from the updated main. Pull requests are not used: after
-the checks the branch is merged into main by fast-forward and deleted with `git land`
+the checks the branch is merged into main by fast-forward and deleted with `git land` —
+a temporary order until the first release
 ([HOWTO](HOWTO.md#git-working-without-pull-requests)). A branch behind main is first
 rebased onto it (`git rebase -S`, conflicts resolved, affected checks repeated). Force push and
 rewriting published history are not allowed. Successful checks of an older commit do not count for new changes.

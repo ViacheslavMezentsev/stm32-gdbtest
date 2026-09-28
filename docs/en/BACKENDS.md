@@ -19,6 +19,7 @@ The `[probe]` table of the local TOML:
 | `executable` | Server: a name on PATH or an absolute path; defaults `openocd`, `ST-LINK_gdbserver(.exe)`, `JLinkGDBServerCL.exe` (Windows) or `JLinkGDBServerCLExe` (Linux) |
 | `speed_khz` | 1…4000, default 1000 — an upper limit, not the actual interface frequency |
 | `flash` | `if-different` (default) or `verify-only` |
+| `[remote]` | A separate table: the GDB server on a Linux stand host over SSH ([Linux stand](LINUX_STAND.md#remote-gdb-server-windows-or-wsl--orange-pi)); `executable` and `programmer_dir` then refer to the stand host |
 | `startup_timeout_s` | 1…120, default 10 — how long to wait for the server to become ready; probes with a slow target connection need more |
 | `programmer_dir` | `stlink` only: absolute directory containing `STM32_Programmer_CLI.exe` (without `.exe` on Linux) |
 

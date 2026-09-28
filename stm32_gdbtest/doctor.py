@@ -8,8 +8,8 @@ import shutil
 import subprocess
 import sys
 
-from stm32_gdbtest import backends
-from stm32_gdbtest.processes import FLAGS, lock_directory
+from stm32_gdbtest import backends, remote as remote_host
+from stm32_gdbtest.processes import FLAGS, lock_directory, probe_identity
 from stm32_gdbtest.runner import tool
 
 USB_VENDORS = {"0483": "ST-Link", "1366": "J-Link"}
@@ -115,13 +115,18 @@ def diagnose(gdb=None, stand=None, sysfs=Path("/sys/bus/usb/devices")):
     if stand:
         try:
             loaded = backends.load_stand(stand)
-            add("stand", "OK", f"{loaded['backend']} {loaded['executable']}")
+            where = f" on {loaded['remote']['host']} over SSH" if loaded.get("remote") else ""
+            add("stand", "OK", f"{loaded['backend']} {loaded['executable']}{where}")
         except Exception as error:  # reported as a diagnostic, not raised
             hint = ""
             if not backends.WINDOWS and "stlink" in Path(stand).read_text(errors="replace") \
                     and arch in ("aarch64", "arm64"):
                 hint = "; ST-LINK GDB Server has no Linux arm64 build, use openocd"
             add("stand", "FAIL", f"{error}{hint}")
+    if loaded and loaded.get("remote"):
+        # ТЗ 5.18.6: the stand host is checked through the same SSH path the runner uses.
+        _check_remote(loaded, add)
+        return results
     if loaded and loaded["backend"] == "openocd":
         code, text = _output([loaded["executable"], "--version"])
         first = text.splitlines()[0] if text else ""
@@ -144,6 +149,33 @@ def diagnose(gdb=None, stand=None, sysfs=Path("/sys/bus/usb/devices")):
     else:
         add("usb", "OK", "USB access is not checked on this OS")
     return results
+
+
+def _check_remote(stand, add):
+    remote = stand["remote"]
+    config = remote_host.check_config(probe_identity(stand["serial"], stand["backend"]), stand["executable"])
+    try:
+        code, text = _output(remote_host.ssh_command(remote) + [remote_host.remote_script(remote, config)], timeout=40)
+    except subprocess.TimeoutExpired:
+        add("remote", "FAIL", f"{remote['host']}: SSH did not answer in 40 s")
+        return
+    result = remote_host.check_result(text)
+    if not result:
+        hint = remote_host.environment_hint(code) or "see the output"
+        add("remote", "FAIL", f"{remote['host']}: {hint}: {text.strip()[-300:]}")
+        return
+    old = tuple(int(x) for x in result["python"].split(".")[:2]) < (3, 8)
+    add("remote", "FAIL" if old else "OK",
+        f"{remote['host']}: {result['machine']}, helper Python {result['python']}" + (" (3.8+ required)" if old else ""))
+    add("remote-server", "OK" if result["executable"] else "FAIL",
+        result["executable"] or f"{stand['executable']} not found on the stand host (check env_script or PATH)")
+    add("remote-lock", "OK" if result["lock_writable"] else "FAIL", result["lock_dir"])
+    for device in result["usb"]:
+        add("remote-usb", "OK" if device["access"] else "FAIL",
+            f"{device['kind']} {device['product_id']} serial {device['serial'] or '?'} {device['node']}"
+            + ("" if device["access"] else ": no read/write access, install udev rules on the stand host"))
+    if not any(_serial_matches(d, stand) for d in result["usb"]):
+        add("remote-usb", "WARN", f"no {stand['backend']} debugger with the stand serial on the stand host")
 
 
 def main(gdb=None, stand=None, as_json=False):

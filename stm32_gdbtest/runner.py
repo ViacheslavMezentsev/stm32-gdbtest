@@ -5,7 +5,8 @@ import hashlib
 import json
 import math
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
+import random
 import socket
 import subprocess
 import time
@@ -13,7 +14,8 @@ import traceback
 
 from stm32_gdbtest.backends import load_stand, server_spec
 from stm32_gdbtest.profile import load_profile
-from stm32_gdbtest.processes import FLAGS, probe_lock, spawn_options, stop_tree
+from stm32_gdbtest.processes import FLAGS, probe_identity, probe_lock, spawn_options, stop_tree
+from stm32_gdbtest import remote as remote_host
 from stm32_gdbtest.reports import CODES, write_reports
 from stm32_gdbtest.compatibility import runtime_manifest
 from stm32_gdbtest.build_manifest import load_verified
@@ -67,6 +69,8 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
         stand = load_stand(path) if path else None
         if stand:
             report["backend"] = stand["backend"]
+            if stand.get("remote"):
+                report["server_host"] = stand["remote"]["host"]
         profile = load_profile(session["profile"])
         report["profile"] = profile
         if prepare_only:
@@ -94,7 +98,7 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
 
 
 def execute(session, test, stand, out, report, timeout, profile, prepare_only=False):
-    server = client = None
+    server = client = remote = None
     ready = False
     env = os.environ.copy()
     project_root = Path(session.get("root", ROOT)).resolve()
@@ -201,7 +205,14 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
             sock.bind(("127.0.0.1", 0))
             port = sock.getsockname()[1]
         endpoint = f"127.0.0.1:{port}"
-        backend = server_spec(stand, port, profile, out)
+        remote = stand.get("remote")
+        if remote:
+            # ТЗ 5.18.2: the helper substitutes the stand host's port and run directory.
+            remote_port = random.randint(40000, 59999)
+            backend = server_spec(stand, "{port}", profile, PurePosixPath("{dir}"))
+            backend["ready"] = backend["ready"].replace("{port}", str(remote_port))
+        else:
+            backend = server_spec(stand, port, profile, out)
         report["backend_commands"] = dict(reset_halt=backend["reset_halt"], finish=backend["finish"],
                                           setup=backend.get("setup", []))
         run_data = dict(test=test, elf=str(elf), image=str(image), result=str(agent_result),
@@ -214,15 +225,32 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
         run_file = out / "run.json"
         run_file.write_text(json.dumps(run_data), encoding="utf-8")
         env["STM32_GDBTEST_RUN"] = str(run_file)
-        with (out / "server.log").open("wb") as server_log, (out / "gdb.log").open("wb") as gdb_log:
-            server = subprocess.Popen(backend["command"], env=env, cwd=out,
-                                      stdout=server_log, stderr=subprocess.STDOUT, **spawn_options())
+        with (out / "server.log").open("wb") as server_log, (out / "gdb.log").open("wb") as gdb_log, \
+                (out / "tunnel.log").open("wb") if remote else open(os.devnull, "wb") as tunnel_log:
             limit = stand.get("startup_timeout_s", 10)
+            if remote:
+                config = remote_host.serve_config(probe_identity(stand["serial"], stand["backend"]),
+                                                  remote_port, backend["command"])
+                command = remote_host.ssh_command(remote, "-v", "-o", "ExitOnForwardFailure=yes", "-L",
+                                                  f"127.0.0.1:{port}:127.0.0.1:{remote_port}")
+                server = subprocess.Popen(command + [remote_host.remote_script(remote, config)], env=env,
+                                          cwd=out, stdin=subprocess.PIPE, stdout=server_log, stderr=tunnel_log,
+                                          **spawn_options())
+                limit += 10  # SSH connection and authentication
+            else:
+                server = subprocess.Popen(backend["command"], env=env, cwd=out,
+                                          stdout=server_log, stderr=subprocess.STDOUT, **spawn_options())
             deadline = time.monotonic() + limit
             while time.monotonic() < deadline:
+                text = (out / "server.log").read_text(errors="replace")
+                if remote and remote_host.parse_marker(text, "error"):
+                    raise RuntimeError("Stand host refused the run: " + remote_host.parse_marker(text, "error"))
                 if server.poll() is not None:
-                    raise RuntimeError("GDB server exited before ready; see server.log")
-                if backend["ready"] in (out / "server.log").read_text(errors="replace"):
+                    hint = remote_host.environment_hint(server.returncode) if remote else ""
+                    raise RuntimeError("GDB server exited before ready; see server.log"
+                                       + (" and tunnel.log (" + hint + ")" if remote else ""))
+                if backend["ready"] in text and (not remote or remote_host.forwarding_ready(
+                        (out / "tunnel.log").read_text(errors="replace"))):
                     ready = True
                     break
                 time.sleep(0.1)
@@ -259,6 +287,13 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
             report.update(status="ERROR", teardown_error=traceback.format_exc())
         finally:
             try:
+                if remote and server is not None and server.poll() is None:
+                    # EOF on the session lets the helper stop the server, send its logs and unlock.
+                    server.stdin.close()
+                    try:
+                        server.wait(timeout=12)
+                    except subprocess.TimeoutExpired:
+                        pass
                 stop_tree(server)
             except BaseException:
                 report.update(status="ERROR", cleanup_error=traceback.format_exc())

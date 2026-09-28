@@ -1,0 +1,15 @@
+# GDB server and debugger on a Linux stand host (e.g. Orange Pi 5), runner on this computer.
+# Copy to <profile>-remote.local.toml. SSH keys only: no passwords here (docs/en/LINUX_STAND.md).
+[probe]
+backend = "openocd"                      # or "jlink"; ST-LINK GDB Server has no arm64 build
+serial = "REPLACE_WITH_DEBUGGER_SERIAL"
+executable = "openocd"                   # on the stand host; J-Link: /opt/SEGGER/JLink/JLinkGDBServerCLExe
+speed_khz = 1000
+flash = "if-different"
+
+[remote]
+host = "REPLACE_WITH_STAND_HOST"         # address, name or ~/.ssh/config alias
+user = "orangepi"
+# port = 22
+# identity_file = "C:/Users/<user>/.ssh/id_ed25519_stand"
+# env_script = "~/.local/stm32-gdbtest/env.sh"   # default when the file exists

@@ -13,7 +13,9 @@ commands are the same in both except for quoting (section "The `git land` alias"
 ## Git: working without pull requests
 
 A branch `<agent>/<task>` is created from a fresh main and, after the checks, merged
-into main by fast-forward. The GitHub web interface cannot merge without a pull
+into main by fast-forward. This is a temporary order until the first release, while
+branches serve as experiments and intermediate steps; it is revised when the release
+is prepared. The GitHub web interface cannot merge without a pull
 request, and GitHub's automatic branch deletion works for pull requests only, so
 merging and cleanup are done locally.
 
@@ -169,6 +171,29 @@ Stop-Process -Id <pid>
 The run directory is printed in the final `run` line and in `summary.json` of
 `run_hw.py`. It holds `result.json`, `server.log`, `gdb.log`, `recovery.log` and the
 server logs ([API](API.md), [checks and CI](testing.md)).
+
+## Remote GDB server over SSH
+
+Setup: [Linux stand](LINUX_STAND.md#remote-gdb-server-windows-or-wsl--orange-pi). Check the
+connection manually with the same options the runner uses:
+
+```powershell
+ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -i <key> orangepi@<host> "python3 --version"
+```
+
+| Message | What to do |
+| --- | --- |
+| `Permission denied (publickey…)` in `tunnel.log` | The key is not in `~/.ssh/authorized_keys` on the stand host or another `identity_file` is set; a key with a passphrase works only through `ssh-agent` |
+| `Host key verification failed` | The host key is not in `known_hosts` or has changed (OS reinstall): run `ssh orangepi@<host> exit` once; for a changed key first `ssh-keygen -R <host>` |
+| `Stand host refused the run: busy …` | The debugger on the stand host is busy: another run from Windows or a local run on the Orange Pi |
+| `Stand host refused the run: abandoned …` | A previous run on the stand host crashed: on the Orange Pi `pgrep -a openocd; pgrep -a JLink`, stop leftovers, retry |
+| `Stand host refused the run: executable …` | The server is not found on the stand host: check the `executable` path, for OpenOCD that `~/.local/stm32-gdbtest/env.sh` exists or set `env_script` |
+| `GDB server exited before ready; see server.log and tunnel.log (env_script …)` | Code 97: the given `env_script` could not be sourced; code 255: an SSH error (key, host, network) |
+| `Passwords are not supported in [remote]` | Passwords are not allowed in the stand: set up key login |
+
+Undo: remove the `[remote]` table from the stand (or the stand file), remove the key
+from `~/.ssh/authorized_keys` on the stand host, and the host entry with
+`ssh-keygen -R <host>`.
 
 ## Docker and CI
 

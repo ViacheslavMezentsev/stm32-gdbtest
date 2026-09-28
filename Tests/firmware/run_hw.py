@@ -71,7 +71,8 @@ def main():
         sys.exit("Set ARM_TOOLCHAIN_ROOT and STM32CUBE_REPOSITORY (source env.sh of tools/linux_stand.py) "
                  "or pass --toolchain and --cube")
     stand_path = args.stand.resolve()
-    probe = tomllib.loads(stand_path.read_text(encoding="utf-8"))["probe"]
+    document = tomllib.loads(stand_path.read_text(encoding="utf-8"))
+    probe = document["probe"]
     name = f"{args.profile}-{stand_path.name.split('.')[0]}"
     build = FIRMWARE / "build" / f"hw-{name}"
     out = ROOT / "build/hw" / name
@@ -88,8 +89,10 @@ def main():
     policy_a5 = out / "full-image-a5.toml"
     policy_a5.write_text(policy.read_text(encoding="utf-8").replace("fill = 255", "fill = 165"), encoding="utf-8")
     stand_verify = out / "stand-verify-only.toml"
-    stand_verify.write_text("[probe]\n" + "".join(
-        f"{key} = {json.dumps(value)}\n" for key, value in dict(probe, flash="verify-only").items()), encoding="utf-8")
+    tables = dict(document, probe=dict(probe, flash="verify-only"))  # keeps [remote] of a remote stand
+    stand_verify.write_text("".join(f"[{table}]\n" + "".join(f"{key} = {json.dumps(value)}\n"
+                                                             for key, value in values.items())
+                                    for table, values in tables.items()), encoding="utf-8")
     results = []
 
     def scenario(test_id, *extra, stand=stand_path, image_policy=None, expect=0):
@@ -184,6 +187,7 @@ def main():
         results.append(entry)
         print(f"{status} {step} ({entry['seconds']}s)" + (f": {detail}" if detail else ""), flush=True)
     summary = dict(schema=1, profile=args.profile, backend=probe.get("backend"), stand=stand_path.name,
+                   server_host=document.get("remote", {}).get("host", "local"),
                    host=f"{platform.system()} {platform.release()} {platform.machine()}",
                    toolchain=str(args.toolchain), passed=sum(r["status"] == "PASS" for r in results),
                    total=len(results), steps=results)

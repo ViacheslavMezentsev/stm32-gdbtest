@@ -4,10 +4,11 @@
 
 Hardware runs work on Linux x86_64 and aarch64 with glibc ≥ 2.31, which includes
 Ubuntu 20.04. The target validation stand is an Orange Pi 5 with Ubuntu 20.04
-(aarch64). The runner, the GDB server and the debugger are on one computer; a remote
-server over SSH is not supported yet (question 11.2.18 of the
-[specification](../TECHNICAL_SPECIFICATION.md), Russian). Requirements: items
-5.4.8–5.4.11, 5.17 and 6.10 of the specification.
+(aarch64). The runner, the GDB server and the debugger are on one computer, or the GDB server
+runs on the Orange Pi and the runner on Windows or in WSL
+([remote GDB server](#remote-gdb-server-windows-or-wsl--orange-pi)). Requirements: items
+5.4.8–5.4.11, 5.17, 5.18 and 6.10 of the [specification](../TECHNICAL_SPECIFICATION.md)
+(Russian).
 
 ## Environment without root
 
@@ -99,6 +100,59 @@ The debugger is protected by an `flock` file in `/tmp/stm32-gdbtest-locks` (or i
 `STM32_GDBTEST_LOCK_DIR`) shared by all users and projects of the host. The server and
 GDB run in their own process group and stop together with their children. Details and
 behaviour after a crash: [debugger ownership](DEBUGGER_OWNERSHIP.md#linux).
+
+## Remote GDB server (Windows or WSL → Orange Pi)
+
+The runner, GDB and the build stay on the developer's computer (Windows or WSL), while
+the GDB server and the debuggers are on the Orange Pi. For that the stand gets a
+`[remote]` table. The runner opens one SSH session: it forwards a local port to the
+server's port on the Orange Pi and starts a small helper script there. The helper takes
+the same debugger lock as local runs on the Orange Pi, starts the server and stops it
+when the session closes or breaks. No copy of the module is needed on the Orange Pi,
+only the stand environment (for xPack OpenOCD) and the J-Link software. Passwords are
+not supported: only an SSH key and a known host key.
+
+Once on Windows (PowerShell):
+
+```powershell
+ssh-keygen -t ed25519 -f $env:USERPROFILE\.ssh\id_ed25519_stand     # empty passphrase or ssh-agent
+type $env:USERPROFILE\.ssh\id_ed25519_stand.pub | ssh orangepi@<host> "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+ssh -i $env:USERPROFILE\.ssh\id_ed25519_stand orangepi@<host> exit   # accept the host key; no password from now on
+```
+
+The second command asks for the password for the last time. A key with a passphrase
+works only through `ssh-agent` (the OpenSSH Authentication Agent service on Windows):
+the runner starts SSH without interactive input. After key login works, password login
+on the Orange Pi can be disabled (`PasswordAuthentication no` in `/etc/ssh/sshd_config`,
+then `sudo systemctl restart ssh`).
+
+The stand is a copy of the [template](../../Tests/firmware/stands/remote.example.toml):
+
+```toml
+[probe]
+backend = "jlink"
+serial = "<serial>"
+executable = "/opt/SEGGER/JLink/JLinkGDBServerCLExe"   # path on the Orange Pi
+
+[remote]
+host = "<host>"                  # address, name or an alias from ~/.ssh/config
+user = "orangepi"
+identity_file = "C:/Users/<user>/.ssh/id_ed25519_stand"
+```
+
+For OpenOCD `executable` is just `openocd`: `~/.local/stm32-gdbtest/env.sh` is sourced on
+the Orange Pi before the server starts (another path: `env_script`). Check and run from
+Windows as for a local stand:
+
+```powershell
+python -B -m stm32_gdbtest doctor --stand Tests/firmware/stands/f411ce-remote.local.toml
+python -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stands/f411ce-remote.local.toml
+```
+
+`doctor` checks Python, the server, the lock directory and USB debuggers on the Orange Pi
+through the same SSH session. The run directory gets `tunnel.log` (the SSH log), and
+the server logs from the Orange Pi go to `server.log`. Common errors are in the
+[HOWTO](HOWTO.md#remote-gdb-server-over-ssh).
 
 ## WSL2 and usbipd-win
 

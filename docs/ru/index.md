@@ -20,7 +20,7 @@
 - [GDB-серверы](BACKENDS.md) — OpenOCD, ST-LINK GDB Server, J-Link; стенд.
 - [Identity и Flash](TARGET_IDENTITY.md) — DEV_ID и заводской размер Flash.
 - [Владение отладчиком](DEBUGGER_OWNERSHIP.md) — межпроектная блокировка на Windows и Linux.
-- [Linux-стенд](LINUX_STAND.md) — окружение без root (Ubuntu 20.04, Orange Pi 5), USB, J-Link, WSL2.
+- [Linux-стенд](LINUX_STAND.md) — окружение без root (Ubuntu 20.04, Orange Pi 5), USB, J-Link, удалённый GDB-сервер по SSH, WSL2.
 
 ## Состояние и сопровождение
 

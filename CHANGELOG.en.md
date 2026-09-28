@@ -8,6 +8,11 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- Remote GDB server: the `[remote]` stand table. The runner and GDB run on Windows or in
+  WSL, the server and the debugger on a Linux stand host (Orange Pi 5); one SSH session
+  with port forwarding and a helper script, the stand host's lock, the server stopped
+  when the session closes or breaks, SSH keys only; `doctor` checks the stand host.
+  Template `Tests/firmware/stands/remote.example.toml`.
 - HOWTO `docs/ru|en/HOWTO.md`: git commands and the `git land` alias (fast-forward merge
   without pull requests plus branch deletion), undoing changes, common Linux stand,
   debugger and Docker problems; linked from AGENTS.md.

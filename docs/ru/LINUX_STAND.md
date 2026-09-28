@@ -4,9 +4,9 @@
 
 Аппаратный запуск работает на Linux x86_64 и aarch64 с glibc ≥ 2.31, то есть и на
 Ubuntu 20.04. Целевой стенд проверки — Orange Pi 5 с Ubuntu 20.04 (aarch64). Runner,
-GDB-сервер и отладчик находятся на одном компьютере; удалённый сервер по SSH пока
-не поддерживается (вопрос 11.2.18 [ТЗ](../TECHNICAL_SPECIFICATION.md)). Требования —
-п. 5.4.8–5.4.11, 5.17 и 6.10 ТЗ.
+GDB-сервер и отладчик находятся на одном компьютере, либо GDB-сервер работает на
+Orange Pi, а runner — на Windows или в WSL ([удалённый GDB-сервер](#удалённый-gdb-сервер-windows-или-wsl--orange-pi)).
+Требования — п. 5.4.8–5.4.11, 5.17, 5.18 и 6.10 [ТЗ](../TECHNICAL_SPECIFICATION.md).
 
 ## Окружение без root
 
@@ -97,6 +97,59 @@ python3 -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stan
 `STM32_GDBTEST_LOCK_DIR`), общим для всех пользователей и проектов хоста. Сервер и
 GDB работают в отдельной группе процессов и останавливаются вместе с потомками.
 Подробности и поведение после аварии — [владение отладчиком](DEBUGGER_OWNERSHIP.md#linux).
+
+## Удалённый GDB-сервер (Windows или WSL → Orange Pi)
+
+Runner, GDB и сборка остаются на компьютере разработчика (Windows или WSL), а
+GDB-сервер и отладчики — на Orange Pi. Для этого в стенд добавляется таблица
+`[remote]`. Runner открывает одну SSH-сессию: она пробрасывает локальный порт на порт
+сервера на Orange Pi и запускает там небольшой вспомогательный скрипт. Скрипт берёт
+ту же блокировку отладчика, что и локальные запуски на Orange Pi, запускает сервер и
+останавливает его, когда сессия закрывается или обрывается. Копия модуля на Orange Pi
+не нужна, достаточно окружения стенда (для xPack OpenOCD) и ПО J-Link. Пароли не
+поддерживаются: только SSH-ключ и заранее известный ключ хоста.
+
+Один раз на Windows (PowerShell):
+
+```powershell
+ssh-keygen -t ed25519 -f $env:USERPROFILE\.ssh\id_ed25519_stand     # пустая фраза или ssh-agent
+type $env:USERPROFILE\.ssh\id_ed25519_stand.pub | ssh orangepi@<хост> "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+ssh -i $env:USERPROFILE\.ssh\id_ed25519_stand orangepi@<хост> exit   # принять ключ хоста; пароль больше не спрашивается
+```
+
+Во второй команде пароль вводится в последний раз. Ключ с фразой-паролем работает
+только через `ssh-agent` (служба OpenSSH Authentication Agent в Windows): runner
+запускает SSH без интерактивного ввода. После проверки входа по ключу вход по паролю
+на Orange Pi можно отключить (`PasswordAuthentication no` в `/etc/ssh/sshd_config`,
+затем `sudo systemctl restart ssh`).
+
+Стенд — копия [шаблона](../../Tests/firmware/stands/remote.example.toml):
+
+```toml
+[probe]
+backend = "jlink"
+serial = "<serial>"
+executable = "/opt/SEGGER/JLink/JLinkGDBServerCLExe"   # путь на Orange Pi
+
+[remote]
+host = "<хост>"                  # адрес, имя или псевдоним из ~/.ssh/config
+user = "orangepi"
+identity_file = "C:/Users/<user>/.ssh/id_ed25519_stand"
+```
+
+`executable` для OpenOCD — просто `openocd`: перед запуском сервера на Orange Pi
+подключается `~/.local/stm32-gdbtest/env.sh` (другой путь — `env_script`). Проверка и
+запуск — с Windows, как для локального стенда:
+
+```powershell
+python -B -m stm32_gdbtest doctor --stand Tests/firmware/stands/f411ce-remote.local.toml
+python -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stands/f411ce-remote.local.toml
+```
+
+`doctor` проверяет через ту же SSH-сессию Python, сервер, каталог блокировок и
+отладчики USB на Orange Pi. В каталоге запуска появляется `tunnel.log` (журнал SSH),
+а журналы сервера с Orange Pi попадают в `server.log`. Частые ошибки — в
+[памятке](HOWTO.md#удалённый-gdb-сервер-по-ssh).
 
 ## WSL2 и usbipd-win
 

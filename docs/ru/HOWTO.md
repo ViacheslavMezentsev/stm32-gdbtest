@@ -14,7 +14,8 @@
 ## Git: рабочий цикл без PR
 
 Ветка `<агент>/<задача>` создаётся от свежего main и после проверок сливается в main
-перемоткой (fast-forward). Слить без PR в веб-интерфейсе GitHub нельзя, и
+перемоткой (fast-forward). Это временный порядок до первого релиза, пока ветки служат
+опытами и промежуточными шагами; при подготовке релиза он пересматривается. Слить без PR в веб-интерфейсе GitHub нельзя, и
 автоудаление веток GitHub работает только для PR, поэтому слияние и уборка делаются
 локально.
 
@@ -169,6 +170,28 @@ Stop-Process -Id <pid>
 Каталог запуска указан в итоговой строке `run` и в `summary.json` сценария `run_hw.py`.
 Там лежат `result.json`, `server.log`, `gdb.log`, `recovery.log` и журналы серверов
 ([API](API.md), [проверки и CI](testing.md)).
+
+## Удалённый GDB-сервер по SSH
+
+Настройка — [Linux-стенд](LINUX_STAND.md#удалённый-gdb-сервер-windows-или-wsl--orange-pi).
+Проверка связи вручную той же командой, что использует runner:
+
+```powershell
+ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -i <ключ> orangepi@<хост> "python3 --version"
+```
+
+| Сообщение | Что делать |
+| --- | --- |
+| `Permission denied (publickey…)` в `tunnel.log` | Ключ не добавлен в `~/.ssh/authorized_keys` на хосте стенда или указан другой `identity_file`; ключ с фразой-паролем — только через `ssh-agent` |
+| `Host key verification failed` | Ключа хоста нет в `known_hosts` или он изменился (переустановка ОС): один раз `ssh orangepi@<хост> exit`; для изменившегося ключа сначала `ssh-keygen -R <хост>` |
+| `Stand host refused the run: busy …` | Отладчик на хосте стенда занят: другой запуск с Windows или локальный запуск на Orange Pi |
+| `Stand host refused the run: abandoned …` | Прежний запуск на хосте стенда завершился аварийно: на Orange Pi `pgrep -a openocd; pgrep -a JLink`, остановить остатки, повторить |
+| `Stand host refused the run: executable …` | Сервер не найден на хосте стенда: проверить путь `executable`, для OpenOCD — наличие `~/.local/stm32-gdbtest/env.sh` или `env_script` |
+| `GDB server exited before ready; see server.log and tunnel.log (env_script …)` | Код 97: указанный `env_script` не удалось подключить; код 255: ошибка SSH (ключ, хост, сеть) |
+| `Passwords are not supported in [remote]` | Пароли в стенде не допускаются: настроить вход по ключу |
+
+Вернуть как было: удалить таблицу `[remote]` из стенда (или файл стенда), убрать ключ
+из `~/.ssh/authorized_keys` на хосте стенда, запись хоста — `ssh-keygen -R <хост>`.
 
 ## Docker и CI
 

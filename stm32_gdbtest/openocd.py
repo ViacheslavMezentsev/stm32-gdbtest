@@ -18,7 +18,11 @@ def startup_timeout(data):
 
 
 def load_stand(path):
-    data = tomllib.loads(Path(path).read_text(encoding="utf-8"))["probe"]
+    return validate(tomllib.loads(Path(path).read_text(encoding="utf-8"))["probe"])
+
+
+def validate(data, local=True):
+    """[probe] for OpenOCD; a remote stand resolves the executable on the stand host."""
     if set(data) - {"backend", "serial", "executable", "speed_khz", "flash", "startup_timeout_s"}:
         raise ValueError("Unknown probe setting; check the stand TOML")
     if data.get("backend") != "openocd":
@@ -31,7 +35,7 @@ def load_stand(path):
     policy = data.get("flash", "if-different")
     if policy not in ("if-different", "verify-only"):
         raise ValueError("flash must be if-different or verify-only")
-    executable = shutil.which(data.get("executable", "openocd"))
+    executable = shutil.which(data.get("executable", "openocd")) if local else data.get("executable", "openocd")
     if not executable:
         raise FileNotFoundError("OpenOCD executable not found")
     return dict(data, executable=executable, speed_khz=speed, flash=policy,

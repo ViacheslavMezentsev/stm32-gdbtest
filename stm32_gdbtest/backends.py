@@ -6,7 +6,7 @@ import re
 import shutil
 import tomllib
 
-from stm32_gdbtest import openocd
+from stm32_gdbtest import openocd, remote as remote_host
 
 
 # Vendor names differ by OS: SEGGER ships JLinkGDBServerCLExe on Linux; ST keeps the
@@ -20,9 +20,13 @@ PROGRAMMER = "STM32_Programmer_CLI.exe" if WINDOWS else "STM32_Programmer_CLI"
 
 
 def load_stand(path):
-    data = tomllib.loads(Path(path).read_text(encoding="utf-8"))["probe"]
+    document = tomllib.loads(Path(path).read_text(encoding="utf-8"))
+    data = document["probe"]
+    # ТЗ 5.18.1: [remote] moves the server to a stand host; its tools are resolved there.
+    remote = remote_host.load(document.get("remote"))
+    local = remote is None
     if data.get("backend") == "openocd":
-        return openocd.load_stand(path)
+        return dict(openocd.validate(data, local), remote=remote)
     if data.get("backend") not in ("stlink", "jlink"):
         raise ValueError("Supported backends: openocd, stlink, jlink")
     allowed = {"backend", "serial", "executable", "speed_khz", "flash", "startup_timeout_s"}
@@ -41,16 +45,25 @@ def load_stand(path):
     if policy not in ("if-different", "verify-only"):
         raise ValueError("flash must be if-different or verify-only")
     data = dict(data, startup_timeout_s=openocd.startup_timeout(data))
-    executable = shutil.which(data.get("executable", DEFAULT_SERVER[data["backend"]]))
+    if local:
+        executable = shutil.which(data.get("executable", DEFAULT_SERVER[data["backend"]]))
+    else:
+        executable = data.get("executable", remote_host.stand_executable_default(data["backend"]))
     if not executable:
         raise FileNotFoundError("GDB Server executable not found")
     if data["backend"] == "jlink":
-        return dict(data, executable=executable, speed_khz=speed, flash=policy)
-    programmer = Path(data.get("programmer_dir", ""))
-    if not programmer.is_absolute() or not (programmer / PROGRAMMER).is_file():
-        raise ValueError("programmer_dir must contain " + PROGRAMMER)
-    return dict(data, executable=executable, programmer_dir=str(programmer),
-                speed_khz=speed, flash=policy)
+        return dict(data, executable=executable, speed_khz=speed, flash=policy, remote=remote)
+    if local:
+        programmer = Path(data.get("programmer_dir", ""))
+        if not programmer.is_absolute() or not (programmer / PROGRAMMER).is_file():
+            raise ValueError("programmer_dir must contain " + PROGRAMMER)
+        programmer = str(programmer)
+    else:
+        programmer = data.get("programmer_dir", "")
+        if not isinstance(programmer, str) or not programmer.startswith("/"):
+            raise ValueError("programmer_dir must be an absolute path on the stand host")
+    return dict(data, executable=executable, programmer_dir=programmer,
+                speed_khz=speed, flash=policy, remote=remote)
 
 
 def server_spec(stand, port, profile, out):
