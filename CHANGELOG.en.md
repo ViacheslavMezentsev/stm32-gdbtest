@@ -13,6 +13,7 @@ Versions: [policy](docs/en/VERSIONING.md).
   and runs it on a stand without rebuilding; `run_hw.py --package`.
 - The Hardware workflow (manual only): build and `pack` on GitHub, run the packages on a
   self-hosted runner with a stand. `run_hw.py --repeat` for loop runs with `soak.json`.
+  Checked: packages from Windows on Orange Pi 5 — three stands × 10/10; a loop with interruption.
   Documentation `docs/ru|en/HARDWARE_CI.md`.
 - DDTT 0.2 method specification (Debugger-Driven Testing on Target) `docs/ru|en/DDTT.md`:
   scope, terms, principles, model, requirements for scenarios, stands, tools and agents

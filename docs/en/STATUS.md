@@ -48,8 +48,8 @@ API contents; a matching HAL version does not prove matching behaviour.
 | Runner and GDB on Windows, server and debugger on Orange Pi 5 over SSH | Checked: 3 stands × 10/10 |
 | Linux x86_64 locally | Implemented; CI covers environment, build and preparation; not checked on hardware |
 | WSL2: debugger through usbipd or server on Orange Pi over SSH | Implemented as Linux; not checked on hardware |
-| Build in one place, run on a stand (`pack`, `run --package`) | Implemented; checked without hardware and through SSH loopback; not checked on hardware |
-| Hardware CI on a self-hosted runner (Hardware workflow), loop runs (`run_hw.py --repeat`) | Implemented; runner not installed, workflow not run yet |
+| Build in one place, run on a stand (`pack`, `run --package`) | Checked: packages built on Windows, three stands × 10/10 on Orange Pi 5 |
+| Hardware CI on a self-hosted runner (Hardware workflow), loop runs (`run_hw.py --repeat`) | Loop checked on Orange Pi 5 (F411CE, 10 iterations, Ctrl+C interruption); runner not installed, workflow not run yet |
 
 ## Hardware check of the CI firmware, 2026-09-28
 

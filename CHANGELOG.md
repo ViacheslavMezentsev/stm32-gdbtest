@@ -13,6 +13,7 @@
   пакет и запускает его на стенде без пересборки; `run_hw.py --package`.
 - Workflow Hardware (только вручную): сборка и `pack` на GitHub, запуск пакетов на
   self-hosted раннере со стендом. `run_hw.py --repeat` для прогонов в цикле с `soak.json`.
+  Проверено: пакеты с Windows на Orange Pi 5 — три стенда × 10/10; цикл с прерыванием.
   Документация `docs/ru|en/HARDWARE_CI.md`.
 - Спецификация метода DDTT 0.2 (Debugger-Driven Testing on Target — тестирование через
   отладчик на целевом устройстве) `docs/ru|en/DDTT.md`: область, термины, принципы,

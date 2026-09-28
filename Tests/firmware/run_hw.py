@@ -100,6 +100,8 @@ def main():
     runs = build / "hwtest/runs"
     if args.package:
         package = args.package.resolve()
+        if not package.is_file():
+            sys.exit(f"Package not found: {package} (copy it to this computer first)")
         workdir = out / "package"
         cli = [sys.executable, "-B", ROOT / "stm32_gdbtest/cli.py", "run", "--package", package,
                "--workdir", workdir]

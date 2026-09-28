@@ -34,8 +34,8 @@
   (`claude/remote-server`, ТЗ 0.9), проверено с Windows: 3 стенда × 10/10.
 - [ ] Группа D: сборка в одном месте, запуск на Orange Pi 5 (`pack`, `run --package`);
   аппаратный CI на self-hosted runner aarch64 (workflow Hardware, вопрос 11.2.16 ТЗ);
-  прогоны в цикле (`run_hw.py --repeat`) — реализовано (`claude/prepared-runs`, ТЗ 0.12),
-  нужны установка раннера и аппаратная проверка.
+  прогоны в цикле (`run_hw.py --repeat`) — реализовано (`claude/prepared-runs`, ТЗ 0.12);
+  пакеты и цикл проверены на Orange Pi 5, осталась установка раннера и запуск workflow.
 
 ## Этапы
 
