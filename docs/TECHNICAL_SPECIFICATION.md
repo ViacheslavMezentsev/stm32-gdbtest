@@ -1226,7 +1226,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-105 | `PackageTests.test_changed_extra_or_unsafe_entries_are_refused` (р.0.12) | Изменённый файл — «changed»; лишний файл и путь `..` — «do not match»; без GDB — `FileNotFoundError` |
 | TC-106 | `PackageTests.test_pack_refuses_failed_preparation_and_bad_input` (р.0.12) | ERROR подготовки — пакет не записан; неизвестный сценарий, `--include` вне корня, сценарии вне профиля — отказ |
 | TC-107 | D: `pack` на Windows, `run_hw.py --package` на Orange Pi 5 для трёх стендов (р.0.12) | 10/10 шагов, в отчётах поле `package`. Выполнено: F411CE/OpenOCD, F103C8/J-Link CE, F030R8/J-Link STLink — по 10/10 |
-| TC-108 | D: workflow Hardware на self-hosted раннере Orange Pi 5 (р.0.12) | `prepare` и `hardware` зелёные; артефакты `ddtt-packages`, `hardware-results` |
+| TC-108 | D: workflow Hardware на self-hosted раннере Orange Pi 5 (р.0.12) | `prepare` и `hardware` зелёные; артефакты `ddtt-packages`, `hardware-results`. Выполнено: раннер-служба на Orange Pi 5, пакеты собраны на GitHub (ubuntu-24.04); F411CE/OpenOCD, F103C8/J-Link CE, F030R8/J-Link STLink — по 10/10 |
 | TC-109 | D: `run_hw.py --repeat 0` на стенде с последующим Ctrl+C (р.0.12) | Итерации сохраняются; после прерывания `soak.json` с `interrupted = true`. Выполнено: F411CE/OpenOCD, шаги boot и gpio, 10 итераций 10/10, прерывание на 11-й, OpenOCD остановлен |
 
 ---

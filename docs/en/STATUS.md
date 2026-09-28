@@ -49,7 +49,7 @@ API contents; a matching HAL version does not prove matching behaviour.
 | Linux x86_64 locally | Implemented; CI covers environment, build and preparation; not checked on hardware |
 | WSL2: debugger through usbipd or server on Orange Pi over SSH | Implemented as Linux; not checked on hardware |
 | Build in one place, run on a stand (`pack`, `run --package`) | Checked: packages built on Windows, three stands × 10/10 on Orange Pi 5 |
-| Hardware CI on a self-hosted runner (Hardware workflow), loop runs (`run_hw.py --repeat`) | Loop checked on Orange Pi 5 (F411CE, 10 iterations, Ctrl+C interruption); runner not installed, workflow not run yet |
+| Hardware CI on a self-hosted runner (Hardware workflow), loop runs (`run_hw.py --repeat`) | Checked: runner service on Orange Pi 5, packages built on GitHub — three stands × 10/10; loop — F411CE, 10 iterations, Ctrl+C interruption |
 
 ## Hardware check of the CI firmware, 2026-09-28
 
@@ -104,8 +104,7 @@ test and may replace Flash, while `ctest --preset offline` does not connect to a
 
 ## Next steps
 
-Before v0.1.0: runs from WSL, transfer of a prepared run and
-hardware CI on a self-hosted runner. Then v0.1.0-rc.1 and v0.1.0, supervision of
+Before v0.1.0: runs from WSL and the final re-check of the stands. Then v0.1.0-rc.1 and v0.1.0, supervision of
 server processes, evolution of the
 profile schema and manifest; later a host controller for external equipment and Python
 packaging. These are plans, not available features: [roadmap](../../TODO.md)
