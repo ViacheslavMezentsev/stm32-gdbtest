@@ -28,6 +28,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,6 +45,19 @@ def say(text):
 def run(*args, cwd=None):
     say("$ " + " ".join(str(a) for a in args))
     subprocess.run([str(a) for a in args], cwd=cwd, check=True)
+
+
+def run_network(*args, attempts=4):
+    """Network commands survive transient server errors (e.g. HTTP 500 of GitHub releases)."""
+    for attempt in range(1, attempts + 1):
+        say("$ " + " ".join(str(a) for a in args))
+        if subprocess.run([str(a) for a in args]).returncode == 0:
+            return
+        if attempt < attempts:
+            delay = 15 * 2 ** (attempt - 1)
+            say(f"Attempt {attempt} of {attempts} failed; retrying in {delay} s")
+            time.sleep(delay)
+    sys.exit("Network command failed after {} attempts: {}".format(attempts, " ".join(str(a) for a in args)))
 
 
 def machine():
@@ -77,8 +91,8 @@ def install_component(prefix, component, arch):
     file = downloads / archive["url"].rsplit("/", 1)[1]
     if not file.is_file() or sha256(file) != archive["sha256"]:
         partial = file.with_name(file.name + ".part")
-        run("curl", "--fail", "--silent", "--show-error", "--location", "--retry", "3", "--connect-timeout", "30",
-            "--max-time", "1800", "--output", partial, archive["url"])
+        run_network("curl", "--fail", "--silent", "--show-error", "--location", "--retry", "5", "--retry-delay",
+                    "5", "--connect-timeout", "30", "--max-time", "1800", "--output", partial, archive["url"])
         actual = sha256(partial)
         if actual != archive["sha256"]:
             partial.unlink()
@@ -129,13 +143,13 @@ def install_source(prefix, item):
     sparse = destination / ".git/info/sparse-checkout"
     sparse.parent.mkdir(parents=True, exist_ok=True)
     sparse.write_text("".join(f"/{name}/\n" for name in item["sparse_include"]))
-    run(*git, "fetch", "--quiet", "--depth=1", "--filter=blob:none", "origin", item["commit"])
+    run_network(*git, "fetch", "--quiet", "--depth=1", "--filter=blob:none", "origin", item["commit"])
     run(*git, "checkout", "--quiet", "--detach", "FETCH_HEAD")
     head = subprocess.check_output([str(a) for a in git] + ["rev-parse", "HEAD"], text=True).strip()
     if head != item["commit"]:
         sys.exit(f"Unexpected commit for {item['name']}: {head}")
     if item["submodules"]:
-        run(*git, "submodule", "update", "--init", "--depth=1", "--", *item["submodules"])
+        run_network(*git, "submodule", "update", "--init", "--depth=1", "--", *item["submodules"])
     for filename in item["required_files"]:
         if not (destination / filename).is_file():
             sys.exit(f"{item['name']}: {filename} missing")

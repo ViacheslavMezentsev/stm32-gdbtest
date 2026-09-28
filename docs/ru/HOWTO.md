@@ -131,7 +131,7 @@ git log --show-signature -1            # проверить подпись по�
 | `FAIL usb … no read/write access` | Правила udev (раздел «Доступ к USB» в [Linux-стенде](LINUX_STAND.md)), переподключить отладчик |
 | `FAIL openocd … interface/stlink.cfg` | Найден OpenOCD 0.10 из apt: выполнить `env.sh`, чтобы первым в `PATH` был xPack OpenOCD |
 | J-Link STLink (Nucleo): `GDB server startup timed out`, в `jlink.log` подключение около 10 с | Окно условий J-Link STLink ждёт подтверждения. Один раз в графическом сеансе (монитор или удалённый рабочий стол): `JLinkExe -USB <serial>`, `connect`, отметить галочку. Запасной вариант — `startup_timeout_s = 30` в стенде |
-| Сбой загрузки при установке окружения | Повторить `python3 tools/linux_stand.py install`: установленное пропускается, загрузки докачиваются заново |
+| Сбой загрузки при установке окружения (например, HTTP 500 от GitHub) | Сценарий сам повторяет загрузку и `git fetch` до 4 раз с паузами 15, 30, 60 с; если не помогло — запустить `python3 tools/linux_stand.py install` ещё раз: установленное пропускается. В CI — перезапустить упавшее задание (Re-run failed jobs); загрузки кэшируются |
 | Переставить один компонент | `rm -rf ~/.local/stm32-gdbtest/<каталог компонента>` и `python3 tools/linux_stand.py install --only <имя>` |
 
 Вернуть систему в исходное состояние:

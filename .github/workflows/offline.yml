@@ -80,6 +80,11 @@ jobs:
           apt-get -o Acquire::Retries=3 update
           apt-get install -y --no-install-recommends ca-certificates curl git python3
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Cache pinned downloads (verified by SHA-256 on use)
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: ~/.local/stm32-gdbtest/downloads
+          key: linux-stand-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('tools/linux-stand.lock.json') }}
       - name: Install the stand environment as a regular user would (no root needed)
         run: python3 tools/linux_stand.py install
       - name: Host tests on the stand Python

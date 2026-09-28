@@ -104,6 +104,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Fixed
 
+- `tools/linux_stand.py` retries downloads and `git fetch` on transient server errors
+  (up to 4 attempts with pauses); CI jobs cache the pinned downloads.
 - The BIN is built only from the selected load sections (`objcopy -j`): an empty section
   with a RAM address (for example an empty `.data`) no longer stretches it to hundreds of
   MiB before the "BIN extent differs" refusal. Host test and a CI regression on a real ELF.

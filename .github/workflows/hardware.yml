@@ -30,6 +30,11 @@ jobs:
       PROFILES: ${{ inputs.profiles }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Cache pinned downloads (verified by SHA-256 on use)
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: ~/.local/stm32-gdbtest/downloads
+          key: linux-stand-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('tools/linux-stand.lock.json') }}
       - name: Pinned toolchain of the stand environment
         run: python3 tools/linux_stand.py install --only python cmake ninja gcc cube
       - name: Build, prepare and pack the CI firmware

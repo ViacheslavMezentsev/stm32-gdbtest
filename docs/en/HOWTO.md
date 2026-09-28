@@ -132,7 +132,7 @@ Details: [Linux stand](LINUX_STAND.md).
 | `FAIL usb … no read/write access` | udev rules (section "USB access" in [Linux stand](LINUX_STAND.md)), reconnect the debugger |
 | `FAIL openocd … interface/stlink.cfg` | OpenOCD 0.10 from apt was found: run `env.sh` so that xPack OpenOCD comes first on `PATH` |
 | J-Link STLink (Nucleo): `GDB server startup timed out`, `jlink.log` shows about 10 s to connect | The J-Link STLink terms window waits for confirmation. Once, in a graphical session (monitor or remote desktop): `JLinkExe -USB <serial>`, `connect`, tick the checkbox. Fallback: `startup_timeout_s = 30` in the stand |
-| A download failed while installing the environment | Run `python3 tools/linux_stand.py install` again: installed parts are skipped, downloads restart |
+| A download failed while installing the environment (e.g. HTTP 500 from GitHub) | The script itself retries downloads and `git fetch` up to 4 times with 15, 30, 60 s pauses; if that fails, run `python3 tools/linux_stand.py install` again: installed parts are skipped. In CI re-run the failed job (Re-run failed jobs); downloads are cached |
 | Reinstall one component | `rm -rf ~/.local/stm32-gdbtest/<component directory>` and `python3 tools/linux_stand.py install --only <name>` |
 
 Return the system to its original state:
