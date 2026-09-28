@@ -9,6 +9,7 @@ scenarios check register state and are not evidence of HAL behaviour.
 Toolchain: `ARM_TOOLCHAIN_ROOT`; CMSIS: `STM32CUBE_REPOSITORY` with
 `STM32Cube_FW_F0_V1.11.6`, `STM32Cube_FW_F1_V1.8.7`, `STM32Cube_FW_F4_V1.28.3`.
 Usually run through `ci/run_checks.py` inside the CI Docker image. On a local
-Windows stand `run_hw.py` runs the same scenarios on hardware (see docs/en/testing.md).
+Windows or Linux stand `run_hw.py` runs the same scenarios on hardware (see
+docs/en/testing.md and docs/en/LINUX_STAND.md).
 LEDs: NUCLEO-F030R8 PA5, WeAct BluePill-Plus PB2, WeAct BlackPill F411 PC13.
 C sources follow the repository `.clang-format`.

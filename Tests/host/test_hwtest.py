@@ -14,7 +14,7 @@ from stm32_gdbtest.profile import load_profile
 from stm32_gdbtest.reports import write_reports
 from stm32_gdbtest.runner import ROOT, run
 from stm32_gdbtest.compatibility import REQUIRED_GDB_API, inspect_gdb_api, require_gdb_api, runtime_manifest
-from stm32_gdbtest.backends import load_stand as load_backend_stand, server_spec
+from stm32_gdbtest.backends import PROGRAMMER, load_stand as load_backend_stand, server_spec
 
 
 class HostTests(unittest.TestCase):
@@ -109,7 +109,7 @@ class HostTests(unittest.TestCase):
             stand.write_text(content)
             with self.assertRaisesRegex(ValueError, "programmer_dir"):
                 load_backend_stand(stand)
-            (self.directory / "STM32_Programmer_CLI.exe").touch()
+            (self.directory / PROGRAMMER).touch()
             content += 'programmer_dir="' + self.directory.as_posix() + '"\n'
             stand.write_text(content + 'flash_policy="verify-only"\n')
             with self.assertRaisesRegex(ValueError, "Unknown probe setting"):
@@ -237,13 +237,14 @@ class HostTests(unittest.TestCase):
         self.assertIsNone(report["compatibility"]["backend"]["version"])
         self.assertTrue(next(self.directory.glob("*/junit.xml")).exists())
 
-    @unittest.skipUnless(os.name == "nt", "Windows lock")
     def test_probe_lock_rejects_concurrent_owner_and_releases(self):
-        with probe_lock(self.directory, "TESTSERIAL"):
+        with patch.dict(os.environ, {"STM32_GDBTEST_LOCK_DIR": str(self.directory / "locks")}), \
+                probe_lock(self.directory, "TESTSERIAL"):
             with self.assertRaises(RuntimeError):
                 with probe_lock(self.directory, "TESTSERIAL"):
                     self.fail("Concurrent ownership")
-        with probe_lock(self.directory, "TESTSERIAL"):
+        with patch.dict(os.environ, {"STM32_GDBTEST_LOCK_DIR": str(self.directory / "locks")}), \
+                probe_lock(self.directory, "TESTSERIAL"):
             pass
 
 
