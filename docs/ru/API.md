@@ -114,7 +114,12 @@ python -B -m stm32_gdbtest doctor --stand path/to/stand.local.toml
 `doctor [--gdb PATH] [--stand TOML] [--json]` проверяет окружение без обращения к
 отладчику: host Python, GDB-Python ≥ 3.11 и binutils рядом с ним, CMake и Ninja,
 каталог блокировок, стенд (для OpenOCD — наличие `interface/stlink.cfg`) и на Linux —
-ST-Link и J-Link на USB с правами доступа. Итог — строки OK/WARN/FAIL; код 1 при FAIL.
+ST-Link и J-Link на USB с правами доступа. Итог — строки OK/WARN/FAIL (`--json` — список
+`{name, status, detail}`); код 1 при FAIL. GDB ищется так: `--gdb` → `STM32_GDBTEST_GDB` →
+`arm-none-eabi-gdb-py3`/`arm-none-eabi-gdb` в `PATH` → `bin` в `ARM_TOOLCHAIN_ROOT` → на
+Windows каталог xPack по умолчанию в профиле пользователя. Для стенда с `[remote]`
+локальные проверки OpenOCD и USB заменяются проверками хоста стенда по SSH (`remote`,
+`remote-server`, `remote-lock`, `remote-usb`, предел 40 с).
 
 `collect --cmake/--workspace` — интерфейс генерации CMake, вручную обычно не нужен.
 
@@ -129,7 +134,8 @@ compatibility 1, политика образа 1. `session.json` — внутр�
 Подробности: [подключение](GETTING_STARTED.md), [manifest](MANIFESTS.md),
 [identity](TARGET_IDENTITY.md), [GDB-серверы](BACKENDS.md),
 [владение отладчиком](DEBUGGER_OWNERSHIP.md). `STM32_GDBTEST_LOCK_DIR` задаёт на Linux
-базовый каталог блокировок (по умолчанию `/tmp`).
+базовый каталог блокировок: по умолчанию системный каталог временных файлов (`/tmp`
+или `TMPDIR`), внутри — `stm32-gdbtest-locks`.
 
 ## Проверка образа
 

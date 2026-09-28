@@ -2,9 +2,9 @@
 
 Documentation · [Русский](../ru/index.md)
 
-Introduction — [README](../../README.en.md): a verification loop for STM32 firmware on real
-hardware for agent-driven and manual development, the reference implementation of
-[DDTT](DDTT.md) — debugger-driven on-target testing. Requirements —
+Introduction — [README](../../README.en.md): an implementation of [DDTT](DDTT.md) for
+STM32 — checks of running firmware on a real board through GDB and an SWD debugger,
+written as scenarios in the project repository. Requirements —
 the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 
 ## Getting started

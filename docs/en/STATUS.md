@@ -11,10 +11,10 @@ history is in the [CHANGELOG](../../CHANGELOG.en.md).
 
 | Area | Verified scope |
 | --- | --- |
-| Host tests | 79 unittests without an MCU; on Linux 4 Windows lock tests are skipped, on Windows 5 Linux tests (`flock` lock, process groups) |
+| Host tests | 86 unittests without an MCU; on Linux 4 Windows mutex tests are skipped, on Windows 7 Linux tests (`flock` lock 3, process groups 2, remote server helper 2) |
 | CI (GitHub Actions, Docker) | Docs, format, host on Windows and Linux; F030R8/F103C8/F411CE CI firmware with GCC 13.3.1, 14.2.1, 15.2.1 and CMake 3.28.3: build manifest, `prepare`, full image, 10 negative contracts, load section alignment, empty RAM section; the Linux stand environment in `ubuntu:20.04` on x86_64 and aarch64 ([checks and CI](testing.md)) |
 | CI firmware on hardware | 4 stands × 10/10 steps at commit `fbc103d` (section below) |
-| Linux stand without hardware | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) in a container: environment installation, 79 host tests, `doctor`, `build` and `prepare` of the CI firmware; the hardware path without a debugger — lock, OpenOCD start, ERROR "exited before ready", processes stopped |
+| Linux stand without hardware | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) in a container: environment installation, host tests (79 at revision 0.7), `doctor`, `build` and `prepare` of the CI firmware; the hardware path without a debugger — lock, OpenOCD start, ERROR "exited before ready", processes stopped |
 | Remote GDB server on hardware | Runner and GDB on Windows 10, GDB servers on Orange Pi 5 over SSH: F411CE / OpenOCD, F103C8 / J-Link CE, F030R8 / J-Link STLink — 10/10 each (`run_hw.py`) |
 | Remote GDB server without hardware | SSH loopback (OpenSSH, key, `known_hosts`) and a fake J-Link server: port forwarding, GDB connecting through the tunnel, recovery, stopping the server and returning its log, refusal on a busy stand host lock, cleanup after a broken session |
 | Linux stand on hardware | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 / J-Link GDB Server 9.80 arm64 — 10/10 after confirming the J-Link STLink terms window in a graphical session; without it the connection waits about 10 s, the first run gave 2/10 ([Linux stand](LINUX_STAND.md)) |

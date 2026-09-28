@@ -25,7 +25,8 @@ The `[probe]` table of the local TOML:
 
 Unknown keys are rejected. Templates: [OpenOCD](../../examples/stands/stlink.example.toml)
 and [OpenOCD, ST, J-Link for the CI firmware](../../Tests/firmware/stands/jlink.example.toml)
-(`openocd.example.toml` and `stlink.example.toml` in the same folder). Local paths
+(`openocd.example.toml`, `stlink.example.toml` and `remote.example.toml` for a remote stand
+in the same folder). Local paths
 and serial numbers are not committed (`*.local.toml`). `run --prepare-only --stand …`
 validates the stand and backend commands without connecting to the debugger, and
 `doctor --stand …` also checks GDB-Python, OpenOCD and USB access.

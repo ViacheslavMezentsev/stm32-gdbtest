@@ -88,5 +88,6 @@ SSH-сессии скрипт останавливает сервер и сни�
 
 Host-тесты — `Tests/host/test_probe_lock.py`: Windows-часть выполняется на Windows
 (в CI — задача на `windows-2022`), Linux-часть (блокировка, брошенное владение,
-остановка группы процессов) — на Linux. Аппаратные результаты и опыт конкуренции
+остановка группы процессов) — на Linux. Блокировку хоста стенда и вспомогательный
+скрипт удалённого сервера проверяет `Tests/host/test_remote.py` (`RemoteHelperTests`, Linux). Аппаратные результаты и опыт конкуренции
 процессов — [в стендовом проекте](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/DEBUGGER_OWNERSHIP.md).

@@ -119,7 +119,12 @@ this mode; if one is selected, it is validated completely, including the J-Link 
 the debugger: host Python, GDB-Python ≥ 3.11 and binutils next to it, CMake and Ninja,
 the lock directory, the stand (for OpenOCD — that `interface/stlink.cfg` exists) and on
 Linux ST-Link and J-Link devices on USB with access rights. The output is OK/WARN/FAIL
-lines; the exit code is 1 on FAIL.
+lines (`--json` gives a list of `{name, status, detail}`); the exit code is 1 on FAIL. GDB
+is looked up as `--gdb` → `STM32_GDBTEST_GDB` → `arm-none-eabi-gdb-py3`/`arm-none-eabi-gdb`
+on `PATH` → `bin` under `ARM_TOOLCHAIN_ROOT` → on Windows the default xPack directory in the
+user profile. For a stand with `[remote]` the local OpenOCD and USB checks are replaced by
+checks of the stand host over SSH (`remote`, `remote-server`, `remote-lock`, `remote-usb`,
+40 s limit).
 
 `collect --cmake/--workspace` is the CMake generation interface and is rarely used by hand.
 
@@ -134,7 +139,8 @@ internal development API; consumers use CMake, the CLI and the Target operations
 Details: [getting started](GETTING_STARTED.md), [manifest](MANIFESTS.md),
 [identity](TARGET_IDENTITY.md), [GDB servers](BACKENDS.md),
 [debugger ownership](DEBUGGER_OWNERSHIP.md). On Linux `STM32_GDBTEST_LOCK_DIR` sets the
-base directory of the locks (default `/tmp`).
+base directory of the locks: by default the system temporary directory (`/tmp` or
+`TMPDIR`), with `stm32-gdbtest-locks` inside.
 
 ## Image verification
 

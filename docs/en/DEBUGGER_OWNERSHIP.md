@@ -87,5 +87,6 @@ closes or breaks, the helper stops the server and releases the lock
 
 Host tests: `Tests/host/test_probe_lock.py`. The Windows part runs on Windows (in CI —
 the `windows-2022` job), the Linux part (lock, abandoned ownership, stopping the
-process group) on Linux. Hardware results and process contention experiments are
+process group) on Linux. The stand host lock and the remote server helper are tested by
+`Tests/host/test_remote.py` (`RemoteHelperTests`, Linux). Hardware results and process contention experiments are
 [in the stand project](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/DEBUGGER_OWNERSHIP.md) (Russian).

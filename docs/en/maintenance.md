@@ -109,7 +109,7 @@ CI workflows run for any branch, so a new prefix needs no workflow change.
 
 ## Checks
 
-1. Offline checks in the CI Docker image: `python3 ci/run_checks.py` — the docs, host
+1. Offline checks in the CI Docker image: `python3 ci/run_checks.py` — the docs, format, host
    and firmware levels ([checks and CI](testing.md)). Before a push run the levels
    affected by the change.
 2. Module host tests without Docker: `python -B -m unittest discover -s Tests/host -v`;

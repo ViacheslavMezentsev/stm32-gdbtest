@@ -97,5 +97,8 @@ The script reprograms Flash: use only boards agreed for experiments.
 - Connecting to a GDB server, debugger and MCU, Flash programming, identity, the
   Target API at run time, timeout/recovery — these are the consumer's hardware checks.
 - Debugger locking between processes — only by the Windows and Linux host tests.
+- The remote GDB server through real SSH: host tests check the SSH options and the
+  helper script without SSH; an end-to-end run over SSH is checked manually on a stand
+  ([Linux stand](LINUX_STAND.md)).
 - HAL semantics and correctness of scenarios on a board: contracts check the
   presence of symbols, types and macro expansion in the ELF.

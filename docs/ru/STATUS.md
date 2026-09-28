@@ -11,10 +11,10 @@
 
 | Область | Доказанный объём |
 | --- | --- |
-| Host-тесты | 79 unittest без MCU; на Linux 4 теста блокировки Windows пропускаются, на Windows — 5 тестов Linux (блокировка `flock`, группы процессов) |
+| Host-тесты | 86 unittest без MCU; на Linux пропускаются 4 теста Windows mutex, на Windows — 7 тестов Linux (блокировка `flock` 3, группы процессов 2, помощник удалённого сервера 2) |
 | CI (GitHub Actions, Docker) | Docs, format, host на Windows и Linux; CI-прошивки F030R8/F103C8/F411CE на GCC 13.3.1, 14.2.1, 15.2.1 с CMake 3.28.3: build manifest, `prepare`, полный образ, 10 отрицательных контрактов, выравнивание секций загрузки, пустая секция в RAM; окружение Linux-стенда в `ubuntu:20.04` на x86_64 и aarch64 ([проверки и CI](testing.md)) |
 | CI-прошивки на оборудовании | 4 стенда × 10/10 шагов на коммите `fbc103d` (раздел ниже) |
-| Linux-стенд без оборудования | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) в контейнере: установка окружения, 79 host-тестов, `doctor`, `build` и `prepare` CI-прошивок; аппаратный путь без отладчика — блокировка, запуск OpenOCD, ERROR «exited before ready», процессы остановлены |
+| Linux-стенд без оборудования | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) в контейнере: установка окружения, host-тесты (79 на ревизии 0.7), `doctor`, `build` и `prepare` CI-прошивок; аппаратный путь без отладчика — блокировка, запуск OpenOCD, ERROR «exited before ready», процессы остановлены |
 | Удалённый GDB-сервер на оборудовании | Runner и GDB на Windows 10, GDB-серверы на Orange Pi 5 по SSH: F411CE / OpenOCD, F103C8 / J-Link CE, F030R8 / J-Link STLink — по 10/10 (`run_hw.py`) |
 | Удалённый GDB-сервер без оборудования | Петля SSH (OpenSSH, ключ, `known_hosts`) и фиктивный J-Link сервер: проброс порта, подключение GDB через туннель, recovery, остановка сервера и передача журнала, отказ при занятой блокировке хоста стенда, очистка после обрыва сессии |
 | Linux-стенд на оборудовании | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 / J-Link GDB Server 9.80 arm64 — 10/10 после подтверждения окна условий J-Link STLink в графическом сеансе; без этого подключение ждёт около 10 с, первый прогон — 2/10 ([Linux-стенд](LINUX_STAND.md)) |

@@ -5,17 +5,19 @@
 
 [Русский](README.md)
 
-**stm32-gdbtest is a verification loop for STM32 firmware on real hardware, for
-agent-driven and manual development.** An AI agent or a developer describes a check as
-a Python scenario in the project repository. The scenario runs in GDB through an SWD
-debugger against the running firmware, with no test code inside it, and produces a
-JSON/JUnit report. The same scenario runs manually, from CTest, in a CI runner or in a
-loop on a stand — with any connection layout: the debugger at the workstation, on a
-Linux stand such as an Orange Pi, or on a remote stand over SSH.
+**stm32-gdbtest implements [DDTT](docs/en/DDTT.md) for STM32: checks of running firmware
+on a real board through GDB and an SWD debugger, written as scenarios in the project
+repository.** A developer or an AI agent writes a scenario; it runs in GDB on the
+computer, controls the firmware through a debug server and produces a JSON/JUnit
+report. There is no test code in the firmware. The same scenario runs manually, from
+CTest, in a CI runner or in a loop on a stand — with any connection layout: the
+debugger at the workstation, on a Linux stand such as an Orange Pi, or on a remote
+stand over SSH.
 
-Technically it is a framework and the reference implementation of
-[DDTT — debugger-driven on-target testing](docs/en/DDTT.md): not an MCU simulator and not
-a unit-test framework that runs test functions inside the firmware. It needs a
+DDTT (debugger-driven on-target testing) is a method described by its own
+[specification](docs/en/DDTT.md); this repository is its reference implementation. It is
+not an MCU simulator and not a unit-test framework that runs test functions inside the
+firmware. It needs a
 built ELF with debug information, an MCU profile and a stand.
 
 ## Why this approach

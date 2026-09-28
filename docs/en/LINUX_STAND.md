@@ -140,6 +140,23 @@ user = "orangepi"
 identity_file = "C:/Users/<user>/.ssh/id_ed25519_stand"
 ```
 
+`[remote]` keys:
+
+| Key | Value |
+| --- | --- |
+| `host` | Address, host name or an alias from `~/.ssh/config` (required) |
+| `user` | User on the stand host; by default from the SSH configuration |
+| `port` | SSH port, 1…65535, default 22 |
+| `identity_file` | Existing absolute path to a private key; without it the agent keys and `~/.ssh` are used |
+| `env_script` | Environment script on the stand host; failing to source it refuses with code 97. By default `~/.local/stm32-gdbtest/env.sh` is sourced when it exists |
+| `ssh` | SSH client, default `ssh` from `PATH` |
+
+Keys with passwords (`password`, `passphrase`, `secret`, `token`) are rejected. The stand
+host needs only `python3` ≥ 3.8 (the Ubuntu 20.04 system Python fits). The server port on
+the stand host is picked at random from 40000–59999; readiness is awaited for
+`startup_timeout_s` + 10 s for SSH. `STM32_GDBTEST_LOCK_DIR` on the stand host applies only
+if `env_script` or `env.sh` exports it: the helper script runs non-interactively.
+
 For OpenOCD `executable` is just `openocd`: `~/.local/stm32-gdbtest/env.sh` is sourced on
 the Orange Pi before the server starts (another path: `env_script`). Check and run from
 Windows as for a local stand:
@@ -165,8 +182,8 @@ yet (question 11.2.20 of the specification).
 ## Limits
 
 - Installation, host tests, `doctor`, build and preparation are checked in CI (the
-  `linux-stand` job, Ubuntu 20.04 x86_64 and aarch64). Hardware results on Orange Pi 5
-  go to the [status](STATUS.md) after the run.
+  `linux-stand` job, Ubuntu 20.04 x86_64 and aarch64). Hardware results on Orange Pi 5 —
+  locally and from Windows over SSH — are in the [status](STATUS.md).
 - A crash of the runner does not stop the server's process group: check
   `pgrep -a openocd` and `pgrep -a JLink` before retrying.
 - xPack OpenOCD 0.12.0-7 warns about the deprecated `tcl_port`, `telnet_port`,

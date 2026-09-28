@@ -168,16 +168,17 @@ Stop-Process -Id <pid>
 ```
 
 Каталог запуска указан в итоговой строке `run` и в `summary.json` сценария `run_hw.py`.
-Там лежат `result.json`, `server.log`, `gdb.log`, `recovery.log` и журналы серверов
+Там лежат `result.json`, `server.log`, `gdb.log`, `recovery.log`, журналы серверов и для
+удалённого стенда `tunnel.log`
 ([API](API.md), [проверки и CI](testing.md)).
 
 ## Удалённый GDB-сервер по SSH
 
 Настройка — [Linux-стенд](LINUX_STAND.md#удалённый-gdb-сервер-windows-или-wsl--orange-pi).
-Проверка связи вручную той же командой, что использует runner:
+Проверка связи вручную с теми же ключевыми параметрами, что у runner:
 
 ```powershell
-ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -i <ключ> orangepi@<хост> "python3 --version"
+ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -i <ключ> orangepi@<хост> "python3 --version"
 ```
 
 | Сообщение | Что делать |
@@ -188,6 +189,8 @@ ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -i <ключ> orangepi@<х�
 | `Stand host refused the run: abandoned …` | Прежний запуск на хосте стенда завершился аварийно: на Orange Pi `pgrep -a openocd; pgrep -a JLink`, остановить остатки, повторить |
 | `Stand host refused the run: executable …` | Сервер не найден на хосте стенда: проверить путь `executable`, для OpenOCD — наличие `~/.local/stm32-gdbtest/env.sh` или `env_script` |
 | `GDB server exited before ready; see server.log and tunnel.log (env_script …)` | Код 97: указанный `env_script` не удалось подключить; код 255: ошибка SSH (ключ, хост, сеть) |
+| `Stand host refused the run: port …` | Случайно выбранный порт сервера на хосте стенда занят: повторить запуск |
+| `GDB server startup timed out after N s` для удалённого стенда | Предел — `startup_timeout_s` + 10 с на SSH; посмотреть `server.log` и `tunnel.log` |
 | `Passwords are not supported in [remote]` | Пароли в стенде не допускаются: настроить вход по ключу |
 
 Вернуть как было: удалить таблицу `[remote]` из стенда (или файл стенда), убрать ключ

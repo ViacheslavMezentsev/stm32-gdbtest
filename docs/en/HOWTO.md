@@ -169,16 +169,16 @@ Stop-Process -Id <pid>
 ```
 
 The run directory is printed in the final `run` line and in `summary.json` of
-`run_hw.py`. It holds `result.json`, `server.log`, `gdb.log`, `recovery.log` and the
-server logs ([API](API.md), [checks and CI](testing.md)).
+`run_hw.py`. It holds `result.json`, `server.log`, `gdb.log`, `recovery.log`, the server
+logs and, for a remote stand, `tunnel.log` ([API](API.md), [checks and CI](testing.md)).
 
 ## Remote GDB server over SSH
 
 Setup: [Linux stand](LINUX_STAND.md#remote-gdb-server-windows-or-wsl--orange-pi). Check the
-connection manually with the same options the runner uses:
+connection manually with the same key options the runner uses:
 
 ```powershell
-ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -i <key> orangepi@<host> "python3 --version"
+ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -i <key> orangepi@<host> "python3 --version"
 ```
 
 | Message | What to do |
@@ -189,6 +189,8 @@ ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -i <key> orangepi@<host> "p
 | `Stand host refused the run: abandoned …` | A previous run on the stand host crashed: on the Orange Pi `pgrep -a openocd; pgrep -a JLink`, stop leftovers, retry |
 | `Stand host refused the run: executable …` | The server is not found on the stand host: check the `executable` path, for OpenOCD that `~/.local/stm32-gdbtest/env.sh` exists or set `env_script` |
 | `GDB server exited before ready; see server.log and tunnel.log (env_script …)` | Code 97: the given `env_script` could not be sourced; code 255: an SSH error (key, host, network) |
+| `Stand host refused the run: port …` | The randomly picked server port on the stand host is busy: run again |
+| `GDB server startup timed out after N s` for a remote stand | The limit is `startup_timeout_s` + 10 s for SSH; check `server.log` and `tunnel.log` |
 | `Passwords are not supported in [remote]` | Passwords are not allowed in the stand: set up key login |
 
 Undo: remove the `[remote]` table from the stand (or the stand file), remove the key
