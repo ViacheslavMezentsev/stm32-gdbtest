@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.16 (черновик для согласования) |
+| **Ревизия** | 0.17 (черновик для согласования) |
 | **Дата формирования** | 28.09.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `Tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0-rc.1 (текущая версия разработки `0.1.0.dev0`, `API_VERSION = 1`) |
@@ -33,6 +33,15 @@
 | 0.14 | 28.09.2026 | Закрыт вопрос 11.2.21: контейнер `ubuntu:20.04` задания `linux-stand` закреплён по digest мультиархитектурного индекса. |
 | 0.15 | 28.09.2026 | Закрыт вопрос 11.2.20 решением владельца: WSL2 (Ubuntu 20.04 x86_64) проверен как компьютер запуска с сервером на Orange Pi 5 — три стенда × 10/10 (TC-112); проброс отладчика через usbipd-win отнесён к техническому долгу — на компьютере владельца он конфликтует с фильтрами USB других программ. Отдельный Linux-ПК x86_64 не проверялся. |
 | 0.16 | 29.09.2026 | Подключение потребителя с Arduino Core STM32 (HAL и CMSIS не из пакета `STM32Cube_FW_*`) показало, что пустой `cube_packages` отклонял manifest. Описательные списки `cube_packages` и `library_versions` могут быть пустыми; `compilers`, `units`, `inputs` — нет. |
+| 0.17 | 29.09.2026 | Проверено подключение настоящего потребителя перед выпуском: проект на STM32G474 с Arduino Core STM32 и stm32-cmake-yml, runner на Windows, сервер на Orange Pi 5 — `prepare` и `hw` сценария загрузки PASS (TC-114). |
+
+### Изменения ревизии 0.17
+
+Изменённые и новые пункты ревизии 0.17 помечены `(р.0.17)`.
+
+| Пункты | Тип | Суть |
+| :--- | :---: | :--- |
+| 9.2, 10 | нов., изм. | TC-114; матрица |
 
 ### Изменения ревизии 0.16
 
@@ -1155,7 +1164,7 @@ flowchart LR
 
 ### 9.2. Тест-кейсы
 
-TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-106, TC-110, TC-113 соответствуют host-тестам `Tests/host` (имя теста указано в сценарии), TC-66…TC-73 — offline- и аппаратным проверкам, TC-79…TC-83, TC-85, TC-86, TC-88, TC-89, TC-96 — проверкам CI, TC-84, TC-97, TC-103, TC-107…TC-109, TC-111, TC-112 — аппаратной проверке CI-прошивок (р.0.15). Результаты D взяты из документации модуля и стендового проекта (п. 1.3.4).
+TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-106, TC-110, TC-113 соответствуют host-тестам `Tests/host` (имя теста указано в сценарии), TC-66…TC-73 — offline- и аппаратным проверкам, TC-79…TC-83, TC-85, TC-86, TC-88, TC-89, TC-96 — проверкам CI, TC-84, TC-97, TC-103, TC-107…TC-109, TC-111, TC-112 — аппаратной проверке CI-прошивок (р.0.15), TC-114 — аппаратной проверке у потребителя (р.0.17). Результаты D взяты из документации модуля и стендового проекта (п. 1.3.4).
 
 | TC | Сценарий | Ожидаемый результат |
 | :---: | :--- | :--- |
@@ -1272,6 +1281,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-111 | C: удалённый запуск с Windows на Orange Pi 5, во время прогона Ctrl+C, затем отключение сети компьютера запуска (р.0.13) | После Ctrl+C и через ≤ 20 с после отключения сети на хосте стенда нет процессов сервера и помощника; следующий запуск получает отладчик. Выполнено: F411CE/OpenOCD — после Ctrl+C процессов нет; сервер удержан 25 с, кабель Orange Pi выдернут — сервер и помощник остановлены через 13 с, следующий запуск boot и gpio — PASS |
 | TC-112 | C: runner и GDB в WSL2 (Ubuntu 20.04 x86_64, окружение `tools/linux_stand.py` без OpenOCD), сервер и отладчики на Orange Pi 5 по SSH (р.0.15) | `doctor` без FAIL, `run_hw.py` 10/10. Выполнено: F411CE/OpenOCD, F103C8/J-Link CE, F030R8/J-Link STLink — по 10/10 |
 | TC-113 | `BuildManifestTests.test_descriptive_lists_may_be_empty` (р.0.16) | Manifest с пустыми `cube_packages` и `library_versions` принят; `cube_packages = null` отклоняется (`test_mismatched_artifacts_and_incomplete_schema_are_rejected`) |
+| TC-114 | Потребитель: STM32G474, Arduino Core STM32 и stm32-cmake-yml (CRC в ELF после линковки), `stm32_gdbtest_attach` после настройки проекта, стенд с `[remote]` на Orange Pi 5 (р.0.17) | `host.traceability`, `prepare.<ID>` и `hw.<ID>` сценария загрузки — PASS; manifest снят после встраивания CRC. Выполнено: DEV_ID `0x469`, IWDG заморожен при остановке |
 
 ---
 
@@ -1301,7 +1311,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 3.6.1–3.6.4 | FI: `validate_policy`, `load_policy` | TC-13, TC-14, TC-23 |
 | 3.6.5 | RU: `run` (`image_policy_path`) | I |
 | 3.6.6 | DOC: IMAGES.md | I |
-| 3.7.1–3.7.6 | BM: `snapshot`, `label`, `version_macros`, `selected_flags` | TC-04–TC-06, TC-66 |
+| 3.7.1–3.7.6 | BM: `snapshot`, `label`, `version_macros`, `selected_flags` | TC-04–TC-06, TC-66, TC-114 |
 | 3.7.7 | BM: `load_verified` | TC-01–TC-03, TC-113 |
 | 3.8.1 | CK: `file(GENERATE)` session | A, TC-66 |
 | 3.8.2 | RU: `execute` (`run.json`, `contract-request.json`) | I |
@@ -1367,7 +1377,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 5.11.1–5.11.3 | AG: `finally` | TC-70, TC-72, I |
 | 5.12.1–5.12.6 | RU: `execute` (`finally`); PS: `stop_tree` | TC-70 |
 | 5.13.1–5.13.13 | CK: `stm32_gdbtest_attach`, `stm32_gdbtest_register` | A, TC-66, TC-67, TC-72 |
-| 5.13.14 | CK: `stm32_gdbtest_register` (`prepare.${id}`) | TC-80 |
+| 5.13.14 | CK: `stm32_gdbtest_register` (`prepare.${id}`) | TC-80, TC-114 |
 | 5.14.1–5.14.5 | BM: `main`, `snapshot`, `dependency_map` | TC-04, TC-66, TC-79, A |
 | 5.14.6 | BM: `command_args` | TC-78, TC-79 |
 | 5.15.1–5.15.3 | IN; CL; MA | TC-64, TC-65 |

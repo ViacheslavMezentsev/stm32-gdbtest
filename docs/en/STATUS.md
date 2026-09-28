@@ -24,6 +24,7 @@ history is in the [CHANGELOG](../../CHANGELOG.en.md).
 | Stand project, F030R8 / J-Link STLink | 17/17 HW |
 | Stand project, F429ZI / ST-Link/V2 | 22/22 HW through OpenOCD and the ST server with module `b76d909`; occasional USB failures in long series ([protocol](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/F429_SERVER_STABILITY.md), Russian) |
 | Independent F411 consumer | Build and offline, hardware scenario, verify-only, timeout/recovery and restoring the main firmware |
+| Consumer project, STM32G474 / ST-Link through Orange Pi 5 | Arduino Core STM32 (HAL and CMSIS not from STM32Cube), stm32-cmake-yml with CRC in the ELF after linking, C++ with LTO, xPack GCC 14.2.1 (GDB 15.2.90, Python 3.12.8); runner on Windows, OpenOCD on the Orange Pi over SSH. `prepare` and `hw` of the boot scenario (DEV_ID `0x469`, IWDG frozen while halted) — PASS. The connection found the manifest refusal without STM32Cube packages (fixed, specification 0.16) |
 | F401CC / ST-Link, ST server on F1/F4 | Earlier hardware checks; new macro scenarios were not repeated after the module split |
 
 Scenario counts refer to the consumer application, not to a universal module suite
