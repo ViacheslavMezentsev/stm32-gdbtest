@@ -2,7 +2,8 @@
 
 Documentation · [Русский](../ru/index.md)
 
-Introduction and purpose of the module — [README](../../README.en.md). Requirements —
+Introduction — [README](../../README.en.md): a verification loop for STM32 firmware on real
+hardware for agent-driven and manual development, debugger-driven testing. Requirements —
 the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 
 ## Getting started

@@ -5,6 +5,13 @@
 The process is the same for manual work and agent generation. A person needs only a
 Python editor or VS Code and the commands below; an agent is not a dependency.
 
+For an agent this is a closed loop: it writes the requirement, puts a scenario into the
+repository, checks it without hardware (`run --prepare-only`), runs it on a stand and
+reads `result.json`. The result is not an answer in a chat but a test case of the
+project that later runs again manually, in CI or on a stand in a loop. An agent does
+not change the stand, the debugger firmware or dangerous Flash settings without the
+owner's agreement ([maintenance](maintenance.md#working-with-hardware)).
+
 1. Write the observable requirement and its ID in `Tests/requirements.md`. Define the
    acceptable effect of halt/reset and the failure criterion.
 2. Prepare `target.toml` for the specific MCU, board and firmware: Flash, identity,

@@ -99,7 +99,7 @@ python -B -m stm32_gdbtest doctor --stand path/to/stand.local.toml
 | Параметр `run` | Назначение |
 | --- | --- |
 | `--session`, `--test` | Сгенерированный `session.json` и ID сценария |
-| `--stand` | Локальный стенд; порядок выбора: `--stand` → `STM32_GDBTEST_STAND` → `session.stand` |
+| `--stand` | Локальный стенд; порядок выбора: `--stand` → `STM32_GDBTEST_STAND` → `session.stand`; с таблицей `[remote]` сервер запускается на хосте стенда по SSH, в отчёте — `server_host`, журнал SSH — `tunnel.log` |
 | `--timeout` | Внешний предел времени GDB, 0 < t ≤ 300 с; по умолчанию `timeout_s` сценария |
 | `--identity-policy warn\|strict` | Политика DEV_ID; порядок: CLI → `STM32_GDBTEST_IDENTITY_POLICY` → `warn` |
 | `--image-policy` | Политика полного образа; альтернатива — абсолютный `STM32_GDBTEST_IMAGE_POLICY` |

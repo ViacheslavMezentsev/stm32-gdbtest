@@ -70,6 +70,10 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Changed
 
+- Project definition: a verification loop for STM32 firmware on real hardware for
+  agent-driven and manual development, technically a debugger-driven test framework.
+  README, documentation maps, stand layouts in STATUS, layout choice in getting
+  started, the agent loop in test authoring; specification revision 0.10.
 - `run_hw.py` works on Linux (toolchain and Cube from `env.sh`) and records the host OS
   and architecture in `summary.json`.
 - Documentation moved to `docs/ru/` with English versions in `docs/en/`, `index.md`

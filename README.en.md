@@ -5,19 +5,31 @@
 
 [Русский](README.md)
 
-**stm32-gdbtest automates checks of running firmware on a real STM32 through
-GDB-Python and an SWD debugger.** It is not an MCU simulator and not a regular
-unit-test framework that runs test functions inside the firmware or on a PC: Python
-scenarios run in GDB on the computer and control the application on the board
-through a GDB server. They need a built ELF with debug information, an MCU profile
-and a hardware stand.
+**stm32-gdbtest is a verification loop for STM32 firmware on real hardware, for
+agent-driven and manual development.** An AI agent or a developer describes a check as
+a Python scenario in the project repository. The scenario runs in GDB through an SWD
+debugger against the running firmware, with no test code inside it, and produces a
+JSON/JUnit report. The same scenario runs manually, from CTest, in a CI runner or in a
+loop on a stand — with any connection layout: the debugger at the workstation, on a
+Linux stand such as an Orange Pi, or on a remote stand over SSH.
+
+Technically it is a debugger-driven on-target test framework: not an MCU simulator and
+not a unit-test framework that runs test functions inside the firmware. It needs a
+built ELF with debug information, an MCU profile and a stand.
 
 ## Why this approach
 
+An agent can design a change and use GDB directly, but a check done in a chat is not
+repeatable. Here the loop closes in the repository: requirement → scenario in
+`Tests/board` → checks without hardware (ELF contracts, image) → run on a stand → a
+report that both the agent and a person read. Scenarios stay test cases of the project
+and run again after every change — on any of the described stands, manually or
+automatically.
+
 With STM32 it matters to check not only computations but also peripheral setup,
 interrupt handling and the application's reaction to HAL errors. Developers already
-check much of this manually in a debugger. The module lets you describe such actions
-in Python, repeat them after changes and get a report.
+check much of this manually in a debugger; a scenario records such actions and
+expectations.
 
 The project grew out of practical GDB-Python experiments on F1/F4 boards. The
 infrastructure was extracted from the [stand project](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill)
@@ -50,7 +62,8 @@ ELF are available.
 
 ## Features and maturity
 
-Implemented: runs through OpenOCD, ST-LINK GDB Server and J-Link GDB Server, image
+Implemented: runs through OpenOCD, ST-LINK GDB Server and J-Link GDB Server on Windows
+and Linux, including a GDB server on a remote stand over SSH, image
 verification and programming, hardware breakpoints, reading values and controlled
 injections, selective ELF/HAL contracts, timeouts with a recovery attempt, JSON/JUnit
 and CMake/CTest integration. `run --prepare-only` performs every check before the GDB
@@ -58,13 +71,16 @@ server without hardware; CI is built on it ([checks and CI](docs/en/testing.md))
 
 This is a development version before the first 0.1.0 release. Verified on hardware:
 F030R8 and F103C8 through J-Link and F411CE through ST-Link with OpenOCD and ST-LINK
-GDB Server, including programming, the full image and recovery after a timeout; the
+GDB Server, including programming, the full image and recovery after a timeout — on
+Windows, on Orange Pi 5 (Ubuntu 20.04) and from Windows to Orange Pi 5 over SSH; the
 stand project also covers F429ZI and earlier F401 checks. Support depends on the
 specific combination of MCU, HAL, GDB and backend. [Exact matrix and limits](docs/en/STATUS.md).
 
-Planned: supervision of child processes and evolution of the profile schema and
+Planned before 0.1.0: running a prepared build on a stand and hardware CI on a
+self-hosted runner; then supervision of child processes and evolution of the profile schema and
 compatibility metadata. Coordinated control of power, relays and other instruments
-through a host controller is planned separately; there is no such API yet. Python
+through a host controller is planned separately — with it the loop becomes full HIL;
+there is no such API yet. Python
 packaging is considered an additional delivery method. [Roadmap](TODO.md) (Russian).
 
 ## Contents and dependencies

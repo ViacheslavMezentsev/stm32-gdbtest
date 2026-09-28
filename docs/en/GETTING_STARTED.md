@@ -22,6 +22,20 @@ project dependency run them in a separate working copy.
 - Verified versions and boards — [status](STATUS.md). Other MCUs and versions need
   their own checks.
 
+## Stand layout
+
+Scenarios do not depend on where the debugger is connected; the local stand file
+defines the layout:
+
+- the debugger at the workstation (Windows or Linux) — `[probe]` with the server on this
+  computer ([GDB servers](BACKENDS.md));
+- the debugger on a Linux stand, everything runs there — the `tools/linux_stand.py`
+  environment ([Linux stand](LINUX_STAND.md));
+- the debugger on a Linux stand, the runner at the workstation — `[probe]` plus
+  `[remote]` with an SSH key ([remote GDB server](LINUX_STAND.md#remote-gdb-server-windows-or-wsl--orange-pi)).
+
+Checked layouts are in the [status](STATUS.md#stand-layouts).
+
 ## Checking the module without a board
 
 From the module root:

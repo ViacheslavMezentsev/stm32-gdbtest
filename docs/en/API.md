@@ -103,7 +103,7 @@ The logical CLI name is `stm32-gdbtest`; a separate executable will come with pa
 | `run` option | Purpose |
 | --- | --- |
 | `--session`, `--test` | Generated `session.json` and scenario ID |
-| `--stand` | Local stand; selection order: `--stand` → `STM32_GDBTEST_STAND` → `session.stand` |
+| `--stand` | Local stand; selection order: `--stand` → `STM32_GDBTEST_STAND` → `session.stand`; with a `[remote]` table the server starts on the stand host over SSH, the report has `server_host`, the SSH log is `tunnel.log` |
 | `--timeout` | External GDB deadline, 0 < t ≤ 300 s; defaults to the scenario's `timeout_s` |
 | `--identity-policy warn\|strict` | DEV_ID policy; order: CLI → `STM32_GDBTEST_IDENTITY_POLICY` → `warn` |
 | `--image-policy` | Full-image policy; alternative — an absolute `STM32_GDBTEST_IMAGE_POLICY` |

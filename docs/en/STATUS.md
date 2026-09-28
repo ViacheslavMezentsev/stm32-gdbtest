@@ -39,6 +39,18 @@ CubeF1 1.8.7, CubeF4 1.28.3. CI also builds with GCC 14.2.1 and 15.2.1 (GDB 15.2
 and 16.3.90 with Python 3.12 and 3.13). A GCC version does not guarantee the GDB Python
 API contents; a matching HAL version does not prove matching behaviour.
 
+## Stand layouts
+
+| Layout | State |
+| --- | --- |
+| Everything on Windows: runner, GDB, server, debugger | Checked: 4 stands × 10/10 |
+| Everything on a Linux stand (Orange Pi 5, Ubuntu 20.04 aarch64) | Checked: 3 stands × 10/10 |
+| Runner and GDB on Windows, server and debugger on Orange Pi 5 over SSH | Checked: 3 stands × 10/10 |
+| Linux x86_64 locally | Implemented; CI covers environment, build and preparation; not checked on hardware |
+| WSL2: debugger through usbipd or server on Orange Pi over SSH | Implemented as Linux; not checked on hardware |
+| Build in one place, run on a stand | Planned before 0.1.0 |
+| Hardware CI on a self-hosted runner, 24/7 loop runs | Planned before 0.1.0 |
+
 ## Hardware check of the CI firmware, 2026-09-28
 
 Commit `fbc103d`, `Tests/firmware/run_hw.py`, xPack GCC 13.3.1-1.1. Every stand passed

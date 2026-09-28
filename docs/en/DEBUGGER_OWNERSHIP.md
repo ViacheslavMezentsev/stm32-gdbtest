@@ -73,6 +73,16 @@ group and `SIGKILL` after 3 s, so children of the server end too, even if the le
 has already exited. A crash of the runner itself does not stop the group — check
 leftover processes (`pgrep -a openocd`, `pgrep -a JLink`).
 
+## Remote stand
+
+A stand with `[remote]` has two locks: one on the runner's computer (a mutex on
+Windows, `flock` on Linux) and an `flock` on the stand host with the same hash. The
+helper script takes the second one before starting the server, so a run from Windows
+and a local run on the Orange Pi never use one debugger at the same time. Stand host
+refusals come as "Stand host refused the run: busy / abandoned". When the SSH session
+closes or breaks, the helper stops the server and releases the lock
+([Linux stand](LINUX_STAND.md#remote-gdb-server-windows-or-wsl--orange-pi)).
+
 ## Checking the mechanism
 
 Host tests: `Tests/host/test_probe_lock.py`. The Windows part runs on Windows (in CI —
