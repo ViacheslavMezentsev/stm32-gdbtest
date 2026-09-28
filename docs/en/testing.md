@@ -65,7 +65,7 @@ CI firmware — the presets in `Tests/firmware` (`cmake --preset f411ce`,
   `.github/FUNDING.yml` changes: host tests on `windows-2022` (Python 3.11 and 3.13)
   and the host and firmware levels in the Docker image on `ubuntu-24.04` without
   network (`--network none`); the `linux-stand` job installs the stand environment in
-  an `ubuntu:20.04` container on x86_64 and aarch64 (network is needed to download
+  an `ubuntu:20.04` container (pinned by digest) on x86_64 and aarch64 (network is needed to download
   the pinned archives).
 - **Hardware** — manual only: build and `pack` on `ubuntu-24.04`, then run the packages on
   a self-hosted runner with a stand ([hardware CI](HARDWARE_CI.md)).

@@ -64,7 +64,7 @@ CI-прошивка — presets в `Tests/firmware` (`cmake --preset f411ce`,
 - **Offline** — при push в любую ветку, кроме изменений только Markdown, `LICENSE`
   и `.github/FUNDING.yml`: host-тесты на `windows-2022` (Python 3.11 и 3.13) и
   уровни host и firmware в Docker-образе на `ubuntu-24.04` без сети (`--network none`);
-  задание `linux-stand` — окружение стенда в контейнере `ubuntu:20.04` на x86_64 и
+  задание `linux-stand` — окружение стенда в контейнере `ubuntu:20.04` (закреплён по digest) на x86_64 и
   aarch64 (сеть нужна для загрузки закреплённых архивов).
 - **Hardware** — только вручную: сборка и `pack` на `ubuntu-24.04`, затем запуск пакетов
   на self-hosted раннере со стендом ([аппаратный CI](HARDWARE_CI.md)).

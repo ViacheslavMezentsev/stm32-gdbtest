@@ -81,6 +81,7 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Changed
 
+- The `linux-stand` CI job uses the `ubuntu:20.04` container pinned by digest.
 - Project definition: a verification loop for STM32 firmware on real hardware for
   agent-driven and manual development, technically a debugger-driven test framework.
   README, documentation maps, stand layouts in STATUS, layout choice in getting
