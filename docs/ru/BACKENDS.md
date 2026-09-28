@@ -5,7 +5,8 @@
 Backend задаёт запуск и готовность сервера, команды setup, reset, завершения и
 восстановления. Сценарии пользуются общим Target API; ожидания периферии остаются
 у потребителя. Стенд выбирается `--stand` → `STM32_GDBTEST_STAND` → `session.stand`
-([API](API.md)). Аппаратный запуск поддерживается на Windows.
+([API](API.md)). Аппаратный запуск поддерживается на Windows и Linux
+([Linux-стенд](LINUX_STAND.md)).
 
 ## Стенд
 
@@ -15,16 +16,23 @@ Backend задаёт запуск и готовность сервера, ком
 | --- | --- |
 | `backend` | `openocd`, `stlink` (ST-LINK GDB Server) или `jlink` |
 | `serial` | Явный серийный номер отладчика; для J-Link — десятичный USB-номер |
-| `executable` | Сервер: имя в PATH или абсолютный путь |
+| `executable` | Сервер: имя в PATH или абсолютный путь; по умолчанию `openocd`, `ST-LINK_gdbserver(.exe)`, `JLinkGDBServerCL.exe` (Windows) или `JLinkGDBServerCLExe` (Linux) |
 | `speed_khz` | 1…4000, по умолчанию 1000 — верхний предел, не фактическая частота |
 | `flash` | `if-different` (по умолчанию) или `verify-only` |
-| `programmer_dir` | Только `stlink`: абсолютный каталог с `STM32_Programmer_CLI.exe` |
+| `programmer_dir` | Только `stlink`: абсолютный каталог с `STM32_Programmer_CLI.exe` (на Linux — без `.exe`) |
 
 Неизвестный ключ отклоняется. Шаблоны: [OpenOCD](../../examples/stands/stlink.example.toml)
 и [OpenOCD, ST, J-Link для CI-прошивок](../../Tests/firmware/stands/jlink.example.toml)
 (в той же папке `openocd.example.toml` и `stlink.example.toml`). Локальные пути и
 серийные номера не коммитятся (`*.local.toml`). `run --prepare-only --stand …`
-проверяет стенд и команды backend без подключения к отладчику.
+проверяет стенд и команды backend без подключения к отладчику, а `doctor --stand …`
+дополнительно проверяет GDB-Python, OpenOCD и доступ к USB.
+
+На Linux ST-LINK GDB Server (STM32CubeCLT) есть только для x86_64; на aarch64
+(Orange Pi 5) используются OpenOCD и J-Link. OpenOCD 0.10 из репозитория Ubuntu 20.04
+не содержит `interface/stlink.cfg`, поэтому окружение стенда ставит xPack OpenOCD
+0.12.0-7. Эта сборка предупреждает об устаревших `tcl_port`/`telnet_port`/`gdb_port`;
+команды оставлены совместимыми с OpenOCD 0.12.0.
 
 ## Проверенные различия
 

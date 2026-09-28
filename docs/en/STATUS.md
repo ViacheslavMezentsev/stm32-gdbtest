@@ -11,9 +11,11 @@ history is in the [CHANGELOG](../../CHANGELOG.en.md).
 
 | Area | Verified scope |
 | --- | --- |
-| Host tests | 71 unittests without an MCU; on Linux 5 Windows lock tests are skipped |
-| CI (GitHub Actions, Docker) | Docs, format, host on Windows and Linux; F030R8/F103C8/F411CE CI firmware with GCC 13.3.1, 14.2.1, 15.2.1 and CMake 3.28.3: build manifest, `prepare`, full image, 10 negative contracts, load section alignment, empty RAM section ([checks and CI](testing.md)) |
+| Host tests | 79 unittests without an MCU; on Linux 4 Windows lock tests are skipped, on Windows 5 Linux tests (`flock` lock, process groups) |
+| CI (GitHub Actions, Docker) | Docs, format, host on Windows and Linux; F030R8/F103C8/F411CE CI firmware with GCC 13.3.1, 14.2.1, 15.2.1 and CMake 3.28.3: build manifest, `prepare`, full image, 10 negative contracts, load section alignment, empty RAM section; the Linux stand environment in `ubuntu:20.04` on x86_64 and aarch64 ([checks and CI](testing.md)) |
 | CI firmware on hardware | 4 stands × 10/10 steps at commit `fbc103d` (section below) |
+| Linux stand without hardware | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) in a container: environment installation, 79 host tests, `doctor`, `build` and `prepare` of the CI firmware; the hardware path without a debugger — lock, OpenOCD start, ERROR "exited before ready", processes stopped |
+| Linux stand on hardware | Not done yet: Orange Pi 5 (Ubuntu 20.04 aarch64) with OpenOCD and J-Link — a mandatory check before the release ([Linux stand](LINUX_STAND.md)) |
 | ELF/HAL preflight | Positive case and 11 negative variants on F103C8/F401CC/F411CE ELF files of the stand project |
 | Stand project, F411CE / ST-Link / OpenOCD | 24/24 CTest (22 HW + 2 host) after the module split |
 | Stand project, F103C8 / J-Link | 24/24 CTest (22 HW + 2 host) |
@@ -60,8 +62,10 @@ stm32-hwtest-blackpill suite was not repeated on these commits.
 
 ## Implementation limits
 
-- Hardware runs on Windows; build, manifest and preparation also on Linux. Ninja, one
-  firmware target and one MCU and debugger per run.
+- Hardware runs on Windows and Linux x86_64/aarch64 (glibc ≥ 2.31); on Linux they are
+  implemented but not yet checked on hardware. The GDB server runs on the same
+  computer as the runner. Ninja, one firmware target and one MCU and debugger per run.
+- ST-LINK GDB Server is unavailable on Linux aarch64 (ST does not release it for arm64).
 - The build manifest uses Cube and CMSIS metadata; a universal build system and an
   arbitrary toolchain are not claimed.
 - J-Link mapping verified for STM32F103C8T6 → STM32F103C8 and STM32F030R8T6 → STM32F030R8.
@@ -71,9 +75,10 @@ stm32-hwtest-blackpill suite was not repeated on these commits.
   HAL semantics.
 - Halt changes MCU behaviour; current, exact timing and physical signals need
   external methods.
-- Cross-project locking works within one Windows session for participating runners;
-  vendor tools are not controlled by it, and a release after a crash does not
-  guarantee that the child server exited.
+- Cross-project locking works within one Windows session or one Linux host for
+  participating runners; vendor tools are not controlled by it, and a release after a
+  crash does not guarantee that the child server exited. Windows and WSL locks are
+  independent.
 - Results are PASS, FAIL, ERROR; there is no automatic SKIP, multi-node or power
   control with reconnect. Recovery is an attempt, not a guarantee after a physical
   loss of the link or power.
@@ -83,7 +88,10 @@ test and may replace Flash, while `ctest --preset offline` does not connect to a
 
 ## Next steps
 
-Releasing v0.1.0-rc.1 and v0.1.0, supervision of server processes, evolution of the
+Before v0.1.0: the hardware check on Orange Pi 5, a remote GDB server over SSH (runner
+on Windows or in WSL, debugger on Orange Pi 5), transfer of a prepared run and
+hardware CI on a self-hosted runner. Then v0.1.0-rc.1 and v0.1.0, supervision of
+server processes, evolution of the
 profile schema and manifest; later a host controller for external equipment and Python
 packaging. These are plans, not available features: [roadmap](../../TODO.md)
 (Russian), [versioning rules](VERSIONING.md), [getting started](GETTING_STARTED.md).

@@ -8,6 +8,21 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- Hardware runs on Linux x86_64 and aarch64 (glibc ≥ 2.31, including Ubuntu 20.04 on
+  Orange Pi 5): debugger lock with `flock` in a host-wide directory
+  (`STM32_GDBTEST_LOCK_DIR`, default `/tmp`) with abandoned-ownership detection, the
+  server and GDB in their own process group stopped with `SIGTERM`/`SIGKILL`, Linux
+  server names without `.exe`. Not yet checked on Linux hardware.
+- `tools/linux_stand.py`: stand environment without root — Python 3.11
+  (python-build-standalone), CMake 3.28.3, Ninja 1.12.1, xPack GCC 13.3.1-1.1, xPack
+  OpenOCD 0.12.0-7 and CMSIS from `tools/linux-stand.lock.json` with SHA-256 for x86_64
+  and aarch64; `env.sh`.
+- `doctor` command: GDB-Python, binutils, CMake, Ninja, the lock directory, the stand,
+  OpenOCD `interface/stlink.cfg` and on Linux ST-Link and J-Link devices on USB with
+  access rights.
+- CI: the `linux-stand` job in an `ubuntu:20.04` container on x86_64 and aarch64 —
+  environment installation, host tests, `doctor`, build and preparation of the CI firmware.
+- Linux stand documentation `docs/ru|en/LINUX_STAND.md`; specification revision 0.7.
 - Hardware check of the CI firmware `Tests/firmware/run_hw.py` (10 steps: programming,
   repeat, strict identity, full image, verify-only, timeout/recovery); at commit `fbc103d`
   F030R8/J-Link STLink, F103C8/J-Link, F411CE/OpenOCD and F411CE/ST-LINK GDB Server passed.
@@ -42,6 +57,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Changed
 
+- `run_hw.py` works on Linux (toolchain and Cube from `env.sh`) and records the host OS
+  and architecture in `summary.json`.
 - Documentation moved to `docs/ru/` with English versions in `docs/en/`, `index.md`
   documentation maps and navigation lines; README.en.md added. Pages were checked
   against the current features: preparation without hardware, Linux for the offline
@@ -49,8 +66,7 @@ Versions: [policy](docs/en/VERSIONING.md).
   the F030 Flash size address, verified stands; specification revisions 0.5 and 0.6.
 - Build, build manifest, offline contracts and image preparation also work on Linux:
   compiler commands are split by shell rules, binutils names follow the GDB suffix.
-  Hardware runs remain Windows-only; the refusal on another OS comes after stand and
-  profile selection, before debugger locking.
+  (hardware runs on Linux — see Added).
 - AGENTS.md is a short rule list; branches `<agent>/<task>`, merging without pull
   requests, signed Conventional Commits; specification revision 0.3.
 - Gaps of the derived BIN are filled with 0xFF. This does not guarantee filled holes

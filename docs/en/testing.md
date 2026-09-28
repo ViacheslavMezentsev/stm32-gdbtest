@@ -5,7 +5,7 @@
 CI checks the module up to the GDB server: without a debugger, a board or MCU
 access. Hardware scenarios run separately on an agreed stand
 ([maintenance](maintenance.md#working-with-hardware)). CI requirements are items
-8.11–8.19 of the [specification](../TECHNICAL_SPECIFICATION.md) (Russian).
+8.11–8.20 of the [specification](../TECHNICAL_SPECIFICATION.md) (Russian).
 
 ## Check levels
 
@@ -13,7 +13,8 @@ access. Hardware scenarios run separately on an agreed stand
 | --- | --- | --- |
 | docs | `check_spec.py --strict` for the specification, local Markdown links, RU/EN pairs | `ci/run_checks.py docs`, Docs workflow |
 | format | C/C++ sources match `.clang-format` (`clang-format --dry-run --Werror`, version ≥ 16) | `ci/run_checks.py format` in the Docker image, Offline workflow |
-| host | Module host tests `Tests/host` | Linux in the Docker image and Windows (Python 3.11, 3.13), Offline workflow |
+| host | Module host tests `Tests/host` | Linux in the Docker image, Windows (Python 3.11, 3.13) and Ubuntu 20.04 x86_64/aarch64 on the stand environment Python, Offline workflow |
+| stand | Installing the Linux stand environment in a clean `ubuntu:20.04`, `doctor`, the `build` and `prepare` steps of `run_hw.py` for three profiles | `linux-stand` job of the Offline workflow on `ubuntu-24.04` and `ubuntu-24.04-arm` |
 | firmware | Building the F030R8, F103C8, F411CE CI firmware with every GCC in the lock file; build manifest; CTest `host` (traceability, `prepare.<ID>` with offline contracts); full-image preparation; rejection of a too small image policy; 10 negative ELF contract variants; presence and 4-byte alignment of load sections, including `.data` | `ci/run_checks.py firmware` in the Docker image, Offline workflow |
 
 The CI firmware lives in [Tests/firmware](../../Tests/firmware/README.md): CMSIS without
@@ -63,7 +64,9 @@ CI firmware — the presets in `Tests/firmware` (`cmake --preset f411ce`,
 - **Offline** — on a push to any branch except Markdown-only, `LICENSE` and
   `.github/FUNDING.yml` changes: host tests on `windows-2022` (Python 3.11 and 3.13)
   and the host and firmware levels in the Docker image on `ubuntu-24.04` without
-  network (`--network none`).
+  network (`--network none`); the `linux-stand` job installs the stand environment in
+  an `ubuntu:20.04` container on x86_64 and aarch64 (network is needed to download
+  the pinned archives).
 
 There is no branch-prefix filter: branches of new agents are checked without
 editing the workflows. A check result belongs to a specific commit; match it to
@@ -71,8 +74,8 @@ the branch's latest commit before merging.
 
 ## Hardware check of the CI firmware (development)
 
-Separately from CI the same firmware is checked on a local Windows stand with
-`Tests/firmware/run_hw.py`. It builds a profile, runs the scenarios through the
+Separately from CI the same firmware is checked on a local Windows or Linux stand
+with `Tests/firmware/run_hw.py`. It builds a profile, runs the scenarios through the
 regular runner and GDB server and checks the expected outcome of every step:
 programming and a repeat without programming, strict identity, a full image with an
 0xA5 tail, the expected verify-only ERROR, 0xFF restore, timeout with recovery and a
@@ -84,13 +87,15 @@ python -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stand
 
 The stand is a local copy of a template from `Tests/firmware/stands/*.example.toml`
 (`*.local.toml` is not committed). Toolchain and Cube — `--toolchain`, `--cube` or
-`ARM_TOOLCHAIN_ROOT`, `STM32CUBE_REPOSITORY`. The result is `build/hw/<profile>-<stand>/summary.json`.
+`ARM_TOOLCHAIN_ROOT`, `STM32CUBE_REPOSITORY`; on Linux the stand environment's `env.sh`
+sets them ([Linux stand](LINUX_STAND.md)), on Windows there are defaults in the user
+profile. `summary.json` records the host OS and architecture. The result is `build/hw/<profile>-<stand>/summary.json`.
 The script reprograms Flash: use only boards agreed for experiments.
 
 ## What CI does not check
 
 - Connecting to a GDB server, debugger and MCU, Flash programming, identity, the
   Target API at run time, timeout/recovery — these are the consumer's hardware checks.
-- Debugger locking between processes — only by the Windows host tests.
+- Debugger locking between processes — only by the Windows and Linux host tests.
 - HAL semantics and correctness of scenarios on a board: contracts check the
   presence of symbols, types and macro expansion in the ELF.

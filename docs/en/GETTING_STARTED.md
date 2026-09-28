@@ -9,11 +9,16 @@ project dependency run them in a separate working copy.
 
 ## Requirements
 
-- Hardware runs: Windows, Python ≥ 3.11, CMake ≥ 3.25, Ninja, ARM GCC with
-  `arm-none-eabi-gdb-py3` (GDB with embedded Python ≥ 3.11), an SWD debugger and its
-  GDB server (OpenOCD, ST-LINK GDB Server or J-Link GDB Server).
+- Hardware runs: Windows or Linux (x86_64, aarch64, glibc ≥ 2.31), Python ≥ 3.11,
+  CMake ≥ 3.25, Ninja, ARM GCC with `arm-none-eabi-gdb-py3` (GDB with embedded
+  Python ≥ 3.11), an SWD debugger and its GDB server (OpenOCD, ST-LINK GDB Server or
+  J-Link GDB Server).
+- On Linux everything except the J-Link software and udev rules is installed without
+  root by `tools/linux_stand.py`, including Ubuntu 20.04 ([Linux stand](LINUX_STAND.md)).
 - Build, build manifest and preparation without hardware (`run --prepare-only`) also
-  work on Linux; a ready environment is the CI Docker image ([checks and CI](testing.md)).
+  run in the CI Docker image ([checks and CI](testing.md)).
+- `python -B -m stm32_gdbtest doctor [--stand <stand>]` checks the environment without
+  accessing the debugger.
 - Verified versions and boards — [status](STATUS.md). Other MCUs and versions need
   their own checks.
 

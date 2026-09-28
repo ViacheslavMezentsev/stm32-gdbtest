@@ -4,8 +4,9 @@
 
 ## Mechanism
 
-`probe_lock(root, serial, backend="openocd")` uses the named Windows mutex
-`Local\stm32-gdbtest.probe.v1.<sha256>`. The key is the debugger family and the
+`probe_lock(root, serial, backend="openocd")` uses the named mutex
+`Local\stm32-gdbtest.probe.v1.<sha256>` on Windows and a file with `flock` on Linux
+(see [Linux](#linux)). The key is the debugger family and the
 upper-case serial number: OpenOCD and the ST server map to `stlink`, J-Link to
 `jlink`. The project root, MCU and GDB port are not part of the key. The serial number
 is not published in the object name, but the hash is not a way to hide secrets.
@@ -25,10 +26,10 @@ debugger must take part in the same protocol. An in-process guard rejects a nest
 acquisition, because a Windows mutex is recursive for its owning thread. One import
 of the package per Python process is supported.
 
-`run --prepare-only` does not access the debugger and takes no lock.
+`run --prepare-only` and `doctor` do not access the debugger and take no lock.
 
-The older file lock `build/probe-locks/<sha256(serial)>.lock` is held inside the
-mutex for compatibility with an old runner in the same checkout. Therefore two
+The older file lock `build/probe-locks/<sha256(serial)>.lock` (Windows only) is held
+inside the mutex for compatibility with an old runner in the same checkout. Therefore two
 debuggers of different families with the same serial number in one checkout may
 be refused conservatively. An old runner in another checkout does not know the new
 mutex — update all participating projects. Vendor tools, VS Code and an arbitrary
@@ -48,8 +49,33 @@ Killing foreign processes or resetting the MCU because of this state is not allo
 After a host crash first check and stop leftover servers. Child process supervision
 (Job Object) is a separate task ([roadmap](../../TODO.md), Russian).
 
+## Linux
+
+The lock is the file `probe.v1.<sha256>.lock` with the same hash in the
+`stm32-gdbtest-locks` directory under `STM32_GDBTEST_LOCK_DIR`, or under `/tmp` without
+the variable. It is taken with `flock` without waiting; a busy file gives the same
+ERROR "another runner on this host". The directory is created with mode `1777` and
+the files with `0666`, so all users and checkouts of the host share the lock.
+
+The kernel drops `flock` when the owning process ends, so to detect a crash the owner
+writes `pid=<PID>` into the file and clears it on release. If the next runner takes
+the file and finds a record, the previous owner crashed: the runner clears the record
+and refuses with "Abandoned debugger ownership", as with `WAIT_ABANDONED`. The next run
+after the check proceeds.
+
+The coordination scope is one kernel and one directory. A container, a virtual
+machine or a WSL distribution with its own `/tmp` does not see the host lock; set a
+shared directory with `STM32_GDBTEST_LOCK_DIR`. The WSL lock does not interact with the
+Windows mutex: do not use one debugger from Windows and WSL at the same time.
+
+The server and GDB start in their own process group. Stopping sends `SIGTERM` to the
+group and `SIGKILL` after 3 s, so children of the server end too, even if the leader
+has already exited. A crash of the runner itself does not stop the group — check
+leftover processes (`pgrep -a openocd`, `pgrep -a JLink`).
+
 ## Checking the mechanism
 
-Host tests: `Tests/host/test_probe_lock.py`; they run on Windows only (in CI — the
-`windows-2022` job). Hardware results and process contention experiments are
+Host tests: `Tests/host/test_probe_lock.py`. The Windows part runs on Windows (in CI —
+the `windows-2022` job), the Linux part (lock, abandoned ownership, stopping the
+process group) on Linux. Hardware results and process contention experiments are
 [in the stand project](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/DEBUGGER_OWNERSHIP.md) (Russian).
