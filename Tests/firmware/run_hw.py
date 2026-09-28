@@ -18,9 +18,14 @@ The test boards are reprogrammed: use only boards agreed for experiments.
 Usage (repository root; on Linux first `. ~/.local/stm32-gdbtest/env.sh`, see tools/linux_stand.py):
   python -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stands/f411ce-openocd.local.toml
 Results: build/hw/<profile>-<stand name>/summary.json and the runner reports it lists.
+
+A package from `python -m stm32_gdbtest pack` replaces the build here (--package; built and
+prepared elsewhere, e.g. in CI). --repeat N repeats the steps (0: until Ctrl+C) and writes
+soak.json with counters plus iterations/NNNNN.json (docs/en/HARDWARE_CI.md).
 """
 
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -29,6 +34,7 @@ import shutil
 import subprocess
 import sys
 import time
+import zipfile
 
 if sys.version_info < (3, 11):
     sys.exit(f"run_hw.py needs Python 3.11+, this is {sys.version.split()[0]}. "
@@ -66,8 +72,14 @@ def main():
     parser.add_argument("--cube", type=Path, default=os.environ.get("STM32CUBE_REPOSITORY")
                         or (home / "STM32Cube/Repository" if home else None))
     parser.add_argument("--steps", nargs="*", choices=STEPS, default=list(STEPS))
+    parser.add_argument("--package", type=Path,
+                        help="prepared run package from `pack`: no build here, the build step checks the package")
+    parser.add_argument("--repeat", type=int, default=1,
+                        help="repeat the steps N times (0: until interrupted); build runs only once")
     args = parser.parse_args()
-    if not args.toolchain or not args.cube:
+    if args.repeat < 0:
+        sys.exit("--repeat must be 0 (until interrupted) or a positive number")
+    if not args.package and (not args.toolchain or not args.cube):
         sys.exit("Set ARM_TOOLCHAIN_ROOT and STM32CUBE_REPOSITORY (source env.sh of tools/linux_stand.py) "
                  "or pass --toolchain and --cube")
     stand_path = args.stand.resolve()
@@ -85,6 +97,13 @@ def main():
         env.pop(variable, None)
     session = build / "hwtest/session.json"
     cli = [sys.executable, "-B", ROOT / "stm32_gdbtest/cli.py", "run", "--session", session]
+    runs = build / "hwtest/runs"
+    if args.package:
+        package = args.package.resolve()
+        workdir = out / "package"
+        cli = [sys.executable, "-B", ROOT / "stm32_gdbtest/cli.py", "run", "--package", package,
+               "--workdir", workdir]
+        runs = workdir / hashlib.sha256(package.read_bytes()).hexdigest()[:16] / "runs"
     policy = FIRMWARE / f"profiles/{args.profile}/full-image.toml"
     policy_a5 = out / "full-image-a5.toml"
     policy_a5.write_text(policy.read_text(encoding="utf-8").replace("fill = 255", "fill = 165"), encoding="utf-8")
@@ -93,12 +112,10 @@ def main():
     stand_verify.write_text("".join(f"[{table}]\n" + "".join(f"{key} = {json.dumps(value)}\n"
                                                              for key, value in values.items())
                                     for table, values in tables.items()), encoding="utf-8")
-    results = []
-
     def scenario(test_id, *extra, stand=stand_path, image_policy=None, expect=0):
         run_env = dict(env, STM32_GDBTEST_IMAGE_POLICY=str(image_policy)) if image_policy else env
         result = command([*cli, "--test", test_id, "--stand", stand, *extra], log, run_env)
-        reports = sorted((build / "hwtest/runs").glob(f"*-{test_id}-*/result.json"), key=lambda p: p.stat().st_mtime)
+        reports = sorted(runs.glob(f"*-{test_id}-*/result.json"), key=lambda p: p.stat().st_mtime)
         report = json.loads(reports[-1].read_text(encoding="utf-8")) if reports else {}
         if result.returncode != expect:
             raise StepError(f"exit {result.returncode}, expected {expect}: {report.get('error', result.stdout[-2000:])}")
@@ -109,6 +126,13 @@ def main():
             raise StepError(message)
 
     def step_build():
+        if args.package:
+            # ТЗ 5.19: the package was built and prepared elsewhere; check it holds the CI scenarios.
+            with zipfile.ZipFile(args.package) as bundle:
+                manifest = json.loads(bundle.read("ddtt-package.json"))
+            ids = {test["id"] for test in manifest["tests"]}
+            require({"HW_CI_BOOT", "HW_CI_GPIO"} <= ids, f"package lacks CI scenarios: {sorted(ids)}")
+            return None, None
         configure = command(["cmake", "-S", FIRMWARE, "-B", build, "-G", "Ninja", "--toolchain",
                              FIRMWARE / "cmake/arm-gcc.cmake", f"-DCI_PROFILE={args.profile}",
                              f"-DARM_TOOLCHAIN_ROOT={args.toolchain}", f"-DSTM32CUBE_REPOSITORY={args.cube}",
@@ -170,31 +194,64 @@ def main():
     handlers = {"build": step_build, "prepare": step_prepare, "boot": step_boot, "gpio": step_gpio,
                 "strict": step_strict, "full-a5": step_full_a5, "verify-only-ff": step_verify_only_ff,
                 "full-ff": step_full_ff, "timeout": step_timeout, "after-recovery": step_after_recovery}
-    for step in [s for s in STEPS if s in args.steps]:
-        started = time.monotonic()
-        try:
-            report, path = handlers[step]()
-            status, detail = "PASS", None
-        except Exception as error:  # the next steps still run and report their own state
-            status, detail, report, path = "FAIL", str(error), None, None
-        entry = dict(step=step, status=status, seconds=round(time.monotonic() - started, 1), detail=detail,
-                     report=str(path.relative_to(ROOT)) if path else None)
-        if report:
-            entry.update(result=report.get("status"), flashed=report.get("flashed"),
-                         teardown=report.get("teardown"), warnings=report.get("warnings"),
-                         backend_version=report.get("compatibility", {}).get("backend", {}).get("version"),
-                         debugger_firmware=report.get("compatibility", {}).get("debugger", {}).get("firmware"))
-        results.append(entry)
-        print(f"{status} {step} ({entry['seconds']}s)" + (f": {detail}" if detail else ""), flush=True)
-    summary = dict(schema=1, profile=args.profile, backend=probe.get("backend"), stand=stand_path.name,
-                   server_host=document.get("remote", {}).get("host", "local"),
-                   host=f"{platform.system()} {platform.release()} {platform.machine()}",
-                   toolchain=str(args.toolchain), passed=sum(r["status"] == "PASS" for r in results),
-                   total=len(results), steps=results)
-    (out / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"{summary['passed']}/{summary['total']} steps passed; {out / 'summary.json'}")
-    return 0 if summary["passed"] == summary["total"] else 1
+    def iteration(first):
+        results = []
+        for step in [s for s in STEPS if s in args.steps and (first or s != "build")]:
+            started = time.monotonic()
+            try:
+                report, path = handlers[step]()
+                status, detail = "PASS", None
+            except Exception as error:  # the next steps still run and report their own state
+                status, detail, report, path = "FAIL", str(error), None, None
+            entry = dict(step=step, status=status, seconds=round(time.monotonic() - started, 1), detail=detail,
+                         report=str(path.relative_to(ROOT)) if path else None)
+            if report:
+                entry.update(result=report.get("status"), flashed=report.get("flashed"),
+                             teardown=report.get("teardown"), warnings=report.get("warnings"),
+                             backend_version=report.get("compatibility", {}).get("backend", {}).get("version"),
+                             debugger_firmware=report.get("compatibility", {}).get("debugger", {}).get("firmware"))
+            results.append(entry)
+            print(f"{status} {step} ({entry['seconds']}s)" + (f": {detail}" if detail else ""), flush=True)
+        return dict(schema=1, profile=args.profile, backend=probe.get("backend"), stand=stand_path.name,
+                    server_host=document.get("remote", {}).get("host", "local"),
+                    host=f"{platform.system()} {platform.release()} {platform.machine()}",
+                    toolchain=None if args.package else str(args.toolchain),
+                    package=args.package.name if args.package else None,
+                    passed=sum(r["status"] == "PASS" for r in results), total=len(results), steps=results)
 
+    if args.repeat == 1:
+        summary = iteration(True)
+        (out / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        print(f"{summary['passed']}/{summary['total']} steps passed; {out / 'summary.json'}")
+        return 0 if summary["passed"] == summary["total"] else 1
+    # Soak mode (ТЗ 5.20): repeat until N iterations or Ctrl+C; every iteration keeps its summary.
+    soak = dict(schema=1, profile=args.profile, stand=stand_path.name, repeat=args.repeat,
+                started_utc=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), iterations=0,
+                passed_iterations=0, step_failures={}, first_failure=None, last_utc=None, interrupted=False)
+    (out / "iterations").mkdir()
+    number = 0
+    try:
+        while args.repeat == 0 or number < args.repeat:
+            number += 1
+            print(f"--- iteration {number}", flush=True)
+            summary = iteration(number == 1)
+            (out / "iterations" / f"{number:05d}.json").write_text(json.dumps(summary, indent=2) + "\n",
+                                                                     encoding="utf-8")
+            soak["iterations"] = number
+            soak["last_utc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            if summary["passed"] == summary["total"]:
+                soak["passed_iterations"] += 1
+            for entry in summary["steps"]:
+                if entry["status"] != "PASS":
+                    soak["step_failures"][entry["step"]] = soak["step_failures"].get(entry["step"], 0) + 1
+                    soak["first_failure"] = soak["first_failure"] or dict(iteration=number, step=entry["step"],
+                                                                          detail=entry["detail"])
+            (out / "soak.json").write_text(json.dumps(soak, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    except KeyboardInterrupt:
+        soak["interrupted"] = True
+        (out / "soak.json").write_text(json.dumps(soak, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"{soak['passed_iterations']}/{soak['iterations']} iterations passed; {out / 'soak.json'}")
+    return 0 if soak["iterations"] and soak["passed_iterations"] == soak["iterations"] else 1
 
 if __name__ == "__main__":
     sys.exit(main())

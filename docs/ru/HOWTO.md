@@ -196,6 +196,21 @@ ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -i <�
 Вернуть как было: удалить таблицу `[remote]` из стенда (или файл стенда), убрать ключ
 из `~/.ssh/authorized_keys` на хосте стенда, запись хоста — `ssh-keygen -R <хост>`.
 
+## Пакеты подготовленного запуска и аппаратный CI
+
+Подробно — [аппаратный CI](HARDWARE_CI.md).
+
+| Сообщение | Что делать |
+| --- | --- |
+| `Preparation failed, package not written: …` | Подготовка сценария дала ERROR: запустить `run --prepare-only` для него и разобрать `result.json` |
+| `Package file changed: …`, `Package contents do not match its manifest` | Пакет повреждён или изменён после `pack`: создать заново, не править zip вручную |
+| `The Tests directory must be inside the profile directory` | Каталог сценариев вынесен из профиля: перенести или собрать пакет из профиля |
+| Сценарий на стенде не находит вспомогательный модуль | Добавить его при упаковке: `pack … --include helpers` |
+| Задание `hardware` не стартует | Раннер не в сети или без метки `stm32-stand`: Settings → Actions → Runners |
+
+Вернуть как было: удалить `build/ddtt-packages` и `build/packages`; раннер — раздел
+«Установка раннера» в [аппаратном CI](HARDWARE_CI.md).
+
 ## Docker и CI
 
 | Проблема | Решение |

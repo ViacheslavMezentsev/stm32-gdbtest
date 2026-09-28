@@ -11,7 +11,7 @@ history is in the [CHANGELOG](../../CHANGELOG.en.md).
 
 | Area | Verified scope |
 | --- | --- |
-| Host tests | 86 unittests without an MCU; on Linux 4 Windows mutex tests are skipped, on Windows 7 Linux tests (`flock` lock 3, process groups 2, remote server helper 2) |
+| Host tests | 89 unittests without an MCU; on Linux 4 Windows mutex tests are skipped, on Windows 7 Linux tests (`flock` lock 3, process groups 2, remote server helper 2) |
 | CI (GitHub Actions, Docker) | Docs, format, host on Windows and Linux; F030R8/F103C8/F411CE CI firmware with GCC 13.3.1, 14.2.1, 15.2.1 and CMake 3.28.3: build manifest, `prepare`, full image, 10 negative contracts, load section alignment, empty RAM section; the Linux stand environment in `ubuntu:20.04` on x86_64 and aarch64 ([checks and CI](testing.md)) |
 | CI firmware on hardware | 4 stands × 10/10 steps at commit `fbc103d` (section below) |
 | Linux stand without hardware | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) in a container: environment installation, host tests (79 at revision 0.7), `doctor`, `build` and `prepare` of the CI firmware; the hardware path without a debugger — lock, OpenOCD start, ERROR "exited before ready", processes stopped |
@@ -48,8 +48,8 @@ API contents; a matching HAL version does not prove matching behaviour.
 | Runner and GDB on Windows, server and debugger on Orange Pi 5 over SSH | Checked: 3 stands × 10/10 |
 | Linux x86_64 locally | Implemented; CI covers environment, build and preparation; not checked on hardware |
 | WSL2: debugger through usbipd or server on Orange Pi over SSH | Implemented as Linux; not checked on hardware |
-| Build in one place, run on a stand | Planned before 0.1.0 |
-| Hardware CI on a self-hosted runner, 24/7 loop runs | Planned before 0.1.0 |
+| Build in one place, run on a stand (`pack`, `run --package`) | Implemented; checked without hardware and through SSH loopback; not checked on hardware |
+| Hardware CI on a self-hosted runner (Hardware workflow), loop runs (`run_hw.py --repeat`) | Implemented; runner not installed, workflow not run yet |
 
 ## Hardware check of the CI firmware, 2026-09-28
 

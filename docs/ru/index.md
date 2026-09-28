@@ -25,6 +25,7 @@
 - [Identity и Flash](TARGET_IDENTITY.md) — DEV_ID и заводской размер Flash.
 - [Владение отладчиком](DEBUGGER_OWNERSHIP.md) — межпроектная блокировка на Windows и Linux.
 - [Linux-стенд](LINUX_STAND.md) — окружение без root (Ubuntu 20.04, Orange Pi 5), USB, J-Link, удалённый GDB-сервер по SSH, WSL2.
+- [Аппаратный CI](HARDWARE_CI.md) — пакеты подготовленного запуска, self-hosted раннер на Orange Pi, прогоны 24/7.
 
 ## Состояние и сопровождение
 

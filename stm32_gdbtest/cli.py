@@ -28,7 +28,12 @@ def main():
     check.add_argument("--tests", type=Path, required=True)
     check.add_argument("--requirements", type=Path, required=True)
     run_parser = subs.add_parser("run")
-    run_parser.add_argument("--session", type=Path, required=True)
+    source = run_parser.add_mutually_exclusive_group(required=True)
+    source.add_argument("--session", type=Path)
+    source.add_argument("--package", type=Path, help="prepared run package created by `pack`")
+    run_parser.add_argument("--gdb", type=Path, help="GDB with Python for --package (default: lookup)")
+    run_parser.add_argument("--workdir", type=Path, default=Path("build/ddtt-packages"),
+                            help="where --package is verified and extracted")
     run_parser.add_argument("--test", required=True)
     run_parser.add_argument("--stand", type=Path)
     run_parser.add_argument("--timeout", type=float)
@@ -36,6 +41,12 @@ def main():
     run_parser.add_argument("--image-policy", type=Path)
     run_parser.add_argument("--prepare-only", action="store_true",
                             help="run every host-side step before the GDB server, without hardware access")
+    packer = subs.add_parser("pack", help="prepare scenarios here and write a package to run on a stand")
+    packer.add_argument("--session", type=Path, required=True)
+    packer.add_argument("--output", type=Path, required=True, help="package file, *.zip")
+    packer.add_argument("--test", action="append", help="scenario ID; repeat; default: all")
+    packer.add_argument("--include", action="append", default=[],
+                        help="helper file or directory relative to the project root; repeat")
     doctor = subs.add_parser("doctor", help="check GDB-Python, binutils, tools, stand and USB access")
     doctor.add_argument("--gdb", type=Path)
     doctor.add_argument("--stand", type=Path)
@@ -60,7 +71,22 @@ def main():
         print("Requirement IDs and tests match")
         return 0
     from stm32_gdbtest.runner import run
-    session = json.loads(args.session.read_text(encoding="utf-8"))
+    if args.command == "pack":
+        from stm32_gdbtest.package import pack
+        session = json.loads(args.session.read_text(encoding="utf-8"))
+        try:
+            manifest = pack(session, args.output, args.test, args.include,
+                            prepare=lambda test: "PASS" if run(session, test, prepare_only=True) == 0 else "ERROR")
+        except RuntimeError as error:
+            print(f"ERROR: {error}", file=sys.stderr)
+            return 2
+        print(f"Package {args.output}: {len(manifest['tests'])} scenarios, ELF {manifest['elf_sha256'][:12]}")
+        return 0
+    if args.package:
+        from stm32_gdbtest.package import open_package
+        session = open_package(args.package, args.workdir, args.gdb and str(args.gdb))
+    else:
+        session = json.loads(args.session.read_text(encoding="utf-8"))
     tests = {t["id"]: t for t in collect(session["tests"])}
     return run(session, tests[args.test], args.stand, args.timeout, args.identity_policy, args.image_policy,
                args.prepare_only)

@@ -8,6 +8,12 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- Prepared run packages: `pack` prepares scenarios without hardware and writes a zip with the
+  ELF, build manifest, profile, scenarios and file SHA-256; `run --package` verifies the package
+  and runs it on a stand without rebuilding; `run_hw.py --package`.
+- The Hardware workflow (manual only): build and `pack` on GitHub, run the packages on a
+  self-hosted runner with a stand. `run_hw.py --repeat` for loop runs with `soak.json`.
+  Documentation `docs/ru|en/HARDWARE_CI.md`.
 - DDTT 0.2 method specification (Debugger-Driven Testing on Target) `docs/ru|en/DDTT.md`:
   scope, terms, principles, model, requirements for scenarios, stands, tools and agents
   per RFC 2119; stm32-gdbtest is the reference implementation.

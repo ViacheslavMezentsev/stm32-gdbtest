@@ -10,6 +10,7 @@ from contextlib import redirect_stdout
 from unittest.mock import patch
 
 from stm32_gdbtest import doctor
+from stm32_gdbtest.toolchain import find_gdb
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -53,8 +54,8 @@ class DoctorTests(unittest.TestCase):
         gdb.parent.mkdir()
         gdb.write_text("")
         env = {"STM32_GDBTEST_GDB": "", "ARM_TOOLCHAIN_ROOT": str(self.dir)}
-        with patch.dict(os.environ, env), patch("stm32_gdbtest.doctor.shutil.which", return_value=None):
-            self.assertEqual(doctor._toolchain_gdb(), str(gdb))
+        with patch.dict(os.environ, env), patch("shutil.which", return_value=None):
+            self.assertEqual(find_gdb(), str(gdb))
 
     def test_missing_gdb_fails_and_never_starts_a_server(self):
         # TC-93: ТЗ 5.17.1, 5.17.2 — FAIL gives exit 1; the doctor starts no GDB server.

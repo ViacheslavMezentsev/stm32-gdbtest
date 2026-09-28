@@ -11,6 +11,7 @@ import sys
 from stm32_gdbtest import backends, remote as remote_host
 from stm32_gdbtest.processes import FLAGS, lock_directory, probe_identity
 from stm32_gdbtest.runner import tool
+from stm32_gdbtest.toolchain import find_gdb
 
 USB_VENDORS = {"0483": "ST-Link", "1366": "J-Link"}
 # ST's vendor ID also covers application devices (e.g. 5740, a USB CDC port of a
@@ -24,19 +25,6 @@ def _output(args, timeout=20):
     result = subprocess.run([str(a) for a in args], stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                             text=True, errors="replace", timeout=timeout, creationflags=FLAGS)
     return result.returncode, result.stdout.strip()
-
-
-def _toolchain_gdb():
-    """The toolchain run_hw.py and the CI firmware use: ARM_TOOLCHAIN_ROOT, then the Windows default."""
-    roots = [os.environ.get("ARM_TOOLCHAIN_ROOT")]
-    if os.name == "nt" and os.environ.get("USERPROFILE"):
-        roots.append(str(Path(os.environ["USERPROFILE"]) / "xpack-arm-none-eabi-gcc-13.3.1-1.1"))
-    suffix = ".exe" if os.name == "nt" else ""
-    for root in filter(None, roots):
-        candidate = Path(root) / "bin" / ("arm-none-eabi-gdb-py3" + suffix)
-        if candidate.is_file():
-            return str(candidate)
-    return None
 
 
 def usb_debuggers(sysfs=Path("/sys/bus/usb/devices"), dev=Path("/dev/bus/usb")):
@@ -86,8 +74,7 @@ def diagnose(gdb=None, stand=None, sysfs=Path("/sys/bus/usb/devices")):
     if sys.version_info < (3, 11):
         add("python", "FAIL", "Python 3.11+ required for the host runner")
 
-    gdb = gdb or os.environ.get("STM32_GDBTEST_GDB") or shutil.which("arm-none-eabi-gdb-py3") \
-        or shutil.which("arm-none-eabi-gdb") or _toolchain_gdb()
+    gdb = find_gdb(gdb and str(gdb))
     if not gdb or not Path(gdb).is_file():
         add("gdb", "FAIL", "GDB with Python not found: set STM32_GDBTEST_GDB or put arm-none-eabi-gdb-py3 on PATH")
     else:

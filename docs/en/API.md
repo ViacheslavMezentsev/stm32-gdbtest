@@ -102,7 +102,8 @@ The logical CLI name is `stm32-gdbtest`; a separate executable will come with pa
 
 | `run` option | Purpose |
 | --- | --- |
-| `--session`, `--test` | Generated `session.json` and scenario ID |
+| `--session` or `--package`, `--test` | Generated `session.json` or a prepared run package, and scenario ID |
+| `--gdb`, `--workdir` | For `--package`: the stand's GDB (otherwise looked up like `doctor`) and the extraction directory (default `build/ddtt-packages`) |
 | `--stand` | Local stand; selection order: `--stand` → `STM32_GDBTEST_STAND` → `session.stand`; with a `[remote]` table the server starts on the stand host over SSH, the report has `server_host`, the SSH log is `tunnel.log` |
 | `--timeout` | External GDB deadline, 0 < t ≤ 300 s; defaults to the scenario's `timeout_s` |
 | `--identity-policy warn\|strict` | DEV_ID policy; order: CLI → `STM32_GDBTEST_IDENTITY_POLICY` → `warn` |
@@ -126,6 +127,10 @@ user profile. For a stand with `[remote]` the local OpenOCD and USB checks are r
 checks of the stand host over SSH (`remote`, `remote-server`, `remote-lock`, `remote-usb`,
 40 s limit).
 
+`pack --session S --output P.zip [--test ID …] [--include PATH …]` prepares scenarios without
+hardware and writes a prepared run package; `run --package` checks the SHA-256 of every
+package file and adds a `package` field to the report ([hardware CI](HARDWARE_CI.md)).
+
 `collect --cmake/--workspace` is the CMake generation interface and is rarely used by hand.
 
 `run` exit codes: PASS — 0, FAIL — 1, ERROR — 2; argument errors also give 2. A
@@ -133,7 +138,7 @@ failure before the run directory exists does not guarantee JSON/JUnit. An expect
 failure stays ERROR and never turns into PASS.
 
 Stable schemas: target 1, contract registry 1, build manifest 1, runtime
-compatibility 1, image policy 1. `session.json` is an internal artifact without a
+compatibility 1, image policy 1, prepared run package 1. `session.json` is an internal artifact without a
 stable schema promise. Direct calls into `runner`, `contracts`, `processes` are an
 internal development API; consumers use CMake, the CLI and the Target operations.
 Details: [getting started](GETTING_STARTED.md), [manifest](MANIFESTS.md),

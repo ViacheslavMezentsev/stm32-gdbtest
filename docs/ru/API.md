@@ -98,7 +98,8 @@ python -B -m stm32_gdbtest doctor --stand path/to/stand.local.toml
 
 | Параметр `run` | Назначение |
 | --- | --- |
-| `--session`, `--test` | Сгенерированный `session.json` и ID сценария |
+| `--session` или `--package`, `--test` | Сгенерированный `session.json` или пакет подготовленного запуска и ID сценария |
+| `--gdb`, `--workdir` | Для `--package`: GDB стенда (иначе поиск как у `doctor`) и каталог распаковки (по умолчанию `build/ddtt-packages`) |
 | `--stand` | Локальный стенд; порядок выбора: `--stand` → `STM32_GDBTEST_STAND` → `session.stand`; с таблицей `[remote]` сервер запускается на хосте стенда по SSH, в отчёте — `server_host`, журнал SSH — `tunnel.log` |
 | `--timeout` | Внешний предел времени GDB, 0 < t ≤ 300 с; по умолчанию `timeout_s` сценария |
 | `--identity-policy warn\|strict` | Политика DEV_ID; порядок: CLI → `STM32_GDBTEST_IDENTITY_POLICY` → `warn` |
@@ -121,6 +122,11 @@ Windows каталог xPack по умолчанию в профиле поль�
 локальные проверки OpenOCD и USB заменяются проверками хоста стенда по SSH (`remote`,
 `remote-server`, `remote-lock`, `remote-usb`, предел 40 с).
 
+`pack --session S --output P.zip [--test ID …] [--include PATH …]` готовит сценарии без
+оборудования и пишет пакет подготовленного запуска; `run --package` проверяет SHA-256
+каждого файла пакета и добавляет в отчёт поле `package`
+([аппаратный CI](HARDWARE_CI.md)).
+
 `collect --cmake/--workspace` — интерфейс генерации CMake, вручную обычно не нужен.
 
 Коды `run`: PASS — 0, FAIL — 1, ERROR — 2; ошибка аргументов также даёт 2. Отказ
@@ -128,7 +134,7 @@ Windows каталог xPack по умолчанию в профиле поль�
 ERROR и не превращается в PASS.
 
 Стабильные схемы: target 1, реестр контрактов 1, build manifest 1, runtime
-compatibility 1, политика образа 1. `session.json` — внутренний артефакт без
+compatibility 1, политика образа 1, пакет подготовленного запуска 1. `session.json` — внутренний артефакт без
 обещания стабильной схемы. Прямые вызовы `runner`, `contracts`, `processes` —
 внутренний API разработки; потребители используют CMake, CLI и операции Target.
 Подробности: [подключение](GETTING_STARTED.md), [manifest](MANIFESTS.md),

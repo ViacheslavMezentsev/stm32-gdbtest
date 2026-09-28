@@ -49,6 +49,8 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
     started = time.monotonic()
     report = {"id": test["id"], "status": "ERROR", "checks": [], "started_utc": stamp,
               "mode": "prepare" if prepare_only else "hardware"}
+    if session.get("package"):
+        report["package"] = session["package"]  # ТЗ 5.19.3: provenance of a prepared run
     try:
         legacy = [name for name in ("HWTEST_STAND", "HWTEST_IDENTITY_POLICY") if os.environ.get(name)]
         if legacy:

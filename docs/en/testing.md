@@ -67,6 +67,8 @@ CI firmware — the presets in `Tests/firmware` (`cmake --preset f411ce`,
   network (`--network none`); the `linux-stand` job installs the stand environment in
   an `ubuntu:20.04` container on x86_64 and aarch64 (network is needed to download
   the pinned archives).
+- **Hardware** — manual only: build and `pack` on `ubuntu-24.04`, then run the packages on
+  a self-hosted runner with a stand ([hardware CI](HARDWARE_CI.md)).
 
 There is no branch-prefix filter: branches of new agents are checked without
 editing the workflows. A check result belongs to a specific commit; match it to

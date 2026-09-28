@@ -1,0 +1,87 @@
+name: Hardware
+
+# Hardware runs on the owner's self-hosted stand (docs/en/HARDWARE_CI.md). Manual only:
+# a public repository must never start a self-hosted runner from pull requests.
+on:
+  workflow_dispatch:
+    inputs:
+      profiles:
+        description: 'CI profiles, space separated (f030r8 f103c8 f411ce)'
+        required: true
+        default: 'f030r8 f103c8 f411ce'
+      steps:
+        description: 'run_hw.py steps, space separated; empty for all'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hardware-stand
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    # Build and prepare where the toolchain is; the stand only runs the packages.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      PROFILES: ${{ inputs.profiles }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Pinned toolchain of the stand environment
+        run: python3 tools/linux_stand.py install --only python cmake ninja gcc cube
+      - name: Build, prepare and pack the CI firmware
+        run: |
+          . "$HOME/.local/stm32-gdbtest/env.sh"
+          mkdir -p build/packages
+          for profile in $PROFILES; do
+            case "$profile" in f030r8|f103c8|f411ce) ;; *) echo "Unknown profile: $profile"; exit 1 ;; esac
+            (cd Tests/firmware && cmake --preset "$profile" && cmake --build --preset "$profile" \
+              && ctest --preset "$profile-offline")
+            python3 -B -m stm32_gdbtest pack --session "Tests/firmware/build/$profile/hwtest/session.json" \
+              --output "build/packages/$profile.zip"
+          done
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ddtt-packages
+          path: build/packages/*.zip
+          if-no-files-found: error
+
+  hardware:
+    needs: prepare
+    runs-on: [self-hosted, linux, ARM64, stm32-stand]
+    timeout-minutes: 60
+    env:
+      PROFILES: ${{ inputs.profiles }}
+      STEPS: ${{ inputs.steps }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: ddtt-packages
+          path: build/packages
+      - name: Doctor and hardware runs of the prepared packages
+        run: |
+          . "$HOME/.local/stm32-gdbtest/env.sh"
+          stands="${STM32_GDBTEST_STANDS_DIR:-$HOME/.config/stm32-gdbtest/stands}"
+          status=0
+          for profile in $PROFILES; do
+            case "$profile" in f030r8|f103c8|f411ce) ;; *) echo "Unknown profile: $profile"; exit 1 ;; esac
+            python3 -B -m stm32_gdbtest doctor --stand "$stands/$profile.toml" || status=1
+            python3 -B Tests/firmware/run_hw.py --profile "$profile" --stand "$stands/$profile.toml" \
+              --package "build/packages/$profile.zip" ${STEPS:+--steps $STEPS} || status=1
+          done
+          exit $status
+      - name: Keep results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: hardware-results
+          path: |
+            build/hw/*/summary.json
+            build/hw/*/run_hw.log
+            build/hw/*/package/*/runs/*/result.json
+            build/hw/*/package/*/runs/*/*.log
+          if-no-files-found: warn

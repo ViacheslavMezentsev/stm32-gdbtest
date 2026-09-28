@@ -197,6 +197,21 @@ Undo: remove the `[remote]` table from the stand (or the stand file), remove the
 from `~/.ssh/authorized_keys` on the stand host, and the host entry with
 `ssh-keygen -R <host>`.
 
+## Prepared run packages and hardware CI
+
+Details: [hardware CI](HARDWARE_CI.md).
+
+| Message | What to do |
+| --- | --- |
+| `Preparation failed, package not written: …` | A scenario's preparation gave ERROR: run `run --prepare-only` for it and read `result.json` |
+| `Package file changed: …`, `Package contents do not match its manifest` | The package is damaged or changed after `pack`: create it again, do not edit the zip by hand |
+| `The Tests directory must be inside the profile directory` | The scenario directory is outside the profile: move it or pack from the profile |
+| A scenario on the stand cannot find a helper module | Add it when packing: `pack … --include helpers` |
+| The `hardware` job does not start | The runner is offline or lacks the `stm32-stand` label: Settings → Actions → Runners |
+
+Undo: delete `build/ddtt-packages` and `build/packages`; for the runner see "Installing the
+runner" in [hardware CI](HARDWARE_CI.md).
+
 ## Docker and CI
 
 | Problem | Solution |
