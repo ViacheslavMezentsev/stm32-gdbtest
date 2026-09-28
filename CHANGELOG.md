@@ -12,7 +12,10 @@
   в WSL, сервер и отладчик — на хосте стенда Linux (Orange Pi 5); одна SSH-сессия с
   пробросом порта и вспомогательным скриптом, блокировка хоста стенда, остановка
   сервера при закрытии или обрыве сессии, только ключи SSH; `doctor` проверяет хост
-  стенда. Шаблон `Tests/firmware/stands/remote.example.toml`.
+  стенда. Шаблон `Tests/firmware/stands/remote.example.toml`. Проверено с Windows на
+  Orange Pi 5: F411CE/OpenOCD, F103C8/J-Link CE, F030R8/J-Link STLink — по 10/10.
+- `doctor` находит GDB в `ARM_TOOLCHAIN_ROOT` и в каталоге xPack по умолчанию на Windows,
+  как `run_hw.py`.
 - Памятка `docs/ru|en/HOWTO.md`: команды git и псевдоним `git land` (слияние перемоткой
   без PR с удалением ветки), возврат состояния, частые проблемы Linux-стенда,
   отладчиков и Docker; ссылка из AGENTS.md.

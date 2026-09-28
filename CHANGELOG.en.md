@@ -12,7 +12,10 @@ Versions: [policy](docs/en/VERSIONING.md).
   WSL, the server and the debugger on a Linux stand host (Orange Pi 5); one SSH session
   with port forwarding and a helper script, the stand host's lock, the server stopped
   when the session closes or breaks, SSH keys only; `doctor` checks the stand host.
-  Template `Tests/firmware/stands/remote.example.toml`.
+  Template `Tests/firmware/stands/remote.example.toml`. Checked from Windows to Orange Pi 5:
+  F411CE/OpenOCD, F103C8/J-Link CE, F030R8/J-Link STLink — 10/10 each.
+- `doctor` finds GDB in `ARM_TOOLCHAIN_ROOT` and in the default xPack directory on Windows,
+  like `run_hw.py`.
 - HOWTO `docs/ru|en/HOWTO.md`: git commands and the `git land` alias (fast-forward merge
   without pull requests plus branch deletion), undoing changes, common Linux stand,
   debugger and Docker problems; linked from AGENTS.md.

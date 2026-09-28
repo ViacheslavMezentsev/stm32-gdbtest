@@ -26,6 +26,19 @@ def _output(args, timeout=20):
     return result.returncode, result.stdout.strip()
 
 
+def _toolchain_gdb():
+    """The toolchain run_hw.py and the CI firmware use: ARM_TOOLCHAIN_ROOT, then the Windows default."""
+    roots = [os.environ.get("ARM_TOOLCHAIN_ROOT")]
+    if os.name == "nt" and os.environ.get("USERPROFILE"):
+        roots.append(str(Path(os.environ["USERPROFILE"]) / "xpack-arm-none-eabi-gcc-13.3.1-1.1"))
+    suffix = ".exe" if os.name == "nt" else ""
+    for root in filter(None, roots):
+        candidate = Path(root) / "bin" / ("arm-none-eabi-gdb-py3" + suffix)
+        if candidate.is_file():
+            return str(candidate)
+    return None
+
+
 def usb_debuggers(sysfs=Path("/sys/bus/usb/devices"), dev=Path("/dev/bus/usb")):
     """ST-Link and J-Link devices visible through sysfs with their device node access."""
     found = []
@@ -74,7 +87,7 @@ def diagnose(gdb=None, stand=None, sysfs=Path("/sys/bus/usb/devices")):
         add("python", "FAIL", "Python 3.11+ required for the host runner")
 
     gdb = gdb or os.environ.get("STM32_GDBTEST_GDB") or shutil.which("arm-none-eabi-gdb-py3") \
-        or shutil.which("arm-none-eabi-gdb")
+        or shutil.which("arm-none-eabi-gdb") or _toolchain_gdb()
     if not gdb or not Path(gdb).is_file():
         add("gdb", "FAIL", "GDB with Python not found: set STM32_GDBTEST_GDB or put arm-none-eabi-gdb-py3 on PATH")
     else:

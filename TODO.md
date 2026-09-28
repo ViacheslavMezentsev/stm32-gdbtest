@@ -29,7 +29,7 @@
 - [ ] WSL2 + usbipd — покрывается поддержкой Linux, проверить на оборудовании.
 - [ ] Группа C: runner и GDB на Windows или в WSL, GDB-сервер и отладчик на Orange Pi 5
   по SSH (туннель, удалённая блокировка, таблица `[remote]`, только ключи) — реализовано
-  (`claude/remote-server`, ТЗ 0.9), нужна аппаратная проверка с Windows.
+  (`claude/remote-server`, ТЗ 0.9), проверено с Windows: 3 стенда × 10/10.
 - [ ] Группа D: сборка в одном месте, запуск на Orange Pi 5 (`run --from-prepared`);
   аппаратный CI на self-hosted runner aarch64 (вопрос 11.2.16 ТЗ).
 

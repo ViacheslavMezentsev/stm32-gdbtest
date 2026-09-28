@@ -47,9 +47,19 @@ class DoctorTests(unittest.TestCase):
         self.assertTrue(doctor._serial_matches(devices[0], dict(backend="openocd", serial="066cff494849877187252626")))
         self.assertFalse(doctor._serial_matches(devices[0], dict(backend="jlink", serial="69653773")))
 
+    def test_gdb_found_in_arm_toolchain_root(self):
+        # TC-93: ТЗ 5.17.1 — the same toolchain as run_hw.py when PATH has no GDB.
+        gdb = self.dir / "bin" / ("arm-none-eabi-gdb-py3" + (".exe" if os.name == "nt" else ""))
+        gdb.parent.mkdir()
+        gdb.write_text("")
+        env = {"STM32_GDBTEST_GDB": "", "ARM_TOOLCHAIN_ROOT": str(self.dir)}
+        with patch.dict(os.environ, env), patch("stm32_gdbtest.doctor.shutil.which", return_value=None):
+            self.assertEqual(doctor._toolchain_gdb(), str(gdb))
+
     def test_missing_gdb_fails_and_never_starts_a_server(self):
         # TC-93: ТЗ 5.17.1, 5.17.2 — FAIL gives exit 1; the doctor starts no GDB server.
-        env = {"STM32_GDBTEST_GDB": str(self.dir / "absent-gdb"), "STM32_GDBTEST_LOCK_DIR": str(self.dir)}
+        env = {"STM32_GDBTEST_GDB": str(self.dir / "absent-gdb"), "STM32_GDBTEST_LOCK_DIR": str(self.dir),
+               "ARM_TOOLCHAIN_ROOT": "", "USERPROFILE": ""}
         with patch.dict(os.environ, env), patch("stm32_gdbtest.doctor.shutil.which", return_value=None), \
                 patch("stm32_gdbtest.doctor.usb_debuggers", return_value=[]), redirect_stdout(io.StringIO()) as out:
             self.assertEqual(doctor.main(), 1)

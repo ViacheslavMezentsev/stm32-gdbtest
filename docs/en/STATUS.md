@@ -15,6 +15,7 @@ history is in the [CHANGELOG](../../CHANGELOG.en.md).
 | CI (GitHub Actions, Docker) | Docs, format, host on Windows and Linux; F030R8/F103C8/F411CE CI firmware with GCC 13.3.1, 14.2.1, 15.2.1 and CMake 3.28.3: build manifest, `prepare`, full image, 10 negative contracts, load section alignment, empty RAM section; the Linux stand environment in `ubuntu:20.04` on x86_64 and aarch64 ([checks and CI](testing.md)) |
 | CI firmware on hardware | 4 stands × 10/10 steps at commit `fbc103d` (section below) |
 | Linux stand without hardware | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) in a container: environment installation, 79 host tests, `doctor`, `build` and `prepare` of the CI firmware; the hardware path without a debugger — lock, OpenOCD start, ERROR "exited before ready", processes stopped |
+| Remote GDB server on hardware | Runner and GDB on Windows 10, GDB servers on Orange Pi 5 over SSH: F411CE / OpenOCD, F103C8 / J-Link CE, F030R8 / J-Link STLink — 10/10 each (`run_hw.py`) |
 | Remote GDB server without hardware | SSH loopback (OpenSSH, key, `known_hosts`) and a fake J-Link server: port forwarding, GDB connecting through the tunnel, recovery, stopping the server and returning its log, refusal on a busy stand host lock, cleanup after a broken session |
 | Linux stand on hardware | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 / J-Link GDB Server 9.80 arm64 — 10/10 after confirming the J-Link STLink terms window in a graphical session; without it the connection waits about 10 s, the first run gave 2/10 ([Linux stand](LINUX_STAND.md)) |
 | ELF/HAL preflight | Positive case and 11 negative variants on F103C8/F401CC/F411CE ELF files of the stand project |
@@ -66,8 +67,8 @@ stm32-hwtest-blackpill suite was not repeated on these commits.
 - Hardware runs on Windows and Linux x86_64/aarch64 (glibc ≥ 2.31); on Linux they are
   checked on Orange Pi 5 (aarch64) with OpenOCD, J-Link CE and J-Link STLink; Linux x86_64 was not
   checked on hardware. The GDB server runs on the runner's
-  computer or on a Linux stand host over SSH (`[remote]`); the remote mode is checked only
-  with SSH loopback and a fake server, not yet on hardware. Ninja, one firmware target and one MCU and debugger per run.
+  computer or on a Linux stand host over SSH (`[remote]`); the remote mode is checked from
+  Windows to Orange Pi 5; a broken session only with SSH loopback and a fake server. Ninja, one firmware target and one MCU and debugger per run.
 - ST-LINK GDB Server is unavailable on Linux aarch64 (ST does not release it for arm64).
 - The build manifest uses Cube and CMSIS metadata; a universal build system and an
   arbitrary toolchain are not claimed.
@@ -91,8 +92,7 @@ test and may replace Flash, while `ctest --preset offline` does not connect to a
 
 ## Next steps
 
-Before v0.1.0: the hardware check of the remote GDB server (runner on Windows or in
-WSL, debugger on Orange Pi 5), transfer of a prepared run and
+Before v0.1.0: runs from WSL, transfer of a prepared run and
 hardware CI on a self-hosted runner. Then v0.1.0-rc.1 and v0.1.0, supervision of
 server processes, evolution of the
 profile schema and manifest; later a host controller for external equipment and Python
