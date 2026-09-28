@@ -22,7 +22,7 @@ stm32_gdbtest_attach(firmware_target
   firmware target до вызова `stm32_gdbtest_attach`.
 - Поддерживается один firmware target верхнего каталога CMake, генератор Ninja,
   каталог сборки внутри `PROJECT_SOURCE_DIR`. Сборка, build manifest и подготовка
-  работают на Windows и Linux; аппаратный запуск — только на Windows.
+  и аппаратный запуск работают на Windows и Linux ([Linux-стенд](LINUX_STAND.md)).
 - `PROFILE_DIR` и пути `MANIFEST_INPUTS` задаются абсолютными. В `PROFILE_DIR`
   находятся `target.toml`, `Tests/board/test_*.py`, `Tests/requirements.md` и при
   использовании контрактов `Tests/contracts.json`.
@@ -91,6 +91,7 @@ python -B -m stm32_gdbtest collect --tests examples/minimal-consumer/profile/Tes
 python -B -m stm32_gdbtest trace --tests examples/minimal-consumer/profile/Tests/board --requirements examples/minimal-consumer/profile/Tests/requirements.md
 python -B -m stm32_gdbtest run --session examples/minimal-consumer/build/debug/hwtest/session.json --test HW_CONSUMER_GPIO --prepare-only
 python -B -m stm32_gdbtest run --session examples/minimal-consumer/build/debug/hwtest/session.json --test HW_CONSUMER_GPIO --stand path/to/stand.local.toml
+python -B -m stm32_gdbtest doctor --stand path/to/stand.local.toml
 ```
 
 Логическое имя CLI — `stm32-gdbtest`; отдельный исполняемый файл появится при упаковке.
@@ -110,6 +111,11 @@ python -B -m stm32_gdbtest run --session examples/minimal-consumer/build/debug/h
 `mode: prepare` и `hardware_accessed: false`. Стенд в этом режиме необязателен,
 а если выбран — проверяется целиком, включая mapping J-Link.
 
+`doctor [--gdb PATH] [--stand TOML] [--json]` проверяет окружение без обращения к
+отладчику: host Python, GDB-Python ≥ 3.11 и binutils рядом с ним, CMake и Ninja,
+каталог блокировок, стенд (для OpenOCD — наличие `interface/stlink.cfg`) и на Linux —
+ST-Link и J-Link на USB с правами доступа. Итог — строки OK/WARN/FAIL; код 1 при FAIL.
+
 `collect --cmake/--workspace` — интерфейс генерации CMake, вручную обычно не нужен.
 
 Коды `run`: PASS — 0, FAIL — 1, ERROR — 2; ошибка аргументов также даёт 2. Отказ
@@ -122,7 +128,8 @@ compatibility 1, политика образа 1. `session.json` — внутр�
 внутренний API разработки; потребители используют CMake, CLI и операции Target.
 Подробности: [подключение](GETTING_STARTED.md), [manifest](MANIFESTS.md),
 [identity](TARGET_IDENTITY.md), [GDB-серверы](BACKENDS.md),
-[владение отладчиком](DEBUGGER_OWNERSHIP.md).
+[владение отладчиком](DEBUGGER_OWNERSHIP.md). `STM32_GDBTEST_LOCK_DIR` задаёт на Linux
+базовый каталог блокировок (по умолчанию `/tmp`).
 
 ## Проверка образа
 
@@ -159,5 +166,5 @@ configure и build. Старый CTest без configure содержит пут�
 Сохранены имена build/test presets, `check-hw`, `host.hwtest`, каталоги отчётов
 `hwtest`, ID `HW_*`, форматы TOML/JSON и пространство имён блокировки. Миграция не
 требует тестовых hooks в прошивке и не означает поддержки произвольного STM32,
-других ОС для аппаратного запуска или автоматической остановки процессов после
-аварии host.
+ОС кроме Windows и Linux для аппаратного запуска или автоматической остановки
+процессов после аварии host.

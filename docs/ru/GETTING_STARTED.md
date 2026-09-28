@@ -9,11 +9,16 @@ Python-сценарии и настройки платы находятся в �
 
 ## Требования
 
-- Аппаратный запуск: Windows, Python ≥ 3.11, CMake ≥ 3.25, Ninja, ARM GCC с
-  `arm-none-eabi-gdb-py3` (GDB со встроенным Python ≥ 3.11), SWD-отладчик и его
-  GDB-сервер (OpenOCD, ST-LINK GDB Server или J-Link GDB Server).
-- Сборка, build manifest и подготовка без оборудования (`run --prepare-only`)
-  работают также на Linux; готовое окружение — Docker-образ CI ([проверки и CI](testing.md)).
+- Аппаратный запуск: Windows или Linux (x86_64, aarch64, glibc ≥ 2.31), Python ≥ 3.11,
+  CMake ≥ 3.25, Ninja, ARM GCC с `arm-none-eabi-gdb-py3` (GDB со встроенным
+  Python ≥ 3.11), SWD-отладчик и его GDB-сервер (OpenOCD, ST-LINK GDB Server или
+  J-Link GDB Server).
+- На Linux всё, кроме ПО J-Link и правил udev, ставится без root сценарием
+  `tools/linux_stand.py`, в том числе на Ubuntu 20.04 ([Linux-стенд](LINUX_STAND.md)).
+- Сборка, build manifest и подготовка без оборудования (`run --prepare-only`) —
+  также в Docker-образе CI ([проверки и CI](testing.md)).
+- `python -B -m stm32_gdbtest doctor [--stand <стенд>]` проверяет окружение без
+  обращения к отладчику.
 - Проверенные версии и платы — [текущее состояние](STATUS.md). Другие MCU и
   версии требуют собственной проверки.
 

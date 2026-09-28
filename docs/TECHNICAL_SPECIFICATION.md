@@ -1,17 +1,17 @@
 # ТЕХНИЧЕСКОЕ ЗАДАНИЕ
 
-## Инфраструктура автоматизированной проверки прошивки STM32 на оборудовании через GDB-Python и SWD-отладчик stm32-gdbtest (Windows, ARM GCC/GDB)
+## Инфраструктура автоматизированной проверки прошивки STM32 на оборудовании через GDB-Python и SWD-отладчик stm32-gdbtest (Windows, Linux, ARM GCC/GDB)
 
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.6 (черновик для согласования) |
+| **Ревизия** | 0.7 (черновик для согласования) |
 | **Дата формирования** | 28.09.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `Tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0-rc.1 (текущая версия разработки `0.1.0.dev0`, `API_VERSION = 1`) |
-| **Целевая платформа** | Хост Windows; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows; сборка, manifest и подготовка — также Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
-| **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, IMAGES, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.6)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
-| **Связанные файлы кода** | `stm32_gdbtest/*.py` (19 модулей), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `Tests/host/*.py`, `examples/minimal-consumer/*`; `Tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)` |
+| **Целевая платформа** | Хост Windows; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
+| **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.7)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
+| **Связанные файлы кода** | `stm32_gdbtest/*.py` (20 модулей), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `Tests/host/*.py`, `examples/minimal-consumer/*`; `Tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
 
 ### История ревизий
 
@@ -23,6 +23,25 @@
 | 0.4 | 28.09.2026 | Аппаратная проверка CI-прошивок перед 0.1.0 по решению владельца: сценарий `Tests/firmware/run_hw.py`, 4 стенда (F030R8 / NUCLEO-F030R8 / J-Link STLink (J-Link GDB Server 8.32), F103C8 / WeAct BluePill-Plus / J-Link CE (8.32), F411CE / WeAct BlackPill / ST-Link V2J43M28 через OpenOCD 0.12.0 и ST-LINK GDB Server 7.14.0) — по 10/10 шагов на коммите `fbc103d`. Первый прогон F030R8 выявил невыровненный адрес загрузки `.data` (HardFault на Cortex-M0); исправлено, CI проверяет выравнивание. Добавлены стиль `.clang-format` и уровень CI format. |
 | 0.5 | 28.09.2026 | Решён вопрос 11.2.17: BIN формируется только из выбранных секций загрузки (`objcopy -j`), пустая секция с LMA в RAM больше не раздувает его до сотен мегабайт. Добавлены host-тест и регрессия CI на реальном ELF с пустой секцией в RAM. |
 | 0.6 | 28.09.2026 | Документация сверена с текущим функционалом и перенесена в `docs/ru/` с английскими версиями в `docs/en/`, добавлены README.en.md и карты документации. Закрыт вопрос 11.2.2: определены роли ТЗ, README, STATUS, CHANGELOG, TODO и страниц механизмов. Уточнён вопрос 11.2.6: F429ZI отражён в STATUS. |
+| 0.7 | 28.09.2026 | По решению владельца все сценарии размещения стенда реализуются до v0.1.0; ревизия покрывает группы A и B. Аппаратный запуск на Linux (x86_64, aarch64, glibc ≥ 2.31): блокировка отладчика через `flock` в общем каталоге хоста с признаком брошенного владения, завершение группы процессов сервера и GDB, имена серверов без `.exe`. Окружение стенда без root для Ubuntu 20.04 (Orange Pi 5): `tools/linux_stand.py` с Python 3.11 (python-build-standalone) и версиями инструментов CI. Команда `doctor`. CI-задание в контейнере Ubuntu 20.04 для x86_64 и aarch64. Добавлены вопросы 11.2.18–11.2.21; удалённый GDB-сервер по SSH и перенос подготовленного запуска — следующая ревизия. |
+
+### Изменения ревизии 0.7
+
+Изменённые и новые пункты ревизии 0.7 помечены `(р.0.7)`.
+
+| Пункты | Тип | Суть |
+| :--- | :---: | :--- |
+| Заголовок, реквизиты, 1.2.1, 2.2.8, 2.5.1 | изм. | Linux — платформа аппаратного запуска; инструменты стенда |
+| 5.3.4, 7.4.1, 7.5.2, 7.7.5 | изм. | Аппаратный запуск на Windows и Linux; область координации |
+| 5.4.2, 5.4.4–5.4.6 | изм. | Уточнение по ОС |
+| 5.4.8–5.4.11 | нов. | Блокировка отладчика на Linux |
+| 5.17 | нов. | Команда `doctor` |
+| 6.8.5, 6.9.1 | изм. | Каталог блокировок вне проекта; `STM32_GDBTEST_LOCK_DIR` |
+| 6.10 | нов. | Операционная система Linux, окружение стенда |
+| 8.14, 8.19 | изм. | Linux в CI и в аппаратной проверке перед выпуском |
+| 8.20 | нов. | CI-задание Ubuntu 20.04 x86_64/aarch64 |
+| 9.2 | изм., нов. | TC-77 изменён; TC-90…TC-97 |
+| 10, 11.2.3, 11.2.5, 11.2.16, 11.2.18–11.2.21, приложения A, B | изм., нов. | Матрица, вопросы, константы, конфигурации |
 
 ### Изменения ревизии 0.6
 
@@ -124,7 +143,7 @@
 
 ### 1.2. Область применения
 
-1.2.1. Требования применимы к пакету `stm32_gdbtest/` (host runner, CLI, GDB-агент, Target API, backend GDB-серверов, контракты, проверка образа, build manifest, отчёты), CMake-интеграции `stm32_gdbtest/cmake/STM32GDBTest.cmake`, host-тестам `Tests/host`, примеру `examples/minimal-consumer`, CI-прошивкам `Tests/firmware`, окружению и сценариям CI `ci/`, `.github/workflows/`. (р.0.3)
+1.2.1. Требования применимы к пакету `stm32_gdbtest/` (host runner, CLI, GDB-агент, Target API, backend GDB-серверов, контракты, проверка образа, build manifest, отчёты), CMake-интеграции `stm32_gdbtest/cmake/STM32GDBTest.cmake`, host-тестам `Tests/host`, примеру `examples/minimal-consumer`, CI-прошивкам `Tests/firmware`, окружению и сценариям CI `ci/`, `.github/workflows/`, окружению Linux-стенда `tools/`. (р.0.7)
 
 1.2.2. Документ не описывает прошивки, MCU-профили, сценарии и требования конкретных приложений: они принадлежат проектам-потребителям (прежде всего stm32-hwtest-blackpill). Требования к взаимодействию с потребителем приведены в п. 6.8.1–6.8.5.
 
@@ -138,7 +157,7 @@
 
 1.3.3. Целевой реализацией считается код `main` @ `a371d80`. В случае расхождения между этим документом и кодом расхождение считается дефектом одного из них и разрешается пересмотром ревизии документа. Известные расхождения документации и кода перечислены в приложении F.
 
-1.3.4. Аппаратные результаты взяты из документации модуля и стендового проекта; при формировании ревизии 0.1 оборудование не использовалось. Host-тесты запущены в среде формирования (Linux, Python 3.11.15): 57 PASS, 3 FAIL из-за Windows-зависимого кода, 5 пропущено (Windows mutex); на Windows по документации — 65/65. В ревизии 0.3 host-тестов 70: в Docker-образе CI (Linux, Python 3.12) 65 PASS и 5 пропущено; уровни host и firmware CI (10 проверок) прошли в образе, собранном в среде формирования на локальной копии Ubuntu 24.04 вместо образа Docker Hub; workflows GitHub при формировании ревизии не запускались. Аппаратная проверка CI-прошивок 28.09.2026 выполнена владельцем сценарием `run_hw.py` на его стендах, отчёты `summary.json` и `result.json` прочитаны и разобраны при формировании ревизии 0.4. (р.0.4)
+1.3.4. Аппаратные результаты взяты из документации модуля и стендового проекта; при формировании ревизии 0.1 оборудование не использовалось. Host-тесты запущены в среде формирования (Linux, Python 3.11.15): 57 PASS, 3 FAIL из-за Windows-зависимого кода, 5 пропущено (Windows mutex); на Windows по документации — 65/65. В ревизии 0.3 host-тестов 70: в Docker-образе CI (Linux, Python 3.12) 65 PASS и 5 пропущено; уровни host и firmware CI (10 проверок) прошли в образе, собранном в среде формирования на локальной копии Ubuntu 24.04 вместо образа Docker Hub; workflows GitHub при формировании ревизии не запускались. Аппаратная проверка CI-прошивок 28.09.2026 выполнена владельцем сценарием `run_hw.py` на его стендах, отчёты `summary.json` и `result.json` прочитаны и разобраны при формировании ревизии 0.4. В ревизии 0.7 host-тестов 79: на Linux (Python 3.11) 75 PASS и 4 пропущено (Windows mutex); окружение стенда проверено в контейнере Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25), собранном debootstrap; aarch64, Windows-исполнитель и Orange Pi 5 при формировании ревизии не использовались. (р.0.7)
 
 ### 1.4. Термины и сокращения
 
@@ -247,7 +266,7 @@ flowchart LR
 
 2.2.7. Сбор диагностики при отказе и возврат MCU в работу через диалект backend.
 
-2.2.8. Межпроектная координация доступа к одному отладчику в пределах Windows-сессии.
+2.2.8. Межпроектная координация доступа к одному отладчику в пределах Windows-сессии или хоста Linux. (р.0.7)
 
 2.2.9. Метаданные совместимости среды выполнения без копирования личных данных.
 
@@ -275,7 +294,7 @@ flowchart LR
 
 ### 2.5. Ограничения платформы
 
-2.5.1. Хост аппаратного запуска — Windows (named mutex, `msvcrt`, `taskkill`). Сборка, build manifest, offline-контракты и подготовка (п. 5.16) работают на Windows и Linux; аппаратный запуск на другой ОС отклоняется (п. 5.3.4). (р.0.3)
+2.5.1. Хост аппаратного запуска — Windows (named mutex, `msvcrt`, `taskkill`) или Linux x86_64/aarch64 с glibc ≥ 2.31 (`flock`, группы процессов; п. 6.10). Сборка, build manifest, offline-контракты и подготовка (п. 5.16) работают на обеих ОС. GDB-сервер запускается на том же хосте, что и runner; удалённый сервер — вопрос 11.2.18. (р.0.7)
 
 2.5.2. Host Python ≥ 3.11 (`tomllib`); GDB-Python — отдельный интерпретатор ≥ 3.11, не окружение Python компьютера.
 
@@ -537,7 +556,7 @@ flowchart LR
 
 5.3.3. Политика identity ДОЛЖНА выбираться: CLI → `STM32_GDBTEST_IDENTITY_POLICY` → `warn`; иное значение — ERROR. `[R]`
 
-5.3.4. Аппаратный запуск на ОС, отличной от Windows, ДОЛЖЕН завершаться ERROR с отчётом после выбора стенда и профиля и до захвата блокировки отладчика. Режим подготовки (п. 5.16) от ОС не зависит. `[U]` (р.0.3)
+5.3.4. Аппаратный запуск ДОЛЖЕН поддерживаться на Windows и Linux одним кодом runner; блокировка отладчика и завершение процессов выбираются по ОС (п. 5.4, 6.7, 6.10). Другие POSIX-системы не проверены и поддержанными не объявляются. Режим подготовки (п. 5.16) от ОС не зависит. Причина: стенд владельца работает на Orange Pi 5 с Ubuntu 20.04. `[U]` (р.0.7)
 
 5.3.5. Внешний предел времени GDB — `--timeout` либо `timeout_s` сценария; значение ДОЛЖНО быть конечным, `0 < t ≤ MAX_TIMEOUT_S` (`MAX_TIMEOUT_S = 300` с). `[R]`
 
@@ -555,17 +574,25 @@ flowchart LR
 
 5.4.1. Блокировка ДОЛЖНА захватываться после чтения стенда и профиля, до снимка ELF, preflight, `objcopy` и сервера, и удерживаться на всём выполнении, включая recovery и остановку процессов сервера. `[R]`
 
-5.4.2. Имя объекта ДОЛЖНО иметь вид `Local\stm32-gdbtest.probe.v1.<SHA-256 от "<семейство>:<SERIAL>">`, где семейство — `jlink` для backend `jlink` и `stlink` для `openocd` и `stlink`, serial — в верхнем регистре. Корень проекта, MCU и порт в ключ не входят. `[R]`
+5.4.2. Имя объекта ДОЛЖНО иметь вид `Local\stm32-gdbtest.probe.v1.<SHA-256 от "<семейство>:<SERIAL>">`, где семейство — `jlink` для backend `jlink` и `stlink` для `openocd` и `stlink`, serial — в верхнем регистре. Корень проекта, MCU и порт в ключ не входят. На Linux тот же SHA-256 входит в имя файла блокировки (п. 5.4.8). `[R]` (р.0.7)
 
 5.4.3. Захват ДОЛЖЕН выполняться без ожидания; занятый объект ДОЛЖЕН приводить к ERROR («another runner») с отчётами и без аппаратного подключения. `[R]`
 
-5.4.4. Состояние `WAIT_ABANDONED` ДОЛЖНО приводить к освобождению объекта и ERROR с предложением проверить оставшиеся процессы GDB/сервера; чужие процессы НЕ ДОЛЖНЫ завершаться, MCU НЕ ДОЛЖЕН сбрасываться. `[R]`
+5.4.4. Состояние `WAIT_ABANDONED` (Windows) ДОЛЖНО приводить к освобождению объекта и ERROR с предложением проверить оставшиеся процессы GDB/сервера; чужие процессы НЕ ДОЛЖНЫ завершаться, MCU НЕ ДОЛЖЕН сбрасываться. Аналог для Linux — п. 5.4.9. `[R]` (р.0.7)
 
-5.4.5. Повторный захват того же имени в том же процессе ДОЛЖЕН отклоняться (Windows mutex рекурсивен для потока-владельца). `[R]`
+5.4.5. Повторный захват того же имени в том же процессе ДОЛЖЕН отклоняться на обеих ОС (Windows mutex рекурсивен для потока-владельца; повторный `flock` другого дескриптора в том же процессе был бы отказом с ошибочным текстом). `[R]` (р.0.7)
 
-5.4.6. Дополнительно ДОЛЖНА удерживаться совместимая файловая блокировка `build/probe-locks/<SHA-256 serial>.lock` (`msvcrt.locking`) для прежнего runner того же checkout; занятость — ERROR. `[R]`
+5.4.6. На Windows дополнительно ДОЛЖНА удерживаться совместимая файловая блокировка `build/probe-locks/<SHA-256 serial>.lock` (`msvcrt.locking`) для прежнего runner того же checkout; занятость — ERROR. На Linux прежних runner нет, и она не создаётся. `[R]` (р.0.7)
 
 5.4.7. Блокировки ДОЛЖНЫ освобождаться в `finally` при любом исходе; ошибка API или прав доступа НЕ ДОЛЖНА приводить к обходу блокировки. `[R]`
+
+5.4.8. На Linux блокировкой ДОЛЖЕН служить файл `probe.v1.<SHA-256 по п. 5.4.2>.lock` в каталоге `<база>/stm32-gdbtest-locks`, где база — `STM32_GDBTEST_LOCK_DIR`, иначе системный каталог временных файлов (`/tmp`). Захват — `flock(LOCK_EX | LOCK_NB)` без ожидания; занятость ДОЛЖНА приводить к ERROR «already owned by another runner on this host» по п. 5.4.3. `[N]` (р.0.7)
+
+5.4.9. Владелец ДОЛЖЕН записывать в файл блокировки после захвата запись `pid=<PID>` и очищать её при освобождении. Непустая запись при успешном захвате означает, что прежний владелец завершился без освобождения (ядро снимает `flock` при смерти процесса); runner ДОЛЖЕН очистить запись, освободить блокировку и завершиться ERROR «Abandoned debugger ownership» с текстом записи. Чужие процессы НЕ ДОЛЖНЫ завершаться, MCU НЕ ДОЛЖЕН сбрасываться; следующий запуск после проверки владельцем захватывает блокировку. `[N]` (р.0.7)
+
+5.4.10. Каталог блокировок ДОЛЖЕН создаваться с правами `1777` (общий для пользователей, sticky bit), файлы — `0666`, если их создаёт текущий пользователь; недоступный каталог ДОЛЖЕН приводить к ERROR без обхода блокировки. `[N]` (р.0.7)
+
+5.4.11. Область координации на Linux — одно ядро и один каталог блокировок: все пользователи и checkout хоста. Контейнеры, виртуальные машины и дистрибутивы WSL с собственным `/tmp` не охватываются, если им не задан общий `STM32_GDBTEST_LOCK_DIR`; vendor tools блокировку не соблюдают. `[N]` (р.0.7)
 
 ### 5.5. Снимок ELF и проверка build manifest
 
@@ -747,6 +774,14 @@ flowchart LR
 
 5.16.5. Режим подготовки ДОЛЖЕН работать на Windows и Linux. Причина: CI и агенты проверяют модуль до GDB-сервера в Linux-контейнере без оборудования. `[N]` (р.0.3)
 
+### 5.17. Диагностика окружения стенда (`doctor`) (р.0.7)
+
+5.17.1. Команда `doctor [--gdb PATH] [--stand TOML] [--json]` ДОЛЖНА проверять: версию host Python (≥ 3.11); GDB (`--gdb` → `STM32_GDBTEST_GDB` → `arm-none-eabi-gdb-py3` → `arm-none-eabi-gdb` в `PATH`) со встроенным Python ≥ 3.11 и `tomllib`; binutils по п. 6.2.1; CMake ≥ 3.25 и Ninja (отсутствие — WARN, они нужны только CMake-интеграции); каталог блокировок (Linux); при заданном стенде — стенд по п. 3.4 и для OpenOCD — доступность `interface/stlink.cfg`; на Linux — отладчики USB (п. 5.17.3). `[N]` (р.0.7)
+
+5.17.2. Каждая проверка ДОЛЖНА давать OK, WARN или FAIL с пояснением; код возврата — 1 при хотя бы одном FAIL, иначе 0. `doctor` НЕ ДОЛЖЕН захватывать блокировку, запускать GDB-сервер или подключаться к цели; OpenOCD запускается только с `-c shutdown` до инициализации адаптера. `[N]` (р.0.7)
+
+5.17.3. На Linux `doctor` ДОЛЖЕН перечислять устройства ST-Link (VID 0483 с PID отладчиков ST-Link; прочие устройства ST, например CDC-порт прошивки, пропускаются) и J-Link (VID 1366, кроме USB-хабов) по sysfs с серийным номером и правом чтения и записи узла `/dev/bus/usb`; отсутствие права — FAIL с указанием на правила udev; отсутствие отладчика с serial стенда — WARN (ST-Link/V2 сообщает двоичный serial, решение принимает сервер). `[N]` (р.0.7)
+
 ---
 
 ## 6. Требования к интерфейсам
@@ -815,13 +850,27 @@ flowchart LR
 
 6.8.4. Прошивка ДОЛЖНА собираться с отладочной информацией (для макросов — `-g3`); тестовые hooks в прошивку НЕ ДОЛЖНЫ добавляться. `-g3` не сохраняет неиспользуемые функции. `[R]`
 
-6.8.5. Выходные файлы (build, runs, temp, блокировки) ДОЛЖНЫ создаваться в проекте потребителя, а не в подмодуле. `[R]`
+6.8.5. Выходные файлы (build, runs, temp, совместимая блокировка п. 5.4.6) ДОЛЖНЫ создаваться в проекте потребителя, а не в подмодуле; межпроектные блокировки (п. 5.4.2, 5.4.8) по назначению находятся вне проекта. `[R]` (р.0.7)
 
 ### 6.9. Переменные окружения и cache
 
-6.9.1. Публичные переменные окружения: `STM32_GDBTEST_STAND`, `STM32_GDBTEST_IDENTITY_POLICY`, `STM32_GDBTEST_IMAGE_POLICY` (абсолютный путь). Внутренние `STM32_GDBTEST_RUN` и `STM32_GDBTEST_CONTRACT_REQUEST` формирует host; пользователь их не задаёт. `[R]`
+6.9.1. Публичные переменные окружения: `STM32_GDBTEST_STAND`, `STM32_GDBTEST_IDENTITY_POLICY`, `STM32_GDBTEST_IMAGE_POLICY` (абсолютный путь), `STM32_GDBTEST_LOCK_DIR` (база каталога блокировок Linux, п. 5.4.8) (р.0.7). Внутренние `STM32_GDBTEST_RUN` и `STM32_GDBTEST_CONTRACT_REQUEST` формирует host; пользователь их не задаёт. `[R]`
 
 6.9.2. Публичные cache-переменные CMake: `STM32_GDBTEST_SOURCE_DIR` (задаёт потребитель), `STM32_GDBTEST_GDB`, `STM32_GDBTEST_STAND`. `[R]`
+
+### 6.10. Операционная система Linux (р.0.7)
+
+6.10.1. Поддерживаемый хост Linux — x86_64 или aarch64 с glibc ≥ 2.31 (Ubuntu 20.04 и новее). Целевой стенд проверки — Orange Pi 5 (RK3588S) с Ubuntu 20.04 aarch64. Причина: требование владельца поддержать именно Ubuntu 20.04 на Orange Pi 5. `[N]` (р.0.7)
+
+6.10.2. GDB-сервер и GDB ДОЛЖНЫ запускаться в собственной сессии и группе процессов (`start_new_session`); остановка — `SIGTERM` группе, ожидание 3 с, затем `SIGKILL` группе, ожидание 5 с. Группа ДОЛЖНА останавливаться и после выхода ведущего процесса, пока в ней остаются потомки. `[N]` (р.0.7)
+
+6.10.3. Имена серверов по умолчанию на Linux — `JLinkGDBServerCLExe` и `ST-LINK_gdbserver`, программатор — `STM32_Programmer_CLI` (без `.exe`). ST-LINK GDB Server (STM32CubeCLT) для aarch64 не выпускается: на aarch64 используются backend `openocd` и `jlink`. `[N]` (р.0.7)
+
+6.10.4. Окружение стенда без root ДОЛЖНО устанавливаться сценарием `tools/linux_stand.py install` в каталог пользователя (по умолчанию `~/.local/stm32-gdbtest`): Python 3.11 (python-build-standalone), CMake, Ninja, xPack GNU Arm GCC с GDB-Python, xPack OpenOCD 0.12.0-7 и CMSIS пакетов Cube. Архивы задаются `tools/linux-stand.lock.json` для x86_64 и aarch64 с SHA-256; версии GCC, CMake, Ninja и Cube ДОЛЖНЫ совпадать с `ci/dependencies.lock.json`. Сценарий ДОЛЖЕН выполняться системным Python ≥ 3.8, не менять системные пакеты, быть повторяемым (установленный компонент с тем же SHA-256 пропускается) и формировать `env.sh` с `PATH`, `ARM_TOOLCHAIN_ROOT`, `STM32CUBE_REPOSITORY`, `STM32_GDBTEST_GDB`. Причина: системные Python 3.8, CMake 3.16 и OpenOCD 0.10 Ubuntu 20.04 не удовлетворяют п. 2.5.2, 2.5.4 и 6.10.6. `[N]` (р.0.7)
+
+6.10.5. Правила udev и членство в группах для доступа к USB, а также ПО J-Link устанавливает владелец стенда; модуль и `tools/linux_stand.py` НЕ ДОЛЖНЫ требовать root. `[N]` (р.0.7)
+
+6.10.6. OpenOCD 0.10 из репозитория Ubuntu 20.04 не содержит `interface/stlink.cfg` и не поддерживается; `doctor` ДОЛЖЕН выявлять такой OpenOCD до запуска (п. 5.17.1). `[N]` (р.0.7)
 
 ---
 
@@ -855,7 +904,7 @@ flowchart LR
 
 ### 7.4. Переносимость
 
-7.4.1. Аппаратный запуск ДОЛЖЕН поддерживаться на Windows; сборка, build manifest, offline-контракты, подготовка и host-тесты — на Windows и Linux (п. 2.5.1, 5.16.5). `[U]` (р.0.3)
+7.4.1. Аппаратный запуск, сборка, build manifest, offline-контракты, подготовка и host-тесты ДОЛЖНЫ поддерживаться на Windows и Linux (п. 2.5.1, 5.3.4, 5.16.5, 6.10.1). `[U]` (р.0.7)
 
 7.4.2. Поддерживаемая архитектура цели — ARM Cortex-M (`elf32-littlearm`); RISC-V не поддерживается, несмотря на успешный эксперимент К1921ВГ015. `[R]`
 
@@ -863,7 +912,7 @@ flowchart LR
 
 7.5.1. Один запуск работает с одним MCU и одним отладчиком; параллельные HW-тесты CTest одного проекта ДОЛЖНЫ исключаться `RESOURCE_LOCK stm32_swd`. `[R]`
 
-7.5.2. Межпроектная координация охватывает только участвующие runner в одной Windows-сессии; vendor tools, VS Code и сторонние серверы не блокируются. `[R]`
+7.5.2. Межпроектная координация охватывает только участвующие runner в одной Windows-сессии или на одном хосте Linux (п. 5.4.11); vendor tools, VS Code и сторонние серверы не блокируются. `[R]` (р.0.7)
 
 7.5.3. Поддерживается один импорт пакета в Python-процессе. `[R]`
 
@@ -883,7 +932,7 @@ flowchart LR
 
 7.7.4. Каждое нормативное требование ДОЛЖНО прослеживаться до реализации и проверки (раздел 10). `[N]`
 
-7.7.5. Базовая проверка модуля `python -B -m unittest discover -s Tests/host -v` ДОЛЖНА проходить полностью на Windows перед публикацией изменения. `[R]`
+7.7.5. Базовая проверка модуля `python -B -m unittest discover -s Tests/host -v` ДОЛЖНА проходить полностью на Windows и Linux перед публикацией изменения; пропускаются только тесты другой ОС. `[R]` (р.0.7)
 
 7.7.6. Изменения ДОЛЖНЫ выполняться в ветке `<агент>/<задача>` от актуального main, где `<агент>` — короткое имя инструмента или участника, создавшего ветку (`claude/`, `codex/`, `gemini/`; человек — своё имя или `dev/`), а `<задача>` — описание в kebab-case на английском. Новый агент выбирает собственный префикс. Причина: над репозиторием работают разные агенты, и префикс показывает автора ветки. `[N]` (р.0.2)
 
@@ -931,7 +980,7 @@ flowchart LR
 
 8.13. Уровень firmware ДОЛЖЕН собирать CI-прошивки `Tests/firmware` (CMSIS без HAL) для профилей F030R8, F103C8, F411CE каждым GCC lock-файла (13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1) с CMake 3.28.3 и для каждой пары проверять: build manifest (единицы, входы, версия компилятора, отсутствие абсолютных путей), CTest `host` (traceability, `prepare.<ID>` с запрошенными контрактами), подготовку полного образа, отказ политики, меньшей образа, отказ каждого из 10 отрицательных вариантов ELF-контрактов, наличие секции `.data`, выравнивание всех секций загрузки на 4 байта и подготовку ELF с добавленной пустой секцией в RAM без увеличения BIN сверх Flash профиля. `[N]` (р.0.5)
 
-8.14. Host-тесты ДОЛЖНЫ выполняться на Windows (Python 3.11 и 3.13) и в Linux-образе CI. `[N]` (р.0.3)
+8.14. Host-тесты ДОЛЖНЫ выполняться на Windows (Python 3.11 и 3.13), в Linux-образе CI и на Python окружения стенда в Ubuntu 20.04 x86_64 и aarch64 (п. 8.20). `[N]` (р.0.7)
 
 8.15. Workflows ДОЛЖНЫ запускаться при push в любую ветку без фильтра префиксов; проверки уровней host и firmware МОГУТ пропускаться для изменений только Markdown, `LICENSE` и `.github/FUNDING.yml`; контейнер CI ДОЛЖЕН работать без сети. `[N]` (р.0.3)
 
@@ -941,7 +990,9 @@ flowchart LR
 
 8.18. Исходники C/C++ репозитория ДОЛЖНЫ соответствовать `.clang-format` в корне репозитория; CI ДОЛЖЕН проверять это `clang-format --dry-run --Werror` версии не ниже 16. Таблицы с ручным выравниванием МОГУТ исключаться `// clang-format off`. `[N]` (р.0.4)
 
-8.19. Перед выпуском версии CI-прошивки ДОЛЖНЫ пройти аппаратную проверку `Tests/firmware/run_hw.py` на итоговом коммите на стендах F030R8/J-Link, F103C8/J-Link, F411CE/OpenOCD и F411CE/ST-LINK GDB Server: все 10 шагов с ожидаемым исходом. Причина: проверки без оборудования не обнаруживают ошибок выполнения (например, HardFault при невыровненном `.data` на Cortex-M0). `[N]` (р.0.4)
+8.19. Перед выпуском версии CI-прошивки ДОЛЖНЫ пройти аппаратную проверку `Tests/firmware/run_hw.py` на итоговом коммите на стендах Windows F030R8/J-Link, F103C8/J-Link, F411CE/OpenOCD и F411CE/ST-LINK GDB Server и на стенде Linux aarch64 (Orange Pi 5, Ubuntu 20.04) с backend OpenOCD и J-Link: все 10 шагов с ожидаемым исходом. Причина: проверки без оборудования не обнаруживают ошибок выполнения (например, HardFault при невыровненном `.data` на Cortex-M0). `[N]` (р.0.7)
+
+8.20. CI ДОЛЖЕН в контейнере `ubuntu:20.04` на исполнителях x86_64 и aarch64 устанавливать окружение стенда `tools/linux_stand.py` из чистой системы (системные `ca-certificates`, `curl`, `git`, `python3`), выполнять host-тесты на установленном Python, `doctor` со стендом OpenOCD и шаги `build` и `prepare` сценария `run_hw.py` для профилей F030R8, F103C8, F411CE. Причина: минимальная поддерживаемая glibc и архитектура стенда проверяются до оборудования. `[N]` (р.0.7)
 
 ---
 
@@ -958,7 +1009,7 @@ flowchart LR
 
 ### 9.2. Тест-кейсы
 
-TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tests/host` (имя теста указано в сценарии), TC-66…TC-73 — offline- и аппаратным проверкам, TC-79…TC-83 — проверкам CI (р.0.3). Результаты D взяты из документации модуля и стендового проекта (п. 1.3.4).
+TC-01…TC-65, TC-74…TC-78, TC-87 и TC-90…TC-95 соответствуют host-тестам `Tests/host` (имя теста указано в сценарии), TC-66…TC-73 — offline- и аппаратным проверкам, TC-79…TC-83, TC-85, TC-86, TC-88, TC-89, TC-96 — проверкам CI, TC-84 и TC-97 — аппаратной проверке CI-прошивок (р.0.7). Результаты D взяты из документации модуля и стендового проекта (п. 1.3.4).
 
 | TC | Сценарий | Ожидаемый результат |
 | :---: | :--- | :--- |
@@ -1038,7 +1089,7 @@ TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tes
 | TC-74 | `test_prepare_passes_without_stand_lock_server_or_connection` (р.0.3) | PASS, `mode = prepare`; блокировка и `Popen` не вызваны; `connection_attempted`, `hardware_accessed` = false; контракты `NOT_REQUESTED`; регионы и `image.bin` в отчёте |
 | TC-75 | `test_prepare_with_stand_records_backend_and_rejects_unmapped_jlink`: стенд J-Link, MCU F103 и H503 (р.0.3) | F103 — PASS с `backend_commands`; H503 — ERROR «mapping not validated»; сервер не запускается |
 | TC-76 | `test_prepare_failure_is_error_before_server`: ELF отсутствует (р.0.3) | Код 2, ERROR; `Popen` не вызван |
-| TC-77 | `test_hardware_run_outside_windows_is_error_before_lock` (не Windows) (р.0.3) | Код 2, «Windows only»; блокировка и `execute` не вызваны |
+| TC-77 | `test_hardware_run_takes_debugger_lock_on_every_host`: аппаратный запуск с подменой блокировки и `execute` на любой ОС (р.0.7) | Блокировка вызвана с serial и backend стенда; `execute` вызван в аппаратном режиме |
 | TC-78 | `test_binutils_follow_gdb_suffix_and_posix_command_lines` (р.0.3) | `.exe` у binutils при GDB `.exe`, без суффикса иначе; POSIX-команда разобрана с кавычками и экранированием |
 | TC-79 | CI firmware: configure и сборка профиля × GCC; проверка session и build manifest (р.0.3) | GDB из выбранного GCC; единицы `src/startup.c`, `src/app.c`, `src/board.c`; скрипт компоновщика во входах; версия компилятора; нет абсолютных путей |
 | TC-80 | CI firmware: `ctest -L host` и `run --prepare-only` для `HW_CI_BOOT`, `HW_CI_GPIO` (р.0.3) | traceability PASS; `prepare.<ID>` PASS; контракты `PASS`, макросы раскрыты в контексте `board_led_toggle`; оборудование не затронуто |
@@ -1051,12 +1102,20 @@ TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tes
 | TC-87 | `test_bin_uses_only_selected_load_sections`: пустая `.data` с LMA в RAM среди секций (р.0.5) | `objcopy` получает `-j` только для `.isr_vector` и `.text`; подготовка PASS |
 | TC-88 | CI firmware: в ELF добавлена пустая загружаемая секция по адресу `0x20000000`, подготовка без build manifest (р.0.5) | PASS; размер `image.bin` не больше Flash профиля (без исправления — 384 MiB и ERROR) |
 | TC-89 | CI docs: пары `docs/ru`/`docs/en`, README и CHANGELOG в обеих локализациях, ссылки после переноса страниц (р.0.6) | Непарных страниц и битых ссылок нет |
+| TC-90 | `PosixProbeLockTests.test_cross_project_cross_backend_and_independent_devices`, `test_exception_and_nested_use_release` (Linux) (р.0.7) | Второй владелец из другого проекта с backend `openocd` и `stlink` — «another runner on this host»; `run` — ERROR без `execute`; другой serial и семейство `jlink` независимы; вложенный захват — «this process»; каталог с правами `1777` |
+| TC-91 | `PosixProbeLockTests.test_abandoned_owner_fails_closed_once`: владелец убит `SIGKILL` (р.0.7) | Первый захват — «Abandoned debugger ownership» с `pid=`; следующий успешен; после освобождения запись пуста |
+| TC-92 | `PosixStopTreeTests`: группа с внуком; внук, пережил выход ведущего процесса и игнорирует `SIGTERM` (р.0.7) | Внук завершён в обоих случаях; процесс собран |
+| TC-93 | `DoctorTests.test_missing_gdb_fails_and_never_starts_a_server` (р.0.7) | FAIL gdb, код 1; CMake отсутствует — WARN; без стенда проверки стенда нет |
+| TC-94 | `DoctorTests.test_usb_scan_reports_serial_and_access`: фиктивный sysfs с ST-Link, J-Link и мышью (р.0.7) | Найдены ST-Link и J-Link; доступ по узлу `/dev/bus/usb`; serial J-Link с ведущими нулями совпадает со стендом; мышь, CDC-порт ST (5740) и хаб SEGGER пропущены |
+| TC-95 | `LinuxStandLockTests.test_stand_lock_matches_ci_lock` (р.0.7) | Архивы x86_64 и aarch64 с SHA-256 у каждого компонента; версии GCC, CMake, Ninja и Cube совпадают с lock-файлом CI; Python ≥ 3.11 |
+| TC-96 | CI linux-stand: `ubuntu:20.04` на x86_64 и aarch64 по п. 8.20 (р.0.7) | Окружение установлено; host-тесты PASS; `doctor` без FAIL; `build` и `prepare` PASS для трёх профилей |
+| TC-97 | D: `run_hw.py` на Orange Pi 5 (Ubuntu 20.04 aarch64) с OpenOCD и J-Link (р.0.7) | Каждый из 10 шагов с ожидаемым исходом, как в TC-84 |
 
 ---
 
 ## 10. Матрица прослеживаемости
 
-Условные обозначения файлов (каталог `stm32_gdbtest/`): **IN** — `__init__.py`; **MA** — `__main__.py`; **CL** — `cli.py`; **CO** — `collect.py`; **PR** — `profile.py`; **BE** — `backends.py`; **OC** — `openocd.py`; **PS** — `processes.py`; **RU** — `runner.py`; **AG** — `agent.py`; **TG** — `target.py`; **ID** — `identity.py`; **IM** — `image.py`; **FI** — `full_image.py`; **CT** — `contracts.py`; **CP** — `contract_preflight.py`; **CM** — `compatibility.py`; **RP** — `reports.py`; **BM** — `build_manifest.py`; **CK** — `cmake/STM32GDBTest.cmake`; **EX** — `examples/`; **DOC** — `docs/`, README.md, AGENTS.md.
+Условные обозначения файлов (каталог `stm32_gdbtest/`): **IN** — `__init__.py`; **MA** — `__main__.py`; **CL** — `cli.py`; **CO** — `collect.py`; **PR** — `profile.py`; **BE** — `backends.py`; **OC** — `openocd.py`; **PS** — `processes.py`; **RU** — `runner.py`; **AG** — `agent.py`; **TG** — `target.py`; **ID** — `identity.py`; **IM** — `image.py`; **FI** — `full_image.py`; **CT** — `contracts.py`; **CP** — `contract_preflight.py`; **CM** — `compatibility.py`; **RP** — `reports.py`; **BM** — `build_manifest.py`; **CK** — `cmake/STM32GDBTest.cmake`; **DR** — `doctor.py` (р.0.7); **LS** — `tools/linux_stand.py`, `tools/linux-stand.lock.json` (р.0.7); **EX** — `examples/`; **DOC** — `docs/`, README.md, AGENTS.md.
 
 Пометка **⚠** — документация или реализация отличается, необходима доработка (приложение F).
 
@@ -1111,19 +1170,20 @@ TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tes
 | 5.3.1 | CL: `argparse` | I |
 | 5.3.2 | RU: `run` (legacy) | TC-25 |
 | 5.3.3 | RU: `run`; ID: `check_target` | TC-50 |
-| 5.3.4 | RU: `run` (`os.name` перед `probe_lock`) | TC-24, TC-77 |
+| 5.3.4 | RU: `run` (`probe_lock` на любой ОС); PS | TC-24, TC-77, TC-97 |
 | 5.3.5 | RU: `run` (`limit`) | I |
 | 5.3.6 | RU: `run` (`path`) | TC-24, TC-41 |
 | 5.3.7 | RU: `local_directory` | TC-24, TC-66 |
 | 5.3.8 | RU: `run`; RP: `write_reports` | TC-24, TC-41 |
 | 5.3.9, 5.3.10 | CL; MA; RU: `run` | TC-25, I |
 | 5.4.1 | RU: `run` (`with probe_lock`) | TC-60 |
-| 5.4.2 | PS: `probe_mutex_name` | TC-63 |
+| 5.4.2 | PS: `probe_identity`, `probe_mutex_name` | TC-63, TC-90 |
 | 5.4.3 | PS: `probe_lock` | TC-42, TC-60 |
 | 5.4.4 | PS: `probe_lock` (`0x80`) | TC-62 |
-| 5.4.5 | PS: `_active` | TC-61 |
+| 5.4.5 | PS: `_active`, `_claim` | TC-61, TC-90 |
 | 5.4.6 | PS: `msvcrt.locking` | I |
-| 5.4.7 | PS: `finally` | TC-61 |
+| 5.4.7 | PS: `finally` | TC-61, TC-90 |
+| 5.4.8–5.4.11 | PS: `_posix_probe_lock`, `lock_directory`, `probe_lock_path` | TC-90, TC-91 |
 | 5.5.1–5.5.3 | RU: `execute`; BM: `load_verified` | TC-02, TC-03 |
 | 5.6.1 | RU: `execute`; CT: `select_contracts` | TC-09 |
 | 5.6.2 | CT: `select_contracts` | TC-08 |
@@ -1151,6 +1211,7 @@ TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tes
 | 5.16.2 | RU: `run`, `execute`; BE: `server_spec` | TC-75 |
 | 5.16.4 | RU: `run` (`mode`) | TC-74 |
 | 5.16.5 | RU; BM; ci/run_checks.py | TC-79–TC-82 |
+| 5.17.1–5.17.3 | DR; CL: `doctor` | TC-93, TC-94, TC-96 |
 
 ### 10.3. Интерфейсы, нефункциональные требования, эволюция (разделы 6–8)
 
@@ -1167,7 +1228,12 @@ TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tes
 | 6.6.1–6.6.5 | BE; OC | TC-32, TC-33, I |
 | 6.7.1, 6.7.2 | PS; BM: `command_args` | TC-60, I |
 | 6.8.1–6.8.5 | DOC: GETTING_STARTED.md; EX: minimal-consumer | TC-66, I |
-| 6.9.1, 6.9.2 | RU; CK | I |
+| 6.9.1, 6.9.2 | RU; PS: `lock_directory`; CK | I, TC-90 |
+| 6.10.1 | PS; RU; `.github/workflows/offline.yml` (linux-stand) | TC-96, TC-97 |
+| 6.10.2 | PS: `spawn_options`, `stop_tree` | TC-92 |
+| 6.10.3 | BE: `DEFAULT_SERVER`, `PROGRAMMER` | I, TC-97 |
+| 6.10.4 | LS; DOC: LINUX_STAND.md | TC-95, TC-96 |
+| 6.10.5, 6.10.6 | DOC: LINUX_STAND.md; DR | I, TC-96 |
 | 7.1.1–7.1.3 | RU; AG; все загрузчики схем | TC-03, TC-11, TC-22, TC-59 |
 | 7.1.4 | AG: `finish`; RU: recovery | TC-68, TC-70 |
 | 7.2.1 | RU: `local_directory`, `hwtest-tmp` | TC-24 |
@@ -1175,10 +1241,10 @@ TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tes
 | 7.2.3 | PS: `probe_mutex_name` | TC-63 |
 | 7.2.4 | `.gitignore`; AGENTS.md | I |
 | 7.3.1, 7.3.2 | RU; CK; приложение A | I |
-| 7.4.1 | RU; BM; `.github/workflows/offline.yml` | TC-77, TC-79 |
+| 7.4.1 | RU; PS; BM; `.github/workflows/offline.yml` | TC-77, TC-79, TC-96, TC-97 |
 | 7.4.2 | RU: `elf32-littlearm` | I |
 | 7.5.1 | CK: `RESOURCE_LOCK stm32_swd` | A |
-| 7.5.2, 7.5.3 | PS | TC-60, TC-61 |
+| 7.5.2, 7.5.3 | PS | TC-60, TC-61, TC-90 |
 | 7.6.1, 7.6.2 | RU; AG; IM; FI | TC-68, I |
 | 7.7.1–7.7.3 | AGENTS.md; DOC | I |
 | 7.7.4 | Раздел 10 | I |
@@ -1194,11 +1260,12 @@ TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tes
 | 8.10, 8.11 | ci/run_checks.py; `.github/workflows/docs.yml`, `offline.yml` | TC-79–TC-83 |
 | 8.12 | ci/dependencies.lock.json; ci/docker | A (сборка образа, `verify.py`) |
 | 8.13 | ci/run_checks.py (`firmware_pair`); Tests/firmware | TC-79–TC-82, TC-86, TC-88 |
-| 8.14, 8.15 | `.github/workflows/offline.yml`, `docs.yml` | I |
+| 8.14, 8.15 | `.github/workflows/offline.yml`, `docs.yml` | I, TC-96 |
 | 8.16 | ci/run_checks.py | T |
 | 8.17 | `.gitattributes` | I |
 | 8.18 | `.clang-format`; ci/run_checks.py (`level_format`) | TC-85 |
-| 8.19 | Tests/firmware/run_hw.py | TC-84 |
+| 8.19 | Tests/firmware/run_hw.py | TC-84, TC-97 |
+| 8.20 | `.github/workflows/offline.yml` (linux-stand); LS | TC-96 |
 
 ---
 
@@ -1220,9 +1287,9 @@ TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tes
 | :---: | :--- | :---: | :--- | :--- |
 | 11.2.1 | CI модуля: платформа (GitHub Actions?), состав уровней (host unittest на `windows-latest`, offline-сборка примера, проверка документации и ссылок, `check_spec.py` для ТЗ), нужен ли self-hosted runner со стендом для D-проверок | Закрыт | GitHub Actions: workflows Docs и Offline; Docker-образ без stm32-cmake-yml; host-тесты Windows и Linux; CI-прошивки F030R8/F103C8/F411CE × GCC 13/14/15 × CMake 3.28.3; стенд в CI — вопрос 11.2.16 (р.0.3) | 8.10–8.16 |
 | 11.2.2 | Структура сопроводительной документации: роль ТЗ относительно README, docs/API.md, docs/STATUS.md, CHANGELOG.md, TODO.md; место ТЗ (`docs/` как в stm32-cmake-yml или корень); какие документы становятся производными от ТЗ | Закрыт | Документация на русском и английском в `docs/ru` и `docs/en`, ТЗ в `docs/` только на русском, порядок сопровождения — maintenance.md (р.0.2). Страницы перенесены, роли документов — п. 7.7.12, навигация и сверка — п. 7.7.13 (р.0.6) | 1.2.3, 7.7.1, 7.7.2, 7.7.10, 7.7.11 |
-| 11.2.3 | Поддержка хоста Linux: сейчас `run` отказывает, 3 host-теста падают, 5 пропускаются. Нужна ли переносимость (хотя бы host-тестов для CI на Linux)? | Закрыт | Offline-часть (сборка, manifest, контракты, подготовка, host-тесты) — на Linux; аппаратный запуск — только Windows (р.0.3) | 2.5.1, 5.3.4, 5.14.6, 5.16.5, 6.2.1, 7.4.1 |
+| 11.2.3 | Поддержка хоста Linux: сейчас `run` отказывает, 3 host-теста падают, 5 пропускаются. Нужна ли переносимость (хотя бы host-тестов для CI на Linux)? | Закрыт | Offline-часть (сборка, manifest, контракты, подготовка, host-тесты) — на Linux; аппаратный запуск — только Windows (р.0.3). Пересмотрено: аппаратный запуск также на Linux (р.0.7, вопрос 11.2.19) | 2.5.1, 5.3.4, 5.14.6, 5.16.5, 6.2.1, 7.4.1 |
 | 11.2.4 | Target schema 2 без обязательных OpenOCD-полей (`openocd_target`, `reset_halt`, `reset_run`) для ST/J-Link-профилей (TODO.md) | Открыт | — | 3.3.1, 3.3.3, 3.3.7 |
-| 11.2.5 | Надзор за дочерними процессами при аварии host (Job Object): включать ли требование в 0.1.0-rc.1 | Открыт | TODO.md; сейчас освобождение mutex не доказывает завершения серверов | 5.4.4, 5.12.4 |
+| 11.2.5 | Надзор за дочерними процессами при аварии host (Job Object): включать ли требование в 0.1.0-rc.1 | Открыт | TODO.md; сейчас освобождение mutex не доказывает завершения серверов. На Linux группа процессов останавливается штатно (п. 6.10.2), но аварийное завершение runner её не останавливает (р.0.7) | 5.4.4, 5.4.9, 5.12.4 |
 | 11.2.6 | Профиль F429ZI проверен в стендовом проекте (OpenOCD и ST, 22/22), но не отражён в docs/STATUS.md модуля. Внести? Нужны ли J-Link mapping для F401/F411/F429 | Открыт | F429ZI отражён в STATUS со ссылкой на протокол (р.0.6); J-Link mapping для F401/F411/F429 — не решено | 6.5.1, 8.8, приложение B |
 | 11.2.7 | Сбой USB (`LIBUSB_ERROR_NOT_FOUND`) после серии запусков на F429: нужна ли доработка штатного завершения сервера вместо `taskkill /F` с контролируемым A/B-опытом | Открыт | Причина не установлена (F429_SERVER_STABILITY.md) | 5.12.4 |
 | 11.2.8 | Статусы SKIP / NOT_APPLICABLE и выбор сценариев по возможностям профиля и стенда (PERIPHERAL_PLAN.md) | Открыт | Сейчас только PASS/FAIL/ERROR | 3.9.1 |
@@ -1233,7 +1300,11 @@ TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tes
 | 11.2.13 | Управление питанием, реле и приборами через host-контроллер, power-cycle с reconnect | Отложен | Вне 0.1.0; вернуться после релиза 0.1.0 (TODO.md) | 2.4.2 |
 | 11.2.14 | Python-упаковка и console entry point `stm32-gdbtest` | Отложен | Дополнительный способ поставки после 0.1.0; до PyPI проверить имя | 5.15.2 |
 | 11.2.15 | Соответствие ревизий ТЗ версиям модуля (например, ТЗ 1.0 ↔ v0.1.0) | Открыт | — | 1.6.6 |
-| 11.2.16 | Аппаратные проверки в CI: self-hosted runner со стендом (плата, отладчик), согласование доступа и восстановления | Отложен | После выпуска 0.1.0; до этого аппаратные проверки выполняются в стендовом проекте (р.0.3) | 8.10, 8.11 |
+| 11.2.16 | Аппаратные проверки в CI: self-hosted runner со стендом (плата, отладчик), согласование доступа и восстановления | Открыт | Было отложено после 0.1.0 (р.0.3). Владелец решил реализовать до v0.1.0: self-hosted runner aarch64 на Orange Pi 5 вместе с переносом подготовленного запуска (группа D) — следующая ревизия (р.0.7) | 8.10, 8.11, 8.19 |
+| 11.2.18 | Удалённый GDB-сервер: runner и GDB на Windows или в WSL, сервер и отладчик на Orange Pi 5; SSH-туннель к порту сервера, удалённая блокировка `flock`, таблица `[remote]` стенда, только ключевая аутентификация (группа C) | Открыт | Реализуется до v0.1.0 в следующей ревизии; пароли в TOML не допускаются (р.0.7) | 2.5.1, 5.4, 5.8, 6.6.2 |
+| 11.2.19 | Linux как платформа аппаратного запуска и стенд Orange Pi 5 с Ubuntu 20.04: как получить Python ≥ 3.11 и инструменты без изменения системы | Закрыт | Аппаратный запуск на Linux x86_64/aarch64 с glibc ≥ 2.31; окружение без root — `tools/linux_stand.py` с python-build-standalone 3.11 и версиями CI; проверка группы A — сразу на Orange Pi 5 (р.0.7) | 2.5.1, 5.3.4, 5.4.8–5.4.11, 6.10 |
+| 11.2.20 | Сценарий WSL2 + usbipd-win: отладчик пробрасывается в дистрибутив WSL, runner работает как на Linux | Открыт | Покрывается поддержкой Linux (п. 6.10); ограничение п. 5.4.11 (блокировка WSL отделена от Windows); аппаратная проверка не выполнялась (р.0.7) | 5.4.11, 6.10.1 |
+| 11.2.21 | Контейнер `ubuntu:20.04` в CI не закреплён по digest, в отличие от образа CI (п. 8.12) | Открыт | Docker Hub недоступен в среде формирования ревизии, digest не получен; закрепить при первой успешной сборке workflow (р.0.7) | 8.12, 8.20 |
 | 11.2.17 | Пустая загружаемая секция с LMA вне Flash (например, пустая `.data` в RAM) не входит в регионы, но `objcopy -O binary` включает её адрес: BIN вырастает до сотен мегабайт до отказа п. 4.1.5. Формировать BIN только из выбранных секций (`objcopy -j …`) или отклонять такие секции до `objcopy`? | Закрыт | BIN формируется только из выбранных секций (`objcopy -j`); регрессия на реальном ELF: до исправления BIN 384 MiB и ERROR, после — PASS (р.0.5) | 4.1.2, 4.1.5 |
 
 ### 11.3. Примечания на будущее (информативно)
@@ -1265,6 +1336,7 @@ TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tes
 | `GDB_REMOTE_TIMEOUT_S` | 5 с (`set remotetimeout`) | 5.9.2 |
 | `RECOVERY_TIMEOUT_S` | 10 с | 5.12.2 |
 | `taskkill` / ожидание процесса | 10 с / 5 с | 5.12.4 |
+| Linux: `SIGTERM` группе / `SIGKILL` группе | ожидание 3 с / 5 с (р.0.7) | 6.10.2 |
 | `CTEST_TIMEOUT_MARGIN_S` | 90 с | 5.13.9 |
 | `host.traceability`, `host.hwtest` TIMEOUT | 30 с | 5.13.10, 5.13.11 |
 | Предел команд build manifest | 20 с | 5.14.3 |
@@ -1272,6 +1344,8 @@ TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tes
 | ST `-l` | 31 | 6.4.1 |
 | Имя блокировки | `Local\stm32-gdbtest.probe.v1.<sha256>` | 5.4.2 |
 | Файловая блокировка | `build/probe-locks/<sha256(serial)>.lock` | 5.4.6 |
+| Блокировка Linux | `${STM32_GDBTEST_LOCK_DIR:-/tmp}/stm32-gdbtest-locks/probe.v1.<sha256>.lock`, запись `pid=<PID>` (р.0.7) | 5.4.8, 5.4.9 |
+| Окружение стенда Linux | Python 3.11.16, CMake 3.28.3, Ninja 1.12.1, GCC 13.3.1-1.1, OpenOCD 0.12.0-7; `~/.local/stm32-gdbtest` (р.0.7) | 6.10.4 |
 | Каталог временных файлов | `build/hwtest-tmp` | 6.1.4 |
 | `__version__` / `API_VERSION` | `0.1.0.dev0` / `1` | 5.15.3 |
 | `prepare.<ID>` TIMEOUT | 90 с (р.0.3) | 5.13.14 |
@@ -1296,6 +1370,7 @@ TC-01…TC-65 и TC-74…TC-78 соответствуют host-тестам `Tes
 | STM32H503CBT6 | — | Не поддержан | Профиль приостановлен владельцем |
 | К1921ВГ015 (RISC-V) | J-Link / JTAG | Эксперимент | Не штатный профиль; мотивировал проверку load sections |
 | F030R8, F103C8, F411CE (CI-прошивки) | Без отладчика в CI; на стендах: J-Link STLink, J-Link CE, ST-Link через OpenOCD и ST server (р.0.4) | CI: сборка и подготовка на GCC 13/14/15; стенды: 4 × 10/10 шагов на `fbc103d` (р.0.4) | CMSIS-сценарии состояния регистров; F103C8 BluePill-Plus сообщает 128 KiB Flash (предупреждение) (р.0.4) |
+| F030R8, F103C8, F411CE (CI-прошивки), Linux | Окружение стенда в Ubuntu 20.04 (glibc 2.31) x86_64: установка, host-тесты, `doctor`, `build` и `prepare` (р.0.7) | Проверено в контейнере при формировании ревизии 0.7; aarch64 и Orange Pi 5 с отладчиками — TC-96, TC-97 не выполнены (р.0.7) | Аппаратный путь на Linux без отладчика: блокировка, запуск OpenOCD, ERROR «exited before ready», процессы остановлены (р.0.7) |
 
 ---
 

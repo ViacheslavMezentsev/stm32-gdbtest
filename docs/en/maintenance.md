@@ -111,7 +111,9 @@ CI workflows run for any branch, so a new prefix needs no workflow change.
    and firmware levels ([checks and CI](testing.md)). Before a push run the levels
    affected by the change.
 2. Module host tests without Docker: `python -B -m unittest discover -s Tests/host -v`;
-   debugger locking is tested on Windows only.
+   debugger locking is tested by the tests of its OS (Windows or Linux). On a Linux
+   stand run them after `. ~/.local/stm32-gdbtest/env.sh`; `python -B -m stm32_gdbtest doctor`
+   checks the environment ([Linux stand](LINUX_STAND.md)).
 3. Consumer example without a board (Windows): in `examples/minimal-consumer` —
    `cmake --preset debug`, `cmake --build --preset debug`, `ctest --preset offline`.
 4. CLI: `python -B -m stm32_gdbtest --version`, `collect`, `trace`, `run --prepare-only`.
@@ -134,7 +136,8 @@ hardware check.
    Flash breakpoints automatically. After an experiment restore the agreed firmware
    and MCU state.
 3. Do not run a third-party server on the same debugger in parallel. The lock only
-   coordinates participating runners in one Windows session; after a crash check
+   coordinates participating runners in one Windows session or on one Linux host;
+   after a crash check
    for leftover GDB and server processes.
 4. Do not hide ERROR or failure causes; do not rerun automatically to get a PASS.
 

@@ -107,7 +107,9 @@ Workflows CI запускаются для любой ветки, поэтому
    и firmware ([проверки и CI](testing.md)). Перед push выполняются уровни,
    затронутые изменением.
 2. Host-тесты модуля без Docker: `python -B -m unittest discover -s Tests/host -v`;
-   блокировка отладчика проверяется только на Windows.
+   блокировка отладчика проверяется тестами своей ОС (Windows или Linux).
+   На Linux-стенде — после `. ~/.local/stm32-gdbtest/env.sh`, окружение проверяет
+   `python -B -m stm32_gdbtest doctor` ([Linux-стенд](LINUX_STAND.md)).
 3. Пример потребителя без платы (Windows): из `examples/minimal-consumer` — `cmake --preset debug`,
    `cmake --build --preset debug`, `ctest --preset offline`.
 4. CLI: `python -B -m stm32_gdbtest --version`, `collect`, `trace`, `run --prepare-only`.
@@ -128,7 +130,8 @@ CI GitHub Actions (workflows Docs и Offline) проверяет модуль д
    отладчика, shared mode и Flash breakpoints. После опыта восстановить оговорённую
    прошивку и состояние MCU.
 3. Не запускать сторонний сервер параллельно на том же отладчике. Блокировка
-   координирует только участвующие runner одной Windows-сессии; после аварии
+   координирует только участвующие runner одной Windows-сессии или одного хоста
+   Linux; после аварии
    проверить оставшиеся процессы GDB и сервера.
 4. Не скрывать ERROR и причины отказов; не повторять запуск автоматически ради PASS.
 

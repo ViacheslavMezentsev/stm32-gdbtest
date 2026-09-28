@@ -13,7 +13,7 @@ import traceback
 
 from stm32_gdbtest.backends import load_stand, server_spec
 from stm32_gdbtest.profile import load_profile
-from stm32_gdbtest.processes import FLAGS, probe_lock, stop_tree
+from stm32_gdbtest.processes import FLAGS, probe_lock, spawn_options, stop_tree
 from stm32_gdbtest.reports import CODES, write_reports
 from stm32_gdbtest.compatibility import runtime_manifest
 from stm32_gdbtest.build_manifest import load_verified
@@ -73,8 +73,6 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
             # ТЗ 5.16.1: no debugger ownership, server or GDB connection in preparation.
             execute(session, test, stand, out, report, limit, profile, prepare_only=True)
         else:
-            if os.name != "nt":
-                raise RuntimeError("Hardware runs support Windows only")
             with probe_lock(project_root, stand["serial"], stand["backend"]):
                 execute(session, test, stand, out, report, limit, profile)
     except BaseException:
@@ -218,7 +216,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
         env["STM32_GDBTEST_RUN"] = str(run_file)
         with (out / "server.log").open("wb") as server_log, (out / "gdb.log").open("wb") as gdb_log:
             server = subprocess.Popen(backend["command"], env=env, cwd=out,
-                                      stdout=server_log, stderr=subprocess.STDOUT, creationflags=FLAGS)
+                                      stdout=server_log, stderr=subprocess.STDOUT, **spawn_options())
             deadline = time.monotonic() + 10
             while time.monotonic() < deadline:
                 if server.poll() is not None:
@@ -231,7 +229,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                 raise TimeoutError("GDB server startup timed out")
             client = subprocess.Popen(gdb_base + [str(elf), "-x", str(ROOT / "stm32_gdbtest/agent.py")],
                                       env=env, cwd=project_root, stdout=gdb_log, stderr=subprocess.STDOUT,
-                                      creationflags=FLAGS)
+                                      **spawn_options())
             returncode = client.wait(timeout=timeout)
         if not agent_result.exists():
             raise RuntimeError(f"GDB exited {returncode} without report; see gdb.log")

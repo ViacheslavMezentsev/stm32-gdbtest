@@ -76,9 +76,10 @@ packaging is considered an additional delivery method. [Roadmap](TODO.md) (Russi
 - `docs/ru`, `docs/en` — integration, writing scenarios and mechanism descriptions;
   `docs/TECHNICAL_SPECIFICATION.md` — the specification (Russian).
 
-The verified environment for hardware runs is Windows, host Python 3.11+, ARM GCC/GDB
-with Python, CMake 3.25+ and Ninja for the build integration; build and preparation
-without hardware also work on Linux. You need an SWD debugger, its GDB server and the
+Hardware runs work on Windows (verified on stands) and Linux x86_64/aarch64,
+including Ubuntu 20.04 on Orange Pi 5 ([Linux stand](docs/en/LINUX_STAND.md)); they need
+host Python 3.11+, ARM GCC/GDB with Python, CMake 3.25+ and Ninja for the build
+integration. On Linux the environment is installed without root by one script. You need an SWD debugger, its GDB server and the
 firmware libraries; HAL/CMSIS, Cube packages and vendor tools are not part of the
 module. GDB-Python is a separate interpreter, not automatically your PC's Python.
 

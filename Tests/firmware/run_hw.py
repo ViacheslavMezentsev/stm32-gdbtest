@@ -1,4 +1,4 @@
-"""Hardware validation of the CI firmware on a local Windows stand (development, not CI).
+"""Hardware validation of the CI firmware on a local Windows or Linux stand (development, not CI).
 
 Builds one CI profile, then runs the scenarios through the real runner and GDB server
 and checks the expected outcome of each step:
@@ -15,7 +15,7 @@ and checks the expected outcome of each step:
   after-recovery   HW_CI_GPIO passes again after recovery
 
 The test boards are reprogrammed: use only boards agreed for experiments.
-Usage (Windows, repository root):
+Usage (repository root; on Linux first `. ~/.local/stm32-gdbtest/env.sh`, see tools/linux_stand.py):
   python -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stands/f411ce-openocd.local.toml
 Results: build/hw/<profile>-<stand name>/summary.json and the runner reports it lists.
 """
@@ -24,6 +24,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import platform
 import shutil
 import subprocess
 import sys
@@ -54,14 +55,17 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--profile", required=True, choices=("f030r8", "f103c8", "f411ce"))
     parser.add_argument("--stand", required=True, type=Path, help="local stand TOML ([probe] table)")
+    # Windows keeps the historical per-user defaults; Linux takes them from env.sh.
+    home = Path(os.environ["USERPROFILE"]) if os.name == "nt" else None
     parser.add_argument("--toolchain", type=Path, default=os.environ.get("ARM_TOOLCHAIN_ROOT")
-                        or Path(os.environ.get("USERPROFILE", "~")) / "xpack-arm-none-eabi-gcc-13.3.1-1.1")
+                        or (home / "xpack-arm-none-eabi-gcc-13.3.1-1.1" if home else None))
     parser.add_argument("--cube", type=Path, default=os.environ.get("STM32CUBE_REPOSITORY")
-                        or Path(os.environ.get("USERPROFILE", "~")) / "STM32Cube/Repository")
+                        or (home / "STM32Cube/Repository" if home else None))
     parser.add_argument("--steps", nargs="*", choices=STEPS, default=list(STEPS))
     args = parser.parse_args()
-    if os.name != "nt":
-        sys.exit("Hardware runs support Windows only")
+    if not args.toolchain or not args.cube:
+        sys.exit("Set ARM_TOOLCHAIN_ROOT and STM32CUBE_REPOSITORY (source env.sh of tools/linux_stand.py) "
+                 "or pass --toolchain and --cube")
     stand_path = args.stand.resolve()
     probe = tomllib.loads(stand_path.read_text(encoding="utf-8"))["probe"]
     name = f"{args.profile}-{stand_path.name.split('.')[0]}"
@@ -176,6 +180,7 @@ def main():
         results.append(entry)
         print(f"{status} {step} ({entry['seconds']}s)" + (f": {detail}" if detail else ""), flush=True)
     summary = dict(schema=1, profile=args.profile, backend=probe.get("backend"), stand=stand_path.name,
+                   host=f"{platform.system()} {platform.release()} {platform.machine()}",
                    toolchain=str(args.toolchain), passed=sum(r["status"] == "PASS" for r in results),
                    total=len(results), steps=results)
     (out / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

@@ -23,7 +23,7 @@ stm32_gdbtest_attach(firmware_target
   the firmware target before `stm32_gdbtest_attach`.
 - One firmware target of the top-level CMake directory, the Ninja generator and a
   build directory inside `PROJECT_SOURCE_DIR` are supported. Build, build manifest
-  and preparation work on Windows and Linux; hardware runs are Windows-only.
+  preparation and hardware runs work on Windows and Linux ([Linux stand](LINUX_STAND.md)).
 - `PROFILE_DIR` and `MANIFEST_INPUTS` paths are absolute. `PROFILE_DIR` contains
   `target.toml`, `Tests/board/test_*.py`, `Tests/requirements.md` and, when contracts
   are used, `Tests/contracts.json`.
@@ -95,6 +95,7 @@ python -B -m stm32_gdbtest collect --tests examples/minimal-consumer/profile/Tes
 python -B -m stm32_gdbtest trace --tests examples/minimal-consumer/profile/Tests/board --requirements examples/minimal-consumer/profile/Tests/requirements.md
 python -B -m stm32_gdbtest run --session examples/minimal-consumer/build/debug/hwtest/session.json --test HW_CONSUMER_GPIO --prepare-only
 python -B -m stm32_gdbtest run --session examples/minimal-consumer/build/debug/hwtest/session.json --test HW_CONSUMER_GPIO --stand path/to/stand.local.toml
+python -B -m stm32_gdbtest doctor --stand path/to/stand.local.toml
 ```
 
 The logical CLI name is `stm32-gdbtest`; a separate executable will come with packaging.
@@ -114,6 +115,12 @@ including full mode. The debugger lock, server and connection are not used; the
 report gets `mode: prepare` and `hardware_accessed: false`. A stand is optional in
 this mode; if one is selected, it is validated completely, including the J-Link mapping.
 
+`doctor [--gdb PATH] [--stand TOML] [--json]` checks the environment without accessing
+the debugger: host Python, GDB-Python ≥ 3.11 and binutils next to it, CMake and Ninja,
+the lock directory, the stand (for OpenOCD — that `interface/stlink.cfg` exists) and on
+Linux ST-Link and J-Link devices on USB with access rights. The output is OK/WARN/FAIL
+lines; the exit code is 1 on FAIL.
+
 `collect --cmake/--workspace` is the CMake generation interface and is rarely used by hand.
 
 `run` exit codes: PASS — 0, FAIL — 1, ERROR — 2; argument errors also give 2. A
@@ -126,7 +133,8 @@ stable schema promise. Direct calls into `runner`, `contracts`, `processes` are 
 internal development API; consumers use CMake, the CLI and the Target operations.
 Details: [getting started](GETTING_STARTED.md), [manifest](MANIFESTS.md),
 [identity](TARGET_IDENTITY.md), [GDB servers](BACKENDS.md),
-[debugger ownership](DEBUGGER_OWNERSHIP.md).
+[debugger ownership](DEBUGGER_OWNERSHIP.md). On Linux `STM32_GDBTEST_LOCK_DIR` sets the
+base directory of the locks (default `/tmp`).
 
 ## Image verification
 
@@ -162,5 +170,6 @@ values to the new names, remove the old environment variables and run configure 
 build again. An old CTest without configure still contains the previous package
 paths. Preset names, `check-hw`, `host.hwtest`, the `hwtest` report directories,
 `HW_*` IDs, TOML/JSON formats and the lock namespace are kept. The migration needs
-no firmware test hooks and does not imply support for an arbitrary STM32, other
-operating systems for hardware runs or automatic cleanup of processes after a host crash.
+no firmware test hooks and does not imply support for an arbitrary STM32, operating
+systems other than Windows and Linux for hardware runs or automatic cleanup of
+processes after a host crash.

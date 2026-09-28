@@ -1,4 +1,6 @@
 # ST-Link through ST-LINK GDB Server (STM32CubeCLT). Copy to <profile>-stlink.local.toml.
+# CubeCLT exists for Windows and Linux x86_64 only; on Linux drop the .exe suffixes,
+# for example /opt/st/stm32cubeclt_1.22.0/STLink-gdb-server/bin/ST-LINK_gdbserver.
 [probe]
 backend = "stlink"
 serial = "REPLACE_WITH_STLINK_SERIAL"

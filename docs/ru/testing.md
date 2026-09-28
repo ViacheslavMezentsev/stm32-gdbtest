@@ -5,7 +5,7 @@
 CI проверяет модуль до GDB-сервера: без отладчика, платы и доступа к MCU.
 Аппаратные сценарии выполняются отдельно на согласованном стенде
 ([сопровождение](maintenance.md#работа-с-оборудованием)). Требования к CI —
-п. 8.11–8.19 [ТЗ](../TECHNICAL_SPECIFICATION.md).
+п. 8.11–8.20 [ТЗ](../TECHNICAL_SPECIFICATION.md).
 
 ## Уровни проверок
 
@@ -13,7 +13,8 @@ CI проверяет модуль до GDB-сервера: без отладч�
 | --- | --- | --- |
 | docs | `check_spec.py --strict` для ТЗ, локальные ссылки Markdown, пары RU/EN | `ci/run_checks.py docs`, workflow Docs |
 | format | Исходники C/C++ соответствуют `.clang-format` (`clang-format --dry-run --Werror`, версия ≥ 16) | `ci/run_checks.py format` в Docker-образе, workflow Offline |
-| host | Host-тесты модуля `Tests/host` | Linux в Docker-образе и Windows (Python 3.11, 3.13), workflow Offline |
+| host | Host-тесты модуля `Tests/host` | Linux в Docker-образе, Windows (Python 3.11, 3.13) и Ubuntu 20.04 x86_64/aarch64 на Python окружения стенда, workflow Offline |
+| stand | Установка окружения Linux-стенда в чистом `ubuntu:20.04`, `doctor`, шаги `build` и `prepare` сценария `run_hw.py` для трёх профилей | Задание `linux-stand` workflow Offline на `ubuntu-24.04` и `ubuntu-24.04-arm` |
 | firmware | Сборка CI-прошивок F030R8, F103C8, F411CE каждым GCC из lock-файла; build manifest; CTest `host` (traceability, `prepare.<ID>` с offline-контрактами); подготовка полного образа; отказ слишком малой политики образа; 10 отрицательных вариантов ELF-контрактов; наличие и выравнивание на 4 байта секций загрузки, включая `.data` | `ci/run_checks.py firmware` в Docker-образе, workflow Offline |
 
 CI-прошивки находятся в [Tests/firmware](../../Tests/firmware/README.md): CMSIS без HAL и
@@ -62,7 +63,9 @@ CI-прошивка — presets в `Tests/firmware` (`cmake --preset f411ce`,
 - **Docs** — при каждом push в любую ветку: уровень docs.
 - **Offline** — при push в любую ветку, кроме изменений только Markdown, `LICENSE`
   и `.github/FUNDING.yml`: host-тесты на `windows-2022` (Python 3.11 и 3.13) и
-  уровни host и firmware в Docker-образе на `ubuntu-24.04` без сети (`--network none`).
+  уровни host и firmware в Docker-образе на `ubuntu-24.04` без сети (`--network none`);
+  задание `linux-stand` — окружение стенда в контейнере `ubuntu:20.04` на x86_64 и
+  aarch64 (сеть нужна для загрузки закреплённых архивов).
 
 Фильтра по префиксу веток нет: ветки новых агентов проверяются без правки workflow.
 Результат проверки относится к конкретному коммиту; сверяйте его с последним
@@ -70,8 +73,8 @@ CI-прошивка — presets в `Tests/firmware` (`cmake --preset f411ce`,
 
 ## Аппаратная проверка CI-прошивок (разработка)
 
-Отдельно от CI те же прошивки проверяются на локальном Windows-стенде сценарием
-`Tests/firmware/run_hw.py`. Он собирает профиль, запускает сценарии через штатный
+Отдельно от CI те же прошивки проверяются на локальном стенде Windows или Linux
+сценарием `Tests/firmware/run_hw.py`. Он собирает профиль, запускает сценарии через штатный
 runner и GDB-сервер и сверяет ожидаемый исход каждого шага: запись и повтор без
 записи, strict identity, полный образ с хвостом 0xA5, ожидаемый ERROR в verify-only,
 восстановление 0xFF, timeout с восстановлением и повторный PASS.
@@ -82,13 +85,15 @@ python -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stand
 
 Стенд — локальная копия шаблона из `Tests/firmware/stands/*.example.toml`
 (`*.local.toml` не коммитится). Toolchain и Cube — `--toolchain`, `--cube` или
-`ARM_TOOLCHAIN_ROOT`, `STM32CUBE_REPOSITORY`. Итог — `build/hw/<профиль>-<стенд>/summary.json`.
+`ARM_TOOLCHAIN_ROOT`, `STM32CUBE_REPOSITORY`; на Linux их задаёт `env.sh` окружения
+стенда ([Linux-стенд](LINUX_STAND.md)), на Windows есть значения по умолчанию в
+профиле пользователя. `summary.json` содержит ОС и архитектуру хоста. Итог — `build/hw/<профиль>-<стенд>/summary.json`.
 Сценарий перезаписывает Flash: используйте только платы, согласованные для опытов.
 
 ## Чего CI не проверяет
 
 - Подключение к GDB-серверу, отладчику и MCU, запись Flash, identity, Target API
   в работе, timeout/recovery — это аппаратные проверки потребителя.
-- Блокировку отладчика между процессами — только host-тестами Windows.
+- Блокировку отладчика между процессами — только host-тестами Windows и Linux.
 - Семантику HAL и корректность сценариев на плате: контракты проверяют наличие
   символов, типов и раскрытие макросов в ELF.

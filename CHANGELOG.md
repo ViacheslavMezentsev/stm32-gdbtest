@@ -8,6 +8,19 @@
 
 ### Added
 
+- Аппаратный запуск на Linux x86_64 и aarch64 (glibc ≥ 2.31, в том числе Ubuntu 20.04
+  на Orange Pi 5): блокировка отладчика `flock` в общем каталоге хоста
+  (`STM32_GDBTEST_LOCK_DIR`, по умолчанию `/tmp`) с обнаружением брошенного владения,
+  сервер и GDB в отдельной группе процессов с остановкой `SIGTERM`/`SIGKILL`, имена
+  серверов Linux без `.exe`. На оборудовании Linux ещё не проверен.
+- `tools/linux_stand.py`: окружение стенда без root — Python 3.11 (python-build-standalone),
+  CMake 3.28.3, Ninja 1.12.1, xPack GCC 13.3.1-1.1, xPack OpenOCD 0.12.0-7 и CMSIS по
+  `tools/linux-stand.lock.json` с SHA-256 для x86_64 и aarch64; `env.sh`.
+- Команда `doctor`: GDB-Python, binutils, CMake, Ninja, каталог блокировок, стенд,
+  `interface/stlink.cfg` OpenOCD и на Linux — ST-Link и J-Link на USB с правами доступа.
+- CI: задание `linux-stand` в контейнере `ubuntu:20.04` на x86_64 и aarch64 —
+  установка окружения, host-тесты, `doctor`, сборка и подготовка CI-прошивок.
+- Документация Linux-стенда `docs/ru|en/LINUX_STAND.md`; ТЗ ревизии 0.7.
 - Аппаратная проверка CI-прошивок `Tests/firmware/run_hw.py` (10 шагов: запись, повтор,
   strict identity, полный образ, verify-only, timeout/recovery); на коммите `fbc103d`
   прошли F030R8/J-Link STLink, F103C8/J-Link, F411CE/OpenOCD и F411CE/ST-LINK GDB Server.
@@ -42,6 +55,8 @@
 
 ### Changed
 
+- `run_hw.py` работает на Linux (toolchain и Cube из `env.sh`) и записывает ОС и
+  архитектуру хоста в `summary.json`.
 - Документация перенесена в `docs/ru/` и получила английские версии в `docs/en/`,
   карты документации `index.md` и строки навигации; добавлен README.en.md. Страницы
   сверены с текущим функционалом: подготовка без оборудования, Linux для offline-части,
@@ -49,8 +64,7 @@
   адрес размера Flash F030, проверенные стенды; ТЗ ревизий 0.5 и 0.6.
 - Сборка, build manifest, offline-контракты и подготовка образа работают также
   на Linux: разбор команд компилятора по правилам shell, имена binutils по суффиксу
-  GDB. Аппаратный запуск по-прежнему только на Windows; отказ на другой ОС выдаётся
-  после выбора стенда и профиля, до блокировки отладчика.
+  GDB (аппаратный запуск на Linux — в разделе Added).
 - AGENTS.md — краткий перечень правил; ветки `<агент>/<задача>`, слияние без PR,
   подписанные коммиты Conventional Commits; ТЗ ревизии 0.3.
 - Промежутки производного BIN заполняются 0xFF. Это не гарантирует заполнение

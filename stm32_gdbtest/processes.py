@@ -1,25 +1,60 @@
-"""Bounded process lifetime and cross-project debugger ownership on Windows."""
+"""Bounded process lifetime and cross-project debugger ownership (Windows, Linux)."""
 
 from contextlib import contextmanager
 import ctypes
-from ctypes import wintypes
+import errno
 import hashlib
 import os
 from pathlib import Path
+import signal
 import subprocess
+import tempfile
 import threading
+import time
 import re
 
 
 FLAGS = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
 
 
+def spawn_options():
+    """Popen options that let stop_tree reach every child of a server or GDB client."""
+    if os.name == "nt":
+        return {"creationflags": FLAGS}
+    return {"start_new_session": True}  # ТЗ 6.10.2: own process group per child.
+
+
 def stop_tree(process):
-    if process is None or process.poll() is not None:
+    if process is None:
         return
-    result = subprocess.run(["taskkill", "/PID", str(process.pid), "/T", "/F"],
-                            capture_output=True, timeout=10, creationflags=FLAGS)
-    if result.returncode and process.poll() is None:
+    if os.name == "nt":
+        if process.poll() is not None:
+            return
+        result = subprocess.run(["taskkill", "/PID", str(process.pid), "/T", "/F"],
+                                capture_output=True, timeout=10, creationflags=FLAGS)
+        if result.returncode and process.poll() is None:
+            process.kill()
+        process.wait(timeout=5)
+        return
+    # The group outlives an exited leader while grandchildren remain; the kernel does
+    # not reuse a PID that is still a live process group id.
+    for sig, grace in ((signal.SIGTERM, 3.0), (signal.SIGKILL, 5.0)):
+        try:
+            os.killpg(process.pid, sig)
+        except (ProcessLookupError, PermissionError):
+            break
+        deadline = time.monotonic() + grace
+        while time.monotonic() < deadline:
+            process.poll()
+            try:
+                os.killpg(process.pid, 0)
+            except (ProcessLookupError, PermissionError):
+                break
+            time.sleep(0.05)
+        else:
+            continue
+        break
+    if process.poll() is None:
         process.kill()
     process.wait(timeout=5)
 
@@ -29,17 +64,32 @@ _active = set()
 _active_guard = threading.Lock()
 
 
-def probe_mutex_name(serial, backend="openocd"):
+def probe_identity(serial, backend="openocd"):
+    """Hash of family:SERIAL; OpenOCD and the ST server share the ST-Link family."""
     if backend not in ("openocd", "stlink", "jlink"):
         raise ValueError("Unknown debugger backend")
     if not isinstance(serial, str) or not re.fullmatch(r"[A-Za-z0-9]+", serial):
         raise ValueError("Explicit alphanumeric debugger serial required")
     family = "jlink" if backend == "jlink" else "stlink"
     identity = family + ":" + serial.upper()
-    return "Local\\stm32-gdbtest.probe.v1." + hashlib.sha256(identity.encode("ascii")).hexdigest()
+    return hashlib.sha256(identity.encode("ascii")).hexdigest()
+
+
+def probe_mutex_name(serial, backend="openocd"):
+    return "Local\\stm32-gdbtest.probe.v1." + probe_identity(serial, backend)
+
+
+def lock_directory():
+    """Host-wide directory shared by runners of every checkout and user."""
+    return Path(os.environ.get("STM32_GDBTEST_LOCK_DIR") or tempfile.gettempdir()) / "stm32-gdbtest-locks"
+
+
+def probe_lock_path(serial, backend="openocd"):
+    return lock_directory() / ("probe.v1." + probe_identity(serial, backend) + ".lock")
 
 
 def _kernel_api():
+    from ctypes import wintypes
     api = ctypes.WinDLL("kernel32", use_last_error=True)
     api.CreateMutexW.argtypes = [ctypes.c_void_p, wintypes.BOOL, wintypes.LPCWSTR]
     api.CreateMutexW.restype = wintypes.HANDLE
@@ -54,6 +104,74 @@ def _kernel_api():
 
 @contextmanager
 def probe_lock(root, serial, backend="openocd"):
+    if os.name == "nt":
+        with _windows_probe_lock(root, serial, backend):
+            yield
+    else:
+        with _posix_probe_lock(serial, backend):
+            yield
+
+
+@contextmanager
+def _claim(name):
+    with _active_guard:
+        if name in _active:
+            raise RuntimeError("Debugger already owned by a runner in this process")
+        _active.add(name)
+    try:
+        yield
+    finally:
+        with _active_guard:
+            _active.remove(name)
+
+
+@contextmanager
+def _posix_probe_lock(serial, backend):
+    """Fail-fast ownership on one host through flock in a shared directory.
+
+    The kernel drops flock when the owner dies; the owner record left in the file
+    then marks abandoned ownership, as WAIT_ABANDONED does on Windows. It coordinates
+    participating runners only and does not prove that server children terminated.
+    """
+    import fcntl
+    path = probe_lock_path(serial, backend)
+    with _claim(path.name):
+        directory = path.parent
+        try:
+            directory.mkdir(parents=True, exist_ok=True)
+            if directory.stat().st_uid == os.getuid():
+                directory.chmod(0o1777)  # Shared by users; sticky bit protects foreign files.
+        except OSError as exc:
+            raise RuntimeError(f"Debugger lock directory unavailable: {directory}") from exc
+        descriptor = os.open(path, os.O_RDWR | os.O_CREAT, 0o666)
+        try:
+            if os.fstat(descriptor).st_uid == os.getuid():
+                os.fchmod(descriptor, 0o666)
+            try:
+                fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except OSError as exc:
+                if exc.errno in (errno.EWOULDBLOCK, errno.EACCES):
+                    raise RuntimeError("Debugger already owned by another runner on this host") from exc
+                raise
+            try:
+                previous = os.pread(descriptor, 256, 0)
+                if previous.strip():
+                    os.ftruncate(descriptor, 0)  # Explicit retry after the check is accepted.
+                    raise RuntimeError("Abandoned debugger ownership: check orphan GDB/server processes "
+                                       "before retry (" + previous.decode("ascii", "replace").strip() + ")")
+                os.pwrite(descriptor, f"pid={os.getpid()}\n".encode("ascii"), 0)
+                try:
+                    yield
+                finally:
+                    os.ftruncate(descriptor, 0)
+            finally:
+                fcntl.flock(descriptor, fcntl.LOCK_UN)
+        finally:
+            os.close(descriptor)
+
+
+@contextmanager
+def _windows_probe_lock(root, serial, backend="openocd"):
     """Fail-fast ownership within one Windows session; also retain legacy local lock.
 
     This coordinates participating runners, not arbitrary vendor tools. Release of

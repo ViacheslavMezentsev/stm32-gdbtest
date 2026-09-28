@@ -1,11 +1,22 @@
 """Server dialects: shared test scenarios never contain vendor monitor commands."""
 
+import os
 from pathlib import Path
 import re
 import shutil
 import tomllib
 
 from stm32_gdbtest import openocd
+
+
+# Vendor names differ by OS: SEGGER ships JLinkGDBServerCLExe on Linux; ST keeps the
+# names and drops .exe. ST-LINK GDB Server has no Linux arm64 build.
+WINDOWS = os.name == "nt"
+DEFAULT_SERVER = {
+    "jlink": "JLinkGDBServerCL.exe" if WINDOWS else "JLinkGDBServerCLExe",
+    "stlink": "ST-LINK_gdbserver.exe" if WINDOWS else "ST-LINK_gdbserver",
+}
+PROGRAMMER = "STM32_Programmer_CLI.exe" if WINDOWS else "STM32_Programmer_CLI"
 
 
 def load_stand(path):
@@ -29,15 +40,14 @@ def load_stand(path):
     policy = data.get("flash", "if-different")
     if policy not in ("if-different", "verify-only"):
         raise ValueError("flash must be if-different or verify-only")
-    default = "JLinkGDBServerCL.exe" if data["backend"] == "jlink" else "ST-LINK_gdbserver.exe"
-    executable = shutil.which(data.get("executable", default))
+    executable = shutil.which(data.get("executable", DEFAULT_SERVER[data["backend"]]))
     if not executable:
         raise FileNotFoundError("GDB Server executable not found")
     if data["backend"] == "jlink":
         return dict(data, executable=executable, speed_khz=speed, flash=policy)
     programmer = Path(data.get("programmer_dir", ""))
-    if not programmer.is_absolute() or not (programmer / "STM32_Programmer_CLI.exe").is_file():
-        raise ValueError("programmer_dir must contain STM32_Programmer_CLI.exe")
+    if not programmer.is_absolute() or not (programmer / PROGRAMMER).is_file():
+        raise ValueError("programmer_dir must contain " + PROGRAMMER)
     return dict(data, executable=executable, programmer_dir=str(programmer),
                 speed_khz=speed, flash=policy)
 

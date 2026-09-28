@@ -5,7 +5,8 @@
 A backend defines server start and readiness, setup, reset, finish and recovery
 commands. Scenarios use the common Target API; peripheral expectations stay with the
 consumer. The stand is selected by `--stand` → `STM32_GDBTEST_STAND` → `session.stand`
-([API](API.md)). Hardware runs are supported on Windows.
+([API](API.md)). Hardware runs are supported on Windows and Linux
+([Linux stand](LINUX_STAND.md)).
 
 ## Stand
 
@@ -15,16 +16,23 @@ The `[probe]` table of the local TOML:
 | --- | --- |
 | `backend` | `openocd`, `stlink` (ST-LINK GDB Server) or `jlink` |
 | `serial` | Explicit debugger serial number; for J-Link the decimal USB number |
-| `executable` | Server: a name on PATH or an absolute path |
+| `executable` | Server: a name on PATH or an absolute path; defaults `openocd`, `ST-LINK_gdbserver(.exe)`, `JLinkGDBServerCL.exe` (Windows) or `JLinkGDBServerCLExe` (Linux) |
 | `speed_khz` | 1…4000, default 1000 — an upper limit, not the actual interface frequency |
 | `flash` | `if-different` (default) or `verify-only` |
-| `programmer_dir` | `stlink` only: absolute directory containing `STM32_Programmer_CLI.exe` |
+| `programmer_dir` | `stlink` only: absolute directory containing `STM32_Programmer_CLI.exe` (without `.exe` on Linux) |
 
 Unknown keys are rejected. Templates: [OpenOCD](../../examples/stands/stlink.example.toml)
 and [OpenOCD, ST, J-Link for the CI firmware](../../Tests/firmware/stands/jlink.example.toml)
 (`openocd.example.toml` and `stlink.example.toml` in the same folder). Local paths
 and serial numbers are not committed (`*.local.toml`). `run --prepare-only --stand …`
-validates the stand and backend commands without connecting to the debugger.
+validates the stand and backend commands without connecting to the debugger, and
+`doctor --stand …` also checks GDB-Python, OpenOCD and USB access.
+
+On Linux ST-LINK GDB Server (STM32CubeCLT) exists for x86_64 only; on aarch64
+(Orange Pi 5) use OpenOCD and J-Link. OpenOCD 0.10 from the Ubuntu 20.04 repository
+lacks `interface/stlink.cfg`, so the stand environment installs xPack OpenOCD 0.12.0-7.
+This build warns about the deprecated `tcl_port`/`telnet_port`/`gdb_port`; the
+commands stay compatible with OpenOCD 0.12.0.
 
 ## Verified differences
 

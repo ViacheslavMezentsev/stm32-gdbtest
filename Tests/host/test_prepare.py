@@ -99,17 +99,17 @@ class PrepareTests(unittest.TestCase):
             popen.assert_not_called()
         self.assertEqual(self.report()["status"], "ERROR")
 
-    @unittest.skipIf(os.name == "nt", "non-Windows host")
-    def test_hardware_run_outside_windows_is_error_before_lock(self):
-        # TC-77: ТЗ 5.3.4
+    def test_hardware_run_takes_debugger_lock_on_every_host(self):
+        # TC-77: ТЗ 5.3.4 (р.0.7) — Windows and Linux both reach the lock and the run.
         stand = dict(backend="openocd", serial="TEST", executable="openocd", speed_khz=1000, flash="if-different")
         with patch("stm32_gdbtest.runner.load_stand", return_value=stand), \
                 patch("stm32_gdbtest.runner.probe_lock") as lock, \
                 patch("stm32_gdbtest.runner.execute") as execute:
-            self.assertEqual(run(self.session, self.test, "stand.toml"), 2)
-            lock.assert_not_called()
-            execute.assert_not_called()
-        self.assertIn("Windows only", self.report()["error"])
+            run(self.session, self.test, "stand.toml")
+            lock.assert_called_once()
+            self.assertEqual(lock.call_args.args[1:], ("TEST", "openocd"))
+            execute.assert_called_once()
+            self.assertNotIn("prepare_only", execute.call_args.kwargs)
 
     def test_bin_uses_only_selected_load_sections(self):
         # TC-87: ТЗ 4.1.5 — an empty .data with a RAM LMA must not reach objcopy.

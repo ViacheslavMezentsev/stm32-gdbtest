@@ -6,6 +6,10 @@ from pathlib import Path
 import sys
 
 sys.dont_write_bytecode = True
+if sys.version_info < (3, 11):
+    # ТЗ 2.5.2: the runner needs tomllib; on Linux stands the system Python is older.
+    sys.exit(f"stm32-gdbtest needs Python 3.11+, this is {sys.version.split()[0]} ({sys.executable}). "
+             "On a Linux stand run: . ~/.local/stm32-gdbtest/env.sh")
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from stm32_gdbtest import __version__
@@ -32,7 +36,14 @@ def main():
     run_parser.add_argument("--image-policy", type=Path)
     run_parser.add_argument("--prepare-only", action="store_true",
                             help="run every host-side step before the GDB server, without hardware access")
+    doctor = subs.add_parser("doctor", help="check GDB-Python, binutils, tools, stand and USB access")
+    doctor.add_argument("--gdb", type=Path)
+    doctor.add_argument("--stand", type=Path)
+    doctor.add_argument("--json", action="store_true")
     args = parser.parse_args()
+    if args.command == "doctor":
+        from stm32_gdbtest.doctor import main as doctor_main
+        return doctor_main(args.gdb, args.stand, args.json)
     if args.command == "collect":
         tests = collect(args.tests)
         if args.cmake:
