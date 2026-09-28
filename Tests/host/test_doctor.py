@@ -32,10 +32,13 @@ class DoctorTests(unittest.TestCase):
             file.write_text("")
 
     def test_usb_scan_reports_serial_and_access(self):
-        # TC-94: ТЗ 5.17.3 — ST-Link and J-Link found in sysfs, other vendors ignored.
+        # TC-94: ТЗ 5.17.3 — ST-Link and J-Link found in sysfs; other devices, ST CDC and hubs ignored.
         self.device("1-1", "0483", "3748", "066CFF494849877187252626", dev=5)
         self.device("1-2", "1366", "0101", "000069653773", dev=6, node=False)
         self.device("1-3", "046d", "c52b", "MOUSE", dev=7)
+        self.device("1-4", "0483", "5740", "CDC", dev=8)
+        self.device("1-5", "1366", "0105", "", dev=9)
+        (self.dir / "sys/1-5/bDeviceClass").write_text("09\n")
         devices = doctor.usb_debuggers(self.dir / "sys", self.dir / "dev")
         self.assertEqual([d["kind"] for d in devices], ["ST-Link", "J-Link"])
         self.assertTrue(devices[0]["access"])

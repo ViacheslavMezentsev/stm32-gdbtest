@@ -13,6 +13,10 @@ from stm32_gdbtest.processes import FLAGS, lock_directory
 from stm32_gdbtest.runner import tool
 
 USB_VENDORS = {"0483": "ST-Link", "1366": "J-Link"}
+# ST's vendor ID also covers application devices (e.g. 5740, a USB CDC port of a
+# board firmware); only ST-Link product IDs are debuggers.
+STLINK_PRODUCTS = {"3744", "3748", "374a", "374b", "374d", "374e", "374f", "3752", "3753",
+                   "3754", "3755", "3757"}
 GDB_PROBE = "python import sys, tomllib, gdb; print(gdb.VERSION, sys.version.split()[0])"
 
 
@@ -38,6 +42,10 @@ def usb_debuggers(sysfs=Path("/sys/bus/usb/devices"), dev=Path("/dev/bus/usb")):
                 return (device / name).read_text(errors="replace").strip()
             except OSError:
                 return ""
+        if attribute("bDeviceClass") == "09":
+            continue  # USB hub, e.g. the hub inside some J-Link models
+        if vendor == "0483" and attribute("idProduct").lower() not in STLINK_PRODUCTS:
+            continue
         node = None
         if attribute("busnum") and attribute("devnum"):
             node = dev / f"{int(attribute('busnum')):03d}" / f"{int(attribute('devnum')):03d}"

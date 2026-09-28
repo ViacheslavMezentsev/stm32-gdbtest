@@ -780,7 +780,7 @@ flowchart LR
 
 5.17.2. Каждая проверка ДОЛЖНА давать OK, WARN или FAIL с пояснением; код возврата — 1 при хотя бы одном FAIL, иначе 0. `doctor` НЕ ДОЛЖЕН захватывать блокировку, запускать GDB-сервер или подключаться к цели; OpenOCD запускается только с `-c shutdown` до инициализации адаптера. `[N]` (р.0.7)
 
-5.17.3. На Linux `doctor` ДОЛЖЕН перечислять устройства ST-Link (VID 0483) и J-Link (VID 1366) по sysfs с серийным номером и правом чтения и записи узла `/dev/bus/usb`; отсутствие права — FAIL с указанием на правила udev; отсутствие отладчика с serial стенда — WARN (ST-Link/V2 сообщает двоичный serial, решение принимает сервер). `[N]` (р.0.7)
+5.17.3. На Linux `doctor` ДОЛЖЕН перечислять устройства ST-Link (VID 0483 с PID отладчиков ST-Link; прочие устройства ST, например CDC-порт прошивки, пропускаются) и J-Link (VID 1366, кроме USB-хабов) по sysfs с серийным номером и правом чтения и записи узла `/dev/bus/usb`; отсутствие права — FAIL с указанием на правила udev; отсутствие отладчика с serial стенда — WARN (ST-Link/V2 сообщает двоичный serial, решение принимает сервер). `[N]` (р.0.7)
 
 ---
 
@@ -1106,7 +1106,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87 и TC-90…TC-95 соответствуют 
 | TC-91 | `PosixProbeLockTests.test_abandoned_owner_fails_closed_once`: владелец убит `SIGKILL` (р.0.7) | Первый захват — «Abandoned debugger ownership» с `pid=`; следующий успешен; после освобождения запись пуста |
 | TC-92 | `PosixStopTreeTests`: группа с внуком; внук, пережил выход ведущего процесса и игнорирует `SIGTERM` (р.0.7) | Внук завершён в обоих случаях; процесс собран |
 | TC-93 | `DoctorTests.test_missing_gdb_fails_and_never_starts_a_server` (р.0.7) | FAIL gdb, код 1; CMake отсутствует — WARN; без стенда проверки стенда нет |
-| TC-94 | `DoctorTests.test_usb_scan_reports_serial_and_access`: фиктивный sysfs с ST-Link, J-Link и мышью (р.0.7) | Найдены ST-Link и J-Link; доступ по узлу `/dev/bus/usb`; serial J-Link с ведущими нулями совпадает со стендом; мышь пропущена |
+| TC-94 | `DoctorTests.test_usb_scan_reports_serial_and_access`: фиктивный sysfs с ST-Link, J-Link и мышью (р.0.7) | Найдены ST-Link и J-Link; доступ по узлу `/dev/bus/usb`; serial J-Link с ведущими нулями совпадает со стендом; мышь, CDC-порт ST (5740) и хаб SEGGER пропущены |
 | TC-95 | `LinuxStandLockTests.test_stand_lock_matches_ci_lock` (р.0.7) | Архивы x86_64 и aarch64 с SHA-256 у каждого компонента; версии GCC, CMake, Ninja и Cube совпадают с lock-файлом CI; Python ≥ 3.11 |
 | TC-96 | CI linux-stand: `ubuntu:20.04` на x86_64 и aarch64 по п. 8.20 (р.0.7) | Окружение установлено; host-тесты PASS; `doctor` без FAIL; `build` и `prepare` PASS для трёх профилей |
 | TC-97 | D: `run_hw.py` на Orange Pi 5 (Ubuntu 20.04 aarch64) с OpenOCD и J-Link (р.0.7) | Каждый из 10 шагов с ожидаемым исходом, как в TC-84 |
