@@ -80,7 +80,7 @@ stm32-hwtest-blackpill suite was not repeated on these commits.
   checked on Orange Pi 5 (aarch64) with OpenOCD, J-Link CE and J-Link STLink; Linux x86_64 was not
   checked on hardware. The GDB server runs on the runner's
   computer or on a Linux stand host over SSH (`[remote]`); the remote mode is checked from
-  Windows to Orange Pi 5; a broken session only with SSH loopback and a fake server. Ninja, one firmware target and one MCU and debugger per run.
+  Windows to Orange Pi 5; a lost link checked by pulling the Orange Pi cable: the heartbeat stopped the server after 13 s. Ninja, one firmware target and one MCU and debugger per run.
 - ST-LINK GDB Server is unavailable on Linux aarch64 (ST does not release it for arm64).
 - The build manifest uses Cube and CMSIS metadata; a universal build system and an
   arbitrary toolchain are not claimed.
