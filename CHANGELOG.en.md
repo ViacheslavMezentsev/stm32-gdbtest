@@ -14,7 +14,7 @@ Versions: [policy](docs/en/VERSIONING.md).
   Orange Pi 5): debugger lock with `flock` in a host-wide directory
   (`STM32_GDBTEST_LOCK_DIR`, default `/tmp`) with abandoned-ownership detection, the
   server and GDB in their own process group stopped with `SIGTERM`/`SIGKILL`, Linux
-  server names without `.exe`. Checked on Orange Pi 5 with OpenOCD and J-Link CE.
+  server names without `.exe`. Checked on Orange Pi 5: F411CE/OpenOCD, F103C8/J-Link CE, F030R8/J-Link STLink — 10/10 each.
 - `tools/linux_stand.py`: stand environment without root — Python 3.11
   (python-build-standalone), CMake 3.28.3, Ninja 1.12.1, xPack GCC 13.3.1-1.1, xPack
   OpenOCD 0.12.0-7 and CMSIS from `tools/linux-stand.lock.json` with SHA-256 for x86_64

@@ -58,9 +58,20 @@ sudo udevadm control --reload-rules && sudo udevadm trigger
 The J-Link software for Linux (the `arm64` package for Orange Pi 5) is downloaded from
 the SEGGER site after accepting the license and installed with
 `sudo dpkg -i JLink_Linux_V…_arm64.deb`; the package installs `/opt/SEGGER/JLink` and
-its own udev rules. Version 8.32 is verified on the Windows stands. After the
+its own udev rules. Versions 8.32 (Windows, Orange Pi 5) and 9.80 (Orange Pi 5) are verified. After the
 debuggers are connected, `doctor` shows the devices found, their serial numbers and
 access to `/dev/bus/usb`.
+
+**J-Link STLink** (the Nucleo on-board ST-Link reflashed to J-Link) shows a graphical
+window with terms of use when it connects to a target: it works with STM32 targets
+only, and the terms must be confirmed with a checkbox. The command-line server does not
+show the window: without a desktop the connection waits about 10 s — longer than the
+default server readiness limit — and the run ends with ERROR "GDB server startup timed
+out". Confirm the window once in a graphical session (a monitor or remote desktop):
+`JLinkExe -USB <serial>`, then `connect`. After that F030R8 passed 10/10 on Orange Pi 5;
+whether the confirmation survives a reboot or reconnect was not checked. If the window
+cannot be confirmed, set `startup_timeout_s = 30` in the stand. J-Link CE and ST-Link
+show no such window.
 
 ST-LINK GDB Server (STM32CubeCLT) is not released for aarch64: on Orange Pi 5 use the
 `openocd` and `jlink` backends. All three are available on Linux x86_64.
@@ -104,9 +115,5 @@ yet (question 11.2.20 of the specification).
   go to the [status](STATUS.md) after the run.
 - A crash of the runner does not stop the server's process group: check
   `pgrep -a openocd` and `pgrep -a JLink` before retrying.
-- J-Link STLink (the Nucleo on-board ST-Link reflashed to J-Link) on Orange Pi 5 takes
-  about 10 s to connect to the target — longer than the default server readiness
-  limit. Set `startup_timeout_s = 30` in the stand of such a debugger. The cause of the
-  delay is not known; J-Link CE and ST-Link through OpenOCD connect in a fraction of a second.
 - xPack OpenOCD 0.12.0-7 warns about the deprecated `tcl_port`, `telnet_port`,
   `gdb_port`; the commands stay compatible with OpenOCD 0.12.0.

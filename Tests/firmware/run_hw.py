@@ -29,7 +29,11 @@ import shutil
 import subprocess
 import sys
 import time
-import tomllib
+
+if sys.version_info < (3, 11):
+    sys.exit(f"run_hw.py needs Python 3.11+, this is {sys.version.split()[0]}. "
+             "On a Linux stand run: . ~/.local/stm32-gdbtest/env.sh")
+import tomllib  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 FIRMWARE = ROOT / "Tests/firmware"

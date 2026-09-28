@@ -14,7 +14,7 @@
   на Orange Pi 5): блокировка отладчика `flock` в общем каталоге хоста
   (`STM32_GDBTEST_LOCK_DIR`, по умолчанию `/tmp`) с обнаружением брошенного владения,
   сервер и GDB в отдельной группе процессов с остановкой `SIGTERM`/`SIGKILL`, имена
-  серверов Linux без `.exe`. Проверен на Orange Pi 5 с OpenOCD и J-Link CE.
+  серверов Linux без `.exe`. Проверен на Orange Pi 5: F411CE/OpenOCD, F103C8/J-Link CE, F030R8/J-Link STLink — по 10/10.
 - `tools/linux_stand.py`: окружение стенда без root — Python 3.11 (python-build-standalone),
   CMake 3.28.3, Ninja 1.12.1, xPack GCC 13.3.1-1.1, xPack OpenOCD 0.12.0-7 и CMSIS по
   `tools/linux-stand.lock.json` с SHA-256 для x86_64 и aarch64; `env.sh`.
