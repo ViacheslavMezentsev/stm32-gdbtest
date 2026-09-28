@@ -179,24 +179,38 @@ def write_env(prefix, lock):
     say(f"Environment: . {prefix / 'env.sh'}")
 
 
-def verify(prefix, lock, arch):
-    directory, _ = paths(prefix, lock)
+def verify(prefix, lock, arch, selected):
+    """Checks the selected components only: install --only NAME leaves the rest absent."""
+    directory, cube = paths(prefix, lock)
     python = directory["python"] / "bin/python3.11"
     checks = [
-        [python, "-c", "import sys, tomllib; print('Python', sys.version.split()[0])"],
-        [directory["cmake"] / "bin/cmake", "--version"],
-        [directory["ninja"] / "ninja", "--version"],
-        [directory["gcc"] / "bin/arm-none-eabi-gcc", "-dumpfullversion"],
-        [directory["gcc"] / "bin/arm-none-eabi-gdb-py3", "-nx", "-batch", "-ex",
-         "python import sys, tomllib, gdb; print('GDB', gdb.VERSION, 'Python', sys.version.split()[0])"],
-        [directory["openocd"] / "bin/openocd", "--version"],
+        ("python", [python, "-c", "import sys, tomllib; print('Python', sys.version.split()[0])"]),
+        ("cmake", [directory["cmake"] / "bin/cmake", "--version"]),
+        ("ninja", [directory["ninja"] / "ninja", "--version"]),
+        ("gcc", [directory["gcc"] / "bin/arm-none-eabi-gcc", "-dumpfullversion"]),
+        ("gcc", [directory["gcc"] / "bin/arm-none-eabi-gdb-py3", "-nx", "-batch", "-ex",
+                 "python import sys, tomllib, gdb; print('GDB', gdb.VERSION, 'Python', sys.version.split()[0])"]),
+        ("openocd", [directory["openocd"] / "bin/openocd", "--version"]),
     ]
     failed = False
-    for check in checks:
+    for name, check in checks:
+        if name not in selected:
+            continue
+        if not Path(check[0]).is_file():
+            failed = True
+            say(f"FAIL {Path(check[0]).name}: not installed ({check[0]})")
+            continue
         result = subprocess.run([str(a) for a in check], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
         first = (result.stdout.strip().splitlines() or [""])[0]
         failed |= result.returncode != 0
         say(("OK   " if result.returncode == 0 else "FAIL ") + f"{Path(check[0]).name}: {first}")
+    if "cube" in selected:
+        sources = {s["name"]: s for s in json.loads(CI_LOCK.read_text(encoding="utf-8"))["sources"]}
+        for name in lock["cube_sources"]:
+            marker = cube / Path(sources[name]["destination"]).name / MARKER
+            ok = marker.is_file() and marker.read_text().strip() == sources[name]["commit"]
+            failed |= not ok
+            say(("OK   " if ok else "FAIL ") + f"{name}: " + ("pinned commit" if ok else "not installed"))
     say(f"Host: {platform.system()} {platform.release()} {arch}, glibc {platform.libc_ver()[1]}")
     return 1 if failed else 0
 
@@ -230,7 +244,7 @@ def main():
             for name in lock["cube_sources"]:
                 install_source(prefix, sources[name])
         write_env(prefix, lock)
-    return verify(prefix, lock, arch)
+    return verify(prefix, lock, arch, selected)
 
 
 if __name__ == "__main__":

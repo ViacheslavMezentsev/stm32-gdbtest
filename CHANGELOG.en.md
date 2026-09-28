@@ -106,6 +106,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 - `tools/linux_stand.py` retries downloads and `git fetch` on transient server errors
   (up to 4 attempts with pauses); CI jobs cache the pinned downloads.
+- `tools/linux_stand.py install --only …` verifies the selected components only: the
+  `prepare` job of hardware CI no longer fails on the absent OpenOCD.
 - The BIN is built only from the selected load sections (`objcopy -j`): an empty section
   with a RAM address (for example an empty `.data`) no longer stretches it to hundreds of
   MiB before the "BIN extent differs" refusal. Host test and a CI regression on a real ELF.
