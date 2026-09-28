@@ -178,8 +178,11 @@ the server logs from the Orange Pi go to `server.log`. Common errors are in the
 A debugger can be forwarded into a WSL2 distribution (`usbipd bind` and
 `usbipd attach --wsl` on Windows); after that the steps are the same as on Linux. The
 WSL lock does not interact with the Windows mutex, so one debugger must not be used
-from Windows and WSL at the same time. This scenario has not been checked on hardware
-yet (question 11.2.20 of the specification).
+from Windows and WSL at the same time. This scenario has not been checked on hardware:
+on the owner's computer usbipd-win conflicts with USB filters of other software
+(`usbipd list` warnings about USBPcap and `nxusbf`), attaching fails and Windows may
+crash. The checked path for WSL is the
+[remote server](#remote-gdb-server-windows-or-wsl--orange-pi) on the Orange Pi.
 
 ## Limits
 

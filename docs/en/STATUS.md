@@ -46,8 +46,9 @@ API contents; a matching HAL version does not prove matching behaviour.
 | Everything on Windows: runner, GDB, server, debugger | Checked: 4 stands × 10/10 |
 | Everything on a Linux stand (Orange Pi 5, Ubuntu 20.04 aarch64) | Checked: 3 stands × 10/10 |
 | Runner and GDB on Windows, server and debugger on Orange Pi 5 over SSH | Checked: 3 stands × 10/10 |
-| Linux x86_64 locally | Implemented; CI covers environment, build and preparation; not checked on hardware |
-| WSL2: debugger through usbipd or server on Orange Pi over SSH | Implemented as Linux; not checked on hardware |
+| Runner and GDB in WSL2 (Ubuntu 20.04 x86_64), server and debugger on Orange Pi 5 over SSH | Checked: 3 stands × 10/10 |
+| WSL2 with the debugger through usbipd-win | Implemented as Linux; not checked (technical debt: conflicts with USB filters of other software) |
+| A separate Linux x86_64 PC with a debugger | Implemented; the x86_64 run side checked in WSL2, CI covers environment, build and preparation; not checked on such a PC |
 | Build in one place, run on a stand (`pack`, `run --package`) | Checked: packages built on Windows, three stands × 10/10 on Orange Pi 5 |
 | Hardware CI on a self-hosted runner (Hardware workflow), loop runs (`run_hw.py --repeat`) | Checked: runner service on Orange Pi 5, packages built on GitHub — three stands × 10/10; loop — F411CE, 10 iterations, Ctrl+C interruption |
 
@@ -77,10 +78,10 @@ stm32-hwtest-blackpill suite was not repeated on these commits.
 ## Implementation limits
 
 - Hardware runs on Windows and Linux x86_64/aarch64 (glibc ≥ 2.31); on Linux they are
-  checked on Orange Pi 5 (aarch64) with OpenOCD, J-Link CE and J-Link STLink; Linux x86_64 was not
-  checked on hardware. The GDB server runs on the runner's
+  checked on Orange Pi 5 (aarch64) with OpenOCD, J-Link CE and J-Link STLink; Linux x86_64 only as the
+  run side in WSL2 with the server on the Orange Pi, not with a local debugger. The GDB server runs on the runner's
   computer or on a Linux stand host over SSH (`[remote]`); the remote mode is checked from
-  Windows to Orange Pi 5; a lost link checked by pulling the Orange Pi cable: the heartbeat stopped the server after 13 s. Ninja, one firmware target and one MCU and debugger per run.
+  Windows and WSL2 to Orange Pi 5; a lost link checked by pulling the Orange Pi cable: the heartbeat stopped the server after 13 s. Ninja, one firmware target and one MCU and debugger per run.
 - ST-LINK GDB Server is unavailable on Linux aarch64 (ST does not release it for arm64).
 - The build manifest uses Cube and CMSIS metadata; a universal build system and an
   arbitrary toolchain are not claimed.
@@ -104,7 +105,7 @@ test and may replace Flash, while `ctest --preset offline` does not connect to a
 
 ## Next steps
 
-Before v0.1.0: runs from WSL and the final re-check of the stands. Then v0.1.0-rc.1 and v0.1.0, supervision of
+Before v0.1.0: the final re-check of the stands. Then v0.1.0-rc.1 and v0.1.0, supervision of
 server processes, evolution of the
 profile schema and manifest; later a host controller for external equipment and Python
 packaging. These are plans, not available features: [roadmap](../../TODO.md)
