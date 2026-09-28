@@ -6,9 +6,20 @@ import shutil
 import tomllib
 
 
+DEFAULT_STARTUP_TIMEOUT_S = 10
+
+
+def startup_timeout(data):
+    """ТЗ 3.4.10: wait for the server ready marker; some probes connect slowly."""
+    value = data.get("startup_timeout_s", DEFAULT_STARTUP_TIMEOUT_S)
+    if type(value) is not int or not 1 <= value <= 120:
+        raise ValueError("startup_timeout_s must be an integer between 1 and 120")
+    return value
+
+
 def load_stand(path):
     data = tomllib.loads(Path(path).read_text(encoding="utf-8"))["probe"]
-    if set(data) - {"backend", "serial", "executable", "speed_khz", "flash"}:
+    if set(data) - {"backend", "serial", "executable", "speed_khz", "flash", "startup_timeout_s"}:
         raise ValueError("Unknown probe setting; check the stand TOML")
     if data.get("backend") != "openocd":
         raise ValueError("Only the openocd backend is supported")
@@ -23,7 +34,8 @@ def load_stand(path):
     executable = shutil.which(data.get("executable", "openocd"))
     if not executable:
         raise FileNotFoundError("OpenOCD executable not found")
-    return dict(data, executable=executable, speed_khz=speed, flash=policy)
+    return dict(data, executable=executable, speed_khz=speed, flash=policy,
+                startup_timeout_s=startup_timeout(data))
 
 
 def server_command(stand, port, profile):

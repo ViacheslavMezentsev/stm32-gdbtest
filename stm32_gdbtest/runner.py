@@ -217,7 +217,8 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
         with (out / "server.log").open("wb") as server_log, (out / "gdb.log").open("wb") as gdb_log:
             server = subprocess.Popen(backend["command"], env=env, cwd=out,
                                       stdout=server_log, stderr=subprocess.STDOUT, **spawn_options())
-            deadline = time.monotonic() + 10
+            limit = stand.get("startup_timeout_s", 10)
+            deadline = time.monotonic() + limit
             while time.monotonic() < deadline:
                 if server.poll() is not None:
                     raise RuntimeError("GDB server exited before ready; see server.log")
@@ -226,7 +227,8 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                     break
                 time.sleep(0.1)
             if not ready:
-                raise TimeoutError("GDB server startup timed out")
+                raise TimeoutError(f"GDB server startup timed out after {limit} s; see server.log "
+                                   "(a slow probe connection may need startup_timeout_s in the stand)")
             client = subprocess.Popen(gdb_base + [str(elf), "-x", str(ROOT / "stm32_gdbtest/agent.py")],
                                       env=env, cwd=project_root, stdout=gdb_log, stderr=subprocess.STDOUT,
                                       **spawn_options())

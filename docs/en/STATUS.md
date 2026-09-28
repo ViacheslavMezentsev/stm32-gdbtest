@@ -15,7 +15,7 @@ history is in the [CHANGELOG](../../CHANGELOG.en.md).
 | CI (GitHub Actions, Docker) | Docs, format, host on Windows and Linux; F030R8/F103C8/F411CE CI firmware with GCC 13.3.1, 14.2.1, 15.2.1 and CMake 3.28.3: build manifest, `prepare`, full image, 10 negative contracts, load section alignment, empty RAM section; the Linux stand environment in `ubuntu:20.04` on x86_64 and aarch64 ([checks and CI](testing.md)) |
 | CI firmware on hardware | 4 stands × 10/10 steps at commit `fbc103d` (section below) |
 | Linux stand without hardware | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) in a container: environment installation, 79 host tests, `doctor`, `build` and `prepare` of the CI firmware; the hardware path without a debugger — lock, OpenOCD start, ERROR "exited before ready", processes stopped |
-| Linux stand on hardware | Not done yet: Orange Pi 5 (Ubuntu 20.04 aarch64) with OpenOCD and J-Link — a mandatory check before the release ([Linux stand](LINUX_STAND.md)) |
+| Linux stand on hardware | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 — 2/10, the ~10 s target connection exceeded the readiness limit, a rerun with `startup_timeout_s` is pending ([Linux stand](LINUX_STAND.md)) |
 | ELF/HAL preflight | Positive case and 11 negative variants on F103C8/F401CC/F411CE ELF files of the stand project |
 | Stand project, F411CE / ST-Link / OpenOCD | 24/24 CTest (22 HW + 2 host) after the module split |
 | Stand project, F103C8 / J-Link | 24/24 CTest (22 HW + 2 host) |
@@ -63,7 +63,8 @@ stm32-hwtest-blackpill suite was not repeated on these commits.
 ## Implementation limits
 
 - Hardware runs on Windows and Linux x86_64/aarch64 (glibc ≥ 2.31); on Linux they are
-  implemented but not yet checked on hardware. The GDB server runs on the same
+  checked on Orange Pi 5 (aarch64) with OpenOCD and J-Link CE; Linux x86_64 was not
+  checked on hardware. The GDB server runs on the same
   computer as the runner. Ninja, one firmware target and one MCU and debugger per run.
 - ST-LINK GDB Server is unavailable on Linux aarch64 (ST does not release it for arm64).
 - The build manifest uses Cube and CMSIS metadata; a universal build system and an

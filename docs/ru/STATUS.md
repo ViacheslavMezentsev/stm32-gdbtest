@@ -15,7 +15,7 @@
 | CI (GitHub Actions, Docker) | Docs, format, host на Windows и Linux; CI-прошивки F030R8/F103C8/F411CE на GCC 13.3.1, 14.2.1, 15.2.1 с CMake 3.28.3: build manifest, `prepare`, полный образ, 10 отрицательных контрактов, выравнивание секций загрузки, пустая секция в RAM; окружение Linux-стенда в `ubuntu:20.04` на x86_64 и aarch64 ([проверки и CI](testing.md)) |
 | CI-прошивки на оборудовании | 4 стенда × 10/10 шагов на коммите `fbc103d` (раздел ниже) |
 | Linux-стенд без оборудования | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) в контейнере: установка окружения, 79 host-тестов, `doctor`, `build` и `prepare` CI-прошивок; аппаратный путь без отладчика — блокировка, запуск OpenOCD, ERROR «exited before ready», процессы остановлены |
-| Linux-стенд на оборудовании | Не выполнялось: Orange Pi 5 (Ubuntu 20.04 aarch64) с OpenOCD и J-Link — обязательная проверка перед выпуском ([Linux-стенд](LINUX_STAND.md)) |
+| Linux-стенд на оборудовании | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 — 2/10, подключение к цели около 10 с превышало предел готовности, повтор с `startup_timeout_s` ожидается ([Linux-стенд](LINUX_STAND.md)) |
 | ELF/HAL preflight | Положительный случай и 11 отрицательных вариантов на ELF F103C8/F401CC/F411CE стендового проекта |
 | Стендовый проект, F411CE / ST-Link / OpenOCD | 24/24 CTest (22 HW + 2 host) после отделения модуля |
 | Стендовый проект, F103C8 / J-Link | 24/24 CTest (22 HW + 2 host) |
@@ -63,7 +63,8 @@ stm32-hwtest-blackpill на этих коммитах не повторялся.
 ## Ограничения реализации
 
 - Аппаратный запуск — Windows и Linux x86_64/aarch64 (glibc ≥ 2.31); на Linux он
-  реализован, но на оборудовании ещё не проверен. GDB-сервер работает на том же
+  проверен на Orange Pi 5 (aarch64) с OpenOCD и J-Link CE; Linux x86_64 на оборудовании
+  не проверялся. GDB-сервер работает на том же
   компьютере, что и runner. Ninja, один firmware target и один MCU и отладчик на запуск.
 - ST-LINK GDB Server на Linux aarch64 недоступен (сервер ST не выпускается для arm64).
 - Build manifest использует метаданные Cube и CMSIS; универсальная система сборки

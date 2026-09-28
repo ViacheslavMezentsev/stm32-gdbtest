@@ -19,6 +19,7 @@ Backend задаёт запуск и готовность сервера, ком
 | `executable` | Сервер: имя в PATH или абсолютный путь; по умолчанию `openocd`, `ST-LINK_gdbserver(.exe)`, `JLinkGDBServerCL.exe` (Windows) или `JLinkGDBServerCLExe` (Linux) |
 | `speed_khz` | 1…4000, по умолчанию 1000 — верхний предел, не фактическая частота |
 | `flash` | `if-different` (по умолчанию) или `verify-only` |
+| `startup_timeout_s` | 1…120, по умолчанию 10 — сколько ждать готовности сервера; больше нужно отладчикам с медленным подключением к цели |
 | `programmer_dir` | Только `stlink`: абсолютный каталог с `STM32_Programmer_CLI.exe` (на Linux — без `.exe`) |
 
 Неизвестный ключ отклоняется. Шаблоны: [OpenOCD](../../examples/stands/stlink.example.toml)

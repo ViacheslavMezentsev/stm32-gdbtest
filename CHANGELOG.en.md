@@ -8,11 +8,13 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- Stand setting `startup_timeout_s` (1…120 s, default 10) — how long to wait for the
+  GDB server to become ready; the timeout message names the limit and the setting.
 - Hardware runs on Linux x86_64 and aarch64 (glibc ≥ 2.31, including Ubuntu 20.04 on
   Orange Pi 5): debugger lock with `flock` in a host-wide directory
   (`STM32_GDBTEST_LOCK_DIR`, default `/tmp`) with abandoned-ownership detection, the
   server and GDB in their own process group stopped with `SIGTERM`/`SIGKILL`, Linux
-  server names without `.exe`. Not yet checked on Linux hardware.
+  server names without `.exe`. Checked on Orange Pi 5 with OpenOCD and J-Link CE.
 - `tools/linux_stand.py`: stand environment without root — Python 3.11
   (python-build-standalone), CMake 3.28.3, Ninja 1.12.1, xPack GCC 13.3.1-1.1, xPack
   OpenOCD 0.12.0-7 and CMSIS from `tools/linux-stand.lock.json` with SHA-256 for x86_64

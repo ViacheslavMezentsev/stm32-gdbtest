@@ -5,11 +5,11 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.7 (черновик для согласования) |
+| **Ревизия** | 0.8 (черновик для согласования) |
 | **Дата формирования** | 28.09.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `Tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0-rc.1 (текущая версия разработки `0.1.0.dev0`, `API_VERSION = 1`) |
-| **Целевая платформа** | Хост Windows; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
+| **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.7)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (20 модулей), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `Tests/host/*.py`, `examples/minimal-consumer/*`; `Tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
 
@@ -24,6 +24,18 @@
 | 0.5 | 28.09.2026 | Решён вопрос 11.2.17: BIN формируется только из выбранных секций загрузки (`objcopy -j`), пустая секция с LMA в RAM больше не раздувает его до сотен мегабайт. Добавлены host-тест и регрессия CI на реальном ELF с пустой секцией в RAM. |
 | 0.6 | 28.09.2026 | Документация сверена с текущим функционалом и перенесена в `docs/ru/` с английскими версиями в `docs/en/`, добавлены README.en.md и карты документации. Закрыт вопрос 11.2.2: определены роли ТЗ, README, STATUS, CHANGELOG, TODO и страниц механизмов. Уточнён вопрос 11.2.6: F429ZI отражён в STATUS. |
 | 0.7 | 28.09.2026 | По решению владельца все сценарии размещения стенда реализуются до v0.1.0; ревизия покрывает группы A и B. Аппаратный запуск на Linux (x86_64, aarch64, glibc ≥ 2.31): блокировка отладчика через `flock` в общем каталоге хоста с признаком брошенного владения, завершение группы процессов сервера и GDB, имена серверов без `.exe`. Окружение стенда без root для Ubuntu 20.04 (Orange Pi 5): `tools/linux_stand.py` с Python 3.11 (python-build-standalone) и версиями инструментов CI. Команда `doctor`. CI-задание в контейнере Ubuntu 20.04 для x86_64 и aarch64. Добавлены вопросы 11.2.18–11.2.21; удалённый GDB-сервер по SSH и перенос подготовленного запуска — следующая ревизия. |
+| 0.8 | 28.09.2026 | Первая аппаратная проверка на Orange Pi 5 (Ubuntu 20.04 aarch64): F411CE/ST-Link/OpenOCD и F103C8/J-Link CE — 10/10 шагов; F030R8 с J-Link STLink (перепрошитый встроенный ST-Link Nucleo) подключается к цели около 10 с и не укладывается в предел готовности сервера. Добавлен параметр стенда `startup_timeout_s`; имена серверов по умолчанию в п. 3.4.7, 3.4.8 приведены к п. 6.10.3. |
+
+### Изменения ревизии 0.8
+
+Изменённые и новые пункты ревизии 0.8 помечены `(р.0.8)`.
+
+| Пункты | Тип | Суть |
+| :--- | :---: | :--- |
+| Реквизиты | изм. | Платформа |
+| 3.4.2, 3.4.7, 3.4.8, 5.8.3 | изм. | `startup_timeout_s`; имена серверов по ОС |
+| 3.4.10 | нов. | Предел готовности сервера в стенде |
+| 9.2, 10, приложения A, B | изм., нов. | TC-98; результат TC-97 (частично); константа; конфигурации |
 
 ### Изменения ревизии 0.7
 
@@ -370,7 +382,7 @@ flowchart LR
 
 3.4.1. Стенд ДОЛЖЕН содержать таблицу `[probe]` с `backend` из набора `openocd`, `stlink`, `jlink`; иное значение ДОЛЖНО отклоняться. `[R]`
 
-3.4.2. Допустимые ключи: `backend`, `serial`, `executable`, `speed_khz`, `flash`; для `stlink` дополнительно `programmer_dir`. Неизвестный ключ ДОЛЖЕН отклоняться («Unknown probe setting»). `[R]`
+3.4.2. Допустимые ключи: `backend`, `serial`, `executable`, `speed_khz`, `flash`, `startup_timeout_s` (р.0.8); для `stlink` дополнительно `programmer_dir`. Неизвестный ключ ДОЛЖЕН отклоняться («Unknown probe setting»). `[R]` (р.0.8)
 
 3.4.3. `serial` ДОЛЖЕН быть задан явно и соответствовать `[A-Za-z0-9]+`. `[R]`
 
@@ -380,11 +392,13 @@ flowchart LR
 
 3.4.6. `flash` ДОЛЖЕН принимать значение `if-different` (по умолчанию) или `verify-only` (п. 4.4.1–4.4.2). `[R]`
 
-3.4.7. Исполняемый файл сервера ДОЛЖЕН находиться через `PATH` (`shutil.which`) по `executable` или по умолчанию: `openocd`, `ST-LINK_gdbserver.exe`, `JLinkGDBServerCL.exe`; отсутствие ДОЛЖНО приводить к ошибке. `[R]`
+3.4.7. Исполняемый файл сервера ДОЛЖЕН находиться через `PATH` (`shutil.which`) по `executable` или по умолчанию: `openocd`, `ST-LINK_gdbserver.exe`, `JLinkGDBServerCL.exe` на Windows и имена п. 6.10.3 на Linux; отсутствие ДОЛЖНО приводить к ошибке. `[R]` (р.0.8)
 
-3.4.8. Для `stlink` `programmer_dir` ДОЛЖЕН быть абсолютным путём к каталогу с `STM32_Programmer_CLI.exe`. `[R]`
+3.4.8. Для `stlink` `programmer_dir` ДОЛЖЕН быть абсолютным путём к каталогу с `STM32_Programmer_CLI.exe` (на Linux — `STM32_Programmer_CLI`). `[R]` (р.0.8)
 
 3.4.9. Файл стенда локален (`*.local.toml`) и НЕ ДОЛЖЕН публиковаться в Git; шаблон — `examples/stands/stlink.example.toml`. `[R]`
+
+3.4.10. `startup_timeout_s` — предел ожидания маркера готовности сервера (п. 5.8.3), целое `1…120`, по умолчанию `SERVER_READY_TIMEOUT_S = 10`. Иное значение ДОЛЖНО отклоняться при чтении стенда. Причина: J-Link GDB Server с J-Link STLink (перепрошитый встроенный ST-Link) на Linux aarch64 подключается к цели около 10 с. `[N]` (р.0.8)
 
 ### 3.5. Реестр контрактов `Tests/contracts.json` (schema 1)
 
@@ -636,7 +650,7 @@ flowchart LR
 
 5.8.2. Сервер ДОЛЖЕН запускаться командой диалекта backend (п. 6.3.1, 6.4.1, 6.5.2) с рабочим каталогом — каталогом запуска и выводом в `server.log`. `[R]`
 
-5.8.3. Готовность ДОЛЖНА определяться появлением маркера диалекта в `server.log` за `SERVER_READY_TIMEOUT_S = 10` с; завершение сервера раньше маркера или истечение предела — ERROR. `[R]`
+5.8.3. Готовность ДОЛЖНА определяться появлением маркера диалекта в `server.log` за `startup_timeout_s` стенда (по умолчанию `SERVER_READY_TIMEOUT_S = 10` с); завершение сервера раньше маркера или истечение предела — ERROR с указанием предела и параметра стенда. `[R]` (р.0.8)
 
 5.8.4. Команды `reset_halt`, `finish`, `setup` выбранного диалекта ДОЛЖНЫ сохраняться в `backend_commands` отчёта. `[R]`
 
@@ -1009,7 +1023,7 @@ flowchart LR
 
 ### 9.2. Тест-кейсы
 
-TC-01…TC-65, TC-74…TC-78, TC-87 и TC-90…TC-95 соответствуют host-тестам `Tests/host` (имя теста указано в сценарии), TC-66…TC-73 — offline- и аппаратным проверкам, TC-79…TC-83, TC-85, TC-86, TC-88, TC-89, TC-96 — проверкам CI, TC-84 и TC-97 — аппаратной проверке CI-прошивок (р.0.7). Результаты D взяты из документации модуля и стендового проекта (п. 1.3.4).
+TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95 и TC-98 соответствуют host-тестам `Tests/host` (имя теста указано в сценарии), TC-66…TC-73 — offline- и аппаратным проверкам, TC-79…TC-83, TC-85, TC-86, TC-88, TC-89, TC-96 — проверкам CI, TC-84 и TC-97 — аппаратной проверке CI-прошивок (р.0.7). Результаты D взяты из документации модуля и стендового проекта (п. 1.3.4).
 
 | TC | Сценарий | Ожидаемый результат |
 | :---: | :--- | :--- |
@@ -1110,6 +1124,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87 и TC-90…TC-95 соответствуют 
 | TC-95 | `LinuxStandLockTests.test_stand_lock_matches_ci_lock` (р.0.7) | Архивы x86_64 и aarch64 с SHA-256 у каждого компонента; версии GCC, CMake, Ninja и Cube совпадают с lock-файлом CI; Python ≥ 3.11 |
 | TC-96 | CI linux-stand: `ubuntu:20.04` на x86_64 и aarch64 по п. 8.20 (р.0.7) | Окружение установлено; host-тесты PASS; `doctor` без FAIL; `build` и `prepare` PASS для трёх профилей |
 | TC-97 | D: `run_hw.py` на Orange Pi 5 (Ubuntu 20.04 aarch64) с OpenOCD и J-Link (р.0.7) | Каждый из 10 шагов с ожидаемым исходом, как в TC-84 |
+| TC-98 | `test_stand_startup_timeout_is_bounded_and_defaults_to_10`: стенды `openocd` и `jlink` без параметра, с `30` и с `0`, `121`, `2.5`, `"30"` (р.0.8) | 10 по умолчанию; 30 принято; прочие — `ValueError` «startup_timeout_s» |
 
 ---
 
@@ -1133,6 +1148,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87 и TC-90…TC-95 соответствуют 
 | 3.3.12 | `Tests/fixtures/README.md` | I |
 | 3.4.1–3.4.8 | BE: `load_stand`; OC: `load_stand` | TC-31, TC-33, TC-39 |
 | 3.4.9 | `.gitignore` (`*.local.toml`); EX: `stands/stlink.example.toml` | I |
+| 3.4.10 | OC: `startup_timeout`; BE: `load_stand`; RU: `execute` | TC-98, TC-97 |
 | 3.5.1–3.5.11 | CT: `select_contracts` | TC-07–TC-10 |
 | 3.6.1–3.6.4 | FI: `validate_policy`, `load_policy` | TC-13, TC-14, TC-23 |
 | 3.6.5 | RU: `run` (`image_policy_path`) | I |
@@ -1191,7 +1207,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87 и TC-90…TC-95 соответствуют 
 | 5.6.5–5.6.8 | CT: `inspect_contracts`; CP | TC-66, TC-73 |
 | 5.6.9, 5.6.10 | RU: `execute` | TC-11, TC-66 |
 | 5.7.1, 5.7.2 | RU: `execute` | TC-22, TC-59 |
-| 5.8.1–5.8.4 | RU: `execute`; BE: `server_spec` | TC-32, TC-68 |
+| 5.8.1–5.8.4 | RU: `execute`; BE: `server_spec` | TC-32, TC-68, TC-98 |
 | 5.9.1, 5.9.2 | RU: `gdb_base`; AG: `main` | I |
 | 5.9.3 | AG: `main`; CM: `require_gdb_api` | TC-27 |
 | 5.9.4, 5.9.5 | AG: `main` | I, TC-68 |
@@ -1332,7 +1348,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87 и TC-90…TC-95 соответствуют 
 | `PREFLIGHT_TIMEOUT_S` | 15 с | 5.6.4 |
 | `TOOL_TIMEOUT_S` | 15 с (`objdump`, `objcopy`) | 5.7.1 |
 | `GDB_PROBE_TIMEOUT_S` | 10 с | 5.7.1 |
-| `SERVER_READY_TIMEOUT_S` | 10 с (опрос 0,1 с) | 5.8.3 |
+| `SERVER_READY_TIMEOUT_S` | 10 с (опрос 0,1 с); `startup_timeout_s` стенда 1…120 с (р.0.8) | 3.4.10, 5.8.3 |
 | `GDB_REMOTE_TIMEOUT_S` | 5 с (`set remotetimeout`) | 5.9.2 |
 | `RECOVERY_TIMEOUT_S` | 10 с | 5.12.2 |
 | `taskkill` / ожидание процесса | 10 с / 5 с | 5.12.4 |
@@ -1371,6 +1387,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87 и TC-90…TC-95 соответствуют 
 | К1921ВГ015 (RISC-V) | J-Link / JTAG | Эксперимент | Не штатный профиль; мотивировал проверку load sections |
 | F030R8, F103C8, F411CE (CI-прошивки) | Без отладчика в CI; на стендах: J-Link STLink, J-Link CE, ST-Link через OpenOCD и ST server (р.0.4) | CI: сборка и подготовка на GCC 13/14/15; стенды: 4 × 10/10 шагов на `fbc103d` (р.0.4) | CMSIS-сценарии состояния регистров; F103C8 BluePill-Plus сообщает 128 KiB Flash (предупреждение) (р.0.4) |
 | F030R8, F103C8, F411CE (CI-прошивки), Linux | Окружение стенда в Ubuntu 20.04 (glibc 2.31) x86_64: установка, host-тесты, `doctor`, `build` и `prepare` (р.0.7) | Проверено в контейнере при формировании ревизии 0.7; aarch64 и Orange Pi 5 с отладчиками — TC-96, TC-97 не выполнены (р.0.7) | Аппаратный путь на Linux без отладчика: блокировка, запуск OpenOCD, ERROR «exited before ready», процессы остановлены (р.0.7) |
+| F411CE, F103C8, F030R8 (CI-прошивки), Orange Pi 5 | Ubuntu 20.04 aarch64; ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7; J-Link CE V9 и J-Link STLink V21 / J-Link GDB Server 8.32 arm64 (р.0.8) | F411CE/OpenOCD — 10/10, F103C8/J-Link — 10/10; F030R8/J-Link STLink — 2/10: подключение к цели около 10 с превышает предел готовности (р.0.8) | Повтор F030R8 с `startup_timeout_s` — TC-97 (р.0.8) |
 
 ---
 

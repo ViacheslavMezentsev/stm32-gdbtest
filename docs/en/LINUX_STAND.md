@@ -104,5 +104,9 @@ yet (question 11.2.20 of the specification).
   go to the [status](STATUS.md) after the run.
 - A crash of the runner does not stop the server's process group: check
   `pgrep -a openocd` and `pgrep -a JLink` before retrying.
+- J-Link STLink (the Nucleo on-board ST-Link reflashed to J-Link) on Orange Pi 5 takes
+  about 10 s to connect to the target — longer than the default server readiness
+  limit. Set `startup_timeout_s = 30` in the stand of such a debugger. The cause of the
+  delay is not known; J-Link CE and ST-Link through OpenOCD connect in a fraction of a second.
 - xPack OpenOCD 0.12.0-7 warns about the deprecated `tcl_port`, `telnet_port`,
   `gdb_port`; the commands stay compatible with OpenOCD 0.12.0.

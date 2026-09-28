@@ -25,7 +25,7 @@ def load_stand(path):
         return openocd.load_stand(path)
     if data.get("backend") not in ("stlink", "jlink"):
         raise ValueError("Supported backends: openocd, stlink, jlink")
-    allowed = {"backend", "serial", "executable", "speed_khz", "flash"}
+    allowed = {"backend", "serial", "executable", "speed_khz", "flash", "startup_timeout_s"}
     if data["backend"] == "stlink":
         allowed.add("programmer_dir")
     if set(data) - allowed:
@@ -40,6 +40,7 @@ def load_stand(path):
     policy = data.get("flash", "if-different")
     if policy not in ("if-different", "verify-only"):
         raise ValueError("flash must be if-different or verify-only")
+    data = dict(data, startup_timeout_s=openocd.startup_timeout(data))
     executable = shutil.which(data.get("executable", DEFAULT_SERVER[data["backend"]]))
     if not executable:
         raise FileNotFoundError("GDB Server executable not found")

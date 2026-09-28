@@ -209,6 +209,21 @@ class HostTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Unknown probe setting"):
             load_stand(path)
 
+    def test_stand_startup_timeout_is_bounded_and_defaults_to_10(self):
+        # TC-98: ТЗ 3.4.10
+        path = self.directory / "stand.toml"
+        with patch("stm32_gdbtest.openocd.shutil.which", return_value="openocd"), \
+                patch("stm32_gdbtest.backends.shutil.which", return_value="server"):
+            for backend, serial in (("openocd", "TEST"), ("jlink", "771549434")):
+                path.write_text(f'[probe]\nbackend="{backend}"\nserial="{serial}"\n')
+                self.assertEqual(load_backend_stand(path)["startup_timeout_s"], 10)
+                path.write_text(f'[probe]\nbackend="{backend}"\nserial="{serial}"\nstartup_timeout_s=30\n')
+                self.assertEqual(load_backend_stand(path)["startup_timeout_s"], 30)
+                for bad in ("0", "121", "2.5", '"30"'):
+                    path.write_text(f'[probe]\nbackend="{backend}"\nserial="{serial}"\nstartup_timeout_s={bad}\n')
+                    with self.assertRaisesRegex(ValueError, "startup_timeout_s"):
+                        load_backend_stand(path)
+
     def test_reports_distinguish_assertion_and_infrastructure(self):
         for status, tag in (("PASS", None), ("FAIL", "failure"), ("ERROR", "error")):
             report = dict(id="HW_ONE", status=status, duration_s=1.25, error='expected <x> & "y"')
