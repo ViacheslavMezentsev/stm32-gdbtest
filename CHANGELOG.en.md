@@ -8,6 +8,9 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- HOWTO `docs/ru|en/HOWTO.md`: git commands and the `git land` alias (fast-forward merge
+  without pull requests plus branch deletion), undoing changes, common Linux stand,
+  debugger and Docker problems; linked from AGENTS.md.
 - Stand setting `startup_timeout_s` (1…120 s, default 10) — how long to wait for the
   GDB server to become ready; the timeout message names the limit and the setting.
 - Hardware runs on Linux x86_64 and aarch64 (glibc ≥ 2.31, including Ubuntu 20.04 on

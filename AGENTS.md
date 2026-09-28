@@ -5,7 +5,8 @@ Instructions for AI agents and new contributors ([English](docs/en/maintenance.m
 
 Порядок ознакомления, рабочий цикл, правила веток, коммитов, ТЗ и двуязычной
 документации описаны в [docs/ru/maintenance.md → «Порядок работы с проектом»](docs/ru/maintenance.md#порядок-работы-с-проектом).
-Начните с него.
+Начните с него. При проблеме с git, стендом, отладчиком или Docker сначала загляните
+в [памятку](docs/ru/HOWTO.md) ([English](docs/en/HOWTO.md)) и только потом ищите новое решение.
 
 Кратко:
 
@@ -14,7 +15,8 @@ Instructions for AI agents and new contributors ([English](docs/en/maintenance.m
    текущая ревизия указана в его реквизитах. Копии ТЗ вне репозитория не ведутся.
 3. Работайте в ветке `<агент>/<задача>` от актуального main; префикс — имя
    создающего ветку агента или участника (`claude/`, `codex/`, `gemini/`, `dev/`, …).
-   PR не используются: проверенная ветка сливается в main обычным `git merge`.
+   PR не используются: проверенная ветка сливается в main перемоткой (`git land`,
+   [памятка](docs/ru/HOWTO.md#git-рабочий-цикл-без-pr)), после чего удаляется.
 4. Изменение поведения или интерфейса — с host-регрессией, обновлением docs/ru/API.md и docs/en/API.md
    и миграции, записью в CHANGELOG (RU и EN) и новой ревизией ТЗ. Проверки до
    GDB-сервера — `python3 ci/run_checks.py` в Docker-образе CI ([docs/ru/testing.md](docs/ru/testing.md)).
@@ -28,3 +30,5 @@ Instructions for AI agents and new contributors ([English](docs/en/maintenance.m
    hooks в прошивку не добавлять; GDB API — только из основного потока GDB.
 9. Не коммитить локальные TOML стендов, серийные номера, персональные пути,
    ELF, build и кэши.
+10. Новое решение частой проблемы (команда git, настройка стенда, окно J-Link и т. п.)
+    записывается в памятку `docs/ru|en/HOWTO.md` в том же коммите.

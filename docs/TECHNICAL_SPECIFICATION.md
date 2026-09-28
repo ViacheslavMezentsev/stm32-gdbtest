@@ -10,7 +10,7 @@
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `Tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0-rc.1 (текущая версия разработки `0.1.0.dev0`, `API_VERSION = 1`) |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
-| **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.7)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
+| **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.8)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (20 модулей), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `Tests/host/*.py`, `examples/minimal-consumer/*`; `Tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
 
 ### История ревизий
@@ -35,6 +35,8 @@
 | Реквизиты | изм. | Платформа |
 | 3.4.2, 3.4.7, 3.4.8, 5.8.3 | изм. | `startup_timeout_s`; имена серверов по ОС |
 | 3.4.10, 6.10.7 | нов. | Предел готовности сервера в стенде; окно условий J-Link STLink |
+| 7.7.7 | изм. | Слияние перемоткой и удаление ветки |
+| 7.7.14 | нов. | Памятка HOWTO |
 | 9.2, 10, приложения A, B | изм., нов. | TC-98; результат TC-97 (частично); константа; конфигурации |
 
 ### Изменения ревизии 0.7
@@ -952,7 +954,7 @@ flowchart LR
 
 7.7.6. Изменения ДОЛЖНЫ выполняться в ветке `<агент>/<задача>` от актуального main, где `<агент>` — короткое имя инструмента или участника, создавшего ветку (`claude/`, `codex/`, `gemini/`; человек — своё имя или `dev/`), а `<задача>` — описание в kebab-case на английском. Новый агент выбирает собственный префикс. Причина: над репозиторием работают разные агенты, и префикс показывает автора ветки. `[N]` (р.0.2)
 
-7.7.7. Проверенная ветка ДОЛЖНА сливаться в main обычным `git merge` без PR; force push и переписывание опубликованной истории НЕ ДОЛЖНЫ применяться. Push, теги и релизы выполняет владелец. `[N]` (р.0.2)
+7.7.7. Проверенная ветка ДОЛЖНА сливаться в main без PR перемоткой (fast-forward), чтобы в main попадали подписанные коммиты ветки без неподписанного merge-коммита; отставшая ветка переносится на main (`rebase` с подписью). После слияния ветка удаляется на GitHub и локально (псевдоним `git land`, docs/ru/HOWTO.md). Force push в main и переписывание опубликованной истории main НЕ ДОЛЖНЫ применяться. Push, теги и релизы выполняет владелец. `[N]` (р.0.8)
 
 7.7.8. Сообщения коммитов ДОЛЖНЫ соответствовать Conventional Commits на английском языке и НЕ ДОЛЖНЫ содержать ссылок на сессии чатов и агентов; то же относится к именам веток. `[N]` (р.0.2)
 
@@ -965,6 +967,8 @@ flowchart LR
 7.7.12. Роли документов ДОЛЖНЫ разделяться: ТЗ — нормативные требования и прослеживаемость; README — краткое введение (зачем, что, как, зависимости, ссылки); `docs/*/STATUS.md` — проверенный объём, стенды и ограничения; CHANGELOG — история изменений по версиям; TODO.md — дорожная карта и текущие ветки; остальные страницы `docs/ru|en` — описания механизмов и порядок работы. Одно и то же утверждение не дублируется: второе место ссылается на первое. `[N]` (р.0.6)
 
 7.7.13. Каждая страница `docs/ru` и `docs/en` ДОЛЖНА начинаться строкой навигации со ссылкой на карту `index.md` своей локализации и на ту же страницу другой локализации; новая страница добавляется в обе карты. Перед выпуском версии документация ДОЛЖНА сверяться с текущим функционалом. `[N]` (р.0.6)
+
+7.7.14. Решения частых проблем (команды git и псевдонимы, настройка стенда и отладчиков, Docker) и способы вернуть прежнее состояние ДОЛЖНЫ собираться в docs/ru/HOWTO.md и docs/en/HOWTO.md; AGENTS.md ссылается на них. Новое решение частой проблемы добавляется туда в том же коммите. Причина: повторный поиск уже найденного решения (например, окна условий J-Link STLink). `[N]` (р.0.8)
 
 ---
 
@@ -1271,6 +1275,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95 и TC-98 соответств
 | 7.7.6–7.7.9 | AGENTS.md; docs/ru/maintenance.md, docs/en/maintenance.md; история Git (`git log --show-signature`) | I |
 | 7.7.10, 7.7.11 | AGENTS.md; docs/ru/maintenance.md, docs/en/maintenance.md | I, TC-83, TC-89 |
 | 7.7.12, 7.7.13 | README.md, README.en.md; docs/ru, docs/en (`index.md`, строки навигации) | I, TC-89 |
+| 7.7.14 | docs/ru/HOWTO.md, docs/en/HOWTO.md; AGENTS.md | I, TC-83 |
 | 8.1–8.3, 8.6, 8.9 | DOC: VERSIONING.md; IN | I |
 | 8.4 | PR; CT; BM; CM; FI | TC-13, TC-29, TC-36 |
 | 8.5 | RU: legacy env; DOC: API.md | TC-25 |

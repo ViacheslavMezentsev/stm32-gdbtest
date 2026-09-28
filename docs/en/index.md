@@ -28,4 +28,5 @@ the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 - [Checks and CI](testing.md) — CI levels, Docker image, hardware check of the CI firmware.
 - [Versions and releases](VERSIONING.md) — SemVer, tags, release preparation.
 - [Maintenance](maintenance.md) — workflow, branches, commits, bilingual documentation.
+- [HOWTO](HOWTO.md) — git commands (including `git land`), common stand, debugger and Docker problems, undoing changes.
 - [CHANGELOG](../../CHANGELOG.en.md), [roadmap](../../TODO.md) (Russian), [AGENTS.md](../../AGENTS.md).
