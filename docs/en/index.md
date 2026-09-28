@@ -9,7 +9,7 @@ the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 
 ## Getting started
 
-- [DDTT specification](DDTT.md) — the debugger-driven on-target testing method: terms, principles, requirements for scenarios, stands and tools.
+- [DDTT specification](DDTT.md) — the debugger-driven testing on target method: terms, principles, requirements for scenarios, stands and tools.
 
 - [Getting started](GETTING_STARTED.md) — requirements, checks without a board, submodule integration.
 - [Writing tests](TEST_AUTHORING.md) — the process for people and AI agents.

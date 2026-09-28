@@ -14,7 +14,7 @@ CTest, in a CI runner or in a loop on a stand — with any connection layout: th
 debugger at the workstation, on a Linux stand such as an Orange Pi, or on a remote
 stand over SSH.
 
-DDTT (debugger-driven on-target testing) is a method described by its own
+DDTT (debugger-driven testing on target) is a method described by its own
 [specification](docs/en/DDTT.md); this repository is its reference implementation. It is
 not an MCU simulator and not a unit-test framework that runs test functions inside the
 firmware. It needs a

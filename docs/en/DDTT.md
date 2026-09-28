@@ -1,8 +1,8 @@
-# DDTT: debugger-driven on-target testing
+# DDTT: debugger-driven testing on target
 
 [Documentation](index.md) → DDTT specification · [Русский](../ru/DDTT.md)
 
-**Debugger-Driven On-Target Testing (DDTT), specification 0.1 — draft.**
+**Debugger-Driven Testing on Target (DDTT), specification 0.2 — draft.**
 
 ## Abstract
 
@@ -18,7 +18,7 @@ agent writes the scenarios.
 
 ## Status of this document
 
-Draft 0.1 of 2026-09-28. The specification is maintained in the
+Draft 0.2 of 2026-09-28. The specification is maintained in the
 [stm32-gdbtest](https://github.com/ViacheslavMezentsev/stm32-gdbtest) repository, which
 is its first (reference) implementation; the specification itself does not depend on
 it. Versions follow SemVer: before 1.0 incompatible changes are possible, and each one
@@ -52,6 +52,13 @@ DDTT applies when **the target device is separate from the host** and reachable 
 a debug interface: microcontrollers and SoCs with SWD, JTAG, cJTAG or a similar port,
 connected through a debug adapter and a debug server (for example GDB RSP). Typical
 targets are Cortex-M, RISC-V and DSP MCUs, bare metal or with an RTOS.
+
+The name reflects this split. **Debugger-driven testing** is the general notion: a
+scenario controls the code under test through a debugger. It also applies to PC
+programs, where the debugger and the code run on the same machine and OS. **DDTT**
+(debugger-driven testing **on target**) is its variant for a separate target device, the
+subject of this specification. The general notion is written in full without an
+abbreviation: DDT is already taken (section 9).
 
 Out of scope:
 
@@ -95,6 +102,8 @@ DDTT-6.1-1); numbers are never reused.
 
 | Term | Definition |
 | --- | --- |
+| Debugger-driven testing | The general notion: a scenario controls the code under test through a debugger — on a PC or on a separate device. No abbreviation is used. |
+| DDTT | Debugger-driven testing on a separate target device (debugger-driven testing on target) — the subject of this specification. |
 | Host | The computer where the tool runs and the scenario executes. |
 | Target device (target) | A separate device with the firmware under test (MCU, SoC), reachable through a debug interface. |
 | Debug adapter | A device connecting a computer to the target's debug port (ST-Link, J-Link, CMSIS-DAP and similar). |
@@ -334,4 +343,5 @@ def gpio(t):
 
 | Version | Date | Changes |
 | --- | --- | --- |
+| 0.2 | 2026-09-28 | Name refined: Debugger-Driven Testing on Target instead of Debugger-Driven On-Target Testing; the general notion "debugger-driven testing" introduced, DDTT is its variant for a separate target device (1.3, 3). Requirements unchanged |
 | 0.1 | 2026-09-28 | First draft: scope, terms, principles, model, requirements for scenarios, the target API, stands, the run lifecycle, reports, access, preflight, automation and agent scenarios; the stm32-gdbtest reference implementation |

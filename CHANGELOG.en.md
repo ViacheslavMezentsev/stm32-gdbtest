@@ -8,7 +8,7 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
-- DDTT 0.1 method specification (debugger-driven on-target testing) `docs/ru|en/DDTT.md`:
+- DDTT 0.2 method specification (Debugger-Driven Testing on Target) `docs/ru|en/DDTT.md`:
   scope, terms, principles, model, requirements for scenarios, stands, tools and agents
   per RFC 2119; stm32-gdbtest is the reference implementation.
 - Remote GDB server: the `[remote]` stand table. The runner and GDB run on Windows or in
