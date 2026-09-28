@@ -13,8 +13,9 @@ JSON/JUnit report. The same scenario runs manually, from CTest, in a CI runner o
 loop on a stand — with any connection layout: the debugger at the workstation, on a
 Linux stand such as an Orange Pi, or on a remote stand over SSH.
 
-Technically it is a debugger-driven on-target test framework: not an MCU simulator and
-not a unit-test framework that runs test functions inside the firmware. It needs a
+Technically it is a framework and the reference implementation of
+[DDTT — debugger-driven on-target testing](docs/en/DDTT.md): not an MCU simulator and not
+a unit-test framework that runs test functions inside the firmware. It needs a
 built ELF with debug information, an MCU profile and a stand.
 
 ## Why this approach

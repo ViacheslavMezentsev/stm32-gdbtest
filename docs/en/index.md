@@ -3,10 +3,13 @@
 Documentation · [Русский](../ru/index.md)
 
 Introduction — [README](../../README.en.md): a verification loop for STM32 firmware on real
-hardware for agent-driven and manual development, debugger-driven testing. Requirements —
+hardware for agent-driven and manual development, the reference implementation of
+[DDTT](DDTT.md) — debugger-driven on-target testing. Requirements —
 the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 
 ## Getting started
+
+- [DDTT specification](DDTT.md) — the debugger-driven on-target testing method: terms, principles, requirements for scenarios, stands and tools.
 
 - [Getting started](GETTING_STARTED.md) — requirements, checks without a board, submodule integration.
 - [Writing tests](TEST_AUTHORING.md) — the process for people and AI agents.

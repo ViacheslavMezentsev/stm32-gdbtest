@@ -11,7 +11,8 @@ Instructions for AI agents and new contributors ([English](docs/en/maintenance.m
 Кратко:
 
 1. Прочитайте [README](README.md), затем [TODO.md](TODO.md) — там текущая ветка и статус.
-2. Требования — в [docs/TECHNICAL_SPECIFICATION.md](docs/TECHNICAL_SPECIFICATION.md);
+2. Метод, который реализует модуль, — [спецификация DDTT](docs/ru/DDTT.md) ([English](docs/en/DDTT.md));
+   требования к модулю — в [docs/TECHNICAL_SPECIFICATION.md](docs/TECHNICAL_SPECIFICATION.md);
    текущая ревизия указана в его реквизитах. Копии ТЗ вне репозитория не ведутся.
 3. Работайте в ветке `<агент>/<задача>` от актуального main; префикс — имя
    создающего ветку агента или участника (`claude/`, `codex/`, `gemini/`, `dev/`, …).
