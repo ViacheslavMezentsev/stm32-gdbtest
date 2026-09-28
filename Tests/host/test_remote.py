@@ -1,4 +1,4 @@
-"""Remote GDB server over SSH without an SSH server or a debugger (TC-99…TC-102)."""
+"""Remote GDB server over SSH without an SSH server or a debugger (TC-99…TC-102, TC-110)."""
 import base64
 import json
 import os
@@ -143,6 +143,25 @@ class RemoteHelperTests(unittest.TestCase):
         self.assertEqual(self.lock.read_text(), "")
         workdir = "".join(lines).split(" dir=")[1].split()[0]
         self.assertFalse(Path(workdir).exists())
+
+    def test_lost_heartbeat_stops_the_server_and_unlocks(self):
+        # TC-110: ТЗ 5.18.7 — the link died without closing the session (stdin stays open)
+        with patch.object(remote, "HEARTBEAT_TIMEOUT_S", 2):
+            owner = self.start(47315)
+        self.addCleanup(lambda: owner.poll() is None and owner.kill())
+        self.wait_for(owner, "Waiting for GDB connection")
+        heartbeat = remote.Heartbeat(owner.stdin.buffer, interval=0.3)
+        time.sleep(4)
+        self.assertIsNone(owner.poll(), "a live heartbeat keeps the server")
+        heartbeat.stop()
+        stopped = time.monotonic()
+        rest = owner.stdout.read()
+        owner.wait(timeout=20)
+        self.assertLess(time.monotonic() - stopped, 8)
+        self.assertIn("STM32_GDBTEST_REMOTE exit=", rest)
+        self.assertNotIn("log=", rest)
+        self.assertEqual(self.lock.read_text(), "")
+        owner.stdin.close()
 
     def test_abandoned_record_and_missing_server_are_refused(self):
         self.lock.parent.mkdir(parents=True)

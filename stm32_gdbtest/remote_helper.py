@@ -9,7 +9,9 @@ Protocol on stdout (the SSH channel), one marker per line:
   STM32_GDBTEST_REMOTE error=<code> <text>                  refusal, exit code 3
   STM32_GDBTEST_REMOTE log=<name>                           followed by a log file
   STM32_GDBTEST_REMOTE exit=<code>                          final line
-The server is stopped when stdin reaches EOF (the runner closed or lost the session).
+The server is stopped when stdin reaches EOF (the runner closed or lost the session) or,
+with "heartbeat_s" in the config, when stdin brings no data for that long (the link died
+without closing the connection); then the logs are not sent, as the channel may be stalled.
 """
 
 import base64
@@ -107,6 +109,7 @@ def serve(config):
     descriptor = acquire(config["identity"])
     directory = tempfile.mkdtemp(prefix="stm32-gdbtest-")
     process = None
+    lost = False
     try:
         command = [item.replace("{port}", str(port)).replace("{dir}", directory) for item in config["command"]]
         executable = shutil.which(command[0])
@@ -117,9 +120,16 @@ def serve(config):
         say("ready-to-start port=%d dir=%s" % (port, directory))
         process = subprocess.Popen(command, cwd=directory, stdin=subprocess.DEVNULL, stdout=sys.stdout,
                                    stderr=subprocess.STDOUT, start_new_session=True)
+        heartbeat = config.get("heartbeat_s")
+        last = time.monotonic()
         while process.poll() is None:
             readable, _, _ = select.select([sys.stdin], [], [], 0.5)
-            if readable and not os.read(sys.stdin.fileno(), 4096):
+            if readable:
+                if not os.read(sys.stdin.fileno(), 4096):
+                    break
+                last = time.monotonic()
+            elif heartbeat and time.monotonic() - last > heartbeat:
+                lost = True
                 break
         return process.poll() or 0
     finally:
@@ -127,7 +137,7 @@ def serve(config):
             if process is not None:
                 stop_group(process)
             try:
-                for name in config.get("logs", []):
+                for name in [] if lost else config.get("logs", []):
                     path = os.path.join(directory, name)
                     if os.path.isfile(path):
                         say("log=" + name)

@@ -108,7 +108,9 @@ the GDB server and the debuggers are on the Orange Pi. For that the stand gets a
 `[remote]` table. The runner opens one SSH session: it forwards a local port to the
 server's port on the Orange Pi and starts a small helper script there. The helper takes
 the same debugger lock as local runs on the Orange Pi, starts the server and stops it
-when the session closes or breaks. No copy of the module is needed on the Orange Pi,
+when the session closes or breaks. The runner sends a heartbeat into the session every
+2 s: when the link is lost without closing the connection, the server stops after 15 s of
+silence. No copy of the module is needed on the Orange Pi,
 only the stand environment (for xPack OpenOCD) and the J-Link software. Passwords are
 not supported: only an SSH key and a known host key.
 

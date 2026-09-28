@@ -4,6 +4,9 @@ The runner and GDB stay on this computer; the GDB server and the debugger are on
 stand host (for example an Orange Pi next to the boards). One SSH session starts
 remote_helper.py, which takes the stand host's debugger lock and runs the server, and
 forwards a local port to the server's port on the stand host's loopback interface.
+The runner sends a heartbeat over the session: a link that dies without closing the
+connection (Wi-Fi, cable, sleep) stops the server and frees the lock after
+HEARTBEAT_TIMEOUT_S instead of when TCP gives up hours later.
 """
 
 import base64
@@ -11,6 +14,7 @@ import json
 from pathlib import Path
 import re
 import shutil
+import threading
 
 HELPER = Path(__file__).with_name("remote_helper.py")
 ALLOWED = {"host", "user", "port", "identity_file", "env_script", "ssh"}
@@ -20,6 +24,8 @@ DEFAULT_ENV = "~/.local/stm32-gdbtest/env.sh"
 STLINK_PRODUCTS = ["3744", "3748", "374a", "374b", "374d", "374e", "374f", "3752", "3753",
                    "3754", "3755", "3757"]
 LOGS = ["jlink.log", "stlink.log"]
+HEARTBEAT_INTERVAL_S = 2
+HEARTBEAT_TIMEOUT_S = 15
 
 
 def load(table):
@@ -87,7 +93,30 @@ def remote_script(remote, config):
 
 
 def serve_config(identity, port, command):
-    return dict(mode="serve", identity=identity, port=port, command=command, logs=LOGS)
+    return dict(mode="serve", identity=identity, port=port, command=command, logs=LOGS,
+                heartbeat_s=HEARTBEAT_TIMEOUT_S)
+
+
+class Heartbeat:
+    """Writes a newline to the SSH session every HEARTBEAT_INTERVAL_S until stopped (ТЗ 5.18.7)."""
+
+    def __init__(self, stream, interval=HEARTBEAT_INTERVAL_S):
+        self.stream, self.interval = stream, interval
+        self.stopped = threading.Event()
+        self.thread = threading.Thread(target=self._beat, name="remote-heartbeat", daemon=True)
+        self.thread.start()
+
+    def _beat(self):
+        while not self.stopped.wait(self.interval):
+            try:
+                self.stream.write(b"\n")
+                self.stream.flush()
+            except (OSError, ValueError):
+                return  # the session is gone or closing
+
+    def stop(self):
+        self.stopped.set()
+        self.thread.join(timeout=5)
 
 
 def check_config(identity, executable):

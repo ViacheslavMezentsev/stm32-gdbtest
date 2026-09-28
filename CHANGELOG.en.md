@@ -105,6 +105,9 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Fixed
 
+- Remote server: the runner sends a heartbeat into the SSH session every 2 s; when the link
+  is lost without closing the connection (Wi-Fi, cable, sleep), the server on the stand
+  host stops and the debugger is freed after 15 s instead of hours.
 - `tools/linux_stand.py` retries downloads and `git fetch` on transient server errors
   (up to 4 attempts with pauses); CI jobs cache the pinned downloads.
 - `tools/linux_stand.py install --only …` verifies the selected components only: the

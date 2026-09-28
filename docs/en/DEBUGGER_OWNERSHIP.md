@@ -80,7 +80,9 @@ Windows, `flock` on Linux) and an `flock` on the stand host with the same hash. 
 helper script takes the second one before starting the server, so a run from Windows
 and a local run on the Orange Pi never use one debugger at the same time. Stand host
 refusals come as "Stand host refused the run: busy / abandoned". When the SSH session
-closes or breaks, the helper stops the server and releases the lock
+closes or breaks, the helper stops the server and releases the lock; when the link is
+lost without closing the connection (Wi-Fi, cable, a sleeping computer), this happens
+after 15 s without the runner's heartbeat
 ([Linux stand](LINUX_STAND.md#remote-gdb-server-windows-or-wsl--orange-pi)).
 
 ## Checking the mechanism

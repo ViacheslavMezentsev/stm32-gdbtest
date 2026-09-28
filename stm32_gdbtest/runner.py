@@ -100,7 +100,7 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
 
 
 def execute(session, test, stand, out, report, timeout, profile, prepare_only=False):
-    server = client = remote = None
+    server = client = remote = heartbeat = None
     ready = False
     env = os.environ.copy()
     project_root = Path(session.get("root", ROOT)).resolve()
@@ -238,6 +238,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                 server = subprocess.Popen(command + [remote_host.remote_script(remote, config)], env=env,
                                           cwd=out, stdin=subprocess.PIPE, stdout=server_log, stderr=tunnel_log,
                                           **spawn_options())
+                heartbeat = remote_host.Heartbeat(server.stdin)
                 limit += 10  # SSH connection and authentication
             else:
                 server = subprocess.Popen(backend["command"], env=env, cwd=out,
@@ -289,6 +290,8 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
             report.update(status="ERROR", teardown_error=traceback.format_exc())
         finally:
             try:
+                if heartbeat is not None:
+                    heartbeat.stop()
                 if remote and server is not None and server.poll() is None:
                     # EOF on the session lets the helper stop the server, send its logs and unlock.
                     server.stdin.close()
