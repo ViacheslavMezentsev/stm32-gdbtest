@@ -251,7 +251,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                 if server.poll() is not None:
                     hint = remote_host.environment_hint(server.returncode) if remote else ""
                     raise RuntimeError("GDB server exited before ready; see server.log"
-                                       + (" and tunnel.log (" + hint + ")" if remote else ""))
+                                       + (" and tunnel.log" + (f" ({hint})" if hint else "") if remote else ""))
                 if backend["ready"] in text and (not remote or remote_host.forwarding_ready(
                         (out / "tunnel.log").read_text(errors="replace"))):
                     ready = True
