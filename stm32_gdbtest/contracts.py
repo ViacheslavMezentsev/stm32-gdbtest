@@ -53,15 +53,20 @@ MISSING_DEBUG_INFO = re.compile(r"No symbol|No struct type|No union type|No enum
                                 r"incomplete type|No type named")
 
 
-def macro_type(api, expression):
-    """Type of a macro expression without evaluating it (`whatis` reads no target memory).
+def macro_type(api, expansion):
+    """Type of a macro expansion without evaluating it (`whatis` reads no target memory).
 
     A missing type (`(DBGMCU_TypeDef *)...` when the firmware never uses DBGMCU) would only
     fail at run time; here it fails in preflight. Statement macros (`do { } while (0)`) are
     not expressions and are recorded, not rejected.
+
+    `whatis` gets the text already expanded by `macro expand` (ТЗ 5.6.11). Without a frame
+    GDB parses an expression in the macro scope of the compilation unit's lowest address;
+    in C++ that is often code inlined from a header included before the device header
+    (`etl/optional.h` before `main.h`), where the macro is not defined yet.
     """
     try:
-        text = api.execute("whatis " + expression, to_string=True).strip()
+        text = api.execute("whatis " + expansion, to_string=True).strip()
     except Exception as exc:
         message = str(exc).strip()
         if MISSING_DEBUG_INFO.search(message):
@@ -130,16 +135,18 @@ def inspect_contracts(api, selected):
                 api.execute(f"list *0x{address:x}", to_string=True)
                 for expression in macros["expressions"]:
                     identifier = expression.split("(", 1)[0]
+                    # A compiler command-line macro is listed as `-DNAME=value`, not `#define`.
                     definition = api.execute("info macro " + identifier, to_string=True)
                     check(name + ": defined " + identifier,
-                          bool(re.search(r"^#define " + re.escape(identifier) + r"(?:\(|\s|$)", definition, re.M)), True)
+                          bool(re.search(r"^(?:#define |-D)" + re.escape(identifier) + r"(?:\(|\s|=|$)",
+                                    definition, re.M)), True)
                     expansion = api.execute("macro expand " + expression, to_string=True).strip()
                     prefix = "expands to: "
                     if not expansion.startswith(prefix) or expansion[len(prefix):] == expression:
                         raise ValueError("Macro did not expand: " + expression)
                     entry = dict(contract=name, context=macros["context"], expression=expression,
                                  expansion=expansion[len(prefix):])
-                    entry.update(macro_type(api, expression))
+                    entry.update(macro_type(api, entry["expansion"]))
                     report.setdefault("macros", []).append(entry)
                     if "type_error" in entry:
                         check(name + ": typed " + expression + " (" + entry["type_error"] + ")", False, True)

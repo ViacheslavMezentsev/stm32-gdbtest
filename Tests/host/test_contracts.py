@@ -71,16 +71,25 @@ class ContractTests(unittest.TestCase):
                     return ""
                 name = command.split()[-1].split("(")[0]
                 if command.startswith("info macro"):
+                    if name == "SHUNT_R008":
+                        # Compiler command-line macro, as GDB lists it.
+                        return "Defined at main.cpp:0\n-DSHUNT_R008=1\n"
                     return f"Defined at stm32f103xb.h:1\n#define {name} value\n"
                 if command.startswith("macro expand"):
                     return {"DBGMCU": "expands to: ((DBGMCU_TypeDef *)0xE0042000UL)",
                             "RCC_CR_PLLON": "expands to: (0x1UL << (24U))",
+                            "LED_GPIO_Port": "expands to: ((GPIO_TypeDef *) 0x40011000UL)",
+                            "SHUNT_R008": "expands to: 1",
                             "ENABLE_IT": "expands to: do { x = 1; } while (0)"}[name]
                 expression = command.removeprefix("whatis ")
-                if expression == "DBGMCU":
+                if expression == "((DBGMCU_TypeDef *)0xE0042000UL)":
                     raise RuntimeError('No symbol "DBGMCU_TypeDef" in current context.')
-                if expression == "ENABLE_IT()":
+                if expression.startswith("do "):
                     raise RuntimeError('A syntax error in expression, near `do { x = 1; } while (0)\'.')
+                if not expression.startswith(("(", "1")):
+                    # Without a frame GDB parses in the scope of the unit's lowest address,
+                    # which may precede the header defining the macro (C++ with etl first).
+                    raise RuntimeError(f'No symbol "{expression}" in current context.')
                 return "type = unsigned long"
 
         def run(expressions):
@@ -94,6 +103,11 @@ class ContractTests(unittest.TestCase):
         self.assertEqual(report["status"], "ERROR")
         self.assertIn("DBGMCU_TypeDef", report["macros"][0]["type_error"])
         self.assertIn("typed DBGMCU", report["errors"][0]["error"])
+        # The type comes from the expansion, not the macro name (ТЗ 5.6.11, р.0.26), and a
+        # command-line macro `-DNAME=value` counts as defined (ТЗ 5.6.8, р.0.26).
+        report = run(["LED_GPIO_Port", "SHUNT_R008"])
+        self.assertEqual(report["status"], "PASS", report["errors"])
+        self.assertEqual([m["expansion"] for m in report["macros"]], ["((GPIO_TypeDef *) 0x40011000UL)", "1"])
 
     def test_bad_preflight_stops_before_debug_server(self):
         elf = self.directory / "firmware.elf"

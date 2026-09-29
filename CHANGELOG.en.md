@@ -6,6 +6,13 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+### Fixed
+
+- The `macros` contract in C++: the type is taken from the expansion text — `whatis <name>` used
+  to give a false `No symbol` ERROR when the compilation unit started with code from a header
+  included before the device header (`etl/optional.h` before `main.h`). A compiler command-line
+  macro (`-DNAME=value`) counts as defined. Specification revision 0.26.
+
 ### Changed
 
 - The `macros` contract checks the type of the expansion (`whatis`, no memory reads): a type

@@ -41,7 +41,8 @@ snapshot is stored separately from the build.
 - `enums`: required enum constants and values; extra values are allowed.
 - `macros`: `context` (a function) and `expressions` — see [HAL macros](HAL_MACRO_GUIDE.md).
   Each expression is checked for its definition, expansion and the type of the expansion
-  (`whatis`, no memory reads). If the expansion refers to a type missing from the debug info
+  (`whatis` on the expansion text, no memory reads; a command-line macro `-DNAME` also counts
+  as defined). If the expansion refers to a type missing from the debug info
   (`(DBGMCU_TypeDef *)…` when the firmware does not use DBGMCU), the contract reports ERROR
   before the server; a build with `-fno-eliminate-unused-debug-types` helps. Statement macros
   (`do { } while (0)`) are not expressions: the report has `type_note` for them, not an error.
