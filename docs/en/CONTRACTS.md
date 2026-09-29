@@ -15,7 +15,7 @@ compatibility and not a SKIP result.
 3. The selected declarations, the registry SHA-256 and `contract-request.json` are saved.
 4. A separate batch GDB runs with this ELF, auto-load disabled, without a server and
    without connecting to the target; the external limit is 15 s. Checks use only
-   Symbol/Type/Block and `list`, `info macro`, `macro expand` — no `parse_and_eval`,
+   Symbol/Type/Block and `list`, `info macro`, `macro expand`, `whatis` — no `parse_and_eval`,
    no target function calls, no memory writes.
 5. `contract-result.json` is accepted only with PASS, exit code 0 and a matching ELF
    SHA-256. An error, a missing result or a timeout stops the run before the GDB server.
@@ -40,6 +40,11 @@ snapshot is stored separately from the build.
 - `fields`: required structure fields and their types; extra fields are allowed.
 - `enums`: required enum constants and values; extra values are allowed.
 - `macros`: `context` (a function) and `expressions` — see [HAL macros](HAL_MACRO_GUIDE.md).
+  Each expression is checked for its definition, expansion and the type of the expansion
+  (`whatis`, no memory reads). If the expansion refers to a type missing from the debug info
+  (`(DBGMCU_TypeDef *)…` when the firmware does not use DBGMCU), the contract reports ERROR
+  before the server; a build with `-fno-eliminate-unused-debug-types` helps. Statement macros
+  (`do { } while (0)`) are not expressions: the report has `type_note` for them, not an error.
 - `source_reviews`: file, SHA-256 and the `reason` of a manual review of the used behaviour.
 
 Argument and return types are resolved in the function's own block. A global

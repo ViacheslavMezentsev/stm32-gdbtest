@@ -11,7 +11,7 @@ history is in the [CHANGELOG](../../CHANGELOG.en.md).
 
 | Area | Verified scope |
 | --- | --- |
-| Host tests | 95 unittests without an MCU; on Linux 4 Windows mutex tests are skipped, on Windows 7 Linux tests (`flock` lock 3, process groups 2, remote server helper 2) |
+| Host tests | 96 unittests without an MCU; on Linux 4 Windows mutex tests are skipped, on Windows 7 Linux tests (`flock` lock 3, process groups 2, remote server helper 2) |
 | CI (GitHub Actions, Docker) | Docs, format, host on Windows and Linux; F030R8/F103C8/F411CE CI firmware with GCC 13.3.1, 14.2.1, 15.2.1 and CMake 3.28.3: build manifest, `prepare`, full image, 10 negative contracts, load section alignment, empty RAM section; the Linux stand environment in `ubuntu:20.04` on x86_64 and aarch64 ([checks and CI](testing.md)) |
 | CI firmware on hardware | Final check at `2143665`: 4 stands on Windows, 3 stands from Windows to Orange Pi 5, 3 stands in the Hardware workflow — 10/10 steps each; earlier 4 stands at `fbc103d` (sections below) |
 | Linux stand without hardware | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) in a container: environment installation, host tests (79 at revision 0.7), `doctor`, `build` and `prepare` of the CI firmware; the hardware path without a debugger — lock, OpenOCD start, ERROR "exited before ready", processes stopped |
@@ -101,8 +101,8 @@ stm32-hwtest-blackpill suite was not repeated on these commits.
 - ST-LINK GDB Server is unavailable on Linux aarch64 (ST does not release it for arm64).
 - The build manifest uses Cube and CMSIS metadata; a universal build system and an
   arbitrary toolchain are not claimed.
-- J-Link mapping verified for STM32F103C8T6 → STM32F103C8 and STM32F030R8T6 → STM32F030R8;
-  STM32F103CBT6 → STM32F103CB is added and not yet verified on hardware.
+- J-Link mapping verified for STM32F103C8T6 → STM32F103C8, STM32F030R8T6 → STM32F030R8 and
+  STM32F103CBT6 → STM32F103CB (WeAct BluePill-Plus, the stm32-hwtest-bluepill demo project).
 - The target schema has mandatory OpenOCD fields. H503 is not supported.
 - `-g3` is needed for macros in the debug information but does not keep unused
   functions. Contracts check the selected symbols, types and expansions, not the whole

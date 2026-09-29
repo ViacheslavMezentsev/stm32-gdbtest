@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import patch
 
 from stm32_gdbtest.collect import collect
-from stm32_gdbtest.contracts import select_contracts
+from stm32_gdbtest.contracts import inspect_contracts, select_contracts
 from stm32_gdbtest.runner import ROOT, execute
 
 
@@ -52,6 +52,48 @@ class ContractTests(unittest.TestCase):
                 select_contracts(path, ["m"], None)
         selected = select_contracts(self.registry, ["clock_macros"], None)
         self.assertEqual(selected["contracts"]["clock_macros"]["macros"]["context"], "loop")
+
+    def test_macro_contract_requires_types_of_the_expansion(self):
+        # A macro can expand to a cast to a type that the firmware never uses, so GCC left it
+        # out of the debug info; such a contract must fail in preflight, not in the scenario.
+        class Symbol:
+            is_function = True
+
+            def value(self):
+                return type("V", (), {"address": 0x08000100})()
+
+        class Api:
+            def lookup_global_symbol(self, name):
+                return Symbol()
+
+            def execute(self, command, to_string=False):
+                if command.startswith("list"):
+                    return ""
+                name = command.split()[-1].split("(")[0]
+                if command.startswith("info macro"):
+                    return f"Defined at stm32f103xb.h:1\n#define {name} value\n"
+                if command.startswith("macro expand"):
+                    return {"DBGMCU": "expands to: ((DBGMCU_TypeDef *)0xE0042000UL)",
+                            "RCC_CR_PLLON": "expands to: (0x1UL << (24U))",
+                            "ENABLE_IT": "expands to: do { x = 1; } while (0)"}[name]
+                expression = command.removeprefix("whatis ")
+                if expression == "DBGMCU":
+                    raise RuntimeError('No symbol "DBGMCU_TypeDef" in current context.')
+                if expression == "ENABLE_IT()":
+                    raise RuntimeError('A syntax error in expression, near `do { x = 1; } while (0)\'.')
+                return "type = unsigned long"
+
+        def run(expressions):
+            return inspect_contracts(Api(), {"contracts": {"m": {"macros": {"context": "loop", "expressions": expressions}}}})
+
+        report = run(["RCC_CR_PLLON", "ENABLE_IT()"])
+        self.assertEqual(report["status"], "PASS")
+        self.assertEqual(report["macros"][0]["type"], "unsigned long")
+        self.assertIn("not an expression", report["macros"][1]["type_note"])
+        report = run(["DBGMCU"])
+        self.assertEqual(report["status"], "ERROR")
+        self.assertIn("DBGMCU_TypeDef", report["macros"][0]["type_error"])
+        self.assertIn("typed DBGMCU", report["errors"][0]["error"])
 
     def test_bad_preflight_stops_before_debug_server(self):
         elf = self.directory / "firmware.elf"

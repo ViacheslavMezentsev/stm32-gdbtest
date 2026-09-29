@@ -6,6 +6,13 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Контракт `macros` проверяет тип раскрытия (`whatis`, без чтения памяти): тип, которого нет
+  в отладочной информации (например, `DBGMCU_TypeDef`), даёт ERROR в preflight, а не в сценарии;
+  statement-макросы отмечаются `type_note`. J-Link `STM32F103CBT6` проверен на WeAct BluePill-Plus.
+  ТЗ ревизии 0.25.
+
 ### Fixed
 
 - Build manifest на CMake 3.25: в `compile_commands.json` нет ключа `output`, объектный файл берётся

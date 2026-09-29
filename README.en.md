@@ -116,6 +116,7 @@ F103C8, F411CE — Cortex-M0, M3, M4) and the example `examples/minimal-consumer
 | --- | --- | --- |
 | STM32F030R8 | J-Link STLink / J-Link GDB Server | CI firmware, stand project |
 | STM32F103C8 | J-Link CE / J-Link GDB Server | CI firmware, stand project |
+| STM32F103CB | J-Link CE / J-Link GDB Server | demo project [stm32-hwtest-bluepill](https://github.com/ViacheslavMezentsev/stm32-hwtest-bluepill) |
 | STM32F411CE | ST-Link / OpenOCD and ST-LINK GDB Server | CI firmware, example, stand project |
 | STM32F429ZI | ST-Link / OpenOCD and ST-LINK GDB Server | stand project |
 | STM32F401CC | ST-Link / ST-LINK GDB Server | stand project, earlier checks |
@@ -123,7 +124,7 @@ F103C8, F411CE — Cortex-M0, M3, M4) and the example `examples/minimal-consumer
 
 OpenOCD and ST-LINK GDB Server need only the profile. J-Link GDB Server requires a
 device name mapping, which currently exists for STM32F103C8T6, STM32F030R8T6 and
-STM32F103CBT6 (the last one not yet verified on hardware). H503 is not supported. Support is defined by the specific combination
+STM32F103CBT6. H503 is not supported. Support is defined by the specific combination
 of MCU, HAL, GDB and backend, not by the family: [current status](docs/en/STATUS.md).
 
 ## Status

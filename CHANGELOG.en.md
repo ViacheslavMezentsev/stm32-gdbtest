@@ -6,6 +6,13 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+### Changed
+
+- The `macros` contract checks the type of the expansion (`whatis`, no memory reads): a type
+  missing from the debug info (for example `DBGMCU_TypeDef`) is an ERROR in preflight rather than
+  in the scenario; statement macros get a `type_note`. J-Link `STM32F103CBT6` verified on WeAct
+  BluePill-Plus. Specification revision 0.25.
+
 ### Fixed
 
 - Build manifest on CMake 3.25: `compile_commands.json` has no `output` key, the object file is

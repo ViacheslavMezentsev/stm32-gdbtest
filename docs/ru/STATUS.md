@@ -11,7 +11,7 @@
 
 | Область | Доказанный объём |
 | --- | --- |
-| Host-тесты | 95 unittest без MCU; на Linux пропускаются 4 теста Windows mutex, на Windows — 7 тестов Linux (блокировка `flock` 3, группы процессов 2, помощник удалённого сервера 2) |
+| Host-тесты | 96 unittest без MCU; на Linux пропускаются 4 теста Windows mutex, на Windows — 7 тестов Linux (блокировка `flock` 3, группы процессов 2, помощник удалённого сервера 2) |
 | CI (GitHub Actions, Docker) | Docs, format, host на Windows и Linux; CI-прошивки F030R8/F103C8/F411CE на GCC 13.3.1, 14.2.1, 15.2.1 с CMake 3.28.3: build manifest, `prepare`, полный образ, 10 отрицательных контрактов, выравнивание секций загрузки, пустая секция в RAM; окружение Linux-стенда в `ubuntu:20.04` на x86_64 и aarch64 ([проверки и CI](testing.md)) |
 | CI-прошивки на оборудовании | Итоговая проверка на `2143665`: 4 стенда на Windows, 3 стенда с Windows на Orange Pi 5, 3 стенда в workflow Hardware — по 10/10 шагов; ранее 4 стенда на `fbc103d` (разделы ниже) |
 | Linux-стенд без оборудования | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) в контейнере: установка окружения, host-тесты (79 на ревизии 0.7), `doctor`, `build` и `prepare` CI-прошивок; аппаратный путь без отладчика — блокировка, запуск OpenOCD, ERROR «exited before ready», процессы остановлены |
@@ -101,8 +101,8 @@ stm32-hwtest-blackpill на этих коммитах не повторялся.
 - ST-LINK GDB Server на Linux aarch64 недоступен (сервер ST не выпускается для arm64).
 - Build manifest использует метаданные Cube и CMSIS; универсальная система сборки
   и произвольный toolchain не заявлены.
-- J-Link mapping проверен для STM32F103C8T6 → STM32F103C8 и STM32F030R8T6 → STM32F030R8;
-  STM32F103CBT6 → STM32F103CB добавлен, на оборудовании не проверялся.
+- J-Link mapping проверен для STM32F103C8T6 → STM32F103C8, STM32F030R8T6 → STM32F030R8 и
+  STM32F103CBT6 → STM32F103CB (WeAct BluePill-Plus, демонстрационный проект stm32-hwtest-bluepill).
 - Target schema содержит обязательные поля OpenOCD. H503 не поддержан.
 - `-g3` нужен для макросов в отладочной информации, но не сохраняет неиспользуемые
   функции. Контракты проверяют выбранные символы, типы и раскрытия, а не всю

@@ -48,9 +48,31 @@ def select_contracts(path, names, manifest):
     return dict(schema=1, registry_sha256=hashlib.sha256(raw).hexdigest(), contracts=selected)
 
 
+# ТЗ 5.6.11: GDB errors meaning that the debug info lacks a symbol or type used by the expansion.
+MISSING_DEBUG_INFO = re.compile(r"No symbol|No struct type|No union type|No enum type|There is no member|"
+                                r"incomplete type|No type named")
+
+
+def macro_type(api, expression):
+    """Type of a macro expression without evaluating it (`whatis` reads no target memory).
+
+    A missing type (`(DBGMCU_TypeDef *)...` when the firmware never uses DBGMCU) would only
+    fail at run time; here it fails in preflight. Statement macros (`do { } while (0)`) are
+    not expressions and are recorded, not rejected.
+    """
+    try:
+        text = api.execute("whatis " + expression, to_string=True).strip()
+    except Exception as exc:
+        message = str(exc).strip()
+        if MISSING_DEBUG_INFO.search(message):
+            return dict(type_error=message)
+        return dict(type_note="not an expression: " + message)
+    return dict(type=text.removeprefix("type = "))
+
+
 def inspect_contracts(api, selected):
     report = dict(schema=1, status="PASS", checks=[], errors=[],
-                  scope="ELF types, macro presence/expansion and reviewed-source hashes; no runtime semantics")
+                  scope="ELF types, macro presence/expansion/expression types and reviewed-source hashes; no runtime semantics")
 
     def check(name, actual, expected):
         passed = actual == expected
@@ -115,9 +137,12 @@ def inspect_contracts(api, selected):
                     prefix = "expands to: "
                     if not expansion.startswith(prefix) or expansion[len(prefix):] == expression:
                         raise ValueError("Macro did not expand: " + expression)
-                    report.setdefault("macros", []).append(dict(contract=name,
-                        context=macros["context"], expression=expression,
-                        expansion=expansion[len(prefix):]))
+                    entry = dict(contract=name, context=macros["context"], expression=expression,
+                                 expansion=expansion[len(prefix):])
+                    entry.update(macro_type(api, expression))
+                    report.setdefault("macros", []).append(entry)
+                    if "type_error" in entry:
+                        check(name + ": typed " + expression + " (" + entry["type_error"] + ")", False, True)
         except Exception as exc:
             report["errors"].append(dict(contract=name, error=str(exc)))
     if report["errors"]:
