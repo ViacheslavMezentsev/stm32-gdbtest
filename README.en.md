@@ -63,48 +63,102 @@ automatically and does not check "all of HAL" by itself. The scenario author def
 requirements and expectations; only symbols and features that survived in the built
 ELF are available.
 
-## Features and maturity
+## Features
 
-Implemented: runs through OpenOCD, ST-LINK GDB Server and J-Link GDB Server on Windows
-and Linux, including a GDB server on a remote stand over SSH, image
-verification and programming, hardware breakpoints, reading values and controlled
-injections, selective ELF/HAL contracts, timeouts with a recovery attempt, JSON/JUnit
-and CMake/CTest integration. `run --prepare-only` performs every check before the GDB
-server without hardware; CI is built on it ([checks and CI](docs/en/testing.md)).
+- Runs scenarios through OpenOCD, ST-LINK GDB Server and J-Link GDB Server; runner and
+  GDB on Windows or Linux, the GDB server next to them or on the stand's Linux host over SSH.
+- Image verification and programming: by loadable ELF sections, or a full image with
+  fill and CRC-32 computed on the PC ([images and CRC](docs/en/IMAGES.md)); DEV_ID and
+  Flash size checks in `warn` and `strict` modes ([identity](docs/en/TARGET_IDENTITY.md)).
+- Target API: hardware breakpoints, `reach` with a frame check, reading values and
+  structures, `set_value` and `force_return` for injections ([API](docs/en/API.md)).
+- Checks without hardware: build manifest, selective ELF/HAL contracts,
+  `run --prepare-only`, requirement traceability; CI is built on them
+  ([checks and CI](docs/en/testing.md)).
+- Timeouts with a recovery attempt, debugger locking between processes, JSON/JUnit
+  reports, CMake/CTest integration.
+- Prepared run packages (`pack`, `run --package`): build in one place, run on the
+  stand; hardware CI on a self-hosted runner ([hardware CI](docs/en/HARDWARE_CI.md)).
 
-Version 0.1.0-rc.1 is the first release candidate. Verified on hardware: F030R8 and
-F103C8 through J-Link and F411CE through ST-Link with OpenOCD and ST-LINK GDB Server,
-including programming, the full image and recovery after a timeout — on Windows, on
-Orange Pi 5 (Ubuntu 20.04), from Windows and WSL2 to Orange Pi 5 over SSH, with
-prepared run packages and hardware CI on a self-hosted runner; a consumer project on
-STM32G474 with Arduino Core STM32; the stand project also covers F429ZI and earlier
-F401 checks. Support depends on the specific combination of MCU, HAL, GDB and backend.
-[Exact matrix and limits](docs/en/STATUS.md).
+## Run layouts
+
+The scenario and the report are the same in every layout; only the local stand file
+(`*.local.toml`) changes, and it stays with the user.
+
+| Layout | Runner and GDB | GDB server and debugger | Status |
+| --- | --- | --- | --- |
+| Local on Windows | Windows | same computer | verified: 4 stands |
+| Local on a Linux stand | Orange Pi 5, Ubuntu 20.04 aarch64 | same computer | verified: 3 stands |
+| Remote server from Windows | Windows | Orange Pi 5 over SSH (`[remote]`) | verified: 3 stands and the consumer project |
+| Remote server from WSL2 | WSL2, Ubuntu 20.04 x86_64 | Orange Pi 5 over SSH | verified: 3 stands |
+| Prepared run package | build on Windows or in GitHub Actions | Orange Pi 5, `run --package` | verified: 3 stands |
+| Hardware CI | prepare on GitHub, hardware on a self-hosted runner | Orange Pi 5 (runner service) | verified: 3 stands |
+| Local on Linux x86_64 | Linux PC | same computer | implemented, not verified on hardware |
+| WSL2 with the debugger via usbipd-win | WSL2 | same computer | implemented as Linux, not verified |
+
+Remote mode uses SSH keys only; the debugger lock is held on the stand host and the
+link is watched by a heartbeat. ST-LINK GDB Server is not available on Linux aarch64
+(ST does not ship it for arm64), so OpenOCD and J-Link are used on Orange Pi.
+Details: [Linux stand](docs/en/LINUX_STAND.md), [GDB servers](docs/en/BACKENDS.md).
+
+## MCU profiles
+
+A profile is a `target.toml` file describing a specific MCU: Flash, DEV_ID, number of
+hardware breakpoints, fault handlers, diagnostic registers, the OpenOCD target. The
+module has no ready-made profile library "for any STM32": the consumer writes a profile
+for their board, using one of the existing ones as a template. Several MCU variants of
+one firmware can share scenarios, each with its own profile (`PROFILE`).
+
+Templates in the repository: the CI firmware `Tests/firmware/profiles/` (F030R8,
+F103C8, F411CE — Cortex-M0, M3, M4) and the example `examples/minimal-consumer/profile/` (F411CE).
+
+| MCU | Debugger / GDB server | Verified in |
+| --- | --- | --- |
+| STM32F030R8 | J-Link STLink / J-Link GDB Server | CI firmware, stand project |
+| STM32F103C8 | J-Link CE / J-Link GDB Server | CI firmware, stand project |
+| STM32F411CE | ST-Link / OpenOCD and ST-LINK GDB Server | CI firmware, example, stand project |
+| STM32F429ZI | ST-Link / OpenOCD and ST-LINK GDB Server | stand project |
+| STM32F401CC | ST-Link / ST-LINK GDB Server | stand project, earlier checks |
+| STM32G474CE | ST-Link / OpenOCD on Orange Pi 5 | consumer project (Arduino Core STM32) |
+
+OpenOCD and ST-LINK GDB Server need only the profile. J-Link GDB Server requires a
+validated device name mapping, which currently exists only for STM32F103C8T6 and
+STM32F030R8T6. H503 is not supported. Support is defined by the specific combination
+of MCU, HAL, GDB and backend, not by the family: [current status](docs/en/STATUS.md).
+
+## Status
+
+Version 0.1.0-rc.1 is the first release candidate (Python `0.1.0rc1`, `API_VERSION = 1`).
+Final verification on the release commit: CI, 4 stands on Windows, 3 stands from Windows
+to Orange Pi 5, 3 stands in hardware CI — 10/10 steps each, and 4 scenarios of the
+consumer project on STM32G474. Exact matrix and limits — [STATUS](docs/en/STATUS.md).
 
 Next: supervision of child processes and evolution of the profile schema and
 compatibility metadata. Coordinated control of power, relays and other instruments
 through a host controller is planned separately — with it the loop becomes full HIL;
-there is no such API yet. Python
-packaging is considered an additional delivery method. [Roadmap](TODO.md) (Russian).
+there is no such API yet. Python packaging is considered an additional delivery
+method. [Roadmap](TODO.md) (Russian).
 
 ## Contents and dependencies
 
 - `stm32_gdbtest/` — runner, GDB agent, Target API, backends, contracts and CMake integration.
 - `Tests/host`, `Tests/fixtures` — infrastructure checks without a board.
-- `Tests/firmware`, `ci/` — F030R8/F103C8/F411CE CI firmware, Docker image and the check script.
+- `Tests/firmware`, `ci/` — F030R8/F103C8/F411CE CI firmware, Docker image, the check
+  script and `run_hw.py` for hardware validation on a stand.
+- `tools/linux_stand.py` — installs the Linux stand environment without root.
 - `examples/minimal-consumer/` — a standalone firmware and test example for F411.
 - `docs/ru`, `docs/en` — integration, writing scenarios and mechanism descriptions;
   `docs/TECHNICAL_SPECIFICATION.md` — the specification (Russian).
 
-Hardware runs work on Windows (verified on stands) and Linux x86_64/aarch64,
-including Ubuntu 20.04 on Orange Pi 5 ([Linux stand](docs/en/LINUX_STAND.md)); they need
-host Python 3.11+, ARM GCC/GDB with Python, CMake 3.25+ and Ninja for the build
-integration. On Linux the environment is installed without root by one script. You need an SWD debugger, its GDB server and the
-firmware libraries; HAL/CMSIS, Cube packages and vendor tools are not part of the
-module. GDB-Python is a separate interpreter, not automatically your PC's Python.
+You need host Python 3.11+, ARM GCC and GDB with embedded Python 3.11+, CMake 3.25+ and
+Ninja, an SWD debugger and its GDB server, and the firmware libraries. HAL/CMSIS, Cube
+packages and vendor tools are not part of the module. GDB-Python is a separate
+interpreter, not your PC's Python environment. Linux stand: glibc ≥ 2.31 (Ubuntu 20.04
+or newer), x86_64 or aarch64.
 
-The module is integrated as a **Git submodule**. MCU settings, application tests and
-the local stand stay with the consumer. Start with [integration and the example](docs/en/GETTING_STARTED.md),
+The module is integrated as a **Git submodule** (or a separate clone whose path is set
+by `STM32_GDBTEST_SOURCE_DIR`). MCU settings, application tests and the local stand
+stay with the consumer. Start with [integration and the example](docs/en/GETTING_STARTED.md),
 then move on to [writing tests](docs/en/TEST_AUTHORING.md) — by hand or with an agent.
 
 ## Documentation and related projects

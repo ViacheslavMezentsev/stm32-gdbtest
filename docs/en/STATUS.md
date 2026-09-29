@@ -3,7 +3,7 @@
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
 Snapshot: 2026-09-29. Release candidate **0.1.0-rc.1** (Python `0.1.0rc1`), `API_VERSION = 1`;
-the tag follows the final check on the release commit. The main delivery is a pinned Git submodule; there is no pip package
+the final check passed on the release commit `2143665` (section below); the owner sets the tag. The main delivery is a pinned Git submodule; there is no pip package
 or separate executable yet. This page describes the verified scope, not a change log;
 history is in the [CHANGELOG](../../CHANGELOG.en.md).
 
@@ -13,7 +13,7 @@ history is in the [CHANGELOG](../../CHANGELOG.en.md).
 | --- | --- |
 | Host tests | 89 unittests without an MCU; on Linux 4 Windows mutex tests are skipped, on Windows 7 Linux tests (`flock` lock 3, process groups 2, remote server helper 2) |
 | CI (GitHub Actions, Docker) | Docs, format, host on Windows and Linux; F030R8/F103C8/F411CE CI firmware with GCC 13.3.1, 14.2.1, 15.2.1 and CMake 3.28.3: build manifest, `prepare`, full image, 10 negative contracts, load section alignment, empty RAM section; the Linux stand environment in `ubuntu:20.04` on x86_64 and aarch64 ([checks and CI](testing.md)) |
-| CI firmware on hardware | 4 stands × 10/10 steps at commit `fbc103d` (section below) |
+| CI firmware on hardware | Final check at `2143665`: 4 stands on Windows, 3 stands from Windows to Orange Pi 5, 3 stands in the Hardware workflow — 10/10 steps each; earlier 4 stands at `fbc103d` (sections below) |
 | Linux stand without hardware | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) in a container: environment installation, host tests (79 at revision 0.7), `doctor`, `build` and `prepare` of the CI firmware; the hardware path without a debugger — lock, OpenOCD start, ERROR "exited before ready", processes stopped |
 | Remote GDB server on hardware | Runner and GDB on Windows 10, GDB servers on Orange Pi 5 over SSH: F411CE / OpenOCD, F103C8 / J-Link CE, F030R8 / J-Link STLink — 10/10 each (`run_hw.py`) |
 | Remote GDB server without hardware | SSH loopback (OpenSSH, key, `known_hosts`) and a fake J-Link server: port forwarding, GDB connecting through the tunnel, recovery, stopping the server and returning its log, refusal on a busy stand host lock, cleanup after a broken session |
@@ -53,6 +53,21 @@ API contents; a matching HAL version does not prove matching behaviour.
 | Build in one place, run on a stand (`pack`, `run --package`) | Checked: packages built on Windows, three stands × 10/10 on Orange Pi 5 |
 | Hardware CI on a self-hosted runner (Hardware workflow), loop runs (`run_hw.py --repeat`) | Checked: runner service on Orange Pi 5, packages built on GitHub — three stands × 10/10; loop — F411CE, 10 iterations, Ctrl+C interruption |
 
+## Final check of 0.1.0-rc.1, 2026-09-29
+
+Commit `2143665` (version `0.1.0rc1`); later changes are documentation only.
+
+| Check | Result |
+| --- | --- |
+| CI: Docs, Offline (format, host Windows/Linux, CI firmware on GCC 13/14/15, Linux stand environment) | green |
+| `run_hw.py` on Windows: F030R8 / J-Link STLink, F103C8 / J-Link CE, F411CE / OpenOCD, F411CE / ST-LINK GDB Server | 4 × 10/10 |
+| `run_hw.py` from Windows, GDB servers on Orange Pi 5 over SSH: F030R8 / J-Link, F103C8 / J-Link, F411CE / OpenOCD | 3 × 10/10 |
+| Hardware workflow: packages built on GitHub, run on the Orange Pi 5 runner service | 3 × 10/10 |
+| STM32G474 consumer project, runner on Windows, OpenOCD on Orange Pi 5: CTest host 5/5, scenarios on the board | 4/4 PASS |
+
+On NUCLEO-F030R8, J-Link STLink on Windows shows a terms-of-use window; confirm it
+before the run, otherwise the connection waits for the answer.
+
 ## Hardware check of the CI firmware, 2026-09-28
 
 Commit `fbc103d`, `Tests/firmware/run_hw.py`, xPack GCC 13.3.1-1.1. Every stand passed
@@ -72,8 +87,8 @@ The first F030R8 run found a HardFault in `Reset_Handler`: the `.data` load addr
 was unaligned, and Cortex-M0 does not allow unaligned word reads. The linker scripts
 were fixed and CI checks the alignment — an example of a run-time defect that checks
 without hardware cannot see. After `fbc103d` the BIN is built from the selected
-sections only; before the release the hardware check is repeated on the final commit
-(item 8.19 of the [specification](../TECHNICAL_SPECIFICATION.md)). The
+sections only; before the release the hardware check was repeated on the final commit
+(item 8.19 of the [specification](../TECHNICAL_SPECIFICATION.md), section above). The
 stm32-hwtest-blackpill suite was not repeated on these commits.
 
 ## Implementation limits
@@ -106,7 +121,7 @@ test and may replace Flash, while `ctest --preset offline` does not connect to a
 
 ## Next steps
 
-The final check on the v0.1.0-rc.1 commit and the tag; then v0.1.0. Next, supervision of
+The v0.1.0-rc.1 tag; then v0.1.0 and a hardware check of the consumer project's STM32G431 variant. Next, supervision of
 server processes, evolution of the
 profile schema and manifest; later a host controller for external equipment and Python
 packaging. These are plans, not available features: [roadmap](../../TODO.md)

@@ -89,6 +89,8 @@ The first release candidate (Python version `0.1.0rc1`, `API_VERSION = 1`, speci
 
 ### Changed
 
+- README: features as a list, a table of run layouts with their verification status, MCU
+  profiles and verified MCU/debugger/server combinations; STATUS: final check of the candidate.
 - The `linux-stand` CI job uses the `ubuntu:20.04` container pinned by digest.
 - Project definition: a verification loop for STM32 firmware on real hardware for
   agent-driven and manual development, technically a debugger-driven test framework.
@@ -138,5 +140,6 @@ The first release candidate (Python version `0.1.0rc1`, `API_VERSION = 1`, speci
   longer cause a false error or reprogramming.
 - Bounds/overlap validation before the server, block readback, explicit evidence scope.
 
-The `v0.1.0-rc.1` tag goes on the merge commit after the final check on it (CI, hardware
-runs on the stands, consumer scenarios) — [before a release](docs/en/VERSIONING.md#before-a-release).
+The final check passed on commit `2143665` (CI, hardware runs on the stands, consumer
+scenarios) — [before a release](docs/en/VERSIONING.md#before-a-release). The `v0.1.0-rc.1` tag goes on
+the commit with the refined documentation: its code is identical to the verified one.
