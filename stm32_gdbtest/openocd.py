@@ -5,6 +5,8 @@ import re
 import shutil
 import tomllib
 
+from stm32_gdbtest.toolchain import expand_path
+
 
 DEFAULT_STARTUP_TIMEOUT_S = 10
 
@@ -35,7 +37,8 @@ def validate(data, local=True):
     policy = data.get("flash", "if-different")
     if policy not in ("if-different", "verify-only"):
         raise ValueError("flash must be if-different or verify-only")
-    executable = shutil.which(data.get("executable", "openocd")) if local else data.get("executable", "openocd")
+    executable = (shutil.which(expand_path(data.get("executable", "openocd"))) if local
+                  else data.get("executable", "openocd"))
     if not executable:
         raise FileNotFoundError("OpenOCD executable not found")
     return dict(data, executable=executable, speed_khz=speed, flash=policy,

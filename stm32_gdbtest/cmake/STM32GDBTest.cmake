@@ -26,14 +26,19 @@ function(stm32_gdbtest_attach target)
     if(NOT HW_PROFILE)
         set(HW_PROFILE "${HW_PROFILE_DIR}/target.toml")
     endif()
-    if(NOT HW_PROFILE_DIR OR NOT IS_DIRECTORY "${HW_PROFILE_DIR}/Tests" OR NOT EXISTS "${HW_PROFILE}")
-        message(FATAL_ERROR "stm32_gdbtest_attach requires PROFILE_DIR with Tests/ and a target description "
-            "(PROFILE_DIR/target.toml or PROFILE)")
+    # ТЗ 5.13.2: the scenario directory is PROFILE_DIR/Tests or PROFILE_DIR/tests.
+    set(hw_tests_root "${HW_PROFILE_DIR}/Tests")
+    if(NOT IS_DIRECTORY "${hw_tests_root}" AND IS_DIRECTORY "${HW_PROFILE_DIR}/tests")
+        set(hw_tests_root "${HW_PROFILE_DIR}/tests")
+    endif()
+    if(NOT HW_PROFILE_DIR OR NOT IS_DIRECTORY "${hw_tests_root}" OR NOT EXISTS "${HW_PROFILE}")
+        message(FATAL_ERROR "stm32_gdbtest_attach requires PROFILE_DIR with Tests/ (or tests/) and a target "
+            "description (PROFILE_DIR/target.toml or PROFILE)")
     endif()
     find_package(Python3 3.11 COMPONENTS Interpreter REQUIRED)
     get_filename_component(STM32_GDBTEST_MODULE_ROOT "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../.." ABSOLUTE)
     set(STM32_GDBTEST_ROOT "${PROJECT_SOURCE_DIR}")
-    set(STM32_GDBTEST_TESTS "${HW_PROFILE_DIR}/Tests/board")
+    set(STM32_GDBTEST_TESTS "${hw_tests_root}/board")
     set(STM32_GDBTEST_PROFILE "${HW_PROFILE}")
     set(STM32_GDBTEST_SESSION "${CMAKE_BINARY_DIR}/hwtest/session.json")
     if(NOT CMAKE_GENERATOR STREQUAL "Ninja")
@@ -99,7 +104,7 @@ function(stm32_gdbtest_attach target)
     set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${test_sources}
         "${STM32_GDBTEST_MODULE_ROOT}/stm32_gdbtest/collect.py")
     add_test(NAME host.traceability COMMAND "${Python3_EXECUTABLE}" "${STM32_GDBTEST_MODULE_ROOT}/stm32_gdbtest/cli.py"
-        trace --tests "${STM32_GDBTEST_TESTS}" --requirements "${HW_PROFILE_DIR}/Tests/requirements.md")
+        trace --tests "${STM32_GDBTEST_TESTS}" --requirements "${hw_tests_root}/requirements.md")
     set_tests_properties(host.traceability PROPERTIES LABELS host TIMEOUT 30
         WORKING_DIRECTORY "${STM32_GDBTEST_ROOT}" ENVIRONMENT "PYTHONDONTWRITEBYTECODE=1")
     if(HW_SELF_TESTS)

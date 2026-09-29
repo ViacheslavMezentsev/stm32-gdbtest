@@ -26,7 +26,8 @@ stm32_gdbtest_attach(firmware_target
   preparation and hardware runs work on Windows and Linux ([Linux stand](LINUX_STAND.md)).
 - `PROFILE_DIR`, `PROFILE` and `MANIFEST_INPUTS` paths are absolute. `PROFILE_DIR`
   contains `Tests/board/test_*.py`, `Tests/requirements.md`, `Tests/contracts.json`
-  when contracts are used, and `target.toml`.
+  when contracts are used, and `target.toml`. The scenario directory may also be named
+  `tests`.
 - `PROFILE` is the MCU description as a separate file instead of
   `PROFILE_DIR/target.toml`. Several MCU variants of one firmware then share scenarios,
   requirements and contracts; each variant is its own build with its own `PROFILE`:

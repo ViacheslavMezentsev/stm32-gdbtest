@@ -7,6 +7,7 @@ import shutil
 import tomllib
 
 from stm32_gdbtest import openocd, remote as remote_host
+from stm32_gdbtest.toolchain import expand_path
 
 
 # Vendor names differ by OS: SEGGER ships JLinkGDBServerCLExe on Linux; ST keeps the
@@ -46,7 +47,7 @@ def load_stand(path):
         raise ValueError("flash must be if-different or verify-only")
     data = dict(data, startup_timeout_s=openocd.startup_timeout(data))
     if local:
-        executable = shutil.which(data.get("executable", DEFAULT_SERVER[data["backend"]]))
+        executable = shutil.which(expand_path(data.get("executable", DEFAULT_SERVER[data["backend"]])))
     else:
         executable = data.get("executable", remote_host.stand_executable_default(data["backend"]))
     if not executable:
@@ -54,7 +55,7 @@ def load_stand(path):
     if data["backend"] == "jlink":
         return dict(data, executable=executable, speed_khz=speed, flash=policy, remote=remote)
     if local:
-        programmer = Path(data.get("programmer_dir", ""))
+        programmer = Path(expand_path(data.get("programmer_dir", "")))
         if not programmer.is_absolute() or not (programmer / PROGRAMMER).is_file():
             raise ValueError("programmer_dir must contain " + PROGRAMMER)
         programmer = str(programmer)

@@ -1,4 +1,4 @@
-"""Remote GDB server over SSH without an SSH server or a debugger (TC-99…TC-102, TC-110)."""
+"""Remote GDB server over SSH without an SSH server or a debugger (TC-99…TC-102, TC-110, TC-117)."""
 import base64
 import json
 import os
@@ -53,6 +53,25 @@ class RemoteSettingsTests(unittest.TestCase):
         with patch("stm32_gdbtest.remote.shutil.which", return_value=None):
             with self.assertRaisesRegex(FileNotFoundError, "SSH client"):
                 remote.load(dict(host="h"))
+
+    def test_stand_paths_expand_environment_variables(self):
+        # TC-117: ТЗ 3.4.12 — %VAR%, $VAR, ${VAR} and ~ in local stand paths, on every OS
+        from stm32_gdbtest.toolchain import expand_path
+        with tempfile.TemporaryDirectory() as temp:
+            key = Path(temp) / "id_stand"
+            key.write_text("key")
+            with patch.dict(os.environ, {"STAND_HOME": temp}):
+                for raw in ("%STAND_HOME%/id_stand", "$STAND_HOME/id_stand", "${STAND_HOME}/id_stand"):
+                    with self.subTest(raw=raw):
+                        self.assertEqual(Path(expand_path(raw)), key)
+                        loaded = remote.load(dict(host="stand", identity_file=raw))
+                        self.assertEqual(Path(loaded["identity_file"]), key)
+            self.assertEqual(expand_path("~/x"), os.path.expanduser("~/x"))
+            with patch.dict(os.environ, {}, clear=False):
+                os.environ.pop("STAND_UNSET_VAR", None)
+                for raw in ("%STAND_UNSET_VAR%/k", "$STAND_UNSET_VAR/k"):
+                    with self.subTest(raw=raw), self.assertRaisesRegex(ValueError, "not set"):
+                        expand_path(raw)
 
     def test_ssh_command_is_key_only_and_script_is_quoting_free(self):
         # TC-100: ТЗ 5.18.1, 5.18.2

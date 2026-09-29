@@ -36,6 +36,23 @@ not widen the selected profile or linker script. Example: a WeAct BluePill-Plus 
 STM32F103C8 reports 128 KiB against a 64 KiB profile — a warning, and the run
 continues within the profile bounds.
 
+## Clones and remarked chips
+
+On cheap boards (BluePill and similar) the package marking, DEV_ID and the Flash size
+register often differ from the expected MCU: an STM32F103C8 with 128 KiB Flash like an
+F103CB, or a compatible chip from another vendor. What to do:
+
+- **A different Flash size with the same DEV_ID** (F103C8 and F103CB are both `0x410`) is
+  only a warning: the run stays within the profile. The profile and the linker script
+  describe what the firmware targets, not what the chip reported.
+- **A different DEV_ID.** With the `warn` policy the scenario runs with a warning, with
+  `strict` it is ERROR. If such a chip is a deliberate part of the stand, describe it with
+  its own profile holding the observed `[identity]` (a separate `target.toml` or a
+  `PROFILE` file) and check it there instead of relaxing the policy for every board.
+- **Compatible chips from other vendors** (GD32, CKS32 and so on) may differ in debug and
+  Flash registers and timing. A matching DEV_ID does not prove compatibility; such boards
+  are checked as a separate MCU.
+
 This interprets the factory register according to the selected profile; it is not a
 test of the whole memory. For an unknown MCU the address may be wrong, and a warning
 does not prove that the memory map and peripherals are compatible. For a new family

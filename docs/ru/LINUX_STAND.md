@@ -136,7 +136,7 @@ executable = "/opt/SEGGER/JLink/JLinkGDBServerCLExe"   # путь на Orange Pi
 [remote]
 host = "<хост>"                  # адрес, имя или псевдоним из ~/.ssh/config
 user = "orangepi"
-identity_file = "C:/Users/<user>/.ssh/id_ed25519_stand"
+identity_file = "~/.ssh/id_ed25519_stand"       # или %USERPROFILE%/.ssh/…
 ```
 
 Ключи `[remote]`:
@@ -146,7 +146,7 @@ identity_file = "C:/Users/<user>/.ssh/id_ed25519_stand"
 | `host` | Адрес, имя хоста или псевдоним из `~/.ssh/config` (обязателен) |
 | `user` | Пользователь на хосте стенда; по умолчанию — из конфигурации SSH |
 | `port` | Порт SSH, 1…65535, по умолчанию 22 |
-| `identity_file` | Существующий абсолютный путь к закрытому ключу; без него — ключи агента и `~/.ssh` |
+| `identity_file` | Путь к закрытому ключу; `~`, `%USERPROFILE%`, `$HOME` раскрываются (например, `~/.ssh/id_ed25519_stand`); без него — ключи агента и `~/.ssh` |
 | `env_script` | Скрипт окружения на хосте стенда; не подключился — отказ с кодом 97. По умолчанию подключается `~/.local/stm32-gdbtest/env.sh`, если он есть |
 | `ssh` | Клиент SSH, по умолчанию `ssh` из `PATH` |
 

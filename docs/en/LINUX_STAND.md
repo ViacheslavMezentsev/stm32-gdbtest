@@ -139,7 +139,7 @@ executable = "/opt/SEGGER/JLink/JLinkGDBServerCLExe"   # path on the Orange Pi
 [remote]
 host = "<host>"                  # address, name or an alias from ~/.ssh/config
 user = "orangepi"
-identity_file = "C:/Users/<user>/.ssh/id_ed25519_stand"
+identity_file = "~/.ssh/id_ed25519_stand"       # or %USERPROFILE%/.ssh/…
 ```
 
 `[remote]` keys:
@@ -149,7 +149,7 @@ identity_file = "C:/Users/<user>/.ssh/id_ed25519_stand"
 | `host` | Address, host name or an alias from `~/.ssh/config` (required) |
 | `user` | User on the stand host; by default from the SSH configuration |
 | `port` | SSH port, 1…65535, default 22 |
-| `identity_file` | Existing absolute path to a private key; without it the agent keys and `~/.ssh` are used |
+| `identity_file` | Path to a private key; `~`, `%USERPROFILE%`, `$HOME` are expanded (for example `~/.ssh/id_ed25519_stand`); without it the agent keys and `~/.ssh` are used |
 | `env_script` | Environment script on the stand host; failing to source it refuses with code 97. By default `~/.local/stm32-gdbtest/env.sh` is sourced when it exists |
 | `ssh` | SSH client, default `ssh` from `PATH` |
 

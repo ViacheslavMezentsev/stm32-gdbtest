@@ -11,5 +11,5 @@ flash = "if-different"
 host = "REPLACE_WITH_STAND_HOST"         # address, name or ~/.ssh/config alias
 user = "orangepi"
 # port = 22
-# identity_file = "C:/Users/<user>/.ssh/id_ed25519_stand"
+# identity_file = "~/.ssh/id_ed25519_stand"      # ~, %USERPROFILE%, $HOME are expanded
 # env_script = "~/.local/stm32-gdbtest/env.sh"   # default when the file exists

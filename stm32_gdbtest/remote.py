@@ -16,6 +16,8 @@ import re
 import shutil
 import threading
 
+from stm32_gdbtest.toolchain import expand_path
+
 HELPER = Path(__file__).with_name("remote_helper.py")
 ALLOWED = {"host", "user", "port", "identity_file", "env_script", "ssh"}
 NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
@@ -49,7 +51,7 @@ def load(table):
         raise ValueError("[remote] port must be an integer between 1 and 65535")
     identity = table.get("identity_file")
     if identity is not None:
-        identity = Path(identity).expanduser()
+        identity = Path(expand_path(identity))
         if not identity.is_absolute() or not identity.is_file():
             raise ValueError("[remote] identity_file must be an existing absolute path to a private key")
         identity = str(identity)

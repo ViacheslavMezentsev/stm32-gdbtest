@@ -2,7 +2,24 @@
 
 import os
 from pathlib import Path
+import re
 import shutil
+
+_PERCENT = re.compile(r"%([A-Za-z_][A-Za-z0-9_]*)%")
+_UNEXPANDED = re.compile(r"%[A-Za-z_][A-Za-z0-9_]*%|\$\{?[A-Za-z_]")
+
+
+def expand_path(value):
+    """Local stand path (ТЗ 3.4.12): ~, %VAR% and $VAR/${VAR} on every OS.
+
+    A stand file can then say "%USERPROFILE%/.ssh/key" or "~/.ssh/key" instead of a
+    personal absolute path. A variable that is not set is an error, not an empty string.
+    """
+    expanded = _PERCENT.sub(lambda m: os.environ.get(m[1], m[0]), str(value))
+    expanded = os.path.expanduser(os.path.expandvars(expanded))
+    if _UNEXPANDED.search(expanded):
+        raise ValueError(f"Environment variable in path is not set: {value}")
+    return expanded
 
 
 def toolchain_gdb():

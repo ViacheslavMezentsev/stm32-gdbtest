@@ -8,6 +8,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- Local stand paths expand `~`, `%VAR%` and `$VAR` (`%USERPROFILE%/.ssh/key`); the scenario
+  directory may be named `tests`.
 - `stm32_gdbtest_attach(... PROFILE <target.toml>)`: the MCU description as a separate file,
   shared `Tests` (scenarios, requirements, contracts) for several MCU variants of one firmware.
 - Prepared run packages: `pack` prepares scenarios without hardware and writes a zip with the

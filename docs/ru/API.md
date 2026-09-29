@@ -25,7 +25,8 @@ stm32_gdbtest_attach(firmware_target
   и аппаратный запуск работают на Windows и Linux ([Linux-стенд](LINUX_STAND.md)).
 - `PROFILE_DIR`, `PROFILE` и пути `MANIFEST_INPUTS` задаются абсолютными. В
   `PROFILE_DIR` находятся `Tests/board/test_*.py`, `Tests/requirements.md`, при
-  использовании контрактов `Tests/contracts.json` и `target.toml`.
+  использовании контрактов `Tests/contracts.json` и `target.toml`. Каталог сценариев
+  может называться и `tests`.
 - `PROFILE` — описание MCU отдельным файлом вместо `PROFILE_DIR/target.toml`. Так
   несколько вариантов MCU одной прошивки используют общие сценарии, требования и
   контракты; каждый вариант — своя сборка со своим `PROFILE`:

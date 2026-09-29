@@ -26,7 +26,8 @@ Backend задаёт запуск и готовность сервера, ком
 Неизвестный ключ отклоняется. Шаблоны: [OpenOCD](../../examples/stands/stlink.example.toml)
 и [OpenOCD, ST, J-Link для CI-прошивок](../../Tests/firmware/stands/jlink.example.toml)
 (в той же папке `openocd.example.toml`, `stlink.example.toml` и `remote.example.toml` для
-удалённого стенда). Локальные пути и
+удалённого стенда). В локальных путях (`executable`, `programmer_dir`, `identity_file`)
+раскрываются `~`, `%VAR%` и `$VAR`: `%USERPROFILE%/...` вместо личного пути. Локальные пути и
 серийные номера не коммитятся (`*.local.toml`). `run --prepare-only --stand …`
 проверяет стенд и команды backend без подключения к отладчику, а `doctor --stand …`
 дополнительно проверяет GDB-Python, OpenOCD и доступ к USB.
