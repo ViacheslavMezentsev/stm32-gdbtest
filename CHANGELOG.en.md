@@ -8,6 +8,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- Specification revision 0.22: question 11.2.23 on build system independence (a stable
+  `session.json` schema with a command to create it, an optional build manifest).
 - Release notes `docs/releases/<tag>.md` (starting with v0.1.0-rc.1) — the annotated
   tag message and the GitHub release text; procedure in VERSIONING and maintenance.
 
