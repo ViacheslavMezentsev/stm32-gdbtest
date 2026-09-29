@@ -42,7 +42,9 @@ current revision is stated in its header.
 3. A "release" spec revision with up-to-date appendices B and F.
 4. Host and offline checks, consumer integration through a real submodule, agreed
    hardware and recovery checks on the final commit.
-5. Merge into main, then tag `vX.Y.Z` on the merge commit. Tags are never moved.
+5. Merge into main, then an annotated signed tag `vX.Y.Z` on the merge commit with the
+   message from `docs/releases/vX.Y.Z.md` ([tag and notes](VERSIONING.md#tag-and-release-notes)).
+   Tags are never moved.
 
 **Technical specification**
 

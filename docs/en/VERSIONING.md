@@ -29,7 +29,29 @@ version and change only when the corresponding contract changes.
    in the commit. The actual check matrix and known limits are stated.
 5. `__version__` is updated, a dated CHANGELOG section is opened (RU and EN),
    `[Unreleased]` is kept for future changes; a "release" specification revision is issued.
-6. Merge into main, then tag the merge commit. The owner publishes; the name is
+6. The release branch contains the release notes `docs/releases/<tag>.md` (section below).
+7. Merge into main, then tag the merge commit. The owner publishes; the name is
    checked before a package is published.
+
+## Tag and release notes
+
+The tag is annotated and signed; its message is the release notes file:
+
+```powershell
+git tag -s v0.1.0 -F docs/releases/v0.1.0.md --cleanup=verbatim
+git push origin v0.1.0
+```
+
+`--cleanup=verbatim` keeps the text as is: without it git drops lines starting with
+`#`. The same file is the GitHub release text (Releases → Draft a new release; for
+`-rc` tick "Set as a pre-release") or `gh release create v0.1.0 -F
+docs/releases/v0.1.0.md` (`--prerelease` for candidates).
+
+The notes are plain text without Markdown headings, Russian first, then English after
+a `---` line. Contents: the first line `stm32-gdbtest <version> — <gist>`; the purpose
+in one or two sentences; Python version, `API_VERSION`, specification revision;
+"Highlights" — 5–8 user-relevant items from the CHANGELOG; "Final check" — the commit
+and the result matrix; "Limits"; links to CHANGELOG and STATUS.
+Example — [v0.1.0-rc.1](../releases/v0.1.0-rc.1.md).
 
 Branch and commit rules — [maintenance](maintenance.md).

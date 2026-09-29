@@ -6,6 +6,11 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+### Added
+
+- Release notes `docs/releases/<tag>.md` (starting with v0.1.0-rc.1) — the annotated
+  tag message and the GitHub release text; procedure in VERSIONING and maintenance.
+
 ## [0.1.0-rc.1] — 2026-09-29
 
 The first release candidate (Python version `0.1.0rc1`, `API_VERSION = 1`, specification revision 0.21).
