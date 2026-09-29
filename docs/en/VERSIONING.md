@@ -52,6 +52,9 @@ a `---` line. Contents: the first line `stm32-gdbtest <version> — <gist>`; the
 in one or two sentences; Python version, `API_VERSION`, specification revision;
 "Highlights" — 5–8 user-relevant items from the CHANGELOG; "Final check" — the commit
 and the result matrix; "Limits"; links to CHANGELOG and STATUS.
+GitHub turns `@name` into a user mention (the user appears among the release
+contributors) and `#number` into an issue link, so write such fragments only in
+backticks: `` `@case` ``.
 Example — [v0.1.0-rc.1](../releases/v0.1.0-rc.1.md).
 
 Branch and commit rules — [maintenance](maintenance.md).
