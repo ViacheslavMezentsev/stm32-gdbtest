@@ -1,6 +1,32 @@
 """Target API. Imported only inside GDB's main Python thread."""
 
+import re
+
 import gdb
+
+_CLONE = re.compile(r"\s*\[clone [^\]]*\]")
+
+
+def function_name(name):
+    """Plain function name of a frame (ТЗ 5.10.7).
+
+    GDB may name a frame by its ELF symbol instead of DWARF, as GCC/LTO emits it:
+    `HmiManager::init() [clone .constprop.0]`, `ParamRegistry::print() const`. Clone
+    suffixes, trailing qualifiers and the parameter list are removed.
+    """
+    if name is None:
+        return None
+    name = _CLONE.sub("", name).strip()
+    while name.endswith((" const", " volatile")):
+        name = name.rsplit(" ", 1)[0]
+    if name.endswith(")"):
+        depth = 0
+        for index in range(len(name) - 1, -1, -1):
+            depth += {")": 1, "(": -1}.get(name[index], 0)
+            if depth == 0:
+                name = name[:index]
+                break
+    return name.strip()
 
 
 class CheckFailed(AssertionError):
@@ -74,7 +100,9 @@ class Target:
             stop = self.stops[-1] if self.stops else {}
             self.report.setdefault("stops", []).append(stop)
             self.check(f"breakpoint reached: {function}", number in stop.get("breakpoints", []), True)
-            self.check(f"frame: {function}", gdb.newest_frame().name(), function)
+            frame = gdb.newest_frame().name()
+            stop["frame"] = frame
+            self.check(f"frame: {function}", function_name(frame), function_name(function))
             if when is not None:
                 # GDB can stop after a condition evaluation error; never accept that silently.
                 self.check(f"condition: {when}", bool(self.value(when)), True)

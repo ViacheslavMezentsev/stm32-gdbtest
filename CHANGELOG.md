@@ -105,6 +105,9 @@
 
 ### Fixed
 
+- `reach` сравнивает имя кадра без суффиксов `[clone …]`, `const` и параметров: с LTO GDB
+  называет кадр по символу ELF (`HmiManager::init() [clone .constprop.0]`), и верная
+  остановка давала FAIL.
 - Build manifest с пустыми `cube_packages` и `library_versions` больше не отклоняется:
   HAL и CMSIS могут быть не из пакета `STM32Cube_FW_*` (Arduino Core STM32).
 - Удалённый сервер: runner шлёт в SSH-сессию сигнал присутствия каждые 2 с; при обрыве

@@ -106,6 +106,9 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Fixed
 
+- `reach` compares the frame name without `[clone …]` suffixes, `const` and parameters: with
+  LTO GDB names the frame by its ELF symbol (`HmiManager::init() [clone .constprop.0]`), and
+  a correct stop gave FAIL.
 - A build manifest with empty `cube_packages` and `library_versions` is no longer
   rejected: HAL and CMSIS may come from outside an `STM32Cube_FW_*` package (Arduino Core STM32).
 - Remote server: the runner sends a heartbeat into the SSH session every 2 s; when the link

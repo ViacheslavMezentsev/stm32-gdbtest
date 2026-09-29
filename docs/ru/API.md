@@ -70,7 +70,7 @@ def gpio(t):
 | `check(name, actual, expected)` | Запись результата; несовпадение вызывает `CheckFailed` → FAIL |
 | `value(expression)` | `gdb.parse_and_eval`, отказ для optimized-out, возвращает `int` |
 | `fields(expression, expected)` | Поэлементное сравнение скалярных полей с `int` или C-выражением |
-| `reach(function, when=None)` | Временная аппаратная точка, `continue`, проверка причины остановки, кадра и условия |
+| `reach(function, when=None)` | Временная аппаратная точка, `continue`, проверка причины остановки, кадра и условия; имя кадра сравнивается без `[clone …]` и параметров (клоны LTO) |
 | `breakpoint(function, temporary=False, when=None)` | Аппаратная точка с проверкой pending и бюджета профиля |
 | `set_value(expression, value)` | Явная запись с журналом before/after; допустимость записи в MMIO проверяет автор |
 | `force_return(expression)` | Принудительный return из текущего кадра с журналом; тело функции не выполняется |
