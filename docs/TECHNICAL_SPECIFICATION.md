@@ -44,7 +44,7 @@
 | Пункты | Тип | Суть |
 | :--- | :---: | :--- |
 | 3.5, 5.13.1, 5.13.2, 5.19.1, 6.8.2 | изм. | `PROFILE`: описание MCU вне каталога сценариев |
-| 9.2, 10 | нов., изм. | TC-116; матрица |
+| 9.2, 10 | нов., изм. | TC-116; TC-114 дополнен сценариями `setup()` и `force_return`; матрица |
 
 ### Изменения ревизии 0.18
 
@@ -1303,7 +1303,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-111 | C: удалённый запуск с Windows на Orange Pi 5, во время прогона Ctrl+C, затем отключение сети компьютера запуска (р.0.13) | После Ctrl+C и через ≤ 20 с после отключения сети на хосте стенда нет процессов сервера и помощника; следующий запуск получает отладчик. Выполнено: F411CE/OpenOCD — после Ctrl+C процессов нет; сервер удержан 25 с, кабель Orange Pi выдернут — сервер и помощник остановлены через 13 с, следующий запуск boot и gpio — PASS |
 | TC-112 | C: runner и GDB в WSL2 (Ubuntu 20.04 x86_64, окружение `tools/linux_stand.py` без OpenOCD), сервер и отладчики на Orange Pi 5 по SSH (р.0.15) | `doctor` без FAIL, `run_hw.py` 10/10. Выполнено: F411CE/OpenOCD, F103C8/J-Link CE, F030R8/J-Link STLink — по 10/10 |
 | TC-113 | `BuildManifestTests.test_descriptive_lists_may_be_empty` (р.0.16) | Manifest с пустыми `cube_packages` и `library_versions` принят; `cube_packages = null` отклоняется (`test_mismatched_artifacts_and_incomplete_schema_are_rejected`) |
-| TC-114 | Потребитель: STM32G474, Arduino Core STM32 и stm32-cmake-yml (CRC в ELF после линковки), `stm32_gdbtest_attach` после настройки проекта, стенд с `[remote]` на Orange Pi 5 (р.0.17) | `host.traceability`, `prepare.<ID>` и `hw.<ID>` сценария загрузки — PASS; manifest снят после встраивания CRC. Выполнено: DEV_ID `0x469`, IWDG заморожен при остановке |
+| TC-114 | Потребитель: STM32G474, Arduino Core STM32 и stm32-cmake-yml (CRC в ELF после линковки), `stm32_gdbtest_attach` после настройки проекта, стенд с `[remote]` на Orange Pi 5 (р.0.17) | `host.traceability`, `prepare.<ID>` и `hw.<ID>` сценария загрузки — PASS; manifest снят после встраивания CRC. Выполнено: DEV_ID `0x469`, IWDG заморожен при остановке. В р.0.19 — четыре сценария на сборке без LTO: загрузка, завершение `setup()`, 15 вызовов по порядку (`reach`), отказ питания через `force_return` (первая аппаратная проверка `force_return`) — PASS |
 | TC-115 | `FrameNameTests.test_clone_suffixes_qualifiers_and_parameters_are_removed` (р.0.18) | `HmiManager::init() [clone .constprop.0]` → `HmiManager::init`; `print() const [clone …]`, несколько суффиксов, параметры и `operator()` обрабатываются; разные функции не совпадают |
 | TC-116 | `PackageTests.test_target_description_outside_the_scenario_directory` (р.0.19) | `target.toml` из отдельного каталога попадает в пакет как `profile/target.toml`, `Tests` — целиком, `tests_dir = profile/Tests/board`; после распаковки сценарии и реестр рядом с описанием MCU. Дополнительно в среде формирования: CI-прошивка F411CE с `PROFILE` вне `PROFILE_DIR` — `prepare` с контрактом и traceability PASS |
 
@@ -1397,7 +1397,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 5.9.7 | ID: `check_target` | TC-46–TC-49 |
 | 5.9.8 | ID: `check_target` | TC-49 |
 | 5.9.9 | AG; RU: печать `warnings` | TC-40, TC-48 |
-| 5.10.1–5.10.13 | TG: `Target`, `function_name`; AG: `main` | TC-68, TC-72, TC-115, I |
+| 5.10.1–5.10.13 | TG: `Target`, `function_name`; AG: `main` | TC-68, TC-72, TC-114, TC-115, I |
 | 5.11.1–5.11.3 | AG: `finally` | TC-70, TC-72, I |
 | 5.12.1–5.12.6 | RU: `execute` (`finally`); PS: `stop_tree` | TC-70 |
 | 5.13.1–5.13.13 | CK: `stm32_gdbtest_attach`, `stm32_gdbtest_register` | A, TC-66, TC-67, TC-72, TC-116 |

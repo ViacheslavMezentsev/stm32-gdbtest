@@ -63,6 +63,18 @@ actual stop reason: a breakpoint that was set successfully is not a test by itse
 GPIO register value does not prove the pin voltage, `uwTick` does not measure an exact
 external duration, Sleep under SWD does not prove current consumption.
 
+**LTO.** With `-flto` functions from different files are inlined into each other: the code
+of an inlined function may run out of source order (`reach` steps wait for a function that
+has already run until the timeout), `force_return` from an inlined function is impossible,
+and GDB may name the frame by a clone (`Func() [clone .constprop.0]`; `reach` accepts such
+names). For scenarios that walk through calls or replace a return value, build a test
+variant without LTO: add `-fno-lto` after `-flto` in the compile and link options (GCC uses
+the last one). The checked firmware is then the variant without LTO.
+
+**Several MCU variants.** When one firmware builds for different MCUs with the same logic,
+keep scenarios and requirements in one `PROFILE_DIR/Tests` and each MCU description as a
+separate file selected with `PROFILE` ([API](API.md)); each variant is its own build.
+
 A task for an agent must state the MCU, firmware or ELF, stand, goal and allowed
 actions. Do not guess the hardware wiring and do not set expectations from an observed
 result just to get a PASS; a person checks the same assumptions. Negative scenarios

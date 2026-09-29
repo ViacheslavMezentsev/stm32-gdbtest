@@ -24,7 +24,7 @@
 | Стендовый проект, F030R8 / J-Link STLink | 17/17 HW |
 | Стендовый проект, F429ZI / ST-Link/V2 | 22/22 HW через OpenOCD и ST server на модуле `b76d909`; единичные сбои USB в длинных сериях ([протокол](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/F429_SERVER_STABILITY.md)) |
 | Независимый consumer F411 | Сборка и offline, аппаратный сценарий, verify-only, timeout/recovery и восстановление основной прошивки |
-| Проект потребителя, STM32G474 / ST-Link через Orange Pi 5 | Arduino Core STM32 (HAL и CMSIS не из STM32Cube), stm32-cmake-yml с CRC в ELF после линковки, C++ с LTO, xPack GCC 14.2.1 (GDB 15.2.90, Python 3.12.8); runner на Windows, OpenOCD на Orange Pi по SSH. `prepare` и `hw` сценария загрузки (DEV_ID `0x469`, заморозка IWDG при остановке) — PASS. Подключение выявило отказ manifest без пакетов STM32Cube (исправлен, ТЗ 0.16) |
+| Проект потребителя, STM32G474 / ST-Link через Orange Pi 5 | Arduino Core STM32 (HAL и CMSIS не из STM32Cube), stm32-cmake-yml с CRC в ELF после линковки, C++ с LTO, xPack GCC 14.2.1 (GDB 15.2.90, Python 3.12.8); runner на Windows, OpenOCD на Orange Pi по SSH. Четыре сценария PASS на одной сборке без LTO: загрузка (DEV_ID `0x469`, заморозка IWDG при остановке), завершение `setup()`, 15 вызовов `setup()` по порядку, инъекция отказа питания через `force_return` — первая аппаратная проверка `force_return`. Подключение выявило отказ manifest без пакетов STM32Cube (исправлен, ТЗ 0.16) |
 | F401CC / ST-Link, ST server на F1/F4 | Более ранние аппаратные проверки; новые macro-сценарии после отделения модуля не повторялись |
 
 Число сценариев относится к приложению потребителя, а не к универсальному набору
