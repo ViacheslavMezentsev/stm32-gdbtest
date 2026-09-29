@@ -1,7 +1,39 @@
+# Build trees and generated artifacts (reports, packages, manifests live under build/)
 /build/
 /examples/minimal-consumer/build/
 /Tests/firmware/build/
+/compile_commands.json
 **/CMakeUserPresets.json
+
+# Local stands: serial numbers, host addresses, key paths (docs/ru/BACKENDS.md)
 *.local.toml
+
+# Private keys must never be committed; stands reference them by path
+id_rsa*
+id_ecdsa*
+id_ed25519*
+*.pem
+
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Personal editor, IDE and agent settings
+/.vscode/
+/.idea/
+/.claude/
+*.swp
+*~
+
+# Agent and desktop app outputs
+/Claude outputs/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
