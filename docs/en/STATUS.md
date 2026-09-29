@@ -101,7 +101,8 @@ stm32-hwtest-blackpill suite was not repeated on these commits.
 - ST-LINK GDB Server is unavailable on Linux aarch64 (ST does not release it for arm64).
 - The build manifest uses Cube and CMSIS metadata; a universal build system and an
   arbitrary toolchain are not claimed.
-- J-Link mapping verified for STM32F103C8T6 → STM32F103C8 and STM32F030R8T6 → STM32F030R8.
+- J-Link mapping verified for STM32F103C8T6 → STM32F103C8 and STM32F030R8T6 → STM32F030R8;
+  STM32F103CBT6 → STM32F103CB is added and not yet verified on hardware.
 - The target schema has mandatory OpenOCD fields. H503 is not supported.
 - `-g3` is needed for macros in the debug information but does not keep unused
   functions. Contracts check the selected symbols, types and expansions, not the whole

@@ -122,8 +122,8 @@ F103C8, F411CE — Cortex-M0, M3, M4) and the example `examples/minimal-consumer
 | STM32G474CE | ST-Link / OpenOCD on Orange Pi 5 | consumer project (Arduino Core STM32) |
 
 OpenOCD and ST-LINK GDB Server need only the profile. J-Link GDB Server requires a
-validated device name mapping, which currently exists only for STM32F103C8T6 and
-STM32F030R8T6. H503 is not supported. Support is defined by the specific combination
+device name mapping, which currently exists for STM32F103C8T6, STM32F030R8T6 and
+STM32F103CBT6 (the last one not yet verified on hardware). H503 is not supported. Support is defined by the specific combination
 of MCU, HAL, GDB and backend, not by the family: [current status](docs/en/STATUS.md).
 
 ## Status

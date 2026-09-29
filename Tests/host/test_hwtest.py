@@ -155,6 +155,8 @@ class HostTests(unittest.TestCase):
         self.assertEqual(f0["command"][f0["command"].index("-device") + 1], "STM32F030R8")
         self.assertEqual(f0["command"][f0["command"].index("-USB") + 1], stand["serial"])
         self.assertEqual(f0["setup"], ["monitor flash breakpoints = 0"])
+        cb = server_spec(stand, 1234, dict(profile, mcu="STM32F103CBT6", flash_size=131072), self.directory)
+        self.assertEqual(cb["command"][cb["command"].index("-device") + 1], "STM32F103CB")
         with self.assertRaisesRegex(ValueError, "mapping not validated"):
             server_spec(stand, 1234, dict(profile, mcu="STM32H503CBT6"), self.directory)
 

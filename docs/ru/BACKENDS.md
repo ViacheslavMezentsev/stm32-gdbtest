@@ -75,7 +75,8 @@ COM frequency 950 kHz. Дополнительный порт SWV (наблюда
 после завершения дерево процессов закрывается.
 
 **J-Link.** Проверены mappings `STM32F103C8T6` → `STM32F103C8` (J-Link CE) и
-`STM32F030R8T6` → `STM32F030R8` (встроенный J-Link STLink на Nucleo). Другие MCU
+`STM32F030R8T6` → `STM32F030R8` (встроенный J-Link STLink на Nucleo); добавлен
+`STM32F103CBT6` → `STM32F103CB` (WeAct BluePill-Plus, аппаратная проверка ожидается). Другие MCU
 отклоняются до запуска сервера, пока mapping не проверен. Flash breakpoints
 отключаются, используются аппаратные точки останова.
 

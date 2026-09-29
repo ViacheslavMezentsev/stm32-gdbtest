@@ -74,7 +74,8 @@ run. Logs and temporary files (`--temp-path`, `-f`, `TEMP`/`TMP`) go to the
 consumer's run directory; the process tree is closed at the end.
 
 **J-Link.** Verified mappings: `STM32F103C8T6` → `STM32F103C8` (J-Link CE) and
-`STM32F030R8T6` → `STM32F030R8` (on-board J-Link STLink on Nucleo). Other MCUs are
+`STM32F030R8T6` → `STM32F030R8` (on-board J-Link STLink on Nucleo); added
+`STM32F103CBT6` → `STM32F103CB` (WeAct BluePill-Plus, hardware check pending). Other MCUs are
 rejected before the server starts until a mapping is verified. Flash breakpoints are
 disabled; hardware breakpoints are used.
 

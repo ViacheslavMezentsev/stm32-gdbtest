@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.22 (черновик для согласования) |
+| **Ревизия** | 0.23 (черновик для согласования) |
 | **Дата формирования** | 29.09.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `Tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0; выпущен кандидат 0.1.0-rc.1 (версия Python `0.1.0rc1`, `API_VERSION = 1`) |
@@ -39,6 +39,15 @@
 | 0.20 | 29.09.2026 | По замечаниям потребителя: локальные пути файла стенда раскрывают `~`, `%VAR%` и `$VAR`/`${VAR}` на любой ОС (например, `%USERPROFILE%/.ssh/key` вместо личного абсолютного пути); каталог сценариев может называться `Tests` или `tests`. |
 | 0.21 | 29.09.2026 | Редакция к выпуску 0.1.0-rc.1: версия модуля `0.1.0rc1`; требования и тест-кейсы не менялись. |
 | 0.22 | 29.09.2026 | После выпуска 0.1.0-rc.1: открыт вопрос 11.2.23 о независимости от системы сборки — стабильная схема `session.json` с командой её создания и необязательный build manifest; допущение 11.1.4 ссылается на вопрос. Требования и тест-кейсы не менялись. |
+| 0.23 | 29.09.2026 | J-Link: соответствие `STM32F103CBT6` → `STM32F103CB` для демонстрационного проекта на WeAct BluePill-Plus (F103CB); TC-33 дополнен. |
+
+### Изменения ревизии 0.23
+
+Изменённые пункты ревизии 0.23 помечены `(р.0.23)`.
+
+| Пункты | Тип | Суть |
+| :--- | :---: | :--- |
+| 6.5.1, 9.2 (TC-33) | изм. | J-Link: `STM32F103CBT6` → `STM32F103CB` |
 
 ### Изменения ревизии 0.22
 
@@ -1017,7 +1026,7 @@ flowchart LR
 
 ### 6.5. Backend J-Link GDB Server
 
-6.5.1. MCU профиля ДОЛЖЕН отображаться в имя устройства J-Link по таблице: `STM32F103C8T6` → `STM32F103C8`, `STM32F030R8T6` → `STM32F030R8`. Иной MCU ДОЛЖЕН отклоняться до запуска сервера («mapping not validated»). `[R]`
+6.5.1. MCU профиля ДОЛЖЕН отображаться в имя устройства J-Link по таблице: `STM32F103C8T6` → `STM32F103C8`, `STM32F103CBT6` → `STM32F103CB`, `STM32F030R8T6` → `STM32F030R8`. Иной MCU ДОЛЖЕН отклоняться до запуска сервера («mapping not validated»). Соответствие `STM32F103CBT6` добавлено для демонстрационного проекта на WeAct BluePill-Plus; аппаратная проверка — на этом стенде. `[U]` (р.0.23)
 
 6.5.2. Команда: `<server> -device <устройство> -if SWD -speed <speed_khz> -USB <serial> -port <port> -swoport 0 -telnetport 0 -RTTTelnetPort 0 -localhostonly 1 -nogui -strict -timeout 5000 -noir -noreset -nohalt -nosinglerun -vd -log <каталог запуска>/jlink.log`. `[R]`
 
@@ -1254,7 +1263,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-30 | `test_stlink_manifest_does_not_invent_openocd_api_version` | Версия 7.14.0, firmware `V2J43M28`, `api = null`; без `PRIVATE` |
 | TC-31 | `test_stlink_requires_programmer_and_rejects_unknown_settings` | Без `programmer_dir` — ошибка; лишний ключ — «Unknown probe setting»; корректный стенд с `flash = if-different` |
 | TC-32 | `test_backend_dialects_keep_vendor_commands_separate` | ST: `finish = [monitor reset, detach]`, `-e`, `-g`, без `-t` и erase-all; OpenOCD: `[monitor reset run, disconnect]`, target cfg в команде |
-| TC-33 | `test_jlink_requires_serial_and_known_device_mapping`: serial `0`, `1`, `nickname`, `001234`; MCU F103, F030, H503 | Serial отклонены; F103 → `STM32F103C8`, F030 → `STM32F030R8`, `-nosinglerun`, `setup`, `finish`; H503 — «mapping not validated» |
+| TC-33 | `test_jlink_requires_serial_and_known_device_mapping`: serial `0`, `1`, `nickname`, `001234`; MCU F103C8, F103CB, F030, H503 (р.0.23) | Serial отклонены; F103C8 → `STM32F103C8`, F103CB → `STM32F103CB`, F030 → `STM32F030R8`, `-nosinglerun`, `setup`, `finish`; H503 — «mapping not validated» |
 | TC-34 | `test_jlink_runtime_version_and_firmware_are_separate` | Версия 8.32, firmware из строки `Firmware:`, `api = null`, без `PRIVATE` |
 | TC-35 | `test_profiles_select_distinct_mcus_and_flash_limits` | F411: 512 KiB, F103: 64 KiB; разные identity; F103 — `stm32f1x.cfg` |
 | TC-36 | `test_profile_rejects_typo_and_missing_settings`: опечатка ключа, schema 2, `breakpoint_limit` = числу handlers, отрицательный размер, нечётный адрес | `ValueError` на каждый вариант |
