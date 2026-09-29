@@ -6,6 +6,11 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+### Fixed
+
+- Build manifest on CMake 3.25: `compile_commands.json` has no `output` key, the object file is
+  taken from the compiler's `-o` (the snapshot used to fail with `KeyError: 'output'`); specification revision 0.24.
+
 ### Added
 
 - J-Link: `STM32F103CBT6` → `STM32F103CB` mapping (WeAct BluePill-Plus, the stm32-hwtest-bluepill

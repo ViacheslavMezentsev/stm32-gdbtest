@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from stm32_gdbtest.build_manifest import dependency_map, digest, label, load_verified, selected_flags, version_macros
+from stm32_gdbtest.build_manifest import dependency_map, digest, label, load_verified, object_output, selected_flags, version_macros
 from stm32_gdbtest.runner import ROOT, execute
 
 
@@ -77,6 +77,15 @@ class BuildManifestTests(unittest.TestCase):
         result = dependency_map(text, self.directory)
         self.assertEqual(result[self.directory / "obj file.obj"], [header])
         self.assertIsNone(result[self.directory / "other.obj"])
+
+    def test_object_path_without_output_key_comes_from_the_command(self):
+        # CMake 3.25 compile_commands.json has no "output"; 3.26+ has it.
+        args = ["gcc", "-DX", "-o", "CMakeFiles/fw.dir/src/a.cpp.obj", "-c", "a.cpp"]
+        self.assertEqual(object_output({"file": "a.cpp"}, args), "CMakeFiles/fw.dir/src/a.cpp.obj")
+        self.assertEqual(object_output({"file": "a.cpp"}, ["gcc", "-oCMakeFiles/b.o", "-c", "b.c"]), "CMakeFiles/b.o")
+        self.assertEqual(object_output({"file": "a.cpp", "output": "given.o"}, args), "given.o")
+        with self.assertRaisesRegex(ValueError, "object file"):
+            object_output({"file": "a.cpp"}, ["gcc", "-c", "a.cpp"])
 
     def test_versions_are_literal_declarations_not_macro_evaluation(self):
         text = "#define __STM32F1xx_HAL_VERSION_MAIN (0x01U) /* comment */\n#define __CM_CMSIS_VERSION_SUB (1U)\n#define __CM_CMSIS_VERSION_MAIN (1 + 5)\n"

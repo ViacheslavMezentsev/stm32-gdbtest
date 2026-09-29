@@ -64,6 +64,21 @@ def version_macros(text):
         r"[ \t]+\(?[ \t]*(0x[0-9A-Fa-f]+|[0-9]+)[uUlL]*[ \t]*\)?[ \t]*(?:/\*[^\n]*|//[^\n]*)?$", text.replace("\r\n", "\n"), re.M)}
 
 
+def object_output(row, args):
+    """ТЗ 5.14.7: object file of a compile_commands.json entry.
+
+    CMake 3.25 writes no "output" key (3.26 does); then the object is the -o argument.
+    """
+    if "output" in row:
+        return row["output"]
+    for index, arg in enumerate(args):
+        if arg == "-o" and index + 1 < len(args):
+            return args[index + 1]
+        if arg.startswith("-o") and len(arg) > 2:
+            return arg[2:]
+    raise ValueError("Cannot find the object file of " + row.get("file", "?") + " in compile_commands.json")
+
+
 def selected_flags(args):
     # Exact command hash is also retained; this human-readable list deliberately omits paths.
     return [arg for arg in args if arg.startswith(("-D", "-U", "-O", "-g", "-m", "-f", "-std=", "--specs="))
@@ -78,7 +93,8 @@ def snapshot(root, build, elf, profile, ninja, target=None, extra_inputs=()):
     database = json.loads((build / "compile_commands.json").read_text(encoding="utf-8"))
     units, compilers, files = [], {}, set()
     for row in database:
-        obj = (Path(row["directory"]) / row["output"]).resolve()
+        args = command_args(row["command"])
+        obj = (Path(row["directory"]) / object_output(row, args)).resolve()
         # This MVP attaches to the single firmware target, not arbitrary host/helper targets.
         if not obj.is_relative_to(build / "CMakeFiles" / ((target or elf.stem) + ".dir")):
             continue
@@ -93,7 +109,6 @@ def snapshot(root, build, elf, profile, ninja, target=None, extra_inputs=()):
             raise ValueError("Missing/stale Ninja dependencies; rebuild firmware: " + obj.name)
         if any(p.stat().st_mtime_ns > obj.stat().st_mtime_ns for p in dependencies):
             raise ValueError("Dependency changed after compilation; rebuild firmware: " + obj.name)
-        args = command_args(row["command"])
         compiler = Path(args[0]).resolve()
         if compiler not in compilers:
             compilers[compiler] = dict(name=compiler.name, sha256=digest(compiler),

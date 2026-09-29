@@ -6,6 +6,11 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Build manifest на CMake 3.25: в `compile_commands.json` нет ключа `output`, объектный файл берётся
+  из `-o` команды компилятора (ранее снимок падал с `KeyError: 'output'`); ТЗ ревизии 0.24.
+
 ### Added
 
 - J-Link: соответствие `STM32F103CBT6` → `STM32F103CB` (WeAct BluePill-Plus, демонстрационный
