@@ -132,7 +132,9 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
             (out / "build-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
         names = test.get("contracts", [])
         report["contracts"] = dict(schema=1, requested=names, status="ERROR" if names else "NOT_REQUESTED")
-        selected = select_contracts(Path(session["profile"]).parent / "Tests/contracts.json",
+        # ТЗ 3.5: the registry sits in Tests/ next to the scenarios, not next to target.toml.
+        tests_root = Path(session["tests"]).parent if session.get("tests") else Path(session["profile"]).parent / "Tests"
+        selected = select_contracts(tests_root / "contracts.json",
                                     names, report.get("build_manifest"))
         if names:
             report["contracts"].update(status="ERROR", selected=selected)

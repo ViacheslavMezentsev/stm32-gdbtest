@@ -30,14 +30,15 @@ def _files(session, include):
     root = Path(session["root"]).resolve()
     profile = Path(session["profile"]).resolve()
     tests_dir = Path(session["tests"]).resolve()
-    if not tests_dir.is_relative_to(profile.parent):
-        raise ValueError("The Tests directory must be inside the profile directory to be packaged")
+    # Scenarios live in <Tests>/board; the whole <Tests> directory (requirements, contracts)
+    # becomes profile/Tests, whether or not target.toml sits next to it (ТЗ 5.19.1).
+    tests_root = tests_dir.parent
     files = {"firmware.elf": Path(session["elf"]).resolve(), "profile/target.toml": profile}
     if session.get("build_manifest"):
         files["build-manifest.json"] = Path(session["build_manifest"]).resolve()
-    for path in sorted((profile.parent / "Tests").rglob("*")):
+    for path in sorted(tests_root.rglob("*")):
         if path.is_file() and "__pycache__" not in path.parts:
-            files["profile/" + path.relative_to(profile.parent).as_posix()] = path
+            files["profile/Tests/" + path.relative_to(tests_root).as_posix()] = path
     for item in include:
         source = (root / item).resolve()
         if not source.is_relative_to(root) or source == root:
@@ -48,7 +49,7 @@ def _files(session, include):
             if name.split("/")[0] in RESERVED or "__pycache__" in path.parts:
                 continue
             files[name] = path
-    return files, "profile/" + tests_dir.relative_to(profile.parent).as_posix()
+    return files, "profile/Tests/" + tests_dir.name
 
 
 def pack(session, output, test_ids=None, include=(), prepare=None):

@@ -23,9 +23,18 @@ stm32_gdbtest_attach(firmware_target
 - Поддерживается один firmware target верхнего каталога CMake, генератор Ninja,
   каталог сборки внутри `PROJECT_SOURCE_DIR`. Сборка, build manifest и подготовка
   и аппаратный запуск работают на Windows и Linux ([Linux-стенд](LINUX_STAND.md)).
-- `PROFILE_DIR` и пути `MANIFEST_INPUTS` задаются абсолютными. В `PROFILE_DIR`
-  находятся `target.toml`, `Tests/board/test_*.py`, `Tests/requirements.md` и при
-  использовании контрактов `Tests/contracts.json`.
+- `PROFILE_DIR`, `PROFILE` и пути `MANIFEST_INPUTS` задаются абсолютными. В
+  `PROFILE_DIR` находятся `Tests/board/test_*.py`, `Tests/requirements.md`, при
+  использовании контрактов `Tests/contracts.json` и `target.toml`.
+- `PROFILE` — описание MCU отдельным файлом вместо `PROFILE_DIR/target.toml`. Так
+  несколько вариантов MCU одной прошивки используют общие сценарии, требования и
+  контракты; каждый вариант — своя сборка со своим `PROFILE`:
+
+  ```cmake
+  stm32_gdbtest_attach(firmware_target
+      PROFILE_DIR "${PROJECT_SOURCE_DIR}/hil"                    # общий Tests/
+      PROFILE "${PROJECT_SOURCE_DIR}/hil/profiles/${MCU}.toml")  # G474.toml, G431.toml
+  ```
 - `MANIFEST_INPUTS` добавляет файлы в снимок manifest и в зависимости перелинковки.
 - `SELF_TESTS` включает host-тесты самого модуля (`host.hwtest`); потребителю не нужен.
 - stm32-cmake-yml не является зависимостью API.

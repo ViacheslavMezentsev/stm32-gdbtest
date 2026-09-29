@@ -8,6 +8,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- `stm32_gdbtest_attach(... PROFILE <target.toml>)`: the MCU description as a separate file,
+  shared `Tests` (scenarios, requirements, contracts) for several MCU variants of one firmware.
 - Prepared run packages: `pack` prepares scenarios without hardware and writes a zip with the
   ELF, build manifest, profile, scenarios and file SHA-256; `run --package` verifies the package
   and runs it on a stand without rebuilding; `run_hw.py --package`.

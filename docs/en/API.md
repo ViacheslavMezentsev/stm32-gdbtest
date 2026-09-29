@@ -24,9 +24,18 @@ stm32_gdbtest_attach(firmware_target
 - One firmware target of the top-level CMake directory, the Ninja generator and a
   build directory inside `PROJECT_SOURCE_DIR` are supported. Build, build manifest
   preparation and hardware runs work on Windows and Linux ([Linux stand](LINUX_STAND.md)).
-- `PROFILE_DIR` and `MANIFEST_INPUTS` paths are absolute. `PROFILE_DIR` contains
-  `target.toml`, `Tests/board/test_*.py`, `Tests/requirements.md` and, when contracts
-  are used, `Tests/contracts.json`.
+- `PROFILE_DIR`, `PROFILE` and `MANIFEST_INPUTS` paths are absolute. `PROFILE_DIR`
+  contains `Tests/board/test_*.py`, `Tests/requirements.md`, `Tests/contracts.json`
+  when contracts are used, and `target.toml`.
+- `PROFILE` is the MCU description as a separate file instead of
+  `PROFILE_DIR/target.toml`. Several MCU variants of one firmware then share scenarios,
+  requirements and contracts; each variant is its own build with its own `PROFILE`:
+
+  ```cmake
+  stm32_gdbtest_attach(firmware_target
+      PROFILE_DIR "${PROJECT_SOURCE_DIR}/hil"                    # shared Tests/
+      PROFILE "${PROJECT_SOURCE_DIR}/hil/profiles/${MCU}.toml")  # G474.toml, G431.toml
+  ```
 - `MANIFEST_INPUTS` adds files to the manifest snapshot and to relink dependencies.
 - `SELF_TESTS` enables the module's own host tests (`host.hwtest`); consumers do not need it.
 - stm32-cmake-yml is not an API dependency.

@@ -27,8 +27,9 @@ then contains:
 | `profile/target.toml`, `profile/Tests/…` | MCU profile, scenarios, `contracts.json`, `requirements.md` |
 | `--include` files | Project helper modules imported by scenarios (paths relative to the project root) |
 
-`--test ID` (repeatable) keeps only the selected scenarios. The scenario directory must
-be inside the profile directory.
+`--test ID` (repeatable) keeps only the selected scenarios. The package takes the
+scenarios' `Tests` directory and the MCU description, even when the latter is a separate
+file (`PROFILE`).
 
 On the stand, run from the package instead of `session.json`:
 

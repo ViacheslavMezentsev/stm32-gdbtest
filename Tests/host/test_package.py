@@ -1,4 +1,4 @@
-"""Prepared run packages without a toolchain or a debugger (TC-104…TC-106)."""
+"""Prepared run packages without a toolchain or a debugger (TC-104…TC-106, TC-116)."""
 import json
 import os
 from pathlib import Path
@@ -103,10 +103,20 @@ class PackageTests(unittest.TestCase):
             pack(self.session, self.output, test_ids=["HW_NONE"])
         with self.assertRaisesRegex(ValueError, "inside the project root"):
             pack(self.session, self.output, include=["../outside"])
-        outside = dict(self.session, tests=str(self.root / "helpers"))
-        (self.root / "helpers/test_x.py").write_text(SCENARIO)
-        with self.assertRaisesRegex(ValueError, "inside the profile directory"):
-            pack(outside, self.output)
+
+    def test_target_description_outside_the_scenario_directory(self):
+        # TC-116: ТЗ 5.13.2, 5.19.1 — one Tests/ for several MCU variants, target.toml elsewhere
+        variant = self.root / "profiles/g431.toml"
+        variant.parent.mkdir()
+        variant.write_bytes(b"[mcu]\nname = 'g431'\n")
+        session = dict(self.session, profile=str(variant))
+        manifest = pack(session, self.output)
+        self.assertEqual(manifest["tests_dir"], "profile/Tests/board")
+        with zipfile.ZipFile(self.output) as bundle:
+            self.assertEqual(bundle.read("profile/target.toml"), b"[mcu]\nname = 'g431'\n")
+            self.assertIn("profile/Tests/contracts.json", bundle.namelist())
+        opened = open_package(self.output, Path(self.temp.name) / "work", str(self.gdb))
+        self.assertEqual(Path(opened["tests"]).parent, Path(opened["profile"]).parent / "Tests")
 
 
 if __name__ == "__main__":
