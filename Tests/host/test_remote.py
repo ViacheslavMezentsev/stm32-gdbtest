@@ -60,7 +60,8 @@ class RemoteSettingsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             key = Path(temp) / "id_stand"
             key.write_text("key")
-            with patch.dict(os.environ, {"STAND_HOME": temp}):
+            with patch.dict(os.environ, {"STAND_HOME": temp}), \
+                    patch("stm32_gdbtest.remote.shutil.which", return_value="ssh"):  # CI image has no ssh
                 for raw in ("%STAND_HOME%/id_stand", "$STAND_HOME/id_stand", "${STAND_HOME}/id_stand"):
                     with self.subTest(raw=raw):
                         self.assertEqual(Path(expand_path(raw)), key)
