@@ -72,15 +72,16 @@ injections, selective ELF/HAL contracts, timeouts with a recovery attempt, JSON/
 and CMake/CTest integration. `run --prepare-only` performs every check before the GDB
 server without hardware; CI is built on it ([checks and CI](docs/en/testing.md)).
 
-This is a development version before the first 0.1.0 release. Verified on hardware:
-F030R8 and F103C8 through J-Link and F411CE through ST-Link with OpenOCD and ST-LINK
-GDB Server, including programming, the full image and recovery after a timeout — on
-Windows, on Orange Pi 5 (Ubuntu 20.04) and from Windows to Orange Pi 5 over SSH; the
-stand project also covers F429ZI and earlier F401 checks. Support depends on the
-specific combination of MCU, HAL, GDB and backend. [Exact matrix and limits](docs/en/STATUS.md).
+Version 0.1.0-rc.1 is the first release candidate. Verified on hardware: F030R8 and
+F103C8 through J-Link and F411CE through ST-Link with OpenOCD and ST-LINK GDB Server,
+including programming, the full image and recovery after a timeout — on Windows, on
+Orange Pi 5 (Ubuntu 20.04), from Windows and WSL2 to Orange Pi 5 over SSH, with
+prepared run packages and hardware CI on a self-hosted runner; a consumer project on
+STM32G474 with Arduino Core STM32; the stand project also covers F429ZI and earlier
+F401 checks. Support depends on the specific combination of MCU, HAL, GDB and backend.
+[Exact matrix and limits](docs/en/STATUS.md).
 
-Planned before 0.1.0: running a prepared build on a stand and hardware CI on a
-self-hosted runner; then supervision of child processes and evolution of the profile schema and
+Next: supervision of child processes and evolution of the profile schema and
 compatibility metadata. Coordinated control of power, relays and other instruments
 through a host controller is planned separately — with it the loop becomes full HIL;
 there is no such API yet. Python

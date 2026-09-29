@@ -4,8 +4,8 @@
 
 The format is MAJOR.MINOR.PATCH per [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html);
 Git tags have the `v` prefix. The first candidate is **v0.1.0-rc.1**, the first release
-**v0.1.0**. The current `0.1.0.dev0` is a development version; the initial export from
-the stand project is not a release.
+**v0.1.0**. The current version is the candidate `0.1.0rc1` (tag `v0.1.0-rc.1`); the
+initial export from the stand project is not a release.
 
 Before 1.0: compatible fixes → 0.1.1; new features or API changes → 0.2.0 with an
 explicit migration. PATCH never breaks the API. After 1.0: incompatible API → MAJOR,

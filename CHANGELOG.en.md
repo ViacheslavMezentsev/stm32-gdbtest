@@ -6,6 +6,10 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+## [0.1.0-rc.1] — 2026-09-29
+
+The first release candidate (Python version `0.1.0rc1`, `API_VERSION = 1`, specification revision 0.21).
+
 ### Added
 
 - Local stand paths expand `~`, `%VAR%` and `$VAR` (`%USERPROFILE%/.ssh/key`); the scenario
@@ -134,6 +138,5 @@ Versions: [policy](docs/en/VERSIONING.md).
   longer cause a false error or reprogramming.
 - Bounds/overlap validation before the server, block readback, explicit evidence scope.
 
-No release or tag has been created yet; the separate Git history and submodule
-integration are already verified. Historical hardware results do not replace a check
-of the new integration.
+The `v0.1.0-rc.1` tag goes on the merge commit after the final check on it (CI, hardware
+runs on the stands, consumer scenarios) — [before a release](docs/en/VERSIONING.md#before-a-release).

@@ -2,8 +2,8 @@
 
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
-Snapshot: 2026-09-28. Development version **0.1.0.dev0**, `API_VERSION = 1`; no
-release tags yet. The main delivery is a pinned Git submodule; there is no pip package
+Snapshot: 2026-09-29. Release candidate **0.1.0-rc.1** (Python `0.1.0rc1`), `API_VERSION = 1`;
+the tag follows the final check on the release commit. The main delivery is a pinned Git submodule; there is no pip package
 or separate executable yet. This page describes the verified scope, not a change log;
 history is in the [CHANGELOG](../../CHANGELOG.en.md).
 
@@ -106,7 +106,7 @@ test and may replace Flash, while `ctest --preset offline` does not connect to a
 
 ## Next steps
 
-Before v0.1.0: the final re-check of the stands. Then v0.1.0-rc.1 and v0.1.0, supervision of
+The final check on the v0.1.0-rc.1 commit and the tag; then v0.1.0. Next, supervision of
 server processes, evolution of the
 profile schema and manifest; later a host controller for external equipment and Python
 packaging. These are plans, not available features: [roadmap](../../TODO.md)
