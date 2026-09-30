@@ -87,6 +87,8 @@ edge. Start the next scenario from the agreed reset state.
 [CMSIS RTC](F030_CMSIS_RTC.md).
 
 <a id="tech-004"></a>
+For Cortex-M exception numbers, use `SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk`. GDB names `xPSR`/`xpsr` depend on the server. Preflight the CMSIS macros in the required context. Reading VECTACTIVE does not clear flags or prove the physical IRQ source.
+
 ## TECH-004 — Override HAL return and suppress a callback
 
 **Purpose:** test the caller's response while skipping a function body.

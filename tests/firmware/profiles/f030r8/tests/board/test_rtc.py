@@ -25,14 +25,14 @@ def rtc_alarm(target):
     target.reach("RTC_IRQHandler")
     before = target.value("board_rtc_events")
     for index in range(2):
-        target.check("RTC exception", target.value("$xPSR & 0x1ff"), 18)
+        target.check("RTC exception", target.value("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 18)
         target.check("Alarm A pending", target.value("(RTC->ISR & RTC_ISR_ALRAF) != 0"), 1)
         target.check("EXTI17 pending", target.value("EXTI->PR & (1 << 17)"), 1 << 17)
         target.check("one event per handler", target.value("board_rtc_events"), (before + index) & 0xFFFFFFFF)
         if index == 0:
             target.reach("RTC_IRQHandler")
     target.reach("app_loop")
-    target.check("thread resumes", target.value("$xPSR & 0x1ff"), 0)
+    target.check("thread resumes", target.value("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 0)
     target.check("second alarm published", ((target.value("board_rtc_events") - before) & 0xFFFFFFFF) >= 2, True)
     target.check("no RTC error", target.value("board_rtc_error"), 0)
 

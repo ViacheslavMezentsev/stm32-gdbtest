@@ -118,3 +118,17 @@ HAL первоначально отклонён CMake из-за Windows cache в
 не единый 15/15. Отчёты: build/rc2-offline-initial.json и build/rc2-offline-hal.json.
 Опубликованный SHA ещё должен пройти Docs/Offline. HW-приёмка кандидата и
 обновление потребителя остаются открытыми; текст релиза — черновик.
+
+## Ошибка приёмки rc.2 (01.10.2026)
+
+Docs и весь Offline для e3f5233 прошли. Windows GDB → SSH/OpenOCD на Orange Pi,
+NUCLEO-F030R8/ST-Link: 6 PASS, затем HW_CI_TIM3_IRQ ERROR; серия остановлена.
+TIM3_IRQHandler достигнут, ICSR=32. Диагностика подтвердила: xPSR — Bad register,
+xpsr — доступен. Сервер: xPack OpenOCD 0.12.0+dev-02228-ge5888bda3-dirty.
+GDB работает на Windows. Исходный HAL восстановлен, HW_BOOT/HW_BLINK PASS, reset_run.
+Отчёты: build/rc2-acceptance/f030-full-20260930T221717Z/summary.json.
+
+Исправлены сценарии: SCB ICSR VECTACTIVE с preflight CMSIS-макросов.
+Firmware и runtime не меняются; требуется повтор полного набора и CI нового SHA.
+core_registers профиля остаётся серверозависимым: diagnostic_errors сохраняет
+недоступный xPSR. Это ограничение диагностики, не отсутствие IRQ.

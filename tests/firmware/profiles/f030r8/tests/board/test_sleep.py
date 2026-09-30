@@ -8,7 +8,7 @@ def reach_wfi_irq(target, handler, exception):
     # An IRQ can arrive before WFI: bound retries and inspect the interrupted frame.
     for attempt in range(8):
         target.reach(handler)
-        target.check("expected exception", target.value("$xPSR & 0x1ff"), exception)
+        target.check("expected exception", target.value("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), exception)
         interrupted = gdb.newest_frame().older()
         # GDB may insert an exception/signal trampoline between the two frames.
         for _ in range(4):

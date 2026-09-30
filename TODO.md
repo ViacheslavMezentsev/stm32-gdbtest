@@ -193,3 +193,5 @@
   текущая доработка не объявляет production-поддержку RISC-V.
 
 - [x] Проверить профиль Cortex-M0 через J-Link STLink: F030R8, существующие API/schema, host65 и 17 HW-сценариев потребителя.
+
+- [ ] rc.2: повторить полный F030 после исправления xPSR → SCB ICSR; e3f5233 остановлен на TIM3 IRQ, restore PASS. См. docs/ru/RC2_READINESS.md.

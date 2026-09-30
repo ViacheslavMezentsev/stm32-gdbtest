@@ -69,14 +69,14 @@ def timer_irq(target):
     # Run to actual exception entries, without EGR/NVIC/software injection.
     target.reach("TIM3_IRQHandler")
     for _ in range(2):
-        target.check("TIM3 exception number", target.value("$xPSR & 0x1ff"), 32)
+        target.check("TIM3 exception number", target.value("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 32)
         target.check("update pending", target.value("TIM3->SR & TIM_SR_UIF"), 1)
         before = target.value("board_timer_events")
         target.reach("TIM3_IRQHandler")
         target.check("one event published", target.value("board_timer_events"), (before + 1) & 0xFFFFFFFF)
     # A permanently asserted update IRQ would starve thread mode on this M0.
     target.reach("board_delay_ms")
-    target.check("thread mode resumes", target.value("$xPSR & 0x1ff"), 0)
+    target.check("thread mode resumes", target.value("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 0)
 
 
 @case("HW_CI_ADC_INIT", labels=("adc", "dma", "init"), contracts=("ci_adc_macros",))
@@ -103,7 +103,7 @@ def adc_init(target):
 def adc_dma(target):
     for sequence in (1, 2):
         target.reach("DMA1_Channel1_IRQHandler")
-        target.check("DMA exception", target.value("$xPSR & 0x1ff"), 25)
+        target.check("DMA exception", target.value("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 25)
         target.check("DMA exhausted", target.value("DMA1_Channel1->CNDTR"), 0)
         target.check("transfer complete, no error", target.value("DMA1->ISR & (DMA_ISR_TCIF1 | DMA_ISR_TEIF1)"), 2)
         raw = [target.value(f"board_adc_buffer[{i}]") for i in range(2)]

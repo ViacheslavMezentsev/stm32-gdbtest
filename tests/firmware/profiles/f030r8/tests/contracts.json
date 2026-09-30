@@ -77,7 +77,9 @@
           "TIM_SR_UIF",
           "RCC",
           "RCC_APB1ENR_TIM3EN",
-          "NVIC"
+          "NVIC",
+          "SCB",
+          "SCB_ICSR_VECTACTIVE_Msk"
         ]
       }
     },
@@ -102,7 +104,9 @@
           "DMA_ISR_TEIF1",
           "NVIC",
           "ADC_CFGR2_CKMODE",
-          "ADC_CR_ADSTART"
+          "ADC_CR_ADSTART",
+          "SCB",
+          "SCB_ICSR_VECTACTIVE_Msk"
         ]
       }
     },
@@ -145,7 +149,8 @@
         "expressions": [
           "SCB",
           "SysTick",
-          "NVIC"
+          "NVIC",
+          "SCB_ICSR_VECTACTIVE_Msk"
         ]
       }
     },
@@ -165,7 +170,9 @@
           "RTC_CR_ALRAIE",
           "RCC_BDCR_RTCSEL",
           "RCC_BDCR_RTCEN",
-          "RCC_CSR_LSIRDY"
+          "RCC_CSR_LSIRDY",
+          "SCB",
+          "SCB_ICSR_VECTACTIVE_Msk"
         ]
       }
     }

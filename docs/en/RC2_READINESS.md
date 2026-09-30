@@ -117,3 +117,17 @@ it was preserved as ci-gcc13-windows-before-rc2. A separate clean HAL run passed
 not a single 15/15. Reports: build/rc2-offline-initial.json and build/rc2-offline-hal.json.
 The published SHA still needs Docs/Offline. Candidate HW acceptance and consumer
 integration remain open; release notes are a draft.
+
+## rc.2 acceptance failure (2026-10-01)
+
+Docs and all Offline jobs passed for e3f5233. Windows GDB → SSH/OpenOCD on Orange Pi,
+NUCLEO-F030R8/ST-Link: 6 PASS, then HW_CI_TIM3_IRQ ERROR; stopped on first error.
+TIM3_IRQHandler was reached, ICSR=32. Diagnostics confirmed xPSR: Bad register,
+xpsr: available. Server: xPack OpenOCD 0.12.0+dev-02228-ge5888bda3-dirty.
+GDB runs on Windows. Original HAL restored, HW_BOOT/HW_BLINK PASS, reset_run.
+Evidence: build/rc2-acceptance/f030-full-20260930T221717Z/summary.json.
+
+Fixed scenarios use SCB ICSR VECTACTIVE with CMSIS macro preflight. Firmware and
+runtime are unchanged; the complete set and CI must be repeated on the new SHA.
+Profile core_registers remains server-specific: diagnostic_errors preserves
+unavailable xPSR. This diagnostic limitation does not mean no IRQ occurred.

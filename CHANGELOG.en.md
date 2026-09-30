@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- F030 CMSIS: exception number through SCB ICSR instead of server-specific xPSR, with macro preflight; found during rc.2 acceptance through Orange Pi.
+
 ## [0.1.0-rc.2] — 2026-10-01
 
 Candidate in preparation; the date will be verified at publication. Final acceptance
