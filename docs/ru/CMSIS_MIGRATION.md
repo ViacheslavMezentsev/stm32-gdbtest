@@ -17,7 +17,8 @@ F401/F429 предстоит добавить; H503 остаётся на пау
 
 [Итоговая таблица 17 HAL → 18 CMSIS-сценариев](F030_CMSIS_ACCEPTANCE.md)
 заменяет исходную инвентаризацию. Базовые функции проверены на Nucleo/ST-Link;
-HAL-specific handles/macros/force_return ещё требуют отдельного fixture.
+HAL-specific handles/macros/force_return сохранены в отдельном
+[HAL F030 fixture с аппаратной приёмкой](F030_HAL_VALIDATION.md).
 Полная миграция всех MCU не завершена, активный HAL-профиль пока сохраняется.
 
 ## Порядок приёмки

@@ -2,6 +2,9 @@
 
 [Документация](index.md) · [English](../en/F030_CMSIS_SLEEP.md)
 
+Протокол этапа: числа тестов и планы ниже относятся к указанной ревизии.
+Текущий состав — [STATUS](STATUS.md), подготовка выпуска — [rc.2](RC2_READINESS.md).
+
 30.09.2026, codex/f030-cmsis-sleep от a84b742. NUCLEO-F030R8,
 штатный ST-Link V2J45M31/SWD 1 МГц, OpenOCD0.12.0, Windows,
 GCC13.3.1-1.1/GDB14.2.90/Python3.11.4; без UART/внешних соединений.

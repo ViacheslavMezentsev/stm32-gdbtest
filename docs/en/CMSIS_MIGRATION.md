@@ -17,7 +17,8 @@ RISC-V needs its own startup/BSP.
 
 The [17 HAL →18 CMSIS acceptance table](F030_CMSIS_ACCEPTANCE.md) replaces the
 initial inventory. Basic functions passed on Nucleo/ST-Link; HAL-specific
-handles/macros/force_return still require a separate fixture. Migration of all
+handles/macros/force_return are preserved in the separate
+[HAL F030 fixture with hardware acceptance](F030_HAL_VALIDATION.md). Migration of all
 MCUs is incomplete; retain the active HAL profile for now.
 
 ## Acceptance sequence

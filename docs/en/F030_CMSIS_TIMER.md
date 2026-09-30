@@ -2,6 +2,9 @@
 
 [Documentation](index.md) · [Русский](../ru/F030_CMSIS_TIMER.md)
 
+Stage record: case counts and plans below refer to the stated revision.
+Current scope: [STATUS](STATUS.md); release preparation: [rc.2](RC2_READINESS.md).
+
 2026-09-30, `codex/f030-cmsis-timer` based on `40fafac`. NUCLEO-F030R8,
 native ST-Link/SWD at 1 MHz, OpenOCD 0.12.0, Windows, GCC13.3.1-1.1,
 GDB14.2.90/Python3.11.4. No UART or additional wiring.

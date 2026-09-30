@@ -2,8 +2,6 @@
 
 [Документация](index.md) → API · [English](../en/API.md)
 
-[Аппаратная приёмка HAL F030](F030_HAL_VALIDATION.md): 17/17, шесть повторов, timeout/recovery и восстановление исходной прошивки проверены на Windows/ST-Link/OpenOCD; ТЗ 0.40. API без изменений.
-
 Статус: кандидат выпуска **0.1.0-rc.1** (Python `0.1.0rc1`), `API_VERSION = 1`. Это номер описанной
 поверхности API, а не обещание стабильности релиза 1.0 и не версия GDB. Модуль
 поставляется Git-подмодулем; установка через pip пока не поддерживается, уникальность
@@ -26,16 +24,16 @@ stm32_gdbtest_attach(firmware_target
   каталог сборки внутри `PROJECT_SOURCE_DIR`. Сборка, build manifest и подготовка
   и аппаратный запуск работают на Windows и Linux ([Linux-стенд](LINUX_STAND.md)).
 - `PROFILE_DIR`, `PROFILE` и пути `MANIFEST_INPUTS` задаются абсолютными. В
-  `PROFILE_DIR` находятся `Tests/board/test_*.py`, `Tests/requirements.md`, при
-  использовании контрактов `Tests/contracts.json` и `target.toml`. Каталог сценариев
-  может называться и `tests`.
+  `PROFILE_DIR` находятся `tests/board/test_*.py`, `tests/requirements.md`, при
+  использовании контрактов `tests/contracts.json` и `target.toml`. Каталог сценариев
+  для новых проектов называется `tests`; прежнее имя `Tests` также поддерживается.
 - `PROFILE` — описание MCU отдельным файлом вместо `PROFILE_DIR/target.toml`. Так
   несколько вариантов MCU одной прошивки используют общие сценарии, требования и
   контракты; каждый вариант — своя сборка со своим `PROFILE`:
 
   ```cmake
   stm32_gdbtest_attach(firmware_target
-      PROFILE_DIR "${PROJECT_SOURCE_DIR}/hil"                    # общий Tests/
+      PROFILE_DIR "${PROJECT_SOURCE_DIR}/hil"                    # общий tests/
       PROFILE "${PROJECT_SOURCE_DIR}/hil/profiles/${MCU}.toml")  # G474.toml, G431.toml
   ```
 - `MANIFEST_INPUTS` добавляет файлы в снимок manifest и в зависимости перелинковки.

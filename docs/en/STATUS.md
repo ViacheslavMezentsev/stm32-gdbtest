@@ -2,72 +2,43 @@
 
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
-[HAL F030 hardware acceptance](F030_HAL_VALIDATION.md): 17/17, six repeats, timeout/recovery and original firmware restoration verified on Windows/ST-Link/OpenOCD; specification 0.40. API unchanged.
 
-[HAL CI](F030_HAL_REGRESSION.md): hal level added, full Linux15/15 and Windows6/6 PASS. Hardware acceptance is documented above; CI specification0.39.
+Snapshot: 2026-10-01, main `7f3c65b`. rc.1 is published;
+[0.1.0-rc.2](RC2_READINESS.md) is being prepared. Before the release branch,
+Python version remains `0.1.0rc1`, API_VERSION=1. The checks below are not final rc.2 acceptance.
+Delivery is a pinned Git submodule; there is no pip package.
 
-[F030 HAL fixture](F030_HAL_REGRESSION.md): standalone build and offline19/19 on Windows/Linux GCC13. Import specification0.38; CI and HW accepted in separate stages above.
+## Current scope and evidence
 
-[Separate F030 HAL regression plan](F030_HAL_REGRESSION.md): scope prepared; fixture implemented offline. The batch through `cea01f9` is in main; consumer updated at `0c8c966`.
-
-[F030 HAL→CMSIS mapping and branch batch order](F030_CMSIS_ACCEPTANCE.md). Previous16 +2 new cases tested on one ELF, not a single18/18 run. HAL restored.
-
-Snapshot: 2026-09-30. Release candidate **0.1.0-rc.1** (Python `0.1.0rc1`), `API_VERSION = 1`;
-the final check passed on the release commit `2143665` (section below); the owner sets the tag. The main delivery is a pinned Git submodule; there is no pip package
-or separate executable yet. This page describes the verified scope, not a change log;
-history is in the [CHANGELOG](../../CHANGELOG.en.md).
-
-CMSIS F030: boot/clock/GPIO/blink — **4/4 HW PASS** on NUCLEO-F030R8/ST-Link/OpenOCD; the previous HAL firmware was restored. [Evidence and limitations](F030_CMSIS_BASELINE.md). Remaining failure coverage and final F030 acceptance are pending.
-
-## Checks
-
-| Area | Verified scope |
+| Area | Verified scope and limits |
 | --- | --- |
-| Host tests | 96 unittests without an MCU; on Linux 4 Windows mutex tests are skipped, on Windows 7 Linux tests (`flock` lock 3, process groups 2, remote server helper 2) |
-| CI (GitHub Actions, Docker) | Docs, format, host on Windows and Linux; F030R8/F103C8/F411CE CI firmware with GCC 13.3.1, 14.2.1, 15.2.1 and CMake 3.28.3: build manifest, `prepare`, full image, 10 negative contracts, load section alignment, empty RAM section; the Linux stand environment in `ubuntu:20.04` on x86_64 and aarch64 ([checks and CI](testing.md)) |
-| CI firmware on hardware | Final check at `2143665`: 4 stands on Windows, 3 stands from Windows to Orange Pi 5, 3 stands in the Hardware workflow — 10/10 steps each; earlier 4 stands at `fbc103d` (sections below) |
-| Linux stand without hardware | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) in a container: environment installation, host tests (79 at revision 0.7), `doctor`, `build` and `prepare` of the CI firmware; the hardware path without a debugger — lock, OpenOCD start, ERROR "exited before ready", processes stopped |
-| Remote GDB server on hardware | Runner and GDB on Windows 10, GDB servers on Orange Pi 5 over SSH: F411CE / OpenOCD, F103C8 / J-Link CE, F030R8 / J-Link STLink — 10/10 each (`run_hw.py`) |
-| Remote GDB server without hardware | SSH loopback (OpenSSH, key, `known_hosts`) and a fake J-Link server: port forwarding, GDB connecting through the tunnel, recovery, stopping the server and returning its log, refusal on a busy stand host lock, cleanup after a broken session |
-| Linux stand on hardware | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 / J-Link GDB Server 9.80 arm64 — 10/10 after confirming the J-Link STLink terms window in a graphical session; without it the connection waits about 10 s, the first run gave 2/10 ([Linux stand](LINUX_STAND.md)) |
-| ELF/HAL preflight | Positive case and 11 negative variants on F103C8/F401CC/F411CE ELF files of the stand project |
-| Stand project, F411CE / ST-Link / OpenOCD | 24/24 CTest (22 HW + 2 host) after the module split |
-| Stand project, F103C8 / J-Link | 24/24 CTest (22 HW + 2 host) |
-| Stand project, F030R8 / J-Link STLink | 17/17 HW |
-| Stand project, F429ZI / ST-Link/V2 | 22/22 HW through OpenOCD and the ST server with module `b76d909`; occasional USB failures in long series ([protocol](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/F429_SERVER_STABILITY.md), Russian) |
-| Independent F411 consumer | Build and offline, hardware scenario, verify-only, timeout/recovery and restoring the main firmware |
-| Consumer project, STM32G474 / ST-Link through Orange Pi 5 | Arduino Core STM32 (HAL and CMSIS not from STM32Cube), stm32-cmake-yml with CRC in the ELF after linking, C++ with LTO, xPack GCC 14.2.1 (GDB 15.2.90, Python 3.12.8); runner on Windows, OpenOCD on the Orange Pi over SSH. Four scenarios PASS on one build without LTO: boot (DEV_ID `0x469`, IWDG frozen while halted), `setup()` completion, 15 `setup()` calls in order, power-fault injection with `force_return` — the first hardware check of `force_return`. The connection found the manifest refusal without STM32Cube packages (fixed, specification 0.16) |
-| F401CC / ST-Link, ST server on F1/F4 | Earlier hardware checks; new macro scenarios were not repeated after the module split |
+| Host | 97 unittests; Windows: 8 platform skips. Linux skips Windows-only checks; exact results are logged, skips do not count as HW PASS |
+| Offline CI | Docs, format, host; CMSIS F030/F103/F411 × GCC13/14/15; separate GCC13 HAL F030, 19 CTest checks and 5 negative contracts. All five Offline jobs passed at 7f3c65b |
+| CMSIS F030 | 18 cases: boot/clock/GPIO/blink, TIM3, ADC/DMA/numeric vectors, Sleep, RTC and failures. HW: 16 previous + 2 new cases on one ELF; a single complete 18/18 run remains required for rc.2 |
+| HAL F030 | Standalone tests/hal-f030: 17/17, six post-injection repeats, expected timeout ERROR, recovery and consumer HAL restoration — Windows/ST-Link/OpenOCD |
+| CMSIS F103/F411 | Two boot/GPIO cases each; full peripheral migration is not complete |
+| minimal-consumer F411 | Separate CMake integration example without YAML; demonstrates module integration, not complete board peripherals |
+| BlackPill consumer | main a48c944 pins module 7f3c65b: Windows host97 (8 skips), Linux five builds/120 CTest PASS; Offline SUCCESS for that SHA. No HW run on the integration branch |
 
-Scenario counts refer to the consumer application, not to a universal module suite
-and not to code coverage. Documentation changes are not new hardware runs. Protocols,
-ELF hashes and limits of the stand project (Russian):
-[stand status](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/STATUS.md),
-[consumer check](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/CONSUMER_VALIDATION.md),
-[methods and experiments](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/STM32_TESTING_METHODS.md).
-
-Verified tools: xPack ARM GCC 13.3.1-1.1, GDB 14.2.90 with embedded Python 3.11.4,
-OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), J-Link 8.32; CubeF0 1.11.6,
-CubeF1 1.8.7, CubeF4 1.28.3. CI also builds with GCC 14.2.1 and 15.2.1 (GDB 15.2.90
-and 16.3.90 with Python 3.12 and 3.13). A GCC version does not guarantee the GDB Python
-API contents; a matching HAL version does not prove matching behaviour.
+Sources: [HAL→CMSIS](F030_CMSIS_ACCEPTANCE.md), [HAL protocol](F030_HAL_VALIDATION.md),
+[techniques](TESTING_TECHNIQUES.md), [CI](testing.md).
+The current Nucleo stand uses native ST-Link/OpenOCD; J-Link STLink results below are historical.
+F103 is WeAct BluePill-Plus/J-Link; F411 is BlackPill/ST-Link with OpenOCD and ST server.
+Remote runs, packages and the Hardware workflow were checked for rc.1; they have not
+been repeated on the rc.2 candidate. A standalone Linux PC with USB and WSL usbipd
+remain unverified configurations. Case counts are not code coverage percentages.
 
 ## Stand layouts
 
-| Layout | State |
-| --- | --- |
-| Everything on Windows: runner, GDB, server, debugger | Checked: 4 stands × 10/10 |
-| Everything on a Linux stand (Orange Pi 5, Ubuntu 20.04 aarch64) | Checked: 3 stands × 10/10 |
-| Runner and GDB on Windows, server and debugger on Orange Pi 5 over SSH | Checked: 3 stands × 10/10 |
-| Runner and GDB in WSL2 (Ubuntu 20.04 x86_64), server and debugger on Orange Pi 5 over SSH | Checked: 3 stands × 10/10 |
-| WSL2 with the debugger through usbipd-win | Implemented as Linux; not checked (technical debt: conflicts with USB filters of other software) |
-| A separate Linux x86_64 PC with a debugger | Implemented; the x86_64 run side checked in WSL2, CI covers environment, build and preparation; not checked on such a PC |
-| Build in one place, run on a stand (`pack`, `run --package`) | Checked: packages built on Windows, three stands × 10/10 on Orange Pi 5 |
-| Hardware CI on a self-hosted runner (Hardware workflow), loop runs (`run_hw.py --repeat`) | Checked: runner service on Orange Pi 5, packages built on GitHub — three stands × 10/10; loop — F411CE, 10 iterations, Ctrl+C interruption |
+Local Windows and Orange Pi 5/Linux, Windows/WSL → server over SSH,
+pack/run --package and the Hardware workflow are implemented and were checked
+for rc.1. The historical matrix below is not final rc.2 acceptance.
+Candidate reruns follow the [release matrix](RC2_READINESS.md).
 
 ## Final check of 0.1.0-rc.1, 2026-09-29
 
-Commit `2143665` (version `0.1.0rc1`); later changes are documentation only.
+Historical rc.1 check: commit `2143665` (version `0.1.0rc1`).
+These results do not automatically apply to changes made after rc.1.
 
 | Check | Result |
 | --- | --- |
@@ -134,11 +105,42 @@ test and may replace Flash, while `ctest --preset offline` does not connect to a
 
 ## Next steps
 
-The v0.1.0-rc.1 tag; then v0.1.0 and a hardware check of the consumer project's STM32G431 variant. Next, supervision of
-server processes, evolution of the
-profile schema and manifest; later a host controller for external equipment and Python
-packaging. These are plans, not available features: [roadmap](../../TODO.md)
-(Russian), [versioning rules](VERSIONING.md), [getting started](GETTING_STARTED.md).
+Prepare [rc.2](RC2_READINESS.md), then continue CMSIS migration and the
+[roadmap](../../TODO.md). RISC-V, external stand control and Python packaging
+remain planned work.
+
+
+## Previous verification summary (before rc.2 review)
+
+| Area | Verified scope |
+| --- | --- |
+| CI (GitHub Actions, Docker) | Docs, format, host on Windows and Linux; F030R8/F103C8/F411CE CI firmware with GCC 13.3.1, 14.2.1, 15.2.1 and CMake 3.28.3: build manifest, `prepare`, full image, 10 negative contracts, load section alignment, empty RAM section; the Linux stand environment in `ubuntu:20.04` on x86_64 and aarch64 ([checks and CI](testing.md)) |
+| CI firmware on hardware | Final check at `2143665`: 4 stands on Windows, 3 stands from Windows to Orange Pi 5, 3 stands in the Hardware workflow — 10/10 steps each; earlier 4 stands at `fbc103d` (sections below) |
+| Linux stand without hardware | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) in a container: environment installation, host tests (79 at revision 0.7), `doctor`, `build` and `prepare` of the CI firmware; the hardware path without a debugger — lock, OpenOCD start, ERROR "exited before ready", processes stopped |
+| Remote GDB server on hardware | Runner and GDB on Windows 10, GDB servers on Orange Pi 5 over SSH: F411CE / OpenOCD, F103C8 / J-Link CE, F030R8 / J-Link STLink — 10/10 each (`run_hw.py`) |
+| Remote GDB server without hardware | SSH loopback (OpenSSH, key, `known_hosts`) and a fake J-Link server: port forwarding, GDB connecting through the tunnel, recovery, stopping the server and returning its log, refusal on a busy stand host lock, cleanup after a broken session |
+| Linux stand on hardware | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 / J-Link GDB Server 9.80 arm64 — 10/10 after confirming the J-Link STLink terms window in a graphical session; without it the connection waits about 10 s, the first run gave 2/10 ([Linux stand](LINUX_STAND.md)) |
+| ELF/HAL preflight | Positive case and 11 negative variants on F103C8/F401CC/F411CE ELF files of the stand project |
+| Stand project, F411CE / ST-Link / OpenOCD | 24/24 CTest (22 HW + 2 host) after the module split |
+| Stand project, F103C8 / J-Link | 24/24 CTest (22 HW + 2 host) |
+| Stand project, F030R8 / J-Link STLink | 17/17 HW |
+| Stand project, F429ZI / ST-Link/V2 | 22/22 HW through OpenOCD and the ST server with module `b76d909`; occasional USB failures in long series ([protocol](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/F429_SERVER_STABILITY.md), Russian) |
+| Independent F411 consumer | Build and offline, hardware scenario, verify-only, timeout/recovery and restoring the main firmware |
+| Consumer project, STM32G474 / ST-Link through Orange Pi 5 | Arduino Core STM32 (HAL and CMSIS not from STM32Cube), stm32-cmake-yml with CRC in the ELF after linking, C++ with LTO, xPack GCC 14.2.1 (GDB 15.2.90, Python 3.12.8); runner on Windows, OpenOCD on the Orange Pi over SSH. Four scenarios PASS on one build without LTO: boot (DEV_ID `0x469`, IWDG frozen while halted), `setup()` completion, 15 `setup()` calls in order, power-fault injection with `force_return` — the first hardware check of `force_return`. The connection found the manifest refusal without STM32Cube packages (fixed, specification 0.16) |
+| F401CC / ST-Link, ST server on F1/F4 | Earlier hardware checks; new macro scenarios were not repeated after the module split |
+
+Scenario counts refer to the consumer application, not to a universal module suite
+and not to code coverage. Documentation changes are not new hardware runs. Protocols,
+ELF hashes and limits of the stand project (Russian):
+[stand status](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/STATUS.md),
+[consumer check](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/CONSUMER_VALIDATION.md),
+[methods and experiments](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/STM32_TESTING_METHODS.md).
+
+Verified tools: xPack ARM GCC 13.3.1-1.1, GDB 14.2.90 with embedded Python 3.11.4,
+OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), J-Link 8.32; CubeF0 1.11.6,
+CubeF1 1.8.7, CubeF4 1.28.3. CI also builds with GCC 14.2.1 and 15.2.1 (GDB 15.2.90
+and 16.3.90 with Python 3.12 and 3.13). A GCC version does not guarantee the GDB Python
+API contents; a matching HAL version does not prove matching behaviour.
 
 ## Check history
 

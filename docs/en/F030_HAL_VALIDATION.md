@@ -2,6 +2,9 @@
 
 [Documentation](index.md) → HAL F030 · [Русский](../ru/F030_HAL_VALIDATION.md)
 
+Stage record: case counts and plans below refer to the stated revision.
+Current scope: [STATUS](STATUS.md); release preparation: [rc.2](RC2_READINESS.md).
+
 The standalone [fixture](../../tests/hal-f030/README.en.md) passed hardware checks
 on NUCLEO-F030R8 with native ST-Link V2J45M31, SWD 1 MHz and OpenOCD 0.12.0.
 Local date: 2026-10-01; evidence start: 20260930T195222.241532Z (UTC).

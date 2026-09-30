@@ -2,8 +2,6 @@
 
 [Documentation](index.md) → API · [Русский](../ru/API.md)
 
-[HAL F030 hardware acceptance](F030_HAL_VALIDATION.md): 17/17, six repeats, timeout/recovery and original firmware restoration verified on Windows/ST-Link/OpenOCD; specification 0.40. API unchanged.
-
 Status: release candidate **0.1.0-rc.1** (Python `0.1.0rc1`), `API_VERSION = 1`. This numbers the
 described API surface; it is not a 1.0 stability promise and not a GDB version. The
 module is delivered as a Git submodule; pip installation is not supported yet, and
@@ -27,16 +25,15 @@ stm32_gdbtest_attach(firmware_target
   build directory inside `PROJECT_SOURCE_DIR` are supported. Build, build manifest
   preparation and hardware runs work on Windows and Linux ([Linux stand](LINUX_STAND.md)).
 - `PROFILE_DIR`, `PROFILE` and `MANIFEST_INPUTS` paths are absolute. `PROFILE_DIR`
-  contains `Tests/board/test_*.py`, `Tests/requirements.md`, `Tests/contracts.json`
-  when contracts are used, and `target.toml`. The scenario directory may also be named
-  `tests`.
+  contains `tests/board/test_*.py`, `tests/requirements.md`, `tests/contracts.json`
+  when contracts are used, and `target.toml`. Use `tests` for new projects; legacy `Tests` remains supported.
 - `PROFILE` is the MCU description as a separate file instead of
   `PROFILE_DIR/target.toml`. Several MCU variants of one firmware then share scenarios,
   requirements and contracts; each variant is its own build with its own `PROFILE`:
 
   ```cmake
   stm32_gdbtest_attach(firmware_target
-      PROFILE_DIR "${PROJECT_SOURCE_DIR}/hil"                    # shared Tests/
+      PROFILE_DIR "${PROJECT_SOURCE_DIR}/hil"                    # shared tests/
       PROFILE "${PROJECT_SOURCE_DIR}/hil/profiles/${MCU}.toml")  # G474.toml, G431.toml
   ```
 - `MANIFEST_INPUTS` adds files to the manifest snapshot and to relink dependencies.

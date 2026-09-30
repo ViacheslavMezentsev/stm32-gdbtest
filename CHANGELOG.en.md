@@ -10,11 +10,9 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 - HAL F030: manual run_hw.py with required restore-session; 17/17 HW, six repeats, expected timeout/recovery and HAL restoration passed on ST-Link/OpenOCD. RU/EN protocol, specification 0.40/TC-131; API unchanged.
 
-### Added
-
 - Added F030 HAL offline CI level: GCC13, exact inventory/JUnit/JSON and five negative HAL contracts. Docker includes pinned HAL F0; specification0.39/TC-130, API unchanged.
 
-- Standalone tests/hal-f030:17 HAL cases, build without YAML/consumer, provenance/import checks and TECH references. Windows/Linux GCC13 offline19/19; HW not run yet. Specification0.38/TC-129.
+- Standalone tests/hal-f030:17 HAL cases, build without YAML/consumer, provenance/import checks and TECH references. Windows/Linux GCC13 offline19/19. The initial stage was offline; hardware acceptance followed (see above). Specification0.38/TC-129.
 
 - [Techniques catalogue TECH-001…008](docs/en/TESTING_TECHNIQUES.md) with CMSIS scenario references. HAL techniques preserved independently of migration; documentation/comments only, API/specification0.37 unchanged.
 
@@ -32,44 +30,34 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 - F030 CMSIS Sleep: isolate SysTick/TIM3 and check WFI using interrupted PC; 2/2 new HW PASS, HAL restored. Firmware/API unchanged; specification0.32.
 
-### Added
-
 - F030 CMSIS: single-point VDDA/temperature, 7 numeric and 14 invalid vectors; 12/12 HW PASS, HAL restored. libgcc for F030 only; specification0.31, core API unchanged.
-
-### Added
 
 - F030 CMSIS ADC/DMA: calibration, CH16/17, normal DMA, raw publication, deadline and missing-IRQ test. 9/9 HW PASS; specification 0.30, API unchanged.
 
-### Added
-
 - F030 CMSIS: 100 ms TIM3, NVIC/vector/IRQ, event counter; two new scenarios and CI prepare. 6/6 HW PASS, HAL restored. Specification 0.29; core API unchanged.
-
-### Added
 
 - F030 CMSIS baseline: 1 ms SysTick, PA5 LED with a 500 ms interval, explicit
   HSI/GPIO setup; four boot/GPIO/clock/blink scenarios and mandatory CI preparation.
   Nucleo/ST-Link/OpenOCD: 4/4 PASS; previous HAL firmware restored.
   No API/schema changes; specification 0.28, limits in docs/en/F030_CMSIS_BASELINE.md.
 
-### Added
-
 - CMSIS example migration plan and F030 gap inventory with acceptance criteria.
   F030 build/offline 3/3 PASS without HW; specification revision 0.27.
 
+- J-Link: `STM32F103CBT6` → `STM32F103CB` mapping (WeAct BluePill-Plus, the stm32-hwtest-bluepill
+  demo project); specification revision 0.23.
+- Specification revision 0.22: question 11.2.23 on build system independence (a stable
+  `session.json` schema with a command to create it, an optional build manifest).
+- Release notes `docs/releases/<tag>.md` (starting with v0.1.0-rc.1) — the annotated
+  tag message and the GitHub release text; procedure in VERSIONING and maintenance.
+
 ### Changed
+
+- Documentation reconciled before rc.2: current status, examples, CI and lowercase tests; historical protocols separated from current plans. Specification 0.41 records acceptance/publication rules; version and runtime remain unchanged.
 
 - Renamed the root `Tests` directory to `tests`, updating CI, commands, fixtures
   and links. Consumer profile `Tests` directories and support for both spellings
   remain unchanged. Reconfigure old builds under the new directory.
-
-### Fixed
-
-- The `macros` contract in C++: the type is taken from the expansion text — `whatis <name>` used
-  to give a false `No symbol` ERROR when the compilation unit started with code from a header
-  included before the device header (`etl/optional.h` before `main.h`). A compiler command-line
-  macro (`-DNAME=value`) counts as defined. Specification revision 0.26.
-
-### Changed
 
 - The `macros` contract checks the type of the expansion (`whatis`, no memory reads): a type
   missing from the debug info (for example `DBGMCU_TypeDef`) is an ERROR in preflight rather than
@@ -78,17 +66,13 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Fixed
 
+- The `macros` contract in C++: the type is taken from the expansion text — `whatis <name>` used
+  to give a false `No symbol` ERROR when the compilation unit started with code from a header
+  included before the device header (`etl/optional.h` before `main.h`). A compiler command-line
+  macro (`-DNAME=value`) counts as defined. Specification revision 0.26.
+
 - Build manifest on CMake 3.25: `compile_commands.json` has no `output` key, the object file is
   taken from the compiler's `-o` (the snapshot used to fail with `KeyError: 'output'`); specification revision 0.24.
-
-### Added
-
-- J-Link: `STM32F103CBT6` → `STM32F103CB` mapping (WeAct BluePill-Plus, the stm32-hwtest-bluepill
-  demo project); specification revision 0.23.
-- Specification revision 0.22: question 11.2.23 on build system independence (a stable
-  `session.json` schema with a command to create it, an optional build manifest).
-- Release notes `docs/releases/<tag>.md` (starting with v0.1.0-rc.1) — the annotated
-  tag message and the GitHub release text; procedure in VERSIONING and maintenance.
 
 ## [0.1.0-rc.1] — 2026-09-29
 

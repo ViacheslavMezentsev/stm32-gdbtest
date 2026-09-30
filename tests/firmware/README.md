@@ -19,3 +19,16 @@ is 500 SysTick milliseconds; see [baseline evidence](../../docs/en/F030_CMSIS_BA
 
 F030 RTC owns and resets the calendar on boot, but never resets the backup domain.
 See [RTC evidence and limitations](../../docs/en/F030_CMSIS_RTC.md).
+
+## Current example scope
+
+F030 has 18 scenarios covering boot/clock/GPIO/blink, TIM3, ADC/DMA and numeric
+vectors, RTC, Sleep and selected failure paths. F103/F411 retain two boot/GPIO
+scenarios each. This is not peripheral parity across profiles.
+The separate [HAL F030 fixture](../hal-f030/README.en.md) preserves HAL-specific
+contracts, handles/callbacks and force_return checks.
+
+`run_hw.py` exercises the runner lifecycle using boot/GPIO, not all F030 cases.
+Use the explicit hardware suite described in the [rc.2 plan](../../docs/en/RC2_READINESS.md)
+for candidate acceptance. The [status](../../docs/en/STATUS.md) distinguishes
+historical results from checks of the current candidate.

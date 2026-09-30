@@ -2,6 +2,9 @@
 
 [Документация](index.md) → F030 CMSIS · [English](../en/F030_CMSIS_BASELINE.md)
 
+Протокол этапа: числа тестов и планы ниже относятся к указанной ревизии.
+Текущий состав — [STATUS](STATUS.md), подготовка выпуска — [rc.2](RC2_READINESS.md).
+
 30.09.2026, ветка `codex/f030-cmsis-baseline` от `4601888`.
 NUCLEO-F030R8, штатный ST-Link/SWD 1 МГц, OpenOCD; runner Windows,
 xPack GCC13.3.1-1.1, GDB14.2.90/Python3.11.4. UART не подключён.

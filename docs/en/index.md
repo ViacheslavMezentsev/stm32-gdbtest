@@ -2,6 +2,8 @@
 
 Documentation · [Русский](../ru/index.md)
 
+[rc.2 readiness and acceptance matrix](RC2_READINESS.md).
+
 [HAL F030 hardware acceptance](F030_HAL_VALIDATION.md): 17/17, six repeats, timeout/recovery and original firmware restoration verified on Windows/ST-Link/OpenOCD; specification 0.40. API unchanged.
 
 Introduction — [README](../../README.en.md): an implementation of [DDTT](DDTT.md) for

@@ -12,7 +12,7 @@ project that later runs again manually, in CI or on a stand in a loop. An agent 
 not change the stand, the debugger firmware or dangerous Flash settings without the
 owner's agreement ([maintenance](maintenance.md#working-with-hardware)).
 
-1. Write the observable requirement and its ID in `Tests/requirements.md`. Define the
+1. Write the observable requirement and its ID in `tests/requirements.md`. Define the
    acceptable effect of halt/reset and the failure criterion.
 2. Prepare `target.toml` for the specific MCU, board and firmware: Flash, identity,
    breakpoint budget, fault handlers. Build Debug with `-g3`, check the ELF and manifest.

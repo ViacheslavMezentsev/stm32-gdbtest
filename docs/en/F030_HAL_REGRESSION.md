@@ -2,6 +2,12 @@
 
 [Documentation](index.md) · [Русский](../ru/F030_HAL_REGRESSION.md)
 
+Fixture/CI/HW stages are in main `7f3c65b`; consumer integration is `a48c944`.
+See [hardware acceptance](F030_HAL_VALIDATION.md); stage history is retained below.
+
+Stage record: case counts and plans below refer to the stated revision.
+Current scope: [STATUS](STATUS.md); release preparation: [rc.2](RC2_READINESS.md).
+
 Preparation following the [HAL → CMSIS comparison](F030_CMSIS_ACCEPTANCE.md).
 The standalone build and17 scenarios are implemented in tests/hal-f030.
 This is an offline migration, not a new HW PASS. Specification0.38,8.32/TC-129;

@@ -2,6 +2,8 @@
 
 [Documentation](index.md) → Versions · [Русский](../ru/VERSIONING.md)
 
+[rc.2 plan](RC2_READINESS.md): tag `v0.1.0-rc.2`, Python `0.1.0rc2`; not released yet.
+
 The format is MAJOR.MINOR.PATCH per [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html);
 Git tags have the `v` prefix. The first candidate is **v0.1.0-rc.1**, the first release
 **v0.1.0**. The current version is the candidate `0.1.0rc1` (tag `v0.1.0-rc.1`); the
@@ -22,7 +24,7 @@ version and change only when the corresponding contract changes.
 
 1. Host and offline checks: CI is green on the final commit ([checks and CI](testing.md)).
 2. Hardware check of the CI firmware with `run_hw.py` on the final commit on the
-   F030R8/J-Link, F103C8/J-Link, F411CE/OpenOCD and F411CE/ST-LINK GDB Server stands.
+   F030R8/ST-Link/OpenOCD, F103C8/J-Link, F411CE/OpenOCD and F411CE/ST-LINK GDB Server stands.
 3. Consumer integration through a real Git submodule; if needed, agreed hardware and
    recovery checks of the consumer.
 4. Documentation and migration match the code; LICENSE is present; no local artifacts

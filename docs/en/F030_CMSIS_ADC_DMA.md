@@ -2,6 +2,9 @@
 
 [Documentation](index.md) · [Русский](../ru/F030_CMSIS_ADC_DMA.md)
 
+Stage record: case counts and plans below refer to the stated revision.
+Current scope: [STATUS](STATUS.md); release preparation: [rc.2](RC2_READINESS.md).
+
 2026-09-30, codex/f030-cmsis-adc-dma based on 5883316. NUCLEO-F030R8,
 native ST-Link V2J45M31/SWD 1 MHz, OpenOCD0.12.0, Windows,
 xPack GCC13.3.1-1.1/GDB14.2.90/Python3.11.4. USB/SWD only, no UART or

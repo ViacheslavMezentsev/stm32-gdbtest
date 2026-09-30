@@ -16,6 +16,7 @@ access. Hardware scenarios run separately on an agreed stand
 | host | Module host tests `tests/host` | Linux in the Docker image, Windows (Python 3.11, 3.13) and Ubuntu 20.04 x86_64/aarch64 on the stand environment Python, Offline workflow |
 | stand | Installing the Linux stand environment in a clean `ubuntu:20.04`, `doctor`, the `build` and `prepare` steps of `run_hw.py` for three profiles | `linux-stand` job of the Offline workflow on `ubuntu-24.04` and `ubuntu-24.04-arm` |
 | firmware | Building the F030R8, F103C8, F411CE CI firmware with every GCC in the lock file; build manifest; CTest `host` (traceability, `prepare.<ID>` with offline contracts); full-image preparation; rejection of a too small image policy; 10 negative ELF contract variants; presence and 4-byte alignment of load sections, including `.data` | `ci/run_checks.py firmware` in the Docker image, Offline workflow |
+| hal | HAL F030/GCC13: 19 CTest, 17 prepare JSON, positive and 5 negative contracts; no server | `ci/run_checks.py hal`, Offline workflow |
 
 The CI firmware lives in [tests/firmware](../../tests/firmware/README.md): CMSIS without
 HAL and without stm32-cmake-yml, one profile each for Cortex-M0, M3 and M4. The
@@ -63,7 +64,7 @@ CI firmware — the presets in `tests/firmware` (`cmake --preset f411ce`,
 - **Docs** — on every push to any branch: the docs level.
 - **Offline** — on a push to any branch except Markdown-only, `LICENSE` and
   `.github/FUNDING.yml` changes: host tests on `windows-2022` (Python 3.11 and 3.13)
-  and the host and firmware levels in the Docker image on `ubuntu-24.04` without
+  and the format, host, firmware and hal levels in the Docker image on `ubuntu-24.04` without
   network (`--network none`); the `linux-stand` job installs the stand environment in
   an `ubuntu:20.04` container (pinned by digest) on x86_64 and aarch64 (network is needed to download
   the pinned archives).
@@ -124,3 +125,6 @@ The default runner also includes hal; --gcc/--profile only restrict the CMSIS
 matrix. For HAL use ARM_TOOLCHAIN_ROOT pointing to GCC13 and STM32CUBE_REPOSITORY;
 otherwise the Windows/Linux GCC13 default is used. HAL GCC14/15 and hardware
 regression remain separate tasks.
+
+For rc.2 acceptance see the [matrix](RC2_READINESS.md). `tests/firmware/run_hw.py`
+uses boot/GPIO to exercise the runner; the full F030 suite is run separately.

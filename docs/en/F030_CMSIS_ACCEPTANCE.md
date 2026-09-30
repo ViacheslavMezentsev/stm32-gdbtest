@@ -2,6 +2,9 @@
 
 [Documentation](index.md) · [Русский](../ru/F030_CMSIS_ACCEPTANCE.md)
 
+Stage record: case counts and plans below refer to the stated revision.
+Current scope: [STATUS](STATUS.md); release preparation: [rc.2](RC2_READINESS.md).
+
 Third batch branch: codex/f030-cmsis-acceptance based on codex/f030-rtc-deadline
 (`769226b`). Reviewed the consumer's17 F030 HAL cases at `50adc35` and18 CMSIS
 cases in tests/firmware. Case counts are not code coverage.

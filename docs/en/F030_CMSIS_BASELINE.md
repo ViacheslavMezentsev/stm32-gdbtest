@@ -2,6 +2,9 @@
 
 [Documentation](index.md) → F030 CMSIS · [Русский](../ru/F030_CMSIS_BASELINE.md)
 
+Stage record: case counts and plans below refer to the stated revision.
+Current scope: [STATUS](STATUS.md); release preparation: [rc.2](RC2_READINESS.md).
+
 2026-09-30, branch `codex/f030-cmsis-baseline` based on `4601888`.
 NUCLEO-F030R8, native ST-Link/SWD at 1 MHz, OpenOCD; Windows runner,
 xPack GCC13.3.1-1.1, GDB14.2.90/Python3.11.4. No UART connection.

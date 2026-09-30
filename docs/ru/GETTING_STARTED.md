@@ -77,7 +77,7 @@ stm32_gdbtest_attach(firmware_target
     MANIFEST_INPUTS "${PROJECT_SOURCE_DIR}/profiles/myboard/firmware_FLASH.ld")
 ```
 
-Профиль содержит `target.toml` и `Tests/` (`board/test_*.py`, `requirements.md`,
+Профиль содержит `target.toml` и `tests/` (`board/test_*.py`, `requirements.md`,
 `contracts.json`). Тесты создаются в проекте, не внутри подмодуля. Локальный стенд
 выбирается `STM32_GDBTEST_STAND` или `--stand`; шаблоны —
 `examples/stands/stlink.example.toml` и `tests/firmware/stands/*.example.toml`.

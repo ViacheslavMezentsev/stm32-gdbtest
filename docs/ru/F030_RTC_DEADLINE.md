@@ -2,6 +2,9 @@
 
 [Документация](index.md) · [English](../en/F030_RTC_DEADLINE.md)
 
+Протокол этапа: числа тестов и планы ниже относятся к указанной ревизии.
+Текущий состав — [STATUS](STATUS.md), подготовка выпуска — [rc.2](RC2_READINESS.md).
+
 Вторая ветка пакета: codex/f030-rtc-deadline от codex/f030-adc-busy (`3ba9c26`).
 Firmware и API не менялись. HW_CI_RTC_DEADLINE останавливает rtc_wait при
 error=3 и заменяет mask на0. Предикат готовности становится заведомо ложным,

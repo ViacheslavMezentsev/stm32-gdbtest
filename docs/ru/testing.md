@@ -16,6 +16,7 @@ CI проверяет модуль до GDB-сервера: без отладч�
 | host | Host-тесты модуля `tests/host` | Linux в Docker-образе, Windows (Python 3.11, 3.13) и Ubuntu 20.04 x86_64/aarch64 на Python окружения стенда, workflow Offline |
 | stand | Установка окружения Linux-стенда в чистом `ubuntu:20.04`, `doctor`, шаги `build` и `prepare` сценария `run_hw.py` для трёх профилей | Задание `linux-stand` workflow Offline на `ubuntu-24.04` и `ubuntu-24.04-arm` |
 | firmware | Сборка CI-прошивок F030R8, F103C8, F411CE каждым GCC из lock-файла; build manifest; CTest `host` (traceability, `prepare.<ID>` с offline-контрактами); подготовка полного образа; отказ слишком малой политики образа; 10 отрицательных вариантов ELF-контрактов; наличие и выравнивание на 4 байта секций загрузки, включая `.data` | `ci/run_checks.py firmware` в Docker-образе, workflow Offline |
+| hal | HAL F030/GCC13: 19 CTest, 17 prepare JSON, положительный и 5 отрицательных contracts; без сервера | `ci/run_checks.py hal`, workflow Offline |
 
 CI-прошивки находятся в [tests/firmware](../../tests/firmware/README.md): CMSIS без HAL и
 без stm32-cmake-yml, по профилю на Cortex-M0, M3 и M4. Сценарии проверяют состояние
@@ -63,7 +64,7 @@ CI-прошивка — presets в `tests/firmware` (`cmake --preset f411ce`,
 - **Docs** — при каждом push в любую ветку: уровень docs.
 - **Offline** — при push в любую ветку, кроме изменений только Markdown, `LICENSE`
   и `.github/FUNDING.yml`: host-тесты на `windows-2022` (Python 3.11 и 3.13) и
-  уровни host и firmware в Docker-образе на `ubuntu-24.04` без сети (`--network none`);
+  уровни format, host, firmware и hal в Docker-образе на `ubuntu-24.04` без сети (`--network none`);
   задание `linux-stand` — окружение стенда в контейнере `ubuntu:20.04` (закреплён по digest) на x86_64 и
   aarch64 (сеть нужна для загрузки закреплённых архивов).
 - **Hardware** — только вручную: сборка и `pack` на `ubuntu-24.04`, затем запуск пакетов
@@ -122,3 +123,6 @@ F1/F4 остаются CMSIS-only. Workflow запускает `format host firm
 CMSIS-матрицу. Для HAL используйте ARM_TOOLCHAIN_ROOT GCC13, STM32CUBE_REPOSITORY;
 без переменной берётся установленный GCC13 по умолчанию Windows/Linux.
 HAL GCC14/15 и аппаратная регрессия остаются отдельными задачами.
+
+Для приёмки rc.2 см. [матрицу](RC2_READINESS.md). `tests/firmware/run_hw.py`
+использует boot/GPIO для проверки runner; полный набор F030 запускается отдельно.

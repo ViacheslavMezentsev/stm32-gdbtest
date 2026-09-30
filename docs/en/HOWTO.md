@@ -13,9 +13,7 @@ commands are the same in both except for quoting (section "The `git land` alias"
 ## Git: working without pull requests
 
 A branch `<agent>/<task>` is created from a fresh main and, after the checks, merged
-into main by fast-forward. This is a temporary order until the first release, while
-branches serve as experiments and intermediate steps; it is revised when the release
-is prepared. The GitHub web interface cannot merge without a pull
+into main by fast-forward. This order applies to one maintainer working with agents and is reconsidered when the team grows. The GitHub web interface cannot merge without a pull
 request, and GitHub's automatic branch deletion works for pull requests only, so
 merging and cleanup are done locally.
 

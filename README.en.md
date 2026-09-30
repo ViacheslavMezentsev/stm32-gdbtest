@@ -83,7 +83,7 @@ ELF are available.
 ## Run layouts
 
 The scenario and the report are the same in every layout; only the local stand file
-(`*.local.toml`) changes, and it stays with the user.
+(`*.local.toml`, `remote.toml`) changes, and it stays with the user.
 
 | Layout | Runner and GDB | GDB server and debugger | Status |
 | --- | --- | --- | --- |
@@ -129,16 +129,14 @@ of MCU, HAL, GDB and backend, not by the family: [current status](docs/en/STATUS
 
 ## Status
 
-Version 0.1.0-rc.1 is the first release candidate (Python `0.1.0rc1`, `API_VERSION = 1`).
-Final verification on the release commit: CI, 4 stands on Windows, 3 stands from Windows
-to Orange Pi 5, 3 stands in hardware CI — 10/10 steps each, and 4 scenarios of the
-consumer project on STM32G474. Exact matrix and limits — [STATUS](docs/en/STATUS.md).
+**0.1.0-rc.1** is published; [rc.2](docs/en/RC2_READINESS.md) is being prepared.
+Since rc.1, manifest and HAL macro contracts were fixed, CMSIS F030 was expanded,
+and a standalone HAL F030 regression fixture was added. F103/F411 still provide
+basic boot/GPIO cases. Verified scope and limits: [STATUS](docs/en/STATUS.md).
+Python version remains `0.1.0rc1` until the release branch, `API_VERSION = 1`.
 
-Next: supervision of child processes and evolution of the profile schema and
-compatibility metadata. Coordinated control of power, relays and other instruments
-through a host controller is planned separately — with it the loop becomes full HIL;
-there is no such API yet. Python packaging is considered an additional delivery
-method. [Roadmap](TODO.md) (Russian).
+RISC-V, full migration of other examples, external instrument control, child process
+supervision and Python packaging remain in the [roadmap](TODO.md).
 
 ## Contents and dependencies
 
@@ -146,6 +144,7 @@ method. [Roadmap](TODO.md) (Russian).
 - `tests/host`, `tests/fixtures` — infrastructure checks without a board.
 - `tests/firmware`, `ci/` — F030R8/F103C8/F411CE CI firmware, Docker image, the check
   script and `run_hw.py` for hardware validation on a stand.
+- `tests/hal-f030/` — standalone HAL F030 regression, CI and hardware acceptance.
 - `tools/linux_stand.py` — installs the Linux stand environment without root.
 - `examples/minimal-consumer/` — a standalone firmware and test example for F411.
 - `docs/ru`, `docs/en` — integration, writing scenarios and mechanism descriptions;

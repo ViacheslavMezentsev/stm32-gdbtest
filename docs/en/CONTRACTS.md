@@ -3,7 +3,7 @@
 [Documentation](index.md) → Contracts · [Русский](../ru/CONTRACTS.md)
 
 A scenario declares contract names literally in `@case(..., contracts=("name",))`.
-Definitions live in `Tests/contracts.json` of the profile directory. Contracts that
+Definitions live in `tests/contracts.json` of the profile directory. Contracts that
 are not requested give `NOT_REQUESTED` in the report — this is not evidence of
 compatibility and not a SKIP result.
 

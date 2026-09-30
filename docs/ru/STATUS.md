@@ -2,72 +2,43 @@
 
 [Документация](index.md) → Текущее состояние · [English](../en/STATUS.md)
 
-[Аппаратная приёмка HAL F030](F030_HAL_VALIDATION.md): 17/17, шесть повторов, timeout/recovery и восстановление исходной прошивки проверены на Windows/ST-Link/OpenOCD; ТЗ 0.40. API без изменений.
 
-[HAL CI](F030_HAL_REGRESSION.md): уровень hal добавлен, Linux полный набор15/15 и Windows6/6 PASS. Аппаратная приёмка описана выше; ТЗ CI 0.39.
+Срез: 01.10.2026, main `7f3c65b`. Опубликован rc.1; готовится
+[0.1.0-rc.2](RC2_READINESS.md). До выпускной ветки Python-версия остаётся
+`0.1.0rc1`, API_VERSION=1. Новые проверки ниже не являются финальной приёмкой rc.2.
+Поставка — закреплённый Git-подмодуль; pip-пакета нет.
 
-[HAL fixture F030](F030_HAL_REGRESSION.md): автономная сборка и offline19/19 на Windows/Linux GCC13. ТЗ переноса 0.38; CI и HW приняты отдельными этапами выше.
+## Текущий состав и доказательства
 
-[План отдельной HAL-регрессии F030](F030_HAL_REGRESSION.md): подготовлен состав; fixture реализован offline. Пакет до `cea01f9` принят в main, потребитель обновлён на `0c8c966`.
-
-[Сверка HAL→CMSIS F030 и порядок пакета веток](F030_CMSIS_ACCEPTANCE.md). Проверены прежние16 +2 новых сценария на одном ELF, не единый прогон18/18. HAL восстановлен.
-
-Срез: 2026-09-30. Кандидат выпуска **0.1.0-rc.1** (Python `0.1.0rc1`), `API_VERSION = 1`;
-итоговая проверка пройдена на коммите выпуска `2143665` (раздел ниже); тег ставит владелец. Основной способ поставки — закреплённый Git-подмодуль; pip-пакета и
-отдельного исполняемого файла пока нет. Документ описывает проверенный объём, а не
-журнал изменений; история — в [CHANGELOG](../../CHANGELOG.md).
-
-CMSIS F030: boot/clock/GPIO/blink — **4/4 HW PASS** на NUCLEO-F030R8/ST-Link/OpenOCD; прежняя HAL-прошивка восстановлена. [Протокол и ограничения](F030_CMSIS_BASELINE.md). Следующий этап — оставшиеся отказы и итоговая приёмка F030.
-
-## Проверки
-
-| Область | Доказанный объём |
+| Область | Проверенный объём и границы |
 | --- | --- |
-| Host-тесты | 96 unittest без MCU; на Linux пропускаются 4 теста Windows mutex, на Windows — 7 тестов Linux (блокировка `flock` 3, группы процессов 2, помощник удалённого сервера 2) |
-| CI (GitHub Actions, Docker) | Docs, format, host на Windows и Linux; CI-прошивки F030R8/F103C8/F411CE на GCC 13.3.1, 14.2.1, 15.2.1 с CMake 3.28.3: build manifest, `prepare`, полный образ, 10 отрицательных контрактов, выравнивание секций загрузки, пустая секция в RAM; окружение Linux-стенда в `ubuntu:20.04` на x86_64 и aarch64 ([проверки и CI](testing.md)) |
-| CI-прошивки на оборудовании | Итоговая проверка на `2143665`: 4 стенда на Windows, 3 стенда с Windows на Orange Pi 5, 3 стенда в workflow Hardware — по 10/10 шагов; ранее 4 стенда на `fbc103d` (разделы ниже) |
-| Linux-стенд без оборудования | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) в контейнере: установка окружения, host-тесты (79 на ревизии 0.7), `doctor`, `build` и `prepare` CI-прошивок; аппаратный путь без отладчика — блокировка, запуск OpenOCD, ERROR «exited before ready», процессы остановлены |
-| Удалённый GDB-сервер на оборудовании | Runner и GDB на Windows 10, GDB-серверы на Orange Pi 5 по SSH: F411CE / OpenOCD, F103C8 / J-Link CE, F030R8 / J-Link STLink — по 10/10 (`run_hw.py`) |
-| Удалённый GDB-сервер без оборудования | Петля SSH (OpenSSH, ключ, `known_hosts`) и фиктивный J-Link сервер: проброс порта, подключение GDB через туннель, recovery, остановка сервера и передача журнала, отказ при занятой блокировке хоста стенда, очистка после обрыва сессии |
-| Linux-стенд на оборудовании | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 / J-Link GDB Server 9.80 arm64 — 10/10 после подтверждения окна условий J-Link STLink в графическом сеансе; без этого подключение ждёт около 10 с, первый прогон — 2/10 ([Linux-стенд](LINUX_STAND.md)) |
-| ELF/HAL preflight | Положительный случай и 11 отрицательных вариантов на ELF F103C8/F401CC/F411CE стендового проекта |
-| Стендовый проект, F411CE / ST-Link / OpenOCD | 24/24 CTest (22 HW + 2 host) после отделения модуля |
-| Стендовый проект, F103C8 / J-Link | 24/24 CTest (22 HW + 2 host) |
-| Стендовый проект, F030R8 / J-Link STLink | 17/17 HW |
-| Стендовый проект, F429ZI / ST-Link/V2 | 22/22 HW через OpenOCD и ST server на модуле `b76d909`; единичные сбои USB в длинных сериях ([протокол](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/F429_SERVER_STABILITY.md)) |
-| Независимый consumer F411 | Сборка и offline, аппаратный сценарий, verify-only, timeout/recovery и восстановление основной прошивки |
-| Проект потребителя, STM32G474 / ST-Link через Orange Pi 5 | Arduino Core STM32 (HAL и CMSIS не из STM32Cube), stm32-cmake-yml с CRC в ELF после линковки, C++ с LTO, xPack GCC 14.2.1 (GDB 15.2.90, Python 3.12.8); runner на Windows, OpenOCD на Orange Pi по SSH. Четыре сценария PASS на одной сборке без LTO: загрузка (DEV_ID `0x469`, заморозка IWDG при остановке), завершение `setup()`, 15 вызовов `setup()` по порядку, инъекция отказа питания через `force_return` — первая аппаратная проверка `force_return`. Подключение выявило отказ manifest без пакетов STM32Cube (исправлен, ТЗ 0.16) |
-| F401CC / ST-Link, ST server на F1/F4 | Более ранние аппаратные проверки; новые macro-сценарии после отделения модуля не повторялись |
+| Host | 97 unittest; Windows: 8 платформенных skips. Linux пропускает Windows-only проверки; точный результат сохраняется в журнале, пропуски не считаются HW PASS |
+| Offline CI | Docs, format, host; CMSIS F030/F103/F411 × GCC13/14/15; отдельный HAL F030 на GCC13, 19 CTest и 5 отрицательных contracts. Все пять jobs Offline прошли на 7f3c65b |
+| CMSIS F030 | 18 сценариев: boot/clock/GPIO/blink, TIM3, ADC/DMA/численные векторы, Sleep, RTC и отказы. HW: 16 прежних + 2 новых на одном ELF; единый полный прогон 18/18 ещё нужен для rc.2 |
+| HAL F030 | Автономный tests/hal-f030: 17/17, шесть повторов после инъекций, ожидаемый timeout ERROR, recovery и восстановление HAL потребителя — Windows/ST-Link/OpenOCD |
+| CMSIS F103/F411 | По два сценария boot/GPIO; полный перенос периферии ещё не выполнен |
+| minimal-consumer F411 | Отдельный пример подключения CMake без YAML; проверяет подключение модуля, не полную периферию платы |
+| Потребитель BlackPill | main a48c944 закрепляет модуль 7f3c65b: Windows host97 (8 skips), Linux пять сборок/120 CTest PASS; Offline этого SHA SUCCESS. HW на интеграционной ветке не запускался |
 
-Число сценариев относится к приложению потребителя, а не к универсальному набору
-модуля и не к проценту покрытия. Изменения документации не считаются новыми
-аппаратными прогонами. Протоколы, хэши ELF и ограничения стендового проекта:
-[состояние стенда](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/STATUS.md),
-[проверка consumer](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/CONSUMER_VALIDATION.md),
-[методы и опыты](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/STM32_TESTING_METHODS.md).
-
-Проверенные инструменты: xPack ARM GCC 13.3.1-1.1, GDB 14.2.90 со встроенным
-Python 3.11.4, OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), J-Link 8.32;
-CubeF0 1.11.6, CubeF1 1.8.7, CubeF4 1.28.3. В CI дополнительно собираются GCC 14.2.1 и
-15.2.1 (GDB 15.2.90 и 16.3.90 с Python 3.12 и 3.13). Номер GCC не гарантирует состав
-GDB Python API; совпадение версии HAL не доказывает совпадения поведения.
+Источники: [HAL→CMSIS](F030_CMSIS_ACCEPTANCE.md), [HAL-протокол](F030_HAL_VALIDATION.md),
+[техники](TESTING_TECHNIQUES.md), [CI](testing.md).
+Текущий Nucleo-стенд — родной ST-Link/OpenOCD; результаты J-Link STLink ниже исторические.
+F103 — WeAct BluePill-Plus/J-Link; F411 — BlackPill/ST-Link с OpenOCD и ST server.
+Удалённые запуски, пакеты и Hardware workflow проверялись при rc.1; повтор на
+кандидате rc.2 пока не выполнен. Отдельный Linux-ПК с USB и WSL usbipd остаются
+непроверенными конфигурациями. Число сценариев не является процентом покрытия.
 
 ## Схемы размещения стенда
 
-| Схема | Состояние |
-| --- | --- |
-| Всё на Windows: runner, GDB, сервер, отладчик | Проверено: 4 стенда × 10/10 |
-| Всё на Linux-стенде (Orange Pi 5, Ubuntu 20.04 aarch64) | Проверено: 3 стенда × 10/10 |
-| Runner и GDB на Windows, сервер и отладчик на Orange Pi 5 по SSH | Проверено: 3 стенда × 10/10 |
-| Runner и GDB в WSL2 (Ubuntu 20.04 x86_64), сервер и отладчик на Orange Pi 5 по SSH | Проверено: 3 стенда × 10/10 |
-| WSL2 с отладчиком через usbipd-win | Реализовано как Linux; не проверялось (технический долг: конфликт с фильтрами USB других программ) |
-| Отдельный Linux-ПК x86_64 с отладчиком | Реализовано; сторона запуска x86_64 проверена в WSL2, в CI — окружение, сборка и подготовка; на таком ПК не проверялось |
-| Сборка в одном месте, запуск на стенде (`pack`, `run --package`) | Проверено: пакеты собраны на Windows, на Orange Pi 5 три стенда × 10/10 |
-| Аппаратный CI на self-hosted раннере (workflow Hardware), прогоны в цикле (`run_hw.py --repeat`) | Проверено: раннер-служба на Orange Pi 5, пакеты собраны на GitHub — три стенда × 10/10; цикл — F411CE, 10 итераций, прерывание Ctrl+C |
+Локальные Windows и Orange Pi 5/Linux, Windows/WSL → сервер по SSH,
+pack/run --package и Hardware workflow реализованы и проверялись для rc.1.
+Это историческая матрица ниже, не итоговая приёмка rc.2.
+Повтор кандидата планируется по [матрице выпуска](RC2_READINESS.md).
 
 ## Итоговая проверка 0.1.0-rc.1, 2026-09-29
 
-Коммит `2143665` (версия `0.1.0rc1`); последующие изменения только в документации.
+Историческая проверка rc.1: коммит `2143665` (версия `0.1.0rc1`).
+Результаты этого раздела не распространяются автоматически на изменения после rc.1.
 
 | Проверка | Результат |
 | --- | --- |
@@ -134,11 +105,42 @@ stm32-hwtest-blackpill на этих коммитах не повторялся.
 
 ## Следующие этапы
 
-Тег v0.1.0-rc.1; затем v0.1.0 и проверка варианта STM32G431 проекта потребителя на плате. Дальше — надзор за
-процессами серверов, развитие схемы профиля
-и manifest; позднее — host-контроллер внешнего оборудования и Python-упаковка. Это
-планы, а не доступные возможности: [дорожная карта](../../TODO.md),
-[правила версий](VERSIONING.md), [начало работы](GETTING_STARTED.md).
+Подготовка [rc.2](RC2_READINESS.md), затем продолжение CMSIS-миграции и работа
+по [TODO](../../TODO.md). RISC-V, внешнее управление стендом и Python-упаковка
+остаются планами.
+
+
+## Предыдущая сводка проверок (до аудита rc.2)
+
+| Область | Доказанный объём |
+| --- | --- |
+| CI (GitHub Actions, Docker) | Docs, format, host на Windows и Linux; CI-прошивки F030R8/F103C8/F411CE на GCC 13.3.1, 14.2.1, 15.2.1 с CMake 3.28.3: build manifest, `prepare`, полный образ, 10 отрицательных контрактов, выравнивание секций загрузки, пустая секция в RAM; окружение Linux-стенда в `ubuntu:20.04` на x86_64 и aarch64 ([проверки и CI](testing.md)) |
+| CI-прошивки на оборудовании | Итоговая проверка на `2143665`: 4 стенда на Windows, 3 стенда с Windows на Orange Pi 5, 3 стенда в workflow Hardware — по 10/10 шагов; ранее 4 стенда на `fbc103d` (разделы ниже) |
+| Linux-стенд без оборудования | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) в контейнере: установка окружения, host-тесты (79 на ревизии 0.7), `doctor`, `build` и `prepare` CI-прошивок; аппаратный путь без отладчика — блокировка, запуск OpenOCD, ERROR «exited before ready», процессы остановлены |
+| Удалённый GDB-сервер на оборудовании | Runner и GDB на Windows 10, GDB-серверы на Orange Pi 5 по SSH: F411CE / OpenOCD, F103C8 / J-Link CE, F030R8 / J-Link STLink — по 10/10 (`run_hw.py`) |
+| Удалённый GDB-сервер без оборудования | Петля SSH (OpenSSH, ключ, `known_hosts`) и фиктивный J-Link сервер: проброс порта, подключение GDB через туннель, recovery, остановка сервера и передача журнала, отказ при занятой блокировке хоста стенда, очистка после обрыва сессии |
+| Linux-стенд на оборудовании | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 / J-Link GDB Server 9.80 arm64 — 10/10 после подтверждения окна условий J-Link STLink в графическом сеансе; без этого подключение ждёт около 10 с, первый прогон — 2/10 ([Linux-стенд](LINUX_STAND.md)) |
+| ELF/HAL preflight | Положительный случай и 11 отрицательных вариантов на ELF F103C8/F401CC/F411CE стендового проекта |
+| Стендовый проект, F411CE / ST-Link / OpenOCD | 24/24 CTest (22 HW + 2 host) после отделения модуля |
+| Стендовый проект, F103C8 / J-Link | 24/24 CTest (22 HW + 2 host) |
+| Стендовый проект, F030R8 / J-Link STLink | 17/17 HW |
+| Стендовый проект, F429ZI / ST-Link/V2 | 22/22 HW через OpenOCD и ST server на модуле `b76d909`; единичные сбои USB в длинных сериях ([протокол](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/F429_SERVER_STABILITY.md)) |
+| Независимый consumer F411 | Сборка и offline, аппаратный сценарий, verify-only, timeout/recovery и восстановление основной прошивки |
+| Проект потребителя, STM32G474 / ST-Link через Orange Pi 5 | Arduino Core STM32 (HAL и CMSIS не из STM32Cube), stm32-cmake-yml с CRC в ELF после линковки, C++ с LTO, xPack GCC 14.2.1 (GDB 15.2.90, Python 3.12.8); runner на Windows, OpenOCD на Orange Pi по SSH. Четыре сценария PASS на одной сборке без LTO: загрузка (DEV_ID `0x469`, заморозка IWDG при остановке), завершение `setup()`, 15 вызовов `setup()` по порядку, инъекция отказа питания через `force_return` — первая аппаратная проверка `force_return`. Подключение выявило отказ manifest без пакетов STM32Cube (исправлен, ТЗ 0.16) |
+| F401CC / ST-Link, ST server на F1/F4 | Более ранние аппаратные проверки; новые macro-сценарии после отделения модуля не повторялись |
+
+Число сценариев относится к приложению потребителя, а не к универсальному набору
+модуля и не к проценту покрытия. Изменения документации не считаются новыми
+аппаратными прогонами. Протоколы, хэши ELF и ограничения стендового проекта:
+[состояние стенда](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/STATUS.md),
+[проверка consumer](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/CONSUMER_VALIDATION.md),
+[методы и опыты](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/STM32_TESTING_METHODS.md).
+
+Проверенные инструменты: xPack ARM GCC 13.3.1-1.1, GDB 14.2.90 со встроенным
+Python 3.11.4, OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), J-Link 8.32;
+CubeF0 1.11.6, CubeF1 1.8.7, CubeF4 1.28.3. В CI дополнительно собираются GCC 14.2.1 и
+15.2.1 (GDB 15.2.90 и 16.3.90 с Python 3.12 и 3.13). Номер GCC не гарантирует состав
+GDB Python API; совпадение версии HAL не доказывает совпадения поведения.
 
 ## История проверок
 

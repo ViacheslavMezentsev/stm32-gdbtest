@@ -43,7 +43,7 @@ Statement-макрос `do { ... } while (0)` не является обычны
 
 ## Offline-контракт
 
-В `Tests/contracts.json` профиля (schema 1) контракт макросов выглядит так:
+В `tests/contracts.json` профиля (schema 1) контракт макросов выглядит так:
 
 ```json
 {

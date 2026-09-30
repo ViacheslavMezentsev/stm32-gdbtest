@@ -44,7 +44,7 @@ effects. A statement macro `do { ... } while (0)` is not an ordinary C expressio
 
 ## Offline contract
 
-In the profile's `Tests/contracts.json` (schema 1) a macro contract looks like this:
+In the profile's `tests/contracts.json` (schema 1) a macro contract looks like this:
 
 ```json
 {
