@@ -133,3 +133,29 @@ Profile core_registers remains server-specific: diagnostic_errors preserves
 unavailable xPSR. This diagnostic limitation does not mean no IRQ occurred.
 
 Repeat at 8a7928c: 14 PASS, RTC_ALARM ERROR after reaching app_loop — SCB is outside the app.c DWARF context. HAL restore boot/blink PASS. The ICSR address and mask are now captured in RTC_IRQHandler before changing context (TECH-002). Evidence: build/rc2-acceptance/f030-full-20260930T222249Z/summary.json.
+
+## CMSIS repeat on the corrected commit
+
+Runtime/scenario SHA: a48158cbfc8c61e015f5e84daa494ce66f639ce0. One complete run:
+18/18 PASS, followed by original HAL restoration: HW_BOOT/HW_BLINK PASS, reset_run.
+Windows xPack GCC13/GDB, ST-Link/SWD, OpenOCD on Orange Pi over SSH.
+ELF SHA256: 6a5ed3b0835ce5f093e808fcca6cce453399d1ad8d3e130816647c5d3afb8280.
+Evidence: build/rc2-acceptance/f030-full-20260930T222540Z/summary.json.
+The preceding 20260930T222451Z run stopped in the local report collector: concurrent
+CTest prepare wrote additional result.json files to the same out directory.
+HW_ADC_INIT was PASS; restore PASS. That run is not counted as a complete set;
+the serial repeat used unchanged code. F030 offline 19/19, docs/host 4/4.
+The newly published SHA still requires Docs/Offline. This SSH run does not
+replace the separate local Windows/backend matrix.
+
+## HAL F030 on the same candidate
+
+At a48158c: 17/17 scenarios, six positive repeats after ADC injections, expected
+timeout ERROR after entering loop, host recovery reset_run and ADC repeat PASS.
+Original consumer HAL restored: HW_BOOT/HW_BLINK PASS, MCU running.
+Same environment: Windows GCC13/GDB → SSH/Orange Pi/OpenOCD, NUCLEO-F030R8/ST-Link.
+Evidence: tests/hal-f030/build/validation/20260930T222705.675442Z/summary.json.
+HAL offline: 19/19. Pack/Hardware workflow, full-image/identity cycles and remaining
+local/remote stands are not yet accepted. Scenario fixes require new CI; do not
+tag or land yet. Subsequent documentation commits do not replace the stated
+SHA of the scenarios actually executed.

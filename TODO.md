@@ -3,7 +3,7 @@
 ## Текущая работа
 
 - codex/release-0.1.0-rc.2 от main eaf31ea: Python 0.1.0rc2, API_VERSION=1,
-  ТЗ 0.42 к выпуску, черновик docs/releases/v0.1.0-rc.2.md. Тег не создан.
+  ТЗ 0.43 к выпуску, черновик docs/releases/v0.1.0-rc.2.md. Тег не создан.
 - [x] Документальный аудит eaf31ea принят: Docs и все пять Offline jobs SUCCESS.
 - [x] Orange Pi и три стенда подтверждены владельцем; doctor без FAIL/WARN.
 - [x] Локально Windows docs/host 4/4; Linux 14 этапов + чистый HAL 1/1.
@@ -194,4 +194,7 @@
 
 - [x] Проверить профиль Cortex-M0 через J-Link STLink: F030R8, существующие API/schema, host65 и 17 HW-сценариев потребителя.
 
-- [ ] rc.2: повторить полный F030 после исправления xPSR → SCB ICSR; e3f5233 остановлен на TIM3 IRQ, restore PASS. См. docs/ru/RC2_READINESS.md.
+- [x] rc.2: полный CMSIS F030 18/18 через SSH на a48158c; HAL restore PASS. Исправлены xPSR и RTC macro context; исходные ERROR сохранены в RC2_READINESS.
+
+- [x] rc.2: HAL F030 через SSH на a48158c — 17/17, шесть повторов, timeout/recovery/restore PASS.
+- [ ] После публикации исправленной выпускной ветки сверить новый SHA и полный CI; продолжить оставшуюся матрицу, не выполнять land заранее.

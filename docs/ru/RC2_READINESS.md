@@ -134,3 +134,29 @@ core_registers профиля остаётся серверозависимым:
 недоступный xPSR. Это ограничение диагностики, не отсутствие IRQ.
 
 Повтор на 8a7928c: 14 PASS, RTC_ALARM ERROR после перехода в app_loop — SCB вне DWARF-контекста app.c. Восстановление HAL boot/blink PASS. Адрес ICSR и маска теперь сохраняются в RTC_IRQHandler до перехода (TECH-002). Отчёт: build/rc2-acceptance/f030-full-20260930T222249Z/summary.json.
+
+## Повтор CMSIS на исправленном коммите
+
+Runtime/scenario SHA: a48158cbfc8c61e015f5e84daa494ce66f639ce0. Единая серия
+18/18 PASS, затем восстановление исходного HAL: HW_BOOT/HW_BLINK PASS, reset_run.
+Windows xPack GCC13/GDB, ST-Link/SWD, OpenOCD на Orange Pi через SSH.
+ELF SHA256: 6a5ed3b0835ce5f093e808fcca6cce453399d1ad8d3e130816647c5d3afb8280.
+Отчёт: build/rc2-acceptance/f030-full-20260930T222540Z/summary.json.
+Перед ним запуск 20260930T222451Z прерван локальным сборщиком отчётов: одновременно
+выполнявшийся CTest prepare записал дополнительные result.json в тот же out.
+HW_ADC_INIT был PASS; восстановление PASS. Этот запуск не засчитывается как
+полный набор; повтор выполнен последовательно, без изменений кода.
+Offline F030 19/19, docs/host 4/4. Новый опубликованный SHA ещё требует Docs/Offline.
+Это SSH-проверка, она не заменяет отдельную локальную Windows/backend матрицу.
+
+## HAL F030 на том же кандидате
+
+На a48158c: 17/17 сценариев, шесть положительных повторов после инъекций ADC,
+ожидаемый timeout ERROR после входа в loop, host recovery reset_run и повтор ADC PASS.
+Затем исходный HAL потребителя восстановлен: HW_BOOT/HW_BLINK PASS, MCU running.
+Среда та же: Windows GCC13/GDB → SSH/Orange Pi/OpenOCD, NUCLEO-F030R8/ST-Link.
+Отчёт: tests/hal-f030/build/validation/20260930T222705.675442Z/summary.json.
+Offline HAL: 19/19. Pack/Hardware workflow, циклы full-image/identity и оставшиеся
+локальные/удалённые стенды ещё не приняты. Исправления сценариев требуют нового CI;
+тег и land пока не выполнять. Последующие документальные коммиты не заменяют
+указанный SHA фактически выполненных сценариев.

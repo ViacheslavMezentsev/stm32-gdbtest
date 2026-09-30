@@ -250,3 +250,10 @@ report and old build under another name inside the workspace, then create a clea
 build for the current OS. tests/hal-f030 CI uses build/ci-gcc13; preserve that exact
 directory, not the Git checkout or the whole hardware evidence directory.
 If the HAL rerun succeeds, report two runs rather than a single 15/15 PASS.
+
+## Do not mix prepare and hardware reports from one session
+
+CTest prepare and CLI run write result.json to session.out. Run them serially
+or use separate sessions/out directories. Counting every new result.json without
+a mode/id filter can misattribute prepare output to a hardware scenario. Preserve
+the evidence and repeat the complete set separately; do not claim a complete PASS.

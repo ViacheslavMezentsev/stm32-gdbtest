@@ -8,13 +8,15 @@ Snapshot: 2026-10-01, release branch based on main `eaf31ea`. rc.1 is published;
 Python version is `0.1.0rc2`, API_VERSION=1. The checks below are not final rc.2 acceptance.
 Delivery is a pinned Git submodule; there is no pip package.
 
+rc.2 acceptance at a48158c: remote Nucleo CMSIS 18/18 and HAL 17/17, repeats and recovery PASS; the complete release matrix remains open. [Evidence and preserved failures](RC2_READINESS.md).
+
 ## Current scope and evidence
 
 | Area | Verified scope and limits |
 | --- | --- |
 | Host | 97 unittests; Windows: 8 platform skips. Linux skips Windows-only checks; exact results are logged, skips do not count as HW PASS |
 | Offline CI | Docs, format, host; CMSIS F030/F103/F411 × GCC13/14/15; separate GCC13 HAL F030, 19 CTest checks and 5 negative contracts. All five Offline jobs passed at 7f3c65b |
-| CMSIS F030 | 18 cases: boot/clock/GPIO/blink, TIM3, ADC/DMA/numeric vectors, Sleep, RTC and failures. HW: 16 previous + 2 new cases on one ELF; a single complete 18/18 run remains required for rc.2 |
+| CMSIS F030 | 18 cases: boot/clock/GPIO/blink, TIM3, ADC/DMA/numeric vectors, Sleep, RTC and failures. HW: one complete 18/18 run at a48158c over SSH/Orange Pi; HAL restored. See RC2_READINESS; the local Windows matrix remains pending |
 | HAL F030 | Standalone tests/hal-f030: 17/17, six post-injection repeats, expected timeout ERROR, recovery and consumer HAL restoration — Windows/ST-Link/OpenOCD |
 | CMSIS F103/F411 | Two boot/GPIO cases each; full peripheral migration is not complete |
 | minimal-consumer F411 | Separate CMake integration example without YAML; demonstrates module integration, not complete board peripherals |
