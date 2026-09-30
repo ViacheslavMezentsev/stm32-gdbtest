@@ -2,9 +2,11 @@
 
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
-[HAL CI](F030_HAL_REGRESSION.md): hal level added, full Linux15/15 and Windows6/6 PASS. Hardware acceptance remains next; specification0.39.
+[HAL F030 hardware acceptance](F030_HAL_VALIDATION.md): 17/17, six repeats, timeout/recovery and original firmware restoration verified on Windows/ST-Link/OpenOCD; specification 0.40. API unchanged.
 
-[F030 HAL fixture](F030_HAL_REGRESSION.md): standalone build and offline19/19 on Windows/Linux GCC13. Specification0.38; HW and fixture CI integration follow.
+[HAL CI](F030_HAL_REGRESSION.md): hal level added, full Linux15/15 and Windows6/6 PASS. Hardware acceptance is documented above; CI specification0.39.
+
+[F030 HAL fixture](F030_HAL_REGRESSION.md): standalone build and offline19/19 on Windows/Linux GCC13. Import specification0.38; CI and HW accepted in separate stages above.
 
 [Separate F030 HAL regression plan](F030_HAL_REGRESSION.md): scope prepared; fixture implemented offline. The batch through `cea01f9` is in main; consumer updated at `0c8c966`.
 

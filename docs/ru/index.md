@@ -2,6 +2,8 @@
 
 Документация · [English](../en/index.md)
 
+[Аппаратная приёмка HAL F030](F030_HAL_VALIDATION.md): 17/17, шесть повторов, timeout/recovery и восстановление исходной прошивки проверены на Windows/ST-Link/OpenOCD; ТЗ 0.40. API без изменений.
+
 Введение — [README](../../README.md): реализация [DDTT](DDTT.md) для STM32 — проверки
 работающей прошивки на реальной плате через GDB и SWD-отладчик сценариями в
 репозитории проекта. Требования — [ТЗ](../TECHNICAL_SPECIFICATION.md)

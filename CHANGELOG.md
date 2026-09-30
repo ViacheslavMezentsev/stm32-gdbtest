@@ -8,6 +8,10 @@
 
 ### Added
 
+- HAL F030: ручной run_hw.py с обязательным restore-session; 17/17 HW, шесть повторов, ожидаемый timeout/recovery и возврат HAL прошли на ST-Link/OpenOCD. Протокол RU/EN, ТЗ 0.40/TC-131; API без изменений.
+
+### Added
+
 - HAL F030 включён в offline CI отдельным уровнем hal: GCC13, точный inventory/JUnit/JSON, пять отрицательных HAL-контрактов. Docker добавляет закреплённый HAL F0; ТЗ0.39/TC-130, API без изменений.
 
 - Автономный tests/hal-f030: 17 HAL-сценариев, сборка без YAML/потребителя, provenance/import checks и TECH-ссылки. Windows/Linux GCC13 offline19/19; HW ещё не выполнялся. ТЗ0.38/TC-129.

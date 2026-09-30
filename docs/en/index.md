@@ -2,6 +2,8 @@
 
 Documentation · [Русский](../ru/index.md)
 
+[HAL F030 hardware acceptance](F030_HAL_VALIDATION.md): 17/17, six repeats, timeout/recovery and original firmware restoration verified on Windows/ST-Link/OpenOCD; specification 0.40. API unchanged.
+
 Introduction — [README](../../README.en.md): an implementation of [DDTT](DDTT.md) for
 STM32 — checks of running firmware on a real board through GDB and an SWD debugger,
 written as scenarios in the project repository. Requirements —

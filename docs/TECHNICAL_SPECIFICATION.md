@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.39 (черновик для согласования) |
+| **Ревизия** | 0.40 (черновик для согласования) |
 | **Дата формирования** | 01.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0; выпущен кандидат 0.1.0-rc.1 (версия Python `0.1.0rc1`, `API_VERSION = 1`) |
@@ -69,6 +69,16 @@
 | 0.38 | 01.10.2026 | Автономный HAL fixture F030: 17 сценариев, provenance и импорты, TC-129. Границы форматирования импортированного кода. |
 
 | 0.39 | 01.10.2026 | HAL F030 включён в offline CI отдельным уровнем hal на GCC13: точный inventory/JUnit/JSON, положительный и пять отрицательных контрактов, TC-130. |
+
+| 0.40 | 01.10.2026 | Ручная HW-приёмка HAL F030 через CLI с обязательным восстановлением: 17 сценариев, повторы, timeout/recovery; TC-131. |
+
+### Изменения ревизии 0.40
+
+Изменённые и новые пункты помечены `(р.0.40)`.
+
+| Пункты | Тип | Изменение |
+| --- | --- | --- |
+| 8.34, 9.2, 10, G.17 | нов. | Явная HAL HW-приёмка и протокол, TC-131 |
 
 ### Изменения ревизии 0.39
 
@@ -1382,6 +1392,8 @@ flowchart LR
 
 8.33. Offline CI ДОЛЖЕН запускать уровень hal для tests/hal-f030 на GCC13.3.1: ровно 19 успешных CTest (17 prepare, traceability, fixture), 17 свежих JSON с тем же ELF hash и без connection_attempted/hardware_accessed, PASS запрошенных contracts; положительный HAL preflight и пять независимых отрицательных вариантов (макрос, контекст, return, enum, callback argument) с ERROR в ожидаемом контракте. Docker ДОЛЖЕН устанавливать HAL F0 из gitlink закреплённого CubeF0; workflow ДОЛЖЕН сохранять логи, JSON/JUnit, manifest и ELF. Уровень НЕ ДОЛЖЕН выбирать стенд или запускать сервер. `[N]` (р.0.39)
 
+8.34. Ручной tests/hal-f030/run_hw.py ДОЛЖЕН требовать явные stand OpenOCD с flash=if-different и restore-session для STM32F030R8T6, проверить оба manifest до сервера, выполнить 17 сценариев, ADC/TIM3/RTC после каждой ADC-инъекции, ожидаемый timeout с маркером входа и host recovery, ADC после recovery; при завершении или неожиданной ошибке пытаться восстановить исходную прошивку с boot/blink. Результат восстановления ДОЛЖЕН сохраняться в локальном summary; отказ восстановления ДОЛЖЕН давать ERROR. `[N]` (р.0.40)
+
 
 
 
@@ -1538,6 +1550,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-128 | tests naming/package compatibility, host/Linux | Новый пакет profile/tests, старый profile/Tests читается; configure/prepare на case-sensitive filesystem; ignore remote.toml (р.0.37) |
 | TC-129 | HAL fixture F030, build/CTest host | GCC13 Windows/Linux: сборка, 17 prepare + trace + inventory/imports/provenance; HW и интеграция в общий CI — следующий этап (р.0.38) |
 | TC-130 | ci/hal_f030.py, GCC13 Windows/Linux | 19 CTest, 17 новых prepare JSON, положительный и 5 отрицательных HAL contracts; без сервера (р.0.39) |
+| TC-131 | tests/hal-f030/run_hw.py, Windows/ST-Link/OpenOCD | 17/17, шесть повторов, ожидаемый ERROR timeout и host recovery, ADC и restore boot/blink PASS; docs/ru/F030_HAL_VALIDATION.md (р.0.40) |
 
 ---
 
@@ -1720,6 +1733,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 8.31 | stm32_gdbtest/package.py; tests/host/test_package.py; .gitignore; ci/run_checks.py | TC-128 |
 | 8.32 | tests/hal-f030/CMakeLists.txt, verify_fixture.py, profile/tests, provenance/source.json | TC-129 (р.0.38) |
 | 8.33 | ci/hal_f030.py, ci/run_checks.py, ci/dependencies.lock.json, .github/workflows/offline.yml | TC-130 (р.0.39) |
+| 8.34 | tests/hal-f030/run_hw.py | TC-131 (р.0.40) |
 
 ---
 
@@ -1964,3 +1978,5 @@ G.14. Переименование собственных Tests профилей
 G.15. HAL fixture F030 выделен в tests/hal-f030; сохранены исходники и 17 сценариев с локальными импортами и TECH-ссылками. Проверка переноса отделена от аппаратной приёмки, общая CI-интеграция следует отдельно. docs/ru/F030_HAL_REGRESSION.md. (р.0.38)
 
 G.16. Уровень hal отделён от матрицы CMSIS GCC13/14/15; начальный baseline HAL ограничен GCC13.3.1. Отрицательные контракты проверяются на реальном ELF без MCU; это не runtime force_return или аппаратная приёмка. (р.0.39)
+
+G.17. HAL F030 проверен на NUCLEO-F030R8/ST-Link/OpenOCD под Windows GCC13: 17/17, шесть повторов и recovery; firmware потребителя восстановлена. Искусственный Python timeout не является аппаратным отказом MCU; другие backend/ОС/компиляторы не подтверждены этим опытом. Протокол docs/ru/F030_HAL_VALIDATION.md. (р.0.40)

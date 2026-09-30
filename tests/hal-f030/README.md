@@ -4,7 +4,7 @@
 
 Автономный пример для проверки HAL-макросов, handles/callbacks и force_return
 через stm32-gdbtest. Сохраняет 17 сценариев исходного F030-приложения; CMSIS-пример
-остаётся отдельно в tests/firmware. Это пока offline-перенос, не новый HW PASS.
+остаётся отдельно в tests/firmware. Аппаратная приёмка 17/17 и recovery выполнены на ST-Link/OpenOCD.
 
 Нужны CMake 3.25+, Ninja, Python 3.11+, xPack ARM GCC13 с GDB-Python и
 STM32CubeF0 V1.11.6. ARM_TOOLCHAIN_ROOT и STM32CUBE_REPOSITORY задаются через
@@ -34,3 +34,5 @@ Python-импорты локализованы, добавлены ссылки 
 сохранены; HAL/CMSIS библиотеки берутся извне под их собственными лицензиями.
 Форматируются только собственные src/app.h и src/*.cpp по src/.clang-format;
 Core и сохранённый platform.c исключены из проверки формата.
+
+Повторение HW и границы проверки: [protocol](../../docs/ru/F030_HAL_VALIDATION.md).

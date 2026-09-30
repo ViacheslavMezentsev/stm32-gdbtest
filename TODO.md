@@ -2,11 +2,13 @@
 
 ## Текущая работа
 
-- codex/f030-hal-ci от codex/f030-hal-fixture (`a3898ff`): новый уровень hal,
-  HAL F0 в закреплённом Docker, JSON/JUnit и отрицательные contracts. ТЗ0.39.
-  Порядок land: fixture → CI → будущая HW validation. Исходный consumer не удалять.
-  Предыдущая ветка опубликована; Docs и Offline все пять jobs SUCCESS.
-  Новый Docker собран; полный Linux15/15 и Windows6/6 PASS. HW пока не запускался.
+- codex/f030-hal-validation от codex/f030-hal-ci (`cc2cf19`): 17/17 HW,
+  шесть положительных повторов, ожидаемый timeout/recovery, ADC после recovery,
+  возврат исходной HAL-прошивки потребителя PASS. ТЗ 0.40, протокол RU/EN.
+  Fixture a3898ff и CI cc2cf19 опубликованы: Docs и Offline (все пять jobs) SUCCESS.
+  Порядок land: fixture → CI → validation после проверки опубликованного SHA.
+  Локально Windows и Linux Docker: docs/host 4/4 PASS на каждой ОС.
+  Далее обновить gitlink потребителя; старый HAL-профиль пока сохранить.
 
 - codex/f030-hal-fixture от main69cfb79: автономный tests/hal-f030, 17 сценариев,
   TECH-ссылки, provenance и offline19/19 Windows/Linux GCC13. ТЗ0.38.

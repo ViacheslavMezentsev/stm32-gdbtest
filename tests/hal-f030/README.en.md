@@ -4,7 +4,7 @@
 
 Standalone stm32-gdbtest fixture for HAL macros, handles/callbacks and force_return.
 Preserves the original17 F030 scenarios; the CMSIS fixture stays in tests/firmware.
-This is an offline migration, not a new HW PASS.
+Hardware acceptance 17/17 and recovery passed on ST-Link/OpenOCD.
 
 Requires CMake3.25+, Ninja, Python3.11+, xPack ARM GCC13 with GDB-Python and
 STM32CubeF0 V1.11.6. Set ARM_TOOLCHAIN_ROOT and STM32CUBE_REPOSITORY in the
@@ -35,3 +35,5 @@ CubeMX AS-IS fallback. [CMSIS Device license](licenses/cmsis-device.txt) and
 HAL/CMSIS libraries retain their own licenses. Format checking covers owned
 src/app.h and src/*.cpp using src/.clang-format; Core and preserved platform.c
 are excluded from formatting.
+
+HW reproduction and limits: [protocol](../../docs/en/F030_HAL_VALIDATION.md).
