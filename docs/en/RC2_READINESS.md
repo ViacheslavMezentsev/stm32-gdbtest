@@ -159,3 +159,30 @@ HAL offline: 19/19. Pack/Hardware workflow, full-image/identity cycles and remai
 local/remote stands are not yet accepted. Scenario fixes require new CI; do not
 tag or land yet. Subsequent documentation commits do not replace the stated
 SHA of the scenarios actually executed.
+
+## Runner lifecycle over SSH (2026-10-01)
+
+Verified SHA: 873f1ac29f5c85b2049c10be773c8486a35c545c. Docs and all five
+Offline jobs SUCCESS (Docs 36786189561, Offline 36786189557).
+Windows GCC13/GDB, GDB servers on Orange Pi; SWD, no additional wiring.
+
+| Stand | Steps | Restoration | Directory under build/rc2-acceptance |
+| --- | --- | --- | --- |
+| NUCLEO-F030R8 / ST-Link / OpenOCD | 10/10 | HAL boot/blink PASS, reset_run | f030r8-lifecycle-20260930T223538Z |
+| WeAct BluePill-Plus F103C8 / J-Link | 10/10 | HAL boot/blink PASS, reset_run | f103c8-lifecycle-20260930T223631Z |
+| BlackPill F411CE / ST-Link / OpenOCD | 10/10 | HAL boot/blink PASS, reset_run | f411ce-lifecycle-20260930T223716Z |
+
+These are 10 validation steps, not 10 positive hardware scenarios:
+build, prepare, boot, GPIO, strict identity, full-image A5, verify-only FF
+(expected ERROR without writing), full-image FF, timeout (expected ERROR with
+recovery), GPIO after recovery. Original consumer firmware was restored after
+each set with boot/blink checks. Each step used the standard run_hw.py separately;
+its summary/log/policy were saved before the next invocation, and CLI reports
+remain in the profile build. The wrapper stops on the first unexpected outcome.
+
+F030 pack also prepared 18 scenarios from the verified ELF. Linux package execution
+and Hardware workflow are not yet confirmed. The runner home configuration for
+F030 on Orange Pi still selects J-Link; the owner must switch it to native
+ST-Link/OpenOCD before the workflow. The local remote.toml used the correct
+ST-Link independently of that file. The local Windows/backend matrix, consumer
+integration and final release notes remain pending.

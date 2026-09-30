@@ -160,3 +160,30 @@ Offline HAL: 19/19. Pack/Hardware workflow, циклы full-image/identity и о
 локальные/удалённые стенды ещё не приняты. Исправления сценариев требуют нового CI;
 тег и land пока не выполнять. Последующие документальные коммиты не заменяют
 указанный SHA фактически выполненных сценариев.
+
+## Цикл runner через SSH (01.10.2026)
+
+Проверенный SHA: 873f1ac29f5c85b2049c10be773c8486a35c545c. Docs и все пять
+Offline jobs SUCCESS (Docs 36786189561, Offline 36786189557).
+Windows GCC13/GDB, GDB-серверы на Orange Pi; SWD, без дополнительных соединений.
+
+| Стенд | Этапы | Восстановление | Каталог в build/rc2-acceptance |
+| --- | --- | --- | --- |
+| NUCLEO-F030R8 / ST-Link / OpenOCD | 10/10 | HAL boot/blink PASS, reset_run | f030r8-lifecycle-20260930T223538Z |
+| WeAct BluePill-Plus F103C8 / J-Link | 10/10 | HAL boot/blink PASS, reset_run | f103c8-lifecycle-20260930T223631Z |
+| BlackPill F411CE / ST-Link / OpenOCD | 10/10 | HAL boot/blink PASS, reset_run | f411ce-lifecycle-20260930T223716Z |
+
+Это 10 этапов проверки, не 10 положительных аппаратных сценариев:
+build, prepare, boot, GPIO, strict identity, full-image A5, verify-only FF
+(ожидаемый ERROR без записи), full-image FF, timeout (ожидаемый ERROR с recovery),
+GPIO после recovery. После каждого набора отдельно восстановлена прошивка
+потребителя и проверены boot/blink. Каждый этап вызван штатным run_hw.py отдельно;
+его summary/log/policy сохранены перед следующим вызовом, результаты CLI остались
+в build профиля. Обвязка прекращает серию на первом неожиданном результате.
+
+Также pack F030 подготовил 18 сценариев из проверенного ELF. Запуск пакета
+на Linux и Hardware workflow пока не подтверждены. Конфигурация F030 в домашнем
+каталоге runner на Orange Pi всё ещё выбирает J-Link; перед workflow владелец
+должен переключить её на родной ST-Link/OpenOCD. Локальный remote.toml использовал
+правильный ST-Link и не зависел от этого файла. Локальная Windows/backend матрица,
+подключение потребителя и окончательный текст выпуска остаются впереди.

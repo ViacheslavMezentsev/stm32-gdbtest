@@ -10,6 +10,8 @@ Delivery is a pinned Git submodule; there is no pip package.
 
 rc.2 acceptance at a48158c: remote Nucleo CMSIS 18/18 and HAL 17/17, repeats and recovery PASS; the complete release matrix remains open. [Evidence and preserved failures](RC2_READINESS.md).
 
+At 873f1ac: Docs/Offline SUCCESS and runner lifecycle over SSH — 10/10 each for F030/OpenOCD, F103/J-Link and F411/OpenOCD, with original firmware restored. This is not yet Linux package/Hardware workflow or the local Windows matrix.
+
 ## Current scope and evidence
 
 | Area | Verified scope and limits |
