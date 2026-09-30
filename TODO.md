@@ -2,6 +2,13 @@
 
 ## Текущая работа
 
+- `codex/f030-cmsis-adc-units` от `a6c0426`: преобразование F030 ADC и
+  7 численных/14 невалидных наборов; 12/12 HW PASS, HAL восстановлен.
+  Проверки: F030 CTest 13/13, Windows host 96 (8 skips), Linux docs/host/
+  9 пар firmware 13/13 PASS; strict ТЗ и формат PASS.
+  [Протокол](docs/ru/F030_CMSIS_ADC_UNITS.md). Далее RTC/Sleep и отказы.
+
+
 - `codex/f030-cmsis-adc-dma` от `5883316`: ADC/DMA raw и timeout F030,
   9/9 HW PASS, HAL восстановлен. [Протокол](docs/ru/F030_CMSIS_ADC_DMA.md).
   Проверки: host Windows 96 (8 skips), F030 CTest 10/10; Linux три профиля

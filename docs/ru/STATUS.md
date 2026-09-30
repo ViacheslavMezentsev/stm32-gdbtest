@@ -2,14 +2,14 @@
 
 [Документация](index.md) → Текущее состояние · [English](../en/STATUS.md)
 
-CMSIS F030: ADC/DMA и timeout добавлены; **9/9 HW PASS**, HAL восстановлен. [ADC/DMA](F030_CMSIS_ADC_DMA.md).
+CMSIS F030: физические единицы/векторы/invalid добавлены; **12/12 HW PASS**, HAL восстановлен. [ADC units](F030_CMSIS_ADC_UNITS.md).
 
 Срез: 2026-09-30. Кандидат выпуска **0.1.0-rc.1** (Python `0.1.0rc1`), `API_VERSION = 1`;
 итоговая проверка пройдена на коммите выпуска `2143665` (раздел ниже); тег ставит владелец. Основной способ поставки — закреплённый Git-подмодуль; pip-пакета и
 отдельного исполняемого файла пока нет. Документ описывает проверенный объём, а не
 журнал изменений; история — в [CHANGELOG](../../CHANGELOG.md).
 
-CMSIS F030: boot/clock/GPIO/blink — **4/4 HW PASS** на NUCLEO-F030R8/ST-Link/OpenOCD; прежняя HAL-прошивка восстановлена. [Протокол и ограничения](F030_CMSIS_BASELINE.md). Следующие этапы — физические единицы ADC и RTC.
+CMSIS F030: boot/clock/GPIO/blink — **4/4 HW PASS** на NUCLEO-F030R8/ST-Link/OpenOCD; прежняя HAL-прошивка восстановлена. [Протокол и ограничения](F030_CMSIS_BASELINE.md). Следующие этапы — RTC и Sleep.
 
 ## Проверки
 

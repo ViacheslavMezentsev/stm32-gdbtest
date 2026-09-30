@@ -104,6 +104,39 @@
           "ADC_CFGR2_CKMODE"
         ]
       }
+    },
+    "ci_adc_units": {
+      "type_context": "adc_convert_f030",
+      "functions": {
+        "adc_convert_f030": {
+          "returns": "adc_reading_t",
+          "arguments": [
+            {
+              "name": "temperature",
+              "type": "uint16_t"
+            },
+            {
+              "name": "reference",
+              "type": "uint16_t"
+            },
+            {
+              "name": "reference_cal",
+              "type": "uint16_t"
+            },
+            {
+              "name": "temperature_cal",
+              "type": "uint16_t"
+            }
+          ]
+        }
+      },
+      "fields": {
+        "adc_reading_t": {
+          "vdda_mv": "uint32_t",
+          "temperature_mdeg_c": "int32_t",
+          "quality": "uint32_t"
+        }
+      }
     }
   }
 }

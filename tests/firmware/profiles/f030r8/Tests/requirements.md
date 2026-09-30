@@ -49,3 +49,19 @@ Disable DMA IRQ9 through logged NVIC mutation before acquisition. Hardware
 finishes transfer, but no publication occurs; firmware reports error4 after
 20 SysTick milliseconds and reaches board_adc_fault. Teardown resets the MCU.
 This tests the CMSIS completion deadline, not HAL error-return injection.
+
+## HW_CI_ADC_UNITS
+Real DMA raw samples use F030 VREFINT_CAL/TS_CAL1 (30C/3.3V), typical negative
+4.3mV/C slope. VDDA 2800..3600mV, die temperature -40..125C, quality3
+(single-point + typical slope). This is plausibility, not accuracy validation.
+
+## HW_CI_ADC_VECTORS
+Seven fixed vectors run through the real firmware conversion by logged GDB
+argument mutation: 30C anchor, supply compensation, +/-100 raw counts,
+negative temperature and application VDDA endpoints 2400/3600mV.
+Expected integer values use C truncation toward zero, not Python floor.
+
+## HW_CI_ADC_INVALID
+Each of the four inputs is tested at 0/4095/65535, then supply-out-of-window
+inputs: result fields all zero. Normal acquisition afterwards restores
+quality3; stale valid data must not survive an invalid conversion.

@@ -1,5 +1,6 @@
 /* F030 internal temperature/reference acquisition through CMSIS and normal DMA. */
 #include "app.h"
+#include "adc_units.h"
 #include "stm32f0xx.h"
 
 extern volatile uint32_t board_ticks_ms;
@@ -8,6 +9,10 @@ volatile uint16_t board_temperature_raw;
 volatile uint16_t board_reference_raw;
 volatile uint32_t board_adc_sequences;
 volatile uint32_t board_adc_error;
+volatile adc_reading_t board_adc_reading;
+/* F030 DS9773 factory words; TS_CAL2 is not available on this device. */
+static const uint16_t* const reference_cal_address   = ( const uint16_t* ) 0x1FFFF7BAU;
+static const uint16_t* const temperature_cal_address = ( const uint16_t* ) 0x1FFFF7B8U;
 
 __attribute__( ( noreturn ) ) void board_adc_fault( void )
 {
@@ -113,4 +118,5 @@ void board_adc_sample( void )
         adc_deadline( start, 4U );
         __WFI();
     }
+    board_adc_reading = adc_convert_f030( board_temperature_raw, board_reference_raw, *reference_cal_address, *temperature_cal_address );
 }

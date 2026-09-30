@@ -123,3 +123,52 @@ def adc_timeout(target):
     target.check("completion deadline", target.value("board_adc_error"), 4)
     target.check("no stale publication", target.value("board_adc_sequences"), 0)
     target.check("DMA finished despite missing IRQ", target.value("DMA1_Channel1->CNDTR"), 0)
+
+
+@case("HW_CI_ADC_UNITS", labels=("adc", "units"), contracts=("ci_adc_units",))
+def adc_units(target):
+    target.reach("board_adc_sample")
+    target.reach("board_delay_ms")
+    target.check("single-point provenance", target.value("board_adc_reading.quality"), 3)
+    target.check("plausible VDDA", 2800 <= target.value("board_adc_reading.vdda_mv") <= 3600, True)
+    target.check("plausible die temperature", -40000 <= target.value("board_adc_reading.temperature_mdeg_c") <= 125000, True)
+    target.report["measurement"] = {field: target.value("board_adc_reading." + field)
+                                    for field in ("vdda_mv", "temperature_mdeg_c", "quality")}
+
+
+def check_conversion(target, inputs, expected):
+    target.reach("adc_convert_f030")
+    for name, value in zip(("temperature", "reference", "reference_cal", "temperature_cal"), inputs):
+        target.set_value(name, value)
+    target.reach("board_delay_ms")
+    target.fields("board_adc_reading", dict(zip(("vdda_mv", "temperature_mdeg_c", "quality"), expected)))
+
+
+@case("HW_CI_ADC_VECTORS", timeout_s=60, labels=("adc", "arithmetic"), contracts=("ci_adc_units",))
+def adc_vectors(target):
+    # Fixed analytic anchors; expected values are not computed using firmware code.
+    for inputs, expected in (
+        ((1800, 1500, 1500, 1800), (3300, 30000, 3)),
+        ((1980, 1650, 1500, 1800), (3000, 30000, 3)),
+        ((1700, 1500, 1500, 1800), (3300, 48740, 3)),
+        ((1900, 1500, 1500, 1800), (3300, 11260, 3)),
+        ((2200, 1500, 1500, 1800), (3300, -44963, 3)),
+        ((2475, 1650, 1200, 1800), (2400, 30000, 3)),
+        ((1650, 1650, 1800, 1800), (3600, 30000, 3)),
+    ):
+        check_conversion(target, inputs, expected)
+
+
+@case("HW_CI_ADC_INVALID", timeout_s=60, labels=("adc", "negative", "arithmetic"), contracts=("ci_adc_units",))
+def adc_invalid(target):
+    for index in range(4):
+        for invalid in (0, 4095, 65535):
+            inputs = [1800, 1500, 1500, 1800]
+            inputs[index] = invalid
+            check_conversion(target, inputs, (0, 0, 0))
+    for reference in (1, 4094):
+        check_conversion(target, (1800, reference, 1500, 1800), (0, 0, 0))
+    # A subsequent normal acquisition replaces the invalid result.
+    target.reach("board_adc_sample")
+    target.reach("board_delay_ms")
+    target.check("measurement recovers", target.value("board_adc_reading.quality"), 3)

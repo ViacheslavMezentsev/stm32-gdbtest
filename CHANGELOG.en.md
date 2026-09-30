@@ -8,6 +8,10 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- F030 CMSIS: single-point VDDA/temperature, 7 numeric and 14 invalid vectors; 12/12 HW PASS, HAL restored. libgcc for F030 only; specification0.31, core API unchanged.
+
+### Added
+
 - F030 CMSIS ADC/DMA: calibration, CH16/17, normal DMA, raw publication, deadline and missing-IRQ test. 9/9 HW PASS; specification 0.30, API unchanged.
 
 ### Added

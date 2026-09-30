@@ -60,3 +60,5 @@ the module's small F411 fixture exercises infrastructure.
 TIM3/IRQ stage completed: [6/6 HW PASS, mapping and limitations](F030_CMSIS_TIMER.md).
 
 F030 ADC/DMA: raw samples and timeout, core API unchanged. [ADC/DMA](F030_CMSIS_ADC_DMA.md).
+
+F030 ADC conversion and numeric scenarios; core API unchanged. [ADC units](F030_CMSIS_ADC_UNITS.md).

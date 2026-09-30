@@ -196,3 +196,5 @@ CMSIS fixture F030: API ядра не изменён. `app_delay` в этом п
 API ядра не изменён. Счётчик board_timer_events — состояние F030 fixture, не публичный API. [TIM3/IRQ](F030_CMSIS_TIMER.md).
 
 ADC/DMA F030: сырые отсчёты и timeout, API ядра без изменений. [ADC/DMA](F030_CMSIS_ADC_DMA.md).
+
+F030: преобразование ADC и численные сценарии, API ядра без изменений. [ADC units](F030_CMSIS_ADC_UNITS.md).

@@ -43,3 +43,5 @@ the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 [F030 CMSIS: TIM3/IRQ](F030_CMSIS_TIMER.md).
 
 F030 ADC/DMA: raw samples and timeout, core API unchanged. [ADC/DMA](F030_CMSIS_ADC_DMA.md).
+
+F030 ADC conversion and numeric scenarios; core API unchanged. [ADC units](F030_CMSIS_ADC_UNITS.md).

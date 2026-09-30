@@ -200,3 +200,5 @@ F030 CMSIS fixture: the core API is unchanged. `app_delay` now specifies SysTick
 Core API unchanged. board_timer_events is F030 fixture state, not public API. [TIM3/IRQ](F030_CMSIS_TIMER.md).
 
 F030 ADC/DMA: raw samples and timeout, core API unchanged. [ADC/DMA](F030_CMSIS_ADC_DMA.md).
+
+F030 ADC conversion and numeric scenarios; core API unchanged. [ADC units](F030_CMSIS_ADC_UNITS.md).

@@ -8,6 +8,10 @@
 
 ### Added
 
+- F030 CMSIS: VDDA/температура single-point, 7 численных и 14 невалидных наборов; 12/12 HW PASS, HAL восстановлен. libgcc только F030; ТЗ 0.31, API ядра без изменений.
+
+### Added
+
 - F030 CMSIS ADC/DMA: калибровка, CH16/17, normal DMA, публикация raw, дедлайн и тест отключённого IRQ. 9/9 HW PASS; ТЗ 0.30, API без изменений.
 
 ### Added
