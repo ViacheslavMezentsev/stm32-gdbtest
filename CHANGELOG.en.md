@@ -6,6 +6,11 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+## [0.1.0-rc.2] — 2026-10-01
+
+Candidate in preparation; the date will be verified at publication. Final acceptance
+is not complete: [plan and status](docs/en/RC2_READINESS.md).
+
 ### Added
 
 - HAL F030: manual run_hw.py with required restore-session; 17/17 HW, six repeats, expected timeout/recovery and HAL restoration passed on ST-Link/OpenOCD. RU/EN protocol, specification 0.40/TC-131; API unchanged.
@@ -53,7 +58,10 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Changed
 
-- Documentation reconciled before rc.2: current status, examples, CI and lowercase tests; historical protocols separated from current plans. Specification 0.41 records acceptance/publication rules; version and runtime remain unchanged.
+- Prepared Python version `0.1.0rc2`, API_VERSION=1 and release specification 0.42;
+  final candidate acceptance remains pending.
+
+- Documentation reconciled before rc.2: current status, examples, CI and lowercase tests; historical protocols separated from current plans. Specification 0.41 records acceptance/publication rules; the audit stage did not change runtime.
 
 - Renamed the root `Tests` directory to `tests`, updating CI, commands, fixtures
   and links. Consumer profile `Tests` directories and support for both spellings

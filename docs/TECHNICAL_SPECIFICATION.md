@@ -5,10 +5,10 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.41 (черновик для согласования) |
+| **Ревизия** | 0.42 (редакция к rc.2, приёмка не завершена) |
 | **Дата формирования** | 01.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
-| **Целевая версия** | 0.1.0; выпущен кандидат 0.1.0-rc.1 (версия Python `0.1.0rc1`, `API_VERSION = 1`) |
+| **Целевая версия** | 0.1.0; подготовка кандидата 0.1.0-rc.2 (Python `0.1.0rc2`, `API_VERSION = 1`); rc.1 опубликован |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
@@ -73,6 +73,17 @@
 | 0.40 | 01.10.2026 | Ручная HW-приёмка HAL F030 через CLI с обязательным восстановлением: 17 сценариев, повторы, timeout/recovery; TC-131. |
 
 | 0.41 | 01.10.2026 | Согласован состав rc.2 и порядок проверки описания тега; актуализирован порядок веток для одного владельца с агентами. Runtime и версия не меняются. |
+
+| 0.42 | 01.10.2026 | Выпускная ветка rc.2: версия Python 0.1.0rc2, API_VERSION=1; черновик описания выпуска и явные незавершённые критерии приёмки. |
+
+### Изменения ревизии 0.42
+
+Изменённые и новые пункты помечены `(р.0.42)`.
+
+| Пункты | Тип | Изменение |
+| --- | --- | --- |
+| Реквизиты, 5.15.3, 9.2, приложение A | изм. | Версия 0.1.0rc2, TC-65 |
+| Приложения B, F | изм. | Историческая матрица отделена от приёмки кандидата |
 
 ### Изменения ревизии 0.41
 
@@ -1113,7 +1124,7 @@ flowchart LR
 
 5.15.2. CLI ДОЛЖЕН вызываться как `python -B -m stm32_gdbtest` из корня модуля и по абсолютному пути `stm32_gdbtest/cli.py` из любого каталога. `[R]`
 
-5.15.3. Источник версии — `stm32_gdbtest/__init__.py`: `__version__ = "0.1.0rc1"`, `API_VERSION = 1`. `[R]` (р.0.21)
+5.15.3. Источник версии — `stm32_gdbtest/__init__.py`: `__version__ = "0.1.0rc2"`, `API_VERSION = 1`. `[R]` (р.0.42)
 
 ### 5.16. Подготовка без оборудования (`run --prepare-only`) (р.0.3)
 
@@ -1495,7 +1506,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-62 | `test_abandoned_mutex_fails_closed` (Windows) | «Abandoned»; каталог проекта не создан; повторный захват успешен |
 | TC-63 | `test_identity_mapping_and_validation` (Windows) | Регистр serial и backend OpenOCD/ST дают одно имя, J-Link — другое; неверный serial/backend отклонены |
 | TC-64 | `test_host_import_does_not_require_gdb` | `gdb` не импортирован; `API_VERSION = 1`; `case` возвращает функцию |
-| TC-65 | `test_module_cli_version_and_collection` (р.0.21) | `stm32-gdbtest 0.1.0rc1`; `collect` примера → `HW_CONSUMER_GPIO` |
+| TC-65 | `test_module_cli_version_and_collection` (р.0.42) | `stm32-gdbtest 0.1.0rc2`; `collect` примера → `HW_CONSUMER_GPIO` |
 | TC-66 | `host.consumer_offline` (`verify_offline.py`) после сборки примера | Manifest с `src/main.c`, `src/startup.c` и скриптом компоновщика; импорт сценария; отказ выхода за корень; положительный preflight PASS, отрицательный (`MISSING_CONSUMER_MACRO`) код 2; `connection_attempted = false` |
 | TC-67 | `host.traceability` примера | «Requirement IDs and tests match» |
 | TC-68 | D: `HW_CONSUMER_GPIO` на BlackPill F411CE / ST-Link / OpenOCD | PASS; `image_verified = true`; MCU в reset/run |
@@ -1833,7 +1844,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | Блокировка Linux | `<STM32_GDBTEST_LOCK_DIR или системный каталог временных файлов (/tmp, TMPDIR)>/stm32-gdbtest-locks/probe.v1.<sha256>.lock`, запись `pid=<PID>` (р.0.7) | 5.4.8, 5.4.9 |
 | Окружение стенда Linux | Python 3.11.16, CMake 3.28.3, Ninja 1.12.1, GCC 13.3.1-1.1, OpenOCD 0.12.0-7; `~/.local/stm32-gdbtest` (р.0.7) | 6.10.4 |
 | Каталог временных файлов | `build/hwtest-tmp` | 6.1.4 |
-| `__version__` / `API_VERSION` | `0.1.0rc1` / `1` (р.0.21) | 5.15.3 |
+| `__version__` / `API_VERSION` | `0.1.0rc2` / `1` (р.0.42) | 5.15.3 |
 | `prepare.<ID>` TIMEOUT | 90 с (р.0.3) | 5.13.14 |
 | GCC CI | xPack 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1 (р.0.3) | 8.13 |
 | CMake CI / Ninja | 3.28.3 / 1.12.1 (р.0.3) | 8.13 |
@@ -1843,6 +1854,9 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 ---
 
 ## Приложение B. Проверенные конфигурации (информативно)
+
+Кандидат rc.2: финальная матрица пока не выполнена; план и текущий статус —
+docs/ru/RC2_READINESS.md. Таблицы ниже исторические и не подтверждают новый SHA. (р.0.42)
 
 Источник — docs/STATUS.md модуля и docs/STATUS.md стендового проекта на 25.09.2026. Инструменты: xPack ARM GCC 13.3.1-1.1, GDB 14.2.90 (Python 3.11.4), OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), J-Link 8.32; CubeF4 1.28.3, CubeF1 1.8.7, CubeF0 1.11.6.
 
@@ -1931,6 +1945,10 @@ D.5. В ревизии 0.1 ссылки в коде отсутствуют; их
 ---
 
 ## Приложение F. Расхождения документации и кода
+
+Выпускная ветка согласует __version__, CLI, TC-65 и документацию на 0.1.0rc2;
+API/схемы не меняются. Незавершённая приёмка TC-132 отражена в RC2_READINESS;
+это открытый критерий выпуска, не заявление о совместимости кандидата. (р.0.42)
 
 | № | Пункты ТЗ | Документация / ожидание | Состояние кода | Доработка |
 | :---: | :--- | :--- | :--- | :--- |

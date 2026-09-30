@@ -2,7 +2,7 @@
 
 [Documentation](index.md) → API · [Русский](../ru/API.md)
 
-Status: release candidate **0.1.0-rc.1** (Python `0.1.0rc1`), `API_VERSION = 1`. This numbers the
+Status: candidate in the release branch, not yet published — **0.1.0-rc.2** (Python `0.1.0rc2`), `API_VERSION = 1`. This numbers the
 described API surface; it is not a 1.0 stability promise and not a GDB version. The
 module is delivered as a Git submodule; pip installation is not supported yet, and
 the name still has to be checked for uniqueness before publishing. Requirements:

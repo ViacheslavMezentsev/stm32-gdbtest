@@ -3,7 +3,7 @@ import sys
 
 # Source checkouts may be read-only, including GDB imports and the -m entry point.
 sys.dont_write_bytecode = True
-__version__ = "0.1.0rc1"
+__version__ = "0.1.0rc2"
 API_VERSION = 1
 __all__ = ["case", "API_VERSION", "__version__"]
 

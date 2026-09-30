@@ -241,3 +241,13 @@ F030 ADC CFGR2 в опыте читался как 0x1000 при CKMODE=0. Пр�
 Ошибка «Output directories must remain inside the selected project root»: размещайте
 build внутри каталога примера (tests/hal-f030/build/debug), а не общего build
 репозитория модуля. Не отключайте защиту runner; исправьте binaryDir в preset.
+
+## CMake cache при смене Windows и Linux
+
+Не используйте один build попеременно из Windows и Linux-контейнера: CMakeCache
+сохраняет абсолютные пути. Сообщение «current CMakeCache.txt directory is different»
+возникает до проверки firmware и не означает её дефект. Сохраните отчёт ошибки и
+старый build под другим именем внутри workspace, затем создайте чистый build
+для текущей ОС. Для tests/hal-f030 CI использует build/ci-gcc13; сохранять нужно
+именно этот каталог, не Git checkout и не весь каталог с аппаратными отчётами.
+После успешного повторного HAL-этапа укажите два прогона, не единый 15/15 PASS.

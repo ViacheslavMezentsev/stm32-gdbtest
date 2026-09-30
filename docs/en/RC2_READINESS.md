@@ -3,8 +3,8 @@
 [Documentation](index.md) → rc.2 readiness · [Русский](../ru/RC2_READINESS.md)
 
 Agreed candidate scope, 2026-10-01. Base main `7f3c65b`; this is an acceptance plan,
-not a claim that rc.2 is released. Code still reports `0.1.0rc1`.
-The version changes only in a separate release branch after the documentation review.
+not a claim that rc.2 is released. The documentation audit is in main `eaf31ea`; release branch
+`codex/release-0.1.0-rc.2` reports `0.1.0rc2`. The tag is not published yet.
 
 ## Included scope
 
@@ -106,3 +106,14 @@ Documentation checks: 86 Markdown files, 57 internal anchor links — no errors;
 docs/spec/links/pairs on Windows and Linux Docker — 3/3 on each OS.
 Code, firmware and published rc.1 notes are unchanged. Specification revision is
 0.41; final TC-132 acceptance and the release specification revision remain pending.
+
+## Local release-branch preparation (2026-10-01)
+
+Python 0.1.0rc2, API_VERSION=1, specification 0.42. Windows docs/host 4/4 PASS.
+Linux Docker: docs/format/host and nine CMSIS combinations passed (14 stages).
+HAL initially failed CMake configuration because build/ci-gcc13 held a Windows cache;
+it was preserved as ci-gcc13-windows-before-rc2. A separate clean HAL run passed
+1/1: 19 CTest checks, 17 prepare cases and negative contracts. These are two runs,
+not a single 15/15. Reports: build/rc2-offline-initial.json and build/rc2-offline-hal.json.
+The published SHA still needs Docs/Offline. Candidate HW acceptance and consumer
+integration remain open; release notes are a draft.

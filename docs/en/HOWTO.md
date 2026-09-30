@@ -240,3 +240,13 @@ Owned profiles/examples and new packages use `tests`; old `Tests` inputs remain 
 For “Output directories must remain inside the selected project root”, place
 build inside the fixture (tests/hal-f030/build/debug), not the module-wide build
 directory. Fix preset binaryDir rather than disabling runner containment checks.
+
+## CMake cache when switching Windows and Linux
+
+Do not reuse one build alternately from Windows and a Linux container: CMakeCache
+stores absolute paths. “Current CMakeCache.txt directory is different” occurs before
+firmware validation and does not establish a firmware defect. Preserve the failed
+report and old build under another name inside the workspace, then create a clean
+build for the current OS. tests/hal-f030 CI uses build/ci-gcc13; preserve that exact
+directory, not the Git checkout or the whole hardware evidence directory.
+If the HAL rerun succeeds, report two runs rather than a single 15/15 PASS.

@@ -3,9 +3,9 @@
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
 
-Snapshot: 2026-10-01, main `7f3c65b`. rc.1 is published;
-[0.1.0-rc.2](RC2_READINESS.md) is being prepared. Before the release branch,
-Python version remains `0.1.0rc1`, API_VERSION=1. The checks below are not final rc.2 acceptance.
+Snapshot: 2026-10-01, release branch based on main `eaf31ea`. rc.1 is published;
+[0.1.0-rc.2](RC2_READINESS.md) is being prepared. In the release branch,
+Python version is `0.1.0rc2`, API_VERSION=1. The checks below are not final rc.2 acceptance.
 Delivery is a pinned Git submodule; there is no pip package.
 
 ## Current scope and evidence
