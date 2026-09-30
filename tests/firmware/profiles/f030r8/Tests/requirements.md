@@ -78,3 +78,16 @@ TIM3 external IRQ. Observe TIM3 interrupting WFI with unchanged SysTick count.
 Restore controls, complete the delay and retain ADC sequence. Eight bounded
 attempts allow an IRQ preceding WFI; unwind failure is ERROR, no fallback PASS.
 These tests do not prove current consumption, Stop mode or physical wake latency.
+
+## HW_CI_RTC_INIT
+RTC uses ready LSI, PRER=127/311 and 24-hour format. Alarm A masks all calendar
+fields and subseconds, EXTI17 rising edge and NVIC IRQ2 enabled, vector18
+points to RTC_IRQHandler. Initialization has completed with no error.
+The fixture resets its calendar on boot, never asserts BDRST and refuses an
+existing non-LSI RTC source. Nominal 40kHz LSI is not a precision timebase.
+
+## HW_CI_RTC_ALARM
+Two natural Alarm A entries have IPSR18, ALRAF and EXTI17 pending; the first
+handler publishes one event before the next entry. Thread mode resumes after
+the second event. No software IRQ or calendar injection, no accuracy or
+backup retention claim. Debug halt can coalesce alarms.

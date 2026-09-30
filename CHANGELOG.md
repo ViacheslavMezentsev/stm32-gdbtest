@@ -8,6 +8,8 @@
 
 ### Added
 
+- F030 CMSIS RTC: Alarm A/LSI, ограниченные ожидания, EXTI17/IRQ; 16/16 HW PASS, HAL восстановлен. ТЗ 0.33; API ядра без изменений.
+
 - F030 CMSIS Sleep: изоляция SysTick/TIM3 и проверка WFI по interrupted PC; 2/2 новых HW PASS, HAL восстановлен. Firmware/API не менялись; ТЗ 0.32.
 
 ### Added

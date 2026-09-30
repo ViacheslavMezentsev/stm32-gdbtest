@@ -44,7 +44,7 @@ endif()
 
 add_executable(ci_firmware src/startup.c src/app.c src/board.c)
 if(CI_PROFILE STREQUAL "f030r8")
-    target_sources(ci_firmware PRIVATE src/adc_f030.c src/adc_units.c)
+    target_sources(ci_firmware PRIVATE src/adc_f030.c src/adc_units.c src/rtc_f030.c)
     # Cortex-M0 needs compiler runtime helpers for 32/64-bit integer division.
     target_link_libraries(ci_firmware PRIVATE gcc)
 endif()

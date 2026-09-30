@@ -147,6 +147,26 @@
           "NVIC"
         ]
       }
+    },
+    "ci_rtc_macros": {
+      "macros": {
+        "context": "RTC_IRQHandler",
+        "expressions": [
+          "RTC",
+          "RCC",
+          "PWR",
+          "EXTI",
+          "NVIC",
+          "RTC_ISR_ALRAF",
+          "RTC_ISR_INIT",
+          "RTC_ISR_RSF",
+          "RTC_CR_ALRAE",
+          "RTC_CR_ALRAIE",
+          "RCC_BDCR_RTCSEL",
+          "RCC_BDCR_RTCEN",
+          "RCC_CSR_LSIRDY"
+        ]
+      }
     }
   }
 }

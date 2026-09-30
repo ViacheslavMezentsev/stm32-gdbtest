@@ -2,6 +2,12 @@
 
 ## Текущая работа
 
+- `codex/f030-cmsis-rtc` от `f494ab1`: RTC Alarm A/LSI и два сценария;
+  16/16 HW PASS на новом ELF, HAL восстановлен. [Протокол](docs/ru/F030_CMSIS_RTC.md).
+  Далее отказные ветви и итоговая приёмка HAL→CMSIS для F030.
+  API ядра без изменений; ТЗ 0.33. F030 CTest 17/17, Windows host 96
+  (8 skips), Linux docs/host/9 firmware pairs 13/13 PASS; strict ТЗ и формат PASS.
+
 - `codex/f030-cmsis-sleep` от `a84b742`: два новых Sleep/WFI сценария,
   2/2 HW PASS; прежние 12 не повторялись, ELF тот же. HAL восстановлен.
   Проверки: F030 CTest 15/15, Windows host 96 (8 skips), Linux docs/host/

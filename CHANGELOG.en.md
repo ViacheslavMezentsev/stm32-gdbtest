@@ -8,6 +8,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- F030 CMSIS RTC: Alarm A/LSI, bounded waits, EXTI17/IRQ; 16/16 HW PASS, HAL restored. Specification0.33; core API unchanged.
+
 - F030 CMSIS Sleep: isolate SysTick/TIM3 and check WFI using interrupted PC; 2/2 new HW PASS, HAL restored. Firmware/API unchanged; specification0.32.
 
 ### Added

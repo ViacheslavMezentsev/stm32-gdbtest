@@ -2,14 +2,14 @@
 
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
-CMSIS F030: Sleep/WFI **2/2 new HW PASS** on the same ELF; previous12 scenarios not rerun. HAL restored. [Sleep](F030_CMSIS_SLEEP.md).
+F030 RTC: LSI Alarm A, 16/16 HW PASS, HAL restored. Core API unchanged. [RTC](F030_CMSIS_RTC.md).
 
 Snapshot: 2026-09-30. Release candidate **0.1.0-rc.1** (Python `0.1.0rc1`), `API_VERSION = 1`;
 the final check passed on the release commit `2143665` (section below); the owner sets the tag. The main delivery is a pinned Git submodule; there is no pip package
 or separate executable yet. This page describes the verified scope, not a change log;
 history is in the [CHANGELOG](../../CHANGELOG.en.md).
 
-CMSIS F030: boot/clock/GPIO/blink — **4/4 HW PASS** on NUCLEO-F030R8/ST-Link/OpenOCD; the previous HAL firmware was restored. [Evidence and limitations](F030_CMSIS_BASELINE.md). RTC and remaining failure coverage are pending.
+CMSIS F030: boot/clock/GPIO/blink — **4/4 HW PASS** on NUCLEO-F030R8/ST-Link/OpenOCD; the previous HAL firmware was restored. [Evidence and limitations](F030_CMSIS_BASELINE.md). Remaining failure coverage and final F030 acceptance are pending.
 
 ## Checks
 

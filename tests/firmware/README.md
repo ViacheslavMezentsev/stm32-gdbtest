@@ -16,3 +16,6 @@ C sources follow the repository `.clang-format`.
 
 F030 also provides CLOCK/BLINK scenarios through the regular CLI. Its LED interval
 is 500 SysTick milliseconds; see [baseline evidence](../../docs/en/F030_CMSIS_BASELINE.md).
+
+F030 RTC owns and resets the calendar on boot, but never resets the backup domain.
+See [RTC evidence and limitations](../../docs/en/F030_CMSIS_RTC.md).

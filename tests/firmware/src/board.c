@@ -74,6 +74,7 @@ void board_init( void )
     ( void ) SysTick_Config( 8000000U / 1000U );
     board_timer_init();
     board_adc_init();
+    board_rtc_init();
 }
 
 void board_led_toggle( void )
