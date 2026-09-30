@@ -34,3 +34,21 @@ def rtc_alarm(target):
     target.check("thread resumes", target.value("$xPSR & 0x1ff"), 0)
     target.check("second alarm published", ((target.value("board_rtc_events") - before) & 0xFFFFFFFF) >= 2, True)
     target.check("no RTC error", target.value("board_rtc_error"), 0)
+
+
+@case("HW_CI_RTC_DEADLINE", labels=("rtc", "negative"), contracts=("ci_rtc_macros",))
+def rtc_deadline(target):
+    target.reach("rtc_wait", when="error == 3")
+    target.check("LSI wait mask", target.value("mask"), 1 << 1)
+    before = target.value("board_ticks_ms")
+    backup_address = target.value("&RCC->BDCR")
+    backup = target.value(f"*(unsigned int*){backup_address}")
+    # Make the ready predicate impossible without touching the oscillator/backup domain.
+    target.set_value("mask", 0)
+    target.reach("board_rtc_fault")
+    target.check("RTC wait timeout reported", target.value("board_rtc_error"), 3)
+    target.check("at least 1000 firmware ticks", ((target.value("board_ticks_ms") - before) & 0xFFFFFFFF) >= 1000, True)
+    target.check("backup configuration unchanged", target.value(f"*(unsigned int*){backup_address}"), backup)
+    target.check("no application loop", target.value("app_state.ticks"), 0)
+    target.check("no alarm publication", target.value("board_rtc_events"), 0)
+    target.report["injection_scope"] = "rtc_wait mask argument set to zero; not a physical LSI failure"

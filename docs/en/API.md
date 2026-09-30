@@ -208,3 +208,5 @@ F030 Sleep/WFI: profile scenarios using GDB unwind; core API unchanged. [Sleep e
 F030 RTC: LSI Alarm A, 16/16 HW PASS, HAL restored. Core API unchanged. [RTC](F030_CMSIS_RTC.md).
 
 F030 busy ADC check; API unchanged. [Report](F030_ADC_BUSY.md).
+
+F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_DEADLINE.md).

@@ -8,6 +8,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- F030 RTC deadline through argument injection; API unchanged. [Report](docs/en/F030_RTC_DEADLINE.md). Specification0.35.
+
 - F030 busy ADC check; API unchanged. [Report](docs/en/F030_ADC_BUSY.md). Specification 0.34.
 
 - F030 CMSIS RTC: Alarm A/LSI, bounded waits, EXTI17/IRQ; 16/16 HW PASS, HAL restored. Specification0.33; core API unchanged.

@@ -8,6 +8,8 @@
 
 ### Added
 
+- F030: RTC deadline через инъекцию аргумента, API без изменений. [Протокол](docs/ru/F030_RTC_DEADLINE.md). ТЗ 0.35.
+
 - F030: проверка занятого ADC, API без изменений. [Протокол](docs/ru/F030_ADC_BUSY.md). ТЗ 0.34.
 
 - F030 CMSIS RTC: Alarm A/LSI, ограниченные ожидания, EXTI17/IRQ; 16/16 HW PASS, HAL восстановлен. ТЗ 0.33; API ядра без изменений.

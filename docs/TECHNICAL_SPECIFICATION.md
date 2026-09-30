@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.34 (черновик для согласования) |
+| **Ревизия** | 0.35 (черновик для согласования) |
 | **Дата формирования** | 30.09.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0; выпущен кандидат 0.1.0-rc.1 (версия Python `0.1.0rc1`, `API_VERSION = 1`) |
@@ -59,6 +59,14 @@
 | 0.33 | 30.09.2026 | F030 CMSIS RTC Alarm A/LSI, EXTI17/IRQ и ограниченные ожидания; TC-125. |
 
 | 0.34 | 30.09.2026 | Занятый ADC F030: CONT/ADSTART injection и проверка error6; TC-126. |
+
+| 0.35 | 30.09.2026 | F030 RTC deadline: GDB-инъекция mask, TC-127; ограничение macro context. |
+
+### Изменения ревизии 0.35
+
+| Пункт | Тип | Изменение |
+| :--- | :--- | :--- |
+| 8.30, 9.2, 10, G.12 | нов. | RTC deadline, TC-127, границы инъекции |
 
 ### Изменения ревизии 0.34
 
@@ -1327,6 +1335,8 @@ flowchart LR
 
 8.29. HW_CI_ADC_BUSY ДОЛЖЕН подтверждать ADSTART перед входом в приложение и отказ с error6 без публикации результата; prepare ДОЛЖЕН входить в CI. Проверка НЕ ДОЛЖНА трактоваться как тест возвратов HAL. `[N]` (р.0.34)
 
+8.30. HW_CI_RTC_DEADLINE ДОЛЖЕН проверять истечение общего rtc_wait при mask=0 с error3 через не менее 1000 ticks без изменения BDCR; prepare ДОЛЖЕН входить в CI. Инъекция НЕ ДОЛЖНА заявляться физическим отказом LSI. `[N]` (р.0.35)
+
 
 
 
@@ -1477,6 +1487,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-124 | F030 SLEEP_SYSTICK/TIM3 prepare и HW | SysTick после WFI с первой попытки; TIM3 до WFI, затем после WFI; 2/2 PASS, HAL восстановлен; docs/ru/F030_CMSIS_SLEEP.md (р.0.32) |
 | TC-125 | F030 RTC INIT/ALARM prepare и HW | Настройка и два естественных IRQ PASS; общая регрессия 16/16, HAL восстановлен; docs/ru/F030_CMSIS_RTC.md (р.0.33) |
 | TC-126 | F030 ADC busy, prepare и HW | CONT/ADSTART → error6, sequence/quality=0, PASS; docs/ru/F030_ADC_BUSY.md (р.0.34) |
+| TC-127 | F030 RTC deadline, prepare и HW | mask=0 → error3 после 1000 ticks, BDCR неизменен; исправленный PASS, HAL восстановлен; docs/ru/F030_RTC_DEADLINE.md (р.0.35) |
 
 ---
 
@@ -1655,6 +1666,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 8.27 | tests/firmware/profiles/f030r8/Tests/board/test_sleep.py; ci/run_checks.py | TC-124 |
 | 8.28 | tests/firmware/src/rtc_f030.c; profiles/f030r8/Tests/board/test_rtc.py; ci/run_checks.py | TC-125 |
 | 8.29 | tests/firmware/profiles/f030r8/Tests/board/test_adc_faults.py; ci/run_checks.py | TC-126 |
+| 8.30 | tests/firmware/profiles/f030r8/Tests/board/test_rtc.py; ci/run_checks.py | TC-127 |
 
 ---
 
@@ -1889,3 +1901,5 @@ G.9. Sleep F030: 2/2 новых HW PASS на том же ELF, что TC-123; п�
 G.10. RTC F030: конфигурация и естественный Alarm A IRQ, полный текущий набор 16/16 HW PASS на новом ELF; HAL восстановлен. Отказные ветви RTC, точность и retention не проверены. docs/ru/F030_CMSIS_RTC.md. (р.0.33)
 
 G.11. ADC busy F030: HW PASS на прежнем ELF; проверяется guard занятого ADC, не HAL start error. docs/ru/F030_ADC_BUSY.md. (р.0.34)
+
+G.12. RTC deadline F030: первоначальный ERROR macro context сохранён; исправленный сценарий PASS, положительные ADC/RTC после reset_run PASS, HAL восстановлен. docs/ru/F030_RTC_DEADLINE.md. (р.0.35)

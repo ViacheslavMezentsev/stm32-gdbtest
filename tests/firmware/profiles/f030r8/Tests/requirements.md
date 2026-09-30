@@ -98,3 +98,10 @@ board_adc_sample. Confirm ADSTART, then require error6 at board_adc_fault
 with no published sequence or valid measurement. This exercises the actual
 busy guard, not a HAL return injection. Teardown reset_run restores settings;
 conversion overrun during this deliberately unconsumed stream is expected.
+
+## HW_CI_RTC_DEADLINE
+At rtc_wait(error3), set mask=0 to force the ready predicate false. Require
+error3 at board_rtc_fault after at least 1000 SysTick ticks, unchanged BDCR,
+zero app loops and alarm events. This checks the shared wait deadline and
+error propagation, not physical LSI failure or every RTC initialization path.
+Teardown reset_run restores execution; no backup-domain mutation is injected.

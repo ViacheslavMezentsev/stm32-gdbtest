@@ -51,3 +51,5 @@ F030 Sleep/WFI: профильные сценарии через GDB unwind, API
 F030 RTC: Alarm A на LSI, 16/16 HW PASS, HAL восстановлен. API ядра без изменений. [RTC](F030_CMSIS_RTC.md).
 
 F030: проверка занятого ADC, API без изменений. [Протокол](F030_ADC_BUSY.md).
+
+F030: RTC deadline через инъекцию аргумента, API без изменений. [Протокол](F030_RTC_DEADLINE.md).
