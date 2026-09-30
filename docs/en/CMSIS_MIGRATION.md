@@ -66,3 +66,5 @@ F030 ADC conversion and numeric scenarios; core API unchanged. [ADC units](F030_
 F030 Sleep/WFI: profile scenarios using GDB unwind; core API unchanged. [Sleep evidence](F030_CMSIS_SLEEP.md).
 
 F030 RTC: LSI Alarm A, 16/16 HW PASS, HAL restored. Core API unchanged. [RTC](F030_CMSIS_RTC.md).
+
+F030 busy ADC check; API unchanged. [Report](F030_ADC_BUSY.md).

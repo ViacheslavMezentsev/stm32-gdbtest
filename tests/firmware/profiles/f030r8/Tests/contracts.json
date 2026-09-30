@@ -101,7 +101,8 @@
           "DMA_ISR_TCIF1",
           "DMA_ISR_TEIF1",
           "NVIC",
-          "ADC_CFGR2_CKMODE"
+          "ADC_CFGR2_CKMODE",
+          "ADC_CR_ADSTART"
         ]
       }
     },

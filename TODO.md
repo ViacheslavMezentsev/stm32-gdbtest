@@ -2,6 +2,11 @@
 
 ## Текущая работа
 
+- Пакет F030: `codex/f030-adc-busy` от `5d09823` → `codex/f030-rtc-deadline`
+  → `codex/f030-cmsis-acceptance`. Push трёх веток вместе, CI каждого SHA,
+  land по порядку; gitlink потребителя обновить один раз после пакета.
+  Первая ветка: HW_CI_ADC_BUSY PASS, CTest 18/18, host96 (8 skips).
+
 - `codex/f030-cmsis-rtc` от `f494ab1`: RTC Alarm A/LSI и два сценария;
   16/16 HW PASS на новом ELF, HAL восстановлен. [Протокол](docs/ru/F030_CMSIS_RTC.md).
   Далее отказные ветви и итоговая приёмка HAL→CMSIS для F030.

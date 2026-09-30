@@ -197,7 +197,7 @@ def firmware_pair(gcc, profile):
                            "HW_CI_ADC_INIT", "HW_CI_ADC_DMA", "HW_CI_ADC_TIMEOUT",
                            "HW_CI_ADC_UNITS", "HW_CI_ADC_VECTORS", "HW_CI_ADC_INVALID",
                            "HW_CI_SLEEP_SYSTICK", "HW_CI_SLEEP_TIM3",
-                           "HW_CI_RTC_INIT", "HW_CI_RTC_ALARM"]
+                           "HW_CI_RTC_INIT", "HW_CI_RTC_ALARM", "HW_CI_ADC_BUSY"]
     if any("prepare." + name not in ctest for name in expected_cases):
         raise CheckError("CTest did not run the prepare tests")
     for test_id in expected_cases:

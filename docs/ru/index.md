@@ -49,3 +49,5 @@ F030: преобразование ADC и численные сценарии, A
 F030 Sleep/WFI: профильные сценарии через GDB unwind, API ядра не меняется. [Sleep evidence](F030_CMSIS_SLEEP.md).
 
 F030 RTC: Alarm A на LSI, 16/16 HW PASS, HAL восстановлен. API ядра без изменений. [RTC](F030_CMSIS_RTC.md).
+
+F030: проверка занятого ADC, API без изменений. [Протокол](F030_ADC_BUSY.md).

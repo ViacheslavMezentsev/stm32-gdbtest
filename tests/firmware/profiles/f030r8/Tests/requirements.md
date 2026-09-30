@@ -91,3 +91,10 @@ Two natural Alarm A entries have IPSR18, ALRAF and EXTI17 pending; the first
 handler publishes one event before the next entry. Thread mode resumes after
 the second event. No software IRQ or calendar injection, no accuracy or
 backup retention claim. Debug halt can coalesce alarms.
+
+## HW_CI_ADC_BUSY
+Start continuous ADC conversions through logged MMIO writes before the first
+board_adc_sample. Confirm ADSTART, then require error6 at board_adc_fault
+with no published sequence or valid measurement. This exercises the actual
+busy guard, not a HAL return injection. Teardown reset_run restores settings;
+conversion overrun during this deliberately unconsumed stream is expected.

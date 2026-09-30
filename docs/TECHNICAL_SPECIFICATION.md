@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.33 (черновик для согласования) |
+| **Ревизия** | 0.34 (черновик для согласования) |
 | **Дата формирования** | 30.09.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0; выпущен кандидат 0.1.0-rc.1 (версия Python `0.1.0rc1`, `API_VERSION = 1`) |
@@ -57,6 +57,14 @@
 | 0.32 | 30.09.2026 | F030 Sleep/WFI: SysTick/TIM3, interrupted PC через GDB unwind; TC-124, без изменения firmware/API. |
 
 | 0.33 | 30.09.2026 | F030 CMSIS RTC Alarm A/LSI, EXTI17/IRQ и ограниченные ожидания; TC-125. |
+
+| 0.34 | 30.09.2026 | Занятый ADC F030: CONT/ADSTART injection и проверка error6; TC-126. |
+
+### Изменения ревизии 0.34
+
+| Пункт | Тип | Изменение |
+| :--- | :--- | :--- |
+| 8.29, 9.2, 10, G.11 | нов. | ADC busy, TC-126, границы инъекции |
 
 ### Изменения ревизии 0.33
 
@@ -1317,6 +1325,8 @@ flowchart LR
 
 8.28. F030 fixture ДОЛЖНА настраивать RTC Alarm A от LSI через EXTI17/IRQ2 без BDRST, отклонять несовместимый сохранённый источник и ограничивать ожидания готовности. Сценарии ДОЛЖНЫ проверять конфигурацию и естественные IRQ с публикацией счётчика; CI ДОЛЖЕН выполнять их prepare. Точность и backup retention вне области. `[N]` (р.0.33)
 
+8.29. HW_CI_ADC_BUSY ДОЛЖЕН подтверждать ADSTART перед входом в приложение и отказ с error6 без публикации результата; prepare ДОЛЖЕН входить в CI. Проверка НЕ ДОЛЖНА трактоваться как тест возвратов HAL. `[N]` (р.0.34)
+
 
 
 
@@ -1466,6 +1476,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-123 | F030 ADC_UNITS/VECTORS/INVALID prepare и HW | 7 численных и 14 невалидных наборов, последующее восстановление quality3; 12/12 HW PASS; docs/ru/F030_CMSIS_ADC_UNITS.md (р.0.31) |
 | TC-124 | F030 SLEEP_SYSTICK/TIM3 prepare и HW | SysTick после WFI с первой попытки; TIM3 до WFI, затем после WFI; 2/2 PASS, HAL восстановлен; docs/ru/F030_CMSIS_SLEEP.md (р.0.32) |
 | TC-125 | F030 RTC INIT/ALARM prepare и HW | Настройка и два естественных IRQ PASS; общая регрессия 16/16, HAL восстановлен; docs/ru/F030_CMSIS_RTC.md (р.0.33) |
+| TC-126 | F030 ADC busy, prepare и HW | CONT/ADSTART → error6, sequence/quality=0, PASS; docs/ru/F030_ADC_BUSY.md (р.0.34) |
 
 ---
 
@@ -1643,6 +1654,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 8.26 | tests/firmware/src/adc_units.c, adc_f030.c; f030r8/Tests/board/test_ci.py; ci/run_checks.py | TC-123 |
 | 8.27 | tests/firmware/profiles/f030r8/Tests/board/test_sleep.py; ci/run_checks.py | TC-124 |
 | 8.28 | tests/firmware/src/rtc_f030.c; profiles/f030r8/Tests/board/test_rtc.py; ci/run_checks.py | TC-125 |
+| 8.29 | tests/firmware/profiles/f030r8/Tests/board/test_adc_faults.py; ci/run_checks.py | TC-126 |
 
 ---
 
@@ -1875,3 +1887,5 @@ G.8. F030 физические единицы и численные вектор
 G.9. Sleep F030: 2/2 новых HW PASS на том же ELF, что TC-123; прежние 12 сценариев не повторялись. GDB interrupted-frame evidence не доказывает ток/residency/Stop. docs/ru/F030_CMSIS_SLEEP.md. (р.0.32)
 
 G.10. RTC F030: конфигурация и естественный Alarm A IRQ, полный текущий набор 16/16 HW PASS на новом ELF; HAL восстановлен. Отказные ветви RTC, точность и retention не проверены. docs/ru/F030_CMSIS_RTC.md. (р.0.33)
+
+G.11. ADC busy F030: HW PASS на прежнем ELF; проверяется guard занятого ADC, не HAL start error. docs/ru/F030_ADC_BUSY.md. (р.0.34)
