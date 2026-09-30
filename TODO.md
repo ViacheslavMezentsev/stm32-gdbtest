@@ -3,7 +3,7 @@
 ## Текущая работа
 
 - codex/release-0.1.0-rc.2 от main eaf31ea: Python 0.1.0rc2, API_VERSION=1,
-  ТЗ 0.43 к выпуску, черновик docs/releases/v0.1.0-rc.2.md. Тег не создан.
+  ТЗ 0.44 к выпуску, черновик docs/releases/v0.1.0-rc.2.md. Тег не создан.
 - [x] Документальный аудит eaf31ea принят: Docs и все пять Offline jobs SUCCESS.
 - [x] Orange Pi и три стенда подтверждены владельцем; doctor без FAIL/WARN.
 - [x] Локально Windows docs/host 4/4; Linux 14 этапов + чистый HAL 1/1.
@@ -201,3 +201,6 @@
 
 - [x] На 873f1ac: SSH lifecycle F030/OpenOCD, F103/J-Link, F411/OpenOCD — по 10/10, исходные HAL восстановлены.
 - [ ] Перед Hardware workflow исправить F030 stand на Orange Pi (устаревший J-Link → родной ST-Link/OpenOCD); локальные SSH-проверки использовали правильный stand.
+
+- [x] Исправление F030 stand на Orange Pi подтверждено; Hardware 36787681339 прошёл на 759840a, HAL восстановлены.
+- [ ] Повторить Offline/Hardware после исправления удаления ранних JSON при run --package; проверить наличие каждого отчёта из summary. TC-133, ТЗ 0.44.

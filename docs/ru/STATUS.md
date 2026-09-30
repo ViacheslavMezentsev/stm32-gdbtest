@@ -12,11 +12,17 @@
 
 На 873f1ac: Docs/Offline SUCCESS и цикл runner через SSH — по 10/10 для F030/OpenOCD, F103/J-Link и F411/OpenOCD, с восстановлением исходных прошивок. Это ещё не Linux package/Hardware workflow и не локальная Windows-матрица.
 
+## Hardware workflow: результат и потеря отчётов
+
+На 759840a: Hardware 36787681339, prepare/hardware SUCCESS. Сборка пакетов в GitHub Ubuntu, выполнение на Orange Pi Linux aarch64. Три summary и журнал: по 10/10. Однако open_package удалял предыдущие runs при каждом открытии: в артефактах осталось по одному after-recovery JSON. Эти данные подтверждают журнал выполнения, но не полную сохранность доказательств; приёмка требует повторения после исправления.
+
+Локальный архив: build/rc2-acceptance/hardware-36787681339/hw; восстановление: restore.json — boot/blink PASS для всех трёх исходных HAL, reset_run. F030 stand на runner исправлен владельцем на ST-Link/OpenOCD. Платы оставлены работающими. Новое исправление проверяется TC-133, затем Offline/Hardware на новом SHA.
+
 ## Текущий состав и доказательства
 
 | Область | Проверенный объём и границы |
 | --- | --- |
-| Host | 97 unittest; Windows: 8 платформенных skips. Linux пропускает Windows-only проверки; точный результат сохраняется в журнале, пропуски не считаются HW PASS |
+| Host | 98 unittest; Windows: 8 платформенных skips. Linux пропускает Windows-only проверки; точный результат сохраняется в журнале, пропуски не считаются HW PASS |
 | Offline CI | Docs, format, host; CMSIS F030/F103/F411 × GCC13/14/15; отдельный HAL F030 на GCC13, 19 CTest и 5 отрицательных contracts. Все пять jobs Offline прошли на 7f3c65b |
 | CMSIS F030 | 18 сценариев: boot/clock/GPIO/blink, TIM3, ADC/DMA/численные векторы, Sleep, RTC и отказы. HW: единый прогон 18/18 на a48158c через SSH/Orange Pi; HAL восстановлен. См. RC2_READINESS; локальная Windows-матрица ещё впереди |
 | HAL F030 | Автономный tests/hal-f030: 17/17, шесть повторов после инъекций, ожидаемый timeout ERROR, recovery и восстановление HAL потребителя — Windows/ST-Link/OpenOCD |

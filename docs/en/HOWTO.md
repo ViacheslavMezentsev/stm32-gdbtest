@@ -257,3 +257,7 @@ CTest prepare and CLI run write result.json to session.out. Run them serially
 or use separate sessions/out directories. Counting every new result.json without
 a mode/id filter can misattribute prepare output to a hardware scenario. Preserve
 the evidence and repeat the complete set separately; do not claim a complete PASS.
+
+## Reports from repeated package runs
+
+If summary references missing JSON from earlier runs, check the module version: the old open_package deleted the previous extraction directory. The fixed version keeps separate sessions; update artifact collection patterns as described in [Hardware CI](HARDWARE_CI.md). A green workflow does not replace inspection of retained results.

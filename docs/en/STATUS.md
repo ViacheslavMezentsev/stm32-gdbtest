@@ -12,11 +12,17 @@ rc.2 acceptance at a48158c: remote Nucleo CMSIS 18/18 and HAL 17/17, repeats and
 
 At 873f1ac: Docs/Offline SUCCESS and runner lifecycle over SSH — 10/10 each for F030/OpenOCD, F103/J-Link and F411/OpenOCD, with original firmware restored. This is not yet Linux package/Hardware workflow or the local Windows matrix.
 
+## Hardware workflow: execution and lost reports
+
+At 759840a: Hardware 36787681339, prepare/hardware SUCCESS. Packages built on GitHub Ubuntu, executed on Orange Pi Linux aarch64. Three summaries and the log report 10/10 each. However, open_package deleted earlier runs on each open: artifacts retain only one after-recovery JSON per board. These data support the execution log, not complete evidence retention; acceptance requires a repeat after the fix.
+
+Local archive: build/rc2-acceptance/hardware-36787681339/hw; restore.json records boot/blink PASS for all three original HAL images, reset_run. The owner corrected the F030 runner stand to ST-Link/OpenOCD. Boards remain running. TC-133 covers the fix; Offline/Hardware must follow on the new SHA.
+
 ## Current scope and evidence
 
 | Area | Verified scope and limits |
 | --- | --- |
-| Host | 97 unittests; Windows: 8 platform skips. Linux skips Windows-only checks; exact results are logged, skips do not count as HW PASS |
+| Host | 98 unittests; Windows: 8 platform skips. Linux skips Windows-only checks; exact results are logged, skips do not count as HW PASS |
 | Offline CI | Docs, format, host; CMSIS F030/F103/F411 × GCC13/14/15; separate GCC13 HAL F030, 19 CTest checks and 5 negative contracts. All five Offline jobs passed at 7f3c65b |
 | CMSIS F030 | 18 cases: boot/clock/GPIO/blink, TIM3, ADC/DMA/numeric vectors, Sleep, RTC and failures. HW: one complete 18/18 run at a48158c over SSH/Orange Pi; HAL restored. See RC2_READINESS; the local Windows matrix remains pending |
 | HAL F030 | Standalone tests/hal-f030: 17/17, six post-injection repeats, expected timeout ERROR, recovery and consumer HAL restoration — Windows/ST-Link/OpenOCD |

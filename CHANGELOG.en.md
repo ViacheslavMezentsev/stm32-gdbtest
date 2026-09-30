@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Repeated run --package preserves previous reports and uses separate clean sources; TC-133. Hardware workflow exposed deletion of earlier JSON evidence; acceptance must be repeated.
+
 - rc.2 acceptance at 873f1ac: SSH lifecycle F030/ST-Link/OpenOCD, F103/J-Link, F411/ST-Link/OpenOCD — 10/10 steps each, original firmware restored; Hardware workflow and the local Windows matrix remain pending.
 
 - F030 CMSIS: exception number through SCB ICSR instead of server-specific xPSR, with macro preflight; found during rc.2 acceptance through Orange Pi.

@@ -107,3 +107,16 @@ python3 -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stan
 For a run without an open terminal use `tmux`/`screen` or a systemd user service
 (`systemd-run --user --unit=ddtt-soak …`). Steps that program Flash (`full-a5`, `full-ff`)
 wear the memory: choose steps without programming for long runs.
+
+## Package evidence retention (rc.2)
+
+Repeated run --package extracts inputs into a new
+`<workdir>/<16 SHA-256 characters>/sessions/session-*`. Reports from each invocation
+remain in its `<workdir>/<16 SHA-256 characters>/sessions/session-*/runs`. Read session paths
+from metadata instead of constructing `<hash>/firmware.elf`. Existing schema 1
+packages remain supported; API_VERSION=1. Source directories are retained for
+diagnostics; no automatic cleanup occurs. Remove old builds only after preserving
+required evidence and completing all runs that use those directories.
+
+Previously, reopening a package removed the entire hash directory, including runs.
+Lost JSON reports cannot be recovered from summary: verification must be repeated.

@@ -87,6 +87,6 @@ jobs:
           path: |
             build/hw/*/summary.json
             build/hw/*/run_hw.log
-            build/hw/*/package/*/runs/*/result.json
-            build/hw/*/package/*/runs/*/*.log
+            build/hw/*/package/*/sessions/*/runs/*/result.json
+            build/hw/*/package/*/sessions/*/runs/*/*.log
           if-no-files-found: warn

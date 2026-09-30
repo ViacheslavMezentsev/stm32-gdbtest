@@ -186,3 +186,11 @@ F030 on Orange Pi still selects J-Link; the owner must switch it to native
 ST-Link/OpenOCD before the workflow. The local remote.toml used the correct
 ST-Link independently of that file. The local Windows/backend matrix, consumer
 integration and final release notes remain pending.
+
+## Hardware workflow: execution and lost reports
+
+At 759840a: Hardware 36787681339, prepare/hardware SUCCESS. Packages built on GitHub Ubuntu, executed on Orange Pi Linux aarch64. Three summaries and the log report 10/10 each. However, open_package deleted earlier runs on each open: artifacts retain only one after-recovery JSON per board. These data support the execution log, not complete evidence retention; acceptance requires a repeat after the fix.
+
+Local archive: build/rc2-acceptance/hardware-36787681339/hw; restore.json records boot/blink PASS for all three original HAL images, reset_run. The owner corrected the F030 runner stand to ST-Link/OpenOCD. Boards remain running. TC-133 covers the fix; Offline/Hardware must follow on the new SHA.
+
+Local fix validation: Windows docs/host 4/4; Linux Docker host 1/1; 98 host tests (Windows: 8 platform skips). Two consecutive CLI prepare calls for one F030 package retained both JSON reports in separate sessions. Hardware repetition of the fix is pending.

@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- Повторный run --package сохраняет прежние отчёты и использует отдельные чистые исходники; TC-133. Hardware workflow выявил удаление ранних JSON, требуется повтор приёмки.
+
 - Приёмка rc.2 на 873f1ac: SSH lifecycle F030/ST-Link/OpenOCD, F103/J-Link, F411/ST-Link/OpenOCD — по 10/10 этапов, восстановление исходных прошивок PASS; Hardware workflow и локальная Windows-матрица ещё впереди.
 
 - F030 CMSIS: номер исключения через SCB ICSR вместо серверозависимого xPSR, с preflight макросов; ошибка обнаружена при приёмке rc.2 через Orange Pi.

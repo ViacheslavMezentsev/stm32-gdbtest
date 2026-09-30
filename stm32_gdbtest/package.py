@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path, PurePosixPath
-import shutil
+import tempfile
 import zipfile
 
 from stm32_gdbtest import __version__
@@ -102,10 +102,12 @@ def open_package(path, workdir, gdb=None):
         names = set(bundle.namelist()) - {MANIFEST}
         if not isinstance(files, dict) or names != set(files) or not all(_safe(n) for n in names):
             raise ValueError("Package contents do not match its manifest")
-        target = Path(workdir).resolve() / (_sha(path)[:16])
-        if target.exists():
-            shutil.rmtree(target)
-        target.mkdir(parents=True)
+        package_root = Path(workdir).resolve() / (_sha(path)[:16])
+        sources = package_root / "sessions"
+        sources.mkdir(parents=True, exist_ok=True)
+        # Each invocation gets clean inputs; earlier reports and sources remain intact.
+        # ТЗ 5.19.5: never erase previous evidence when reopening the same package.
+        target = Path(tempfile.mkdtemp(prefix="session-", dir=sources))
         for name, digest in files.items():
             data = bundle.read(name)
             if hashlib.sha256(data).hexdigest() != digest:

@@ -105,7 +105,7 @@ def main():
         workdir = out / "package"
         cli = [sys.executable, "-B", ROOT / "stm32_gdbtest/cli.py", "run", "--package", package,
                "--workdir", workdir]
-        runs = workdir / hashlib.sha256(package.read_bytes()).hexdigest()[:16] / "runs"
+        runs = workdir / hashlib.sha256(package.read_bytes()).hexdigest()[:16]
     policy = FIRMWARE / f"profiles/{args.profile}/full-image.toml"
     policy_a5 = out / "full-image-a5.toml"
     policy_a5.write_text(policy.read_text(encoding="utf-8").replace("fill = 255", "fill = 165"), encoding="utf-8")
@@ -117,7 +117,7 @@ def main():
     def scenario(test_id, *extra, stand=stand_path, image_policy=None, expect=0):
         run_env = dict(env, STM32_GDBTEST_IMAGE_POLICY=str(image_policy)) if image_policy else env
         result = command([*cli, "--test", test_id, "--stand", stand, *extra], log, run_env)
-        reports = sorted(runs.glob(f"*-{test_id}-*/result.json"), key=lambda p: p.stat().st_mtime)
+        reports = sorted(runs.glob(f"**/*-{test_id}-*/result.json"), key=lambda p: p.stat().st_mtime)
         report = json.loads(reports[-1].read_text(encoding="utf-8")) if reports else {}
         if result.returncode != expect:
             raise StepError(f"exit {result.returncode}, expected {expect}: {report.get('error', result.stdout[-2000:])}")

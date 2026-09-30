@@ -64,6 +64,31 @@ class PackageTests(unittest.TestCase):
         only = pack(self.session, self.output, test_ids=["HW_TWO"])
         self.assertEqual([t["id"] for t in only["tests"]], ["HW_TWO"])
 
+    def test_reopen_preserves_reports_and_uses_clean_sources(self):
+        # TC-133: ТЗ 5.19.5 — successful and failed opens preserve earlier evidence.
+        pack(self.session, self.output)
+        work = Path(self.temp.name) / "work"
+        first = open_package(self.output, work, str(self.gdb))
+        runs = Path(first["out"])
+        evidence = runs / "previous" / "result.json"
+        evidence.parent.mkdir(parents=True)
+        evidence.write_bytes(b'{"status":"ERROR"}')
+        original_elf = Path(first["elf"]).read_bytes()
+        Path(first["elf"]).write_bytes(b"changed during previous run")
+        (Path(first["root"]) / "unexpected.py").write_text("stale = True")
+        second = open_package(self.output, work, str(self.gdb))
+        self.assertNotEqual(first["out"], second["out"])
+        self.assertTrue(Path(second["out"]).is_relative_to(Path(second["root"])))
+        self.assertNotEqual(first["root"], second["root"])
+        self.assertEqual(evidence.read_bytes(), b'{"status":"ERROR"}')
+        self.assertEqual(Path(second["elf"]).read_bytes(), original_elf)
+        self.assertFalse((Path(second["root"]) / "unexpected.py").exists())
+        with patch("stm32_gdbtest.package.find_gdb", return_value=None):
+            with self.assertRaises(FileNotFoundError):
+                open_package(self.output, work)
+        self.assertEqual(evidence.read_bytes(), b'{"status":"ERROR"}')
+        self.assertEqual(Path(second["elf"]).read_bytes(), original_elf)
+
     def test_legacy_uppercase_package_still_opens(self):
         # TC-128: schema1 archives retain their manifest-declared path spelling.
         pack(self.session, self.output)
