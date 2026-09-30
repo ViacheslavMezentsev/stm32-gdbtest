@@ -216,7 +216,7 @@ ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -i <�
 | Проблема | Решение |
 | --- | --- |
 | Docker Hub недоступен при сборке образа | `docker build --build-arg BASE_IMAGE=<зеркало>/ubuntu:24.04 …` ([проверки и CI](testing.md)) |
-| Файлы в `build/` созданы root после запуска контейнера на Linux | Запускать с `--user "$(id -u):$(id -g)" -e HOME=/tmp`; удалить старые: `sudo rm -rf build Tests/firmware/build` |
+| Файлы в `build/` созданы root после запуска контейнера на Linux | Запускать с `--user "$(id -u):$(id -g)" -e HOME=/tmp`; удалить старые: `sudo rm -rf build tests/firmware/build` |
 | CI красный, а локально всё проходит | Сравнить коммит проверки с последним коммитом ветки; открыть артефакт `offline-results` или `linux-stand-*` |
 
 Удалить образ и кэш: `docker image rm stm32-gdbtest-ci:local`, `docker builder prune`.

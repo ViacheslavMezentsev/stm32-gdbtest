@@ -1,7 +1,7 @@
 # Build trees and generated artifacts (reports, packages, manifests live under build/)
 /build/
 /examples/minimal-consumer/build/
-/Tests/firmware/build/
+/tests/firmware/build/
 /compile_commands.json
 **/CMakeUserPresets.json
 

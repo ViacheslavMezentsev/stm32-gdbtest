@@ -2,13 +2,23 @@
 
 ## Текущая работа
 
+- `codex/cmsis-migration-inventory` от `bc07625` — [миграция примеров](docs/ru/CMSIS_MIGRATION.md)
+  ([English](docs/en/CMSIS_MIGRATION.md)): сопоставлены 17 HAL-сценариев F030
+  с двумя CMSIS-сценариями. Build/offline 3/3 PASS, без HW. Далее F030
+  boot/clock/GPIO/blink, затем периферия и другие профили. Оптимизация CI — после переноса.
+  Также переименован корневой Tests → tests; вложенные каталоги потребителей
+  сохраняют совместимость. Gitlink потребителя менять после публикации и CI модуля.
+  Проверки: Windows host 96 (8 skips); архив Git index извлечён в Linux filesystem,
+  docs/host/firmware GCC13 для F030/F103/F411 — 7/7 PASS. ТЗ strict: 0 ошибок,
+  0 предупреждений. Новый HW-прогон не выполнялся.
+
 - `claude/tech-spec-0.1` — ТЗ ревизии 0.1 и правила коммитов; слита в main (PR #2).
 - `claude/maintenance-rules` — AGENTS.md в виде краткого перечня, docs/ru|en/maintenance.md,
   ТЗ ревизии 0.2; слита в main.
 - `claude/offline-ci` — подготовка к 0.1.0: `run --prepare-only`, offline-часть на Linux,
   CI-прошивки F030R8/F103C8/F411CE, Docker-образ, workflows Docs и Offline, ТЗ 0.3;
   проверено локально в Docker-образе (13/13: docs, host, 9 пар firmware); слита в main.
-- `claude/hw-validation` — аппаратная проверка CI-прошивок до v0.1.0 (`Tests/firmware/run_hw.py`:
+- `claude/hw-validation` — аппаратная проверка CI-прошивок до v0.1.0 (`tests/firmware/run_hw.py`:
   F411CE/ST-Link, F103C8/J-Link, F030R8/J-Link STLink), `.clang-format` и уровень format в CI,
   LED BluePill-Plus на PB2, выравнивание `.data`; 4 стенда × 10/10 шагов на `fbc103d`,
   ТЗ 0.4, STATUS; слита в main.

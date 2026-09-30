@@ -110,7 +110,7 @@ Workflows CI запускаются для любой ветки, поэтому
 1. Offline-проверки в Docker-образе CI: `python3 ci/run_checks.py` — уровни docs, format, host
    и firmware ([проверки и CI](testing.md)). Перед push выполняются уровни,
    затронутые изменением.
-2. Host-тесты модуля без Docker: `python -B -m unittest discover -s Tests/host -v`;
+2. Host-тесты модуля без Docker: `python -B -m unittest discover -s tests/host -v`;
    блокировка отладчика проверяется тестами своей ОС (Windows или Linux).
    На Linux-стенде — после `. ~/.local/stm32-gdbtest/env.sh`, окружение проверяет
    `python -B -m stm32_gdbtest doctor` ([Linux-стенд](LINUX_STAND.md)).
@@ -142,7 +142,7 @@ CI GitHub Actions (workflows Docs и Offline) проверяет модуль д
 ## Граница модуля и потребителя
 
 - Модуль — ядро инфраструктуры. MCU, плата, ожидания, приборы и тесты приложения —
-  в проекте потребителя. `Tests/fixtures` не являются рабочими профилями и
+  в проекте потребителя. `tests/fixtures` не являются рабочими профилями и
   доказательством поведения HAL.
 - Не добавлять тестовые hooks в прошивку; `-g3` не сохраняет неиспользуемые функции.
 - GDB API вызывается только из основного потока GDB; внешний timeout и recovery

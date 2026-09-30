@@ -76,15 +76,15 @@ ST-LINK GDB Server (STM32CubeCLT) для aarch64 не выпускается: н
 
 ## Локальный стенд и запуск
 
-Скопируйте шаблон из `Tests/firmware/stands/*.example.toml` в `*.local.toml` (такие
+Скопируйте шаблон из `tests/firmware/stands/*.example.toml` в `*.local.toml` (такие
 файлы не коммитятся) и укажите serial из вывода `doctor`. Для OpenOCD достаточно
 `executable = "openocd"` — из `PATH` окружения; для J-Link —
 `executable = "/opt/SEGGER/JLink/JLinkGDBServerCLExe"`.
 
 ```sh
 . ~/.local/stm32-gdbtest/env.sh
-python3 -B -m stm32_gdbtest doctor --stand Tests/firmware/stands/f411ce-openocd.local.toml
-python3 -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stands/f411ce-openocd.local.toml
+python3 -B -m stm32_gdbtest doctor --stand tests/firmware/stands/f411ce-openocd.local.toml
+python3 -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-openocd.local.toml
 ```
 
 `run_hw.py` перезаписывает Flash; итог — `build/hw/<профиль>-<стенд>/summary.json`
@@ -125,7 +125,7 @@ ssh -i $env:USERPROFILE\.ssh\id_ed25519_stand orangepi@<хост> exit   # пр�
 на Orange Pi можно отключить (`PasswordAuthentication no` в `/etc/ssh/sshd_config`,
 затем `sudo systemctl restart ssh`).
 
-Стенд — копия [шаблона](../../Tests/firmware/stands/remote.example.toml):
+Стенд — копия [шаблона](../../tests/firmware/stands/remote.example.toml):
 
 ```toml
 [probe]
@@ -162,8 +162,8 @@ identity_file = "~/.ssh/id_ed25519_stand"       # или %USERPROFILE%/.ssh/…
 запуск — с Windows, как для локального стенда:
 
 ```powershell
-python -B -m stm32_gdbtest doctor --stand Tests/firmware/stands/f411ce-remote.local.toml
-python -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stands/f411ce-remote.local.toml
+python -B -m stm32_gdbtest doctor --stand tests/firmware/stands/f411ce-remote.local.toml
+python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-remote.local.toml
 ```
 
 `doctor` проверяет через ту же SSH-сессию Python, сервер, каталог блокировок и

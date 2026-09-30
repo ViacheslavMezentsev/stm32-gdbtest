@@ -70,7 +70,7 @@ before the run, otherwise the connection waits for the answer.
 
 ## Hardware check of the CI firmware, 2026-09-28
 
-Commit `fbc103d`, `Tests/firmware/run_hw.py`, xPack GCC 13.3.1-1.1. Every stand passed
+Commit `fbc103d`, `tests/firmware/run_hw.py`, xPack GCC 13.3.1-1.1. Every stand passed
 all 10 steps: build and CTest host, preparation with the stand, programming and a
 repeat without programming, strict identity, a 16 KiB full image with an 0xA5 tail,
 the expected verify-only ERROR without programming, 0xFF restore, a 0.2 s timeout with

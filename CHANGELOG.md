@@ -6,6 +6,18 @@
 
 ## [Unreleased]
 
+### Added
+
+- План CMSIS-миграции минимальных примеров в модуль; инвентаризация пробелов
+  F030 и критерии приёмки. F030 build/offline 3/3 PASS без HW; ТЗ 0.27.
+
+### Changed
+
+- Корневой каталог `Tests` переименован в `tests`; обновлены CI, команды,
+  fixtures и ссылки. Каталоги `Tests` внутри профилей потребителей и поддержка
+  обоих вариантов регистра сохранены. Для старого build после переименования
+  требуется повторная конфигурация в новом каталоге.
+
 ### Fixed
 
 - Контракт `macros` в C++: тип раскрытия определяется по его тексту — ранее `whatis <имя>`
@@ -60,7 +72,7 @@
   в WSL, сервер и отладчик — на хосте стенда Linux (Orange Pi 5); одна SSH-сессия с
   пробросом порта и вспомогательным скриптом, блокировка хоста стенда, остановка
   сервера при закрытии или обрыве сессии, только ключи SSH; `doctor` проверяет хост
-  стенда. Шаблон `Tests/firmware/stands/remote.example.toml`. Проверено с Windows на
+  стенда. Шаблон `tests/firmware/stands/remote.example.toml`. Проверено с Windows на
   Orange Pi 5: F411CE/OpenOCD, F103C8/J-Link CE, F030R8/J-Link STLink — по 10/10.
 - `doctor` находит GDB в `ARM_TOOLCHAIN_ROOT` и в каталоге xPack по умолчанию на Windows,
   как `run_hw.py`.
@@ -82,7 +94,7 @@
 - CI: задание `linux-stand` в контейнере `ubuntu:20.04` на x86_64 и aarch64 —
   установка окружения, host-тесты, `doctor`, сборка и подготовка CI-прошивок.
 - Документация Linux-стенда `docs/ru|en/LINUX_STAND.md`; ТЗ ревизии 0.7.
-- Аппаратная проверка CI-прошивок `Tests/firmware/run_hw.py` (10 шагов: запись, повтор,
+- Аппаратная проверка CI-прошивок `tests/firmware/run_hw.py` (10 шагов: запись, повтор,
   strict identity, полный образ, verify-only, timeout/recovery); на коммите `fbc103d`
   прошли F030R8/J-Link STLink, F103C8/J-Link, F411CE/OpenOCD и F411CE/ST-LINK GDB Server.
 - `.clang-format` — стиль исходников C/C++; уровень CI format (`clang-format --dry-run --Werror`).
@@ -96,7 +108,7 @@
 - Docker-образ CI `ci/docker` по закреплённому `ci/dependencies.lock.json`: Ubuntu 24.04,
   xPack GCC 13.3.1/14.2.1/15.2.1 с GDB-Python, CMake 3.28.3, Ninja 1.12.1, CMSIS
   STM32CubeF0/F1/F4; запуск `ci/run_checks.py` локально и в GitHub.
-- CI-прошивки `Tests/firmware` на CMSIS без HAL и stm32-cmake-yml: профили F030R8
+- CI-прошивки `tests/firmware` на CMSIS без HAL и stm32-cmake-yml: профили F030R8
   (Cortex-M0), F103C8 (Cortex-M3), F411CE (Cortex-M4) со сценариями и контрактами.
 - Двуязычные правила сопровождения `docs/ru|en/maintenance.md`, описание проверок
   `docs/ru|en/testing.md`, английская версия журнала изменений.

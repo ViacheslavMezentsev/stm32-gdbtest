@@ -24,7 +24,7 @@ The `[probe]` table of the local TOML:
 | `programmer_dir` | `stlink` only: absolute directory containing `STM32_Programmer_CLI.exe` (without `.exe` on Linux) |
 
 Unknown keys are rejected. Templates: [OpenOCD](../../examples/stands/stlink.example.toml)
-and [OpenOCD, ST, J-Link for the CI firmware](../../Tests/firmware/stands/jlink.example.toml)
+and [OpenOCD, ST, J-Link for the CI firmware](../../tests/firmware/stands/jlink.example.toml)
 (`openocd.example.toml`, `stlink.example.toml` and `remote.example.toml` for a remote stand
 in the same folder). Local paths (`executable`, `programmer_dir`, `identity_file`) expand `~`,
 `%VAR%` and `$VAR`: `%USERPROFILE%/...` instead of a personal path. Local paths

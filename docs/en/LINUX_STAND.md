@@ -79,15 +79,15 @@ ST-LINK GDB Server (STM32CubeCLT) is not released for aarch64: on Orange Pi 5 us
 
 ## Local stand and runs
 
-Copy a template from `Tests/firmware/stands/*.example.toml` to `*.local.toml` (such
+Copy a template from `tests/firmware/stands/*.example.toml` to `*.local.toml` (such
 files are not committed) and set the serial shown by `doctor`. For OpenOCD
 `executable = "openocd"` is enough — it comes from the environment's `PATH`; for
 J-Link use `executable = "/opt/SEGGER/JLink/JLinkGDBServerCLExe"`.
 
 ```sh
 . ~/.local/stm32-gdbtest/env.sh
-python3 -B -m stm32_gdbtest doctor --stand Tests/firmware/stands/f411ce-openocd.local.toml
-python3 -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stands/f411ce-openocd.local.toml
+python3 -B -m stm32_gdbtest doctor --stand tests/firmware/stands/f411ce-openocd.local.toml
+python3 -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-openocd.local.toml
 ```
 
 `run_hw.py` reprograms Flash; the result is `build/hw/<profile>-<stand>/summary.json`
@@ -128,7 +128,7 @@ the runner starts SSH without interactive input. After key login works, password
 on the Orange Pi can be disabled (`PasswordAuthentication no` in `/etc/ssh/sshd_config`,
 then `sudo systemctl restart ssh`).
 
-The stand is a copy of the [template](../../Tests/firmware/stands/remote.example.toml):
+The stand is a copy of the [template](../../tests/firmware/stands/remote.example.toml):
 
 ```toml
 [probe]
@@ -164,8 +164,8 @@ the Orange Pi before the server starts (another path: `env_script`). Check and r
 Windows as for a local stand:
 
 ```powershell
-python -B -m stm32_gdbtest doctor --stand Tests/firmware/stands/f411ce-remote.local.toml
-python -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stands/f411ce-remote.local.toml
+python -B -m stm32_gdbtest doctor --stand tests/firmware/stands/f411ce-remote.local.toml
+python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-remote.local.toml
 ```
 
 `doctor` checks Python, the server, the lock directory and USB debuggers on the Orange Pi

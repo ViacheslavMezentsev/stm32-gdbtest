@@ -16,7 +16,7 @@ class ContractTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory(dir=base)
         self.addCleanup(self.temp.cleanup)
         self.directory = Path(self.temp.name)
-        self.registry = ROOT / "Tests/fixtures/f103c8/Tests/contracts.json"
+        self.registry = ROOT / "tests/fixtures/f103c8/Tests/contracts.json"
 
     def test_literal_selection_does_not_import_tests(self):
         p = self.directory / "test_one.py"
@@ -114,7 +114,7 @@ class ContractTests(unittest.TestCase):
         elf.write_bytes(b"fixture")
         out = self.directory / "run"
         out.mkdir()
-        session = dict(elf=str(elf), profile=str(ROOT / "Tests/fixtures/f103c8/target.toml"), gdb="unused.exe")
+        session = dict(elf=str(elf), profile=str(ROOT / "tests/fixtures/f103c8/target.toml"), gdb="unused.exe")
         report = {}
         def fail_preflight(*args, **kwargs):
             (out / "contract-result.json").write_text(json.dumps(dict(status="ERROR", errors=["wrong signature"])))

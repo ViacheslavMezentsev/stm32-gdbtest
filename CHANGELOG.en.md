@@ -6,6 +6,17 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+### Added
+
+- CMSIS example migration plan and F030 gap inventory with acceptance criteria.
+  F030 build/offline 3/3 PASS without HW; specification revision 0.27.
+
+### Changed
+
+- Renamed the root `Tests` directory to `tests`, updating CI, commands, fixtures
+  and links. Consumer profile `Tests` directories and support for both spellings
+  remain unchanged. Reconfigure old builds under the new directory.
+
 ### Fixed
 
 - The `macros` contract in C++: the type is taken from the expansion text — `whatis <name>` used
@@ -59,7 +70,7 @@ The first release candidate (Python version `0.1.0rc1`, `API_VERSION = 1`, speci
   WSL, the server and the debugger on a Linux stand host (Orange Pi 5); one SSH session
   with port forwarding and a helper script, the stand host's lock, the server stopped
   when the session closes or breaks, SSH keys only; `doctor` checks the stand host.
-  Template `Tests/firmware/stands/remote.example.toml`. Checked from Windows to Orange Pi 5:
+  Template `tests/firmware/stands/remote.example.toml`. Checked from Windows to Orange Pi 5:
   F411CE/OpenOCD, F103C8/J-Link CE, F030R8/J-Link STLink — 10/10 each.
 - `doctor` finds GDB in `ARM_TOOLCHAIN_ROOT` and in the default xPack directory on Windows,
   like `run_hw.py`.
@@ -83,7 +94,7 @@ The first release candidate (Python version `0.1.0rc1`, `API_VERSION = 1`, speci
 - CI: the `linux-stand` job in an `ubuntu:20.04` container on x86_64 and aarch64 —
   environment installation, host tests, `doctor`, build and preparation of the CI firmware.
 - Linux stand documentation `docs/ru|en/LINUX_STAND.md`; specification revision 0.7.
-- Hardware check of the CI firmware `Tests/firmware/run_hw.py` (10 steps: programming,
+- Hardware check of the CI firmware `tests/firmware/run_hw.py` (10 steps: programming,
   repeat, strict identity, full image, verify-only, timeout/recovery); at commit `fbc103d`
   F030R8/J-Link STLink, F103C8/J-Link, F411CE/OpenOCD and F411CE/ST-LINK GDB Server passed.
 - `.clang-format` — C/C++ source style; CI format level (`clang-format --dry-run --Werror`).
@@ -97,7 +108,7 @@ The first release candidate (Python version `0.1.0rc1`, `API_VERSION = 1`, speci
 - CI Docker image `ci/docker` from the pinned `ci/dependencies.lock.json`: Ubuntu 24.04,
   xPack GCC 13.3.1/14.2.1/15.2.1 with GDB-Python, CMake 3.28.3, Ninja 1.12.1, CMSIS of
   STM32CubeF0/F1/F4; `ci/run_checks.py` runs locally and on GitHub.
-- CI firmware `Tests/firmware` on CMSIS without HAL or stm32-cmake-yml: profiles F030R8
+- CI firmware `tests/firmware` on CMSIS without HAL or stm32-cmake-yml: profiles F030R8
   (Cortex-M0), F103C8 (Cortex-M3), F411CE (Cortex-M4) with scenarios and contracts.
 - Bilingual maintenance rules `docs/ru|en/maintenance.md`, check description
   `docs/ru|en/testing.md`, English changelog.

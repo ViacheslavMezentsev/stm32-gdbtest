@@ -109,7 +109,7 @@ function(stm32_gdbtest_attach target)
         WORKING_DIRECTORY "${STM32_GDBTEST_ROOT}" ENVIRONMENT "PYTHONDONTWRITEBYTECODE=1")
     if(HW_SELF_TESTS)
         add_test(NAME host.hwtest COMMAND "${Python3_EXECUTABLE}" -B -m unittest discover
-            -s "${STM32_GDBTEST_MODULE_ROOT}/Tests/host" -v)
+            -s "${STM32_GDBTEST_MODULE_ROOT}/tests/host" -v)
         set_tests_properties(host.hwtest PROPERTIES LABELS host TIMEOUT 30
             WORKING_DIRECTORY "${STM32_GDBTEST_MODULE_ROOT}" ENVIRONMENT "PYTHONDONTWRITEBYTECODE=1")
     endif()

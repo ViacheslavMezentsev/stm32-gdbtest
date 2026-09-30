@@ -43,9 +43,9 @@ jobs:
           mkdir -p build/packages
           for profile in $PROFILES; do
             case "$profile" in f030r8|f103c8|f411ce) ;; *) echo "Unknown profile: $profile"; exit 1 ;; esac
-            (cd Tests/firmware && cmake --preset "$profile" && cmake --build --preset "$profile" \
+            (cd tests/firmware && cmake --preset "$profile" && cmake --build --preset "$profile" \
               && ctest --preset "$profile-offline")
-            python3 -B -m stm32_gdbtest pack --session "Tests/firmware/build/$profile/hwtest/session.json" \
+            python3 -B -m stm32_gdbtest pack --session "tests/firmware/build/$profile/hwtest/session.json" \
               --output "build/packages/$profile.zip"
           done
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -75,7 +75,7 @@ jobs:
           for profile in $PROFILES; do
             case "$profile" in f030r8|f103c8|f411ce) ;; *) echo "Unknown profile: $profile"; exit 1 ;; esac
             python3 -B -m stm32_gdbtest doctor --stand "$stands/$profile.toml" || status=1
-            python3 -B Tests/firmware/run_hw.py --profile "$profile" --stand "$stands/$profile.toml" \
+            python3 -B tests/firmware/run_hw.py --profile "$profile" --stand "$stands/$profile.toml" \
               --package "build/packages/$profile.zip" ${STEPS:+--steps $STEPS} || status=1
           done
           exit $status

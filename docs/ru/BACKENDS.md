@@ -24,7 +24,7 @@ Backend задаёт запуск и готовность сервера, ком
 | `programmer_dir` | Только `stlink`: абсолютный каталог с `STM32_Programmer_CLI.exe` (на Linux — без `.exe`) |
 
 Неизвестный ключ отклоняется. Шаблоны: [OpenOCD](../../examples/stands/stlink.example.toml)
-и [OpenOCD, ST, J-Link для CI-прошивок](../../Tests/firmware/stands/jlink.example.toml)
+и [OpenOCD, ST, J-Link для CI-прошивок](../../tests/firmware/stands/jlink.example.toml)
 (в той же папке `openocd.example.toml`, `stlink.example.toml` и `remote.example.toml` для
 удалённого стенда). В локальных путях (`executable`, `programmer_dir`, `identity_file`)
 раскрываются `~`, `%VAR%` и `$VAR`: `%USERPROFILE%/...` вместо личного пути. Локальные пути и

@@ -29,6 +29,8 @@ the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 
 ## Status and maintenance
 
+- [CMSIS example migration](CMSIS_MIGRATION.md) — baseline, F030 gaps and acceptance.
+
 - [Status](STATUS.md) — verified scope, stands and limits.
 - [Checks and CI](testing.md) — CI levels, Docker image, hardware check of the CI firmware.
 - [Versions and releases](VERSIONING.md) — SemVer, tags, release preparation.

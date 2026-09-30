@@ -109,7 +109,7 @@ module has no ready-made profile library "for any STM32": the consumer writes a 
 for their board, using one of the existing ones as a template. Several MCU variants of
 one firmware can share scenarios, each with its own profile (`PROFILE`).
 
-Templates in the repository: the CI firmware `Tests/firmware/profiles/` (F030R8,
+Templates in the repository: the CI firmware `tests/firmware/profiles/` (F030R8,
 F103C8, F411CE — Cortex-M0, M3, M4) and the example `examples/minimal-consumer/profile/` (F411CE).
 
 | MCU | Debugger / GDB server | Verified in |
@@ -143,8 +143,8 @@ method. [Roadmap](TODO.md) (Russian).
 ## Contents and dependencies
 
 - `stm32_gdbtest/` — runner, GDB agent, Target API, backends, contracts and CMake integration.
-- `Tests/host`, `Tests/fixtures` — infrastructure checks without a board.
-- `Tests/firmware`, `ci/` — F030R8/F103C8/F411CE CI firmware, Docker image, the check
+- `tests/host`, `tests/fixtures` — infrastructure checks without a board.
+- `tests/firmware`, `ci/` — F030R8/F103C8/F411CE CI firmware, Docker image, the check
   script and `run_hw.py` for hardware validation on a stand.
 - `tools/linux_stand.py` — installs the Linux stand environment without root.
 - `examples/minimal-consumer/` — a standalone firmware and test example for F411.

@@ -13,16 +13,16 @@ access. Hardware scenarios run separately on an agreed stand
 | --- | --- | --- |
 | docs | `check_spec.py --strict` for the specification, local Markdown links, RU/EN pairs | `ci/run_checks.py docs`, Docs workflow |
 | format | C/C++ sources match `.clang-format` (`clang-format --dry-run --Werror`, version ≥ 16) | `ci/run_checks.py format` in the Docker image, Offline workflow |
-| host | Module host tests `Tests/host` | Linux in the Docker image, Windows (Python 3.11, 3.13) and Ubuntu 20.04 x86_64/aarch64 on the stand environment Python, Offline workflow |
+| host | Module host tests `tests/host` | Linux in the Docker image, Windows (Python 3.11, 3.13) and Ubuntu 20.04 x86_64/aarch64 on the stand environment Python, Offline workflow |
 | stand | Installing the Linux stand environment in a clean `ubuntu:20.04`, `doctor`, the `build` and `prepare` steps of `run_hw.py` for three profiles | `linux-stand` job of the Offline workflow on `ubuntu-24.04` and `ubuntu-24.04-arm` |
 | firmware | Building the F030R8, F103C8, F411CE CI firmware with every GCC in the lock file; build manifest; CTest `host` (traceability, `prepare.<ID>` with offline contracts); full-image preparation; rejection of a too small image policy; 10 negative ELF contract variants; presence and 4-byte alignment of load sections, including `.data` | `ci/run_checks.py firmware` in the Docker image, Offline workflow |
 
-The CI firmware lives in [Tests/firmware](../../Tests/firmware/README.md): CMSIS without
+The CI firmware lives in [tests/firmware](../../tests/firmware/README.md): CMSIS without
 HAL and without stm32-cmake-yml, one profile each for Cortex-M0, M3 and M4. The
 scenarios check register state and are not evidence of HAL behaviour. The hardware
 run of 2026-09-28 is recorded in the [status page](STATUS.md#hardware-check-of-the-ci-firmware-2026-09-28).
 
-Results go to `build/ci/summary.json`; logs to `Tests/firmware/build/<profile>-gcc<version>/ci.log`.
+Results go to `build/ci/summary.json`; logs to `tests/firmware/build/<profile>-gcc<version>/ci.log`.
 On GitHub they are kept as the `offline-results` artifact.
 
 ## Environment
@@ -53,8 +53,8 @@ Without arguments all levels run. The docs level uses `CHECK_SPEC` from the imag
 If Docker Hub is not reachable, pass a mirror of the same Ubuntu 24.04 image:
 `--build-arg BASE_IMAGE=<mirror>/ubuntu:24.04`. The default is pinned by digest.
 
-Without Docker: host tests — `python -B -m unittest discover -s Tests/host -v`;
-CI firmware — the presets in `Tests/firmware` (`cmake --preset f411ce`,
+Without Docker: host tests — `python -B -m unittest discover -s tests/host -v`;
+CI firmware — the presets in `tests/firmware` (`cmake --preset f411ce`,
 `cmake --build --preset f411ce`, `ctest --preset f411ce-offline`) with
 `ARM_TOOLCHAIN_ROOT` and `STM32CUBE_REPOSITORY` set.
 
@@ -77,17 +77,17 @@ the branch's latest commit before merging.
 ## Hardware check of the CI firmware (development)
 
 Separately from CI the same firmware is checked on a local Windows or Linux stand
-with `Tests/firmware/run_hw.py`. It builds a profile, runs the scenarios through the
+with `tests/firmware/run_hw.py`. It builds a profile, runs the scenarios through the
 regular runner and GDB server and checks the expected outcome of every step:
 programming and a repeat without programming, strict identity, a full image with an
 0xA5 tail, the expected verify-only ERROR, 0xFF restore, timeout with recovery and a
 PASS afterwards.
 
 ```powershell
-python -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stands/f411ce-openocd.local.toml
+python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-openocd.local.toml
 ```
 
-The stand is a local copy of a template from `Tests/firmware/stands/*.example.toml`
+The stand is a local copy of a template from `tests/firmware/stands/*.example.toml`
 (`*.local.toml` is not committed). Toolchain and Cube — `--toolchain`, `--cube` or
 `ARM_TOOLCHAIN_ROOT`, `STM32CUBE_REPOSITORY`; on Linux the stand environment's `env.sh`
 sets them ([Linux stand](LINUX_STAND.md)), on Windows there are defaults in the user

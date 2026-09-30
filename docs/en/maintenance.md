@@ -114,7 +114,7 @@ CI workflows run for any branch, so a new prefix needs no workflow change.
 1. Offline checks in the CI Docker image: `python3 ci/run_checks.py` — the docs, format, host
    and firmware levels ([checks and CI](testing.md)). Before a push run the levels
    affected by the change.
-2. Module host tests without Docker: `python -B -m unittest discover -s Tests/host -v`;
+2. Module host tests without Docker: `python -B -m unittest discover -s tests/host -v`;
    debugger locking is tested by the tests of its OS (Windows or Linux). On a Linux
    stand run them after `. ~/.local/stm32-gdbtest/env.sh`; `python -B -m stm32_gdbtest doctor`
    checks the environment ([Linux stand](LINUX_STAND.md)).
@@ -148,7 +148,7 @@ hardware check.
 ## Module and consumer boundary
 
 - The module is the infrastructure core. MCU, board, expectations, instruments and
-  application tests belong to the consumer project. `Tests/fixtures` are not working
+  application tests belong to the consumer project. `tests/fixtures` are not working
   profiles or evidence of HAL behaviour.
 - Do not add test hooks to firmware; `-g3` does not keep unused functions.
 - The GDB API is called only from GDB's main thread; the external timeout and

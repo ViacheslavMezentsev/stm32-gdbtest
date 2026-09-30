@@ -100,7 +100,7 @@ sudo ./svc.sh install "$USER" && sudo ./svc.sh start
 
 ```sh
 . ~/.local/stm32-gdbtest/env.sh
-python3 -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stands/f411ce-openocd.local.toml \
+python3 -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-openocd.local.toml \
   --steps boot gpio timeout after-recovery --repeat 0
 ```
 

@@ -27,7 +27,7 @@ import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
 LOCK = json.loads((ROOT / "ci/dependencies.lock.json").read_text(encoding="utf-8"))
-FIRMWARE = ROOT / "Tests/firmware"
+FIRMWARE = ROOT / "tests/firmware"
 OUT = ROOT / "build/ci"
 sys.path.insert(0, str(ROOT))
 from stm32_gdbtest.contracts import select_contracts  # noqa: E402
@@ -112,7 +112,7 @@ def level_format(record):
 # --- host -----------------------------------------------------------------------------------
 
 def level_host(record):
-    record("host.unittest", lambda: run([sys.executable, "-B", "-m", "unittest", "discover", "-s", "Tests/host", "-v"],
+    record("host.unittest", lambda: run([sys.executable, "-B", "-m", "unittest", "discover", "-s", "tests/host", "-v"],
                                         log=OUT / "host.log"))
 
 

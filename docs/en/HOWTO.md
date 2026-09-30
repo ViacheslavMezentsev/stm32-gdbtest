@@ -217,7 +217,7 @@ runner" in [hardware CI](HARDWARE_CI.md).
 | Problem | Solution |
 | --- | --- |
 | Docker Hub is unreachable while building the image | `docker build --build-arg BASE_IMAGE=<mirror>/ubuntu:24.04 …` ([checks and CI](testing.md)) |
-| Files in `build/` are owned by root after a container run on Linux | Run with `--user "$(id -u):$(id -g)" -e HOME=/tmp`; remove old ones: `sudo rm -rf build Tests/firmware/build` |
+| Files in `build/` are owned by root after a container run on Linux | Run with `--user "$(id -u):$(id -g)" -e HOME=/tmp`; remove old ones: `sudo rm -rf build tests/firmware/build` |
 | CI is red but everything passes locally | Match the checked commit with the branch's latest commit; open the `offline-results` or `linux-stand-*` artifact |
 
 Remove the image and cache: `docker image rm stm32-gdbtest-ci:local`, `docker builder prune`.

@@ -40,7 +40,7 @@ def gpio(t):
 ```
 
 Three more examples for Cortex-M0, M3 and M4 are the CI firmware profiles
-`Tests/firmware/profiles/*`.
+`tests/firmware/profiles/*`.
 
 From the module root, with the consumer paths:
 

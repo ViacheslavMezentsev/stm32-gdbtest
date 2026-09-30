@@ -120,7 +120,7 @@ class HostTests(unittest.TestCase):
             self.assertEqual(loaded["backend"], "stlink")
 
     def test_backend_dialects_keep_vendor_commands_separate(self):
-        profile = load_profile(ROOT / "Tests/fixtures/f103c8/target.toml")
+        profile = load_profile(ROOT / "tests/fixtures/f103c8/target.toml")
         stand = dict(backend="stlink", executable="server.exe", programmer_dir="C:/ST/bin",
                      serial="TEST", speed_khz=1000)
         st = server_spec(stand, 1234, profile, self.directory)
@@ -144,7 +144,7 @@ class HostTests(unittest.TestCase):
                     load_backend_stand(path)
             path.write_text('[probe]\nbackend="jlink"\nserial="123456789"\n')
             stand = load_backend_stand(path)
-        profile = load_profile(ROOT / "Tests/fixtures/f103c8/target.toml")
+        profile = load_profile(ROOT / "tests/fixtures/f103c8/target.toml")
         spec = server_spec(stand, 1234, profile, self.directory)
         self.assertIn("STM32F103C8", spec["command"])
         self.assertIn("-nosinglerun", spec["command"])
@@ -171,8 +171,8 @@ class HostTests(unittest.TestCase):
         self.assertNotIn("PRIVATE", json.dumps(report))
 
     def test_profiles_select_distinct_mcus_and_flash_limits(self):
-        f411ce = load_profile(ROOT / "Tests/fixtures/f411ce/target.toml")
-        f103c8 = load_profile(ROOT / "Tests/fixtures/f103c8/target.toml")
+        f411ce = load_profile(ROOT / "tests/fixtures/f411ce/target.toml")
+        f103c8 = load_profile(ROOT / "tests/fixtures/f103c8/target.toml")
         self.assertEqual((f411ce["flash_size"], f103c8["flash_size"]), (512 * 1024, 64 * 1024))
         self.assertNotEqual(f411ce["identity"]["value"], f103c8["identity"]["value"])
         stand = dict(executable="openocd", serial="TEST", speed_khz=1000)
@@ -180,7 +180,7 @@ class HostTests(unittest.TestCase):
         self.assertNotIn("target/stm32f4x.cfg", server_command(stand, 1234, f103c8))
 
     def test_profile_rejects_typo_and_missing_settings(self):
-        source = (ROOT / "Tests/fixtures/f411ce/target.toml").read_text()
+        source = (ROOT / "tests/fixtures/f411ce/target.toml").read_text()
         path = self.directory / "target.toml"
         for old, new in (("flash_size", "flash_szie"), ('schema = 1', 'schema = 2'),
                          ('breakpoint_limit = 6', 'breakpoint_limit = 4'),

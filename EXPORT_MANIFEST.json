@@ -27,43 +27,43 @@
       "sha256": "1c5868d30568c77a3168722cccdf1a468d8b12d8f18e611864abef99a5bcc7bc"
     },
     {
-      "path": "Tests/fixtures/README.md",
+      "path": "tests/fixtures/README.md",
       "sha256": "8ac8936da5023497b46cfcb97d8eff101075b7b2ff90d79d383f40bb4d666036"
     },
     {
-      "path": "Tests/fixtures/f103c8/Tests/contracts.json",
+      "path": "tests/fixtures/f103c8/Tests/contracts.json",
       "sha256": "6f5ca99bd20d7c4e5602e0bed75321c5cfbebd92e133c4f5f09ae4f6b8a82c5a"
     },
     {
-      "path": "Tests/fixtures/f103c8/target.toml",
+      "path": "tests/fixtures/f103c8/target.toml",
       "sha256": "89b520c9fe8a51b4dfb1062588b4162da13255ea8f82be6caa34799d0b45e335"
     },
     {
-      "path": "Tests/fixtures/f411ce/target.toml",
+      "path": "tests/fixtures/f411ce/target.toml",
       "sha256": "b306ef08bc9185326503a83195b2876d45c0edc6d60c9baae63b32255cb13863"
     },
     {
-      "path": "Tests/host/test_build_manifest.py",
+      "path": "tests/host/test_build_manifest.py",
       "sha256": "ab4f7aff5af928ee120493d68d09c0abceddbf327585957c783971c69ea93cdf"
     },
     {
-      "path": "Tests/host/test_contracts.py",
+      "path": "tests/host/test_contracts.py",
       "sha256": "9926bbc21e4fdc939f0f1a45ea9576eeb740331ac953930124339dc634f9c87f"
     },
     {
-      "path": "Tests/host/test_hwtest.py",
+      "path": "tests/host/test_hwtest.py",
       "sha256": "bce41c557a795ef01020ba23ad2525ee14b4a0e02b3c583f69148330cfbb2323"
     },
     {
-      "path": "Tests/host/test_identity.py",
+      "path": "tests/host/test_identity.py",
       "sha256": "dc97db1eb517969e72290a1442facd3801758b2532893bc72f55853ccc9a5afc"
     },
     {
-      "path": "Tests/host/test_probe_lock.py",
+      "path": "tests/host/test_probe_lock.py",
       "sha256": "63746bb0b9e8700dd23a8b0029dfc22daa1b39d4b66638e424c4122ec428d4ec"
     },
     {
-      "path": "Tests/host/test_public_api.py",
+      "path": "tests/host/test_public_api.py",
       "sha256": "baef3a881b91cde7f2757e6ced91c8299f89bf157600490ee434ce7c280dfcf2"
     },
     {

@@ -13,16 +13,16 @@ CI проверяет модуль до GDB-сервера: без отладч�
 | --- | --- | --- |
 | docs | `check_spec.py --strict` для ТЗ, локальные ссылки Markdown, пары RU/EN | `ci/run_checks.py docs`, workflow Docs |
 | format | Исходники C/C++ соответствуют `.clang-format` (`clang-format --dry-run --Werror`, версия ≥ 16) | `ci/run_checks.py format` в Docker-образе, workflow Offline |
-| host | Host-тесты модуля `Tests/host` | Linux в Docker-образе, Windows (Python 3.11, 3.13) и Ubuntu 20.04 x86_64/aarch64 на Python окружения стенда, workflow Offline |
+| host | Host-тесты модуля `tests/host` | Linux в Docker-образе, Windows (Python 3.11, 3.13) и Ubuntu 20.04 x86_64/aarch64 на Python окружения стенда, workflow Offline |
 | stand | Установка окружения Linux-стенда в чистом `ubuntu:20.04`, `doctor`, шаги `build` и `prepare` сценария `run_hw.py` для трёх профилей | Задание `linux-stand` workflow Offline на `ubuntu-24.04` и `ubuntu-24.04-arm` |
 | firmware | Сборка CI-прошивок F030R8, F103C8, F411CE каждым GCC из lock-файла; build manifest; CTest `host` (traceability, `prepare.<ID>` с offline-контрактами); подготовка полного образа; отказ слишком малой политики образа; 10 отрицательных вариантов ELF-контрактов; наличие и выравнивание на 4 байта секций загрузки, включая `.data` | `ci/run_checks.py firmware` в Docker-образе, workflow Offline |
 
-CI-прошивки находятся в [Tests/firmware](../../Tests/firmware/README.md): CMSIS без HAL и
+CI-прошивки находятся в [tests/firmware](../../tests/firmware/README.md): CMSIS без HAL и
 без stm32-cmake-yml, по профилю на Cortex-M0, M3 и M4. Сценарии проверяют состояние
 регистров и не являются доказательством поведения HAL. Аппаратный прогон
 28.09.2026 — в [текущем состоянии](STATUS.md#аппаратная-проверка-ci-прошивок-2026-09-28).
 
-Результаты — `build/ci/summary.json`; журналы — `Tests/firmware/build/<профиль>-gcc<версия>/ci.log`.
+Результаты — `build/ci/summary.json`; журналы — `tests/firmware/build/<профиль>-gcc<версия>/ci.log`.
 В GitHub они сохраняются артефактом `offline-results`.
 
 ## Окружение
@@ -53,8 +53,8 @@ docker run --rm --network none --mount "type=bind,source=${PWD},target=/workspac
 Если реестр Docker Hub недоступен, передайте зеркало того же образа Ubuntu 24.04:
 `--build-arg BASE_IMAGE=<зеркало>/ubuntu:24.04`. Значение по умолчанию закреплено digest.
 
-Без Docker: host-тесты — `python -B -m unittest discover -s Tests/host -v`;
-CI-прошивка — presets в `Tests/firmware` (`cmake --preset f411ce`,
+Без Docker: host-тесты — `python -B -m unittest discover -s tests/host -v`;
+CI-прошивка — presets в `tests/firmware` (`cmake --preset f411ce`,
 `cmake --build --preset f411ce`, `ctest --preset f411ce-offline`) при заданных
 `ARM_TOOLCHAIN_ROOT` и `STM32CUBE_REPOSITORY`.
 
@@ -76,16 +76,16 @@ CI-прошивка — presets в `Tests/firmware` (`cmake --preset f411ce`,
 ## Аппаратная проверка CI-прошивок (разработка)
 
 Отдельно от CI те же прошивки проверяются на локальном стенде Windows или Linux
-сценарием `Tests/firmware/run_hw.py`. Он собирает профиль, запускает сценарии через штатный
+сценарием `tests/firmware/run_hw.py`. Он собирает профиль, запускает сценарии через штатный
 runner и GDB-сервер и сверяет ожидаемый исход каждого шага: запись и повтор без
 записи, strict identity, полный образ с хвостом 0xA5, ожидаемый ERROR в verify-only,
 восстановление 0xFF, timeout с восстановлением и повторный PASS.
 
 ```powershell
-python -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stands/f411ce-openocd.local.toml
+python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-openocd.local.toml
 ```
 
-Стенд — локальная копия шаблона из `Tests/firmware/stands/*.example.toml`
+Стенд — локальная копия шаблона из `tests/firmware/stands/*.example.toml`
 (`*.local.toml` не коммитится). Toolchain и Cube — `--toolchain`, `--cube` или
 `ARM_TOOLCHAIN_ROOT`, `STM32CUBE_REPOSITORY`; на Linux их задаёт `env.sh` окружения
 стенда ([Linux-стенд](LINUX_STAND.md)), на Windows есть значения по умолчанию в

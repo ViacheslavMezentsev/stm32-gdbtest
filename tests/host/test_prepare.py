@@ -18,7 +18,7 @@ Idx Name          Size      VMA       LMA       File off  Algn
   1 .text         00000010  08000010  08000010  00001010  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
 """
-PROFILE = ROOT / "Tests/fixtures/f103c8/target.toml"
+PROFILE = ROOT / "tests/fixtures/f103c8/target.toml"
 
 
 class PrepareTests(unittest.TestCase):

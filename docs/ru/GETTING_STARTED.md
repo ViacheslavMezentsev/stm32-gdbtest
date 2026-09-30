@@ -42,7 +42,7 @@ Python-сценарии и настройки платы находятся в �
 
 ```powershell
 python -B -m stm32_gdbtest --version
-python -B -m unittest discover -s Tests/host -v
+python -B -m unittest discover -s tests/host -v
 cd examples/minimal-consumer
 cmake --preset debug
 cmake --build --preset debug
@@ -80,7 +80,7 @@ stm32_gdbtest_attach(firmware_target
 Профиль содержит `target.toml` и `Tests/` (`board/test_*.py`, `requirements.md`,
 `contracts.json`). Тесты создаются в проекте, не внутри подмодуля. Локальный стенд
 выбирается `STM32_GDBTEST_STAND` или `--stand`; шаблоны —
-`examples/stands/stlink.example.toml` и `Tests/firmware/stands/*.example.toml`.
+`examples/stands/stlink.example.toml` и `tests/firmware/stands/*.example.toml`.
 Замените серийный номер и при необходимости путь к серверу и сохраните файл как
 `*.local.toml` в проекте. CLI из любого каталога вызывается по абсолютному пути
 `stm32_gdbtest/cli.py`.

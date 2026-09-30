@@ -16,7 +16,7 @@ and checks the expected outcome of each step:
 
 The test boards are reprogrammed: use only boards agreed for experiments.
 Usage (repository root; on Linux first `. ~/.local/stm32-gdbtest/env.sh`, see tools/linux_stand.py):
-  python -B Tests/firmware/run_hw.py --profile f411ce --stand Tests/firmware/stands/f411ce-openocd.local.toml
+  python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-openocd.local.toml
 Results: build/hw/<profile>-<stand name>/summary.json and the runner reports it lists.
 
 A package from `python -m stm32_gdbtest pack` replaces the build here (--package; built and
@@ -42,7 +42,7 @@ if sys.version_info < (3, 11):
 import tomllib  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
-FIRMWARE = ROOT / "Tests/firmware"
+FIRMWARE = ROOT / "tests/firmware"
 STEPS = ("build", "prepare", "boot", "gpio", "strict", "full-a5", "verify-only-ff", "full-ff", "timeout",
          "after-recovery")
 

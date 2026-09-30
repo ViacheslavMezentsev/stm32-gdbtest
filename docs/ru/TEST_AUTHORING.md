@@ -39,7 +39,7 @@ def gpio(t):
     t.check("GPIOC clock", t.value("(RCC->AHB1ENR & RCC_AHB1ENR_GPIOCEN) != 0"), 1)
 ```
 
-Ещё три примера на Cortex-M0, M3 и M4 — CI-прошивки `Tests/firmware/profiles/*`.
+Ещё три примера на Cortex-M0, M3 и M4 — CI-прошивки `tests/firmware/profiles/*`.
 
 Из корня модуля, с путями потребителя:
 

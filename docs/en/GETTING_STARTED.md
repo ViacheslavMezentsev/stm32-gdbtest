@@ -42,7 +42,7 @@ From the module root:
 
 ```powershell
 python -B -m stm32_gdbtest --version
-python -B -m unittest discover -s Tests/host -v
+python -B -m unittest discover -s tests/host -v
 cd examples/minimal-consumer
 cmake --preset debug
 cmake --build --preset debug
@@ -80,7 +80,7 @@ stm32_gdbtest_attach(firmware_target
 A profile contains `target.toml` and `Tests/` (`board/test_*.py`, `requirements.md`,
 `contracts.json`). Tests are created in the project, not inside the submodule. The
 local stand is selected with `STM32_GDBTEST_STAND` or `--stand`; templates are
-`examples/stands/stlink.example.toml` and `Tests/firmware/stands/*.example.toml`.
+`examples/stands/stlink.example.toml` and `tests/firmware/stands/*.example.toml`.
 Replace the serial number and, if needed, the server path, and save the file as
 `*.local.toml` in the project. The CLI can be called from any directory by the
 absolute path of `stm32_gdbtest/cli.py`.

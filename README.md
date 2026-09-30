@@ -107,7 +107,7 @@ hardware breakpoints, обработчики отказов, диагности�
 потребитель под свою плату, взяв за образец один из имеющихся. Несколько вариантов
 MCU одной прошивки могут делить сценарии, каждый со своим профилем (`PROFILE`).
 
-Образцы в репозитории: CI-прошивки `Tests/firmware/profiles/` (F030R8, F103C8,
+Образцы в репозитории: CI-прошивки `tests/firmware/profiles/` (F030R8, F103C8,
 F411CE — Cortex-M0, M3, M4) и пример `examples/minimal-consumer/profile/` (F411CE).
 
 | MCU | Отладчик / GDB-сервер | Где проверено |
@@ -141,8 +141,8 @@ Orange Pi 5, 3 стенда в аппаратном CI — по 10/10 шагов
 ## Состав и зависимости
 
 - `stm32_gdbtest/` — runner, GDB-агент, Target API, backend, контракты и CMake-интеграция.
-- `Tests/host`, `Tests/fixtures` — проверки инфраструктуры без платы.
-- `Tests/firmware`, `ci/` — CI-прошивки F030R8/F103C8/F411CE, Docker-образ, сценарий
+- `tests/host`, `tests/fixtures` — проверки инфраструктуры без платы.
+- `tests/firmware`, `ci/` — CI-прошивки F030R8/F103C8/F411CE, Docker-образ, сценарий
   проверок и `run_hw.py` для аппаратной проверки на стенде.
 - `tools/linux_stand.py` — установка окружения Linux-стенда без root.
 - `examples/minimal-consumer/` — самостоятельный пример прошивки и теста для F411.

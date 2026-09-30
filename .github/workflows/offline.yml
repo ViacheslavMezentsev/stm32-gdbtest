@@ -31,7 +31,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: Host tests on Windows (named mutex, process lifecycle)
-        run: python -B -m unittest discover -s Tests/host -v
+        run: python -B -m unittest discover -s tests/host -v
 
   linux-offline:
     runs-on: ubuntu-24.04
@@ -57,9 +57,9 @@ jobs:
           path: |
             build/ci/
             build/ci-image.log
-            Tests/firmware/build/*/ci.log
-            Tests/firmware/build/*/hwtest/build-manifest.json
-            Tests/firmware/build/*/hwtest/runs/*/result.json
+            tests/firmware/build/*/ci.log
+            tests/firmware/build/*/hwtest/build-manifest.json
+            tests/firmware/build/*/hwtest/runs/*/result.json
           if-no-files-found: warn
 
   # Stand environment of tools/linux_stand.py on the oldest supported distribution
@@ -91,7 +91,7 @@ jobs:
       - name: Host tests on the stand Python
         run: |
           . "$HOME/.local/stm32-gdbtest/env.sh"
-          python3 -B -m unittest discover -s Tests/host -v
+          python3 -B -m unittest discover -s tests/host -v
       - name: Doctor, CI firmware build and preparation with an OpenOCD stand
         run: |
           . "$HOME/.local/stm32-gdbtest/env.sh"
@@ -99,7 +99,7 @@ jobs:
           printf '[probe]\nbackend = "openocd"\nserial = "CI0000"\n' > "$stand"
           python3 -B -m stm32_gdbtest doctor --stand "$stand"
           for profile in f030r8 f103c8 f411ce; do
-            python3 -B Tests/firmware/run_hw.py --profile "$profile" --stand "$stand" --steps build prepare
+            python3 -B tests/firmware/run_hw.py --profile "$profile" --stand "$stand" --steps build prepare
           done
       - name: Keep results
         if: always()
