@@ -2,6 +2,13 @@
 
 ## Текущая работа
 
+- `codex/f030-cmsis-adc-dma` от `5883316`: ADC/DMA raw и timeout F030,
+  9/9 HW PASS, HAL восстановлен. [Протокол](docs/ru/F030_CMSIS_ADC_DMA.md).
+  Проверки: host Windows 96 (8 skips), F030 CTest 10/10; Linux три профиля
+  × GCC13/14/15 подтверждены первоначальным и исправленным F030-прогонами.
+  Далее преобразование в физические единицы и численные векторы, RTC/Sleep.
+
+
 - `codex/f030-cmsis-timer` от `40fafac`: TIM3/IRQ добавлены в F030 fixture;
   6/6 HW PASS на Nucleo/ST-Link/OpenOCD; HAL восстановлен.
   Offline: Windows host 96 (8 skips), Linux docs/host/9 firmware pairs 13/13 PASS,

@@ -8,6 +8,10 @@
 
 ### Added
 
+- F030 CMSIS ADC/DMA: калибровка, CH16/17, normal DMA, публикация raw, дедлайн и тест отключённого IRQ. 9/9 HW PASS; ТЗ 0.30, API без изменений.
+
+### Added
+
 - F030 CMSIS: TIM3 100 мс, NVIC/vector/IRQ, счётчик событий; два новых сценария и prepare CI. 6/6 HW PASS, HAL восстановлен. ТЗ 0.29; API ядра не меняется.
 
 ### Added

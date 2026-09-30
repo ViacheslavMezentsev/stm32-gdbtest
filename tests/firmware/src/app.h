@@ -22,6 +22,8 @@ void board_init( void );
 void board_led_toggle( void );
 #if defined( STM32F030x8 )
 void board_delay_ms( uint32_t delay_ms );
+void board_adc_init( void );
+void board_adc_sample( void );
 #endif
 uint32_t app_step( app_state_t* state, app_mode_t mode );
 void app_loop( void );

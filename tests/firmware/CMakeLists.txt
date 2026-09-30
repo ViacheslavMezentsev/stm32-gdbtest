@@ -43,6 +43,9 @@ if(NOT EXISTS "${cube_root}/Drivers/CMSIS/Device/ST/${family}/Include")
 endif()
 
 add_executable(ci_firmware src/startup.c src/app.c src/board.c)
+if(CI_PROFILE STREQUAL "f030r8")
+    target_sources(ci_firmware PRIVATE src/adc_f030.c)
+endif()
 set_target_properties(ci_firmware PROPERTIES OUTPUT_NAME "ci-${CI_PROFILE}" SUFFIX .elf)
 target_include_directories(ci_firmware PRIVATE src
     "${cube_root}/Drivers/CMSIS/Include"

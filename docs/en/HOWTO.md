@@ -230,3 +230,7 @@ Remove the image and cache: `docker image rm stm32-gdbtest-ci:local`, `docker bu
   of the new commits and `git update-ref -d refs/agent/tmp`. The bundle starts from a
   commit the owner has (for example `origin/main`).
 - An agent does not push, tag or store passwords; SSH to stands uses keys only.
+
+## Do not compare reserved MMIO bits
+
+F030 ADC CFGR2 read 0x1000 with CKMODE=0 in this experiment. Check the documented field `ADC1->CFGR2 & ADC_CFGR2_CKMODE`, not the whole register. Verify masks against the selected MCU header/RM; do not mask unexpected results without analysis. [Report](F030_CMSIS_ADC_DMA.md).

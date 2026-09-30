@@ -58,3 +58,5 @@ API/схемы/версия пока не меняются. Это план, н�
 а небольшая F411 fixture модуля проверяет инфраструктуру.
 
 Этап TIM3/IRQ выполнен: [6/6 HW PASS, mapping and limitations](F030_CMSIS_TIMER.md).
+
+ADC/DMA F030: сырые отсчёты и timeout, API ядра без изменений. [ADC/DMA](F030_CMSIS_ADC_DMA.md).

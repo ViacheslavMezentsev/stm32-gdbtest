@@ -8,6 +8,10 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- F030 CMSIS ADC/DMA: calibration, CH16/17, normal DMA, raw publication, deadline and missing-IRQ test. 9/9 HW PASS; specification 0.30, API unchanged.
+
+### Added
+
 - F030 CMSIS: 100 ms TIM3, NVIC/vector/IRQ, event counter; two new scenarios and CI prepare. 6/6 HW PASS, HAL restored. Specification 0.29; core API unchanged.
 
 ### Added

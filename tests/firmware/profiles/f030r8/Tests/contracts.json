@@ -80,6 +80,30 @@
           "NVIC"
         ]
       }
+    },
+    "ci_adc_macros": {
+      "macros": {
+        "context": "board_adc_sample",
+        "expressions": [
+          "RCC",
+          "RCC_CR2_HSI14RDY",
+          "RCC_APB2ENR_ADC1EN",
+          "RCC_AHBENR_DMA1EN",
+          "ADC1",
+          "ADC1_COMMON",
+          "ADC_CCR_TSEN",
+          "ADC_CCR_VREFEN",
+          "ADC_CR_ADCAL",
+          "ADC_CR_ADEN",
+          "ADC_ISR_OVR",
+          "DMA1",
+          "DMA1_Channel1",
+          "DMA_ISR_TCIF1",
+          "DMA_ISR_TEIF1",
+          "NVIC",
+          "ADC_CFGR2_CKMODE"
+        ]
+      }
     }
   }
 }

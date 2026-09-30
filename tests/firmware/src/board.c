@@ -73,6 +73,7 @@ void board_init( void )
     /* Constant division keeps this Cortex-M0 fixture independent of libgcc division. */
     ( void ) SysTick_Config( 8000000U / 1000U );
     board_timer_init();
+    board_adc_init();
 }
 
 void board_led_toggle( void )

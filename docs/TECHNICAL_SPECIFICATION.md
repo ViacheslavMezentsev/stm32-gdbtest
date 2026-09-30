@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.29 (черновик для согласования) |
+| **Ревизия** | 0.30 (черновик для согласования) |
 | **Дата формирования** | 30.09.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0; выпущен кандидат 0.1.0-rc.1 (версия Python `0.1.0rc1`, `API_VERSION = 1`) |
@@ -49,6 +49,14 @@
 | 0.28 | 30.09.2026 | Первый этап CMSIS F030: загрузка, HSI/SysTick, GPIO и blink; четыре сценария через CLI и prepare в CI. API ядра не меняется. TC-120. |
 
 | 0.29 | 30.09.2026 | CMSIS F030 TIM3/IRQ: конфигурация, вектор, эффект обработчика и возврат в thread mode; TC-121. |
+
+| 0.30 | 30.09.2026 | CMSIS F030 ADC/DMA: raw-публикация, ограниченные ожидания, missing-IRQ timeout; TC-122. |
+
+### Изменения ревизии 0.30
+
+| Пункт | Тип | Изменение |
+| :--- | :--- | :--- |
+| 8.25, 9.2, 10, G.7 | нов. | ADC/DMA fixture, TC-122 и границы опыта |
 
 ### Изменения ревизии 0.29
 
@@ -1277,6 +1285,9 @@ flowchart LR
 
 8.24. CMSIS-пример F030 ДОЛЖЕН предоставлять HW_CI_TIM3_INIT (PSC=7999, ARR=99, clock, NVIC и вектор IRQ16) и HW_CI_TIM3_IRQ (повторные аппаратные входы, публикация события, возврат в thread mode); CI ДОЛЖЕН выполнять prepare обоих сценариев. Остановки отладчика не позволяют считать эти проверки измерением точного периода или отсутствия потерь событий. `[N]` (р.0.29)
 
+8.25. CMSIS-пример F030 ДОЛЖЕН предоставлять HW_CI_ADC_INIT (HSI14, CH16/17, калибровка, DMA1 channel1/NVIC), HW_CI_ADC_DMA (две публикации raw через DMA) и HW_CI_ADC_TIMEOUT (нет IRQ — error4 без публикации); CI ДОЛЖЕН выполнять prepare этих сценариев. Ожидания ADC ДОЛЖНЫ ограничиваться дедлайном 20 SysTick ticks, при исправном SysTick; аппаратная проверка deadline покрывает потерянный IRQ, а не все отказы. `[N]` (р.0.30)
+
+
 
 
 ---
@@ -1419,6 +1430,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-119 | `ContractTests.test_macro_contract_requires_types_of_the_expansion` (р.0.25) | Тип раскрытия в отчёте; отсутствующий тип (`DBGMCU_TypeDef`) — ERROR «typed DBGMCU»; statement-макрос — `type_note` без ошибки; тип берётся из раскрытия, даже если имя макроса вне области разбора; `-DSHUNT_R008=1` считается определением (р.0.26) |
 | TC-120 | F030: prepare четырёх HW_CI_* на GCC13/14/15; аппаратный run на NUCLEO-F030R8/ST-Link/OpenOCD | Четыре prepare PASS для каждой сборки; четыре HW PASS, reset_run; прежняя HAL-прошивка восстановлена. Протокол docs/ru/F030_CMSIS_BASELINE.md (р.0.28) |
 | TC-121 | F030 HW_CI_TIM3_INIT/IRQ: prepare и HW на NUCLEO-F030R8/ST-Link/OpenOCD | Настройка/вектор и два увеличения счётчика PASS, thread mode восстановлен; baseline повторён; docs/ru/F030_CMSIS_TIMER.md (р.0.29) |
+| TC-122 | F030 ADC_INIT/DMA/TIMEOUT prepare и HW Nucleo/ST-Link/OpenOCD | Две raw-пары и потерянный IRQ PASS; baseline/TIM3 повторены; docs/ru/F030_CMSIS_ADC_DMA.md (р.0.30) |
 
 ---
 
@@ -1592,6 +1604,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 8.22 | tests/firmware/run_hw.py (`--repeat`) | TC-109 |
 | 8.23 | tests/firmware/src; profiles/f030r8/Tests/board/test_ci.py; ci/run_checks.py | TC-120 |
 | 8.24 | tests/firmware/src/board.c, startup.c; f030r8/Tests/board/test_ci.py; ci/run_checks.py | TC-121 |
+| 8.25 | tests/firmware/src/adc_f030.c; f030r8/Tests/board/test_ci.py; ci/run_checks.py | TC-122 |
 
 ---
 
@@ -1816,3 +1829,5 @@ G.4. Согласованный план: минимальные CMSIS-прим�
 G.5. Первый этап F030 выполнен: четыре CMSIS-сценария на NUCLEO-F030R8 с родным ST-Link через OpenOCD прошли, HAL firmware восстановлена. ELF и границы доказательства приведены в docs/ru/F030_CMSIS_BASELINE.md. ADC/DMA/TIM3/RTC остаются последующими этапами; полный набор run_hw.py не повторялся. (р.0.28)
 
 G.6. TIM3/IRQ этап F030 выполнен: 6/6 HW PASS вместе с baseline, HAL восстановлен. Сопоставление с HAL, ELF и ограничения — docs/ru/F030_CMSIS_TIMER.md. ADC/DMA/RTC остаются в плане; runtime ядра не менялся. (р.0.29)
+
+G.7. ADC/DMA raw и completion timeout F030: 9/9 HW PASS, HAL восстановлен. Начальный FAIL сравнения полного CFGR2 исправлен на проверку CKMODE; протокол docs/ru/F030_CMSIS_ADC_DMA.md. Перевод в физические единицы и прочие отказы остаются в плане. (р.0.30)

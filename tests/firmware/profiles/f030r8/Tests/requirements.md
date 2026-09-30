@@ -32,3 +32,20 @@ the handler publishes exactly one board_timer_events increment. Firmware then
 reaches board_delay_ms in thread mode, rejecting an IRQ storm. No EGR or
 NVIC injection. Halt may coalesce updates: no wall-clock period or lost-event
 claim. HAL callback coverage is not preserved by this CMSIS scenario.
+
+## HW_CI_ADC_INIT
+HSI14 async ADC, calibrated/enabled, forward single 12-bit CH16/17 scan,
+239.5-cycle sampling, internal paths enabled. DMA1 channel1 uses normal
+halfword transfers, MINC, TC/TE interrupts and the SRAM buffer. IRQ9/vector25.
+Calibration completion and configuration do not measure ADC accuracy.
+
+## HW_CI_ADC_DMA
+Two real scans finish DMA (CNDTR=0, TCIF, no TEIF); handler runs with IPSR25,
+publishes both raw values before advancing sequence. No saturation or overrun.
+No ADC DR read by tests, no injected conversion. No physical-unit claim yet.
+
+## HW_CI_ADC_TIMEOUT
+Disable DMA IRQ9 through logged NVIC mutation before acquisition. Hardware
+finishes transfer, but no publication occurs; firmware reports error4 after
+20 SysTick milliseconds and reaches board_adc_fault. Teardown resets the MCU.
+This tests the CMSIS completion deadline, not HAL error-return injection.

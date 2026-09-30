@@ -6,6 +6,7 @@ extern int main( void );
 #if defined( STM32F030x8 )
 extern void SysTick_Handler( void );
 extern void TIM3_IRQHandler( void );
+extern void DMA1_Channel1_IRQHandler( void );
 #endif
 
 void Default_Handler( void )
@@ -77,7 +78,7 @@ void ( *const vectors[] )( void ) = {
     /* STM32F030x8 external IRQ slots 0..15, then TIM3_IRQn=16. */
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, DMA1_Channel1_IRQHandler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     TIM3_IRQHandler
 #else

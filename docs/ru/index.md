@@ -41,3 +41,5 @@
 - [CHANGELOG](../../CHANGELOG.md), [дорожная карта](../../TODO.md), [AGENTS.md](../../AGENTS.md).
 
 [F030 CMSIS: TIM3/IRQ](F030_CMSIS_TIMER.md).
+
+ADC/DMA F030: сырые отсчёты и timeout, API ядра без изменений. [ADC/DMA](F030_CMSIS_ADC_DMA.md).

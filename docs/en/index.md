@@ -41,3 +41,5 @@ the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 - [CHANGELOG](../../CHANGELOG.en.md), [roadmap](../../TODO.md) (Russian), [AGENTS.md](../../AGENTS.md).
 
 [F030 CMSIS: TIM3/IRQ](F030_CMSIS_TIMER.md).
+
+F030 ADC/DMA: raw samples and timeout, core API unchanged. [ADC/DMA](F030_CMSIS_ADC_DMA.md).

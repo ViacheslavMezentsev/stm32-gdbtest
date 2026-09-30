@@ -170,8 +170,13 @@ def firmware_pair(gcc, profile):
     sources = {unit["source"] for unit in manifest["units"]}
     inputs = {item["file"] for item in manifest["inputs"]}
     expected_ld = f"profiles/{profile}/firmware_FLASH.ld"
-    if sources != {"src/startup.c", "src/app.c", "src/board.c"} or expected_ld not in inputs:
-        raise CheckError(f"Unexpected manifest units/inputs: {sorted(sources)}; {expected_ld} missing")
+    expected_sources = {"src/startup.c", "src/app.c", "src/board.c"}
+    if profile == "f030r8":
+        expected_sources.add("src/adc_f030.c")
+    if sources != expected_sources:
+        raise CheckError(f"Unexpected manifest units: {sorted(sources)}; expected {sorted(expected_sources)}")
+    if expected_ld not in inputs:
+        raise CheckError(f"Manifest linker input missing: {expected_ld}")
     if manifest["compilers"][0]["version"] != gcc.split("-")[0] or not manifest["cube_packages"]:
         raise CheckError("Manifest compiler version or Cube package differs")
     if any(re.match(r"^(/|[A-Za-z]:)", item["file"]) for item in manifest["inputs"]):
@@ -188,7 +193,8 @@ def firmware_pair(gcc, profile):
     ctest = run(["ctest", "--test-dir", build, "-L", "host", "--output-on-failure"], env=env, log=log)
     expected_cases = ["HW_CI_BOOT", "HW_CI_GPIO"]
     if profile == "f030r8":
-        expected_cases += ["HW_CI_CLOCK", "HW_CI_BLINK", "HW_CI_TIM3_INIT", "HW_CI_TIM3_IRQ"]
+        expected_cases += ["HW_CI_CLOCK", "HW_CI_BLINK", "HW_CI_TIM3_INIT", "HW_CI_TIM3_IRQ",
+                           "HW_CI_ADC_INIT", "HW_CI_ADC_DMA", "HW_CI_ADC_TIMEOUT"]
     if any("prepare." + name not in ctest for name in expected_cases):
         raise CheckError("CTest did not run the prepare tests")
     for test_id in expected_cases:

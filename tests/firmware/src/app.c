@@ -25,6 +25,7 @@ void app_loop( void )
     app_state = next;
     board_led_toggle();
 #if defined( STM32F030x8 )
+    board_adc_sample();
     board_delay_ms( app_delay );
 #else
     for ( uint32_t delay = 0; delay < app_delay; ++delay )
