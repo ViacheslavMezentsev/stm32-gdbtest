@@ -65,3 +65,16 @@ Expected integer values use C truncation toward zero, not Python floor.
 Each of the four inputs is tested at 0/4095/65535, then supply-out-of-window
 inputs: result fields all zero. Normal acquisition afterwards restores
 quality3; stale valid data must not survive an invalid conversion.
+
+## HW_CI_SLEEP_SYSTICK
+At the application's 500-tick delay, disable external IRQs, observe a SysTick
+exception whose unwound interrupted PC follows WFI (0xBF30) in board_delay_ms.
+SCR SLEEPDEEP/SLEEPONEXIT clear. Restore IRQs and reach the next app_loop with
+at least 500 ticks elapsed and the ADC sequence retained. No residency claim.
+
+## HW_CI_SLEEP_TIM3
+At the 500-tick delay stop SysTick/clear its pending exception and leave only
+TIM3 external IRQ. Observe TIM3 interrupting WFI with unchanged SysTick count.
+Restore controls, complete the delay and retain ADC sequence. Eight bounded
+attempts allow an IRQ preceding WFI; unwind failure is ERROR, no fallback PASS.
+These tests do not prove current consumption, Stop mode or physical wake latency.

@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.31 (черновик для согласования) |
+| **Ревизия** | 0.32 (черновик для согласования) |
 | **Дата формирования** | 30.09.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0; выпущен кандидат 0.1.0-rc.1 (версия Python `0.1.0rc1`, `API_VERSION = 1`) |
@@ -53,6 +53,14 @@
 | 0.30 | 30.09.2026 | CMSIS F030 ADC/DMA: raw-публикация, ограниченные ожидания, missing-IRQ timeout; TC-122. |
 
 | 0.31 | 30.09.2026 | CMSIS F030: VDDA/температура, численные и невалидные векторы; libgcc для F030, TC-123. |
+
+| 0.32 | 30.09.2026 | F030 Sleep/WFI: SysTick/TIM3, interrupted PC через GDB unwind; TC-124, без изменения firmware/API. |
+
+### Изменения ревизии 0.32
+
+| Пункт | Тип | Изменение |
+| :--- | :--- | :--- |
+| 8.27, 9.2, 10, G.9 | нов. | Sleep-сценарии, TC-124 и границы доказательства |
 
 ### Изменения ревизии 0.31
 
@@ -1297,6 +1305,9 @@ flowchart LR
 
 8.26. CMSIS-пример F030 ДОЛЖЕН преобразовывать ADC по VREFINT_CAL/TS_CAL1 и типовому наклону 4.3 мВ/°C без TS_CAL2, возвращая quality3; невалидные raw/calibration или VDDA вне 2400..3600 мВ ДОЛЖНЫ давать нулевые поля/quality0. Сценарии HW_CI_ADC_UNITS/VECTORS/INVALID ДОЛЖНЫ проверять правдоподобие, фиксированные численные векторы и замену невалидных результатов; CI ДОЛЖЕН выполнять их prepare, без заявления выполнения арифметики в offline. `[N]` (р.0.31)
 
+8.27. Сценарии F030 HW_CI_SLEEP_SYSTICK/TIM3 ДОЛЖНЫ проверять ordinary Sleep, изолированный IRQ и WFI перед PC прерванного board_delay_ms, с максимумом восьми попыток; невозможность unwind НЕ ДОЛЖНА превращаться в PASS. После восстановления настроек ДОЛЖНО подтверждаться продвижение приложения. CI ДОЛЖЕН выполнять prepare обоих сценариев; измерение тока/residency вне области. `[N]` (р.0.32)
+
+
 
 
 
@@ -1443,6 +1454,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-121 | F030 HW_CI_TIM3_INIT/IRQ: prepare и HW на NUCLEO-F030R8/ST-Link/OpenOCD | Настройка/вектор и два увеличения счётчика PASS, thread mode восстановлен; baseline повторён; docs/ru/F030_CMSIS_TIMER.md (р.0.29) |
 | TC-122 | F030 ADC_INIT/DMA/TIMEOUT prepare и HW Nucleo/ST-Link/OpenOCD | Две raw-пары и потерянный IRQ PASS; baseline/TIM3 повторены; docs/ru/F030_CMSIS_ADC_DMA.md (р.0.30) |
 | TC-123 | F030 ADC_UNITS/VECTORS/INVALID prepare и HW | 7 численных и 14 невалидных наборов, последующее восстановление quality3; 12/12 HW PASS; docs/ru/F030_CMSIS_ADC_UNITS.md (р.0.31) |
+| TC-124 | F030 SLEEP_SYSTICK/TIM3 prepare и HW | SysTick после WFI с первой попытки; TIM3 до WFI, затем после WFI; 2/2 PASS, HAL восстановлен; docs/ru/F030_CMSIS_SLEEP.md (р.0.32) |
 
 ---
 
@@ -1618,6 +1630,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 8.24 | tests/firmware/src/board.c, startup.c; f030r8/Tests/board/test_ci.py; ci/run_checks.py | TC-121 |
 | 8.25 | tests/firmware/src/adc_f030.c; f030r8/Tests/board/test_ci.py; ci/run_checks.py | TC-122 |
 | 8.26 | tests/firmware/src/adc_units.c, adc_f030.c; f030r8/Tests/board/test_ci.py; ci/run_checks.py | TC-123 |
+| 8.27 | tests/firmware/profiles/f030r8/Tests/board/test_sleep.py; ci/run_checks.py | TC-124 |
 
 ---
 
@@ -1846,3 +1859,5 @@ G.6. TIM3/IRQ этап F030 выполнен: 6/6 HW PASS вместе с baseli
 G.7. ADC/DMA raw и completion timeout F030: 9/9 HW PASS, HAL восстановлен. Начальный FAIL сравнения полного CFGR2 исправлен на проверку CKMODE; протокол docs/ru/F030_CMSIS_ADC_DMA.md. Перевод в физические единицы и прочие отказы остаются в плане. (р.0.30)
 
 G.8. F030 физические единицы и численные векторы проверены на GCC13/Nucleo/ST-Link/OpenOCD, 12/12 HW PASS; HAL восстановлен. GCC14/15 ограничены build/preflight. Точность датчика, атомарность структуры измерения и прочие MCU не подтверждаются; docs/ru/F030_CMSIS_ADC_UNITS.md. (р.0.31)
+
+G.9. Sleep F030: 2/2 новых HW PASS на том же ELF, что TC-123; прежние 12 сценариев не повторялись. GDB interrupted-frame evidence не доказывает ток/residency/Stop. docs/ru/F030_CMSIS_SLEEP.md. (р.0.32)

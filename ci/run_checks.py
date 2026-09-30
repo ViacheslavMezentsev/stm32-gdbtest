@@ -195,7 +195,8 @@ def firmware_pair(gcc, profile):
     if profile == "f030r8":
         expected_cases += ["HW_CI_CLOCK", "HW_CI_BLINK", "HW_CI_TIM3_INIT", "HW_CI_TIM3_IRQ",
                            "HW_CI_ADC_INIT", "HW_CI_ADC_DMA", "HW_CI_ADC_TIMEOUT",
-                           "HW_CI_ADC_UNITS", "HW_CI_ADC_VECTORS", "HW_CI_ADC_INVALID"]
+                           "HW_CI_ADC_UNITS", "HW_CI_ADC_VECTORS", "HW_CI_ADC_INVALID",
+                           "HW_CI_SLEEP_SYSTICK", "HW_CI_SLEEP_TIM3"]
     if any("prepare." + name not in ctest for name in expected_cases):
         raise CheckError("CTest did not run the prepare tests")
     for test_id in expected_cases:

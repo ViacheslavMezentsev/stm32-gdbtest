@@ -8,6 +8,10 @@
 
 ### Added
 
+- F030 CMSIS Sleep: изоляция SysTick/TIM3 и проверка WFI по interrupted PC; 2/2 новых HW PASS, HAL восстановлен. Firmware/API не менялись; ТЗ 0.32.
+
+### Added
+
 - F030 CMSIS: VDDA/температура single-point, 7 численных и 14 невалидных наборов; 12/12 HW PASS, HAL восстановлен. libgcc только F030; ТЗ 0.31, API ядра без изменений.
 
 ### Added

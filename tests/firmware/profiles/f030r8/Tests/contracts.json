@@ -137,6 +137,16 @@
           "quality": "uint32_t"
         }
       }
+    },
+    "ci_sleep_macros": {
+      "macros": {
+        "context": "board_delay_ms",
+        "expressions": [
+          "SCB",
+          "SysTick",
+          "NVIC"
+        ]
+      }
     }
   }
 }
