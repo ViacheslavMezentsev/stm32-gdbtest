@@ -55,3 +55,5 @@ F030: проверка занятого ADC, API без изменений. [П�
 F030: RTC deadline через инъекцию аргумента, API без изменений. [Протокол](F030_RTC_DEADLINE.md).
 
 [Сверка HAL→CMSIS F030 и порядок пакета веток](F030_CMSIS_ACCEPTANCE.md).
+
+- [F030 HAL regression: план переноса и приёмка](F030_HAL_REGRESSION.md).

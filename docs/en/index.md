@@ -55,3 +55,5 @@ F030 busy ADC check; API unchanged. [Report](F030_ADC_BUSY.md).
 F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_DEADLINE.md).
 
 [F030 HAL→CMSIS mapping and branch batch order](F030_CMSIS_ACCEPTANCE.md).
+
+- [F030 HAL regression: migration plan and acceptance](F030_HAL_REGRESSION.md).

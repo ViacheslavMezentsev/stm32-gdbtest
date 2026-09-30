@@ -2,27 +2,17 @@
 
 ## Текущая работа
 
-- Четвёртая ветка пакета: `codex/lowercase-profile-tests` от
-  `codex/f030-cmsis-acceptance` (`c2ccc51`). Каталоги профилей/примеров tests,
-  новые пакеты profile/tests, совместимость со старыми Tests; remote.toml и
-  <profile>-remote.toml gitignored. Три предыдущих SHA: Docs/Offline SUCCESS
-  после ручного workflow_dispatch; для четвёртой дождаться собственного CI.
-  После land всех четырёх веток обновить consumer gitlink и его каталоги tests
-  вместе отдельной интеграционной веткой. Основной HAL-профиль пока сохраняется.
-  Проверки: Windows host97 (8 skips), F030 CTest19/19, minimal-consumer3/3,
-  Linux Docker docs/host/9 firmware pairs13/13 PASS на case-sensitive filesystem.
-
-- Пакет F030: `codex/f030-adc-busy` от `5d09823` → `codex/f030-rtc-deadline`
-  → `codex/f030-cmsis-acceptance`. Push трёх веток вместе, CI каждого SHA,
-  land по порядку; gitlink потребителя обновить один раз после пакета.
-  Первая ветка: HW_CI_ADC_BUSY PASS, CTest 18/18, host96 (8 skips).
-  Вторая: RTC deadline PASS после исправления macro context; CTest19/19,
-  положительные ADC_DMA/RTC_ALARM после отказов PASS, HAL восстановлен.
-  Третья: [итоговая сверка](docs/ru/F030_CMSIS_ACCEPTANCE.md); HAL-профиль
-  сохраняется до отдельного HAL regression fixture. Далее CMSIS F103/F411
-  по согласованному стенду; оставшиеся аппаратные отказы явно не закрыты.
-  Каждый снимок: Linux docs/host/9 firmware pairs 13/13 PASS. GitHub CI
-  каждого SHA проверить после группового push; land пока не выполняется.
+- Текущая ветка `codex/f030-hal-regression-plan` от `cea01f9`: подготовлен
+  [план HAL fixture](docs/ru/F030_HAL_REGRESSION.md), исходная база потребителя
+  `0c8c966`, полный начальный набор 17 сценариев. Только документация;
+  новые HW-проверки не выполнялись. Windows/Linux docs 3/3 PASS.
+  Далее зависимые ветки fixture → CI →
+  HW validation, публикация пакетом по готовности. HAL-профиль не удалять.
+- Завершён пакет ADC_BUSY → RTC_DEADLINE → CMSIS acceptance → lowercase:
+  все четыре SHA прошли Docs и Offline, включены в main `cea01f9`.
+  Потребитель обновил gitlink/каталоги tests: `0c8c966`, пять профилей CI PASS,
+  ветка включена в main. Итоговые имена: tests и remote.toml; API_VERSION=1.
+  Прежние16 +2 новых HW-сценария выполнены на одном ELF, HAL восстановлен.
 
 - `codex/f030-cmsis-rtc` от `f494ab1`: RTC Alarm A/LSI и два сценария;
   16/16 HW PASS на новом ELF, HAL восстановлен. [Протокол](docs/ru/F030_CMSIS_RTC.md).

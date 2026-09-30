@@ -2,6 +2,8 @@
 
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
+[Separate F030 HAL regression plan](F030_HAL_REGRESSION.md): scope prepared; fixture not implemented yet. The batch through `cea01f9` is in main; consumer updated at `0c8c966`.
+
 [F030 HAL→CMSIS mapping and branch batch order](F030_CMSIS_ACCEPTANCE.md). Previous16 +2 new cases tested on one ELF, not a single18/18 run. HAL restored.
 
 Snapshot: 2026-09-30. Release candidate **0.1.0-rc.1** (Python `0.1.0rc1`), `API_VERSION = 1`;

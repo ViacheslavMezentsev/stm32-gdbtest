@@ -8,6 +8,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- Prepared the [separate F030 HAL regression plan](docs/en/F030_HAL_REGRESSION.md): sources,17 scenarios, limits and four stages. Documentation only; specification0.37/G.13 and API unchanged.
+
 - Owned profiles/examples and new packages use `tests`; old `Tests` inputs remain supported. Local remote stands use ignored `remote.toml` / `<profile>-remote.toml`. Reconfigure after renaming. [Conventions](docs/en/maintenance.md). Specification0.37.
 
 - [F030 HAL→CMSIS mapping and branch batch order](docs/en/F030_CMSIS_ACCEPTANCE.md).

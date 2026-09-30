@@ -74,3 +74,8 @@ Windows host:96 tests,8 skips; F030 CTest:18/18 on branch1,19/19 on branch2
 (branch3 changes documentation only). Original RTC ERROR:
 20260930T173151.880173Z-HW_CI_RTC_DEADLINE-35952; fixed PASS and restoration are
 recorded in the protocol. GitHub CI still needs checking for each published SHA.
+
+Publication update: the batch, including the fourth naming branch, is in
+main `cea01f9`; Docs and all five Offline jobs succeeded for each SHA. The
+consumer update landed at `0c8c966` after five-profile CI. Next step:
+[separate HAL regression](F030_HAL_REGRESSION.md).
