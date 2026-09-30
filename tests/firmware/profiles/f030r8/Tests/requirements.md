@@ -20,3 +20,15 @@ At successive board_led_toggle entries PA5 is Low/High/Low with at least 500
 board_ticks_ms between entries. The counter is driven by SysTick IRQ; unsigned
 subtraction supports wraparound. Halt changes timing; no wall-clock or optical
 accuracy claim. app_state.ticks counts iterations, not milliseconds.
+
+## HW_CI_TIM3_INIT
+TIM3 uses internal 8 MHz timer clock (APB /1), PSC=7999, ARR=99: nominal
+100 ms update period. Upcounter and update IRQ enabled, NVIC IRQ16 enabled,
+vector slot32 points to TIM3_IRQHandler. UG initialization event is discarded.
+
+## HW_CI_TIM3_IRQ
+Three natural TIM3 exception entries have IPSR=32 and UIF=1. Between entries
+the handler publishes exactly one board_timer_events increment. Firmware then
+reaches board_delay_ms in thread mode, rejecting an IRQ storm. No EGR or
+NVIC injection. Halt may coalesce updates: no wall-clock period or lost-event
+claim. HAL callback coverage is not preserved by this CMSIS scenario.

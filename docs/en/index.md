@@ -39,3 +39,5 @@ the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 - [Maintenance](maintenance.md) — workflow, branches, commits, bilingual documentation.
 - [HOWTO](HOWTO.md) — git commands (including `git land`), common stand, debugger and Docker problems, undoing changes.
 - [CHANGELOG](../../CHANGELOG.en.md), [roadmap](../../TODO.md) (Russian), [AGENTS.md](../../AGENTS.md).
+
+[F030 CMSIS: TIM3/IRQ](F030_CMSIS_TIMER.md).

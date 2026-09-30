@@ -2,6 +2,13 @@
 
 ## Текущая работа
 
+- `codex/f030-cmsis-timer` от `40fafac`: TIM3/IRQ добавлены в F030 fixture;
+  6/6 HW PASS на Nucleo/ST-Link/OpenOCD; HAL восстановлен.
+  Offline: Windows host 96 (8 skips), Linux docs/host/9 firmware pairs 13/13 PASS,
+  F030 CTest 7/7; strict ТЗ и формат PASS.
+  [Протокол](docs/ru/F030_CMSIS_TIMER.md). Далее ADC/DMA/арифметика, RTC, Sleep.
+
+
 - `codex/f030-cmsis-baseline` от `4601888`: первый этап CMSIS F030,
   boot/clock/GPIO/blink — 4/4 HW PASS (ST-Link/OpenOCD), HAL восстановлен.
   Windows host: 96 тестов, 8 skips; Linux docs/host/firmware: 13/13 PASS,

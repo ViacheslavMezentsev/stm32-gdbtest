@@ -8,6 +8,10 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- F030 CMSIS: 100 ms TIM3, NVIC/vector/IRQ, event counter; two new scenarios and CI prepare. 6/6 HW PASS, HAL restored. Specification 0.29; core API unchanged.
+
+### Added
+
 - F030 CMSIS baseline: 1 ms SysTick, PA5 LED with a 500 ms interval, explicit
   HSI/GPIO setup; four boot/GPIO/clock/blink scenarios and mandatory CI preparation.
   Nucleo/ST-Link/OpenOCD: 4/4 PASS; previous HAL firmware restored.

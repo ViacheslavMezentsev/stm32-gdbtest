@@ -39,3 +39,5 @@
 - [Сопровождение](maintenance.md) — порядок работы, ветки, коммиты, двуязычная документация.
 - [Памятка](HOWTO.md) — команды git (включая `git land`), частые проблемы стенда, отладчиков и Docker, возврат состояния.
 - [CHANGELOG](../../CHANGELOG.md), [дорожная карта](../../TODO.md), [AGENTS.md](../../AGENTS.md).
+
+[F030 CMSIS: TIM3/IRQ](F030_CMSIS_TIMER.md).

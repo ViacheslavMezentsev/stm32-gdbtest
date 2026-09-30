@@ -8,6 +8,10 @@
 
 ### Added
 
+- F030 CMSIS: TIM3 100 мс, NVIC/vector/IRQ, счётчик событий; два новых сценария и prepare CI. 6/6 HW PASS, HAL восстановлен. ТЗ 0.29; API ядра не меняется.
+
+### Added
+
 - CMSIS-база F030: SysTick 1 мс, LED PA5 с интервалом 500 мс, явная настройка
   HSI/GPIO; четыре сценария boot/GPIO/clock/blink и обязательный prepare в CI.
   Nucleo/ST-Link/OpenOCD — 4/4 PASS, прежняя HAL firmware восстановлена.

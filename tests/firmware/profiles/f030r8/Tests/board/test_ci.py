@@ -48,3 +48,31 @@ def blink(target):
         target.check("alternating PA5", target.value("(GPIOA->ODR & GPIO_ODR_5) != 0"), level)
         target.check("at least 500 firmware milliseconds", ((now - before) & 0xFFFFFFFF) >= 500, True)
         before = now
+
+
+@case("HW_CI_TIM3_INIT", labels=("timer", "init"), contracts=("ci_timer_macros",))
+def timer_init(target):
+    target.reach("board_led_toggle")
+    target.check("TIM3 clock", target.value("(RCC->APB1ENR & RCC_APB1ENR_TIM3EN) != 0"), 1)
+    target.check("TIM3 prescaler", target.value("TIM3->PSC"), 7999)
+    target.check("TIM3 period", target.value("TIM3->ARR"), 99)
+    target.check("TIM3 internal clock", target.value("TIM3->SMCR"), 0)
+    target.check("TIM3 upcounter enabled", target.value("TIM3->CR1"), 1)
+    target.check("update interrupt only", target.value("TIM3->DIER"), 1)
+    target.check("NVIC TIM3 enabled", target.value("(NVIC->ISER[0] >> 16) & 1"), 1)
+    target.check("TIM3 vector", target.value("(unsigned int)vectors[32] & ~1U"), target.value("(unsigned int)TIM3_IRQHandler & ~1U"))
+
+
+@case("HW_CI_TIM3_IRQ", labels=("timer", "irq"), contracts=("ci_timer_macros",))
+def timer_irq(target):
+    # Run to actual exception entries, without EGR/NVIC/software injection.
+    target.reach("TIM3_IRQHandler")
+    for _ in range(2):
+        target.check("TIM3 exception number", target.value("$xPSR & 0x1ff"), 32)
+        target.check("update pending", target.value("TIM3->SR & TIM_SR_UIF"), 1)
+        before = target.value("board_timer_events")
+        target.reach("TIM3_IRQHandler")
+        target.check("one event published", target.value("board_timer_events"), (before + 1) & 0xFFFFFFFF)
+    # A permanently asserted update IRQ would starve thread mode on this M0.
+    target.reach("board_delay_ms")
+    target.check("thread mode resumes", target.value("$xPSR & 0x1ff"), 0)

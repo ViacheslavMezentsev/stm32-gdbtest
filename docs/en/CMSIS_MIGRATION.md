@@ -56,3 +56,5 @@ The runner did not connect to hardware or change its firmware. No new HW PASS.
 No API/schema/version changes yet. This plan does not confirm new MCU support
 or resume the K1921 stand. The F411 application remains an independent consumer;
 the module's small F411 fixture exercises infrastructure.
+
+TIM3/IRQ stage completed: [6/6 HW PASS, mapping and limitations](F030_CMSIS_TIMER.md).

@@ -7,6 +7,35 @@
 /* NUCLEO-F030R8: LD2 on PA5. */
 uint32_t SystemCoreClock = 8000000U;
 volatile uint32_t board_ticks_ms;
+volatile uint32_t board_timer_events;
+
+void TIM3_IRQHandler( void )
+{
+    if ( ( TIM3->SR & TIM_SR_UIF ) != 0U )
+    {
+        /* UIF is cleared by writing zero, without an SR read-modify-write. */
+        TIM3->SR = ~TIM_SR_UIF;
+        board_timer_events++;
+    }
+}
+
+static void board_timer_init( void )
+{
+    RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
+    ( void ) RCC->APB1ENR;
+    RCC->APB1RSTR |= RCC_APB1RSTR_TIM3RST;
+    RCC->APB1RSTR &= ~RCC_APB1RSTR_TIM3RST;
+    TIM3->PSC      = 7999U;
+    TIM3->ARR      = 99U;
+    TIM3->EGR      = TIM_EGR_UG;
+    /* UG loads the prescaler and sets UIF: discard this initialization event. */
+    TIM3->SR = 0U;
+    NVIC_ClearPendingIRQ( TIM3_IRQn );
+    NVIC_SetPriority( TIM3_IRQn, 2U );
+    TIM3->DIER = TIM_DIER_UIE;
+    NVIC_EnableIRQ( TIM3_IRQn );
+    TIM3->CR1 = TIM_CR1_CEN;
+}
 
 void SysTick_Handler( void )
 {
@@ -43,6 +72,7 @@ void board_init( void )
     GPIOA->MODER    = ( GPIOA->MODER & ~GPIO_MODER_MODER5 ) | GPIO_MODER_MODER5_0;
     /* Constant division keeps this Cortex-M0 fixture independent of libgcc division. */
     ( void ) SysTick_Config( 8000000U / 1000U );
+    board_timer_init();
 }
 
 void board_led_toggle( void )

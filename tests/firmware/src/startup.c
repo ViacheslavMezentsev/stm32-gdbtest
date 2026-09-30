@@ -1,10 +1,11 @@
-/* Minimal Cortex-M startup: core vectors only, no peripheral IRQ. */
+/* Minimal Cortex-M startup: core vectors and F030 TIM3 IRQ. */
 #include <stdint.h>
 
 extern uint32_t _estack, _sidata, _sdata, _edata, _sbss, _ebss;
 extern int main( void );
 #if defined( STM32F030x8 )
 extern void SysTick_Handler( void );
+extern void TIM3_IRQHandler( void );
 #endif
 
 void Default_Handler( void )
@@ -61,7 +62,7 @@ void Reset_Handler( void )
 }
 
 // clang-format off
-/* Core exceptions only: SP, Reset, NMI, HardFault, MemManage, BusFault, UsageFault, reserved, SVC, DebugMon, reserved, PendSV, SysTick. */
+/* Core exceptions, followed by F030 external slots: SP, Reset, NMI, HardFault, MemManage, BusFault, UsageFault, reserved, SVC, DebugMon, reserved, PendSV, SysTick. */
 __attribute__( ( section( ".isr_vector" ), used ) )
 void ( *const vectors[] )( void ) = {
     ( void ( * )( void ) )( &_estack ), Reset_Handler, Default_Handler, HardFault_Handler,
@@ -72,7 +73,13 @@ void ( *const vectors[] )( void ) = {
 #endif
     0, 0, 0, 0, Default_Handler, Default_Handler, 0, Default_Handler,
 #if defined( STM32F030x8 )
-    SysTick_Handler
+    SysTick_Handler,
+    /* STM32F030x8 external IRQ slots 0..15, then TIM3_IRQn=16. */
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    TIM3_IRQHandler
 #else
     Default_Handler
 #endif
