@@ -15,6 +15,10 @@ RISC-V needs its own startup/BSP.
 
 ## F030: comparison with 17 HAL scenarios
 
+First stage complete: [boot/clock/GPIO/blink](F030_CMSIS_BASELINE.md) — 4/4
+on Nucleo/ST-Link/OpenOCD. The table below retains the original inventory;
+the peripheral portion of HW_CLOCK is still pending.
+
 Source: BlackPill f030r8 profile at `7a198d1`. The two existing CMSIS scenarios
 do not replace all 17 original checks.
 

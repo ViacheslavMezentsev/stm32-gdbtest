@@ -2,6 +2,14 @@
 
 ## Текущая работа
 
+- `codex/f030-cmsis-baseline` от `4601888`: первый этап CMSIS F030,
+  boot/clock/GPIO/blink — 4/4 HW PASS (ST-Link/OpenOCD), HAL восстановлен.
+  Windows host: 96 тестов, 8 skips; Linux docs/host/firmware: 13/13 PASS,
+  F030/F103/F411 × GCC13/14/15; strict ТЗ: 0 ошибок/предупреждений.
+  [Протокол](docs/ru/F030_CMSIS_BASELINE.md). Следующий этап — таймер/IRQ,
+  далее ADC/DMA/RTC. Оптимизация CI остаётся после переноса примеров.
+
+
 - `codex/cmsis-migration-inventory` от `bc07625` — [миграция примеров](docs/ru/CMSIS_MIGRATION.md)
   ([English](docs/en/CMSIS_MIGRATION.md)): сопоставлены 17 HAL-сценариев F030
   с двумя CMSIS-сценариями. Build/offline 3/3 PASS, без HW. Далее F030

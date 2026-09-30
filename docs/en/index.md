@@ -29,6 +29,8 @@ the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 
 ## Status and maintenance
 
+- [F030 CMSIS baseline](F030_CMSIS_BASELINE.md) — four hardware scenarios and limitations.
+
 - [CMSIS example migration](CMSIS_MIGRATION.md) — baseline, F030 gaps and acceptance.
 
 - [Status](STATUS.md) — verified scope, stands and limits.

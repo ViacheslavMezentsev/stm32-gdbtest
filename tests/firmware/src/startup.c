@@ -3,6 +3,9 @@
 
 extern uint32_t _estack, _sidata, _sdata, _edata, _sbss, _ebss;
 extern int main( void );
+#if defined( STM32F030x8 )
+extern void SysTick_Handler( void );
+#endif
 
 void Default_Handler( void )
 {
@@ -67,6 +70,11 @@ void ( *const vectors[] )( void ) = {
 #else
     MemManage_Handler, BusFault_Handler, UsageFault_Handler,
 #endif
-    0, 0, 0, 0, Default_Handler, Default_Handler, 0, Default_Handler, Default_Handler
+    0, 0, 0, 0, Default_Handler, Default_Handler, 0, Default_Handler,
+#if defined( STM32F030x8 )
+    SysTick_Handler
+#else
+    Default_Handler
+#endif
 };
 // clang-format on

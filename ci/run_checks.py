@@ -186,9 +186,12 @@ def firmware_pair(gcc, profile):
 
     # CTest host label: traceability and prepare.<ID> with requested offline contracts.
     ctest = run(["ctest", "--test-dir", build, "-L", "host", "--output-on-failure"], env=env, log=log)
-    if "prepare.HW_CI_GPIO" not in ctest or "prepare.HW_CI_BOOT" not in ctest:
+    expected_cases = ["HW_CI_BOOT", "HW_CI_GPIO"]
+    if profile == "f030r8":
+        expected_cases += ["HW_CI_CLOCK", "HW_CI_BLINK"]
+    if any("prepare." + name not in ctest for name in expected_cases):
         raise CheckError("CTest did not run the prepare tests")
-    for test_id in ("HW_CI_BOOT", "HW_CI_GPIO"):
+    for test_id in expected_cases:
         report = prepare(build, session_path, test_id, env)
         if (report["status"], report["mode"], report["contracts"]["status"]) != ("PASS", "prepare", "PASS"):
             raise CheckError(f"{test_id}: unexpected prepare report")

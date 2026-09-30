@@ -9,7 +9,11 @@
           "RCC_AHBENR_GPIOAEN",
           "GPIOA",
           "GPIO_MODER_MODER5",
-          "GPIO_MODER_MODER5_0"
+          "GPIO_MODER_MODER5_0",
+          "GPIO_OTYPER_OT_5",
+          "GPIO_OSPEEDR_OSPEEDR5",
+          "GPIO_PUPDR_PUPDR5",
+          "GPIO_ODR_5"
         ]
       }
     },
@@ -45,6 +49,24 @@
           "APP_MODE_IDLE": 0,
           "APP_MODE_BLINK": 1
         }
+      }
+    },
+    "ci_clock_macros": {
+      "macros": {
+        "context": "board_led_toggle",
+        "expressions": [
+          "RCC",
+          "RCC_CR_HSION",
+          "RCC_CR_HSIRDY",
+          "RCC_CFGR_SW",
+          "RCC_CFGR_SWS",
+          "RCC_CFGR_HPRE",
+          "RCC_CFGR_PPRE",
+          "SysTick",
+          "SysTick_CTRL_ENABLE_Msk",
+          "SysTick_CTRL_TICKINT_Msk",
+          "SysTick_CTRL_CLKSOURCE_Msk"
+        ]
       }
     }
   }

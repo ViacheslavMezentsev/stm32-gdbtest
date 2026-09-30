@@ -194,3 +194,5 @@ paths. Preset names, `check-hw`, `host.hwtest`, the `hwtest` report directories,
 no firmware test hooks and does not imply support for an arbitrary STM32, operating
 systems other than Windows and Linux for hardware runs or automatic cleanup of
 processes after a host crash.
+
+F030 CMSIS fixture: the core API is unchanged. `app_delay` now specifies SysTick milliseconds (500); `app_state.ticks` remains a loop counter. See the four scenarios in the [baseline report](F030_CMSIS_BASELINE.md).

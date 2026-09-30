@@ -8,6 +8,13 @@
 
 ### Added
 
+- CMSIS-база F030: SysTick 1 мс, LED PA5 с интервалом 500 мс, явная настройка
+  HSI/GPIO; четыре сценария boot/GPIO/clock/blink и обязательный prepare в CI.
+  Nucleo/ST-Link/OpenOCD — 4/4 PASS, прежняя HAL firmware восстановлена.
+  API/схемы не менялись; ТЗ 0.28, границы — docs/ru/F030_CMSIS_BASELINE.md.
+
+### Added
+
 - План CMSIS-миграции минимальных примеров в модуль; инвентаризация пробелов
   F030 и критерии приёмки. F030 build/offline 3/3 PASS без HW; ТЗ 0.27.
 

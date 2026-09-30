@@ -8,6 +8,13 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- F030 CMSIS baseline: 1 ms SysTick, PA5 LED with a 500 ms interval, explicit
+  HSI/GPIO setup; four boot/GPIO/clock/blink scenarios and mandatory CI preparation.
+  Nucleo/ST-Link/OpenOCD: 4/4 PASS; previous HAL firmware restored.
+  No API/schema changes; specification 0.28, limits in docs/en/F030_CMSIS_BASELINE.md.
+
+### Added
+
 - CMSIS example migration plan and F030 gap inventory with acceptance criteria.
   F030 build/offline 3/3 PASS without HW; specification revision 0.27.
 
