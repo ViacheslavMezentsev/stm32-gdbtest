@@ -105,3 +105,20 @@ docs/format/host5/5 PASS (host97,8 skips). Linux GCC13: изолированны
 ветка CI с явным ожидаемым набором и отрицательными контрактами. HW17/17,
 положительные повторы после инъекций и timeout/recovery ещё не выполнены.
 Исходный HAL-профиль потребителя не удалён, firmware на плате не менялась.
+
+## CI-этап (01.10.2026)
+
+codex/f030-hal-ci от a3898ff добавляет обязательный уровень hal в Offline.
+[Состав проверки и локальный запуск](testing.md#hal-f030-в-offline-ci).
+HAL F0 взят из gitlink CubeF0: 0cf0218694f30a90d11ff9e53c1908bf9e745443.
+Новый закреплённый Docker-образ успешно собран и прошёл verify environment.
+В изолированной Linux-файловой системе без сети полный набор15/15 PASS:
+docs3 + format1 + host1 + CMSIS9 + HAL1. HAL:19 CTest,17 свежих prepare JSON,
+положительный preflight и5 отрицательных контрактов. Windows: docs/format/host/hal6/6.
+ТЗ0.39/TC-130, API и runtime ядра не изменены.
+
+Отчёты модуля: build/hal-ci-check/ci/summary.json, hal-results/ci.log,
+hal-results/junit.xml, hal-results/contracts/*.result.json; образ — build/hal-ci-image.log.
+GitHub CI этого SHA ещё требуется после push; новый HW-прогон не выполнялся.
+Предыдущий a3898ff прошёл Docs и все5 jobs Offline до добавления HAL CI.
+Старое утверждение выше «общий CI не запускает fixture» относится к этапу0.38.

@@ -8,6 +8,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- Added F030 HAL offline CI level: GCC13, exact inventory/JUnit/JSON and five negative HAL contracts. Docker includes pinned HAL F0; specification0.39/TC-130, API unchanged.
+
 - Standalone tests/hal-f030:17 HAL cases, build without YAML/consumer, provenance/import checks and TECH references. Windows/Linux GCC13 offline19/19; HW not run yet. Specification0.38/TC-129.
 
 - [Techniques catalogue TECH-001…008](docs/en/TESTING_TECHNIQUES.md) with CMSIS scenario references. HAL techniques preserved independently of migration; documentation/comments only, API/specification0.37 unchanged.

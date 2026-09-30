@@ -1,7 +1,7 @@
 """Install the reviewed lockfile into a disposable Linux image.
 
 Adapted from stm32-cmake-yml ci/docker/install.py (same author, MIT); adds
-sparse checkout of selected directories for CMSIS-only Cube packages.
+sparse checkout of selected CMSIS directories and the F0 HAL gitlink from pinned Cube packages.
 """
 
 from concurrent.futures import ThreadPoolExecutor

@@ -30,7 +30,7 @@ CI-прошивки находятся в [tests/firmware](../../tests/firmware/
 Образ `ci/docker/Dockerfile` собирается из закреплённого [lock-файла](../../ci/dependencies.lock.json):
 Ubuntu 24.04 по digest, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1 (каждый с
 `arm-none-eabi-gdb-py3`), CMake 3.28.3, Ninja 1.12.1, CMSIS из STM32CubeF0 1.11.6,
-F1 1.8.7 и F4 1.28.3 (только `Drivers/CMSIS`) и `check_spec.py` навыка
+F1 1.8.7 и F4 1.28.3 (F1/F4 — только `Drivers/CMSIS`, F0 — также HAL) и `check_spec.py` навыка
 embedded-tech-spec. Версии GCC и CMake совпадают с stm32-cmake-yml; CMake 3.19.8
 не используется, так как модулю нужен CMake ≥ 3.25. Архивы проверяются по SHA-256,
 репозитории — по коммиту. При сборке образ проверяет GDB-Python каждого GCC.
@@ -102,3 +102,23 @@ python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stand
   стенде ([Linux-стенд](LINUX_STAND.md)).
 - Семантику HAL и корректность сценариев на плате: контракты проверяют наличие
   символов, типов и раскрытие макросов в ELF.
+
+## HAL F030 в offline CI
+
+Уровень `python -B ci/run_checks.py hal` собирает tests/hal-f030 на GCC13.3.1,
+требует ровно19 CTest (17 prepare + trace + fixture), проверяет17 свежих JSON
+с хешем ELF, без обращений к оборудованию. Контракты запрошенных сценариев — PASS;
+для сценариев без contracts NOT_REQUESTED не означает проверку HAL.
+
+Отдельный положительный preflight, затем пять независимых ошибок: отсутствующий
+макрос, неверный macro context, return type HAL_ADC_Start_DMA, значение HAL_ERROR,
+тип аргумента HAL_ADC_ConvCpltCallback. Каждый отказ должен иметь ERROR именно
+в изменённом контракте. Сервер не запускается, прошивка MCU не выполняется.
+
+Docker использует HAL F0 gitlink из прежнего закреплённого CubeF0 1.11.6;
+F1/F4 остаются CMSIS-only. Workflow запускает `format host firmware hal` и сохраняет
+каталог tests/hal-f030/build/ci-gcc13 (логи, ELF, manifest, JSON/JUnit).
+Без аргументов runner также включает hal; --gcc/--profile ограничивают только
+CMSIS-матрицу. Для HAL используйте ARM_TOOLCHAIN_ROOT GCC13, STM32CUBE_REPOSITORY;
+без переменной берётся установленный GCC13 по умолчанию Windows/Linux.
+HAL GCC14/15 и аппаратная регрессия остаются отдельными задачами.

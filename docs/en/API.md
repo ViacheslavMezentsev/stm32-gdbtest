@@ -214,3 +214,5 @@ F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_D
 Owned profiles/examples and new packages use `tests`; old `Tests` inputs remain supported. Local remote stands use ignored `remote.toml` / `<profile>-remote.toml`. Reconfigure after renaming. [Conventions](maintenance.md).
 
 [Standalone F030 HAL regression](F030_HAL_REGRESSION.md): test consumer, no API changes.
+
+[CI hal level](testing.md) validates the fixture; public APIs/schemas are unchanged.

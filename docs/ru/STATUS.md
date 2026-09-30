@@ -2,6 +2,8 @@
 
 [Документация](index.md) → Текущее состояние · [English](../en/STATUS.md)
 
+[HAL CI](F030_HAL_REGRESSION.md): уровень hal добавлен, Linux полный набор15/15 и Windows6/6 PASS. Аппаратная приёмка остаётся следующим этапом; ТЗ0.39.
+
 [HAL fixture F030](F030_HAL_REGRESSION.md): автономная сборка и offline19/19 на Windows/Linux GCC13. ТЗ0.38; HW и общий CI fixture — далее.
 
 [План отдельной HAL-регрессии F030](F030_HAL_REGRESSION.md): подготовлен состав; fixture реализован offline. Пакет до `cea01f9` принят в main, потребитель обновлён на `0c8c966`.

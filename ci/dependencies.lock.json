@@ -97,14 +97,18 @@
       "destination": "/opt/STM32Cube/Repository/STM32Cube_FW_F0_V1.11.6",
       "sparse_include": [
         "Drivers/CMSIS/Include",
-        "Drivers/CMSIS/Device/ST/STM32F0xx"
+        "Drivers/CMSIS/Device/ST/STM32F0xx",
+        "Drivers/STM32F0xx_HAL_Driver"
       ],
       "submodules": [
-        "Drivers/CMSIS/Device/ST/STM32F0xx"
+        "Drivers/CMSIS/Device/ST/STM32F0xx",
+        "Drivers/STM32F0xx_HAL_Driver"
       ],
       "required_files": [
         "Drivers/CMSIS/Include/core_cm0.h",
-        "Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h"
+        "Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h",
+        "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h",
+        "Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_adc.c"
       ]
     },
     {

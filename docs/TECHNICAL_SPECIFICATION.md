@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.38 (черновик для согласования) |
+| **Ревизия** | 0.39 (черновик для согласования) |
 | **Дата формирования** | 01.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0; выпущен кандидат 0.1.0-rc.1 (версия Python `0.1.0rc1`, `API_VERSION = 1`) |
@@ -67,6 +67,17 @@
 | 0.37 | 30.09.2026 | Lowercase tests в собственных профилях/пакетах; remote.toml и ignore; TC-128 сохраняет старые пакеты. |
 
 | 0.38 | 01.10.2026 | Автономный HAL fixture F030: 17 сценариев, provenance и импорты, TC-129. Границы форматирования импортированного кода. |
+
+| 0.39 | 01.10.2026 | HAL F030 включён в offline CI отдельным уровнем hal на GCC13: точный inventory/JUnit/JSON, положительный и пять отрицательных контрактов, TC-130. |
+
+### Изменения ревизии 0.39
+
+Изменённые и новые пункты помечены `(р.0.39)`.
+
+| Пункт | Тип | Изменение |
+| :--- | :--- | :--- |
+| 8.33, 9.2, 10, G.16 | нов. | HAL CI и отказные контракты, TC-130 |
+| 8.11 | изм. | Дополнительный уровень hal |
 
 ### Изменения ревизии 0.38
 
@@ -1325,7 +1336,7 @@ flowchart LR
 
 8.10. Изменения ДОЛЖНЫ проверяться CI по п. 8.11–8.16 и локально по п. 7.7.5; аппаратные проверки выполняются отдельно в стендовом проекте. `[U]` (р.0.3)
 
-8.11. CI ДОЛЖЕН без отладчика и платы выполнять уровни: docs — `check_spec.py --strict` для ТЗ, локальные ссылки Markdown и пары RU/EN; host — host-тесты `tests/host`; format — соответствие собственных исходников C/C++ файлу `.clang-format`; сохранённые tests/hal-f030/Core и src/platform.c исключаются, пользовательские src/app.h и src/*.cpp проверяются по локальному стилю; firmware — сборка и проверка CI-прошивок до GDB-сервера. `[N]` (р.0.38)
+8.11. CI ДОЛЖЕН без отладчика и платы выполнять уровни: docs — `check_spec.py --strict` для ТЗ, локальные ссылки Markdown и пары RU/EN; host — host-тесты `tests/host`; format — соответствие собственных исходников C/C++ файлу `.clang-format`; сохранённые tests/hal-f030/Core и src/platform.c исключаются, пользовательские src/app.h и src/*.cpp проверяются по локальному стилю; firmware — сборка и проверка CI-прошивок до GDB-сервера; hal — автономный F030 HAL fixture на GCC13 по п. 8.33. `[N]` (р.0.39)
 
 8.12. Окружение CI ДОЛЖНО задаваться lock-файлом `ci/dependencies.lock.json`: базовый образ Ubuntu 24.04 по digest, архивы по SHA-256, репозитории по коммиту; сборка образа ДОЛЖНА проверять наличие GDB-Python ≥ 3.11 у каждого GCC. stm32-cmake-yml в окружение и CI-прошивки не входит. `[N]` (р.0.3)
 
@@ -1368,6 +1379,9 @@ flowchart LR
 8.31. Собственные профили/примеры и новые пакеты ДОЛЖНЫ использовать каталог tests; чтение прежних проектов Tests и пакетов schema1 profile/Tests ДОЛЖНО сохраняться. Локальные remote.toml и *-remote.toml ДОЛЖНЫ исключаться из Git, шаблон remote.example.toml сохраняется. Сторонние имена каталогов не изменяются. `[N]` (р.0.37)
 
 8.32. Автономный tests/hal-f030 ДОЛЖЕН сохранять 17 HAL-сценариев F030 потребителя 0c8c966, contracts/requirements, происхождение файлов и отдельные build/manifest; собираться с CubeF0 1.11.6 без stm32-cmake-yml и исходного потребителя, -Og -g3 без LTO. Offline-проверка ДОЛЖНА включать 17 prepare, traceability, точный набор ID, реальный импорт сценариев и хеши переноса CRLF→LF. Исходный HAL-профиль НЕ ДОЛЖЕН удаляться до отдельной CI/HW-приёмки; offline НЕ ДОЛЖЕН трактоваться как HW PASS. `[N]` (р.0.38)
+
+8.33. Offline CI ДОЛЖЕН запускать уровень hal для tests/hal-f030 на GCC13.3.1: ровно 19 успешных CTest (17 prepare, traceability, fixture), 17 свежих JSON с тем же ELF hash и без connection_attempted/hardware_accessed, PASS запрошенных contracts; положительный HAL preflight и пять независимых отрицательных вариантов (макрос, контекст, return, enum, callback argument) с ERROR в ожидаемом контракте. Docker ДОЛЖЕН устанавливать HAL F0 из gitlink закреплённого CubeF0; workflow ДОЛЖЕН сохранять логи, JSON/JUnit, manifest и ELF. Уровень НЕ ДОЛЖЕН выбирать стенд или запускать сервер. `[N]` (р.0.39)
+
 
 
 
@@ -1523,6 +1537,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-127 | F030 RTC deadline, prepare и HW | mask=0 → error3 после 1000 ticks, BDCR неизменен; исправленный PASS, HAL восстановлен; docs/ru/F030_RTC_DEADLINE.md (р.0.35) |
 | TC-128 | tests naming/package compatibility, host/Linux | Новый пакет profile/tests, старый profile/Tests читается; configure/prepare на case-sensitive filesystem; ignore remote.toml (р.0.37) |
 | TC-129 | HAL fixture F030, build/CTest host | GCC13 Windows/Linux: сборка, 17 prepare + trace + inventory/imports/provenance; HW и интеграция в общий CI — следующий этап (р.0.38) |
+| TC-130 | ci/hal_f030.py, GCC13 Windows/Linux | 19 CTest, 17 новых prepare JSON, положительный и 5 отрицательных HAL contracts; без сервера (р.0.39) |
 
 ---
 
@@ -1704,6 +1719,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 8.30 | tests/firmware/profiles/f030r8/tests/board/test_rtc.py; ci/run_checks.py | TC-127 |
 | 8.31 | stm32_gdbtest/package.py; tests/host/test_package.py; .gitignore; ci/run_checks.py | TC-128 |
 | 8.32 | tests/hal-f030/CMakeLists.txt, verify_fixture.py, profile/tests, provenance/source.json | TC-129 (р.0.38) |
+| 8.33 | ci/hal_f030.py, ci/run_checks.py, ci/dependencies.lock.json, .github/workflows/offline.yml | TC-130 (р.0.39) |
 
 ---
 
@@ -1946,3 +1962,5 @@ G.13. Сверены 17 HAL и 18 CMSIS-сценариев F030: функцио�
 G.14. Переименование собственных Tests профилей/примеров выполнено через промежуточное имя для Windows/Git. Новые пакеты используют profile/tests, старые manifest paths читаются без изменения schema. Исторический EXPORT_MANIFEST и намеренные uppercase fixtures сохранены. (р.0.37)
 
 G.15. HAL fixture F030 выделен в tests/hal-f030; сохранены исходники и 17 сценариев с локальными импортами и TECH-ссылками. Проверка переноса отделена от аппаратной приёмки, общая CI-интеграция следует отдельно. docs/ru/F030_HAL_REGRESSION.md. (р.0.38)
+
+G.16. Уровень hal отделён от матрицы CMSIS GCC13/14/15; начальный baseline HAL ограничен GCC13.3.1. Отрицательные контракты проверяются на реальном ELF без MCU; это не runtime force_return или аппаратная приёмка. (р.0.39)

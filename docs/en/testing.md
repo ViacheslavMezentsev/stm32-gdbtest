@@ -30,7 +30,7 @@ On GitHub they are kept as the `offline-results` artifact.
 The image `ci/docker/Dockerfile` is built from the pinned [lock file](../../ci/dependencies.lock.json):
 Ubuntu 24.04 by digest, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1 (each with
 `arm-none-eabi-gdb-py3`), CMake 3.28.3, Ninja 1.12.1, CMSIS from STM32CubeF0 1.11.6,
-F1 1.8.7 and F4 1.28.3 (`Drivers/CMSIS` only) and the embedded-tech-spec skill's
+F1 1.8.7 and F4 1.28.3 (F1/F4: `Drivers/CMSIS` only; F0: also HAL) and the embedded-tech-spec skill's
 `check_spec.py`. GCC and CMake versions match stm32-cmake-yml; CMake 3.19.8 is not
 used because the module needs CMake ≥ 3.25. Archives are checked by SHA-256,
 repositories by commit. While building, the image checks GDB-Python of every GCC.
@@ -104,3 +104,23 @@ The script reprograms Flash: use only boards agreed for experiments.
   ([Linux stand](LINUX_STAND.md)).
 - HAL semantics and correctness of scenarios on a board: contracts check the
   presence of symbols, types and macro expansion in the ELF.
+
+## F030 HAL in offline CI
+
+`python -B ci/run_checks.py hal` builds tests/hal-f030 with GCC13.3.1, requires
+exactly19 CTest checks (17 prepare + trace + fixture), and validates17 fresh JSON
+reports with ELF hashes and no hardware access. Requested contracts must PASS;
+NOT_REQUESTED for cases without contracts is not HAL validation.
+
+A positive preflight precedes five independent errors: missing macro, wrong macro
+context, HAL_ADC_Start_DMA return type, HAL_ERROR enum value and
+HAL_ADC_ConvCpltCallback argument type. Each must produce ERROR in the mutated
+contract. No server starts and no MCU firmware executes.
+
+Docker installs the HAL F0 gitlink from the existing pinned CubeF0 1.11.6;
+F1/F4 remain CMSIS-only. Workflow runs `format host firmware hal` and retains
+tests/hal-f030/build/ci-gcc13 (logs, ELF, manifest, JSON/JUnit).
+The default runner also includes hal; --gcc/--profile only restrict the CMSIS
+matrix. For HAL use ARM_TOOLCHAIN_ROOT pointing to GCC13 and STM32CUBE_REPOSITORY;
+otherwise the Windows/Linux GCC13 default is used. HAL GCC14/15 and hardware
+regression remain separate tasks.

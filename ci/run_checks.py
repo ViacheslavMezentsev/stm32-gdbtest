@@ -4,12 +4,13 @@ Levels (spec 8.11):
   docs      specification consistency, local Markdown links, RU/EN documentation pairs
   format    C/C++ sources match .clang-format (clang-format --dry-run --Werror)
   host      module host tests (unittest)
+  hal       F030 HAL GCC13: build, exact 19 CTest checks, prepare JSON, negative contracts
   firmware  CI firmware per GCC x profile: configure, build, build manifest, CTest host
             tests (traceability, prepare with offline contracts), full-image prepare,
             negative contract and image-policy cases
 
 Usage inside the CI image (see docs/ru/testing.md):
-  python3 ci/run_checks.py [docs] [format] [host] [firmware] [--gcc VERSION ...] [--profile NAME ...]
+  python3 ci/run_checks.py [docs] [format] [host] [firmware] [hal] [--gcc VERSION ...] [--profile NAME ...]
 Without levels all of them run. Results: build/ci/summary.json.
 """
 
@@ -268,14 +269,14 @@ def level_firmware(record, gccs, profiles):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("levels", nargs="*", metavar="{docs,format,host,firmware}")
+    parser.add_argument("levels", nargs="*", metavar="{docs,format,host,firmware,hal}")
     parser.add_argument("--gcc", action="append", choices=LOCK["gcc_versions"])
     parser.add_argument("--profile", action="append", choices=LOCK["profiles"])
     args = parser.parse_args()
-    unknown = sorted(set(args.levels) - {"docs", "format", "host", "firmware"})
+    unknown = sorted(set(args.levels) - {"docs", "format", "host", "firmware", "hal"})
     if unknown:
         parser.error(f"unknown level: {', '.join(unknown)}")
-    levels = args.levels or ["docs", "format", "host", "firmware"]
+    levels = args.levels or ["docs", "format", "host", "firmware", "hal"]
     OUT.mkdir(parents=True, exist_ok=True)
     results = []
 
@@ -300,6 +301,9 @@ def main():
         level_host(record)
     if "firmware" in levels:
         level_firmware(record, args.gcc or LOCK["gcc_versions"], args.profile or LOCK["profiles"])
+    if "hal" in levels:
+        from ci.hal_f030 import check
+        record("hal.f030.gcc13", lambda: check(run))
     summary = dict(schema=1, levels=levels, cmake=os.environ.get("CMAKE_VERSION"),
                    passed=sum(r["status"] == "PASS" for r in results), total=len(results), results=results)
     (OUT / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

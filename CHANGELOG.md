@@ -8,6 +8,8 @@
 
 ### Added
 
+- HAL F030 включён в offline CI отдельным уровнем hal: GCC13, точный inventory/JUnit/JSON, пять отрицательных HAL-контрактов. Docker добавляет закреплённый HAL F0; ТЗ0.39/TC-130, API без изменений.
+
 - Автономный tests/hal-f030: 17 HAL-сценариев, сборка без YAML/потребителя, provenance/import checks и TECH-ссылки. Windows/Linux GCC13 offline19/19; HW ещё не выполнялся. ТЗ0.38/TC-129.
 
 - [Каталог техник TECH-001…008](docs/ru/TESTING_TECHNIQUES.md) и ссылки в CMSIS-сценариях. HAL-приёмы сохранены независимо от миграции; изменены только документация и комментарии, API/ТЗ 0.37 без изменений.

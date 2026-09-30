@@ -104,3 +104,20 @@ General CI does not build the HAL fixture yet: the next CI branch adds an exact
 inventory and negative contracts. HW17/17, positive repeats after injections and
 timeout/recovery remain untested. The consumer HAL profile has not been removed;
 the connected board firmware was not changed.
+
+## CI stage (2026-10-01)
+
+codex/f030-hal-ci from a3898ff adds the mandatory hal level to Offline.
+[Checks and local invocation](testing.md#f030-hal-in-offline-ci).
+HAL F0 uses the CubeF0 gitlink:0cf0218694f30a90d11ff9e53c1908bf9e745443.
+The new pinned Docker image built successfully and passed environment verification.
+An isolated Linux filesystem, network disabled: full15/15 PASS — docs3 + format1 +
+host1 + CMSIS9 + HAL1. HAL:19 CTest,17 fresh prepare JSON reports, positive preflight
+and5 negative contracts. Windows docs/format/host/hal6/6.
+Specification0.39/TC-130; core API/runtime unchanged.
+
+Module evidence: build/hal-ci-check/ci/summary.json, hal-results/ci.log,
+hal-results/junit.xml, hal-results/contracts/*.result.json; image build: build/hal-ci-image.log.
+GitHub CI for this SHA remains required after push. No new HW run was performed.
+Previous a3898ff passed Docs and all5 Offline jobs before HAL CI was added.
+The earlier statement that general CI does not run the fixture describes stage0.38.
