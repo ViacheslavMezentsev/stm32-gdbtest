@@ -230,3 +230,21 @@ stability. Keep this limitation visible in the release notes.
 All three boards remain on Windows with original HAL running. Consumer integration,
 final documentation/release text review and final SHA validation remain open.
 Later documentation-only changes do not replace this hardware-tested code SHA.
+
+## Consumer integration and publication gates
+
+Consumer stm32-hwtest-blackpill: fb2d18626a3c9ff831bd8d2a0c58bb97c6150cbd,
+pinning module 67b7431eabba970ed2f690fb5ac2fcec045cc06e (documentation-only changes
+from hardware-tested 5b7b466). GitHub Offline
+[36791792481](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/actions/runs/36791792481)
+— SUCCESS: five profiles, 120 CTest checks including 105 prepare checks.
+Local Linux Docker: the same 120/120; Windows F411: 25/25 host/prepare.
+F411/ST-Link/OpenOCD on Windows through the consumer CLI: 22/22 cases;
+separate expected timeout ERROR with confirmed loop entry, host recovery,
+then ADC DMA, boot and blink PASS. Original HAL firmware left running.
+Consumer evidence: build/rc2-integration/linux-reports/summary.json,
+windows-host.log, f411-20260930T232546Z/summary.json and recovery/summary.json.
+
+Remaining gates: Docs and full Offline for the final documentation SHA, owner-approved
+module land, consumer gitlink update and its new CI. The owner then lands the consumer
+and publishes the signed tag/GitHub prerelease. No tag exists; release text is ready for review.

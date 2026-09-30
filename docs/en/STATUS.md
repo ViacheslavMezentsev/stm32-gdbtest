@@ -18,7 +18,7 @@ All original HAL images restored. [Evidence and remaining gates](RC2_READINESS.m
 | HAL F030 | Standalone tests/hal-f030: 17/17, six post-injection repeats, expected timeout ERROR, recovery and consumer HAL restoration — Windows/ST-Link/OpenOCD |
 | CMSIS F103/F411 | Two boot/GPIO cases each; full peripheral migration is not complete |
 | minimal-consumer F411 | Separate CMake integration example without YAML; demonstrates module integration, not complete board peripherals |
-| BlackPill consumer | main a48c944 pins module 7f3c65b: Windows host97 (8 skips), Linux five builds/120 CTest PASS; Offline SUCCESS for that SHA. No HW run on the integration branch |
+| BlackPill consumer | fb2d186 / module 67b7431: Offline SUCCESS, five profiles/120 CTest; Windows 25/25, F411/OpenOCD 22/22 + timeout/recovery/restore. Final gitlink follows module land |
 
 Sources: [HAL→CMSIS](F030_CMSIS_ACCEPTANCE.md), [HAL protocol](F030_HAL_VALIDATION.md),
 [techniques](TESTING_TECHNIQUES.md), [CI](testing.md).

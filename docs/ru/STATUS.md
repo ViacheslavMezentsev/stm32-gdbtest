@@ -18,7 +18,7 @@ F103/J-Link, F411/OpenOCD — по 10/10. ST server завершён после 
 | HAL F030 | Автономный tests/hal-f030: 17/17, шесть повторов после инъекций, ожидаемый timeout ERROR, recovery и восстановление HAL потребителя — Windows/ST-Link/OpenOCD |
 | CMSIS F103/F411 | По два сценария boot/GPIO; полный перенос периферии ещё не выполнен |
 | minimal-consumer F411 | Отдельный пример подключения CMake без YAML; проверяет подключение модуля, не полную периферию платы |
-| Потребитель BlackPill | main a48c944 закрепляет модуль 7f3c65b: Windows host97 (8 skips), Linux пять сборок/120 CTest PASS; Offline этого SHA SUCCESS. HW на интеграционной ветке не запускался |
+| Потребитель BlackPill | fb2d186 / модуль 67b7431: Offline SUCCESS, пять профилей/120 CTest; Windows 25/25, F411/OpenOCD 22/22 + timeout/recovery/restore. Итоговый gitlink обновляется после land модуля |
 
 Источники: [HAL→CMSIS](F030_CMSIS_ACCEPTANCE.md), [HAL-протокол](F030_HAL_VALIDATION.md),
 [техники](TESTING_TECHNIQUES.md), [CI](testing.md).

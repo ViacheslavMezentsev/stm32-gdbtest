@@ -232,3 +232,22 @@ CMSIS-образ для оставшихся двух этапов, и HAL сн�
 потребителем, финальная сверка документации/текста выпуска и проверка итогового
 SHA остаются открытыми. Последующие изменения только документации не заменяют
 этот SHA аппаратно проверенного кода.
+
+## Интеграция потребителя и условия публикации
+
+Потребитель stm32-hwtest-blackpill: fb2d18626a3c9ff831bd8d2a0c58bb97c6150cbd,
+закреплён модуль 67b7431eabba970ed2f690fb5ac2fcec045cc06e (только документация
+относительно аппаратно проверенного 5b7b466). GitHub Offline
+[36791792481](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/actions/runs/36791792481)
+— SUCCESS: пять профилей, 120 CTest, в том числе 105 prepare.
+Локально Linux Docker — те же 120/120; Windows F411 — 25/25 host/prepare.
+F411/ST-Link/OpenOCD под Windows через CLI потребителя: 22/22 сценария;
+отдельно ожидаемый timeout ERROR с подтверждённым входом в цикл,
+host recovery, затем ADC DMA, boot и blink PASS. Исходная HAL-прошивка running.
+Доказательства потребителя: build/rc2-integration/linux-reports/summary.json,
+windows-host.log, f411-20260930T232546Z/summary.json и recovery/summary.json.
+
+Остаётся проверить Docs и полный Offline окончательного документального SHA,
+согласовать land модуля, обновить gitlink потребителя и проверить его новый CI.
+Затем владелец выполняет land потребителя и публикацию подписанного тега/
+GitHub prerelease. Тег не создан; описание выпуска подготовлено для проверки.

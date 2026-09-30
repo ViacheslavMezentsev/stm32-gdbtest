@@ -6,18 +6,21 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
-- Acceptance at 5b7b466: Hardware workflow and all 27 JSON reports verified; local Windows matrix exercised. ST server required USB reconnect, retained as a limitation; original firmware restored.
-
-- Repeated run --package preserves previous reports and uses separate clean sources; TC-133. Hardware workflow exposed deletion of earlier JSON evidence; acceptance must be repeated.
-
-- rc.2 acceptance at 873f1ac: SSH lifecycle F030/ST-Link/OpenOCD, F103/J-Link, F411/ST-Link/OpenOCD — 10/10 steps each, original firmware restored; Hardware workflow and the local Windows matrix remain pending.
-
-- F030 CMSIS: exception number through SCB ICSR instead of server-specific xPSR, with macro preflight; found during rc.2 acceptance through Orange Pi.
-
 ## [0.1.0-rc.2] — 2026-10-01
 
-Candidate in preparation; the date will be verified at publication. Final acceptance
-is not complete: [plan and status](docs/en/RC2_READINESS.md).
+The candidate completed the agreed hardware and integration checks with an ST
+server limitation: manual USB reconnection was required. Publication and final-SHA
+checks remain pending: [evidence](docs/en/RC2_READINESS.md).
+
+### Fixed
+
+- Repeated `run --package` preserves prior reports and extracts clean sources into a separate session; TC-133.
+- F030 CMSIS: exception number through SCB ICSR instead of server-specific xPSR; RTC saves address/mask before changing macro context.
+
+### Verification
+
+- Code 5b7b466: Docs/Offline/Hardware SUCCESS, 27 JSON reports audited; Windows CMSIS F030 18/18, HAL 17/17 with repeats/recovery, three lifecycles at 10/10 each. ST server completed after USB reconnect; uninterrupted sequence not confirmed.
+- Consumer fb2d186 / module 67b7431: five profiles/120 CTest in CI; F411/OpenOCD 22/22 and timeout/recovery PASS. Original firmware restored. Specification 0.45; API_VERSION=1.
 
 ### Added
 
