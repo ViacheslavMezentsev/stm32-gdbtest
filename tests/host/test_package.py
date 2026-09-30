@@ -52,17 +52,36 @@ class PackageTests(unittest.TestCase):
         self.assertEqual(manifest["prepared"], {"HW_ONE": "PASS", "HW_TWO": "PASS"})
         with zipfile.ZipFile(self.output) as bundle:
             self.assertEqual(sorted(bundle.namelist()), sorted([MANIFEST, "firmware.elf", "build-manifest.json",
-                "profile/target.toml", "profile/Tests/board/test_one.py", "profile/Tests/contracts.json",
+                "profile/target.toml", "profile/tests/board/test_one.py", "profile/tests/contracts.json",
                 "helpers/steps.py"]))
         session = open_package(self.output, Path(self.temp.name) / "work", str(self.gdb))
         extracted = Path(session["root"])
         self.assertEqual((extracted / "profile/target.toml").read_bytes(), b"[mcu]\r\nname = 'x'\r\n")
-        self.assertEqual(session["tests"], str(extracted / "profile/Tests/board"))
+        self.assertEqual(session["tests"], str(extracted / "profile/tests/board"))
         self.assertEqual(session["gdb"], str(self.gdb))
         self.assertEqual(session["package"]["prepared"]["HW_ONE"], "PASS")
         self.assertTrue((extracted / "helpers/steps.py").is_file())
         only = pack(self.session, self.output, test_ids=["HW_TWO"])
         self.assertEqual([t["id"] for t in only["tests"]], ["HW_TWO"])
+
+    def test_legacy_uppercase_package_still_opens(self):
+        # TC-128: schema1 archives retain their manifest-declared path spelling.
+        pack(self.session, self.output)
+        with zipfile.ZipFile(self.output) as bundle:
+            entries = {name.replace("profile/tests/", "profile/Tests/"): bundle.read(name)
+                       for name in bundle.namelist()}
+        manifest = json.loads(entries[MANIFEST])
+        manifest["tests_dir"] = "profile/Tests/board"
+        manifest["files"] = {name.replace("profile/tests/", "profile/Tests/"): digest
+                             for name, digest in manifest["files"].items()}
+        entries[MANIFEST] = json.dumps(manifest).encode()
+        legacy = Path(self.temp.name) / "legacy.zip"
+        with zipfile.ZipFile(legacy, "w") as bundle:
+            for name, data in entries.items():
+                bundle.writestr(name, data)
+        opened = open_package(legacy, Path(self.temp.name) / "legacy-work", str(self.gdb))
+        self.assertEqual(Path(opened["tests"]).parent.name, "Tests")
+        self.assertTrue((Path(opened["tests"]) / "test_one.py").is_file())
 
     def test_changed_extra_or_unsafe_entries_are_refused(self):
         # TC-105: ТЗ 5.19.3
@@ -111,12 +130,12 @@ class PackageTests(unittest.TestCase):
         variant.write_bytes(b"[mcu]\nname = 'g431'\n")
         session = dict(self.session, profile=str(variant))
         manifest = pack(session, self.output)
-        self.assertEqual(manifest["tests_dir"], "profile/Tests/board")
+        self.assertEqual(manifest["tests_dir"], "profile/tests/board")
         with zipfile.ZipFile(self.output) as bundle:
             self.assertEqual(bundle.read("profile/target.toml"), b"[mcu]\nname = 'g431'\n")
-            self.assertIn("profile/Tests/contracts.json", bundle.namelist())
+            self.assertIn("profile/tests/contracts.json", bundle.namelist())
         opened = open_package(self.output, Path(self.temp.name) / "work", str(self.gdb))
-        self.assertEqual(Path(opened["tests"]).parent, Path(opened["profile"]).parent / "Tests")
+        self.assertEqual(Path(opened["tests"]).parent, Path(opened["profile"]).parent / "tests")
 
 
 if __name__ == "__main__":

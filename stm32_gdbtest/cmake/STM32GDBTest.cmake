@@ -22,17 +22,17 @@ function(stm32_gdbtest_attach target)
         message(FATAL_ERROR "Unknown stm32_gdbtest_attach arguments: ${HW_UNPARSED_ARGUMENTS}")
     endif()
     # ТЗ 5.13.2: PROFILE selects a target description outside PROFILE_DIR, so several MCU
-    # variants of one firmware share PROFILE_DIR/Tests (scenarios, requirements, contracts).
+    # variants of one firmware share PROFILE_DIR/tests (scenarios, requirements, contracts).
     if(NOT HW_PROFILE)
         set(HW_PROFILE "${HW_PROFILE_DIR}/target.toml")
     endif()
     # ТЗ 5.13.2: the scenario directory is PROFILE_DIR/Tests or PROFILE_DIR/tests.
-    set(hw_tests_root "${HW_PROFILE_DIR}/Tests")
-    if(NOT IS_DIRECTORY "${hw_tests_root}" AND IS_DIRECTORY "${HW_PROFILE_DIR}/tests")
-        set(hw_tests_root "${HW_PROFILE_DIR}/tests")
+    set(hw_tests_root "${HW_PROFILE_DIR}/tests")
+    if(NOT IS_DIRECTORY "${hw_tests_root}" AND IS_DIRECTORY "${HW_PROFILE_DIR}/Tests")
+        set(hw_tests_root "${HW_PROFILE_DIR}/Tests")
     endif()
     if(NOT HW_PROFILE_DIR OR NOT IS_DIRECTORY "${hw_tests_root}" OR NOT EXISTS "${HW_PROFILE}")
-        message(FATAL_ERROR "stm32_gdbtest_attach requires PROFILE_DIR with Tests/ (or tests/) and a target "
+        message(FATAL_ERROR "stm32_gdbtest_attach requires PROFILE_DIR with tests/ (or legacy Tests/) and a target "
             "description (PROFILE_DIR/target.toml or PROFILE)")
     endif()
     find_package(Python3 3.11 COMPONENTS Interpreter REQUIRED)

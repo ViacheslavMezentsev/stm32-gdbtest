@@ -16,7 +16,7 @@ owner's agreement ([maintenance](maintenance.md#working-with-hardware)).
    acceptable effect of halt/reset and the failure criterion.
 2. Prepare `target.toml` for the specific MCU, board and firmware: Flash, identity,
    breakpoint budget, fault handlers. Build Debug with `-g3`, check the ELF and manifest.
-3. Write a top-level function in `profile/Tests/board/test_*.py`. The module is not
+3. Write a top-level function in `profile/tests/board/test_*.py`. The module is not
    changed for a project scenario; helpers live in the project.
 4. When HAL or CMSIS macros are used, choose pure getter and predicate expressions
    and a context — a function from the compilation unit where the macro is defined;
@@ -28,7 +28,7 @@ owner's agreement ([maintenance](maintenance.md#working-with-hardware)).
    extend the set. Record the restored state.
 
 The consumer example already has an `app_loop` function and CMSIS macros in the ELF;
-`profile/Tests/board/test_blink.py`:
+`profile/tests/board/test_blink.py`:
 
 ```python
 from stm32_gdbtest import case
@@ -45,8 +45,8 @@ Three more examples for Cortex-M0, M3 and M4 are the CI firmware profiles
 From the module root, with the consumer paths:
 
 ```powershell
-python -B -m stm32_gdbtest collect --tests examples/minimal-consumer/profile/Tests/board
-python -B -m stm32_gdbtest trace --tests examples/minimal-consumer/profile/Tests/board --requirements examples/minimal-consumer/profile/Tests/requirements.md
+python -B -m stm32_gdbtest collect --tests examples/minimal-consumer/profile/tests/board
+python -B -m stm32_gdbtest trace --tests examples/minimal-consumer/profile/tests/board --requirements examples/minimal-consumer/profile/tests/requirements.md
 python -B -m stm32_gdbtest run --session examples/minimal-consumer/build/debug/hwtest/session.json --test HW_CONSUMER_GPIO --prepare-only
 ```
 

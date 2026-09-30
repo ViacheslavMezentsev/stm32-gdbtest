@@ -97,8 +97,8 @@ def gpio(t):
 
 ```powershell
 python -B -m stm32_gdbtest --version
-python -B -m stm32_gdbtest collect --tests examples/minimal-consumer/profile/Tests/board
-python -B -m stm32_gdbtest trace --tests examples/minimal-consumer/profile/Tests/board --requirements examples/minimal-consumer/profile/Tests/requirements.md
+python -B -m stm32_gdbtest collect --tests examples/minimal-consumer/profile/tests/board
+python -B -m stm32_gdbtest trace --tests examples/minimal-consumer/profile/tests/board --requirements examples/minimal-consumer/profile/tests/requirements.md
 python -B -m stm32_gdbtest run --session examples/minimal-consumer/build/debug/hwtest/session.json --test HW_CONSUMER_GPIO --prepare-only
 python -B -m stm32_gdbtest run --session examples/minimal-consumer/build/debug/hwtest/session.json --test HW_CONSUMER_GPIO --stand path/to/stand.local.toml
 python -B -m stm32_gdbtest doctor --stand path/to/stand.local.toml
@@ -206,3 +206,5 @@ F030 RTC: Alarm A на LSI, 16/16 HW PASS, HAL восстановлен. API я�
 F030: проверка занятого ADC, API без изменений. [Протокол](F030_ADC_BUSY.md).
 
 F030: RTC deadline через инъекцию аргумента, API без изменений. [Протокол](F030_RTC_DEADLINE.md).
+
+Собственные профили/примеры и новые пакеты используют `tests`; чтение старых `Tests` сохранено. Локальные remote-стенды — `remote.toml` / `<profile>-remote.toml`, исключённые из Git. После переименования повторить configure. [Соглашения](maintenance.md).

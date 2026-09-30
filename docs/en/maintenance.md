@@ -179,3 +179,18 @@ form a chain. Record bases/order in TODO. The owner pushes the batch; the agent
 verifies each SHA and all CI before proposing sequential land. Old SHA checks
 do not validate a rebase. Update the consumer gitlink after batch acceptance
 unless an intermediate integration is needed for validation.
+
+## Directory and local stand names
+
+New owned directories use lowercase names. Profiles/examples use tests,
+including profile/tests in newly written packages. Preserve third-party and
+generated names such as Core. Existing external projects with Tests and schema1
+packages with profile/Tests remain readable; uppercase compatibility fixtures
+and the historical EXPORT_MANIFEST keep their spelling.
+
+Local remote stands use remote.toml or <profile>-remote.toml, without .local.
+Both patterns are ignored by Git; remote.example.toml remains a tracked template.
+Rename existing files and update --stand/local presets. The loader does not
+restrict TOML names, so old names still work. Reconfigure CMake after Tests →
+tests: existing session.json files retain the old path. API_VERSION and package
+schema are unchanged.

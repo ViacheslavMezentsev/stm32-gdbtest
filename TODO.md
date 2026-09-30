@@ -2,6 +2,16 @@
 
 ## Текущая работа
 
+- Четвёртая ветка пакета: `codex/lowercase-profile-tests` от
+  `codex/f030-cmsis-acceptance` (`c2ccc51`). Каталоги профилей/примеров tests,
+  новые пакеты profile/tests, совместимость со старыми Tests; remote.toml и
+  <profile>-remote.toml gitignored. Три предыдущих SHA: Docs/Offline SUCCESS
+  после ручного workflow_dispatch; для четвёртой дождаться собственного CI.
+  После land всех четырёх веток обновить consumer gitlink и его каталоги tests
+  вместе отдельной интеграционной веткой. Основной HAL-профиль пока сохраняется.
+  Проверки: Windows host97 (8 skips), F030 CTest19/19, minimal-consumer3/3,
+  Linux Docker docs/host/9 firmware pairs13/13 PASS на case-sensitive filesystem.
+
 - Пакет F030: `codex/f030-adc-busy` от `5d09823` → `codex/f030-rtc-deadline`
   → `codex/f030-cmsis-acceptance`. Push трёх веток вместе, CI каждого SHA,
   land по порядку; gitlink потребителя обновить один раз после пакета.

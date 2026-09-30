@@ -22,7 +22,7 @@ class PublicApiTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(result.stdout.strip(), "stm32-gdbtest 0.1.0rc1")
         result = subprocess.run([sys.executable, "-B", "-m", "stm32_gdbtest", "collect",
-            "--tests", "examples/minimal-consumer/profile/Tests/board"],
+            "--tests", "examples/minimal-consumer/profile/tests/board"],
             cwd=ROOT, capture_output=True, text=True, timeout=10)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(json.loads(result.stdout)[0]["id"], "HW_CONSUMER_GPIO")

@@ -101,8 +101,8 @@ From the module checkout root (from another directory use the absolute path of
 
 ```powershell
 python -B -m stm32_gdbtest --version
-python -B -m stm32_gdbtest collect --tests examples/minimal-consumer/profile/Tests/board
-python -B -m stm32_gdbtest trace --tests examples/minimal-consumer/profile/Tests/board --requirements examples/minimal-consumer/profile/Tests/requirements.md
+python -B -m stm32_gdbtest collect --tests examples/minimal-consumer/profile/tests/board
+python -B -m stm32_gdbtest trace --tests examples/minimal-consumer/profile/tests/board --requirements examples/minimal-consumer/profile/tests/requirements.md
 python -B -m stm32_gdbtest run --session examples/minimal-consumer/build/debug/hwtest/session.json --test HW_CONSUMER_GPIO --prepare-only
 python -B -m stm32_gdbtest run --session examples/minimal-consumer/build/debug/hwtest/session.json --test HW_CONSUMER_GPIO --stand path/to/stand.local.toml
 python -B -m stm32_gdbtest doctor --stand path/to/stand.local.toml
@@ -210,3 +210,5 @@ F030 RTC: LSI Alarm A, 16/16 HW PASS, HAL restored. Core API unchanged. [RTC](F0
 F030 busy ADC check; API unchanged. [Report](F030_ADC_BUSY.md).
 
 F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_DEADLINE.md).
+
+Owned profiles/examples and new packages use `tests`; old `Tests` inputs remain supported. Local remote stands use ignored `remote.toml` / `<profile>-remote.toml`. Reconfigure after renaming. [Conventions](maintenance.md).

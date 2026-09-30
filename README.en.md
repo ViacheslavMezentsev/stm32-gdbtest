@@ -24,7 +24,7 @@ built ELF with debug information, an MCU profile and a stand.
 
 An agent can design a change and use GDB directly, but a check done in a chat is not
 repeatable. Here the loop closes in the repository: requirement → scenario in
-`Tests/board` → checks without hardware (ELF contracts, image) → run on a stand → a
+`tests/board` → checks without hardware (ELF contracts, image) → run on a stand → a
 report that both the agent and a person read. Scenarios stay test cases of the project
 and run again after every change — on any of the described stands, manually or
 automatically.

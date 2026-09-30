@@ -8,6 +8,8 @@
 
 ### Added
 
+- Собственные профили/примеры и новые пакеты используют `tests`; чтение старых `Tests` сохранено. Локальные remote-стенды — `remote.toml` / `<profile>-remote.toml`, исключённые из Git. После переименования повторить configure. [Соглашения](docs/ru/maintenance.md). ТЗ 0.37.
+
 - [Сверка HAL→CMSIS F030 и порядок пакета веток](docs/ru/F030_CMSIS_ACCEPTANCE.md).
 
 - F030: RTC deadline через инъекцию аргумента, API без изменений. [Протокол](docs/ru/F030_RTC_DEADLINE.md). ТЗ 0.35.

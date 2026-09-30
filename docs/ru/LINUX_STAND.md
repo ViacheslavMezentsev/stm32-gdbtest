@@ -162,8 +162,8 @@ identity_file = "~/.ssh/id_ed25519_stand"       # или %USERPROFILE%/.ssh/…
 запуск — с Windows, как для локального стенда:
 
 ```powershell
-python -B -m stm32_gdbtest doctor --stand tests/firmware/stands/f411ce-remote.local.toml
-python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-remote.local.toml
+python -B -m stm32_gdbtest doctor --stand tests/firmware/stands/f411ce-remote.toml
+python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-remote.toml
 ```
 
 `doctor` проверяет через ту же SSH-сессию Python, сервер, каталог блокировок и

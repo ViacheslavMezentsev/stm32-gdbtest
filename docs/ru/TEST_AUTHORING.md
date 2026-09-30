@@ -16,7 +16,7 @@
    Определить допустимое влияние halt/reset и критерий ошибки.
 2. Подготовить `target.toml` по конкретному MCU, плате и прошивке: Flash, identity,
    бюджет точек останова, fault handlers. Собрать Debug с `-g3`, проверить ELF и manifest.
-3. Написать функцию верхнего уровня в `profile/Tests/board/test_*.py`. Модуль не
+3. Написать функцию верхнего уровня в `profile/tests/board/test_*.py`. Модуль не
    изменяется ради проектного сценария; вспомогательный код хранится в проекте.
 4. Если используются HAL- или CMSIS-макросы, выбрать чистые getter и predicate
    выражения и контекст — функцию из единицы компиляции, где макрос определён;
@@ -28,7 +28,7 @@
    только после этого расширять набор. Зафиксировать восстановленное состояние.
 
 Пример потребителя уже содержит функцию `app_loop` и CMSIS-макросы в ELF;
-`profile/Tests/board/test_blink.py`:
+`profile/tests/board/test_blink.py`:
 
 ```python
 from stm32_gdbtest import case
@@ -44,8 +44,8 @@ def gpio(t):
 Из корня модуля, с путями потребителя:
 
 ```powershell
-python -B -m stm32_gdbtest collect --tests examples/minimal-consumer/profile/Tests/board
-python -B -m stm32_gdbtest trace --tests examples/minimal-consumer/profile/Tests/board --requirements examples/minimal-consumer/profile/Tests/requirements.md
+python -B -m stm32_gdbtest collect --tests examples/minimal-consumer/profile/tests/board
+python -B -m stm32_gdbtest trace --tests examples/minimal-consumer/profile/tests/board --requirements examples/minimal-consumer/profile/tests/requirements.md
 python -B -m stm32_gdbtest run --session examples/minimal-consumer/build/debug/hwtest/session.json --test HW_CONSUMER_GPIO --prepare-only
 ```
 

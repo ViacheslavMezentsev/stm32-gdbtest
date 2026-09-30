@@ -1,5 +1,5 @@
 # GDB server and debugger on a Linux stand host (e.g. Orange Pi 5), runner on this computer.
-# Copy to <profile>-remote.local.toml. SSH keys only: no passwords here (docs/en/LINUX_STAND.md).
+# Copy to <profile>-remote.toml. SSH keys only: no passwords here (docs/en/LINUX_STAND.md).
 [probe]
 backend = "openocd"                      # or "jlink"; ST-LINK GDB Server has no arm64 build
 serial = "REPLACE_WITH_DEBUGGER_SERIAL"

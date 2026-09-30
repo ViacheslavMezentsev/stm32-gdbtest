@@ -236,7 +236,7 @@ def firmware_pair(gcc, profile):
         raise CheckError(f"Empty RAM section stretched the BIN: {bins[-1].stat().st_size} bytes")
 
     # Negative ELF contracts: each mutation must stop the offline preflight with ERROR.
-    registry = FIRMWARE / f"profiles/{profile}/Tests/contracts.json"
+    registry = FIRMWARE / f"profiles/{profile}/tests/contracts.json"
     base = select_contracts(registry, ["ci_gpio_macros", "ci_app_api"], manifest)
     negatives = build / "negative"
     negatives.mkdir()

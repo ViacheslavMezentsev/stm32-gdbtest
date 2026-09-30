@@ -1,7 +1,7 @@
 """Prepared run packages (ТЗ 5.19): prepare where the toolchain is, run where the stand is.
 
 A package is one zip file with the firmware ELF, its build manifest, the MCU profile
-with its Tests directory, optional helper files and ddtt-package.json, which lists
+with its tests directory, optional helper files and ddtt-package.json, which lists
 the scenarios and the SHA-256 of every file. The stand side verifies every hash
 before a run and uses only its own GDB and stand; nothing is rebuilt there.
 """
@@ -30,15 +30,15 @@ def _files(session, include):
     root = Path(session["root"]).resolve()
     profile = Path(session["profile"]).resolve()
     tests_dir = Path(session["tests"]).resolve()
-    # Scenarios live in <Tests>/board; the whole <Tests> directory (requirements, contracts)
-    # becomes profile/Tests, whether or not target.toml sits next to it (ТЗ 5.19.1).
+    # Scenarios live in <tests-root>/board; the whole tests root (requirements, contracts)
+    # becomes profile/tests, whether or not target.toml sits next to it (ТЗ 5.19.1).
     tests_root = tests_dir.parent
     files = {"firmware.elf": Path(session["elf"]).resolve(), "profile/target.toml": profile}
     if session.get("build_manifest"):
         files["build-manifest.json"] = Path(session["build_manifest"]).resolve()
     for path in sorted(tests_root.rglob("*")):
         if path.is_file() and "__pycache__" not in path.parts:
-            files["profile/Tests/" + path.relative_to(tests_root).as_posix()] = path
+            files["profile/tests/" + path.relative_to(tests_root).as_posix()] = path
     for item in include:
         source = (root / item).resolve()
         if not source.is_relative_to(root) or source == root:
@@ -49,7 +49,7 @@ def _files(session, include):
             if name.split("/")[0] in RESERVED or "__pycache__" in path.parts:
                 continue
             files[name] = path
-    return files, "profile/Tests/" + tests_dir.name
+    return files, "profile/tests/" + tests_dir.name
 
 
 def pack(session, output, test_ids=None, include=(), prepare=None):

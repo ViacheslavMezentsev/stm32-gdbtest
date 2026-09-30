@@ -24,7 +24,7 @@ then contains:
 | `ddtt-package.json` | Schema 1: module version, creation time, ELF SHA-256, scenarios and their metadata, preparation results, SHA-256 of every file |
 | `firmware.elf` | The ELF with debug information |
 | `build-manifest.json` | The build manifest, when present |
-| `profile/target.toml`, `profile/Tests/…` | MCU profile, scenarios, `contracts.json`, `requirements.md` |
+| `profile/target.toml`, `profile/tests/…` | MCU profile, scenarios, `contracts.json`, `requirements.md` |
 | `--include` files | Project helper modules imported by scenarios (paths relative to the project root) |
 
 `--test ID` (repeatable) keeps only the selected scenarios. The package takes the

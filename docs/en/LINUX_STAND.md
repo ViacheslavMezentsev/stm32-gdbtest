@@ -164,8 +164,8 @@ the Orange Pi before the server starts (another path: `env_script`). Check and r
 Windows as for a local stand:
 
 ```powershell
-python -B -m stm32_gdbtest doctor --stand tests/firmware/stands/f411ce-remote.local.toml
-python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-remote.local.toml
+python -B -m stm32_gdbtest doctor --stand tests/firmware/stands/f411ce-remote.toml
+python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-remote.toml
 ```
 
 `doctor` checks Python, the server, the lock directory and USB debuggers on the Orange Pi

@@ -23,7 +23,7 @@ ERROR пакет не пишет. Затем в zip попадают:
 | `ddtt-package.json` | Схема 1: версия модуля, время создания, SHA-256 ELF, сценарии и их метаданные, итоги подготовки, SHA-256 каждого файла |
 | `firmware.elf` | ELF с отладочной информацией |
 | `build-manifest.json` | Build manifest, если он есть |
-| `profile/target.toml`, `profile/Tests/…` | Профиль MCU, сценарии, `contracts.json`, `requirements.md` |
+| `profile/target.toml`, `profile/tests/…` | Профиль MCU, сценарии, `contracts.json`, `requirements.md` |
 | Файлы `--include` | Вспомогательные модули проекта, которые импортируют сценарии (пути относительно корня проекта) |
 
 `--test ID` (можно повторять) оставляет в пакете только выбранные сценарии. В пакет

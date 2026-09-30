@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.36 (черновик для согласования) |
+| **Ревизия** | 0.37 (черновик для согласования) |
 | **Дата формирования** | 30.09.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0; выпущен кандидат 0.1.0-rc.1 (версия Python `0.1.0rc1`, `API_VERSION = 1`) |
@@ -63,6 +63,15 @@
 | 0.35 | 30.09.2026 | F030 RTC deadline: GDB-инъекция mask, TC-127; ограничение macro context. |
 
 | 0.36 | 30.09.2026 | Итоговая сверка HAL→CMSIS F030 и пакет веток; G.13. Нормативные требования и тест-кейсы не изменены. |
+
+| 0.37 | 30.09.2026 | Lowercase tests в собственных профилях/пакетах; remote.toml и ignore; TC-128 сохраняет старые пакеты. |
+
+### Изменения ревизии 0.37
+
+| Пункт | Тип | Изменение |
+| :--- | :--- | :--- |
+| 8.31, 9.2, 10, G.14 | нов. | Имена каталогов, совместимость пакетов, TC-128 |
+| 5.13.2, 5.19.1, пути примеров | изм. | Предпочтительный tests и новые пакеты profile/tests |
 
 ### Изменения ревизии 0.36
 
@@ -1013,7 +1022,7 @@ flowchart LR
 
 5.13.1. Потребитель ДОЛЖЕН включить `STM32GDBTest.cmake` и вызвать `stm32_gdbtest_attach(<target> PROFILE_DIR <каталог> [PROFILE <target.toml>] [MANIFEST_INPUTS <файлы>…] [SELF_TESTS])` после создания firmware target и включения CTest; неизвестные аргументы — `FATAL_ERROR`. `[R]`
 
-5.13.2. `PROFILE_DIR` ДОЛЖЕН быть задан и содержать каталог сценариев `Tests/` или `tests/` (р.0.20); описание MCU — `PROFILE_DIR/target.toml` или файл `PROFILE`. `PROFILE` позволяет нескольким вариантам MCU одной прошивки использовать общие сценарии, требования и контракты. Пути `PROFILE_DIR`, `PROFILE` и `MANIFEST_INPUTS` задаются абсолютными; без `Tests/` или описания MCU — `FATAL_ERROR`. `[R]` (р.0.19)
+5.13.2. `PROFILE_DIR` ДОЛЖЕН быть задан и содержать каталог сценариев `tests/` (предпочтительный) или прежний `Tests/`; описание MCU — `PROFILE_DIR/target.toml` или файл `PROFILE`. `PROFILE` позволяет нескольким вариантам MCU одной прошивки использовать общие сценарии, требования и контракты. Пути `PROFILE_DIR`, `PROFILE` и `MANIFEST_INPUTS` задаются абсолютными; без каталога сценариев или описания MCU — `FATAL_ERROR`. `[R]` (р.0.37)
 
 5.13.3. Функция ДОЛЖНА требовать Python ≥ 3.11 и генератор Ninja (`FATAL_ERROR` иначе). `[R]`
 
@@ -1101,7 +1110,7 @@ flowchart LR
 
 ### 5.19. Пакеты подготовленного запуска (р.0.12)
 
-5.19.1. Команда `pack --session <S> --output <P.zip> [--test <ID>]… [--include <путь>]…` ДОЛЖНА записывать zip-пакет: `firmware.elf`, `build-manifest.json` (если есть), `profile/target.toml`, каталог `profile/Tests` целиком, файлы `--include` под их путями относительно корня проекта и `ddtt-package.json` (schema 1: `format = ddtt-package`, версия модуля, время создания, SHA-256 ELF, каталог сценариев, метаданные выбранных сценариев, итоги подготовки, SHA-256 каждого файла). Файлы копируются побайтно. `profile/Tests` — каталог, содержащий каталог сценариев (`Tests/board`), независимо от того, где лежит `target.toml` (р.0.19). `--include` вне корня проекта ДОЛЖЕН отклоняться. `[N]` (р.0.12, р.0.19)
+5.19.1. Команда `pack --session <S> --output <P.zip> [--test <ID>]… [--include <путь>]…` ДОЛЖНА записывать zip-пакет: `firmware.elf`, `build-manifest.json` (если есть), `profile/target.toml`, каталог `profile/tests` целиком, файлы `--include` под их путями относительно корня проекта и `ddtt-package.json` (schema 1: `format = ddtt-package`, версия модуля, время создания, SHA-256 ELF, каталог сценариев, метаданные выбранных сценариев, итоги подготовки, SHA-256 каждого файла). Файлы копируются побайтно. `profile/tests` — каталог, содержащий каталог сценариев (`tests/board` или прежний `Tests/board`), независимо от того, где лежит `target.toml`. `--include` вне корня проекта ДОЛЖЕН отклоняться. `[N]` (р.0.37)
 
 5.19.2. До записи пакета `pack` ДОЛЖЕН выполнить подготовку (п. 5.16) каждого выбранного сценария; при хотя бы одном ERROR пакет НЕ ДОЛЖЕН записываться. Неизвестный `--test` — ошибка. `[N]` (р.0.12)
 
@@ -1345,6 +1354,8 @@ flowchart LR
 
 8.30. HW_CI_RTC_DEADLINE ДОЛЖЕН проверять истечение общего rtc_wait при mask=0 с error3 через не менее 1000 ticks без изменения BDCR; prepare ДОЛЖЕН входить в CI. Инъекция НЕ ДОЛЖНА заявляться физическим отказом LSI. `[N]` (р.0.35)
 
+8.31. Собственные профили/примеры и новые пакеты ДОЛЖНЫ использовать каталог tests; чтение прежних проектов Tests и пакетов schema1 profile/Tests ДОЛЖНО сохраняться. Локальные remote.toml и *-remote.toml ДОЛЖНЫ исключаться из Git, шаблон remote.example.toml сохраняется. Сторонние имена каталогов не изменяются. `[N]` (р.0.37)
+
 
 
 
@@ -1484,7 +1495,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-113 | `BuildManifestTests.test_descriptive_lists_may_be_empty` (р.0.16) | Manifest с пустыми `cube_packages` и `library_versions` принят; `cube_packages = null` отклоняется (`test_mismatched_artifacts_and_incomplete_schema_are_rejected`) |
 | TC-114 | Потребитель: STM32G474, Arduino Core STM32 и stm32-cmake-yml (CRC в ELF после линковки), `stm32_gdbtest_attach` после настройки проекта, стенд с `[remote]` на Orange Pi 5 (р.0.17) | `host.traceability`, `prepare.<ID>` и `hw.<ID>` сценария загрузки — PASS; manifest снят после встраивания CRC. Выполнено: DEV_ID `0x469`, IWDG заморожен при остановке. В р.0.19 — четыре сценария на сборке без LTO: загрузка, завершение `setup()`, 15 вызовов по порядку (`reach`), отказ питания через `force_return` (первая аппаратная проверка `force_return`) — PASS |
 | TC-115 | `FrameNameTests.test_clone_suffixes_qualifiers_and_parameters_are_removed` (р.0.18) | `HmiManager::init() [clone .constprop.0]` → `HmiManager::init`; `print() const [clone …]`, несколько суффиксов, параметры и `operator()` обрабатываются; разные функции не совпадают |
-| TC-116 | `PackageTests.test_target_description_outside_the_scenario_directory` (р.0.19) | `target.toml` из отдельного каталога попадает в пакет как `profile/target.toml`, `Tests` — целиком, `tests_dir = profile/Tests/board`; после распаковки сценарии и реестр рядом с описанием MCU. Дополнительно в среде формирования: CI-прошивка F411CE с `PROFILE` вне `PROFILE_DIR` — `prepare` с контрактом и traceability PASS |
+| TC-116 | `PackageTests.test_target_description_outside_the_scenario_directory` (р.0.19) | `target.toml` из отдельного каталога попадает в пакет как `profile/target.toml`, `Tests` — целиком, `tests_dir = profile/tests/board`; после распаковки сценарии и реестр рядом с описанием MCU. Дополнительно в среде формирования: CI-прошивка F411CE с `PROFILE` вне `PROFILE_DIR` — `prepare` с контрактом и traceability PASS |
 | TC-117 | `RemoteSettingsTests.test_stand_paths_expand_environment_variables` (р.0.20) | `%VAR%`, `$VAR`, `${VAR}` и `~` раскрываются, `identity_file` с переменной принят; незаданная переменная — ошибка «not set». Дополнительно в среде формирования: CI-прошивка F411CE с каталогом `tests/` на Linux — `prepare` с контрактом и traceability PASS |
 | TC-118 | `BuildManifestTests.test_object_path_without_output_key_comes_from_the_command` (р.0.24) | Без `output` объект берётся из `-o` и `-o<файл>`; при наличии `output` используется он; без `-o` — ошибка |
 | TC-119 | `ContractTests.test_macro_contract_requires_types_of_the_expansion` (р.0.25) | Тип раскрытия в отчёте; отсутствующий тип (`DBGMCU_TypeDef`) — ERROR «typed DBGMCU»; statement-макрос — `type_note` без ошибки; тип берётся из раскрытия, даже если имя макроса вне области разбора; `-DSHUNT_R008=1` считается определением (р.0.26) |
@@ -1496,6 +1507,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-125 | F030 RTC INIT/ALARM prepare и HW | Настройка и два естественных IRQ PASS; общая регрессия 16/16, HAL восстановлен; docs/ru/F030_CMSIS_RTC.md (р.0.33) |
 | TC-126 | F030 ADC busy, prepare и HW | CONT/ADSTART → error6, sequence/quality=0, PASS; docs/ru/F030_ADC_BUSY.md (р.0.34) |
 | TC-127 | F030 RTC deadline, prepare и HW | mask=0 → error3 после 1000 ticks, BDCR неизменен; исправленный PASS, HAL восстановлен; docs/ru/F030_RTC_DEADLINE.md (р.0.35) |
+| TC-128 | tests naming/package compatibility, host/Linux | Новый пакет profile/tests, старый profile/Tests читается; configure/prepare на case-sensitive filesystem; ignore remote.toml (р.0.37) |
 
 ---
 
@@ -1608,7 +1620,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 5.18.4 | RU: `execute` (маркеры, `forwarding_ready`) | I, TC-103 |
 | 5.18.6 | RU: `probe_lock`; DR: `_check_remote`; RH: `check` | I, TC-103 |
 | 5.18.7 | RM: `Heartbeat`, `serve_config`; RH: `serve`; RU: `execute` | TC-110, TC-111 |
-| 5.19.1–5.19.4 | PK: `pack`, `open_package`; TC: `find_gdb`; CL: `pack`, `run --package`; RU: поле `package` | TC-104…TC-107, TC-116 |
+| 5.19.1–5.19.4 | PK: `pack`, `open_package`; TC: `find_gdb`; CL: `pack`, `run --package`; RU: поле `package` | TC-104…TC-107, TC-116, TC-128 |
 
 ### 10.3. Интерфейсы, нефункциональные требования, эволюция (разделы 6–8)
 
@@ -1667,14 +1679,15 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 8.20 | `.github/workflows/offline.yml` (linux-stand); LS | TC-96 |
 | 8.21 | `.github/workflows/hardware.yml` | I, TC-108 |
 | 8.22 | tests/firmware/run_hw.py (`--repeat`) | TC-109 |
-| 8.23 | tests/firmware/src; profiles/f030r8/Tests/board/test_ci.py; ci/run_checks.py | TC-120 |
+| 8.23 | tests/firmware/src; profiles/f030r8/tests/board/test_ci.py; ci/run_checks.py | TC-120 |
 | 8.24 | tests/firmware/src/board.c, startup.c; f030r8/Tests/board/test_ci.py; ci/run_checks.py | TC-121 |
 | 8.25 | tests/firmware/src/adc_f030.c; f030r8/Tests/board/test_ci.py; ci/run_checks.py | TC-122 |
 | 8.26 | tests/firmware/src/adc_units.c, adc_f030.c; f030r8/Tests/board/test_ci.py; ci/run_checks.py | TC-123 |
-| 8.27 | tests/firmware/profiles/f030r8/Tests/board/test_sleep.py; ci/run_checks.py | TC-124 |
-| 8.28 | tests/firmware/src/rtc_f030.c; profiles/f030r8/Tests/board/test_rtc.py; ci/run_checks.py | TC-125 |
-| 8.29 | tests/firmware/profiles/f030r8/Tests/board/test_adc_faults.py; ci/run_checks.py | TC-126 |
-| 8.30 | tests/firmware/profiles/f030r8/Tests/board/test_rtc.py; ci/run_checks.py | TC-127 |
+| 8.27 | tests/firmware/profiles/f030r8/tests/board/test_sleep.py; ci/run_checks.py | TC-124 |
+| 8.28 | tests/firmware/src/rtc_f030.c; profiles/f030r8/tests/board/test_rtc.py; ci/run_checks.py | TC-125 |
+| 8.29 | tests/firmware/profiles/f030r8/tests/board/test_adc_faults.py; ci/run_checks.py | TC-126 |
+| 8.30 | tests/firmware/profiles/f030r8/tests/board/test_rtc.py; ci/run_checks.py | TC-127 |
+| 8.31 | stm32_gdbtest/package.py; tests/host/test_package.py; .gitignore; ci/run_checks.py | TC-128 |
 
 ---
 
@@ -1913,3 +1926,5 @@ G.11. ADC busy F030: HW PASS на прежнем ELF; проверяется gua
 G.12. RTC deadline F030: первоначальный ERROR macro context сохранён; исправленный сценарий PASS, положительные ADC/RTC после reset_run PASS, HAL восстановлен. docs/ru/F030_RTC_DEADLINE.md. (р.0.35)
 
 G.13. Сверены 17 HAL и 18 CMSIS-сценариев F030: функциональный baseline принят в документированном объёме; HAL callback handles/macros/force_return и промежуточное TIM3 CEN=0 не перенесены. Активный HAL-профиль сохраняется до отдельной регрессии этих механизмов. docs/ru/F030_CMSIS_ACCEPTANCE.md. (р.0.36)
+
+G.14. Переименование собственных Tests профилей/примеров выполнено через промежуточное имя для Windows/Git. Новые пакеты используют profile/tests, старые manifest paths читаются без изменения schema. Исторический EXPORT_MANIFEST и намеренные uppercase fixtures сохранены. (р.0.37)
