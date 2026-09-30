@@ -2,6 +2,12 @@
 
 ## Текущая работа
 
+- codex/f030-hal-fixture от main69cfb79: автономный tests/hal-f030, 17 сценариев,
+  TECH-ссылки, provenance и offline19/19 Windows/Linux GCC13. ТЗ0.38.
+  Windows docs/format/host5/5, Linux docs/host4/4; Linux format отсутствует в
+  локальном образе. Далее зависимые ветки HAL CI и HW validation; старый consumer
+  сохраняется. Коммиты плана/руководства уже включены в main69cfb79.
+
 - `codex/testing-techniques-guide` от `codex/f030-hal-regression-plan` (`caeafe1`):
   каталог TECH-001…008 (RU/EN), ссылки в сценариях, сборочные предпосылки и
   пределы доказательства. Только документация/комментарии, ТЗ 0.37 без изменений.

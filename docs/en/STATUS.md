@@ -2,7 +2,9 @@
 
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
-[Separate F030 HAL regression plan](F030_HAL_REGRESSION.md): scope prepared; fixture not implemented yet. The batch through `cea01f9` is in main; consumer updated at `0c8c966`.
+[F030 HAL fixture](F030_HAL_REGRESSION.md): standalone build and offline19/19 on Windows/Linux GCC13. Specification0.38; HW and fixture CI integration follow.
+
+[Separate F030 HAL regression plan](F030_HAL_REGRESSION.md): scope prepared; fixture implemented offline. The batch through `cea01f9` is in main; consumer updated at `0c8c966`.
 
 [F030 HAL→CMSIS mapping and branch batch order](F030_CMSIS_ACCEPTANCE.md). Previous16 +2 new cases tested on one ELF, not a single18/18 run. HAL restored.
 

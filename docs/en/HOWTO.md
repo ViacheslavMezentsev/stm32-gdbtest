@@ -236,3 +236,9 @@ Remove the image and cache: `docker image rm stm32-gdbtest-ci:local`, `docker bu
 F030 ADC CFGR2 read 0x1000 with CKMODE=0 in this experiment. Check the documented field `ADC1->CFGR2 & ADC_CFGR2_CKMODE`, not the whole register. Verify masks against the selected MCU header/RM; do not mask unexpected results without analysis. [Report](F030_CMSIS_ADC_DMA.md).
 
 Owned profiles/examples and new packages use `tests`; old `Tests` inputs remain supported. Local remote stands use ignored `remote.toml` / `<profile>-remote.toml`. Reconfigure after renaming. [Conventions](maintenance.md).
+
+## Standalone fixture build
+
+For “Output directories must remain inside the selected project root”, place
+build inside the fixture (tests/hal-f030/build/debug), not the module-wide build
+directory. Fix preset binaryDir rather than disabling runner containment checks.

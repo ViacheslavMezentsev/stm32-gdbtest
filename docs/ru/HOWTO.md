@@ -236,3 +236,9 @@ ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -i <�
 F030 ADC CFGR2 в опыте читался как 0x1000 при CKMODE=0. Проверяйте документированное поле `ADC1->CFGR2 & ADC_CFGR2_CKMODE`, не весь регистр. Сверяйте маску с header/RM нужного MCU; не маскируйте неожиданный результат без анализа. [Протокол](F030_CMSIS_ADC_DMA.md).
 
 Собственные профили/примеры и новые пакеты используют `tests`; чтение старых `Tests` сохранено. Локальные remote-стенды — `remote.toml` / `<profile>-remote.toml`, исключённые из Git. После переименования повторить configure. [Соглашения](maintenance.md).
+
+## Build самостоятельного fixture
+
+Ошибка «Output directories must remain inside the selected project root»: размещайте
+build внутри каталога примера (tests/hal-f030/build/debug), а не общего build
+репозитория модуля. Не отключайте защиту runner; исправьте binaryDir в preset.

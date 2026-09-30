@@ -3,9 +3,9 @@
 [Documentation](index.md) · [Русский](../ru/F030_HAL_REGRESSION.md)
 
 Preparation following the [HAL → CMSIS comparison](F030_CMSIS_ACCEPTANCE.md).
-This is a migration plan, not a new HW PASS or an implemented fixture. The
-normative basis remains specification0.37, appendix G.13; API, schemas and
-requirements are unchanged.
+The standalone build and17 scenarios are implemented in tests/hal-f030.
+This is an offline migration, not a new HW PASS. Specification0.38,8.32/TC-129;
+API and schemas are unchanged.
 
 ## Source baseline and location
 
@@ -83,3 +83,24 @@ CI and hardware acceptance. This fixture preserves module mechanisms on F0;
 it does not replace F1/F4 HAL differences or the future F411 consumer regression.
 
 [Techniques catalogue TECH-001…008](TESTING_TECHNIQUES.md) — stable scenario references, build prerequisites, limits and restoration. Preserve TECH-001/003/004 references when migrating HAL scenarios.
+
+## Implemented offline stage (2026-10-01)
+
+Branch codex/f030-hal-fixture from main69cfb79. [Fixture and commands](../../tests/hal-f030/README.en.md).
+Core/startup/linker and application firmware are preserved; Python helpers are
+local to hal_scenarios, with unused F1/F4 rcc_error omitted. TECH-001/003/004/007
+reference the guide. Provenance records the original SHA, paths and LF-normalized
+hashes; previous hardware results are not inherited.
+
+Windows GCC13: build and CTest19/19 (17 prepare + trace + fixture) PASS;
+docs/format/host5/5 PASS (host97,8 skips). Linux GCC13: isolated module snapshot
+without the consumer, build and CTest19/19 PASS, docs/host4/4 PASS.
+Reports: module build/hal-fixture-check. The local Linux image lacks clang-format:
+the initial format ERROR is recorded in the work history. Format was checked
+with Windows clang-format; Linux format is not claimed PASS. Original ST/CubeMX
+whitespace is preserved, so git diff --check reports existing whitespace in imports.
+
+General CI does not build the HAL fixture yet: the next CI branch adds an exact
+inventory and negative contracts. HW17/17, positive repeats after injections and
+timeout/recovery remain untested. The consumer HAL profile has not been removed;
+the connected board firmware was not changed.

@@ -103,7 +103,10 @@ def level_docs(record):
 def level_format(record):
     def check():
         sources = [p for p in sorted(ROOT.rglob("*")) if p.suffix in (".c", ".h", ".cpp", ".hpp")
-                   and not any(part in ("build", ".git") for part in p.relative_to(ROOT).parts)]
+                   and not any(part in ("build", ".git") for part in p.relative_to(ROOT).parts)
+                   # Preserve imported CubeMX and platform code; check owned application sources.
+                   and not p.is_relative_to(ROOT / "tests/hal-f030/Core")
+                   and p != ROOT / "tests/hal-f030/src/platform.c"]
         run(["clang-format", "--dry-run", "--Werror", *sources], log=OUT / "format.log")
         return f"{len(sources)} files"
     record("format.clang-format", check)

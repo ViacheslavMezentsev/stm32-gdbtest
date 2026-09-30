@@ -1,0 +1,235 @@
+{
+  "repository": "https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill",
+  "commit": "0c8c966f0429710e6e20472fbd9fe8898da7cfee",
+  "files": [
+    {
+      "source": "profiles/f030r8/Core/Inc/adc.h",
+      "destination": "Core/Inc/adc.h",
+      "sha256": "fb53b3250668ada093e0f5617ddbace2abb03b2dbe21dee492285667d50a1997",
+      "migrated_sha256": "fb53b3250668ada093e0f5617ddbace2abb03b2dbe21dee492285667d50a1997"
+    },
+    {
+      "source": "profiles/f030r8/Core/Inc/crc.h",
+      "destination": "Core/Inc/crc.h",
+      "sha256": "a0cfef18eae95dc66f98917e338985afb8071cf68ba04ee331f91e68eb5ec54c",
+      "migrated_sha256": "a0cfef18eae95dc66f98917e338985afb8071cf68ba04ee331f91e68eb5ec54c"
+    },
+    {
+      "source": "profiles/f030r8/Core/Inc/dma.h",
+      "destination": "Core/Inc/dma.h",
+      "sha256": "f3190614531c4bd5af6cfcee9cc29aea0321863613eba43266dadb615e6f1036",
+      "migrated_sha256": "f3190614531c4bd5af6cfcee9cc29aea0321863613eba43266dadb615e6f1036"
+    },
+    {
+      "source": "profiles/f030r8/Core/Inc/gpio.h",
+      "destination": "Core/Inc/gpio.h",
+      "sha256": "cd5a5f75903537cba4460073b40e3b0d18d4af6dd7522c5a0756f0b9261e03af",
+      "migrated_sha256": "cd5a5f75903537cba4460073b40e3b0d18d4af6dd7522c5a0756f0b9261e03af"
+    },
+    {
+      "source": "profiles/f030r8/Core/Inc/main.h",
+      "destination": "Core/Inc/main.h",
+      "sha256": "77bdbb95a847083f7ef26bbb8fc94fe8e9aac8bdd5022ad1825402956002ee06",
+      "migrated_sha256": "77bdbb95a847083f7ef26bbb8fc94fe8e9aac8bdd5022ad1825402956002ee06"
+    },
+    {
+      "source": "profiles/f030r8/Core/Inc/rtc.h",
+      "destination": "Core/Inc/rtc.h",
+      "sha256": "282eb812bff55dc09e0d47d205821d98c49199c785800194c7a50d725d328db2",
+      "migrated_sha256": "282eb812bff55dc09e0d47d205821d98c49199c785800194c7a50d725d328db2"
+    },
+    {
+      "source": "profiles/f030r8/Core/Inc/stm32f0xx_hal_conf.h",
+      "destination": "Core/Inc/stm32f0xx_hal_conf.h",
+      "sha256": "9ba3b76d7b6eb0293954bbc863c1d29651be515d529723fdb2eaffa60bcb5aad",
+      "migrated_sha256": "9ba3b76d7b6eb0293954bbc863c1d29651be515d529723fdb2eaffa60bcb5aad"
+    },
+    {
+      "source": "profiles/f030r8/Core/Inc/stm32f0xx_it.h",
+      "destination": "Core/Inc/stm32f0xx_it.h",
+      "sha256": "9197e1299da636bd28241d10918bd885060dd2e2177f67654a06f697e64b9423",
+      "migrated_sha256": "9197e1299da636bd28241d10918bd885060dd2e2177f67654a06f697e64b9423"
+    },
+    {
+      "source": "profiles/f030r8/Core/Inc/tim.h",
+      "destination": "Core/Inc/tim.h",
+      "sha256": "0fcf34a7240f07510e6a37667a8ef0fa38e4a416f824c03476924c38ccbe174f",
+      "migrated_sha256": "0fcf34a7240f07510e6a37667a8ef0fa38e4a416f824c03476924c38ccbe174f"
+    },
+    {
+      "source": "profiles/f030r8/Core/Src/adc.c",
+      "destination": "Core/Src/adc.c",
+      "sha256": "2bfb3670f1feb092cd9cdcc7ab220fdc4ab2bb049c57fe53a74984803bf380a7",
+      "migrated_sha256": "2bfb3670f1feb092cd9cdcc7ab220fdc4ab2bb049c57fe53a74984803bf380a7"
+    },
+    {
+      "source": "profiles/f030r8/Core/Src/crc.c",
+      "destination": "Core/Src/crc.c",
+      "sha256": "de14f4c79abc1679f585e320a76e0f7761d35a9d62cb75e804c76166f24866a1",
+      "migrated_sha256": "de14f4c79abc1679f585e320a76e0f7761d35a9d62cb75e804c76166f24866a1"
+    },
+    {
+      "source": "profiles/f030r8/Core/Src/dma.c",
+      "destination": "Core/Src/dma.c",
+      "sha256": "83df1a5ee6378e9bd079caa7a23306df75976daca9cefc4986ad1b0bb1843774",
+      "migrated_sha256": "83df1a5ee6378e9bd079caa7a23306df75976daca9cefc4986ad1b0bb1843774"
+    },
+    {
+      "source": "profiles/f030r8/Core/Src/gpio.c",
+      "destination": "Core/Src/gpio.c",
+      "sha256": "de69a43ec209ece7814a997df248d469da5db3afa69d572316e533bb213d6ff6",
+      "migrated_sha256": "de69a43ec209ece7814a997df248d469da5db3afa69d572316e533bb213d6ff6"
+    },
+    {
+      "source": "profiles/f030r8/Core/Src/main.c",
+      "destination": "Core/Src/main.c",
+      "sha256": "b710aaea8729bd4a0e6f73e502c904dc1605883aea0c186aab1c3f2c2423b5d7",
+      "migrated_sha256": "b710aaea8729bd4a0e6f73e502c904dc1605883aea0c186aab1c3f2c2423b5d7"
+    },
+    {
+      "source": "profiles/f030r8/Core/Src/rtc.c",
+      "destination": "Core/Src/rtc.c",
+      "sha256": "2f71c18d11b7a8fad5b3d28ee8f46f19d85407a812e8420af055f4a4731b4386",
+      "migrated_sha256": "2f71c18d11b7a8fad5b3d28ee8f46f19d85407a812e8420af055f4a4731b4386"
+    },
+    {
+      "source": "profiles/f030r8/Core/Src/stm32f0xx_hal_msp.c",
+      "destination": "Core/Src/stm32f0xx_hal_msp.c",
+      "sha256": "738d55de668cf0e01797b4041725e1cf20cc38d800010ab5583f5b58e3023fd4",
+      "migrated_sha256": "738d55de668cf0e01797b4041725e1cf20cc38d800010ab5583f5b58e3023fd4"
+    },
+    {
+      "source": "profiles/f030r8/Core/Src/stm32f0xx_it.c",
+      "destination": "Core/Src/stm32f0xx_it.c",
+      "sha256": "ed5a96e2c16d2932edc13479a9dd4ef9286d2fd2d53113e00eea85474c6b0a01",
+      "migrated_sha256": "ed5a96e2c16d2932edc13479a9dd4ef9286d2fd2d53113e00eea85474c6b0a01"
+    },
+    {
+      "source": "profiles/f030r8/Core/Src/syscalls.c",
+      "destination": "Core/Src/syscalls.c",
+      "sha256": "03c06c72eafb44b499814cf9234aba57dd830f345d9b8779b5d7090e78517600",
+      "migrated_sha256": "03c06c72eafb44b499814cf9234aba57dd830f345d9b8779b5d7090e78517600"
+    },
+    {
+      "source": "profiles/f030r8/Core/Src/sysmem.c",
+      "destination": "Core/Src/sysmem.c",
+      "sha256": "ad20f7b1fa1e7c73330727747222cf2ffa3245ebf035230ee9a157545e79df95",
+      "migrated_sha256": "ad20f7b1fa1e7c73330727747222cf2ffa3245ebf035230ee9a157545e79df95"
+    },
+    {
+      "source": "profiles/f030r8/Core/Src/system_stm32f0xx.c",
+      "destination": "Core/Src/system_stm32f0xx.c",
+      "sha256": "22846202b8c38a35d9fc573f48a73484ff61988a5b0b113a3fe281b225cdc175",
+      "migrated_sha256": "22846202b8c38a35d9fc573f48a73484ff61988a5b0b113a3fe281b225cdc175"
+    },
+    {
+      "source": "profiles/f030r8/Core/Src/tim.c",
+      "destination": "Core/Src/tim.c",
+      "sha256": "caa61dee96e92d741bd71770b8cbf216cb770dd3eab7f772b1fa7e8e6b687117",
+      "migrated_sha256": "caa61dee96e92d741bd71770b8cbf216cb770dd3eab7f772b1fa7e8e6b687117"
+    },
+    {
+      "source": "User/Inc/app.h",
+      "destination": "src/app.h",
+      "sha256": "e0aaeac34c9c8e0477c4891faaf6ed93770c719ec7a95f27c6173fb1ae3e6e8f",
+      "migrated_sha256": "e0aaeac34c9c8e0477c4891faaf6ed93770c719ec7a95f27c6173fb1ae3e6e8f"
+    },
+    {
+      "source": "User/Src/program.cpp",
+      "destination": "src/program.cpp",
+      "sha256": "fe30bd4ae95c282d0ebca5744472814091e18c766f7ffb8a165a03b2d007baef",
+      "migrated_sha256": "fe30bd4ae95c282d0ebca5744472814091e18c766f7ffb8a165a03b2d007baef"
+    },
+    {
+      "source": "User/Src/adc_units.cpp",
+      "destination": "src/adc_units.cpp",
+      "sha256": "54748a14612dd735ec10db4b39e9e149a52ced444f6fd3205eaae061662e8147",
+      "migrated_sha256": "54748a14612dd735ec10db4b39e9e149a52ced444f6fd3205eaae061662e8147"
+    },
+    {
+      "source": "profiles/f030r8/Platform/platform.c",
+      "destination": "src/platform.c",
+      "sha256": "419b0057f8d08ccc21b2483e43433f0203ceafc93c1707bde159e79dab6a63a2",
+      "migrated_sha256": "419b0057f8d08ccc21b2483e43433f0203ceafc93c1707bde159e79dab6a63a2"
+    },
+    {
+      "source": "profiles/f030r8/startup_stm32f030x8.s",
+      "destination": "startup_stm32f030x8.s",
+      "sha256": "4d2beb04dd82c765bfac2665e521e8f04915cf97f204fc935c6db45fa8c50d00",
+      "migrated_sha256": "4d2beb04dd82c765bfac2665e521e8f04915cf97f204fc935c6db45fa8c50d00"
+    },
+    {
+      "source": "profiles/f030r8/STM32F030xx_FLASH.ld",
+      "destination": "firmware_FLASH.ld",
+      "sha256": "c5c8589f7d0fff6ddad1d73bce6dff6e61b4d95043d1eae5359dc36f92cce848",
+      "migrated_sha256": "c5c8589f7d0fff6ddad1d73bce6dff6e61b4d95043d1eae5359dc36f92cce848"
+    },
+    {
+      "source": "profiles/f030r8/stm32-hwtest-nucleo-f030r8.ioc",
+      "destination": "provenance/stm32-hwtest-nucleo-f030r8.ioc",
+      "sha256": "f37aa648ad12e5a996d4d085a5029c64f8e380580848944d7377674cea3ef689",
+      "migrated_sha256": "f37aa648ad12e5a996d4d085a5029c64f8e380580848944d7377674cea3ef689"
+    },
+    {
+      "source": "profiles/f030r8/target.toml",
+      "destination": "profile/target.toml",
+      "sha256": "e24b226fde8565598e7b7f11a02a03883e91d38a670e11323441a5144ffb048a",
+      "migrated_sha256": "e24b226fde8565598e7b7f11a02a03883e91d38a670e11323441a5144ffb048a"
+    },
+    {
+      "source": "LICENSE",
+      "destination": "LICENSE",
+      "sha256": "1386ec0972a0cd48d9fe665eee5138b970d2ace104f06ea6e30df426e91c8005",
+      "migrated_sha256": "1386ec0972a0cd48d9fe665eee5138b970d2ace104f06ea6e30df426e91c8005"
+    },
+    {
+      "source": "profiles/f030r8/tests/contracts.json",
+      "destination": "profile/tests/contracts.json",
+      "sha256": "c5c601519224ea9aa083e8436cbff7856fc699720fd79a77451254b43b82beb8",
+      "migrated_sha256": "c5c601519224ea9aa083e8436cbff7856fc699720fd79a77451254b43b82beb8"
+    },
+    {
+      "source": "profiles/f030r8/tests/requirements.md",
+      "destination": "profile/tests/requirements.md",
+      "sha256": "1119a2cc979b997b48b82565c34c13a530f1a9c885ab5f86af9f12645d0279da",
+      "migrated_sha256": "1119a2cc979b997b48b82565c34c13a530f1a9c885ab5f86af9f12645d0279da"
+    },
+    {
+      "source": "profiles/f030r8/tests/board/test_nucleo.py",
+      "destination": "profile/tests/board/test_nucleo.py",
+      "sha256": "ffa8675afd414e5f211a7817aafde6ea081407eceb584908144fa87a4ac43762",
+      "migrated_sha256": "05b2b967aee5d2c97bb49d5cf00bdc2ef4cccb7ad684ffd06fbfdacf592ca466"
+    },
+    {
+      "source": "profiles/f030r8/tests/board/test_peripheral_init.py",
+      "destination": "profile/tests/board/test_peripheral_init.py",
+      "sha256": "45705bfabd56bc2cbbba233f3adb30b90076d765888367e30617bbb1d63cdbae",
+      "migrated_sha256": "45705bfabd56bc2cbbba233f3adb30b90076d765888367e30617bbb1d63cdbae"
+    },
+    {
+      "source": "tests/scenarios/board.py",
+      "destination": "hal_scenarios/board.py",
+      "sha256": "0f83faaf4fdd5e65543fa11b1a768aa737c6f4569cd09d5352ad788cb27d522d",
+      "migrated_sha256": "b027b681d261d669a8c5a43e23912caed543ab90b9ae7a3714a5bb6fb80e5036"
+    },
+    {
+      "source": "tests/scenarios/peripheral_runtime.py",
+      "destination": "hal_scenarios/peripheral_runtime.py",
+      "sha256": "5f1b19c54e8ef68998815fe3e1f5005280c9eec8f2c06bb3589ad6b6f2a53fe5",
+      "migrated_sha256": "4a69779fccd1e720997b711fd794e73eacf3518665aeb6595d597e2152685dfd"
+    },
+    {
+      "source": "tests/scenarios/power.py",
+      "destination": "hal_scenarios/power.py",
+      "sha256": "a71d9f16ded535dbe8a6e09114fc8e385d07c837298fb132cad5db8deff0d1f8",
+      "migrated_sha256": "a71d9f16ded535dbe8a6e09114fc8e385d07c837298fb132cad5db8deff0d1f8"
+    },
+    {
+      "source": "profiles/f030r8/tests/expectations.py",
+      "destination": "hal_scenarios/expectations.py",
+      "sha256": "e8402c8df31228637babf790bb50066c9dd437d14da4088e6fae78593deb3ba6",
+      "migrated_sha256": "e8402c8df31228637babf790bb50066c9dd437d14da4088e6fae78593deb3ba6"
+    }
+  ],
+  "hash_normalization": "CRLF to LF"
+}

@@ -1,0 +1,154 @@
+{
+  "schema": 1,
+  "contracts": {
+    "adc_start_error": {
+      "functions": {
+        "HAL_ADC_Start_DMA": {
+          "returns": "HAL_StatusTypeDef",
+          "arguments": [
+            {
+              "name": "hadc",
+              "type": "ADC_HandleTypeDef *"
+            },
+            {
+              "name": "pData",
+              "type": "uint32_t *"
+            },
+            {
+              "name": "Length",
+              "type": "uint32_t"
+            }
+          ]
+        },
+        "Error_Handler": {
+          "returns": "void",
+          "arguments": []
+        }
+      },
+      "enums": {
+        "HAL_StatusTypeDef": {
+          "HAL_OK": 0,
+          "HAL_ERROR": 1,
+          "HAL_BUSY": 2,
+          "HAL_TIMEOUT": 3
+        }
+      },
+      "type_context": "HAL_ADC_Start_DMA"
+    },
+    "adc_dma_timeout": {
+      "functions": {
+        "HAL_ADC_ConvCpltCallback": {
+          "returns": "void",
+          "arguments": [
+            {
+              "name": "adc",
+              "type": "ADC_HandleTypeDef *"
+            }
+          ]
+        },
+        "Error_Handler": {
+          "returns": "void",
+          "arguments": []
+        }
+      },
+      "type_context": "HAL_ADC_ConvCpltCallback"
+    },
+    "clock_macros": {
+      "macros": {
+        "context": "platform_adc_start",
+        "expressions": [
+          "RCC",
+          "RCC_CFGR_SWS_Msk",
+          "RCC_CFGR_SWS_Pos",
+          "RCC_CFGR_HPRE_Msk",
+          "RCC_CFGR_HPRE_Pos",
+          "RCC_CFGR_PPRE_Msk",
+          "RCC_CFGR_PPRE_Pos",
+          "__HAL_RCC_ADC1_IS_CLK_ENABLED()",
+          "__HAL_RCC_TIM3_IS_CLK_ENABLED()",
+          "__HAL_RCC_DMA1_IS_CLK_ENABLED()"
+        ]
+      }
+    },
+    "gpio_macros": {
+      "macros": {
+        "context": "platform_adc_start",
+        "expressions": [
+          "GPIOA",
+          "__HAL_RCC_GPIOA_IS_CLK_ENABLED()"
+        ]
+      }
+    },
+    "runtime_macros": {
+      "macros": {
+        "context": "HAL_TIM_PeriodElapsedCallback",
+        "expressions": [
+          "TIM3",
+          "TIM_CR1_CEN",
+          "DMA1_Channel1"
+        ]
+      }
+    },
+    "adc_init_macros": {
+      "macros": {
+        "context": "platform_adc_prepare",
+        "expressions": [
+          "ADC1",
+          "ADC_RESOLUTION_12B",
+          "ADC_SCAN_DIRECTION_FORWARD",
+          "ADC_CLOCK_ASYNC_DIV1",
+          "ADC_CFGR1_SCANDIR",
+          "ADC_SMPR_SMP",
+          "DMA1_Channel1",
+          "DMA_PERIPH_TO_MEMORY",
+          "DMA_NORMAL",
+          "DMA_MINC_ENABLE",
+          "DMA_PDATAALIGN_HALFWORD",
+          "DMA_MDATAALIGN_HALFWORD",
+          "ADC_SOFTWARE_START",
+          "ADC_EXTERNALTRIGCONVEDGE_NONE"
+        ]
+      }
+    },
+    "tim_init_macros": {
+      "macros": {
+        "context": "platform_adc_prepare",
+        "expressions": [
+          "TIM3",
+          "TIM_CR1_CEN",
+          "__HAL_TIM_GET_AUTORELOAD(&htim3)"
+        ]
+      }
+    },
+    "rtc_init_macros": {
+      "macros": {
+        "context": "platform_adc_prepare",
+        "expressions": [
+          "RCC",
+          "RTC"
+        ]
+      }
+    },
+    "application": {
+      "functions": {
+        "main": {
+          "returns": "int",
+          "arguments": []
+        },
+        "loop": {
+          "returns": "void",
+          "arguments": []
+        },
+        "setup": {
+          "returns": "void",
+          "arguments": []
+        },
+        "HardFault_Handler": {
+          "returns": "void",
+          "arguments": []
+        }
+      },
+      "type_context": "loop"
+    }
+  }
+}

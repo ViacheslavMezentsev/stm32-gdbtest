@@ -5,8 +5,8 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.37 (черновик для согласования) |
-| **Дата формирования** | 30.09.2026 |
+| **Ревизия** | 0.38 (черновик для согласования) |
+| **Дата формирования** | 01.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0; выпущен кандидат 0.1.0-rc.1 (версия Python `0.1.0rc1`, `API_VERSION = 1`) |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
@@ -65,6 +65,17 @@
 | 0.36 | 30.09.2026 | Итоговая сверка HAL→CMSIS F030 и пакет веток; G.13. Нормативные требования и тест-кейсы не изменены. |
 
 | 0.37 | 30.09.2026 | Lowercase tests в собственных профилях/пакетах; remote.toml и ignore; TC-128 сохраняет старые пакеты. |
+
+| 0.38 | 01.10.2026 | Автономный HAL fixture F030: 17 сценариев, provenance и импорты, TC-129. Границы форматирования импортированного кода. |
+
+### Изменения ревизии 0.38
+
+Изменённые и новые пункты помечены `(р.0.38)`.
+
+| Пункт | Тип | Изменение |
+| :--- | :--- | :--- |
+| 8.32, 9.2, 10, G.15 | нов. | HAL fixture и offline-приёмка TC-129; HW ещё не выполнен |
+| 8.11 | изм. | Форматирование только собственных исходников, исключения сохранённого кода |
 
 ### Изменения ревизии 0.37
 
@@ -1314,7 +1325,7 @@ flowchart LR
 
 8.10. Изменения ДОЛЖНЫ проверяться CI по п. 8.11–8.16 и локально по п. 7.7.5; аппаратные проверки выполняются отдельно в стендовом проекте. `[U]` (р.0.3)
 
-8.11. CI ДОЛЖЕН без отладчика и платы выполнять уровни: docs — `check_spec.py --strict` для ТЗ, локальные ссылки Markdown и пары RU/EN; host — host-тесты `tests/host`; format — соответствие исходников C/C++ файлу `.clang-format`; firmware — сборка и проверка CI-прошивок до GDB-сервера. `[N]` (р.0.4)
+8.11. CI ДОЛЖЕН без отладчика и платы выполнять уровни: docs — `check_spec.py --strict` для ТЗ, локальные ссылки Markdown и пары RU/EN; host — host-тесты `tests/host`; format — соответствие собственных исходников C/C++ файлу `.clang-format`; сохранённые tests/hal-f030/Core и src/platform.c исключаются, пользовательские src/app.h и src/*.cpp проверяются по локальному стилю; firmware — сборка и проверка CI-прошивок до GDB-сервера. `[N]` (р.0.38)
 
 8.12. Окружение CI ДОЛЖНО задаваться lock-файлом `ci/dependencies.lock.json`: базовый образ Ubuntu 24.04 по digest, архивы по SHA-256, репозитории по коммиту; сборка образа ДОЛЖНА проверять наличие GDB-Python ≥ 3.11 у каждого GCC. stm32-cmake-yml в окружение и CI-прошивки не входит. `[N]` (р.0.3)
 
@@ -1355,6 +1366,9 @@ flowchart LR
 8.30. HW_CI_RTC_DEADLINE ДОЛЖЕН проверять истечение общего rtc_wait при mask=0 с error3 через не менее 1000 ticks без изменения BDCR; prepare ДОЛЖЕН входить в CI. Инъекция НЕ ДОЛЖНА заявляться физическим отказом LSI. `[N]` (р.0.35)
 
 8.31. Собственные профили/примеры и новые пакеты ДОЛЖНЫ использовать каталог tests; чтение прежних проектов Tests и пакетов schema1 profile/Tests ДОЛЖНО сохраняться. Локальные remote.toml и *-remote.toml ДОЛЖНЫ исключаться из Git, шаблон remote.example.toml сохраняется. Сторонние имена каталогов не изменяются. `[N]` (р.0.37)
+
+8.32. Автономный tests/hal-f030 ДОЛЖЕН сохранять 17 HAL-сценариев F030 потребителя 0c8c966, contracts/requirements, происхождение файлов и отдельные build/manifest; собираться с CubeF0 1.11.6 без stm32-cmake-yml и исходного потребителя, -Og -g3 без LTO. Offline-проверка ДОЛЖНА включать 17 prepare, traceability, точный набор ID, реальный импорт сценариев и хеши переноса CRLF→LF. Исходный HAL-профиль НЕ ДОЛЖЕН удаляться до отдельной CI/HW-приёмки; offline НЕ ДОЛЖЕН трактоваться как HW PASS. `[N]` (р.0.38)
+
 
 
 
@@ -1508,6 +1522,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-126 | F030 ADC busy, prepare и HW | CONT/ADSTART → error6, sequence/quality=0, PASS; docs/ru/F030_ADC_BUSY.md (р.0.34) |
 | TC-127 | F030 RTC deadline, prepare и HW | mask=0 → error3 после 1000 ticks, BDCR неизменен; исправленный PASS, HAL восстановлен; docs/ru/F030_RTC_DEADLINE.md (р.0.35) |
 | TC-128 | tests naming/package compatibility, host/Linux | Новый пакет profile/tests, старый profile/Tests читается; configure/prepare на case-sensitive filesystem; ignore remote.toml (р.0.37) |
+| TC-129 | HAL fixture F030, build/CTest host | GCC13 Windows/Linux: сборка, 17 prepare + trace + inventory/imports/provenance; HW и интеграция в общий CI — следующий этап (р.0.38) |
 
 ---
 
@@ -1688,6 +1703,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 8.29 | tests/firmware/profiles/f030r8/tests/board/test_adc_faults.py; ci/run_checks.py | TC-126 |
 | 8.30 | tests/firmware/profiles/f030r8/tests/board/test_rtc.py; ci/run_checks.py | TC-127 |
 | 8.31 | stm32_gdbtest/package.py; tests/host/test_package.py; .gitignore; ci/run_checks.py | TC-128 |
+| 8.32 | tests/hal-f030/CMakeLists.txt, verify_fixture.py, profile/tests, provenance/source.json | TC-129 (р.0.38) |
 
 ---
 
@@ -1928,3 +1944,5 @@ G.12. RTC deadline F030: первоначальный ERROR macro context сох
 G.13. Сверены 17 HAL и 18 CMSIS-сценариев F030: функциональный baseline принят в документированном объёме; HAL callback handles/macros/force_return и промежуточное TIM3 CEN=0 не перенесены. Активный HAL-профиль сохраняется до отдельной регрессии этих механизмов. docs/ru/F030_CMSIS_ACCEPTANCE.md. (р.0.36)
 
 G.14. Переименование собственных Tests профилей/примеров выполнено через промежуточное имя для Windows/Git. Новые пакеты используют profile/tests, старые manifest paths читаются без изменения schema. Исторический EXPORT_MANIFEST и намеренные uppercase fixtures сохранены. (р.0.37)
+
+G.15. HAL fixture F030 выделен в tests/hal-f030; сохранены исходники и 17 сценариев с локальными импортами и TECH-ссылками. Проверка переноса отделена от аппаратной приёмки, общая CI-интеграция следует отдельно. docs/ru/F030_HAL_REGRESSION.md. (р.0.38)
