@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Acceptance at 5b7b466: Hardware workflow and all 27 JSON reports verified; local Windows matrix exercised. ST server required USB reconnect, retained as a limitation; original firmware restored.
+
 - Repeated run --package preserves previous reports and uses separate clean sources; TC-133. Hardware workflow exposed deletion of earlier JSON evidence; acceptance must be repeated.
 
 - rc.2 acceptance at 873f1ac: SSH lifecycle F030/ST-Link/OpenOCD, F103/J-Link, F411/ST-Link/OpenOCD — 10/10 steps each, original firmware restored; Hardware workflow and the local Windows matrix remain pending.

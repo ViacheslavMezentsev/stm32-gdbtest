@@ -2,29 +2,19 @@
 
 [Документация](index.md) → Текущее состояние · [English](../en/STATUS.md)
 
-
-Срез: 01.10.2026, выпускная ветка от main `eaf31ea`. Опубликован rc.1; готовится
-[0.1.0-rc.2](RC2_READINESS.md). В выпускной ветке Python-версия —
-`0.1.0rc2`, API_VERSION=1. Новые проверки ниже не являются финальной приёмкой rc.2.
-Поставка — закреплённый Git-подмодуль; pip-пакета нет.
-
-Приёмка rc.2 на a48158c: удалённая Nucleo CMSIS 18/18 и HAL 17/17, повторы и recovery PASS; полная выпускная матрица остаётся открытой. [Протокол и сохранённые ошибки](RC2_READINESS.md).
-
-На 873f1ac: Docs/Offline SUCCESS и цикл runner через SSH — по 10/10 для F030/OpenOCD, F103/J-Link и F411/OpenOCD, с восстановлением исходных прошивок. Это ещё не Linux package/Hardware workflow и не локальная Windows-матрица.
-
-## Hardware workflow: результат и потеря отчётов
-
-На 759840a: Hardware 36787681339, prepare/hardware SUCCESS. Сборка пакетов в GitHub Ubuntu, выполнение на Orange Pi Linux aarch64. Три summary и журнал: по 10/10. Однако open_package удалял предыдущие runs при каждом открытии: в артефактах осталось по одному after-recovery JSON. Эти данные подтверждают журнал выполнения, но не полную сохранность доказательств; приёмка требует повторения после исправления.
-
-Локальный архив: build/rc2-acceptance/hardware-36787681339/hw; восстановление: restore.json — boot/blink PASS для всех трёх исходных HAL, reset_run. F030 stand на runner исправлен владельцем на ST-Link/OpenOCD. Платы оставлены работающими. Новое исправление проверяется TC-133, затем Offline/Hardware на новом SHA.
+Срез rc.2: 5b7b466. Docs/Offline/Hardware SUCCESS; все 27 JSON из GitHub проверены.
+Windows: F030 CMSIS 18/18, HAL 17/17 с повторами/recovery; циклы F030/OpenOCD,
+F103/J-Link, F411/OpenOCD — по 10/10. ST server завершён после USB reconnect;
+это не непрерывный 10/10, причина USB-сбоя не установлена. Все исходные HAL
+восстановлены. [Подробный протокол и оставшиеся условия](RC2_READINESS.md).
 
 ## Текущий состав и доказательства
 
 | Область | Проверенный объём и границы |
 | --- | --- |
 | Host | 98 unittest; Windows: 8 платформенных skips. Linux пропускает Windows-only проверки; точный результат сохраняется в журнале, пропуски не считаются HW PASS |
-| Offline CI | Docs, format, host; CMSIS F030/F103/F411 × GCC13/14/15; отдельный HAL F030 на GCC13, 19 CTest и 5 отрицательных contracts. Все пять jobs Offline прошли на 7f3c65b |
-| CMSIS F030 | 18 сценариев: boot/clock/GPIO/blink, TIM3, ADC/DMA/численные векторы, Sleep, RTC и отказы. HW: единый прогон 18/18 на a48158c через SSH/Orange Pi; HAL восстановлен. См. RC2_READINESS; локальная Windows-матрица ещё впереди |
+| Offline CI | Docs, format, host; CMSIS F030/F103/F411 × GCC13/14/15; отдельный HAL F030 на GCC13, 19 CTest и 5 отрицательных contracts. Все пять jobs Offline прошли на 5b7b466 |
+| CMSIS F030 | 18 сценариев: boot/clock/GPIO/blink, TIM3, ADC/DMA/численные векторы, Sleep, RTC и отказы. HW: единый прогон 18/18 на 5b7b466 локально Windows; HAL восстановлен. Ранее SSH/Orange Pi на a48158c; см. RC2_READINESS |
 | HAL F030 | Автономный tests/hal-f030: 17/17, шесть повторов после инъекций, ожидаемый timeout ERROR, recovery и восстановление HAL потребителя — Windows/ST-Link/OpenOCD |
 | CMSIS F103/F411 | По два сценария boot/GPIO; полный перенос периферии ещё не выполнен |
 | minimal-consumer F411 | Отдельный пример подключения CMake без YAML; проверяет подключение модуля, не полную периферию платы |

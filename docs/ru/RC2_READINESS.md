@@ -45,11 +45,11 @@ API_VERSION=1 и схемы сохраняются, если аудит не о�
 
 | Стенд / режим | Обязательное доказательство rc.2 | Статус |
 | --- | --- | --- |
-| NUCLEO-F030R8, native ST-Link/SWD, OpenOCD, Windows | Единый набор 18 CMSIS-сценариев; отдельно цикл записи/identity/full-image/verify-only/timeout/recovery | Ожидает кандидата |
-| Та же Nucleo, HAL fixture | 17 сценариев, 6 положительных повторов, timeout/recovery и restore | Ожидает кандидата; предыдущая приёмка в F030_HAL_VALIDATION |
-| WeAct BluePill-Plus F103C8, J-Link/SWD, Windows | Базовые сценарии и цикл runner с recovery | Ожидает кандидата |
-| BlackPill F411CE, ST-Link/SWD, OpenOCD и ST GDB Server, Windows | Базовые сценарии и цикл runner с recovery для обоих backend | Ожидает кандидата |
-| Windows → Orange Pi 5 по SSH; pack/run --package; Hardware workflow | Повтор согласованной удалённой матрицы, пакеты того же кандидата | Orange Pi доступен по SSH, runner запущен; подключение плат согласовать |
+| NUCLEO-F030R8, native ST-Link/SWD, OpenOCD, Windows | Единый набор 18 CMSIS-сценариев; отдельно цикл записи/identity/full-image/verify-only/timeout/recovery | 5b7b466: CMSIS 18/18, lifecycle 10/10, restore PASS |
+| Та же Nucleo, HAL fixture | 17 сценариев, 6 положительных повторов, timeout/recovery и restore | 5b7b466: 17/17 + 6 repeats, timeout/recovery/restore PASS |
+| WeAct BluePill-Plus F103C8, J-Link/SWD, Windows | Базовые сценарии и цикл runner с recovery | 5b7b466: 10/10, restore PASS |
+| BlackPill F411CE, ST-Link/SWD, OpenOCD и ST GDB Server, Windows | Базовые сценарии и цикл runner с recovery для обоих backend | 5b7b466: OpenOCD 10/10; ST USB ERROR + reconnect, continuation PASS |
+| Windows → Orange Pi 5 по SSH; pack/run --package; Hardware workflow | Повтор согласованной удалённой матрицы, пакеты того же кандидата | 5b7b466: Hardware 36788964902 PASS; 27 JSON verified |
 
 tests/firmware/run_hw.py проверяет жизненный цикл runner через boot/GPIO.
 Он не запускает автоматически все 18 F030-сценариев: полный набор выполнять
@@ -195,3 +195,40 @@ GPIO после recovery. После каждого набора отдельн�
 Локальный архив: build/rc2-acceptance/hardware-36787681339/hw; восстановление: restore.json — boot/blink PASS для всех трёх исходных HAL, reset_run. F030 stand на runner исправлен владельцем на ST-Link/OpenOCD. Платы оставлены работающими. Новое исправление проверяется TC-133, затем Offline/Hardware на новом SHA.
 
 Локальная проверка исправления: Windows docs/host 4/4; Linux Docker host 1/1; 98 host-тестов (Windows — 8 платформенных skips). Два последовательных CLI prepare одного F030-пакета сохранили оба JSON в отдельных sessions. Аппаратный повтор исправления пока не выполнен.
+
+## Приёмка 5b7b466: пакеты и локальные стенды (01.10.2026)
+
+SHA кода: 5b7b4661a27db497f74f475de667b8df731e9c99. Docs 36788642783,
+Offline 36788643033 и Hardware 36788964902 — SUCCESS. Hardware собрал пакеты
+в GitHub Ubuntu и выполнил их на Orange Pi Linux aarch64: по 10/10 этапов
+F030/OpenOCD, F103/J-Link, F411/OpenOCD. Проверены все 27 отдельных JSON,
+их соответствие summary, ожидаемые ERROR verify-only/timeout и recovery.
+Скачанный владельцем hardware-results.zip содержит те же 27 JSON побайтно.
+Первоначальный сетевой отказ скачивания ZIP с Windows не был ошибкой workflow.
+Локальные доказательства: build/rc2-acceptance/hardware-36788964902, audit.json,
+github-audit.json и restore.json. Исходные HAL восстановлены, boot/blink PASS.
+
+Владелец перенёс три стенда на Windows, сохранив SWD. На том же SHA:
+
+| Стенд / набор | Результат | Доказательства |
+| --- | --- | --- |
+| NUCLEO-F030R8 / ST-Link / OpenOCD, CMSIS | 18/18; restore boot/blink PASS | f030-windows-full-20260930T230819Z |
+| Та же Nucleo, lifecycle | 10/10; restore PASS | f030r8-windows-nucleo-f030r8-20260930T230946Z |
+| Та же Nucleo, HAL | 17/17, 6 повторов, ожидаемый timeout ERROR, recovery, ADC после recovery, restore PASS | 5b7b466: 17/17 + 6 repeats, timeout/recovery/restore PASS |
+| WeAct BluePill-Plus / F103C8 / J-Link | 10/10; restore PASS | f103c8-windows-bluepill-jlink-20260930T231215Z |
+| BlackPill / F411CE / ST-Link / OpenOCD | 10/10; restore PASS | f411ce-windows-blackpill-20260930T231302Z |
+| Та же F411, ST GDB Server 7.14 | 8 этапов PASS, затем USB ERROR до ready; после reconnect boot, timeout/recovery и after-recovery PASS, restore PASS | f411ce-windows-blackpill-stlink-20260930T231349Z и 20260930T231636Z |
+
+Каталоги без полного префикса находятся в build/rc2-acceptance; в каждом summary.json.
+ST server — не непрерывный 10/10: исходный timeout не начался, восстановление
+через ST и OpenOCD тоже отказало. ST сообщил Target USB comms error; OpenOCD
+прочитал некорректные сведения STLINK V8J0S0 / VID:PID 0000:0001. После ручного
+USB reconnect связь и HAL boot/blink восстановились; затем boot подготовил
+CMSIS-образ для оставшихся двух этапов, и HAL снова восстановлен.
+Причина не установлена; reconnect не является исправлением runtime или
+доказательством устойчивости длительной серии. Не скрывать это ограничение в релизе.
+
+Все три платы оставлены на Windows, исходный HAL running. Подключение кандидата
+потребителем, финальная сверка документации/текста выпуска и проверка итогового
+SHA остаются открытыми. Последующие изменения только документации не заменяют
+этот SHA аппаратно проверенного кода.

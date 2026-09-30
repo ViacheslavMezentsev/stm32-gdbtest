@@ -2,29 +2,19 @@
 
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
-
-Snapshot: 2026-10-01, release branch based on main `eaf31ea`. rc.1 is published;
-[0.1.0-rc.2](RC2_READINESS.md) is being prepared. In the release branch,
-Python version is `0.1.0rc2`, API_VERSION=1. The checks below are not final rc.2 acceptance.
-Delivery is a pinned Git submodule; there is no pip package.
-
-rc.2 acceptance at a48158c: remote Nucleo CMSIS 18/18 and HAL 17/17, repeats and recovery PASS; the complete release matrix remains open. [Evidence and preserved failures](RC2_READINESS.md).
-
-At 873f1ac: Docs/Offline SUCCESS and runner lifecycle over SSH — 10/10 each for F030/OpenOCD, F103/J-Link and F411/OpenOCD, with original firmware restored. This is not yet Linux package/Hardware workflow or the local Windows matrix.
-
-## Hardware workflow: execution and lost reports
-
-At 759840a: Hardware 36787681339, prepare/hardware SUCCESS. Packages built on GitHub Ubuntu, executed on Orange Pi Linux aarch64. Three summaries and the log report 10/10 each. However, open_package deleted earlier runs on each open: artifacts retain only one after-recovery JSON per board. These data support the execution log, not complete evidence retention; acceptance requires a repeat after the fix.
-
-Local archive: build/rc2-acceptance/hardware-36787681339/hw; restore.json records boot/blink PASS for all three original HAL images, reset_run. The owner corrected the F030 runner stand to ST-Link/OpenOCD. Boards remain running. TC-133 covers the fix; Offline/Hardware must follow on the new SHA.
+rc.2 snapshot: 5b7b466. Docs/Offline/Hardware SUCCESS; all 27 GitHub JSON reports verified.
+Windows: F030 CMSIS 18/18, HAL 17/17 with repeats/recovery; F030/OpenOCD,
+F103/J-Link and F411/OpenOCD lifecycles — 10/10 each. ST server completed after
+USB reconnect, not an uninterrupted 10/10; the USB failure cause is unknown.
+All original HAL images restored. [Evidence and remaining gates](RC2_READINESS.md).
 
 ## Current scope and evidence
 
 | Area | Verified scope and limits |
 | --- | --- |
 | Host | 98 unittests; Windows: 8 platform skips. Linux skips Windows-only checks; exact results are logged, skips do not count as HW PASS |
-| Offline CI | Docs, format, host; CMSIS F030/F103/F411 × GCC13/14/15; separate GCC13 HAL F030, 19 CTest checks and 5 negative contracts. All five Offline jobs passed at 7f3c65b |
-| CMSIS F030 | 18 cases: boot/clock/GPIO/blink, TIM3, ADC/DMA/numeric vectors, Sleep, RTC and failures. HW: one complete 18/18 run at a48158c over SSH/Orange Pi; HAL restored. See RC2_READINESS; the local Windows matrix remains pending |
+| Offline CI | Docs, format, host; CMSIS F030/F103/F411 × GCC13/14/15; separate GCC13 HAL F030, 19 CTest checks and 5 negative contracts. All five Offline jobs passed at 5b7b466 |
+| CMSIS F030 | 18 cases: boot/clock/GPIO/blink, TIM3, ADC/DMA/numeric vectors, Sleep, RTC and failures. HW: one complete 18/18 run at 5b7b466 locally on Windows; HAL restored. Earlier SSH/Orange Pi run at a48158c; see RC2_READINESS |
 | HAL F030 | Standalone tests/hal-f030: 17/17, six post-injection repeats, expected timeout ERROR, recovery and consumer HAL restoration — Windows/ST-Link/OpenOCD |
 | CMSIS F103/F411 | Two boot/GPIO cases each; full peripheral migration is not complete |
 | minimal-consumer F411 | Separate CMake integration example without YAML; demonstrates module integration, not complete board peripherals |
