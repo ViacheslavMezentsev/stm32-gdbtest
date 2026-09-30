@@ -21,6 +21,7 @@ def rtc_init(target):
 
 @case("HW_CI_RTC_ALARM", labels=("rtc", "irq"), contracts=("ci_rtc_macros",))
 def rtc_alarm(target):
+    # TECH-003: docs/ru/TESTING_TECHNIQUES.md#tech-003 (EN: docs/en/TESTING_TECHNIQUES.md#tech-003).
     target.reach("RTC_IRQHandler")
     before = target.value("board_rtc_events")
     for index in range(2):
@@ -38,6 +39,8 @@ def rtc_alarm(target):
 
 @case("HW_CI_RTC_DEADLINE", labels=("rtc", "negative"), contracts=("ci_rtc_macros",))
 def rtc_deadline(target):
+    # TECH-002: docs/ru/TESTING_TECHNIQUES.md#tech-002 (EN: docs/en/TESTING_TECHNIQUES.md#tech-002).
+    # TECH-005: docs/ru/TESTING_TECHNIQUES.md#tech-005 (EN: docs/en/TESTING_TECHNIQUES.md#tech-005).
     target.reach("rtc_wait", when="error == 3")
     target.check("LSI wait mask", target.value("mask"), 1 << 1)
     before = target.value("board_ticks_ms")

@@ -77,3 +77,5 @@ reference: a changed expansion is visible in the report but not rejected by itse
 The table contains verified F1/F4 examples and separately marked candidates; it is
 not a promise that the macros exist for every STM32 and HAL. Real contracts and
 hardware results are [in the stand project](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/HAL_MACRO_GUIDE.md) (Russian).
+
+[Techniques catalogue TECH-001…008](TESTING_TECHNIQUES.md) — stable scenario references, build prerequisites, limits and restoration. Preserve TECH-001/003/004 references when migrating HAL scenarios.

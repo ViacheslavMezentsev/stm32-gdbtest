@@ -4,6 +4,7 @@ from stm32_gdbtest import case
 
 @case("HW_CI_ADC_BUSY", labels=("adc", "negative"), contracts=("ci_adc_macros",))
 def adc_busy(target):
+    # TECH-006: docs/ru/TESTING_TECHNIQUES.md#tech-006 (EN: docs/en/TESTING_TECHNIQUES.md#tech-006).
     target.reach("board_adc_sample")
     target.check("initial ADC idle", target.value("ADC1->CR & ADC_CR_ADSTART"), 0)
     # Start continuous conversions while the core is halted: ADSTART stays asserted.

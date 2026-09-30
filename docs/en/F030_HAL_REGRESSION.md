@@ -81,3 +81,5 @@ accepting the batch. Do not remove its old HAL profile yet.
 Removing the consumer HAL profile is a separate decision after publication,
 CI and hardware acceptance. This fixture preserves module mechanisms on F0;
 it does not replace F1/F4 HAL differences or the future F411 consumer regression.
+
+[Techniques catalogue TECH-001…008](TESTING_TECHNIQUES.md) — stable scenario references, build prerequisites, limits and restoration. Preserve TECH-001/003/004 references when migrating HAL scenarios.

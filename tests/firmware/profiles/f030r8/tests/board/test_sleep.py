@@ -4,6 +4,7 @@ from stm32_gdbtest import case
 
 
 def reach_wfi_irq(target, handler, exception):
+    # TECH-008: docs/ru/TESTING_TECHNIQUES.md#tech-008 (EN: docs/en/TESTING_TECHNIQUES.md#tech-008).
     # An IRQ can arrive before WFI: bound retries and inspect the interrupted frame.
     for attempt in range(8):
         target.reach(handler)

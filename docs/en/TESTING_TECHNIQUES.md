@@ -1,0 +1,176 @@
+# Testing techniques catalogue
+
+[Documentation](index.md) · [Русский](../ru/TESTING_TECHNIQUES.md)
+
+A practical companion to [test authoring](TEST_AUTHORING.md). HAL techniques
+remain documented after examples migrate to CMSIS: firmware changes, but
+experience with GDB, DWARF, callbacks and injections remains useful.
+These are method cards, not new specification requirements, APIs or coverage metrics.
+
+## Using this catalogue
+
+`TECH-NNN` IDs are stable: never renumber or reuse them. Titles may change;
+anchors remain. Mark obsolete cards and link replacements instead of deleting IDs.
+Reference a technique next to a nontrivial scenario action:
+
+```python
+# TECH-005: docs/ru/TESTING_TECHNIQUES.md#tech-005 (EN: docs/en/TESTING_TECHNIQUES.md#tech-005).
+# Force the wait predicate false; this does not simulate a failed oscillator.
+target.set_value("mask", 0)
+```
+
+Paths are relative to the module root. External consumers use a GitHub URL
+pinned to their gitlink and the same anchor. `@case` and requirements retain
+their IDs; TECH replaces neither ELF contracts nor traceability. No new decorator
+or API field is introduced.
+
+| Group | Techniques |
+| --- | --- |
+| ELF, build and observation | [001 macros](#tech-001), [002 context](#tech-002) |
+| Asynchronous execution | [003 callbacks/IRQs](#tech-003) |
+| Controlled failures | [004 function return](#tech-004), [005 argument](#tech-005), [006 MMIO](#tech-006) |
+| Numerical checks | [007 vectors](#tech-007) |
+| Sleep and interrupts | [008 WFI context](#tech-008) |
+
+The cards derive from executed examples. Another MCU, HAL, GCC or backend needs
+fresh validation. Linked code/protocols do not promise identical results in every environment.
+
+<a id="tech-001"></a>
+## TECH-001 — ELF macros and independent expectations
+
+**Purpose:** inspect configuration using HAL predicates/getters and CMSIS fields.
+**Environment:** `-g3` in the relevant translation unit, correct MCU defines/HAL
+and a macro context in the contract. `-g3` does not retain unused functions;
+a definition in an installed header does not prove its presence in the ELF.
+
+Prepare/contracts first, then reach the required context and use separate checks.
+Compare mask results with masks or normalize them; do not always expect 1.
+Define expected frequencies, divisors and physical channels independently:
+F411 HAL TEMPSENSOR includes a service flag, while the hardware channel is 18.
+Do not invent missing definitions through macro define to obtain PASS.
+
+**Caution:** a getter can read FIFO/read-to-clear registers or participate in an
+SR/DR sequence. Setters are separate injections. Clock enabled does not prove a
+particular ENABLE macro executed. Pure observation needs no restoration; if a
+read has side effects, define recovery and scope beforehand.
+[HAL guidance and validated scope](HAL_MACRO_GUIDE.md).
+
+<a id="tech-002"></a>
+## TECH-002 — Capture an address before changing DWARF context
+
+**Purpose:** compare one MMIO register before and after reaching another function.
+Capture `&RCC->BDCR` where RCC is visible, then read through that address using
+the correct type/width. Do not replace lost macro context with an arbitrary constant.
+
+**Environment:** verified macro context and type width; this example targets a
+32-bit STM32, not a universal MMIO helper. The address belongs to the same session
+and memory map; do not reuse it across ELF files or targets.
+**Limit:** this addresses lost macro context, not register read safety. The
+technique itself performs no injection.
+[RTC deadline: original ERROR and fix](F030_RTC_DEADLINE.md),
+[rtc_deadline](../../tests/firmware/profiles/f030r8/tests/board/test_rtc.py).
+
+<a id="tech-003"></a>
+## TECH-003 — Callback/IRQ to published result
+
+**Purpose:** connect a natural event to the correct peripheral instance and an
+application state change. HAL: reach the callback, check its handle, then wait
+for a second event and publication. CMSIS: check exception/flag, counter,
+thread-mode return and published result.
+
+**Environment:** visible symbols/arguments, operating IRQ/DMA and a suitable
+freeze policy. The HAL weak callback must resolve to the implementation under test.
+**Limit:** peripherals may keep running during halt. Callback frequency under a
+debugger does not measure real throughput; software IRQ does not prove a physical
+edge. Start the next scenario from the agreed reset state.
+[Original HAL ADC/TIM/RTC cases](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/0c8c966f0429710e6e20472fbd9fe8898da7cfee/tests/scenarios/peripheral_runtime.py),
+[CMSIS RTC](F030_CMSIS_RTC.md).
+
+<a id="tech-004"></a>
+## TECH-004 — Override HAL return and suppress a callback
+
+**Purpose:** test the caller's response while skipping a function body.
+Two distinct experiments: `HAL_ADC_Start_DMA` → `force_return("(HAL_StatusTypeDef)1")`
+checks Error_Handler; `force_return("")` from a void callback after DMA completion
+suppresses publication and checks the deadline. Neither publishes a new sequence.
+
+**Environment:** a real called frame, verified prototype/enum/ABI, arguments and
+symbols. For call-path stepping and force_return use a build without LTO and
+verify actual compile/link flags. `-Og -g3` does not guarantee absence of inline
+or optimized-out entities. Prepare cannot replace runtime frame/backend checks.
+
+**Limit:** the skipped HAL body is untested; no physical fault was reproduced.
+DMA has already finished in the void callback case; this is not a bus DMA timeout.
+After injection use reset_run and a separate positive ADC run; stop the series
+if recovery fails. [Both original experiments](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/0c8c966f0429710e6e20472fbd9fe8898da7cfee/tests/scenarios/peripheral_runtime.py).
+The module fixture is still [planned](F030_HAL_REGRESSION.md); old PASS is not new PASS.
+
+<a id="tech-005"></a>
+## TECH-005 — Inject a wait-predicate argument
+
+**Purpose:** exercise a real deadline branch without damaging oscillator setup.
+Reach `rtc_wait` with `error == 3`, check the original mask, capture ticks and
+BDCR, set mask=0 and reach rtc_fault. Check error3, at least 1000 firmware ticks,
+unchanged BDCR and no application start/RTC publication.
+
+**Environment:** a writable argument in the current frame; optimization has not
+removed the function/parameter. SysTick must run; an external runner timeout is mandatory.
+**Limit:** one stage's software deadline, not physical LSI failure or accurate 1000 ms.
+Restore with reset_run, then positive RTC_ALARM.
+[Code](../../tests/firmware/profiles/f030r8/tests/board/test_rtc.py), [protocol](F030_RTC_DEADLINE.md).
+
+<a id="tech-006"></a>
+## TECH-006 — Controlled peripheral state through MMIO
+
+**Purpose:** exercise an ADC busy guard or missing IRQ publication. ADC_BUSY
+checks idle, enables continuous conversion, confirms ADSTART, then checks error6
+and absent data. This differs from TECH-004. ADC_TIMEOUT disables DMA IRQ, not DMA.
+
+**Environment:** the actual MCU reference manual, RW/W1C/rc_w0 semantics and ADC
+behavior during halt. Never generalize read-modify-write to arbitrary status
+registers; report freeze policy and side effects. DMA/ADC may continue and cause OVR.
+**Limit:** one constructed state, not all ADC/DMA faults. Restore with reset_run,
+then normal ADC_DMA; recovery failure stops the series.
+[ADC_BUSY](F030_ADC_BUSY.md), [code](../../tests/firmware/profiles/f030r8/tests/board/test_adc_faults.py),
+[DMA timeout](F030_CMSIS_ADC_DMA.md).
+
+<a id="tech-007"></a>
+## TECH-007 — Independent numerical vectors and invalid inputs
+
+**Purpose:** test arithmetic through actual firmware function arguments/results.
+Supply independently calculated inputs/expectations, check boundaries and invalid
+inputs, then recovery of a normal result.
+**Environment:** visible arguments, C type widths/signedness, integer truncation
+and MCU calibration data. Do not copy expectations from the implementation under test.
+
+**Limit:** arithmetic, not analog sensor accuracy. m°C does not promise 0.001°C
+accuracy. Do not transplant two-point F4 calibration to F030. After argument
+injection return to the normal loop/reset and check quality.
+[F030 vectors and limits](F030_CMSIS_ADC_UNITS.md),
+[adc_vectors/adc_invalid](../../tests/firmware/profiles/f030r8/tests/board/test_ci.py).
+
+<a id="tech-008"></a>
+## TECH-008 — Interrupted WFI context
+
+**Purpose:** confirm progress after Sleep through a selected IRQ. Reach the
+handler, check the exception, unwind the interrupted frame and inspect the
+instruction before the saved PC. In this Cortex-M experiment WFI is halfword 0xBF30.
+An IRQ can arrive before WFI: attempts are bounded and their contexts recorded.
+
+**Environment:** GDB exception-frame unwinding, possibly through a trampoline;
+required symbols/instructions exist. ISA/PC rules depend on architecture.
+**Limit:** no current measurement, sleep duration or Stop/Standby evidence.
+IRQ isolation changes the environment: restore enable bits in finally and finish
+with reset_run; do not hide restoration errors.
+[Code](../../tests/firmware/profiles/f030r8/tests/board/test_sleep.py), [protocol](F030_CMSIS_SLEEP.md).
+
+## Growing the guide
+
+Look for an existing card before adding one. New IDs identify distinct techniques;
+link HAL/CMSIS variants without declaring them equivalent. Record build/context
+preconditions, action, independent criterion, intervention, restoration, limits
+and code/protocol with MCU/HAL/GCC/GDB/backend. Distinguish validated, candidate
+and untested uses. Update RU/EN and comments together. Initial errors are evidence too.
+After HAL/optimization changes repeat affected preflight and HW checks, not just links.
+Future topics: watchpoints, temporary freeze policies, sparse/full images and external
+stimuli. Add cards as experiments are generalized, without promising new APIs.

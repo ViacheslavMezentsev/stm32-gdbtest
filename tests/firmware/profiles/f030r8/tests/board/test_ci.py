@@ -28,6 +28,7 @@ def gpio(target):
 
 @case("HW_CI_CLOCK", labels=("clock",), contracts=("ci_clock_macros",))
 def clock(target):
+    # TECH-001: docs/ru/TESTING_TECHNIQUES.md#tech-001 (EN: docs/en/TESTING_TECHNIQUES.md#tech-001).
     target.reach("board_led_toggle")
     target.check("HSI enabled and ready", target.value("(RCC->CR & (RCC_CR_HSION | RCC_CR_HSIRDY)) == (RCC_CR_HSION | RCC_CR_HSIRDY)"), 1)
     target.check("SYSCLK HSI, AHB/APB divide by one", target.value("RCC->CFGR & (RCC_CFGR_SW | RCC_CFGR_SWS | RCC_CFGR_HPRE | RCC_CFGR_PPRE)"), 0)
@@ -117,6 +118,7 @@ def adc_dma(target):
 
 @case("HW_CI_ADC_TIMEOUT", labels=("adc", "dma", "negative"), contracts=("ci_adc_macros",))
 def adc_timeout(target):
+    # TECH-006: docs/ru/TESTING_TECHNIQUES.md#tech-006 (EN: docs/en/TESTING_TECHNIQUES.md#tech-006).
     target.reach("board_adc_sample")
     target.set_value("NVIC->ICER[0]", 1 << 9)
     target.reach("board_adc_fault")
@@ -146,6 +148,7 @@ def check_conversion(target, inputs, expected):
 
 @case("HW_CI_ADC_VECTORS", timeout_s=60, labels=("adc", "arithmetic"), contracts=("ci_adc_units",))
 def adc_vectors(target):
+    # TECH-007: docs/ru/TESTING_TECHNIQUES.md#tech-007 (EN: docs/en/TESTING_TECHNIQUES.md#tech-007).
     # Fixed analytic anchors; expected values are not computed using firmware code.
     for inputs, expected in (
         ((1800, 1500, 1500, 1800), (3300, 30000, 3)),

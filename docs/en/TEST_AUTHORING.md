@@ -83,3 +83,5 @@ keep the ERROR or FAIL reason; exceptions are not suppressed.
 External instruments and power are a deferred host-controller interface
 ([roadmap](../../TODO.md), Russian). There is no standard power-cycle and reconnect API
 yet; do not emulate it with hidden calls from a background GDB thread.
+
+[Techniques catalogue TECH-001…008](TESTING_TECHNIQUES.md) — stable scenario references, build prerequisites, limits and restoration. Preserve TECH-001/003/004 references when migrating HAL scenarios.
