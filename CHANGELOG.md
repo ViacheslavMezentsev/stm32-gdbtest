@@ -8,6 +8,8 @@
 
 ### Added
 
+- [Сверка HAL→CMSIS F030 и порядок пакета веток](docs/ru/F030_CMSIS_ACCEPTANCE.md).
+
 - F030: RTC deadline через инъекцию аргумента, API без изменений. [Протокол](docs/ru/F030_RTC_DEADLINE.md). ТЗ 0.35.
 
 - F030: проверка занятого ADC, API без изменений. [Протокол](docs/ru/F030_ADC_BUSY.md). ТЗ 0.34.

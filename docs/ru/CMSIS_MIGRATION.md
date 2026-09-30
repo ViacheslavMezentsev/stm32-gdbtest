@@ -13,31 +13,12 @@
 F401/F429 предстоит добавить; H503 остаётся на паузе. CMSIS относится к ARM,
 для RISC-V нужны соответствующие startup/BSP.
 
-## F030: сравнение с 17 HAL-сценариями
+## F030: актуальная сверка
 
-Первый этап выполнен: [boot/clock/GPIO/blink](F030_CMSIS_BASELINE.md) — 4/4
-на Nucleo/ST-Link/OpenOCD. Таблица ниже сохраняет исходную инвентаризацию;
-часть HW_CLOCK, относящаяся к периферии, ещё не перенесена.
-
-Источник — профиль f030r8 BlackPill-проекта на `7a198d1`. Два имеющихся
-CMSIS-сценария не заменяют все 17 исходных проверок.
-
-| Исходные сценарии | CMSIS fixture / недостающая проверка |
-| :--- | :--- |
-| HW_BOOT | HW_CI_BOOT проверяет app_loop/ticks; отдельно сохранить main/fault |
-| HW_GPIO | HW_CI_GPIO проверяет PA5 clock/output; добавить push-pull, pull, speed, initial level |
-| HW_CLOCK | Нужны независимые ожидания частот/делителей и clocks периферии |
-| HW_BLINK | Нужны High/Low и интервал ≥500 ms; app_state.ticks не миллисекунды |
-| HW_ADC_DMA_INIT, HW_ADC_DMA_RUNTIME | ADC/DMA отсутствуют; нужны настройка, завершение, публикация |
-| HW_TIM3_INIT, HW_TIM3_IRQ | TIM3/IRQ отсутствуют; нужны конфигурация и эффект обработчика |
-| HW_RTC_INIT, HW_RTC_ALARM | RTC отсутствует; нужны настройка и повторное событие |
-| HW_ADC_START_ERROR, HW_ADC_DMA_TIMEOUT | Определить отказ CMSIS-драйвера и дедлайн; HAL injection сохранить отдельной fixture |
-| HW_ADC_UNITS, HW_ADC_INVALID, HW_ADC_VECTORS | Перенести арифметику, калибровку и независимые численные ожидания |
-| HW_SLEEP_SYSTICK, HW_SLEEP_TIMER | Перенести WFI/wake sources и оговорки о влиянии отладчика |
-
-Локально 30.09.2026: Windows, GCC13.3.1-1.1, preset f030r8 — build PASS,
-`ctest --preset f030r8-offline` 3/3 (два prepare и traceability).
-Runner не подключался к плате; прошивка стенда не менялась. Это не новый HW PASS.
+[Итоговая таблица 17 HAL → 18 CMSIS-сценариев](F030_CMSIS_ACCEPTANCE.md)
+заменяет исходную инвентаризацию. Базовые функции проверены на Nucleo/ST-Link;
+HAL-specific handles/macros/force_return ещё требуют отдельного fixture.
+Полная миграция всех MCU не завершена, активный HAL-профиль пока сохраняется.
 
 ## Порядок приёмки
 

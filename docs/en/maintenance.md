@@ -170,3 +170,12 @@ hardware check.
   copy (`.gitattributes`): the CI image is also built on Windows. Other files in a
   Windows working copy may have CRLF (`core.autocrlf`) — keep the line endings of
   the file you edit.
+
+## Dependent branch batches
+
+By agreement with the owner, small tasks on one stand can be prepared in
+batches of3–4 branches. Independent branches start at main; dependent branches
+form a chain. Record bases/order in TODO. The owner pushes the batch; the agent
+verifies each SHA and all CI before proposing sequential land. Old SHA checks
+do not validate a rebase. Update the consumer gitlink after batch acceptance
+unless an intermediate integration is needed for validation.

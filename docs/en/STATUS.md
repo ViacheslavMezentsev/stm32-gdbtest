@@ -2,7 +2,7 @@
 
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
-F030 RTC: LSI Alarm A, 16/16 HW PASS, HAL restored. Core API unchanged. [RTC](F030_CMSIS_RTC.md).
+[F030 HAL→CMSIS mapping and branch batch order](F030_CMSIS_ACCEPTANCE.md). Previous16 +2 new cases tested on one ELF, not a single18/18 run. HAL restored.
 
 Snapshot: 2026-09-30. Release candidate **0.1.0-rc.1** (Python `0.1.0rc1`), `API_VERSION = 1`;
 the final check passed on the release commit `2143665` (section below); the owner sets the tag. The main delivery is a pinned Git submodule; there is no pip package

@@ -8,6 +8,11 @@
   Первая ветка: HW_CI_ADC_BUSY PASS, CTest 18/18, host96 (8 skips).
   Вторая: RTC deadline PASS после исправления macro context; CTest19/19,
   положительные ADC_DMA/RTC_ALARM после отказов PASS, HAL восстановлен.
+  Третья: [итоговая сверка](docs/ru/F030_CMSIS_ACCEPTANCE.md); HAL-профиль
+  сохраняется до отдельного HAL regression fixture. Далее CMSIS F103/F411
+  по согласованному стенду; оставшиеся аппаратные отказы явно не закрыты.
+  Каждый снимок: Linux docs/host/9 firmware pairs 13/13 PASS. GitHub CI
+  каждого SHA проверить после группового push; land пока не выполняется.
 
 - `codex/f030-cmsis-rtc` от `f494ab1`: RTC Alarm A/LSI и два сценария;
   16/16 HW PASS на новом ELF, HAL восстановлен. [Протокол](docs/ru/F030_CMSIS_RTC.md).

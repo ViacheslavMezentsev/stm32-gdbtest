@@ -53,3 +53,5 @@ F030 RTC: Alarm A на LSI, 16/16 HW PASS, HAL восстановлен. API я�
 F030: проверка занятого ADC, API без изменений. [Протокол](F030_ADC_BUSY.md).
 
 F030: RTC deadline через инъекцию аргумента, API без изменений. [Протокол](F030_RTC_DEADLINE.md).
+
+[Сверка HAL→CMSIS F030 и порядок пакета веток](F030_CMSIS_ACCEPTANCE.md).

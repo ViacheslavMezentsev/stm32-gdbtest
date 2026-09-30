@@ -13,31 +13,12 @@ the first is a regression fixture, the second demonstrates integration.
 F401/F429 remain to be added; H503 stays paused. CMSIS applies to ARM;
 RISC-V needs its own startup/BSP.
 
-## F030: comparison with 17 HAL scenarios
+## F030: current mapping
 
-First stage complete: [boot/clock/GPIO/blink](F030_CMSIS_BASELINE.md) — 4/4
-on Nucleo/ST-Link/OpenOCD. The table below retains the original inventory;
-the peripheral portion of HW_CLOCK is still pending.
-
-Source: BlackPill f030r8 profile at `7a198d1`. The two existing CMSIS scenarios
-do not replace all 17 original checks.
-
-| Original scenarios | CMSIS fixture / missing evidence |
-| :--- | :--- |
-| HW_BOOT | HW_CI_BOOT checks app_loop/ticks; retain separate main/fault checks |
-| HW_GPIO | HW_CI_GPIO checks PA5 clock/output; add push-pull, pull, speed, initial level |
-| HW_CLOCK | Add independent frequency/divider and peripheral clock expectations |
-| HW_BLINK | Add High/Low and ≥500 ms interval; app_state.ticks is not milliseconds |
-| HW_ADC_DMA_INIT, HW_ADC_DMA_RUNTIME | No ADC/DMA; add configuration, completion, publication |
-| HW_TIM3_INIT, HW_TIM3_IRQ | No TIM3/IRQ; add configuration and handler effects |
-| HW_RTC_INIT, HW_RTC_ALARM | No RTC; add configuration and recurring event |
-| HW_ADC_START_ERROR, HW_ADC_DMA_TIMEOUT | Define CMSIS driver failure/deadline; retain HAL injection in a separate fixture |
-| HW_ADC_UNITS, HW_ADC_INVALID, HW_ADC_VECTORS | Migrate arithmetic, calibration and independent numeric expectations |
-| HW_SLEEP_SYSTICK, HW_SLEEP_TIMER | Migrate WFI/wake sources and debugger-impact limitations |
-
-Local check, 2026-09-30: Windows, GCC13.3.1-1.1, f030r8 preset — build PASS,
-`ctest --preset f030r8-offline` 3/3 (two prepare tests and traceability).
-The runner did not connect to hardware or change its firmware. No new HW PASS.
+The [17 HAL →18 CMSIS acceptance table](F030_CMSIS_ACCEPTANCE.md) replaces the
+initial inventory. Basic functions passed on Nucleo/ST-Link; HAL-specific
+handles/macros/force_return still require a separate fixture. Migration of all
+MCUs is incomplete; retain the active HAL profile for now.
 
 ## Acceptance sequence
 
