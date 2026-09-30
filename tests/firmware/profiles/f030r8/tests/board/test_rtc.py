@@ -23,6 +23,9 @@ def rtc_init(target):
 def rtc_alarm(target):
     # TECH-003: docs/ru/TESTING_TECHNIQUES.md#tech-003 (EN: docs/en/TESTING_TECHNIQUES.md#tech-003).
     target.reach("RTC_IRQHandler")
+    # TECH-002: preserve the CMSIS address/mask before entering HAL-free app.c.
+    icsr_address = target.value("&SCB->ICSR")
+    active_mask = target.value("SCB_ICSR_VECTACTIVE_Msk")
     before = target.value("board_rtc_events")
     for index in range(2):
         target.check("RTC exception", target.value("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 18)
@@ -32,7 +35,7 @@ def rtc_alarm(target):
         if index == 0:
             target.reach("RTC_IRQHandler")
     target.reach("app_loop")
-    target.check("thread resumes", target.value("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 0)
+    target.check("thread resumes", target.value(f"*(unsigned int*){icsr_address} & {active_mask}"), 0)
     target.check("second alarm published", ((target.value("board_rtc_events") - before) & 0xFFFFFFFF) >= 2, True)
     target.check("no RTC error", target.value("board_rtc_error"), 0)
 

@@ -131,3 +131,5 @@ Fixed scenarios use SCB ICSR VECTACTIVE with CMSIS macro preflight. Firmware and
 runtime are unchanged; the complete set and CI must be repeated on the new SHA.
 Profile core_registers remains server-specific: diagnostic_errors preserves
 unavailable xPSR. This diagnostic limitation does not mean no IRQ occurred.
+
+Repeat at 8a7928c: 14 PASS, RTC_ALARM ERROR after reaching app_loop — SCB is outside the app.c DWARF context. HAL restore boot/blink PASS. The ICSR address and mask are now captured in RTC_IRQHandler before changing context (TECH-002). Evidence: build/rc2-acceptance/f030-full-20260930T222249Z/summary.json.

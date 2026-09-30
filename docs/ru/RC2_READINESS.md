@@ -132,3 +132,5 @@ GDB работает на Windows. Исходный HAL восстановлен
 Firmware и runtime не меняются; требуется повтор полного набора и CI нового SHA.
 core_registers профиля остаётся серверозависимым: diagnostic_errors сохраняет
 недоступный xPSR. Это ограничение диагностики, не отсутствие IRQ.
+
+Повтор на 8a7928c: 14 PASS, RTC_ALARM ERROR после перехода в app_loop — SCB вне DWARF-контекста app.c. Восстановление HAL boot/blink PASS. Адрес ICSR и маска теперь сохраняются в RTC_IRQHandler до перехода (TECH-002). Отчёт: build/rc2-acceptance/f030-full-20260930T222249Z/summary.json.
