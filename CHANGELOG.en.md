@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- F411 CMSIS RTC/Sleep/deadline/recovery group:20/20 HW +5 repeats, external timeout/recovery, HAL restored; specification0.51.
+
 - F411 CMSIS ADC1 CH18/17, DMA2 Stream0, factory arithmetic and state injections as one group.15/15 HW +3 repeats, HAL restored; specification0.50.
 
 - F411 CMSIS clocks/GPIO/SysTick/TIM2 group: 7/7 HW OpenOCD, HAL restored; specification0.49, unchanged API.

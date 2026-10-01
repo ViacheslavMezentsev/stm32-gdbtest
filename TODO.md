@@ -2,12 +2,18 @@
 
 ## Текущая работа
 
-- codex/f411-cmsis-adc-dma от main cb17bdf: ADC/DMA/units/failures одной группой.
-- [x] F411/OpenOCD15/15 HW +3 положительных повтора; HAL восстановлен, boot/blink PASS.
-- [x] Windows prepare/traceability16/16, протокол RU/EN и ТЗ0.50.
+- codex/f411-cmsis-rtc-sleep от main4a6f5d3: RTC/Sleep/deadlines/recovery одной группой.
+- [x] F411/OpenOCD20/20 HW +5 повторов; host timeout/recovery, HAL boot/blink восстановлены.
+- [x] Windows prepare/traceability21/21; протокол RU/EN и ТЗ0.51.
 - [x] Windows docs/host4/4, формат PASS; Linux host/девять MCU/GCC10/10 PASS.
-- [ ] Один push группы; проверить Docs/Offline опубликованного SHA, затем land владельцем.
-- [ ] Далее F411 RTC/Sleep/recovery; после групп обновить gitlink потребителя.
+- [ ] Один push группы, полный Docs/Offline опубликованного SHA, затем land владельцем.
+- [ ] Сверить перенос F030/F103/F411 и оставшиеся HAL-specific приёмы; обновить gitlink потребителя.
+- [ ] Согласовать дальнейший перенос примеров и оформление BlackPill как F411-потребителя; старые профили пока не удалять.
+
+## История F411 ADC/DMA (принята)
+
+- main4a6f5d3: Docs36856728377 и Offline36856728367 (все пять jobs) SUCCESS; land подтверждён.
+- 15/15 HW +3 повтора, HAL restore; Windows16/16, Linux10/10; ТЗ0.50.
 
 ## История F411 baseline (принята)
 

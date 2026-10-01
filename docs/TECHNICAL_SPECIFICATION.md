@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.50 (после rc.2, на согласовании) |
+| **Ревизия** | 0.51 (после rc.2, на согласовании) |
 | **Дата формирования** | 01.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0; после опубликованного кандидата 0.1.0-rc.2 (Python `0.1.0rc2`, `API_VERSION = 1`); rc.1 опубликован |
@@ -91,6 +91,16 @@
 | 0.49 | 01.10.2026 | F411 CMSIS clocks/GPIO/SysTick/TIM2, TC-137; API без изменений. |
 
 | 0.50 | 01.10.2026 | F411 ADC/DMA/units/failures, TC-138; API без изменений. |
+
+| 0.51 | 01.10.2026 | F411 RTC/Sleep/deadlines/recovery, TC-139; API без изменений. |
+
+### Изменения ревизии 0.51
+
+Изменённые и новые пункты ревизии 0.51 помечены `(р.0.51)`.
+
+| Пункты | Тип | Суть |
+| :--- | :--- | :--- |
+| 8.40, TC-139, матрица, G.27 | нов. | F411 calendar RTC, interrupted WFI и recovery с пределами доказательства. |
 
 ### Изменения ревизии 0.50
 
@@ -1505,6 +1515,9 @@ flowchart LR
 
 8.39. CMSIS fixture F411 ДОЛЖНА проходить восемь ADC-сценариев init/DMA/units/vectors/invalid/timeout/busy/disabled для scan CH18/17 (480 cycles,8 МГц), DMA2 Stream0/channel0, IRQ56/vector72. Factory-арифметика ДОЛЖНА использовать точки3.3 В/30/110 °C, проверяться пятью численными и19 невалидными наборами с возвратом к обычному измерению. Инъекции IRQ mask/stream EN/ADON0 ДОЛЖНЫ приводить соответственно к error4 через ≥20 ticks/error6/error3 без публикации; после них ДОЛЖЕН повторяться ADC_DMA и в конце восстанавливаться HAL. DMA EN НЕ ДОЛЖЕН считаться доказательством активной конверсии, quality2 — метрологической точностью. `[N]` (р.0.50)
 
+8.40. CMSIS fixture F411 ДОЛЖНА проходить RTC_INIT/RTC_ALARM/RTC_DEADLINE/SLEEP_SYSTICK/SLEEP_TIM2: LSI calendar RTC PRER127/249 и masked Alarm A через IRQ41/vector57, два естественных события, инъекция mask0 в LSIRDY wait с error3 через ≥1000 ticks без BDRST, interrupted WFI от exception15/44 с восстановлением обоих NVIC banks. После инъекции и host timeout ДОЛЖНЫ повторяться RTC/ADC и восстановление HAL. Результат НЕ ДОЛЖЕН трактоваться как физический отказ LSI, точность времени, backup retention, Stop/Standby или измерение тока. `[N]` (р.0.51)
+
+
 
 
 
@@ -1665,6 +1678,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-136 | F103 test_rtc.py/test_sleep.py; CLI run | Пять новых prepare/HW, повтор RTC/ADC после deadline, timeout/recovery и HAL restore; F103_CMSIS_RTC_SLEEP.md (р.0.48) |
 | TC-137 | F411 test_ci.py; ci/run_checks.py | Семь prepare/HW, HAL restore; F411_CMSIS_BASELINE.md (р.0.49) |
 | TC-138 | F411 test_adc.py; ci/run_checks.py | Восемь prepare/HW, численные векторы, state-инъекции, положительные повторы/HAL restore; F411_CMSIS_ADC_DMA.md (р.0.50) |
+| TC-139 | F411 test_rtc.py/test_sleep.py; CLI run | Пять prepare/HW, положительные повторы, host timeout/recovery и HAL restore; F411_CMSIS_RTC_SLEEP.md (р.0.51) |
 
 ---
 
@@ -1854,6 +1868,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 8.37 | tests/firmware/src/rtc_f103.c; profiles/f103c8/tests/board/test_rtc.py, test_sleep.py; ci/run_checks.py | TC-136 (р.0.48) |
 | 8.38 | tests/firmware/src/board.c, app.c, startup.c; profiles/f411ce/tests/board/test_ci.py; ci/run_checks.py | TC-137 (р.0.49) |
 | 8.39 | tests/firmware/src/adc_f411.c, adc_units.c; profiles/f411ce/tests/board/test_adc.py; ci/run_checks.py | TC-138 (р.0.50) |
+| 8.40 | tests/firmware/src/rtc_f411.c; profiles/f411ce/tests/board/test_rtc.py, test_sleep.py; ci/run_checks.py | TC-139 (р.0.51) |
 | 7.7.7, 8.9 | docs/ru/maintenance.md, VERSIONING.md, RC2_READINESS.md; release metadata | TC-132, инспекция перед публикацией (р.0.41) |
 
 ---
@@ -2130,3 +2145,6 @@ G.25. Рабочая копия от d97903c: F411/ST-Link/OpenOCD/Windows GCC13
 
 
 G.26. Рабочая копия от cb17bdf: F411/ST-Link/OpenOCD/Windows GCC13,15/15 HW +3 повтора, HAL boot/blink восстановлены. ELF/границы — docs/ru/F411_CMSIS_ADC_DMA.md. DMA errors, ADC OVR и stream-disable timeout не инжектировались; API/схемы и тег rc.2 неизменны. (р.0.50)
+
+
+G.27. Рабочая копия от4a6f5d3: F411/ST-Link/OpenOCD/Windows GCC13,20/20 HW +5 повторов, ожидаемый host timeout ERROR/recovery и RTC/ADC после него PASS; HAL boot/blink восстановлены. Протокол docs/ru/F411_CMSIS_RTC_SLEEP.md. RTC wakeup отдельно, точность LSI, backup retention и прочие wait faults не проверены. API/схемы/тег rc.2 неизменны. (р.0.51)

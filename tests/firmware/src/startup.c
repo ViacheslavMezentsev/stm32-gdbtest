@@ -17,6 +17,7 @@ extern void DMA1_Channel1_IRQHandler( void );
 extern void SysTick_Handler( void );
 extern void TIM2_IRQHandler( void );
 extern void DMA2_Stream0_IRQHandler( void );
+extern void RTC_Alarm_IRQHandler( void );
 #endif
 
 void Default_Handler( void )
@@ -118,14 +119,15 @@ void ( *const vectors[] )( void ) = {
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     TIM2_IRQHandler,
-    /* IRQ29..55, then DMA2 stream0 IRQ56. */
+    /* IRQ29..40, RTC Alarm IRQ41, IRQ42..55, then DMA2 stream0 IRQ56. */
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    RTC_Alarm_IRQHandler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler,
     DMA2_Stream0_IRQHandler
 #else
     Default_Handler

@@ -86,6 +86,11 @@ policy. HAL weak callback должен быть переопределён им�
 [HAL исходные ADC/TIM/RTC сценарии](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/0c8c966f0429710e6e20472fbd9fe8898da7cfee/tests/scenarios/peripheral_runtime.py),
 [CMSIS RTC](F030_CMSIS_RTC.md).
 
+RTC требует адаптации по семейству: F103 проверяет counter/alarm с перевооружением
+в основном потоке, F411 — masked calendar Alarm A с естественным периодическим IRQ.
+Не переносить prescaler F03040 кГц на F41132 кГц.
+[RTC/Sleep F411 и ограничения](F411_CMSIS_RTC_SLEEP.md).
+
 <a id="tech-004"></a>
 Для проверки номера исключения Cortex-M используйте `SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk`. Имена GDB `xPSR`/`xpsr` зависят от сервера. Проверяйте CMSIS-макросы preflight в нужном контексте. Чтение VECTACTIVE не очищает флаги и не доказывает физический источник IRQ.
 

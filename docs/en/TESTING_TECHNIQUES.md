@@ -86,6 +86,11 @@ edge. Start the next scenario from the agreed reset state.
 [Original HAL ADC/TIM/RTC cases](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/0c8c966f0429710e6e20472fbd9fe8898da7cfee/tests/scenarios/peripheral_runtime.py),
 [CMSIS RTC](F030_CMSIS_RTC.md).
 
+RTC requires family-specific expectations: F103 uses a counter/alarm rearmed in
+thread mode, while F411 uses masked calendar Alarm A with natural periodic IRQs.
+Do not copy the F03040 kHz prescaler to F41132 kHz.
+[F411 RTC/Sleep and limits](F411_CMSIS_RTC_SLEEP.md).
+
 <a id="tech-004"></a>
 For Cortex-M exception numbers, use `SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk`. GDB names `xPSR`/`xpsr` depend on the server. Preflight the CMSIS macros in the required context. Reading VECTACTIVE does not clear flags or prove the physical IRQ source.
 

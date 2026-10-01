@@ -21,7 +21,7 @@ F103/J-Link, F411/OpenOCD — по 10/10. ST server завершён после 
 | Offline CI | Docs, format, host; CMSIS F030/F103/F411 × GCC13/14/15; отдельный HAL F030 на GCC13, 19 CTest и 5 отрицательных contracts. Все пять jobs Offline прошли на 5b7b466 |
 | CMSIS F030 | 18 сценариев: boot/clock/GPIO/blink, TIM3, ADC/DMA/численные векторы, Sleep, RTC и отказы. HW: единый прогон 18/18 на 5b7b466 локально Windows; HAL восстановлен. Ранее SSH/Orange Pi на a48158c; см. RC2_READINESS |
 | HAL F030 | Автономный tests/hal-f030: 17/17, шесть повторов после инъекций, ожидаемый timeout ERROR, recovery и восстановление HAL потребителя — Windows/ST-Link/OpenOCD |
-| CMSIS F103/F411 | После rc.2: F103 20/20 HW clocks/GPIO/SysTick/TIM2/ADC/DMA/RTC/Sleep + 5 normal repeats, timeout/recovery; F411 — 15/15 HW baseline/ADC/DMA/units/failures +3 повтора, HAL восстановлен. Полный перенос периферии не завершён |
+| CMSIS F103/F411 | После rc.2: F103 20/20 HW clocks/GPIO/SysTick/TIM2/ADC/DMA/RTC/Sleep + 5 normal repeats, timeout/recovery; F411 — 20/20 HW baseline/ADC/DMA/RTC/Sleep +5 повторов, timeout/recovery, HAL восстановлен. Полный перенос периферии не завершён |
 | minimal-consumer F411 | Отдельный пример подключения CMake без YAML; проверяет подключение модуля, не полную периферию платы |
 | Потребитель BlackPill | fb2d186 / модуль 67b7431: Offline SUCCESS, пять профилей/120 CTest; Windows 25/25, F411/OpenOCD 22/22 + timeout/recovery/restore. Итоговый gitlink обновляется после land модуля |
 
@@ -172,3 +172,5 @@ F103C8/J-Link проверены полные 16 KiB: запись хвоста 
 [F411 CMSIS baseline](F411_CMSIS_BASELINE.md): HSI16, PC13, SysTick, TIM2; post-rc.2.
 
 [F411 ADC/DMA](F411_CMSIS_ADC_DMA.md): factory calibration, numerical vectors and state faults.
+
+[F411 RTC/Sleep](F411_CMSIS_RTC_SLEEP.md): calendar Alarm A, WFI and recovery.
