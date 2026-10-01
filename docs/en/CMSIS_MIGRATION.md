@@ -68,3 +68,5 @@ F103 ADC/DMA: [15/15 HW, units and failure paths](F103_CMSIS_ADC_DMA.md).
 [F401 ADC/DMA](F401_CMSIS_ADC_DMA.md):15/15 HW and post-injection repeats; continued by [RTC/Sleep/recovery,20/20 HW](F401_CMSIS_RTC_SLEEP.md).
 
 [F429 CMSIS baseline:7/7 HW, HAL restored; specification0.55. Fifth CI profile; ADC/RTC remain pending.](F429_CMSIS_BASELINE.md)
+
+[F429 ADC/DMA/units/failures:15/15 HW +3 repeats, HAL restored; specification0.56.](F429_CMSIS_ADC_DMA.md)

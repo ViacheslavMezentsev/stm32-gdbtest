@@ -5,7 +5,7 @@
 
 [![Hardware evidence](https://img.shields.io/badge/Hardware-historical%20snapshot-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
 [![Board models tested](https://img.shields.io/badge/Boards%20tested-5-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
-[![Recorded hardware cases](https://img.shields.io/badge/HW%20cases%20%28recorded%29-85-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
+[![Recorded hardware cases](https://img.shields.io/badge/HW%20cases%20%28recorded%29-93-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
 [![Latest recorded hardware verification](https://img.shields.io/badge/HW%20verified%20%28latest%29-2026--10--01-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
 
 [Русский](README.md)
@@ -211,7 +211,7 @@ link is watched by a heartbeat. ST-LINK GDB Server is not available on Linux aar
 (ST does not ship it for arm64), so OpenOCD and J-Link are used on Orange Pi.
 Details: [Linux stand](docs/en/LINUX_STAND.md), [GDB servers](docs/en/BACKENDS.md).
 
-**Reading the counters.** `Hardware: historical snapshot`, `Boards tested` and `HW cases (recorded)` describe recorded CMSIS hardware evidence: five board models and 85 distinct profile/fixture/scenario combinations. Repeats and builds do not increase this count; `HW verified (latest)` is the date of the newest included experiment. This is a historical snapshot across revisions, not a single run of current main or a coverage percentage. See the [metric definitions and results table](docs/en/HARDWARE_METRICS.md) for scope and evidence.
+**Reading the counters.** `Hardware: historical snapshot`, `Boards tested` and `HW cases (recorded)` describe recorded CMSIS hardware evidence: five board models and 93 distinct profile/fixture/scenario combinations. Repeats and builds do not increase this count; `HW verified (latest)` is the date of the newest included experiment. This is a historical snapshot across revisions, not a single run of current main or a coverage percentage. See the [metric definitions and results table](docs/en/HARDWARE_METRICS.md) for scope and evidence.
 
 ## MCU profiles
 
@@ -230,7 +230,7 @@ F103C8, F401CC, F411CE, F429ZI — Cortex-M0, M3, M4) and the example `examples/
 | STM32F103C8 | J-Link CE / J-Link GDB Server | CI firmware, stand project |
 | STM32F103CB | J-Link CE / J-Link GDB Server | demo project [stm32-hwtest-bluepill](https://github.com/ViacheslavMezentsev/stm32-hwtest-bluepill) |
 | STM32F401CC | ST-Link / OpenOCD | [CMSIS: 20 cases](docs/en/F401_CMSIS_RTC_SLEEP.md) |
-| STM32F429ZI | ST-Link / OpenOCD | [CMSIS: 7 cases](docs/en/F429_CMSIS_BASELINE.md) |
+| STM32F429ZI | ST-Link / OpenOCD | [CMSIS: 15 cases](docs/en/F429_CMSIS_ADC_DMA.md) |
 | STM32F411CE | ST-Link / OpenOCD and ST-LINK GDB Server | CI firmware, example, stand project |
 | STM32F429ZI | ST-Link / OpenOCD and ST-LINK GDB Server | stand project |
 | STM32F401CC | ST-Link / ST-LINK GDB Server | stand project, earlier checks |

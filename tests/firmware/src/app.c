@@ -23,9 +23,7 @@ void app_loop( void )
 #if defined( STM32F103xB )
     board_rtc_service();
 #endif
-#if !defined( STM32F429xx )
     board_adc_sample();
-#endif
     board_delay_ms( app_delay );
 }
 

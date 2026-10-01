@@ -181,6 +181,8 @@ def firmware_pair(gcc, profile):
         expected_sources.update(("src/adc_f103.c", "src/adc_units.c", "src/rtc_f103.c"))
     if profile == "f401cc":
         expected_sources.update(("src/adc_f401.c", "src/adc_units.c", "src/rtc_f4.c"))
+    if profile == "f429zi":
+        expected_sources.update(("src/adc_f429.c", "src/adc_units.c"))
     if profile == "f411ce":
         expected_sources.update(("src/adc_f411.c", "src/adc_units.c", "src/rtc_f4.c"))
     if sources != expected_sources:
@@ -216,7 +218,7 @@ def firmware_pair(gcc, profile):
                            "HW_CI_SLEEP_SYSTICK", "HW_CI_SLEEP_TIM2"]
     if profile in ("f401cc", "f411ce", "f429zi"):
         expected_cases += ["HW_CI_CLOCK", "HW_CI_BLINK", "HW_CI_TIM2_INIT", "HW_CI_TIM2_IRQ", "HW_CI_SYSTICK_IRQ"]
-    if profile in ("f401cc", "f411ce"):
+    if profile in ("f401cc", "f411ce", "f429zi"):
         expected_cases += ["HW_CI_ADC_INIT", "HW_CI_ADC_DMA", "HW_CI_ADC_UNITS", "HW_CI_ADC_VECTORS",
                            "HW_CI_ADC_INVALID", "HW_CI_ADC_TIMEOUT", "HW_CI_ADC_BUSY", "HW_CI_ADC_DISABLED"]
     if profile in ("f401cc", "f411ce"):

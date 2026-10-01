@@ -2,12 +2,17 @@
 
 ## Текущая работа
 
-- codex/f429-cmsis-baseline от main9d22410: startup/clocks/GPIO/TIM2/SysTick одной группой.
-- [x] Windows build/prepare8/8, HW7/7, HAL boot/blink восстановлены; DISCO/ST-Link/OpenOCD.
-- [x] Windows docs/host4/4, Linux format/host и пять MCU × три GCC17/17; ТЗ0.55 и RU/EN.
+- codex/f429-cmsis-adc-dma от main7a261e8: ADC/DMA/units/failures одной группой.
+- [x] Windows build/prepare16/16, HW15/15 +3 ADC повтора, HAL boot/blink восстановлены.
+- [x] Windows docs/host4/4, Linux format/host +15 MCU/GCC сочетаний17/17; RU/EN и ТЗ0.56.
 - [ ] Docs/полный Offline опубликованного SHA, затем land владельцем.
-- [ ] Далее F429 ADC/DMA/units/failures, затем RTC/Sleep/deadline/recovery. Оставить DISCO подключённой.
-- [ ] Финальная сверка пяти профилей и HAL→CMSIS, F411-consumer, сокращение BlackPill-репозитория; оптимизация после переноса.
+- [ ] Далее F429 RTC/Sleep/deadline/recovery; оставить DISCO/ST-Link/OpenOCD подключённой.
+- [ ] Финальная сверка пяти профилей и HAL→CMSIS, F411-consumer; оптимизация после переноса.
+
+## F429 baseline: принят в main7a261e8
+
+- [x] HW7/7 и HAL restore, Windows prepare8/8, Windows docs/host4/4, Linux17/17.
+- [x] Docs36874758483 и полный Offline36874758494 PASS; land владельцем, origin/main сверен.
 
 ## F401 RTC/Sleep: принят в main9d22410
 
