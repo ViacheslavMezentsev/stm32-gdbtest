@@ -2,22 +2,33 @@
 
 ## Текущая работа
 
+- Ветка codex/cmsis-migration-audit зависит от RTC/Sleep b8d66e0; только документация.
+- [x] Сверить 105 HAL и 98 CMSIS board cases; см. docs/ru/CMSIS_ACCEPTANCE.md.
+- [ ] Сохранить пять HAL GPIO/RCC cases одной группой: F030 fixture после review HAL либо отдельный F4 fixture; затем HW/recovery/restore.
+- [ ] Опубликовать аудит, запустить Offline вручную (Markdown-фильтр), проверить Docs и полный Offline.
+- [x] RTC/Sleep b8d66e0: опубликован, Docs36884302983 и Offline36884302932 SUCCESS.
+- [x] ADC/DMA52c49fd принят в origin/main, SHA сверен.
+- [ ] Land RTC/Sleep владельцем, затем аудит после собственного CI.
+
+## Предыдущая группа RTC/Sleep
+
 - codex/f429-cmsis-rtc-sleep зависит от codex/f429-cmsis-adc-dma52c49fd; порядок land: ADC/DMA → RTC/Sleep.
 - [x] Windows prepare21/21, HW20/20 +5 повторов, host timeout/recovery и HAL boot/blink restore.
 - [x] Windows docs/host 4/4 и Linux 17/17; RU/EN, ТЗ 0.57.
 - [x] Docs36882263763 и полный Offline36882263685 ADC/DMA52c49fd PASS.
-- [ ] Land ADC/DMA владельцем отдельно от публикации.
-- [ ] Опубликовать RTC/Sleep, проверить её Docs/полный Offline и fast-forward после первого land.
-- [ ] Итоговая сверка пяти профилей HAL→CMSIS; отдельные HAL-техники сохраняются.
+- [x] ADC/DMA принят владельцем, origin/main52c49fd сверен.
+- [x] RTC/Sleep опубликован; Docs/полный Offline SUCCESS, fast-forward от52c49fd возможен.
+- [ ] Land RTC/Sleep владельцем.
+- [x] Итоговая сверка пяти профилей HAL→CMSIS: CMSIS_ACCEPTANCE.md; пять HAL GPIO/RCC cases ещё нужно сохранить.
 - [ ] Перевести независимый F411-consumer и проверить интеграцию, затем сократить BlackPill до F411.
 - [ ] Оптимизация тестов/CI после переноса; автоматические аппаратные метрики — отдельный этап.
 
-## F429 ADC/DMA: опубликован52c49fd, ожидает land
+## F429 ADC/DMA: принят в main52c49fd
 
 - [x] HW15/15 +3 повтора, HAL restore; Windows prepare16/16, docs/host4/4, Linux17/17.
 - [x] Ветка опубликована, SHA сверен; Docs SUCCESS.
 - [x] Полный Offline (пять jobs) SUCCESS.
-- [ ] Land владельцем.
+- [x] Land владельцем подтверждён, origin/main52c49fd сверен.
 
 ## F429 baseline: принят в main7a261e8
 

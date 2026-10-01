@@ -72,3 +72,5 @@ F103 ADC/DMA: [15/15 HW, units and failure paths](F103_CMSIS_ADC_DMA.md).
 [F429 ADC/DMA/units/failures:15/15 HW +3 repeats, HAL restored; specification0.56.](F429_CMSIS_ADC_DMA.md)
 
 [F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](F429_CMSIS_RTC_SLEEP.md)
+
+[Five-profile acceptance review and remaining HAL checks](CMSIS_ACCEPTANCE.md).

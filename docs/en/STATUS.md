@@ -186,3 +186,5 @@ Cortex-M0 or every F0 backend combination.
 [F411 ADC/DMA](F411_CMSIS_ADC_DMA.md): factory calibration, numerical vectors and state faults.
 
 [F411 RTC/Sleep](F411_CMSIS_RTC_SLEEP.md): calendar Alarm A, WFI and recovery.
+
+[Five-profile acceptance review and remaining HAL checks](CMSIS_ACCEPTANCE.md).

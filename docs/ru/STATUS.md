@@ -186,3 +186,5 @@ F103C8/J-Link проверены полные 16 KiB: запись хвоста 
 [F411 ADC/DMA](F411_CMSIS_ADC_DMA.md): factory calibration, numerical vectors and state faults.
 
 [F411 RTC/Sleep](F411_CMSIS_RTC_SLEEP.md): calendar Alarm A, WFI and recovery.
+
+[Итоговая сверка пяти профилей и оставшиеся HAL-проверки](CMSIS_ACCEPTANCE.md).

@@ -91,3 +91,5 @@ F030: RTC deadline через инъекцию аргумента, API без и
 - [F411 CMSIS: ADC/DMA/units/failures](F411_CMSIS_ADC_DMA.md).
 
 - [F411 CMSIS: RTC/Sleep/deadlines/recovery](F411_CMSIS_RTC_SLEEP.md).
+
+[Итоговая сверка пяти профилей и оставшиеся HAL-проверки](CMSIS_ACCEPTANCE.md).

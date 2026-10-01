@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Reviewed five CMSIS profiles against HAL: 105 and 98 board cases; identified five HAL GPIO/RCC checks to preserve before deleting old profiles. Core and specification unchanged.
+
 - F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.
 
 - F429 ADC/DMA/units/failures:15/15 HW +3 repeats, HAL restored; specification0.56.
