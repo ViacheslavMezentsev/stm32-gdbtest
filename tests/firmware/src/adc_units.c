@@ -24,3 +24,22 @@ adc_reading_t adc_convert_f030( uint16_t temperature, uint16_t reference, uint16
     const adc_reading_t result   = { vdda, temperature_mc, 3U };
     return result;
 }
+
+adc_reading_t adc_convert_f103( uint16_t temperature, uint16_t reference )
+{
+    const adc_reading_t invalid = { 0U, 0, 0U };
+    if ( !valid_raw( temperature ) || !valid_raw( reference ) )
+    {
+        return invalid;
+    }
+    /* DS5319 typical values: VREFINT=1.20 V, V25=1.43 V, negative slope=4.3 mV/C. */
+    const uint32_t vdda = 1200U * 4095U / reference;
+    if ( vdda < 2400U || vdda > 3600U )
+    {
+        return invalid;
+    }
+    const int64_t delta          = ( 1430000LL * reference - 1200000LL * temperature ) * 1000LL;
+    const int32_t temperature_mc = 25000 + delta / ( 4300LL * reference );
+    const adc_reading_t result   = { vdda, temperature_mc, 1U };
+    return result;
+}

@@ -2,6 +2,16 @@
 
 ## Текущая работа
 
+- codex/f103-cmsis-adc-dma от main352417c; предыдущая группа прошла Docs/Offline и land.
+- [x] ADC/DMA, арифметика, timeout/busy/disabled: 15/15 HW + 3 повтора, HAL восстановлен.
+- [x] Windows prepare/traceability 16/16; протокол RU/EN, ТЗ 0.47.
+- [x] Локально Linux host + девять MCU/GCC сочетаний 10/10, Windows docs/host 4/4, формат PASS.
+- [ ] Один push всей группы, полный Docs/Offline именно опубликованного SHA, затем land.
+- [ ] Далее F103 RTC/Sleep/deadlines/recovery, затем группы F411.
+
+## История группы F103 baseline (принята)
+
+
 - codex/f103-cmsis-baseline от main a0d6547 (опубликован rc.2).
 - [x] Группа clocks/GPIO/SysTick/TIM2: 7/7 HW, исходная HAL восстановлена.
 - [x] Windows host/prepare, Linux host + девять MCU/GCC сочетаний PASS; ТЗ 0.46, RU/EN протокол.

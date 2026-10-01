@@ -137,6 +137,10 @@ inline/optimized-out; prepare не заменяет проверку runtime fra
 [ADC_BUSY](F030_ADC_BUSY.md), [код](../../tests/firmware/profiles/f030r8/tests/board/test_adc_faults.py),
 [DMA timeout](F030_CMSIS_ADC_DMA.md).
 
+F103: [ADC/DMA](F103_CMSIS_ADC_DMA.md) различает guard DMA EN, отключение ADC
+и потерю IRQ-уведомления. Перенос названия «busy» не переносит смысл ADSTART
+из F0 на F1; записывайте, какое состояние действительно создано инъекцией.
+
 <a id="tech-007"></a>
 ## TECH-007 — Независимые численные векторы и невалидные входы
 

@@ -67,3 +67,5 @@ F030: RTC deadline через инъекцию аргумента, API без и
 [Автономная HAL-регрессия F030](F030_HAL_REGRESSION.md): тестовый consumer, без изменения API.
 
 - [F103 CMSIS: clocks/GPIO/SysTick/TIM2](F103_CMSIS_BASELINE.md).
+
+- [F103 CMSIS: ADC/DMA/units/failures](F103_CMSIS_ADC_DMA.md).

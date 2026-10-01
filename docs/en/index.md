@@ -67,3 +67,5 @@ F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_D
 [Standalone F030 HAL regression](F030_HAL_REGRESSION.md): test consumer, no API changes.
 
 - [F103 CMSIS: clocks/GPIO/SysTick/TIM2](F103_CMSIS_BASELINE.md).
+
+- [F103 CMSIS: ADC/DMA/units/failures](F103_CMSIS_ADC_DMA.md).

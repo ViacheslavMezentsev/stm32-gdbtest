@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- F103 CMSIS: ADC1 CH16/17 scan, normal DMA, typical physical units and three state injections. 15/15 HW + 3 positive repeats, HAL restored; specification0.47, API unchanged.
+
 - F103 CMSIS: clocks/GPIO/SysTick/TIM2 group, seven scenarios with macro contracts; 7/7 J-Link HW PASS, HAL restored. rc.2 published at a0d6547; subsequent changes are outside the tag.
 
 ## [0.1.0-rc.2] — 2026-10-01

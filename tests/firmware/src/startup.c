@@ -11,6 +11,7 @@ extern void DMA1_Channel1_IRQHandler( void );
 #elif defined( STM32F103xB )
 extern void SysTick_Handler( void );
 extern void TIM2_IRQHandler( void );
+extern void DMA1_Channel1_IRQHandler( void );
 #endif
 
 void Default_Handler( void )
@@ -90,7 +91,7 @@ void ( *const vectors[] )( void ) = {
     /* STM32F103xB external IRQ slots 0..27, then TIM2_IRQn=28. */
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, DMA1_Channel1_IRQHandler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,

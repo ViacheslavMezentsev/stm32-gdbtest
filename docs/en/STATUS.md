@@ -9,7 +9,8 @@ USB reconnect, not an uninterrupted 10/10; the USB failure cause is unknown.
 All original HAL images restored. [Evidence and remaining gates](RC2_READINESS.md).
 
 rc.2 published at a0d6547. Next: [F103 CMSIS baseline](F103_CMSIS_BASELINE.md),
-7/7 HW on the new branch working tree; this is a post-tag change.
+First group landed at main352417c. Next [ADC/DMA](F103_CMSIS_ADC_DMA.md):
+15/15 HW plus three repeats, HAL restored; post-tag changes.
 
 ## Current scope and evidence
 
@@ -19,7 +20,7 @@ rc.2 published at a0d6547. Next: [F103 CMSIS baseline](F103_CMSIS_BASELINE.md),
 | Offline CI | Docs, format, host; CMSIS F030/F103/F411 × GCC13/14/15; separate GCC13 HAL F030, 19 CTest checks and 5 negative contracts. All five Offline jobs passed at 5b7b466 |
 | CMSIS F030 | 18 cases: boot/clock/GPIO/blink, TIM3, ADC/DMA/numeric vectors, Sleep, RTC and failures. HW: one complete 18/18 run at 5b7b466 locally on Windows; HAL restored. Earlier SSH/Orange Pi run at a48158c; see RC2_READINESS |
 | HAL F030 | Standalone tests/hal-f030: 17/17, six post-injection repeats, expected timeout ERROR, recovery and consumer HAL restoration — Windows/ST-Link/OpenOCD |
-| CMSIS F103/F411 | Post-rc.2: F103 7/7 HW clocks/GPIO/SysTick/TIM2; F411 has two boot/GPIO cases. Full migration remains incomplete |
+| CMSIS F103/F411 | Post-rc.2: F103 15/15 HW clocks/GPIO/SysTick/TIM2/ADC/DMA + 3 normal repeats; F411 has two boot/GPIO cases. Full migration remains incomplete |
 | minimal-consumer F411 | Separate CMake integration example without YAML; demonstrates module integration, not complete board peripherals |
 | BlackPill consumer | fb2d186 / module 67b7431: Offline SUCCESS, five profiles/120 CTest; Windows 25/25, F411/OpenOCD 22/22 + timeout/recovery/restore. Final gitlink follows module land |
 

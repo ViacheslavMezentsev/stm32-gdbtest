@@ -136,6 +136,10 @@ then normal ADC_DMA; recovery failure stops the series.
 [ADC_BUSY](F030_ADC_BUSY.md), [code](../../tests/firmware/profiles/f030r8/tests/board/test_adc_faults.py),
 [DMA timeout](F030_CMSIS_ADC_DMA.md).
 
+F103: [ADC/DMA](F103_CMSIS_ADC_DMA.md) distinguishes the DMA EN guard, ADC
+disable and missing IRQ notification. Reusing the name "busy" does not transfer
+F0 ADSTART semantics to F1; record the state actually established by injection.
+
 <a id="tech-007"></a>
 ## TECH-007 — Independent numerical vectors and invalid inputs
 

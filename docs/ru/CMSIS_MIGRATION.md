@@ -60,3 +60,5 @@ F030: RTC deadline через инъекцию аргумента, API без и
 таймер/IRQ; ADC/DMA/арифметика/отказы; RTC/Sleep/deadlines/recovery. Сначала F103,
 затем F411; gitlink потребителя обновлять после нескольких групп при необходимости.
 Первая группа F103: [7/7 HW и восстановление HAL](F103_CMSIS_BASELINE.md).
+
+F103 ADC/DMA: [15/15 HW, units and failure paths](F103_CMSIS_ADC_DMA.md).

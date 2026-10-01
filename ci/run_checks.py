@@ -177,6 +177,8 @@ def firmware_pair(gcc, profile):
     expected_sources = {"src/startup.c", "src/app.c", "src/board.c"}
     if profile == "f030r8":
         expected_sources.update(("src/adc_f030.c", "src/adc_units.c", "src/rtc_f030.c"))
+    if profile == "f103c8":
+        expected_sources.update(("src/adc_f103.c", "src/adc_units.c"))
     if sources != expected_sources:
         raise CheckError(f"Unexpected manifest units: {sorted(sources)}; expected {sorted(expected_sources)}")
     if expected_ld not in inputs:
@@ -203,7 +205,9 @@ def firmware_pair(gcc, profile):
                            "HW_CI_SLEEP_SYSTICK", "HW_CI_SLEEP_TIM3",
                            "HW_CI_RTC_INIT", "HW_CI_RTC_ALARM", "HW_CI_ADC_BUSY", "HW_CI_RTC_DEADLINE"]
     if profile == "f103c8":
-        expected_cases += ["HW_CI_CLOCK", "HW_CI_BLINK", "HW_CI_TIM2_INIT", "HW_CI_TIM2_IRQ", "HW_CI_SYSTICK_IRQ"]
+        expected_cases += ["HW_CI_CLOCK", "HW_CI_BLINK", "HW_CI_TIM2_INIT", "HW_CI_TIM2_IRQ", "HW_CI_SYSTICK_IRQ",
+                           "HW_CI_ADC_INIT", "HW_CI_ADC_DMA", "HW_CI_ADC_UNITS", "HW_CI_ADC_VECTORS",
+                           "HW_CI_ADC_INVALID", "HW_CI_ADC_TIMEOUT", "HW_CI_ADC_BUSY", "HW_CI_ADC_DISABLED"]
     if any("prepare." + name not in ctest for name in expected_cases):
         raise CheckError("CTest did not run the prepare tests")
     for test_id in expected_cases:

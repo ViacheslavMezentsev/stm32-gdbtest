@@ -5,10 +5,10 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.46 (после rc.2, на согласовании) |
+| **Ревизия** | 0.47 (после rc.2, на согласовании) |
 | **Дата формирования** | 01.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
-| **Целевая версия** | 0.1.0; подготовка кандидата 0.1.0-rc.2 (Python `0.1.0rc2`, `API_VERSION = 1`); rc.1 опубликован |
+| **Целевая версия** | 0.1.0; после опубликованного кандидата 0.1.0-rc.2 (Python `0.1.0rc2`, `API_VERSION = 1`); rc.1 опубликован |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
@@ -83,6 +83,14 @@
 | 0.45 | 01.10.2026 | Итоговая аппаратная и интеграционная проверка rc.2; ограничение USB ST server и оставшиеся условия публикации. |
 
 | 0.46 | 01.10.2026 | F103 CMSIS: clocks/GPIO/SysTick/TIM2 одной группой, TC-134; rc.2 опубликован, следующие изменения вне тега. |
+
+| 0.47 | 01.10.2026 | F103 ADC/DMA/физические единицы/отказы одной группой, TC-135; API без изменений. |
+
+### Изменения ревизии 0.47
+
+| Пункт | Изменение |
+| :--- | :--- |
+| 8.36, TC-135, матрица, G.23 | Scan/DMA и типовые измерения F103; раздельные guard/IRQ/ADC инъекции и границы. |
 
 ### Изменения ревизии 0.46
 
@@ -1459,6 +1467,8 @@ flowchart LR
 
 8.35. CMSIS fixture F103 ДОЛЖНА использовать HSI8 МГц с AHB/APB1/APB2 /1, SysTick1 мс, PB2 push-pull и задержку500 мс, TIM2 PSC7999/ARR99 с IRQ28. Семь сценариев ДОЛЖНЫ проверять .data/BSS, GPIO, clocks, чередование LED, конфигурацию TIM2, естественные TIM2/SysTick IRQ с векторами и продвижением thread mode; CI ДОЛЖЕН выполнять их prepare для GCC13/14/15. Аппаратная проверка НЕ ДОЛЖНА заявлять точность времени, отсутствие потерь IRQ или покрытие HAL callbacks. `[N]` (р.0.46)
 
+8.36. CMSIS fixture F103 ДОЛЖНА выполнять калибровку ADC1 с дедлайнами 20 мс, scan CH16/17 через normal DMA1 channel1 (IRQ11), публиковать два raw перед счётчиком завершения и рассчитывать типовые VDDA/температуру с quality1 без заводских адресов других MCU. Восемь новых сценариев ДОЛЖНЫ проверять init/DMA/units, четыре численных и восемь невалидных наборов, отсутствие IRQ-уведомления (error4 через ≥20 ticks), занятый DMA (error6) и отключённый ADC (error3) без публикации. CI ДОЛЖЕН выполнять prepare для GCC13/14/15. DMA EN НЕ ДОЛЖЕН трактоваться как доказательство активной конверсии; точность температуры и TE/calibration fault injection вне проверенного объёма этой группы. `[N]` (р.0.47)
+
 ---
 
 ## 9. Верификация
@@ -1612,6 +1622,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-132 | Инспекция выпуска по docs/ru/RC2_READINESS.md | Согласованные версия/API/ТЗ/CHANGELOG, фактический SHA CI/HW, один текст тега и Releases; выполняется перед публикацией кандидата (р.0.41) |
 | TC-133 | `PackageTests.test_reopen_preserves_reports_and_uses_clean_sources` | Два открытия: прежний ERROR-отчёт сохранён, изменённый ELF и лишний файл из первой распаковки не попадают во вторую; ошибка GDB сохраняет доказательства (р.0.44) |
 | TC-134 | F103 HW_CI_BOOT/GPIO/CLOCK/BLINK/TIM2_INIT/TIM2_IRQ/SYSTICK_IRQ; ci/run_checks.py | Семь prepare, clocks/GPIO и естественные IRQ на BluePill/J-Link; восстановление HAL; F103_CMSIS_BASELINE.md (р.0.46) |
+| TC-135 | F103 test_adc.py: восемь HW_CI_ADC_*; ci/run_checks.py | 15 prepare, естественный DMA/измерения, численные векторы и MMIO-инъекции; положительные повторы и HAL restore; F103_CMSIS_ADC_DMA.md (р.0.47) |
 
 ---
 
@@ -1797,6 +1808,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 8.33 | ci/hal_f030.py, ci/run_checks.py, ci/dependencies.lock.json, .github/workflows/offline.yml | TC-130 (р.0.39) |
 | 8.34 | tests/hal-f030/run_hw.py | TC-131 (р.0.40) |
 | 8.35 | tests/firmware/src/board.c, startup.c, app.c; profiles/f103c8/tests; ci/run_checks.py | TC-134 (р.0.46) |
+| 8.36 | tests/firmware/src/adc_f103.c, adc_units.c; profiles/f103c8/tests/board/test_adc.py; ci/run_checks.py | TC-135 (р.0.47) |
 | 7.7.7, 8.9 | docs/ru/maintenance.md, VERSIONING.md, RC2_READINESS.md; release metadata | TC-132, инспекция перед публикацией (р.0.41) |
 
 ---
@@ -2062,3 +2074,5 @@ G.20. Hardware workflow 36787681339 на 759840a сообщил 10/10 для к�
 G.21. Код 5b7b466 прошёл Docs/Offline/Hardware; проверены все 27 JSON пакетов Linux. Windows: F030 CMSIS 18/18, HAL 17/17 с повторами/recovery; F030/OpenOCD, F103/J-Link и F411/OpenOCD lifecycle по 10/10. ST server потребовал USB reconnect; причина неизвестна, непрерывный проход не подтверждён. Потребитель fb2d186 закрепляет модуль 67b7431 (только docs после 5b7b466): CI 36791792481 SUCCESS, пять профилей/120 CTest; Windows F411/OpenOCD 22/22 и timeout/recovery PASS. Исходные прошивки восстановлены. Это доказательства проверенных SHA, не публикация rc.2; окончательный документальный SHA проходит Docs/Offline перед согласованием land и тега. Протокол docs/ru/RC2_READINESS.md. (р.0.45)
 
 G.22. Группа F103 clocks/GPIO/SysTick/TIM2 проверена на рабочей копии ветки от a0d6547: 7/7 HW, HAL boot/blink восстановлены. Исходный GPIO ERROR из-за имени макроса другого семейства сохранён, исправлен сценарий. ELF и ограничения — docs/ru/F103_CMSIS_BASELINE.md. Следующие группы объединяют ADC/DMA/арифметику/отказы и RTC/Sleep/deadlines/recovery; один push/CI/land на группу, без изменения API ядра. (р.0.46)
+
+G.23. Рабочая копия от352417c: F103/J-Link/Windows GCC13, 15/15 HW и три положительных ADC_DMA после state-инъекций; HAL boot/blink восстановлены. ELF и точные пределы — docs/ru/F103_CMSIS_ADC_DMA.md. Нельзя переносить F0 ADSTART/OVR или калибровочные слова на F1; busy означает guard владения DMA. Публичные API/схемы неизменны. (р.0.47)

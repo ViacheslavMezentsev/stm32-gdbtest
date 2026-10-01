@@ -148,6 +148,7 @@ void board_init( void )
     GPIOB->CRL  = ( GPIOB->CRL & ~( GPIO_CRL_MODE2 | GPIO_CRL_CNF2 ) ) | GPIO_CRL_MODE2_1;
     ( void ) SysTick_Config( 8000000U / 1000U );
     board_timer_init();
+    board_adc_init();
 }
 
 void board_led_toggle( void )

@@ -60,3 +60,5 @@ one push after combined validation, then full CI and land. Groups: clocks/GPIO/
 timer/IRQ; ADC/DMA/arithmetic/failures; RTC/Sleep/deadlines/recovery. F103 first,
 then F411; update the consumer gitlink after multiple groups as needed.
 First F103 group: [7/7 HW and HAL restoration](F103_CMSIS_BASELINE.md).
+
+F103 ADC/DMA: [15/15 HW, units and failure paths](F103_CMSIS_ADC_DMA.md).

@@ -1,4 +1,4 @@
-/* Pure F030 measurement arithmetic; quality describes provenance, not accuracy. */
+/* Pure measurement arithmetic; quality describes provenance, not accuracy. */
 #ifndef ADC_UNITS_H
 #define ADC_UNITS_H
 #include <stdint.h>
@@ -11,4 +11,5 @@ typedef struct
 } adc_reading_t;
 
 adc_reading_t adc_convert_f030( uint16_t temperature, uint16_t reference, uint16_t reference_cal, uint16_t temperature_cal );
+adc_reading_t adc_convert_f103( uint16_t temperature, uint16_t reference );
 #endif

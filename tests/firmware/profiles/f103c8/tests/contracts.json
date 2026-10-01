@@ -83,6 +83,52 @@
           "SCB_ICSR_VECTACTIVE_Msk"
         ]
       }
+    },
+    "ci_adc_macros": {
+      "macros": {
+        "context": "board_adc_sample",
+        "expressions": [
+          "RCC",
+          "RCC_APB2ENR_ADC1EN",
+          "RCC_AHBENR_DMA1EN",
+          "RCC_CFGR_ADCPRE",
+          "ADC1",
+          "ADC_CR2_ADON",
+          "DMA1",
+          "DMA1_Channel1",
+          "DMA_ISR_TCIF1",
+          "DMA_ISR_TEIF1",
+          "DMA_CCR_EN",
+          "NVIC",
+          "SCB",
+          "SCB_ICSR_VECTACTIVE_Msk"
+        ]
+      }
+    },
+    "ci_adc_units": {
+      "type_context": "adc_convert_f103",
+      "functions": {
+        "adc_convert_f103": {
+          "returns": "adc_reading_t",
+          "arguments": [
+            {
+              "name": "temperature",
+              "type": "uint16_t"
+            },
+            {
+              "name": "reference",
+              "type": "uint16_t"
+            }
+          ]
+        }
+      },
+      "fields": {
+        "adc_reading_t": {
+          "vdda_mv": "uint32_t",
+          "temperature_mdeg_c": "int32_t",
+          "quality": "uint32_t"
+        }
+      }
     }
   }
 }

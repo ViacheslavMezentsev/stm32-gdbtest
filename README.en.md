@@ -239,8 +239,8 @@ Since rc.1, manifest and HAL macro contracts were fixed, CMSIS F030 was expanded
 and a standalone HAL F030 regression fixture was added. In rc.2, F103/F411 provide
 basic boot/GPIO cases. Verified scope and limits: [STATUS](docs/en/STATUS.md).
 The release branch uses Python version `0.1.0rc2`, `API_VERSION = 1`.
-The post-rc.2 branch expands F103: clocks/GPIO/SysTick/TIM2, seven scenarios;
-[report](docs/en/F103_CMSIS_BASELINE.md). The published tag is unchanged.
+The post-rc.2 branch expands F103: clocks/GPIO/SysTick/TIM2/ADC/DMA, 15 scenarios;
+[report](docs/en/F103_CMSIS_ADC_DMA.md). The published tag is unchanged.
 
 RISC-V, full migration of other examples, external instrument control, child process
 supervision and Python packaging remain in the [roadmap](TODO.md).

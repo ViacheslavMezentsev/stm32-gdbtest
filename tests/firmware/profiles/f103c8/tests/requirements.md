@@ -27,3 +27,27 @@ thread mode resumes. No EGR/software-pending injection is used; no jitter claim.
 ## HW_CI_SYSTICK_IRQ
 Natural SysTick enters exception15 through vector15. The handler increments the
 millisecond counter once, then thread mode can resume. No external time reference.
+
+## HW_CI_ADC_INIT
+ADC1 PCLK2/2, independent regular scan CH16/17, 239.5 cycles, calibrated ADC on; normal halfword DMA1 channel1, IRQ11/vector27.
+
+## HW_CI_ADC_DMA
+Two natural scans deliver two halfwords each, exception27/TC without TE; ISR publishes raw values before sequence, DMA stops and flags clear.
+
+## HW_CI_ADC_UNITS
+Typical provenance=1; plausible VDDA and die temperature. Values are estimates, not factory-calibrated accuracy.
+
+## HW_CI_ADC_VECTORS
+Four fixed analytic anchors exercise adc_convert_f103 through argument injection; exact integer output.
+
+## HW_CI_ADC_INVALID
+Zero, saturation, uint16 overflow-range and implausible VDDA inputs yield invalid reading; subsequent acquisition recovers.
+
+## HW_CI_ADC_TIMEOUT
+Mask DMA IRQ11: transfers complete but no notification; after at least20 ticks enter error4 without stale publication.
+
+## HW_CI_ADC_BUSY
+Enable DMA channel before sample: ownership guard yields error6 without publication; this does not prove active ADC conversion.
+
+## HW_CI_ADC_DISABLED
+Clear ADC ADON before sample: error3 without publication. This is not a HAL return-code injection.
