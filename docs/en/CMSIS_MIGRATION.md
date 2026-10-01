@@ -64,3 +64,5 @@ First F103 group: [7/7 HW and HAL restoration](F103_CMSIS_BASELINE.md).
 F103 ADC/DMA: [15/15 HW, units and failure paths](F103_CMSIS_ADC_DMA.md).
 
 [F401 baseline](F401_CMSIS_BASELINE.md): 7/7 HW, ADC/DMA and RTC/Sleep next; the F401 migration is not complete.
+
+[F401 ADC/DMA](F401_CMSIS_ADC_DMA.md):15/15 HW and post-injection repeats; RTC/Sleep next.

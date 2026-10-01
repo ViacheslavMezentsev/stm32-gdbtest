@@ -2,6 +2,8 @@
 
 Документация · [English](../en/index.md)
 
+[F401 ADC/DMA/units/failures:15/15 HW и три положительных повтора, HAL восстановлен; ТЗ0.53.](F401_CMSIS_ADC_DMA.md)
+
 [F401 CMSIS baseline: 7/7 HW через ST-Link/OpenOCD, HAL boot/blink восстановлены. Flash256/RAM64; ADC/RTC ещё не перенесены.](F401_CMSIS_BASELINE.md)
 
 [Метрики аппаратных проверок и таблица результатов](HARDWARE_METRICS.md).

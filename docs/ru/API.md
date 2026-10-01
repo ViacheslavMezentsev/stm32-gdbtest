@@ -227,3 +227,5 @@ F030: RTC deadline через инъекцию аргумента, API без и
 Утерянные JSON не восстанавливаются из summary: нужен повтор проверки.
 
 F401 baseline добавляет только fixture и offline CI; API_VERSION=1 и схемы без изменений. [F401](F401_CMSIS_BASELINE.md).
+
+F401 ADC/DMA изменяет только fixture. Общая функция измерений F4 теперь adc_convert_f4_factory; это символ тестовой firmware, не публичный API модуля. API_VERSION=1, схемы неизменны. [F401 ADC/DMA](F401_CMSIS_ADC_DMA.md).

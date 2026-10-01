@@ -1,19 +1,19 @@
-"""F411 CMSIS ADC acquisition, arithmetic and controlled state faults."""
+"""F401 CMSIS ADC acquisition, arithmetic and controlled state faults."""
 from stm32_gdbtest import case
 
 
 @case("HW_CI_ADC_INIT", labels=("adc", "dma", "init"), contracts=("ci_adc_macros",))
 def adc_init(t):
-    # TECH-001/002: independent expectations, device macros in adc_f411.c.
+    # TECH-001/002: independent expectations, device macros in adc_f401.c.
     t.reach("board_adc_sample")
     t.check("ADC1 clock", t.value("(RCC->APB2ENR & RCC_APB2ENR_ADC1EN) != 0"), 1)
     t.check("DMA2 clock", t.value("(RCC->AHB1ENR & RCC_AHB1ENR_DMA2EN) != 0"), 1)
     t.check("ADC clock PCLK2/2 (8 MHz)", t.value("ADC->CCR & ADC_CCR_ADCPRE"), 0)
     t.check("scan only, independent ADC", t.value("ADC1->CR1"), 0x100)
     t.check("ADC enabled, internal sources, DMA, software trigger", t.value("ADC1->CR2"), 0x301)
-    t.check("sample CH18/17 at 480 cycles", t.value("ADC1->SMPR1"), 0x7E00000)
+    t.check("sample CH16/17 at 480 cycles", t.value("ADC1->SMPR1"), 0xFC0000)
     t.check("two regular ranks", t.value("ADC1->SQR1"), 1 << 20)
-    t.check("CH18 then CH17", t.value("ADC1->SQR3"), 18 | (17 << 5))
+    t.check("CH16 then CH17", t.value("ADC1->SQR3"), 16 | (17 << 5))
     t.check("normal DMA halfwords, TC/TE/DME IRQ", t.value("DMA2_Stream0->CR"), 0x2C16)
     t.check("ADC data address", t.value("DMA2_Stream0->PAR"), t.value("&ADC1->DR"))
     t.check("SRAM buffer address", t.value("DMA2_Stream0->M0AR"), t.value("&board_adc_buffer[0]"))

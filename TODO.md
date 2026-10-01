@@ -2,10 +2,18 @@
 
 ## Текущая работа
 
+- codex/f401-cmsis-adc-dma от mained5557f: ADC1/DMA2/factory units/failures.
+- [x] Windows build/prepare16/16, HW15/15 +3 повтора; HAL boot/blink восстановлены.
+- [x] Windows docs/host4/4, Linux format/host +12 MCU/GCC сочетаний14/14 PASS.
+- [ ] Docs/Offline нового SHA после push, затем land владельцем.
+- [ ] Следующая группа: F401 RTC/Sleep/deadline/recovery. Стенд остаётся F401/ST-Link.
+
+## F401 baseline: принят в mained5557f
+
 - codex/f401-cmsis-baseline от main591c096: clocks/GPIO/SysTick/TIM2, группа из семи сценариев.
 - [x] Windows build/prepare8/8, HW7/7, восстановление HAL boot/blink.
 - [x] Windows docs/host4/4, Linux format/host + четыре MCU × три GCC:14/14 PASS.
-- [ ] Docs/Offline после push нового SHA, затем land владельцем.
+- [x] Docs/Offline ed5557f прошли; land подтверждён.
 - [ ] Следующие группы F401: ADC/DMA/units/failures, затем RTC/Sleep/recovery.
   F429 остаётся далее; старые HAL-профили пока сохраняются.
 

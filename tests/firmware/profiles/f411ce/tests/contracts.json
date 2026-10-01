@@ -115,9 +115,9 @@
       }
     },
     "ci_adc_units": {
-      "type_context": "adc_convert_f411",
+      "type_context": "adc_convert_f4_factory",
       "functions": {
-        "adc_convert_f411": {
+        "adc_convert_f4_factory": {
           "returns": "adc_reading_t",
           "arguments": [
             {

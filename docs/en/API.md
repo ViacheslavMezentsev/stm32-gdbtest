@@ -230,3 +230,5 @@ Previously, reopening a package removed the entire hash directory, including run
 Lost JSON reports cannot be recovered from summary: verification must be repeated.
 
 F401 baseline adds only a fixture and offline CI; API_VERSION=1 and schemas are unchanged. [F401](F401_CMSIS_BASELINE.md).
+
+F401 ADC/DMA changes only the fixture. The shared F4 measurement function is now adc_convert_f4_factory, a test firmware symbol rather than public module API. API_VERSION=1 and schemas are unchanged. [F401 ADC/DMA](F401_CMSIS_ADC_DMA.md).

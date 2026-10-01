@@ -40,4 +40,6 @@ See [RTC/Sleep evidence and limits](../../docs/en/F103_CMSIS_RTC_SLEEP.md).
 
 [F411 RTC/Sleep evidence](../../docs/en/F411_CMSIS_RTC_SLEEP.md) covers calendar alarms, WFI and recovery.
 
-[F401 baseline evidence](../../docs/en/F401_CMSIS_BASELINE.md): seven clocks/GPIO/TIM2/SysTick cases; ADC/RTC remain pending. F401 uses the regular CLI, not the three-profile run_hw.py helper.
+[F401 baseline evidence](../../docs/en/F401_CMSIS_BASELINE.md): seven clocks/GPIO/TIM2/SysTick cases; RTC remains pending. F401 uses the regular CLI, not the three-profile run_hw.py helper.
+
+[F401 ADC/DMA evidence](../../docs/en/F401_CMSIS_ADC_DMA.md):15 cases, CH16/17 and shared adc_convert_f4_factory arithmetic.

@@ -1,9 +1,9 @@
-/* F411 scan CH18/17 and DMA2 stream0/channel0; no HAL or LL dependency. */
+/* F401 scan CH16/17 and DMA2 stream0/channel0; no HAL or LL dependency. */
 #include "app.h"
 #include "adc_units.h"
 #include "stm32f4xx.h"
 
-/* DS10314: factory raw samples at VDDA=3.3 V, TS anchors 30/110 C. */
+/* DS9716: factory raw samples at VDDA=3.3 V, TS anchors 30/110 C. */
 #define BOARD_VREF_CAL ( *( const uint16_t* ) 0x1FFF7A2AU )
 #define BOARD_TS_CAL1  ( *( const uint16_t* ) 0x1FFF7A2CU )
 #define BOARD_TS_CAL2  ( *( const uint16_t* ) 0x1FFF7A2EU )
@@ -70,10 +70,10 @@ void board_adc_init( void )
     RCC->APB2RSTR &= ~RCC_APB2RSTR_ADCRST;
     ADC->CCR       = ADC_CCR_TSVREFE; /* PCLK2/2=8 MHz, VBAT disabled, independent ADC. */
     ADC1->CR1      = ADC_CR1_SCAN;
-    ADC1->SMPR1    = ADC_SMPR1_SMP18 | ADC_SMPR1_SMP17; /* 480 ADC cycles. */
+    ADC1->SMPR1    = ADC_SMPR1_SMP16 | ADC_SMPR1_SMP17; /* 480 ADC cycles. */
     ADC1->SQR1     = ADC_SQR1_L_0;
     ADC1->SQR2     = 0U;
-    ADC1->SQR3     = 18U | ( 17U << 5 );
+    ADC1->SQR3     = 16U | ( 17U << 5 );
     ADC1->CR2      = ADC_CR2_ADON | ADC_CR2_DMA | ADC_CR2_DDS;
     board_delay_ms( 2U ); /* ADC power-up and internal sensor settling. No F1 calibration. */
     DMA2_Stream0->CR   = DMA_SxCR_MINC | DMA_SxCR_PSIZE_0 | DMA_SxCR_MSIZE_0 | DMA_SxCR_TCIE | DMA_SxCR_TEIE | DMA_SxCR_DMEIE;

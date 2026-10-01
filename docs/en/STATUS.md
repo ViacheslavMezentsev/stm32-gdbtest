@@ -2,6 +2,8 @@
 
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
+[F401 ADC/DMA/units/failures:15/15 HW and three positive repeats, HAL restored; specification0.53.](F401_CMSIS_ADC_DMA.md)
+
 [F401 CMSIS baseline: 7/7 HW through ST-Link/OpenOCD, HAL boot/blink restored. Flash256/RAM64; ADC/RTC are not migrated yet.](F401_CMSIS_BASELINE.md)
 
 rc.2 snapshot: 5b7b466. Docs/Offline/Hardware SUCCESS; all 27 GitHub JSON reports verified.

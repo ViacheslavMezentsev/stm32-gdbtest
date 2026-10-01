@@ -45,7 +45,7 @@ adc_reading_t adc_convert_f103( uint16_t temperature, uint16_t reference )
     return result;
 }
 
-adc_reading_t adc_convert_f411( uint16_t temperature, uint16_t reference, uint16_t reference_cal, uint16_t temperature_cal1,
+adc_reading_t adc_convert_f4_factory( uint16_t temperature, uint16_t reference, uint16_t reference_cal, uint16_t temperature_cal1,
     uint16_t temperature_cal2 )
 {
     const adc_reading_t invalid = { 0U, 0, 0U };
