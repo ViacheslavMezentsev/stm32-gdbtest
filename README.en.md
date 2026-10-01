@@ -3,6 +3,11 @@
 [![Docs](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/stm32-gdbtest/docs.yml?branch=main&label=Docs&style=flat-square)](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/workflows/docs.yml)
 [![Offline](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/stm32-gdbtest/offline.yml?branch=main&label=Offline&style=flat-square)](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/workflows/offline.yml)
 
+[![Hardware evidence](https://img.shields.io/badge/Hardware-historical%20snapshot-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
+[![Board models tested](https://img.shields.io/badge/Boards%20tested-3-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
+[![Recorded hardware cases](https://img.shields.io/badge/HW%20cases%20%28recorded%29-58-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
+[![Latest recorded hardware verification](https://img.shields.io/badge/HW%20verified%20%28latest%29-2026--10--01-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
+
 [Русский](README.md)
 
 **stm32-gdbtest implements [DDTT](docs/en/DDTT.md) for STM32: checks of running firmware
@@ -205,6 +210,8 @@ Remote mode uses SSH keys only; the debugger lock is held on the stand host and 
 link is watched by a heartbeat. ST-LINK GDB Server is not available on Linux aarch64
 (ST does not ship it for arm64), so OpenOCD and J-Link are used on Orange Pi.
 Details: [Linux stand](docs/en/LINUX_STAND.md), [GDB servers](docs/en/BACKENDS.md).
+
+**Reading the counters.** `Hardware: historical snapshot`, `Boards tested` and `HW cases (recorded)` describe recorded CMSIS hardware evidence: three board models and 58 distinct profile/fixture/scenario combinations. Repeats and builds do not increase this count; `HW verified (latest)` is the date of the newest included experiment. This is a historical snapshot across revisions, not a single run of current main or a coverage percentage. See the [metric definitions and results table](docs/en/HARDWARE_METRICS.md) for scope and evidence.
 
 ## MCU profiles
 

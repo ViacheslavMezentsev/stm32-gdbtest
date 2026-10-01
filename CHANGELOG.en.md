@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- README RU/EN badges show a historical CMSIS snapshot: 3 board models, 58 cases and the latest evidence date. Added counting rules and a linked results table; automatic metric publication is not implemented yet.
+
 - F411 CMSIS RTC/Sleep/deadline/recovery group:20/20 HW +5 repeats, external timeout/recovery, HAL restored; specification0.51.
 
 - F411 CMSIS ADC1 CH18/17, DMA2 Stream0, factory arithmetic and state injections as one group.15/15 HW +3 repeats, HAL restored; specification0.50.

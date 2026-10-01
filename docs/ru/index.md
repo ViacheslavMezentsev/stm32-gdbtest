@@ -2,6 +2,8 @@
 
 Документация · [English](../en/index.md)
 
+[Метрики аппаратных проверок и таблица результатов](HARDWARE_METRICS.md).
+
 [Подготовка rc.2 и матрица приёмки](RC2_READINESS.md).
 
 [Аппаратная приёмка HAL F030](F030_HAL_VALIDATION.md): 17/17, шесть повторов, timeout/recovery и восстановление исходной прошивки проверены на Windows/ST-Link/OpenOCD; ТЗ 0.40. API без изменений.
