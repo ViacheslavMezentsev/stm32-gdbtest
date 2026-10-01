@@ -10,7 +10,7 @@ Firmware and application-specific scenarios remain outside the module core.
 At `bc07625`, CMSIS-only `tests/firmware` already covers F030/F103/F411;
 `examples/minimal-consumer` targets F411. Reuse these without duplication:
 the first is a regression fixture, the second demonstrates integration.
-F401/F429 remain to be added; H503 stays paused. CMSIS applies to ARM;
+F401 is migrated; F429 is being migrated in groups; H503 stays paused. CMSIS applies to ARM;
 RISC-V needs its own startup/BSP.
 
 ## F030: current mapping
@@ -63,6 +63,8 @@ First F103 group: [7/7 HW and HAL restoration](F103_CMSIS_BASELINE.md).
 
 F103 ADC/DMA: [15/15 HW, units and failure paths](F103_CMSIS_ADC_DMA.md).
 
-[F401 baseline](F401_CMSIS_BASELINE.md): 7/7 HW, ADC/DMA and RTC/Sleep next; the F401 migration is not complete.
+[F401 baseline](F401_CMSIS_BASELINE.md): 7/7 HW in the first group; ADC/DMA and RTC/Sleep completed in subsequent groups.
 
 [F401 ADC/DMA](F401_CMSIS_ADC_DMA.md):15/15 HW and post-injection repeats; continued by [RTC/Sleep/recovery,20/20 HW](F401_CMSIS_RTC_SLEEP.md).
+
+[F429 CMSIS baseline:7/7 HW, HAL restored; specification0.55. Fifth CI profile; ADC/RTC remain pending.](F429_CMSIS_BASELINE.md)

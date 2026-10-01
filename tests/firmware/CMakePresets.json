@@ -15,18 +15,21 @@
     {"name": "f030r8", "inherits": "base", "cacheVariables": {"CI_PROFILE": "f030r8"}},
     {"name": "f103c8", "inherits": "base", "cacheVariables": {"CI_PROFILE": "f103c8"}},
     {"name": "f401cc", "inherits": "base", "cacheVariables": {"CI_PROFILE": "f401cc"}},
-    {"name": "f411ce", "inherits": "base", "cacheVariables": {"CI_PROFILE": "f411ce"}}
+    {"name": "f411ce", "inherits": "base", "cacheVariables": {"CI_PROFILE": "f411ce"}},
+    {"name": "f429zi", "inherits": "base", "cacheVariables": {"CI_PROFILE": "f429zi"}}
   ],
   "buildPresets": [
     {"name": "f030r8", "configurePreset": "f030r8"},
     {"name": "f103c8", "configurePreset": "f103c8"},
     {"name": "f401cc", "configurePreset": "f401cc"},
-    {"name": "f411ce", "configurePreset": "f411ce"}
+    {"name": "f411ce", "configurePreset": "f411ce"},
+    {"name": "f429zi", "configurePreset": "f429zi"}
   ],
   "testPresets": [
     {"name": "f030r8-offline", "configurePreset": "f030r8", "filter": {"include": {"label": "host"}}, "output": {"outputOnFailure": true}},
     {"name": "f103c8-offline", "configurePreset": "f103c8", "filter": {"include": {"label": "host"}}, "output": {"outputOnFailure": true}},
     {"name": "f401cc-offline", "configurePreset": "f401cc", "filter": {"include": {"label": "host"}}, "output": {"outputOnFailure": true}},
-    {"name": "f411ce-offline", "configurePreset": "f411ce", "filter": {"include": {"label": "host"}}, "output": {"outputOnFailure": true}}
+    {"name": "f411ce-offline", "configurePreset": "f411ce", "filter": {"include": {"label": "host"}}, "output": {"outputOnFailure": true}},
+    {"name": "f429zi-offline", "configurePreset": "f429zi", "filter": {"include": {"label": "host"}}, "output": {"outputOnFailure": true}}
   ]
 }

@@ -214,7 +214,7 @@ def firmware_pair(gcc, profile):
                            "HW_CI_ADC_INVALID", "HW_CI_ADC_TIMEOUT", "HW_CI_ADC_BUSY", "HW_CI_ADC_DISABLED",
                            "HW_CI_RTC_INIT", "HW_CI_RTC_ALARM", "HW_CI_RTC_DEADLINE",
                            "HW_CI_SLEEP_SYSTICK", "HW_CI_SLEEP_TIM2"]
-    if profile in ("f401cc", "f411ce"):
+    if profile in ("f401cc", "f411ce", "f429zi"):
         expected_cases += ["HW_CI_CLOCK", "HW_CI_BLINK", "HW_CI_TIM2_INIT", "HW_CI_TIM2_IRQ", "HW_CI_SYSTICK_IRQ"]
     if profile in ("f401cc", "f411ce"):
         expected_cases += ["HW_CI_ADC_INIT", "HW_CI_ADC_DMA", "HW_CI_ADC_UNITS", "HW_CI_ADC_VECTORS",

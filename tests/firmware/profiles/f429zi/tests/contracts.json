@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "contracts": {
+    "ci_gpio_macros": {
+      "macros": {
+        "context": "board_led_toggle",
+        "expressions": [
+          "RCC",
+          "RCC_AHB1ENR_GPIOGEN",
+          "GPIOG",
+          "GPIO_MODER_MODER13",
+          "GPIO_MODER_MODER13_0",
+          "GPIO_OTYPER_OT13",
+          "GPIO_OSPEEDER_OSPEEDR13",
+          "GPIO_PUPDR_PUPD13",
+          "GPIO_ODR_OD13"
+        ]
+      }
+    },
+    "ci_app_api": {
+      "type_context": "app_step",
+      "functions": {
+        "app_step": {
+          "returns": "uint32_t",
+          "arguments": [
+            {
+              "name": "state",
+              "type": "app_state_t *"
+            },
+            {
+              "name": "mode",
+              "type": "app_mode_t"
+            }
+          ]
+        },
+        "app_loop": {
+          "returns": "void",
+          "arguments": []
+        }
+      },
+      "fields": {
+        "app_state_t": {
+          "ticks": "uint32_t",
+          "led": "uint8_t"
+        }
+      },
+      "enums": {
+        "app_mode_t": {
+          "APP_MODE_IDLE": 0,
+          "APP_MODE_BLINK": 1
+        }
+      }
+    },
+    "ci_clock_macros": {
+      "macros": {
+        "context": "board_led_toggle",
+        "expressions": [
+          "RCC",
+          "RCC_CR_HSION",
+          "RCC_CR_HSIRDY",
+          "RCC_CFGR_SW",
+          "RCC_CFGR_SWS",
+          "RCC_CFGR_HPRE",
+          "RCC_CFGR_PPRE1",
+          "RCC_CFGR_PPRE2",
+          "SysTick",
+          "SysTick_CTRL_ENABLE_Msk",
+          "SysTick_CTRL_TICKINT_Msk",
+          "SysTick_CTRL_CLKSOURCE_Msk",
+          "SCB",
+          "SCB_ICSR_VECTACTIVE_Msk"
+        ]
+      }
+    },
+    "ci_timer_macros": {
+      "macros": {
+        "context": "TIM2_IRQHandler",
+        "expressions": [
+          "TIM2",
+          "TIM_SR_UIF",
+          "RCC",
+          "RCC_APB1ENR_TIM2EN",
+          "NVIC",
+          "SCB",
+          "SCB_ICSR_VECTACTIVE_Msk"
+        ]
+      }
+    }
+  }
+}

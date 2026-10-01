@@ -10,7 +10,7 @@
 На `bc07625` уже есть CMSIS-only `tests/firmware` для F030/F103/F411 и
 `examples/minimal-consumer` для F411. Используем их без создания дублей:
 первый проект — регрессионная fixture, второй — пример подключения.
-F401/F429 предстоит добавить; H503 остаётся на паузе. CMSIS относится к ARM,
+F401 перенесён; F429 переносится группами; H503 остаётся на паузе. CMSIS относится к ARM,
 для RISC-V нужны соответствующие startup/BSP.
 
 ## F030: актуальная сверка
@@ -63,6 +63,8 @@ F030: RTC deadline через инъекцию аргумента, API без и
 
 F103 ADC/DMA: [15/15 HW, units and failure paths](F103_CMSIS_ADC_DMA.md).
 
-[F401 baseline](F401_CMSIS_BASELINE.md): 7/7 HW, следующий этап ADC/DMA и RTC/Sleep; полный перенос F401 ещё не завершён.
+[F401 baseline](F401_CMSIS_BASELINE.md): 7/7 HW на первом этапе; ADC/DMA и RTC/Sleep завершены последующими группами.
 
 [F401 ADC/DMA](F401_CMSIS_ADC_DMA.md):15/15 HW и повторы после инъекций; продолжение — [RTC/Sleep/recovery,20/20 HW](F401_CMSIS_RTC_SLEEP.md).
+
+[F429 CMSIS baseline:7/7 HW, HAL восстановлена; ТЗ0.55. Пятый профиль в CI, ADC/RTC ещё впереди.](F429_CMSIS_BASELINE.md)

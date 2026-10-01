@@ -4,8 +4,8 @@
 [![Offline](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/stm32-gdbtest/offline.yml?branch=main&label=Offline&style=flat-square)](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/workflows/offline.yml)
 
 [![Hardware evidence](https://img.shields.io/badge/Hardware-historical%20snapshot-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
-[![Board models tested](https://img.shields.io/badge/Boards%20tested-4-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
-[![Recorded hardware cases](https://img.shields.io/badge/HW%20cases%20%28recorded%29-78-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
+[![Board models tested](https://img.shields.io/badge/Boards%20tested-5-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
+[![Recorded hardware cases](https://img.shields.io/badge/HW%20cases%20%28recorded%29-85-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
 [![Latest recorded hardware verification](https://img.shields.io/badge/HW%20verified%20%28latest%29-2026--10--01-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
 
 [English](README.en.md)
@@ -209,7 +209,7 @@ Linux aarch64 недоступен (ST не выпускает его для arm
 используются OpenOCD и J-Link. Подробности: [Linux-стенд](docs/ru/LINUX_STAND.md),
 [GDB-серверы](docs/ru/BACKENDS.md).
 
-**Как читать счётчики.** `Hardware: historical snapshot`, `Boards tested` и `HW cases (recorded)` описывают сохранённые аппаратные протоколы CMSIS-примеров: четыре модели плат и 78 уникальных сочетаний «профиль + fixture + сценарий». Повторы и сборки не увеличивают это число; `HW verified (latest)` — дата самого нового включённого опыта. Это исторический срез разных ревизий, а не единый прогон текущего main и не процент покрытия. Состав, границы и результаты приведены в [описании метрик и таблице проверок](docs/ru/HARDWARE_METRICS.md).
+**Как читать счётчики.** `Hardware: historical snapshot`, `Boards tested` и `HW cases (recorded)` описывают сохранённые аппаратные протоколы CMSIS-примеров: пять моделей плат и 85 уникальных сочетаний «профиль + fixture + сценарий». Повторы и сборки не увеличивают это число; `HW verified (latest)` — дата самого нового включённого опыта. Это исторический срез разных ревизий, а не единый прогон текущего main и не процент покрытия. Состав, границы и результаты приведены в [описании метрик и таблице проверок](docs/ru/HARDWARE_METRICS.md).
 
 ## Профили MCU
 
@@ -220,7 +220,7 @@ hardware breakpoints, обработчики отказов, диагности�
 MCU одной прошивки могут делить сценарии, каждый со своим профилем (`PROFILE`).
 
 Образцы в репозитории: CI-прошивки `tests/firmware/profiles/` (F030R8, F103C8, F401CC,
-F411CE — Cortex-M0, M3, M4) и пример `examples/minimal-consumer/profile/` (F411CE).
+F411CE, F429ZI — Cortex-M0, M3, M4) и пример `examples/minimal-consumer/profile/` (F411CE).
 
 | MCU | Отладчик / GDB-сервер | Где проверено |
 | --- | --- | --- |
@@ -228,6 +228,7 @@ F411CE — Cortex-M0, M3, M4) и пример `examples/minimal-consumer/profile
 | STM32F103C8 | J-Link CE / J-Link GDB Server | CI-прошивка, стендовый проект |
 | STM32F103CB | J-Link CE / J-Link GDB Server | демонстрационный проект [stm32-hwtest-bluepill](https://github.com/ViacheslavMezentsev/stm32-hwtest-bluepill) |
 | STM32F401CC | ST-Link / OpenOCD | [CMSIS: 20 сценариев](docs/ru/F401_CMSIS_RTC_SLEEP.md) |
+| STM32F429ZI | ST-Link / OpenOCD | [CMSIS: 7 сценариев](docs/ru/F429_CMSIS_BASELINE.md) |
 | STM32F411CE | ST-Link / OpenOCD и ST-LINK GDB Server | CI-прошивка, пример, стендовый проект |
 | STM32F429ZI | ST-Link / OpenOCD и ST-LINK GDB Server | стендовый проект |
 | STM32F401CC | ST-Link / ST-LINK GDB Server | стендовый проект, ранние проверки |
@@ -255,7 +256,7 @@ RISC-V, полный перенос остальных примеров, упр�
 
 - `stm32_gdbtest/` — runner, GDB-агент, Target API, backend, контракты и CMake-интеграция.
 - `tests/host`, `tests/fixtures` — проверки инфраструктуры без платы.
-- `tests/firmware`, `ci/` — CI-прошивки F030R8/F103C8/F411CE, Docker-образ, сценарий
+- `tests/firmware`, `ci/` — CI-прошивки F030R8/F103C8/F401CC/F411CE/F429ZI, Docker-образ, сценарий
   проверок и `run_hw.py` для аппаратной проверки на стенде.
 - `tests/hal-f030/` — самостоятельная HAL-регрессия F030, CI и аппаратная приёмка.
 - `tools/linux_stand.py` — установка окружения Linux-стенда без root.

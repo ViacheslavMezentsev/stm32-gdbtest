@@ -2,14 +2,14 @@
 
 [Documentation](index.md) · [Русский](../ru/HARDWARE_METRICS.md)
 
-Snapshot dated 2026-10-01, with F030/F103/F411 sources in main `591c096`; F401 RTC/Sleep added in a working branch from `87a23be`. README
+Snapshot dated 2026-10-01, with F030/F103/F411 sources in main `591c096`; F401 accepted at `9d22410`; F429 baseline added in a working branch from `9d22410`. README
 badges are currently static and updated with this table after reviewing evidence.
 The blue `Hardware: historical snapshot` describes the evidence category, not
 the health of current CI. Docs and Offline retain their independent statuses.
 
 ## Included results
 
-Only the `tests/firmware` CMSIS fixtures for these four board models are counted.
+Only the `tests/firmware` CMSIS fixtures for these five board models are counted.
 This is a bounded historical set, not every board or execution in project history.
 
 | Board model / MCU | Debugger and backend | Cases with evidence | Report and accepted stage revision |
@@ -18,7 +18,8 @@ This is a bounded historical set, not every board or execution in project histor
 | WeAct BluePill-Plus / STM32F103C8T6 | J-Link, SWD | 20 | [RTC/Sleep and preceding groups](F103_CMSIS_RTC_SLEEP.md), `d97903c`, 2026-10-01 |
 | WeAct BlackPill V3.1 / STM32F411CEU6 | ST-Link, OpenOCD/SWD | 20 | [RTC/Sleep and preceding groups](F411_CMSIS_RTC_SLEEP.md), `91a7cd4`, 2026-10-01 |
 | WeAct BlackPill v3.0 / STM32F401CCU6 | ST-Link, OpenOCD/SWD | 20 | [RTC/Sleep/recovery](F401_CMSIS_RTC_SLEEP.md), working tree from `87a23be`, 2026-10-01 |
-| **Total** | **4 board models** | **78** | **Historical snapshot across revisions** |
+| STM32F429I-DISCO / STM32F429ZIT6 | ST-Link/V2, OpenOCD/SWD | 7 | [Baseline](F429_CMSIS_BASELINE.md), working tree from `9d22410`, 2026-10-01 |
+| **Total** | **5 board models** | **85** | **Historical snapshot across revisions** |
 
 All rows refer to Windows, xPack GCC13.3.1-1.1/GDB14.2.90. Reports provide
 exact ELF hashes, local artifacts, original errors and experiment boundaries.
@@ -28,11 +29,11 @@ the original RTC error remains in the history after the successful repeat.
 
 ## Badge definitions
 
-- `Boards tested: 4` counts distinct board models with a specific MCU in the table.
+- `Boards tested: 5` counts distinct board models with a specific MCU in the table.
   Two physical specimens of one model or two backends do not increase it.
   A debugger identifier is not a board identifier.
-- `HW cases (recorded): 78` sums distinct profile/fixture/scenario-ID combinations
-  with confirmed results in these reports. It is not 78 different test algorithms,
+- `HW cases (recorded): 85` sums distinct profile/fixture/scenario-ID combinations
+  with confirmed results in these reports. It is not 85 different test algorithms,
   an assertion count or a coverage percentage.
 - `HW verified (latest): 2026-10-01` is the newest included experiment date,
   not the verification date of all rows or current main.
@@ -51,7 +52,7 @@ When updating the snapshot, review evidence and the table total, then update
 both README languages, this page and CHANGELOG together. Static badges do
 not change automatically when a GitHub workflow is rerun. The current
 [Hardware workflow](../../.github/workflows/hardware.yml) uses `run_hw.py`
-steps (boot/GPIO, images, recovery); it does not automatically run all 78
+steps (boot/GPIO, images, recovery); it does not automatically run all 85
 peripheral cases. Its success does not validate this entire snapshot.
 
 Next comes a separate automated campaign with an expected matrix and an

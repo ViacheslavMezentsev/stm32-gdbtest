@@ -234,3 +234,5 @@ F401 baseline adds only a fixture and offline CI; API_VERSION=1 and schemas are 
 F401 ADC/DMA changes only the fixture. The shared F4 measurement function is now adc_convert_f4_factory, a test firmware symbol rather than public module API. API_VERSION=1 and schemas are unchanged. [F401 ADC/DMA](F401_CMSIS_ADC_DMA.md).
 
 F401 RTC/Sleep extends only the fixture. rtc_f4.c and vectors are shared with F411; public API and schemas are unchanged. F411 was checked offline after the move. [F401 RTC/Sleep](F401_CMSIS_RTC_SLEEP.md).
+
+Added fixture profile f429zi with seven cases. Public API, schemas and version are unchanged. [F429 baseline](F429_CMSIS_BASELINE.md).

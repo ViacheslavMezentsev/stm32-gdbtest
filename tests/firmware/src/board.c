@@ -156,6 +156,82 @@ void board_led_toggle( void )
 {
     GPIOB->ODR ^= GPIO_ODR_ODR2;
 }
+#elif defined( STM32F429xx )
+#include "stm32f4xx.h"
+
+/* STM32F429I-DISCO: PG13, active-high LD3; HSI nominal 16 MHz. */
+uint32_t SystemCoreClock = 16000000U;
+volatile uint32_t board_ticks_ms;
+volatile uint32_t board_timer_events;
+
+void SysTick_Handler( void )
+{
+    board_ticks_ms++;
+}
+
+void TIM2_IRQHandler( void )
+{
+    if ( ( TIM2->SR & TIM_SR_UIF ) != 0U )
+    {
+        TIM2->SR = ~TIM_SR_UIF;
+        board_timer_events++;
+    }
+}
+
+void board_delay_ms( uint32_t delay_ms )
+{
+    const uint32_t start = board_ticks_ms;
+    while ( ( uint32_t ) ( board_ticks_ms - start ) < delay_ms )
+    {
+        __WFI();
+    }
+}
+
+static void board_timer_init( void )
+{
+    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+    ( void ) RCC->APB1ENR;
+    RCC->APB1RSTR |= RCC_APB1RSTR_TIM2RST;
+    RCC->APB1RSTR &= ~RCC_APB1RSTR_TIM2RST;
+    TIM2->PSC      = 15999U;
+    TIM2->ARR      = 99U;
+    TIM2->EGR      = TIM_EGR_UG;
+    /* Discard the update flag from loading the prescaler. */
+    TIM2->SR = 0U;
+    NVIC_ClearPendingIRQ( TIM2_IRQn );
+    NVIC_SetPriority( TIM2_IRQn, 2U );
+    TIM2->DIER = TIM_DIER_UIE;
+    NVIC_EnableIRQ( TIM2_IRQn );
+    TIM2->CR1 = TIM_CR1_CEN;
+}
+
+void board_init( void )
+{
+    RCC->CR |= RCC_CR_HSION;
+    while ( ( RCC->CR & RCC_CR_HSIRDY ) == 0U )
+    {
+    }
+    RCC->CFGR &= ~( RCC_CFGR_SW | RCC_CFGR_HPRE | RCC_CFGR_PPRE1 | RCC_CFGR_PPRE2 );
+    while ( ( RCC->CFGR & RCC_CFGR_SWS ) != RCC_CFGR_SWS_HSI )
+    {
+    }
+    RCC->CR         &= ~RCC_CR_PLLON;
+    SystemCoreClock  = 16000000U;
+    RCC->AHB1ENR    |= RCC_AHB1ENR_GPIOGEN;
+    ( void ) RCC->AHB1ENR;
+    GPIOG->BSRR     = GPIO_BSRR_BR13;
+    GPIOG->OTYPER  &= ~GPIO_OTYPER_OT13;
+    GPIOG->OSPEEDR &= ~GPIO_OSPEEDER_OSPEEDR13;
+    GPIOG->PUPDR   &= ~GPIO_PUPDR_PUPD13;
+    GPIOG->MODER    = ( GPIOG->MODER & ~GPIO_MODER_MODER13 ) | GPIO_MODER_MODER13_0;
+    ( void ) SysTick_Config( 16000000U / 1000U );
+    board_timer_init();
+}
+
+void board_led_toggle( void )
+{
+    GPIOG->ODR ^= GPIO_ODR_OD13;
+}
 #elif defined( STM32F411xE ) || defined( STM32F401xC )
 #include "stm32f4xx.h"
 

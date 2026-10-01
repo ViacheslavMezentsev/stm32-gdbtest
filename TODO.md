@@ -2,12 +2,18 @@
 
 ## Текущая работа
 
-- codex/f401-cmsis-rtc-sleep от main87a23be: RTC/Sleep/deadline/recovery одной группой.
-- [x] Windows build/prepare21/21, HW20/20 +5 повторов, host timeout/recovery; HAL восстановлена.
-- [x] Windows docs/host4/4, Linux format/host +12 MCU/GCC сочетаний14/14; документация RU/EN, ТЗ0.54.
-- [ ] Docs/полный Offline нового SHA после push, затем land владельцем.
-- [ ] Далее — инвентаризация и CMSIS-перенос F429 группами; смену платы согласовать отдельно.
-- [ ] После переноса всех согласованных примеров — финальная сверка и сокращение потребителя до F411; оптимизация тестов после переноса.
+- codex/f429-cmsis-baseline от main9d22410: startup/clocks/GPIO/TIM2/SysTick одной группой.
+- [x] Windows build/prepare8/8, HW7/7, HAL boot/blink восстановлены; DISCO/ST-Link/OpenOCD.
+- [x] Windows docs/host4/4, Linux format/host и пять MCU × три GCC17/17; ТЗ0.55 и RU/EN.
+- [ ] Docs/полный Offline опубликованного SHA, затем land владельцем.
+- [ ] Далее F429 ADC/DMA/units/failures, затем RTC/Sleep/deadline/recovery. Оставить DISCO подключённой.
+- [ ] Финальная сверка пяти профилей и HAL→CMSIS, F411-consumer, сокращение BlackPill-репозитория; оптимизация после переноса.
+
+## F401 RTC/Sleep: принят в main9d22410
+
+- [x] HW20/20 +5 повторов, host timeout/recovery и HAL restore; Windows prepare21/21.
+- [x] Windows docs/host4/4, Linux14/14, ТЗ0.54; Docs36871974569 и полный Offline36871974507 PASS.
+- [x] Land владельцем подтверждён, origin/main9d22410 сверен.
 
 ## F401 ADC/DMA: принят в main87a23be
 
