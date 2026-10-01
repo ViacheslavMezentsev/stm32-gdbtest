@@ -240,3 +240,5 @@ Added fixture profile f429zi with seven cases. Public API, schemas and version a
 F429 fixture adds ADC/DMA and arithmetic; shared converter, public API, schemas and version are unchanged. [F429 ADC/DMA](F429_CMSIS_ADC_DMA.md).
 
 F429 uses the shared F4 RTC implementation and vectors; RTC algorithm, public API and schemas are unchanged. [F429 RTC/Sleep](F429_CMSIS_RTC_SLEEP.md).
+
+[HAL F030: five GPIO/RCC techniques and source variants](F030_HAL_GPIO_RCC.md).

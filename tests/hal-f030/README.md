@@ -17,7 +17,7 @@ cmake --build --preset debug
 ctest --preset offline
 ```
 
-Ожидаются 19 host-тестов: 17 prepare, traceability, fixture inventory/imports/hashes.
+Ожидаются 24 host-теста: 22 prepare, traceability, fixture inventory/imports/hashes.
 Без фильтра CTest запускает аппаратные тесты; не выполнять до выбора стенда.
 Build и результаты находятся в build/debug. Личный stand не включён.
 Флаги -Og -g3 -fno-lto заданы явно; это отдельный вариант firmware.
@@ -36,3 +36,5 @@ Python-импорты локализованы, добавлены ссылки 
 Core и сохранённый platform.c исключены из проверки формата.
 
 Повторение HW и границы проверки: [protocol](../../docs/ru/F030_HAL_VALIDATION.md).
+
+[Пять новых GPIO/RCC cases, варианты HAL и текущие результаты](../../docs/ru/F030_HAL_GPIO_RCC.md). Исходные 17 сохранены; всего 22.

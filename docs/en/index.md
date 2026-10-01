@@ -93,3 +93,5 @@ F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_D
 - [F411 CMSIS: RTC/Sleep/deadlines/recovery](F411_CMSIS_RTC_SLEEP.md).
 
 [Five-profile acceptance review and remaining HAL checks](CMSIS_ACCEPTANCE.md).
+
+[HAL F030: five GPIO/RCC techniques and source variants](F030_HAL_GPIO_RCC.md).

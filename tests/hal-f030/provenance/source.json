@@ -186,13 +186,17 @@
       "source": "profiles/f030r8/tests/contracts.json",
       "destination": "profile/tests/contracts.json",
       "sha256": "c5c601519224ea9aa083e8436cbff7856fc699720fd79a77451254b43b82beb8",
-      "migrated_sha256": "c5c601519224ea9aa083e8436cbff7856fc699720fd79a77451254b43b82beb8"
+      "migrated_sha256": "d53b0e121672766678c887e0d41f29764f1bccf54c8457a10b1a0cf0b2073262",
+      "original_migrated_sha256": "c5c601519224ea9aa083e8436cbff7856fc699720fd79a77451254b43b82beb8",
+      "extension": "F030 HAL GPIO/RCC group: five cases adapted from consumer84a257e; original migration digest retained."
     },
     {
       "source": "profiles/f030r8/tests/requirements.md",
       "destination": "profile/tests/requirements.md",
       "sha256": "1119a2cc979b997b48b82565c34c13a530f1a9c885ab5f86af9f12645d0279da",
-      "migrated_sha256": "1119a2cc979b997b48b82565c34c13a530f1a9c885ab5f86af9f12645d0279da"
+      "migrated_sha256": "ee079fc22b1ab1f7b87d6074499416c2a1a3db7bc52187cb51248bf12d538d05",
+      "original_migrated_sha256": "1119a2cc979b997b48b82565c34c13a530f1a9c885ab5f86af9f12645d0279da",
+      "extension": "F030 HAL GPIO/RCC group: five cases adapted from consumer84a257e; original migration digest retained."
     },
     {
       "source": "profiles/f030r8/tests/board/test_nucleo.py",

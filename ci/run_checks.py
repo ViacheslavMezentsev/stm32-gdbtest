@@ -4,7 +4,7 @@ Levels (spec 8.11):
   docs      specification consistency, local Markdown links, RU/EN documentation pairs
   format    C/C++ sources match .clang-format (clang-format --dry-run --Werror)
   host      module host tests (unittest)
-  hal       F030 HAL GCC13: build, exact 19 CTest checks, prepare JSON, negative contracts
+  hal       F030 HAL GCC13: build, exact 24 CTest checks, prepare JSON, negative contracts
   firmware  CI firmware per GCC x profile: configure, build, build manifest, CTest host
             tests (traceability, prepare with offline contracts), full-image prepare,
             negative contract and image-policy cases

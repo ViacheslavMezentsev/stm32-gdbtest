@@ -261,3 +261,13 @@ the evidence and repeat the complete set separately; do not claim a complete PAS
 ## Reports from repeated package runs
 
 If summary references missing JSON from earlier runs, check the module version: the old open_package deleted the previous extraction directory. The fixed version keeps separate sessions; update artifact collection patterns as described in [Hardware CI](HARDWARE_CI.md). A green workflow does not replace inspection of retained results.
+
+## Same Cube package name, different RCC signatures
+
+Do not select HAL contracts by Windows/Linux or CubeF0 V1.11.6 directory name.
+The [F030 investigation](F030_HAL_GPIO_RCC.md) found mutable/const differences
+between the installed package and CI gitlink. Use reviewed source hashes and
+strict ELF types. Unknown hashes need review, not disabled preflight.
+Do not reuse a CMake cache containing /workspace paths on Windows: use a separate
+build/copy. WinError5 creating a restore report is not an MCU failure: retain
+ERROR, resolve access and confirm boot/blink separately.

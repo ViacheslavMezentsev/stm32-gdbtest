@@ -16,7 +16,8 @@ EXPECTED = {"HW_BOOT", "HW_CLOCK", "HW_GPIO", "HW_BLINK", "HW_ADC_DMA_INIT",
             "HW_TIM3_INIT", "HW_RTC_INIT", "HW_ADC_DMA_RUNTIME", "HW_TIM3_IRQ",
             "HW_RTC_ALARM", "HW_ADC_START_ERROR", "HW_ADC_DMA_TIMEOUT",
             "HW_ADC_UNITS", "HW_ADC_INVALID", "HW_ADC_VECTORS",
-            "HW_SLEEP_SYSTICK", "HW_SLEEP_TIMER"}
+            "HW_SLEEP_SYSTICK", "HW_SLEEP_TIMER", "HW_GPIO_ARGUMENTS",
+            "HW_GPIO_FILTERED_CALL", "HW_RCC_ERROR", "HW_RCC_OSC_NULL", "HW_RCC_CLOCK_NULL"}
 
 
 def check(run):
@@ -46,12 +47,12 @@ def check(run):
     if any(re.match(r"^(/|[A-Za-z]:)", item["file"]) for item in manifest["inputs"]):
         raise ValueError("Absolute input path in HAL manifest")
     cases = collect(FIXTURE / "profile/tests/board")
-    if len(cases) != 17 or {c["id"] for c in cases} != EXPECTED:
+    if len(cases) != 22 or {c["id"] for c in cases} != EXPECTED:
         raise ValueError("HAL case inventory differs")
     inventory = json.loads(run(["ctest", "--test-dir", build, "-L", "host", "--show-only=json-v1"],
                                env=env, log=log))["tests"]
     names = {"prepare." + name for name in EXPECTED} | {"host.traceability", "host.fixture"}
-    if len(inventory) != 19 or {t["name"] for t in inventory} != names:
+    if len(inventory) != 24 or {t["name"] for t in inventory} != names:
         raise ValueError("HAL CTest inventory differs")
     for test in inventory:
         if test["name"].startswith("prepare.") and "--prepare-only" not in test["command"]:
@@ -62,13 +63,13 @@ def check(run):
     run(["ctest", "--test-dir", build, "-L", "host", "--output-on-failure", "--no-tests=error",
          "--output-junit", junit], env=env, log=log)
     results = ET.parse(junit).getroot().findall(".//testcase")
-    if len(results) != 19 or {r.attrib["name"] for r in results} != names or any(
+    if len(results) != 24 or {r.attrib["name"] for r in results} != names or any(
             r.find(tag) is not None for r in results for tag in ("skipped", "failure", "error")):
         raise ValueError("Incomplete HAL JUnit")
     reports = [json.loads(p.read_text(encoding="utf-8")) for p in
                set((build / "hwtest/runs").glob("*/result.json")) - before]
-    if len(reports) != 17 or {r["id"] for r in reports} != EXPECTED:
-        raise ValueError("Expected exactly 17 fresh HAL prepare reports")
+    if len(reports) != 22 or {r["id"] for r in reports} != EXPECTED:
+        raise ValueError("Expected exactly 22 fresh HAL prepare reports")
     requested = {c["id"]: bool(c.get("contracts")) for c in cases}
     for r in reports:
         if (r["status"] != "PASS" or r["mode"] != "prepare" or r["connection_attempted"]
@@ -76,7 +77,7 @@ def check(run):
             raise ValueError("Invalid HAL prepare evidence")
         if requested[r["id"]] and r["contracts"]["status"] != "PASS":
             raise ValueError("Requested HAL contracts were not checked")
-    selected = select_contracts(FIXTURE / "profile/tests/contracts.json",
+    selected = select_contracts(build / "profile/tests/contracts.json",
                                 ["gpio_macros", "adc_start_error", "adc_dma_timeout"], manifest)
     def missing_macro(c):
         c["gpio_macros"]["macros"]["expressions"].append("HAL_CI_MISSING_MACRO")
@@ -112,4 +113,4 @@ def check(run):
             raise ValueError("Incorrect HAL contract verdict: " + name)
         if mutate and failed_contract not in {e["contract"] for e in evidence.get("errors", [])}:
             raise ValueError("Negative failed for an unrelated reason: " + name)
-    return "19 CTest, 17 fresh prepare reports, positive + 5 rejected HAL contracts"
+    return "24 CTest, 22 fresh prepare reports, positive + 5 rejected HAL contracts"

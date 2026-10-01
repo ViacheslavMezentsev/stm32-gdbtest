@@ -237,3 +237,5 @@ F401 RTC/Sleep расширяет только fixture. rtc_f4.c и вектор
 F429 fixture дополнена ADC/DMA и арифметикой; общий converter, публичный API, схемы и версия неизменны. [F429 ADC/DMA](F429_CMSIS_ADC_DMA.md).
 
 F429 подключён к общей RTC-реализации F4 и таблице векторов; алгоритм RTC, публичный API и схемы не меняются. [F429 RTC/Sleep](F429_CMSIS_RTC_SLEEP.md).
+
+[HAL F030: пять GPIO/RCC-техник и варианты исходников](F030_HAL_GPIO_RCC.md).

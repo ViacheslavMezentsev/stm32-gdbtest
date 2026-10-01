@@ -89,3 +89,5 @@ recovery/restore and technique references. Keep the original profiles until then
 The five-profile peripheral CMSIS baseline has hardware evidence; repository
 separation is not complete. This review changes no core behavior, API, schemas
 or specification requirements.
+
+[HAL F030: five GPIO/RCC techniques and source variants](F030_HAL_GPIO_RCC.md).

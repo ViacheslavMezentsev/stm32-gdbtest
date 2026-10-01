@@ -188,3 +188,5 @@ F103C8/J-Link проверены полные 16 KiB: запись хвоста 
 [F411 RTC/Sleep](F411_CMSIS_RTC_SLEEP.md): calendar Alarm A, WFI and recovery.
 
 [Итоговая сверка пяти профилей и оставшиеся HAL-проверки](CMSIS_ACCEPTANCE.md).
+
+[HAL F030: пять GPIO/RCC-техник и варианты исходников](F030_HAL_GPIO_RCC.md).

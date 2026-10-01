@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Extended HAL F030 to 22 cases: GPIO arguments/filtered call and RCC error/NULL; strict selection of two reviewed source variants, Linux/Windows prepare, specification0.58.
+
 - Reviewed five CMSIS profiles against HAL: 105 and 98 board cases; identified five HAL GPIO/RCC checks to preserve before deleting old profiles. Core and specification unchanged.
 
 - F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.

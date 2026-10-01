@@ -38,3 +38,16 @@ quality=3, правдоподобные VDDA/температура; не под
 Sleep/WFI с активным SysTick, дедлайн >=500 ms, данные измерения сохраняются.
 ## HW_SLEEP_TIMER
 При временном исключении SysTick IRQ приходит callback htim3, затем SysTick восстанавливается.
+
+## HAL GPIO/RCC techniques
+
+## HW_GPIO_ARGUMENTS
+Preserve the source-reviewed HAL technique on F030; see docs/ru/F030_HAL_GPIO_RCC.md.
+## HW_GPIO_FILTERED_CALL
+Preserve the source-reviewed HAL technique on F030; see docs/ru/F030_HAL_GPIO_RCC.md.
+## HW_RCC_ERROR
+Preserve the source-reviewed HAL technique on F030; see docs/ru/F030_HAL_GPIO_RCC.md.
+## HW_RCC_OSC_NULL
+Preserve the source-reviewed HAL technique on F030; see docs/ru/F030_HAL_GPIO_RCC.md.
+## HW_RCC_CLOCK_NULL
+Preserve the source-reviewed HAL technique on F030; see docs/ru/F030_HAL_GPIO_RCC.md.

@@ -194,3 +194,14 @@ and untested uses. Update RU/EN and comments together. Initial errors are eviden
 After HAL/optimization changes repeat affected preflight and HW checks, not just links.
 Future topics: watchpoints, temporary freeze policies, sparse/full images and external
 stimuli. Add cards as experiments are generalized, without promising new APIs.
+
+<a id="tech-009"></a>
+
+## TECH-009 — HAL arguments and reviewed source variants
+
+Conditional reach selects the intended HAL call using GPIOx/Pin/ODR. Read argument
+fields in their DWARF frame, then check the register separately after the call.
+NULL injection here requires reviewing the guard before dereferencing.
+A HAL package name is not a hash: mutable/const RCC variants require different
+strict contracts. An unknown hash is an error, not a reason to drop type checks.
+[Working cases and limits](F030_HAL_GPIO_RCC.md); source review is not HW evidence.

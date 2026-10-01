@@ -149,6 +149,146 @@
         }
       },
       "type_context": "loop"
+    },
+    "gpio_arguments": {
+      "functions": {
+        "HAL_GPIO_Init": {
+          "returns": "void",
+          "arguments": [
+            {
+              "name": "GPIOx",
+              "type": "GPIO_TypeDef *"
+            },
+            {
+              "name": "GPIO_Init",
+              "type": "GPIO_InitTypeDef *"
+            }
+          ]
+        }
+      },
+      "fields": {
+        "GPIO_InitTypeDef": {
+          "Pin": "uint32_t",
+          "Mode": "uint32_t",
+          "Pull": "uint32_t",
+          "Speed": "uint32_t"
+        }
+      },
+      "type_context": "HAL_GPIO_Init"
+    },
+    "gpio_filtered_call": {
+      "functions": {
+        "HAL_GPIO_TogglePin": {
+          "returns": "void",
+          "arguments": [
+            {
+              "name": "GPIOx",
+              "type": "GPIO_TypeDef *"
+            },
+            {
+              "name": "GPIO_Pin",
+              "type": "uint16_t"
+            }
+          ]
+        }
+      },
+      "type_context": "HAL_GPIO_TogglePin"
+    },
+    "rcc_error": {
+      "functions": {
+        "HAL_RCC_OscConfig": {
+          "returns": "HAL_StatusTypeDef",
+          "arguments": [
+            {
+              "name": "RCC_OscInitStruct",
+              "type": "RCC_OscInitTypeDef *"
+            }
+          ]
+        },
+        "Error_Handler": {
+          "returns": "void",
+          "arguments": []
+        }
+      },
+      "enums": {
+        "HAL_StatusTypeDef": {
+          "HAL_OK": 0,
+          "HAL_ERROR": 1,
+          "HAL_BUSY": 2,
+          "HAL_TIMEOUT": 3
+        }
+      },
+      "type_context": "HAL_RCC_OscConfig"
+    },
+    "rcc_osc_null": {
+      "functions": {
+        "HAL_RCC_OscConfig": {
+          "returns": "HAL_StatusTypeDef",
+          "arguments": [
+            {
+              "name": "RCC_OscInitStruct",
+              "type": "RCC_OscInitTypeDef *"
+            }
+          ]
+        },
+        "Error_Handler": {
+          "returns": "void",
+          "arguments": []
+        }
+      },
+      "enums": {
+        "HAL_StatusTypeDef": {
+          "HAL_OK": 0,
+          "HAL_ERROR": 1,
+          "HAL_BUSY": 2,
+          "HAL_TIMEOUT": 3
+        }
+      },
+      "source_reviews": [
+        {
+          "file": "STM32Cube_FW_F0_V1.11.6/Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_rcc.c",
+          "sha256": "fe601fa20f95e48d4bb2a9dd7409ff4d0637e184d6b3c4be4207777b246b2856",
+          "reason": "Reviewed CubeF0 V1.11.6: OscConfig lines 304-308 and ClockConfig lines 781-785 return HAL_ERROR for NULL before assert/dereference. Re-review on source change."
+        }
+      ],
+      "type_context": "HAL_RCC_OscConfig"
+    },
+    "rcc_clock_null": {
+      "functions": {
+        "HAL_RCC_ClockConfig": {
+          "returns": "HAL_StatusTypeDef",
+          "arguments": [
+            {
+              "name": "RCC_ClkInitStruct",
+              "type": "RCC_ClkInitTypeDef *"
+            },
+            {
+              "name": "FLatency",
+              "type": "uint32_t"
+            }
+          ]
+        },
+        "Error_Handler": {
+          "returns": "void",
+          "arguments": []
+        }
+      },
+      "enums": {
+        "HAL_StatusTypeDef": {
+          "HAL_OK": 0,
+          "HAL_ERROR": 1,
+          "HAL_BUSY": 2,
+          "HAL_TIMEOUT": 3
+        }
+      },
+      "source_reviews": [
+        {
+          "file": "STM32Cube_FW_F0_V1.11.6/Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_rcc.c",
+          "sha256": "fe601fa20f95e48d4bb2a9dd7409ff4d0637e184d6b3c4be4207777b246b2856",
+          "reason": "Reviewed CubeF0 V1.11.6: OscConfig lines 304-308 and ClockConfig lines 781-785 return HAL_ERROR for NULL before assert/dereference. Re-review on source change."
+        }
+      ],
+      "type_context": "HAL_RCC_ClockConfig"
     }
   }
 }

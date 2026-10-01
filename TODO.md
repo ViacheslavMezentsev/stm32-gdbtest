@@ -2,6 +2,17 @@
 
 ## Текущая работа
 
+- codex/f030-hal-gpio-rcc зависит от аудита4c51122: пять HAL-техник одной группой.
+- [x] Windows24/24 prepare/host, Linux HAL24/24 + negative contracts; host обеих ОС.
+- [x] Строгий выбор mutable/const RCC по двум reviewed SHA256; неизвестный source отклоняется.
+- [x] Итоговый HW22 +15 повторов, timeout/recovery и автоматический restore; протокол F030_HAL_GPIO_RCC.md.
+- [ ] Публикация GPIO/RCC, Docs и полный Offline, затем land после аудита.
+- [x] Аудит4c51122: Docs36886450888, Offline36886505225 SUCCESS; ожидает land владельцем.
+- [x] RTC/Sleep b8d66e0 принят в main.
+- [ ] Порядок land: аудит → HAL GPIO/RCC; затем независимый F411-consumer.
+
+## Предыдущий аудит
+
 - Ветка codex/cmsis-migration-audit зависит от RTC/Sleep b8d66e0; только документация.
 - [x] Сверить 105 HAL и 98 CMSIS board cases; см. docs/ru/CMSIS_ACCEPTANCE.md.
 - [ ] Сохранить пять HAL GPIO/RCC cases одной группой: F030 fixture после review HAL либо отдельный F4 fixture; затем HW/recovery/restore.

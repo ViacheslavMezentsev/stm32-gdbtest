@@ -34,8 +34,8 @@ def main():
         if load_profile(session["profile"])["mcu"] != "STM32F030R8T6":
             raise ValueError("Both sessions must target STM32F030R8T6")
     cases = collect(sessions[0]["tests"])
-    if len(cases) != 17:
-        raise ValueError("Expected 17 HAL scenarios")
+    if len(cases) != 22:
+        raise ValueError("Expected 22 HAL scenarios")
     restore_ids = {c["id"] for c in collect(sessions[1]["tests"])}
     if not {"HW_BOOT", "HW_BLINK"}.issubset(restore_ids):
         raise ValueError("Restore session needs boot and blink checks")
@@ -75,7 +75,8 @@ def main():
     try:
         for case in cases:
             execute(case["id"], session_path, case["id"])
-            if case["id"] in ("HW_ADC_START_ERROR", "HW_ADC_DMA_TIMEOUT"):
+            if case["id"] in ("HW_ADC_START_ERROR", "HW_ADC_DMA_TIMEOUT", "HW_RCC_ERROR",
+                              "HW_RCC_OSC_NULL", "HW_RCC_CLOCK_NULL"):
                 for positive in ("HW_ADC_DMA_RUNTIME", "HW_TIM3_IRQ", "HW_RTC_ALARM"):
                     execute(case["id"] + "_after_" + positive, session_path, positive)
         # Host timeout/recovery is separate from application error injection.

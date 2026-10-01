@@ -17,7 +17,7 @@ cmake --build --preset debug
 ctest --preset offline
 ```
 
-Expect19 host tests:17 prepare, traceability and fixture inventory/imports/hashes.
+Expect24 host tests:22 prepare, traceability and fixture inventory/imports/hashes.
 Unfiltered CTest runs hardware tests; do not run before selecting a stand.
 Build/results live in build/debug. No private stand is included.
 Explicit flags: -Og -g3 -fno-lto; this is a separate firmware variant.
@@ -37,3 +37,5 @@ src/app.h and src/*.cpp using src/.clang-format; Core and preserved platform.c
 are excluded from formatting.
 
 HW reproduction and limits: [protocol](../../docs/en/F030_HAL_VALIDATION.md).
+
+[Five added GPIO/RCC cases, reviewed HAL variants and current evidence](../../docs/en/F030_HAL_GPIO_RCC.md). The original 17 cases are retained; total 22.

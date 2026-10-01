@@ -188,3 +188,5 @@ Cortex-M0 or every F0 backend combination.
 [F411 RTC/Sleep](F411_CMSIS_RTC_SLEEP.md): calendar Alarm A, WFI and recovery.
 
 [Five-profile acceptance review and remaining HAL checks](CMSIS_ACCEPTANCE.md).
+
+[HAL F030: five GPIO/RCC techniques and source variants](F030_HAL_GPIO_RCC.md).

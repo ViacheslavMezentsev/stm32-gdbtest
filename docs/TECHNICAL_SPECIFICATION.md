@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.57 (после rc.2, на согласовании) |
+| **Ревизия** | 0.58 (после rc.2, на согласовании) |
 | **Дата формирования** | 01.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0; после опубликованного кандидата 0.1.0-rc.2 (Python `0.1.0rc2`, `API_VERSION = 1`); rc.1 опубликован |
@@ -105,6 +105,17 @@
 | 0.56 | 01.10.2026 | F429 ADC/DMA/units/failures и явная проверка SRAM вместо CCM; TC-144. API без изменений. |
 
 | 0.57 | 01.10.2026 | F429 RTC/Sleep/deadline/recovery, общий RTC F4; TC-145. API без изменений. |
+
+| 0.58 | 01.10.2026 | HAL F030: пять GPIO/RCC techniques, source review и расширение до 22 cases; TC-146. |
+
+### Изменения ревизии 0.58
+
+Изменённые и новые пункты ревизии 0.58 помечены `(р.0.58)`.
+
+| Пункты | Тип | Суть |
+| --- | --- | --- |
+| 8.47, TC-146, матрица | нов. | GPIO arguments/filtered call, RCC forced error и NULL guards на F030. |
+| 8.32–8.34, TC-130 | изм. | Исходные 17 сохраняются; расширенный набор 22 prepare, provenance исходного переноса и расширения. |
 
 ### Изменения ревизии 0.57
 
@@ -1556,11 +1567,11 @@ flowchart LR
 
 8.31. Собственные профили/примеры и новые пакеты ДОЛЖНЫ использовать каталог tests; чтение прежних проектов Tests и пакетов schema1 profile/Tests ДОЛЖНО сохраняться. Локальные remote.toml и *-remote.toml ДОЛЖНЫ исключаться из Git, шаблон remote.example.toml сохраняется. Сторонние имена каталогов не изменяются. `[N]` (р.0.37)
 
-8.32. Автономный tests/hal-f030 ДОЛЖЕН сохранять 17 HAL-сценариев F030 потребителя 0c8c966, contracts/requirements, происхождение файлов и отдельные build/manifest; собираться с CubeF0 1.11.6 без stm32-cmake-yml и исходного потребителя, -Og -g3 без LTO. Offline-проверка ДОЛЖНА включать 17 prepare, traceability, точный набор ID, реальный импорт сценариев и хеши переноса CRLF→LF. Исходный HAL-профиль НЕ ДОЛЖЕН удаляться до отдельной CI/HW-приёмки; offline НЕ ДОЛЖЕН трактоваться как HW PASS. `[N]` (р.0.38)
+8.32. Автономный tests/hal-f030 ДОЛЖЕН сохранять 17 HAL-сценариев F030 потребителя 0c8c966, contracts/requirements, происхождение файлов и отдельные build/manifest; собираться с CubeF0 1.11.6 без stm32-cmake-yml и исходного потребителя, -Og -g3 без LTO. Offline-проверка ДОЛЖНА включать 22 prepare (17 исходных и пять по п. 8.47), traceability, точный набор ID, реальный импорт сценариев и хеши переноса CRLF→LF; исходные хеши и описание последующих расширений ДОЛЖНЫ сохраняться. Исходный HAL-профиль НЕ ДОЛЖЕН удаляться до отдельной CI/HW-приёмки; offline НЕ ДОЛЖЕН трактоваться как HW PASS. `[N]` (р.0.58)
 
-8.33. Offline CI ДОЛЖЕН запускать уровень hal для tests/hal-f030 на GCC13.3.1: ровно 19 успешных CTest (17 prepare, traceability, fixture), 17 свежих JSON с тем же ELF hash и без connection_attempted/hardware_accessed, PASS запрошенных contracts; положительный HAL preflight и пять независимых отрицательных вариантов (макрос, контекст, return, enum, callback argument) с ERROR в ожидаемом контракте. Docker ДОЛЖЕН устанавливать HAL F0 из gitlink закреплённого CubeF0; workflow ДОЛЖЕН сохранять логи, JSON/JUnit, manifest и ELF. Уровень НЕ ДОЛЖЕН выбирать стенд или запускать сервер. `[N]` (р.0.39)
+8.33. Offline CI ДОЛЖЕН запускать уровень hal для tests/hal-f030 на GCC13.3.1: ровно 24 успешных CTest (22 prepare, traceability, fixture), 22 свежих JSON с тем же ELF hash и без connection_attempted/hardware_accessed, PASS запрошенных contracts; положительный HAL preflight и пять независимых отрицательных вариантов (макрос, контекст, return, enum, callback argument) с ERROR в ожидаемом контракте. Docker ДОЛЖЕН устанавливать HAL F0 из gitlink закреплённого CubeF0; workflow ДОЛЖЕН сохранять логи, JSON/JUnit, manifest и ELF. Уровень НЕ ДОЛЖЕН выбирать стенд или запускать сервер. `[N]` (р.0.58)
 
-8.34. Ручной tests/hal-f030/run_hw.py ДОЛЖЕН требовать явные stand OpenOCD с flash=if-different и restore-session для STM32F030R8T6, проверить оба manifest до сервера, выполнить 17 сценариев, ADC/TIM3/RTC после каждой ADC-инъекции, ожидаемый timeout с маркером входа и host recovery, ADC после recovery; при завершении или неожиданной ошибке пытаться восстановить исходную прошивку с boot/blink. Результат восстановления ДОЛЖЕН сохраняться в локальном summary; отказ восстановления ДОЛЖЕН давать ERROR. `[N]` (р.0.40)
+8.34. Ручной tests/hal-f030/run_hw.py ДОЛЖЕН требовать явные stand OpenOCD с flash=if-different и restore-session для STM32F030R8T6, проверить оба manifest до сервера, выполнить 22 сценария, ADC/TIM3/RTC после каждой ADC/RCC-инъекции, ожидаемый timeout с маркером входа и host recovery, ADC после recovery; при завершении или неожиданной ошибке пытаться восстановить исходную прошивку с boot/blink. Результат восстановления ДОЛЖЕН сохраняться в локальном summary; отказ восстановления ДОЛЖЕН давать ERROR. `[N]` (р.0.58)
 
 
 
@@ -1592,6 +1603,9 @@ flowchart LR
 8.45. CMSIS fixture F429 ДОЛЖНА проверять ADC1 CH18/17 при8 МГц и480 cycles, DMA2 stream0/channel0 IRQ56/vector72 и размещение всего буфера в SRAM0x20000000..0x2002FFFF вне CCM. Восемь ADC-сценариев ДОЛЖНЫ включать init/runtime/factory units, пять аналитических и19 невалидных векторов, missing-IRQ deadline error4 через ≥20 ticks, DMA ownership error6 и disabled ADC error3; после инъекций ДОЛЖЕН проходить нормальный ADC_DMA, после серии — HAL restore/boot/blink. `[N]` (р.0.56)
 
 8.46. CMSIS fixture F429 ДОЛЖНА проверять RTC LSI/PRER127/249, естественный Alarm A IRQ41/vector57, дедлайн LSIRDY через инъекцию mask=0 с error3 через ≥1000 ticks и WFI-пробуждение SysTick/TIM2 с восстановлением IRQ controls. Приёмка ДОЛЖНА включать весь набор20, положительные RTC/ADC после инъекции и внешнего host timeout/recovery, затем HAL restore/boot/blink. Эти проверки НЕ ДОЛЖНЫ трактоваться как точность LSI, backup retention, потребление или устранение USB-сбоев ST-Link/V2. `[N]` (р.0.57)
+
+8.47. HAL fixture F030 ДОЛЖНА сохранять проверки аргументов HAL_GPIO_Init, условного вызова HAL_GPIO_TogglePin, forced HAL_ERROR из HAL_RCC_OscConfig и NULL-аргументов HAL_RCC_OscConfig/HAL_RCC_ClockConfig. NULL-инъекции ДОЛЖНЫ требовать source-review hash CubeF0 RCC с проверкой возврата HAL_ERROR до разыменования. Fixture ДОЛЖНА выбирать mutable/const контракт только по двум reviewed hash, отклоняя неизвестный source до сервера; ОС или имя каталога НЕ ДОЛЖНЫ определять вариант. Приёмка ДОЛЖНА включать 22 cases, положительные ADC/TIM3/RTC после RCC/ADC-инъекций, внешний timeout/recovery и restore исходной прошивки. Результат НЕ ДОЛЖЕН считаться проверкой HAL F1/F4 или физической неисправности clock. `[N]` (р.0.58)
+
 
 
 
@@ -1747,7 +1761,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-127 | F030 RTC deadline, prepare и HW | mask=0 → error3 после 1000 ticks, BDCR неизменен; исправленный PASS, HAL восстановлен; docs/ru/F030_RTC_DEADLINE.md (р.0.35) |
 | TC-128 | tests naming/package compatibility, host/Linux | Новый пакет profile/tests, старый profile/Tests читается; configure/prepare на case-sensitive filesystem; ignore remote.toml (р.0.37) |
 | TC-129 | HAL fixture F030, build/CTest host | GCC13 Windows/Linux: сборка, 17 prepare + trace + inventory/imports/provenance; HW и интеграция в общий CI — следующий этап (р.0.38) |
-| TC-130 | ci/hal_f030.py, GCC13 Windows/Linux | 19 CTest, 17 новых prepare JSON, положительный и 5 отрицательных HAL contracts; без сервера (р.0.39) |
+| TC-130 | ci/hal_f030.py, GCC13 Windows/Linux | 24 CTest, 22 новых prepare JSON, положительный и 5 отрицательных HAL contracts; без сервера (р.0.58) |
 | TC-131 | tests/hal-f030/run_hw.py, Windows/ST-Link/OpenOCD | 17/17, шесть повторов, ожидаемый ERROR timeout и host recovery, ADC и restore boot/blink PASS; docs/ru/F030_HAL_VALIDATION.md (р.0.40) |
 | TC-132 | Инспекция выпуска по docs/ru/RC2_READINESS.md | Согласованные версия/API/ТЗ/CHANGELOG, фактический SHA CI/HW, один текст тега и Releases; выполняется перед публикацией кандидата (р.0.41) |
 | TC-133 | `PackageTests.test_reopen_preserves_reports_and_uses_clean_sources` | Два открытия: прежний ERROR-отчёт сохранён, изменённый ELF и лишний файл из первой распаковки не попадают во вторую; ошибка GDB сохраняет доказательства (р.0.44) |
@@ -1763,6 +1777,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-143 | F429 tests/board/test_ci.py; CLI run | Семь prepare/HW, Flash2 МиБ/SRAM192 КиБ, HAL restore; F429_CMSIS_BASELINE.md (р.0.55) |
 | TC-144 | F429 test_adc.py; CLI run | Восемь ADC prepare/HW, SRAM bounds, векторы и отказы; три повтора и HAL restore, F429_CMSIS_ADC_DMA.md (р.0.56) |
 | TC-145 | F429 test_rtc.py/test_sleep.py; CLI run | Пять новых prepare/HW, весь набор20, повторы и host recovery; F429_CMSIS_RTC_SLEEP.md (р.0.57) |
+| TC-146 | HAL F030 test_hal_methods.py; ci/hal_f030.py; run_hw.py | 22 prepare, source-review guards, GPIO/RCC HW и повторы/recovery/restore; F030_HAL_GPIO_RCC.md (р.0.58) |
 
 ---
 
@@ -1959,6 +1974,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 8.44 | tests/firmware/profiles/f429zi; src/board.c, startup.c, app.c; ci/run_checks.py | TC-143 (р.0.55) |
 | 8.45 | tests/firmware/src/adc_f429.c, adc_units.c; profiles/f429zi/tests/board/test_adc.py; ci/run_checks.py | TC-144 (р.0.56) |
 | 8.46 | tests/firmware/src/rtc_f4.c, startup.c; profiles/f429zi/tests/board/test_rtc.py, test_sleep.py; ci/run_checks.py | TC-145 (р.0.57) |
+| 8.47 | tests/hal-f030/profile/tests/board/test_hal_methods.py; contracts.json; run_hw.py; ci/hal_f030.py | TC-146 (р.0.58) |
 | 7.7.7, 8.9 | docs/ru/maintenance.md, VERSIONING.md, RC2_READINESS.md; release metadata | TC-132, инспекция перед публикацией (р.0.41) |
 
 ---
@@ -2250,3 +2266,5 @@ G.31. Рабочая копия от9d22410: F429/DISCO/ST-Link/V2/OpenOCD/Windo
 G.32. Рабочая копия от7a261e8: F429/DISCO/ST-Link/V2/OpenOCD/Windows GCC13,15/15 HW +3 нормальных ADC повтора после инъекций; HAL boot/blink восстановлены. Протокол docs/ru/F429_CMSIS_ADC_DMA.md. DMA errors/OVR/stream-disable timeout не инжектировались, RTC/Sleep и внешний host recovery остаются следующей группой. Общая арифметика F4 не изменена. API/схемы/тег rc.2 неизменны. (р.0.56)
 
 G.33. Рабочая копия зависимой ветки от52c49fd: F429/DISCO/ST-Link/V2/OpenOCD/Windows GCC13,20/20 HW +5 повторов; ожидаемый host timeout ERROR/recovery и RTC/ADC после него PASS, HAL boot/blink восстановлены. Протокол docs/ru/F429_CMSIS_RTC_SLEEP.md. Пять CMSIS-профилей имеют аппаратные протоколы; итоговая сверка HAL→CMSIS и F411-consumer ещё впереди. F401/F411 после объединения векторов проверяются offline. API/схемы/тег rc.2 неизменны. (р.0.57)
+
+G.34. HAL F030 расширен до22 cases: Windows/OpenOCD/ST-Link,22/22 HW +15 повторов, timeout/recovery и restore PASS. Первоначальный WinError5 restore и Linux contract ERROR сохранены в F030_HAL_GPIO_RCC.md; второй возник из-за const RCC в CI при одинаковом имени пакета. Строгий fixture selector проверен для обоих hash; firmware ELF не изменён. CMSIS98 метрика не включает HAL. (р.0.58)

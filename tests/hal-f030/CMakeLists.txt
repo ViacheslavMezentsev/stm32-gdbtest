@@ -42,7 +42,14 @@ target_link_options(hal_f030 PRIVATE ${arch} -fno-lto --specs=nano.specs --specs
     "-T${linker}" -Wl,--gc-sections "-Wl,-Map=${CMAKE_CURRENT_BINARY_DIR}/hal_f030.map")
 set_property(TARGET hal_f030 APPEND PROPERTY LINK_DEPENDS "${linker}")
 include("${STM32_GDBTEST_SOURCE_DIR}/stm32_gdbtest/cmake/STM32GDBTest.cmake")
-stm32_gdbtest_attach(hal_f030 PROFILE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/profile"
+find_package(Python3 3.11 COMPONENTS Interpreter REQUIRED)
+file(GLOB_RECURSE profile_inputs CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/profile/*")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${profile_inputs}
+    "${CMAKE_CURRENT_SOURCE_DIR}/configure_profile.py" "${hal}/Src/stm32f0xx_hal_rcc.c")
+execute_process(COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_SOURCE_DIR}/configure_profile.py"
+    --rcc "${hal}/Src/stm32f0xx_hal_rcc.c" --output "${CMAKE_CURRENT_BINARY_DIR}/profile"
+    COMMAND_ERROR_IS_FATAL ANY)
+stm32_gdbtest_attach(hal_f030 PROFILE_DIR "${CMAKE_CURRENT_BINARY_DIR}/profile"
     MANIFEST_INPUTS "${linker}" "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/arm-gcc.cmake")
 
