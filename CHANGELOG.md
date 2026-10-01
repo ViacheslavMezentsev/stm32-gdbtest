@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- F401 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.54. Исторический CMSIS-срез: 4 модели плат, 78 сценариев.
+
 - F401 ADC/DMA/units/failures:15/15 HW и три положительных повтора, HAL восстановлен; ТЗ0.53.
 
 - F401 CMSIS baseline: 7/7 HW через ST-Link/OpenOCD, HAL boot/blink восстановлены. Flash256/RAM64; ADC/RTC ещё не перенесены. ТЗ0.52.

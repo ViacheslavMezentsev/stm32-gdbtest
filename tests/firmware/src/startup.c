@@ -13,11 +13,7 @@ extern void SysTick_Handler( void );
 extern void TIM2_IRQHandler( void );
 extern void RTC_Alarm_IRQHandler( void );
 extern void DMA1_Channel1_IRQHandler( void );
-#elif defined( STM32F401xC )
-extern void SysTick_Handler( void );
-extern void TIM2_IRQHandler( void );
-extern void DMA2_Stream0_IRQHandler( void );
-#elif defined( STM32F411xE )
+#elif defined( STM32F411xE ) || defined( STM32F401xC )
 extern void SysTick_Handler( void );
 extern void TIM2_IRQHandler( void );
 extern void DMA2_Stream0_IRQHandler( void );
@@ -112,29 +108,9 @@ void ( *const vectors[] )( void ) = {
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     RTC_Alarm_IRQHandler
-#elif defined( STM32F401xC )
+#elif defined( STM32F411xE ) || defined( STM32F401xC )
     SysTick_Handler,
-    /* F401 external IRQ0..27, followed by TIM2 IRQ28. */
-    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    TIM2_IRQHandler,
-    /* IRQ29..55, then DMA2 stream0 IRQ56. */
-    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    Default_Handler, Default_Handler, Default_Handler,
-    DMA2_Stream0_IRQHandler
-#elif defined( STM32F411xE )
-    SysTick_Handler,
-    /* F411 external IRQ0..27, followed by TIM2 IRQ28. */
+    /* F401/F411 external IRQ0..27, followed by TIM2 IRQ28. */
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,

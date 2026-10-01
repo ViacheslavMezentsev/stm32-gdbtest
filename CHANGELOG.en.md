@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- F401 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.54. Historical CMSIS snapshot: 4 boards, 78 cases.
+
 - F401 ADC/DMA/units/failures:15/15 HW and three positive repeats, HAL restored; specification0.53.
 
 - F401 CMSIS baseline: 7/7 HW through ST-Link/OpenOCD, HAL boot/blink restored. Flash256/RAM64; ADC/RTC are not migrated yet. Specification0.52.

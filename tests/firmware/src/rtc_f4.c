@@ -1,4 +1,4 @@
-/* F411 calendar/alarm example; owns the RTC calendar, but never resets backup domain. */
+/* F401/F411 calendar/alarm example; owns the RTC calendar, but never resets backup domain. */
 #include "app.h"
 #include "stm32f4xx.h"
 

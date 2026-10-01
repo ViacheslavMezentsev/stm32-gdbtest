@@ -65,4 +65,4 @@ F103 ADC/DMA: [15/15 HW, units and failure paths](F103_CMSIS_ADC_DMA.md).
 
 [F401 baseline](F401_CMSIS_BASELINE.md): 7/7 HW, ADC/DMA and RTC/Sleep next; the F401 migration is not complete.
 
-[F401 ADC/DMA](F401_CMSIS_ADC_DMA.md):15/15 HW and post-injection repeats; RTC/Sleep next.
+[F401 ADC/DMA](F401_CMSIS_ADC_DMA.md):15/15 HW and post-injection repeats; continued by [RTC/Sleep/recovery,20/20 HW](F401_CMSIS_RTC_SLEEP.md).

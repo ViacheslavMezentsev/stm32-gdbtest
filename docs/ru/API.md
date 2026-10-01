@@ -229,3 +229,5 @@ F030: RTC deadline через инъекцию аргумента, API без и
 F401 baseline добавляет только fixture и offline CI; API_VERSION=1 и схемы без изменений. [F401](F401_CMSIS_BASELINE.md).
 
 F401 ADC/DMA изменяет только fixture. Общая функция измерений F4 теперь adc_convert_f4_factory; это символ тестовой firmware, не публичный API модуля. API_VERSION=1, схемы неизменны. [F401 ADC/DMA](F401_CMSIS_ADC_DMA.md).
+
+F401 RTC/Sleep расширяет только fixture. rtc_f4.c и векторы общие с F411; публичный API и схемы не изменены. F411 после переноса проверен offline. [F401 RTC/Sleep](F401_CMSIS_RTC_SLEEP.md).

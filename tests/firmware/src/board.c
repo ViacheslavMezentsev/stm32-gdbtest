@@ -227,9 +227,7 @@ void board_init( void )
     ( void ) SysTick_Config( 16000000U / 1000U );
     board_timer_init();
     board_adc_init();
-#if defined( STM32F411xE )
     board_rtc_init();
-#endif
 }
 
 void board_led_toggle( void )

@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.53 (после rc.2, на согласовании) |
+| **Ревизия** | 0.54 (после rc.2, на согласовании) |
 | **Дата формирования** | 01.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0; после опубликованного кандидата 0.1.0-rc.2 (Python `0.1.0rc2`, `API_VERSION = 1`); rc.1 опубликован |
@@ -97,6 +97,17 @@
 | 0.52 | 01.10.2026 | F401 CMSIS baseline: clocks/GPIO/SysTick/TIM2, профиль 256/64 КиБ, TC-140. API без изменений. |
 
 | 0.53 | 01.10.2026 | F401 ADC1 CH16/17, DMA2 stream0, factory units и отказы; TC-141. Общая арифметика F401/F411, API без изменений. |
+
+| 0.54 | 01.10.2026 | F401 RTC/Sleep/deadline/recovery, общий RTC F401/F411; TC-142. API без изменений. |
+
+### Изменения ревизии 0.54
+
+Изменённые и новые пункты ревизии 0.54 помечены `(р.0.54)`.
+
+| Пункты | Тип | Суть |
+| --- | --- | --- |
+| 8.43, TC-142, матрица, G.30 | нов. | F401 RTC/Sleep/deadline/recovery и границы доказательства. |
+| Матрица 8.40 | изм. | RTC F411 перенесён в общий rtc_f4.c без изменения поведения. |
 
 ### Изменения ревизии 0.53
 
@@ -1541,6 +1552,8 @@ flowchart LR
 
 8.42. CMSIS fixture F401 ДОЛЖНА выполнять scan ADC1 CH16/17 при8 МГц и480 cycles через DMA2 stream0/channel0 в SRAM с IRQ56/vector72. Восемь новых сценариев ДОЛЖНЫ проверять init/DMA/factory units, пять аналитических и19 невалидных наборов, timeout уведомления error4 через ≥20 ticks, DMA ownership error6 и disabled ADC error3 без публикации; после каждой state-инъекции повторяется нормальный ADC_DMA и в конце восстанавливается исходная HAL firmware. Калибровки ДОЛЖНЫ соответствовать DS9716 (3.3 В,30/110°C), общий converter F401/F411 НЕ ДОЛЖЕН объявлять измерительную точность. CI ДОЛЖЕН проверять prepare на GCC13/14/15. `[N]` (р.0.53)
 
+8.43. CMSIS fixture F401 ДОЛЖНА предоставлять пять сценариев RTC_INIT/RTC_ALARM/RTC_DEADLINE/SLEEP_SYSTICK/SLEEP_TIM2: календарь LSI с PRER127/249, естественный Alarm A IRQ41/vector57, инъекция mask=0 с error3 через ≥1000 ticks без изменения backup configuration, interrupted WFI через SysTick/TIM2 с восстановлением IRQ controls. Приёмка ДОЛЖНА включать положительные RTC/ADC после инъекции и внешнего host timeout/recovery, полный набор20 и восстановление исходной HAL firmware. Эти проверки НЕ ДОЛЖНЫ трактоваться как измерение тока, точности LSI или backup retention. `[N]` (р.0.54)
+
 
 
 
@@ -1707,6 +1720,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-139 | F411 test_rtc.py/test_sleep.py; CLI run | Пять prepare/HW, положительные повторы, host timeout/recovery и HAL restore; F411_CMSIS_RTC_SLEEP.md (р.0.51) |
 | TC-140 | F401 tests/board/test_ci.py; CLI run | Семь prepare/HW, Flash256/RAM64, восстановление HAL boot/blink; F401_CMSIS_BASELINE.md (р.0.52) |
 | TC-141 | F401 test_adc.py; CLI run | Восемь prepare/HW, пять векторов/19 invalid, три повтора ADC_DMA и HAL restore; F401_CMSIS_ADC_DMA.md (р.0.53) |
+| TC-142 | F401 test_rtc.py/test_sleep.py; CLI run | Пять prepare/HW, полный набор20, повторы, host timeout/recovery и HAL restore; F401_CMSIS_RTC_SLEEP.md (р.0.54) |
 
 ---
 
@@ -1896,9 +1910,10 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 8.37 | tests/firmware/src/rtc_f103.c; profiles/f103c8/tests/board/test_rtc.py, test_sleep.py; ci/run_checks.py | TC-136 (р.0.48) |
 | 8.38 | tests/firmware/src/board.c, app.c, startup.c; profiles/f411ce/tests/board/test_ci.py; ci/run_checks.py | TC-137 (р.0.49) |
 | 8.39 | tests/firmware/src/adc_f411.c, adc_units.c; profiles/f411ce/tests/board/test_adc.py; ci/run_checks.py | TC-138 (р.0.50) |
-| 8.40 | tests/firmware/src/rtc_f411.c; profiles/f411ce/tests/board/test_rtc.py, test_sleep.py; ci/run_checks.py | TC-139 (р.0.51) |
+| 8.40 | tests/firmware/src/rtc_f4.c; profiles/f411ce/tests/board/test_rtc.py, test_sleep.py; ci/run_checks.py | TC-139 (р.0.54) |
 | 8.41 | tests/firmware/profiles/f401cc; src/board.c, startup.c; ci/run_checks.py | TC-140 (р.0.52) |
 | 8.42 | tests/firmware/src/adc_f401.c, adc_units.c; profiles/f401cc/tests/board/test_adc.py; ci/run_checks.py | TC-141 (р.0.53) |
+| 8.43 | tests/firmware/src/rtc_f4.c, startup.c; profiles/f401cc/tests/board/test_rtc.py, test_sleep.py; ci/run_checks.py | TC-142 (р.0.54) |
 | 7.7.7, 8.9 | docs/ru/maintenance.md, VERSIONING.md, RC2_READINESS.md; release metadata | TC-132, инспекция перед публикацией (р.0.41) |
 
 ---
@@ -2182,3 +2197,5 @@ G.27. Рабочая копия от4a6f5d3: F411/ST-Link/OpenOCD/Windows GCC13,
 G.28. Рабочая копия от591c096: F401CC/ST-Link/OpenOCD/Windows GCC13,7/7 HW; наблюдались DEV_ID0x423 и Flash256 КиБ, несовпадения identity в этом опыте нет. HAL boot/blink восстановлены. Протокол docs/ru/F401_CMSIS_BASELINE.md. ADC/DMA/RTC/Sleep, новые backend и точность времени не проверены. API/схемы/тег rc.2 неизменны. (р.0.52)
 
 G.29. Рабочая копия отed5557f: F401/ST-Link/OpenOCD/Windows GCC13,15/15 HW +3 положительных повтора после state-инъекций, HAL boot/blink восстановлены. Протокол docs/ru/F401_CMSIS_ADC_DMA.md. Общая арифметика переименована в adc_convert_f4_factory без изменения формулы; F411 в этом этапе проверяется offline, не аппаратно. DMA errors/OVR/stream-disable timeout не инжектировались, RTC/Sleep остаются далее. API/схемы/тег rc.2 неизменны. (р.0.53)
+
+G.30. Рабочая копия от87a23be: F401/ST-Link/OpenOCD/Windows GCC13,20/20 HW +5 повторов, ожидаемый host timeout ERROR/recovery и RTC/ADC после него PASS; HAL boot/blink восстановлены. Протокол docs/ru/F401_CMSIS_RTC_SLEEP.md. RTC и векторы общие с F411; после переноса F411 проверен только offline. RTC wakeup отдельно, точность LSI, backup retention и прочие wait faults не проверены. F429 CMSIS остаётся в плане; API/схемы/тег rc.2 неизменны. (р.0.54)

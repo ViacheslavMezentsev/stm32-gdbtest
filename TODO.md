@@ -2,11 +2,19 @@
 
 ## Текущая работа
 
-- codex/f401-cmsis-adc-dma от mained5557f: ADC1/DMA2/factory units/failures.
-- [x] Windows build/prepare16/16, HW15/15 +3 повтора; HAL boot/blink восстановлены.
-- [x] Windows docs/host4/4, Linux format/host +12 MCU/GCC сочетаний14/14 PASS.
-- [ ] Docs/Offline нового SHA после push, затем land владельцем.
-- [ ] Следующая группа: F401 RTC/Sleep/deadline/recovery. Стенд остаётся F401/ST-Link.
+- codex/f401-cmsis-rtc-sleep от main87a23be: RTC/Sleep/deadline/recovery одной группой.
+- [x] Windows build/prepare21/21, HW20/20 +5 повторов, host timeout/recovery; HAL восстановлена.
+- [x] Windows docs/host4/4, Linux format/host +12 MCU/GCC сочетаний14/14; документация RU/EN, ТЗ0.54.
+- [ ] Docs/полный Offline нового SHA после push, затем land владельцем.
+- [ ] Далее — инвентаризация и CMSIS-перенос F429 группами; смену платы согласовать отдельно.
+- [ ] После переноса всех согласованных примеров — финальная сверка и сокращение потребителя до F411; оптимизация тестов после переноса.
+
+## F401 ADC/DMA: принят в main87a23be
+
+- codex/f401-cmsis-adc-dma: ADC1/DMA2/factory units/failures.
+- [x] Windows prepare16/16, HW15/15 +3 повтора, HAL boot/blink.
+- [x] Windows docs/host4/4, Linux format/host +12 MCU/GCC сочетаний14/14.
+- [x] Docs36869402038 и полный Offline36869402018 PASS; land владельцем подтверждён.
 
 ## F401 baseline: принят в mained5557f
 
