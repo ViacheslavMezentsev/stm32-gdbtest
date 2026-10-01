@@ -23,7 +23,7 @@ See [RTC evidence and limitations](../../docs/en/F030_CMSIS_RTC.md).
 ## Current example scope
 
 F030 has 18 scenarios covering boot/clock/GPIO/blink, TIM3, ADC/DMA and numeric
-vectors, RTC, Sleep and selected failure paths. F103 now has 20 cases including ADC/DMA, typical units, RTC, Sleep and failure paths; F411 has seven clock/GPIO/SysTick/TIM2 baseline
+vectors, RTC, Sleep and selected failure paths. F103 now has 20 cases including ADC/DMA, typical units, RTC, Sleep and failure paths; F411 has fifteen baseline/ADC/DMA/factory-unit/failure
 scenarios. This is not peripheral parity across profiles.
 The separate [HAL F030 fixture](../hal-f030/README.en.md) preserves HAL-specific
 contracts, handles/callbacks and force_return checks.
@@ -35,3 +35,5 @@ historical results from checks of the current candidate.
 
 F103 RTC uses a counter/alarm and thread-mode rearming, unlike the F030 calendar.
 See [RTC/Sleep evidence and limits](../../docs/en/F103_CMSIS_RTC_SLEEP.md).
+
+[F411 ADC/DMA evidence](../../docs/en/F411_CMSIS_ADC_DMA.md) covers stream DMA and factory calibration.

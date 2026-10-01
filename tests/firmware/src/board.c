@@ -226,6 +226,7 @@ void board_init( void )
     GPIOC->MODER    = ( GPIOC->MODER & ~GPIO_MODER_MODER13 ) | GPIO_MODER_MODER13_0;
     ( void ) SysTick_Config( 16000000U / 1000U );
     board_timer_init();
+    board_adc_init();
 }
 
 void board_led_toggle( void )

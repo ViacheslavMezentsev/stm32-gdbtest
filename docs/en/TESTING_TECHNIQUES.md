@@ -140,6 +140,10 @@ F103: [ADC/DMA](F103_CMSIS_ADC_DMA.md) distinguishes the DMA EN guard, ADC
 disable and missing IRQ notification. Reusing the name "busy" does not transfer
 F0 ADSTART semantics to F1; record the state actually established by injection.
 
+F411 uses DMA2 Stream0 (IRQ56 in NVIC bank1); normal mode stops the stream
+in hardware. TIMEOUT masks the IRQ, not ADC requests; BUSY EN proves stream
+ownership only. [F411 evidence](F411_CMSIS_ADC_DMA.md).
+
 <a id="tech-007"></a>
 ## TECH-007 — Independent numerical vectors and invalid inputs
 

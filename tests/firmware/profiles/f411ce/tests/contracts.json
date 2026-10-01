@@ -85,6 +85,71 @@
           "SCB_ICSR_VECTACTIVE_Msk"
         ]
       }
+    },
+    "ci_adc_macros": {
+      "macros": {
+        "context": "board_adc_sample",
+        "expressions": [
+          "RCC",
+          "RCC_APB2ENR_ADC1EN",
+          "RCC_AHB1ENR_DMA2EN",
+          "ADC",
+          "ADC_CCR_ADCPRE",
+          "ADC1",
+          "ADC_CR2_ADON",
+          "ADC_SR_OVR",
+          "DMA2",
+          "DMA2_Stream0",
+          "DMA_SxCR_EN",
+          "DMA_LISR_TCIF0",
+          "DMA_LISR_TEIF0",
+          "DMA_LISR_DMEIF0",
+          "DMA_LISR_FEIF0",
+          "NVIC",
+          "SCB",
+          "SCB_ICSR_VECTACTIVE_Msk",
+          "BOARD_VREF_CAL",
+          "BOARD_TS_CAL1",
+          "BOARD_TS_CAL2"
+        ]
+      }
+    },
+    "ci_adc_units": {
+      "type_context": "adc_convert_f411",
+      "functions": {
+        "adc_convert_f411": {
+          "returns": "adc_reading_t",
+          "arguments": [
+            {
+              "name": "temperature",
+              "type": "uint16_t"
+            },
+            {
+              "name": "reference",
+              "type": "uint16_t"
+            },
+            {
+              "name": "reference_cal",
+              "type": "uint16_t"
+            },
+            {
+              "name": "temperature_cal1",
+              "type": "uint16_t"
+            },
+            {
+              "name": "temperature_cal2",
+              "type": "uint16_t"
+            }
+          ]
+        }
+      },
+      "fields": {
+        "adc_reading_t": {
+          "vdda_mv": "uint32_t",
+          "temperature_mdeg_c": "int32_t",
+          "quality": "uint32_t"
+        }
+      }
     }
   }
 }

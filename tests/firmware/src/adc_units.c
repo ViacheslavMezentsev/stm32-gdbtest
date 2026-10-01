@@ -1,4 +1,5 @@
 #include "adc_units.h"
+#include <limits.h>
 
 static int valid_raw( uint16_t value )
 {
@@ -41,5 +42,29 @@ adc_reading_t adc_convert_f103( uint16_t temperature, uint16_t reference )
     const int64_t delta          = ( 1430000LL * reference - 1200000LL * temperature ) * 1000LL;
     const int32_t temperature_mc = 25000 + delta / ( 4300LL * reference );
     const adc_reading_t result   = { vdda, temperature_mc, 1U };
+    return result;
+}
+
+adc_reading_t adc_convert_f411( uint16_t temperature, uint16_t reference, uint16_t reference_cal, uint16_t temperature_cal1,
+    uint16_t temperature_cal2 )
+{
+    const adc_reading_t invalid = { 0U, 0, 0U };
+    if ( !valid_raw( temperature ) || !valid_raw( reference ) || !valid_raw( reference_cal ) || !valid_raw( temperature_cal1 ) ||
+         !valid_raw( temperature_cal2 ) || temperature_cal2 <= temperature_cal1 )
+    {
+        return invalid;
+    }
+    const uint32_t vdda = 3300U * reference_cal / reference;
+    if ( vdda < 2400U || vdda > 3600U )
+    {
+        return invalid;
+    }
+    const int64_t delta   = ( ( int64_t ) temperature * reference_cal - ( int64_t ) temperature_cal1 * reference ) * 80000LL;
+    const int64_t degrees = 30000 + delta / ( ( int64_t ) ( temperature_cal2 - temperature_cal1 ) * reference );
+    if ( degrees < INT32_MIN || degrees > INT32_MAX )
+    {
+        return invalid;
+    }
+    const adc_reading_t result = { vdda, ( int32_t ) degrees, 2U };
     return result;
 }

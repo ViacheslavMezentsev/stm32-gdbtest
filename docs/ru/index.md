@@ -73,3 +73,5 @@ F030: RTC deadline через инъекцию аргумента, API без и
 - [F103 CMSIS: RTC/Sleep/deadlines/recovery](F103_CMSIS_RTC_SLEEP.md).
 
 - [F411 CMSIS: clocks/GPIO/SysTick/TIM2](F411_CMSIS_BASELINE.md).
+
+- [F411 CMSIS: ADC/DMA/units/failures](F411_CMSIS_ADC_DMA.md).

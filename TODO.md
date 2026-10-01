@@ -2,13 +2,17 @@
 
 ## Текущая работа
 
-- codex/f411-cmsis-baseline от main d97903c; одна ветка clocks/GPIO/SysTick/TIM2.
-- [x] F411/ST-Link/OpenOCD: 7/7 HW, исходная HAL восстановлена, boot/blink PASS.
-- [x] Windows prepare/traceability8/8, протокол RU/EN, ТЗ0.49.
+- codex/f411-cmsis-adc-dma от main cb17bdf: ADC/DMA/units/failures одной группой.
+- [x] F411/OpenOCD15/15 HW +3 положительных повтора; HAL восстановлен, boot/blink PASS.
+- [x] Windows prepare/traceability16/16, протокол RU/EN и ТЗ0.50.
 - [x] Windows docs/host4/4, формат PASS; Linux host/девять MCU/GCC10/10 PASS.
-- [ ] Один push группы; полный Docs/Offline опубликованного SHA, затем land владельцем.
-- [ ] Далее F411 ADC/DMA/units/failures, затем RTC/Sleep/recovery.
-- [ ] После групп обновить gitlink потребителя; старые HAL-профили пока сохранить.
+- [ ] Один push группы; проверить Docs/Offline опубликованного SHA, затем land владельцем.
+- [ ] Далее F411 RTC/Sleep/recovery; после групп обновить gitlink потребителя.
+
+## История F411 baseline (принята)
+
+- main cb17bdf: Docs36854198027 и Offline36854197751 (все пять jobs) SUCCESS; land подтверждён.
+- 7/7 HW, HAL restore, Windows prepare8/8, Linux10/10; ТЗ0.49.
 
 ## История группы F103 RTC/Sleep (принята)
 
