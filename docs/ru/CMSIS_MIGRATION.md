@@ -10,7 +10,7 @@
 На `bc07625` уже есть CMSIS-only `tests/firmware` для F030/F103/F411 и
 `examples/minimal-consumer` для F411. Используем их без создания дублей:
 первый проект — регрессионная fixture, второй — пример подключения.
-F401 перенесён; F429 переносится группами; H503 остаётся на паузе. CMSIS относится к ARM,
+F401 перенесён; F429 прошёл три группы, ожидается итоговая сверка; H503 остаётся на паузе. CMSIS относится к ARM,
 для RISC-V нужны соответствующие startup/BSP.
 
 ## F030: актуальная сверка
@@ -70,3 +70,5 @@ F103 ADC/DMA: [15/15 HW, units and failure paths](F103_CMSIS_ADC_DMA.md).
 [F429 CMSIS baseline:7/7 HW, HAL восстановлена; ТЗ0.55. Пятый профиль в CI, ADC/RTC ещё впереди.](F429_CMSIS_BASELINE.md)
 
 [F429 ADC/DMA/units/failures:15/15 HW +3 повтора, HAL восстановлена; ТЗ0.56.](F429_CMSIS_ADC_DMA.md)
+
+[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.](F429_CMSIS_RTC_SLEEP.md)

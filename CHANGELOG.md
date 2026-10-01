@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.
+
 - F429 ADC/DMA/units/failures:15/15 HW +3 повтора, HAL восстановлена; ТЗ0.56.
 
 - F429 CMSIS baseline:7/7 HW, HAL восстановлена; ТЗ0.55. Пятый профиль в CI, ADC/RTC ещё впереди.

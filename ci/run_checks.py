@@ -182,7 +182,7 @@ def firmware_pair(gcc, profile):
     if profile == "f401cc":
         expected_sources.update(("src/adc_f401.c", "src/adc_units.c", "src/rtc_f4.c"))
     if profile == "f429zi":
-        expected_sources.update(("src/adc_f429.c", "src/adc_units.c"))
+        expected_sources.update(("src/adc_f429.c", "src/adc_units.c", "src/rtc_f4.c"))
     if profile == "f411ce":
         expected_sources.update(("src/adc_f411.c", "src/adc_units.c", "src/rtc_f4.c"))
     if sources != expected_sources:
@@ -221,7 +221,7 @@ def firmware_pair(gcc, profile):
     if profile in ("f401cc", "f411ce", "f429zi"):
         expected_cases += ["HW_CI_ADC_INIT", "HW_CI_ADC_DMA", "HW_CI_ADC_UNITS", "HW_CI_ADC_VECTORS",
                            "HW_CI_ADC_INVALID", "HW_CI_ADC_TIMEOUT", "HW_CI_ADC_BUSY", "HW_CI_ADC_DISABLED"]
-    if profile in ("f401cc", "f411ce"):
+    if profile in ("f401cc", "f411ce", "f429zi"):
         expected_cases += ["HW_CI_RTC_INIT", "HW_CI_RTC_ALARM", "HW_CI_RTC_DEADLINE",
                            "HW_CI_SLEEP_SYSTICK", "HW_CI_SLEEP_TIM2"]
     if any("prepare." + name not in ctest for name in expected_cases):

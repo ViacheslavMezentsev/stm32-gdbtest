@@ -235,3 +235,5 @@ F401 RTC/Sleep расширяет только fixture. rtc_f4.c и вектор
 Добавлен профиль fixture f429zi с семью сценариями. Публичный API, схемы и версия неизменны. [F429 baseline](F429_CMSIS_BASELINE.md).
 
 F429 fixture дополнена ADC/DMA и арифметикой; общий converter, публичный API, схемы и версия неизменны. [F429 ADC/DMA](F429_CMSIS_ADC_DMA.md).
+
+F429 подключён к общей RTC-реализации F4 и таблице векторов; алгоритм RTC, публичный API и схемы не меняются. [F429 RTC/Sleep](F429_CMSIS_RTC_SLEEP.md).

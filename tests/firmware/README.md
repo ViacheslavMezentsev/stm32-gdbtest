@@ -46,6 +46,8 @@ See [RTC/Sleep evidence and limits](../../docs/en/F103_CMSIS_RTC_SLEEP.md).
 
 [F401 RTC/Sleep evidence](../../docs/en/F401_CMSIS_RTC_SLEEP.md):20 cases, deadline and host recovery; rtc_f4.c and vectors are shared with F411.
 
-[F429 baseline](../../docs/en/F429_CMSIS_BASELINE.md): seven startup/clocks/GPIO/TIM2/SysTick cases, HSI16 MHz, SRAM192 KiB without CCM. RTC pending.
+[F429 baseline](../../docs/en/F429_CMSIS_BASELINE.md): seven startup/clocks/GPIO/TIM2/SysTick cases, HSI16 MHz, SRAM192 KiB without CCM. RTC covered by the subsequent group below.
 
 [F429 ADC/DMA](../../docs/en/F429_CMSIS_ADC_DMA.md):15 cases, SRAM bounds, factory units and state faults.
+
+[F429 RTC/Sleep](../../docs/en/F429_CMSIS_RTC_SLEEP.md):20 cases, deadlines and host recovery; RTC code/vectors shared with F401/F411.

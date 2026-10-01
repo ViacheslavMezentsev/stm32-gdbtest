@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.56 (после rc.2, на согласовании) |
+| **Ревизия** | 0.57 (после rc.2, на согласовании) |
 | **Дата формирования** | 01.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0; после опубликованного кандидата 0.1.0-rc.2 (Python `0.1.0rc2`, `API_VERSION = 1`); rc.1 опубликован |
@@ -103,6 +103,17 @@
 | 0.55 | 01.10.2026 | F429 CMSIS baseline: startup/clocks/GPIO/TIM2/SysTick, пятый профиль CI, TC-143. API без изменений. |
 
 | 0.56 | 01.10.2026 | F429 ADC/DMA/units/failures и явная проверка SRAM вместо CCM; TC-144. API без изменений. |
+
+| 0.57 | 01.10.2026 | F429 RTC/Sleep/deadline/recovery, общий RTC F4; TC-145. API без изменений. |
+
+### Изменения ревизии 0.57
+
+Изменённые и новые пункты ревизии 0.57 помечены `(р.0.57)`.
+
+| Пункты | Тип | Суть |
+| --- | --- | --- |
+| 8.46, TC-145, матрица, G.33 | нов. | F429 RTC/Sleep/recovery, границы опыта и следующие этапы переноса. |
+| Приложение B, F429 | изм. | CMSIS20/20 и recovery отделены от исторической HAL. |
 
 ### Изменения ревизии 0.56
 
@@ -1580,6 +1591,8 @@ flowchart LR
 
 8.45. CMSIS fixture F429 ДОЛЖНА проверять ADC1 CH18/17 при8 МГц и480 cycles, DMA2 stream0/channel0 IRQ56/vector72 и размещение всего буфера в SRAM0x20000000..0x2002FFFF вне CCM. Восемь ADC-сценариев ДОЛЖНЫ включать init/runtime/factory units, пять аналитических и19 невалидных векторов, missing-IRQ deadline error4 через ≥20 ticks, DMA ownership error6 и disabled ADC error3; после инъекций ДОЛЖЕН проходить нормальный ADC_DMA, после серии — HAL restore/boot/blink. `[N]` (р.0.56)
 
+8.46. CMSIS fixture F429 ДОЛЖНА проверять RTC LSI/PRER127/249, естественный Alarm A IRQ41/vector57, дедлайн LSIRDY через инъекцию mask=0 с error3 через ≥1000 ticks и WFI-пробуждение SysTick/TIM2 с восстановлением IRQ controls. Приёмка ДОЛЖНА включать весь набор20, положительные RTC/ADC после инъекции и внешнего host timeout/recovery, затем HAL restore/boot/blink. Эти проверки НЕ ДОЛЖНЫ трактоваться как точность LSI, backup retention, потребление или устранение USB-сбоев ST-Link/V2. `[N]` (р.0.57)
+
 
 
 
@@ -1749,6 +1762,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-142 | F401 test_rtc.py/test_sleep.py; CLI run | Пять prepare/HW, полный набор20, повторы, host timeout/recovery и HAL restore; F401_CMSIS_RTC_SLEEP.md (р.0.54) |
 | TC-143 | F429 tests/board/test_ci.py; CLI run | Семь prepare/HW, Flash2 МиБ/SRAM192 КиБ, HAL restore; F429_CMSIS_BASELINE.md (р.0.55) |
 | TC-144 | F429 test_adc.py; CLI run | Восемь ADC prepare/HW, SRAM bounds, векторы и отказы; три повтора и HAL restore, F429_CMSIS_ADC_DMA.md (р.0.56) |
+| TC-145 | F429 test_rtc.py/test_sleep.py; CLI run | Пять новых prepare/HW, весь набор20, повторы и host recovery; F429_CMSIS_RTC_SLEEP.md (р.0.57) |
 
 ---
 
@@ -1944,6 +1958,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 8.43 | tests/firmware/src/rtc_f4.c, startup.c; profiles/f401cc/tests/board/test_rtc.py, test_sleep.py; ci/run_checks.py | TC-142 (р.0.54) |
 | 8.44 | tests/firmware/profiles/f429zi; src/board.c, startup.c, app.c; ci/run_checks.py | TC-143 (р.0.55) |
 | 8.45 | tests/firmware/src/adc_f429.c, adc_units.c; profiles/f429zi/tests/board/test_adc.py; ci/run_checks.py | TC-144 (р.0.56) |
+| 8.46 | tests/firmware/src/rtc_f4.c, startup.c; profiles/f429zi/tests/board/test_rtc.py, test_sleep.py; ci/run_checks.py | TC-145 (р.0.57) |
 | 7.7.7, 8.9 | docs/ru/maintenance.md, VERSIONING.md, RC2_READINESS.md; release metadata | TC-132, инспекция перед публикацией (р.0.41) |
 
 ---
@@ -2052,7 +2067,7 @@ docs/ru/RC2_READINESS.md. Таблицы ниже исторические и н
 | STM32F411CEU6 / BlackPill V3.1 | ST-Link / OpenOCD | 22/22 HW; полный образ 16 KiB | Также независимый consumer: build/offline, verify-only, timeout/recovery |
 | STM32F103C8T6 / BluePill | J-Link / J-Link GDB Server | 22/22 HW; полный образ 16 KiB | Mapping `STM32F103C8` |
 | STM32F030R8T6 / NUCLEO-F030R8 | J-Link STLink / J-Link GDB Server | 17/17 HW | Cortex-M0, без CFSR/HFSR; mapping `STM32F030R8` |
-| STM32F429ZIT6 / STM32F429I-DISCO | ST-Link/V2 / OpenOCD и ST | Исторические HAL22/22 на каждом; CMSIS ADC/DMA15/15 только OpenOCD | Новый протокол F429_CMSIS_ADC_DMA.md; USB-ограничение (вопрос 11.2.7) сохраняется. (р.0.56) |
+| STM32F429ZIT6 / STM32F429I-DISCO | ST-Link/V2 / OpenOCD и ST | Исторические HAL22/22 на каждом; CMSIS20/20 + recovery только OpenOCD | Новый протокол F429_CMSIS_RTC_SLEEP.md; USB-ограничение (вопрос 11.2.7) сохраняется. (р.0.57) |
 | STM32F401CCU6 / BlackPill v3.0 | ST-Link / OpenOCD, ST | Ранние проверки | Новые macro-сценарии после отделения модуля не повторялись |
 | STM32H503CBT6 | — | Не поддержан | Профиль приостановлен владельцем |
 | К1921ВГ015 (RISC-V) | J-Link / JTAG | Эксперимент | Не штатный профиль; мотивировал проверку load sections |
@@ -2233,3 +2248,5 @@ G.30. Рабочая копия от87a23be: F401/ST-Link/OpenOCD/Windows GCC13,
 G.31. Рабочая копия от9d22410: F429/DISCO/ST-Link/V2/OpenOCD/Windows GCC13,7/7 HW, HAL boot/blink восстановлены. DEV_ID0x419 и Flash2048 КиБ соответствуют профилю. Протокол docs/ru/F429_CMSIS_BASELINE.md. ADC/DMA/RTC/Sleep/recovery остаются далее; короткий PASS не снимает прежнего ограничения USB-стабильности. API/схемы/тег rc.2 неизменны. (р.0.55)
 
 G.32. Рабочая копия от7a261e8: F429/DISCO/ST-Link/V2/OpenOCD/Windows GCC13,15/15 HW +3 нормальных ADC повтора после инъекций; HAL boot/blink восстановлены. Протокол docs/ru/F429_CMSIS_ADC_DMA.md. DMA errors/OVR/stream-disable timeout не инжектировались, RTC/Sleep и внешний host recovery остаются следующей группой. Общая арифметика F4 не изменена. API/схемы/тег rc.2 неизменны. (р.0.56)
+
+G.33. Рабочая копия зависимой ветки от52c49fd: F429/DISCO/ST-Link/V2/OpenOCD/Windows GCC13,20/20 HW +5 повторов; ожидаемый host timeout ERROR/recovery и RTC/ADC после него PASS, HAL boot/blink восстановлены. Протокол docs/ru/F429_CMSIS_RTC_SLEEP.md. Пять CMSIS-профилей имеют аппаратные протоколы; итоговая сверка HAL→CMSIS и F411-consumer ещё впереди. F401/F411 после объединения векторов проверяются offline. API/схемы/тег rc.2 неизменны. (р.0.57)

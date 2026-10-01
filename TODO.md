@@ -2,12 +2,22 @@
 
 ## Текущая работа
 
-- codex/f429-cmsis-adc-dma от main7a261e8: ADC/DMA/units/failures одной группой.
-- [x] Windows build/prepare16/16, HW15/15 +3 ADC повтора, HAL boot/blink восстановлены.
-- [x] Windows docs/host4/4, Linux format/host +15 MCU/GCC сочетаний17/17; RU/EN и ТЗ0.56.
-- [ ] Docs/полный Offline опубликованного SHA, затем land владельцем.
-- [ ] Далее F429 RTC/Sleep/deadline/recovery; оставить DISCO/ST-Link/OpenOCD подключённой.
-- [ ] Финальная сверка пяти профилей и HAL→CMSIS, F411-consumer; оптимизация после переноса.
+- codex/f429-cmsis-rtc-sleep зависит от codex/f429-cmsis-adc-dma52c49fd; порядок land: ADC/DMA → RTC/Sleep.
+- [x] Windows prepare21/21, HW20/20 +5 повторов, host timeout/recovery и HAL boot/blink restore.
+- [x] Windows docs/host 4/4 и Linux 17/17; RU/EN, ТЗ 0.57.
+- [x] Docs36882263763 и полный Offline36882263685 ADC/DMA52c49fd PASS.
+- [ ] Land ADC/DMA владельцем отдельно от публикации.
+- [ ] Опубликовать RTC/Sleep, проверить её Docs/полный Offline и fast-forward после первого land.
+- [ ] Итоговая сверка пяти профилей HAL→CMSIS; отдельные HAL-техники сохраняются.
+- [ ] Перевести независимый F411-consumer и проверить интеграцию, затем сократить BlackPill до F411.
+- [ ] Оптимизация тестов/CI после переноса; автоматические аппаратные метрики — отдельный этап.
+
+## F429 ADC/DMA: опубликован52c49fd, ожидает land
+
+- [x] HW15/15 +3 повтора, HAL restore; Windows prepare16/16, docs/host4/4, Linux17/17.
+- [x] Ветка опубликована, SHA сверен; Docs SUCCESS.
+- [x] Полный Offline (пять jobs) SUCCESS.
+- [ ] Land владельцем.
 
 ## F429 baseline: принят в main7a261e8
 
@@ -33,8 +43,8 @@
 - [x] Windows build/prepare8/8, HW7/7, восстановление HAL boot/blink.
 - [x] Windows docs/host4/4, Linux format/host + четыре MCU × три GCC:14/14 PASS.
 - [x] Docs/Offline ed5557f прошли; land подтверждён.
-- [ ] Следующие группы F401: ADC/DMA/units/failures, затем RTC/Sleep/recovery.
-  F429 остаётся далее; старые HAL-профили пока сохраняются.
+- [x] Группы F401 ADC/DMA/units/failures и RTC/Sleep/recovery приняты; см. разделы выше.
+  Старые HAL-профили сохраняются до итоговой сверки переноса.
 
 ## README-метрики: приняты в main591c096
 

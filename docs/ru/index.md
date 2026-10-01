@@ -2,6 +2,8 @@
 
 Документация · [English](../en/index.md)
 
+[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.](F429_CMSIS_RTC_SLEEP.md)
+
 [F429 ADC/DMA/units/failures:15/15 HW +3 повтора, HAL восстановлена; ТЗ0.56.](F429_CMSIS_ADC_DMA.md)
 
 [F429 CMSIS baseline:7/7 HW, HAL восстановлена; ТЗ0.55. Пятый профиль в CI, ADC/RTC ещё впереди.](F429_CMSIS_BASELINE.md)

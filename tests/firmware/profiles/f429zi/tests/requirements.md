@@ -52,3 +52,18 @@ Enable stream before sample: DMA ownership guard error6, no publication; no clai
 
 ## HW_CI_ADC_DISABLED
 Clear ADON before sample: error3, no publication. Not a forced HAL return code.
+
+## HW_CI_RTC_INIT
+LSI, calendar RTC PRER127/249, masked Alarm A, EXTI17 rising, IRQ41/vector57; no backup-domain reset.
+
+## HW_CI_RTC_ALARM
+Two natural alarms enter exception57 with ALRAF/EXTI17 pending; one publication per handler, thread resumes.
+
+## HW_CI_RTC_DEADLINE
+Inject zero mask in LSIRDY wait: error3 after at least1000 ticks, backup configuration retained, no application/event publication. Not a physical oscillator fault.
+
+## HW_CI_SLEEP_SYSTICK
+With both external NVIC banks masked, exception15 interrupts WFI; delay completes and ADC sequence retained. Restore IRQ controls.
+
+## HW_CI_SLEEP_TIM2
+Only IRQ28 enabled, SysTick stopped: exception44 interrupts WFI without tick advance; restore controls and resume. Not Stop or a power measurement.

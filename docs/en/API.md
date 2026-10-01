@@ -238,3 +238,5 @@ F401 RTC/Sleep extends only the fixture. rtc_f4.c and vectors are shared with F4
 Added fixture profile f429zi with seven cases. Public API, schemas and version are unchanged. [F429 baseline](F429_CMSIS_BASELINE.md).
 
 F429 fixture adds ADC/DMA and arithmetic; shared converter, public API, schemas and version are unchanged. [F429 ADC/DMA](F429_CMSIS_ADC_DMA.md).
+
+F429 uses the shared F4 RTC implementation and vectors; RTC algorithm, public API and schemas are unchanged. [F429 RTC/Sleep](F429_CMSIS_RTC_SLEEP.md).
