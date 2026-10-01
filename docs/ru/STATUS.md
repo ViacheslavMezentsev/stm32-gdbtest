@@ -2,6 +2,8 @@
 
 [Документация](index.md) → Текущее состояние · [English](../en/STATUS.md)
 
+[F401 CMSIS baseline: 7/7 HW через ST-Link/OpenOCD, HAL boot/blink восстановлены. Flash256/RAM64; ADC/RTC ещё не перенесены.](F401_CMSIS_BASELINE.md)
+
 Срез rc.2: 5b7b466. Docs/Offline/Hardware SUCCESS; все 27 JSON из GitHub проверены.
 Windows: F030 CMSIS 18/18, HAL 17/17 с повторами/recovery; циклы F030/OpenOCD,
 F103/J-Link, F411/OpenOCD — по 10/10. ST server завершён после USB reconnect;

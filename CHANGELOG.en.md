@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- F401 CMSIS baseline: 7/7 HW through ST-Link/OpenOCD, HAL boot/blink restored. Flash256/RAM64; ADC/RTC are not migrated yet. Specification0.52.
+
 - README RU/EN badges show a historical CMSIS snapshot: 3 board models, 58 cases and the latest evidence date. Added counting rules and a linked results table; automatic metric publication is not implemented yet.
 
 - F411 CMSIS RTC/Sleep/deadline/recovery group:20/20 HW +5 repeats, external timeout/recovery, HAL restored; specification0.51.

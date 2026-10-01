@@ -2,6 +2,8 @@
 
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
+[F401 CMSIS baseline: 7/7 HW through ST-Link/OpenOCD, HAL boot/blink restored. Flash256/RAM64; ADC/RTC are not migrated yet.](F401_CMSIS_BASELINE.md)
+
 rc.2 snapshot: 5b7b466. Docs/Offline/Hardware SUCCESS; all 27 GitHub JSON reports verified.
 Windows: F030 CMSIS 18/18, HAL 17/17 with repeats/recovery; F030/OpenOCD,
 F103/J-Link and F411/OpenOCD lifecycles — 10/10 each. ST server completed after

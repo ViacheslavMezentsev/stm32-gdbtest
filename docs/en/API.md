@@ -228,3 +228,5 @@ required evidence and completing all runs that use those directories.
 
 Previously, reopening a package removed the entire hash directory, including runs.
 Lost JSON reports cannot be recovered from summary: verification must be repeated.
+
+F401 baseline adds only a fixture and offline CI; API_VERSION=1 and schemas are unchanged. [F401](F401_CMSIS_BASELINE.md).

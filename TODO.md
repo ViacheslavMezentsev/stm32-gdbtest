@@ -2,9 +2,18 @@
 
 ## Текущая работа
 
+- codex/f401-cmsis-baseline от main591c096: clocks/GPIO/SysTick/TIM2, группа из семи сценариев.
+- [x] Windows build/prepare8/8, HW7/7, восстановление HAL boot/blink.
+- [x] Windows docs/host4/4, Linux format/host + четыре MCU × три GCC:14/14 PASS.
+- [ ] Docs/Offline после push нового SHA, затем land владельцем.
+- [ ] Следующие группы F401: ADC/DMA/units/failures, затем RTC/Sleep/recovery.
+  F429 остаётся далее; старые HAL-профили пока сохраняются.
+
+## README-метрики: приняты в main591c096
+
 - codex/hardware-metrics-readme от main `91a7cd4`: документальный срез CMSIS-метрик.
 - [x] README RU/EN: бейджи, пояснение, таблица доказательств и правила подсчёта.
-- [ ] После push проверить Docs и полный Offline нового SHA, затем land владельцем.
+- [x] Docs и полный Offline591c096 прошли; land подтверждён.
 - [ ] Автоматизировать отдельную полную HW-кампанию: manifest ожидаемой матрицы,
   агрегатор локальных/CI отчётов с SHA/ELF, отдельный статус последней попытки
   и последний успешный результат; публикация JSON в ci-badges после проверки.

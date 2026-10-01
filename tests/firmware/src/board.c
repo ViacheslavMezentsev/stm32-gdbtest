@@ -156,10 +156,10 @@ void board_led_toggle( void )
 {
     GPIOB->ODR ^= GPIO_ODR_ODR2;
 }
-#elif defined( STM32F411xE )
+#elif defined( STM32F411xE ) || defined( STM32F401xC )
 #include "stm32f4xx.h"
 
-/* WeAct BlackPill F411: PC13, active-low LED; HSI nominal 16 MHz. */
+/* WeAct BlackPill F401/F411: PC13, active-low LED; HSI nominal 16 MHz. */
 uint32_t SystemCoreClock = 16000000U;
 volatile uint32_t board_ticks_ms;
 volatile uint32_t board_timer_events;
@@ -226,8 +226,10 @@ void board_init( void )
     GPIOC->MODER    = ( GPIOC->MODER & ~GPIO_MODER_MODER13 ) | GPIO_MODER_MODER13_0;
     ( void ) SysTick_Config( 16000000U / 1000U );
     board_timer_init();
+#if defined( STM32F411xE )
     board_adc_init();
     board_rtc_init();
+#endif
 }
 
 void board_led_toggle( void )

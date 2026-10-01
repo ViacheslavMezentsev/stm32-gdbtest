@@ -2,6 +2,8 @@
 
 Documentation · [Русский](../ru/index.md)
 
+[F401 CMSIS baseline: 7/7 HW through ST-Link/OpenOCD, HAL boot/blink restored. Flash256/RAM64; ADC/RTC are not migrated yet.](F401_CMSIS_BASELINE.md)
+
 [Hardware metrics and results table](HARDWARE_METRICS.md).
 
 [rc.2 readiness and acceptance matrix](RC2_READINESS.md).

@@ -62,3 +62,5 @@ F030: RTC deadline через инъекцию аргумента, API без и
 Первая группа F103: [7/7 HW и восстановление HAL](F103_CMSIS_BASELINE.md).
 
 F103 ADC/DMA: [15/15 HW, units and failure paths](F103_CMSIS_ADC_DMA.md).
+
+[F401 baseline](F401_CMSIS_BASELINE.md): 7/7 HW, следующий этап ADC/DMA и RTC/Sleep; полный перенос F401 ещё не завершён.
