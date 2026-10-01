@@ -6,6 +6,7 @@
 - [x] API, техники и сценарии сверены с кодом; руководство GDB Python и внешние модели изучены.
 - [x] [План RU](docs/ru/RC3_API_RESEARCH.md) / [EN](docs/en/RC3_API_RESEARCH.md): P0/P1/P2, E01–E20, Nucleo-F030R8, BluePill-Plus, BlackPill F411CE/F401CC.
 - [x] Read-only L0 probe GDB14/Python3.11 без ELF, сервера и MCU; наличие API не означает HW PASS.
+- [x] L0 GDB16/Python3.13 из GCC15: дополнительные API и timeout-параметры присутствуют; сравнение с GDB14 сохранено.
 - [ ] Выбрать первый пакет R1, согласовать стенд/restore; создать consumer fixture и выполнить опыты.
 - [ ] Новые API после доказательства: регрессии, API/миграции RU/EN, CHANGELOG, новая ревизия ТЗ.
 - Публикация ветки и land — владелец; пакет остаётся rc2, ТЗ0.58.

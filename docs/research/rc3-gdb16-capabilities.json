@@ -1,0 +1,47 @@
+{
+  "api_presence": {
+    "Architecture.disassemble": true,
+    "Breakpoint.locations": true,
+    "FinishBreakpoint": true,
+    "FinishBreakpoint.return_value": true,
+    "Frame.architecture": true,
+    "Frame.is_valid": true,
+    "Frame.older": true,
+    "Frame.read_register": true,
+    "Frame.read_var": true,
+    "Inferior.read_memory": true,
+    "Inferior.search_memory": true,
+    "Inferior.write_memory": true,
+    "Thread": true,
+    "Value.assign": true,
+    "Value.bytes": true,
+    "Value.cast": true,
+    "Value.fetch_lazy": true,
+    "Value.is_unavailable": false,
+    "Value.string": true,
+    "blocked_signals": true,
+    "events.cont": true,
+    "events.inferior_call": true,
+    "events.memory_changed": true,
+    "events.stop": true,
+    "interrupt": true,
+    "post_event": true,
+    "with_parameter": true
+  },
+  "gdb": "16.3.90.20250906-git",
+  "hardware_accessed": false,
+  "parameters": {
+    "can-use-hw-watchpoints": 1,
+    "direct-call-timeout": null,
+    "indirect-call-timeout": 30,
+    "may-call-functions": true,
+    "non-stop": false,
+    "unwind-on-timeout": false,
+    "unwindonsignal": false
+  },
+  "python": "3.13.12",
+  "value_conversion": {
+    "float_3_5": 3.5,
+    "int_3_5": 3
+  }
+}

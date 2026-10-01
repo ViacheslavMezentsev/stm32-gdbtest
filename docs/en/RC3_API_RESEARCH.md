@@ -141,6 +141,29 @@ only L0. L1 means ELF operations without a target; L2 means semantics on a speci
 MCU/backend; L3 means repeatability, failure paths and recovery. Capabilities need
 these levels and unavailability reasons, not just a GDB version check.
 
+### Additional xPack GCC15 check
+
+Following the owner's update, installed xPack GCC **15.2.1-1.1** was checked:
+GDB **16.3.90.20250906-git**, Python **3.13.12**.
+The same probe produced this [L0 result](../research/rc3-gdb16-capabilities.json)
+without an MCU. Compared with GDB14, `Value.bytes`, `gdb.interrupt`,
+`direct-call-timeout`, `indirect-call-timeout` and `unwind-on-timeout` are present.
+Parameter values are respectively `None` (unlimited), `30` and `false`.
+`Value.is_unavailable` remains absent. This is not the manual's GDB19.
+
+GDB16 is the preferred candidate for E15–17, but presence does not establish
+async-target support, effective timeouts or permission to call GDB from workers.
+First retain the same ELF and select GDB explicitly with `--gdb`; rebuilding with
+GCC15 is a separate experimental variable. Keep global PATH and baseline GCC13
+unchanged. Do not treat `Value.bytes` as generic raw target memory access with
+arbitrary endianness either.
+
+Stand update: the owner confirmed WeAct BluePill-Plus on J-Link CE, consistent
+with the local F103/J-Link TOML. Local files map F411CE to ST-Link/OpenOCD with
+ST-LINK GDB Server as an alternative. The second ST-Link has not yet been mapped
+to a board; USB presence does not establish wiring. The old F030/J-Link TOML
+references a probe absent from the current USB list.
+
 ## 3. Proposed API surface
 
 All names below are **candidates**, not instructions for the current Target.
@@ -327,7 +350,7 @@ The fixed primary source is the supplied PDF. Current HTML may change:
 Other primary sources are in section 4. External projects were neither installed
 nor executed. This is an original plan, not a full Markdown transcription of the manual.
 
-Limitations: no hardware results for new operations, no proof on GCC14/15 GDB or
+Limitations: no hardware results for new operations, no hardware proof on GCC14/15 GDB or
 Linux; L0 does not test ABI, DWT/FPB, IRQ races or recovery. Existing TODO/STATUS/API
 include historical statements, so the baseline was checked against code and
 profile-specific evidence rather than summary counters alone.
