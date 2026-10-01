@@ -24,6 +24,8 @@
 
 ### Added
 
+- README: исторические видео (русский язык), схемы запуска Mermaid и практические ограничения GDB/ELF/frame; уточнена проверка кодов возврата HAL.
+
 - HAL F030: ручной run_hw.py с обязательным restore-session; 17/17 HW, шесть повторов, ожидаемый timeout/recovery и возврат HAL прошли на ST-Link/OpenOCD. Протокол RU/EN, ТЗ 0.40/TC-131; API без изменений.
 
 - HAL F030 включён в offline CI отдельным уровнем hal: GCC13, точный inventory/JUnit/JSON, пять отрицательных HAL-контрактов. Docker добавляет закреплённый HAL F0; ТЗ0.39/TC-130, API без изменений.

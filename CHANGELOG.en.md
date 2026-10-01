@@ -24,6 +24,8 @@ checks remain pending: [evidence](docs/en/RC2_READINESS.md).
 
 ### Added
 
+- README: historical videos (Russian), Mermaid run layouts and practical GDB/ELF/frame limitations; clarified HAL return-code checks.
+
 - HAL F030: manual run_hw.py with required restore-session; 17/17 HW, six repeats, expected timeout/recovery and HAL restoration passed on ST-Link/OpenOCD. RU/EN protocol, specification 0.40/TC-131; API unchanged.
 
 - Added F030 HAL offline CI level: GCC13, exact inventory/JUnit/JSON and five negative HAL contracts. Docker includes pinned HAL F0; specification0.39/TC-130, API unchanged.

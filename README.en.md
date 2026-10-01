@@ -22,21 +22,30 @@ built ELF with debug information, an MCU profile and a stand.
 
 ## Why this approach
 
-An agent can design a change and use GDB directly, but a check done in a chat is not
-repeatable. Here the loop closes in the repository: requirement → scenario in
+An agent can design a change and use GDB directly, but a check recorded only in a chat
+is hard to reproduce. Here actions and expectations are saved in the repository
+as repeatable tests: requirement → scenario in
 `tests/board` → checks without hardware (ELF contracts, image) → run on a stand → a
 report that both the agent and a person read. Scenarios stay test cases of the project
 and run again after every change — on any of the described stands, manually or
 automatically.
 
 With STM32 it matters to check not only computations but also peripheral setup,
-interrupt handling and the application's reaction to HAL errors. Developers already
+interrupt handling and the application's response to status codes returned by HAL
+(such as `HAL_ERROR`, `HAL_BUSY` and `HAL_TIMEOUT`). Developers already
 check much of this manually in a debugger; a scenario records such actions and
 expectations.
 
 The project grew out of practical GDB-Python experiments on F1/F4 boards. The
 infrastructure was extracted from the [stand project](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill)
 so that other applications can use it with their own profiles and tests.
+
+Historical videos by the author, **in Russian**:
+
+- [Early GDB-Python testing experiments](https://www.youtube.com/watch?v=idlKlSHc0wU).
+- [Unit testing for small embedded systems (debugging Python tests)](https://www.youtube.com/watch?v=_BuMmQGHol4) — demonstrates the earlier Python-test workflow.
+
+These videos explain the origins of the approach; the module documentation describes the current API and commands.
 
 ## How it works
 
@@ -57,12 +66,6 @@ variables, structures and registers and compares them with expectations. If need
 can change a value or force a function to return to test the caller's reaction. No
 test logic is added to the firmware.
 
-The debugger affects execution: halt, reset and injections change state and timing.
-The module does not replace measuring instruments, does not compute code coverage
-automatically and does not check "all of HAL" by itself. The scenario author defines
-requirements and expectations; only symbols and features that survived in the built
-ELF are available.
-
 ## Features
 
 - Runs scenarios through OpenOCD, ST-LINK GDB Server and J-Link GDB Server; runner and
@@ -80,6 +83,38 @@ ELF are available.
 - Prepared run packages (`pack`, `run --package`): build in one place, run on the
   stand; hardware CI on a self-hosted runner ([hardware CI](docs/en/HARDWARE_CI.md)).
 
+## Limitations
+
+- **Manual GDB experience is necessary.** The author needs to understand where
+  to stop, which stack frame is selected, and what `step`, `finish`, reset and
+  forced return do. A scenario automates those actions; the module does not
+  choose suitable observation points or expectations for the developer.
+- **Scenarios are Python; GDB evaluates expressions.** Reading C/C++ expressions
+  through `gdb.parse_and_eval` or Target API does not allow arbitrary C code in
+  a scenario. A `do { ... } while (0)` statement macro, for example, is not an
+  evaluable expression. Calling a function from an expression executes code on
+  the MCU and can change state or hang; MMIO reads can also have side effects.
+- **Available data depends on the ELF and current context.** `-g3` preserves macro
+  definitions but cannot restore variables, types or functions removed by
+  optimisation. A HAL/CMSIS macro needs a source location in a compilation unit
+  where it is defined; entering another function or changing the frame may make
+  it unavailable. A contract checks macro presence and expansion, not the safety
+  of evaluating it on hardware. See [macros](docs/en/HAL_MACRO_GUIDE.md) and
+  [testing techniques](docs/en/TESTING_TECHNIQUES.md).
+- **Debugging changes system behaviour.** Stops, resets and injections affect
+  timing and IRQs; peripherals may keep running while the core is halted.
+  Sleep/WFI checks do not measure power consumption. Hardware breakpoint counts
+  are MCU-limited; optimisation and backends affect reachability and
+  `finish`/`force_return` behaviour.
+- **A working, agreed stand is required.** USB/SWD loss or a stuck server can
+  require manual reconnection; timeout/recovery cannot guarantee physical link
+  recovery. Such a case is recorded in [rc.2 acceptance](docs/en/RC2_READINESS.md).
+  Support is verified for a specific MCU, build, GDB and backend combination.
+- **Results apply to the scenario's conditions.** Injecting a HAL return code
+  checks an application branch, not the physical cause of a peripheral failure.
+  The module does not replace measuring instruments or calculate coverage
+  automatically; PASS does not mean all of HAL or every device mode was tested.
+
 ## Run layouts
 
 The scenario and the report are the same in every layout; only the local stand file
@@ -95,6 +130,76 @@ The scenario and the report are the same in every layout; only the local stand f
 | Hardware CI | prepare on GitHub, hardware on a self-hosted runner | Orange Pi 5 (runner service) | verified: 3 stands |
 | Local on Linux x86_64 | Linux PC | same computer | implemented, not verified on hardware |
 | WSL2 with the debugger via usbipd-win | WSL2 | same computer | implemented as Linux, not verified |
+
+### Local run: Windows or Linux
+
+Runner, GDB-Python and server share one computer. This covers Windows
+and Orange Pi; local Linux x86_64 has not yet been verified on hardware.
+
+```mermaid
+flowchart LR
+    subgraph PC["Computer: Windows / Linux"]
+        R["Runner + GDB-Python"] <--> S["GDB server"]
+        R --> O["Report"]
+    end
+    S <-->|USB| D["Debugger"]
+    D <-->|SWD| M["STM32"]
+```
+
+### Remote server: Windows or WSL2 → Linux stand
+
+Runner and scenario stay on the workstation. SSH starts the server on the stand
+and tunnels the GDB connection. The debugger is physically attached to the stand.
+
+```mermaid
+flowchart LR
+    R["Windows / WSL2: runner + GDB-Python"] <-->|SSH tunnel| S["Linux stand: GDB server"]
+    R --> O["Report"]
+    S <-->|USB| D["Debugger"]
+    D <-->|SWD| M["STM32"]
+```
+
+### Package: build separately from execution
+
+A package containing ELF, profile and scenarios is transferred to the stand.
+`run --package` runs both GDB-Python and the server there; reports stay there too.
+
+```mermaid
+flowchart LR
+    B["Windows / GitHub: build + pack"] --> P["Package"]
+    P --> R["Linux stand: run --package + GDB-Python"]
+    R --> O["Report"]
+    R <--> S["GDB server"]
+    S <-->|USB| D["Debugger"]
+    D <-->|SWD| M["STM32"]
+```
+
+### Hardware CI: GitHub and a self-hosted runner
+
+A GitHub-hosted job builds and prepares the package without a board. A self-hosted
+job on Orange Pi downloads it, runs hardware checks and uploads reports.
+
+```mermaid
+flowchart LR
+    G["GitHub: build + prepare + pack"] --> A["Package artifact"]
+    A --> R["Orange Pi: self-hosted runner + GDB-Python"]
+    R --> O["GitHub: reports"]
+    R <--> S["GDB server"]
+    S <-->|USB| D["Debugger"]
+    D <-->|SWD| M["STM32"]
+```
+
+### WSL2 USB forwarding: not hardware-verified
+
+All test processes run in WSL2; Windows forwards the USB device into Linux
+through usbipd-win. This distinct layout has not yet been verified on boards.
+
+```mermaid
+flowchart LR
+    W["WSL2: runner + GDB-Python + server"] <-->|usbipd-win| D["Debugger: USB Windows"]
+    W --> O["Report"]
+    D <-->|SWD| M["STM32"]
+```
 
 Remote mode uses SSH keys only; the debugger lock is held on the stand host and the
 link is watched by a heartbeat. ST-LINK GDB Server is not available on Linux aarch64
