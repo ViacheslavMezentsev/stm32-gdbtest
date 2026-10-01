@@ -153,15 +153,15 @@ Parameter values are respectively `None` (unlimited), `30` and `false`.
 
 GDB16 is the preferred candidate for E15–17, but presence does not establish
 async-target support, effective timeouts or permission to call GDB from workers.
-First retain the same ELF and select GDB explicitly with `--gdb`; rebuilding with
+First retain the same ELF and select GDB in the session (CLI `--gdb` applies only to packages); rebuilding with
 GCC15 is a separate experimental variable. Keep global PATH and baseline GCC13
 unchanged. Do not treat `Value.bytes` as generic raw target memory access with
 arbitrary endianness either.
 
 Stand update: the owner confirmed WeAct BluePill-Plus on J-Link CE, consistent
 with the local F103/J-Link TOML. Local files map F411CE to ST-Link/OpenOCD with
-ST-LINK GDB Server as an alternative. The second ST-Link has not yet been mapped
-to a board; USB presence does not establish wiring. The old F030/J-Link TOML
+ST-LINK GDB Server as an alternative. The owner mapped the second ST-Link to
+Nucleo-F030R8; a local OpenOCD TOML was added. The old F030/J-Link TOML
 references a probe absent from the current USB list.
 
 ## 3. Proposed API surface
@@ -256,7 +256,8 @@ RTTI and exceptions. Add a later FreeRTOS program only if E18 needs it.
 
 ## 6. Experiment matrix
 
-**E01…E20 have not run on an MCU.** Start with host/fake-GDB failure paths, then
+At the R0 review, **E01…E20 had not run on an MCU**. Subsequent results for an R1
+subset are recorded in the [hardware protocol](RC3_API_R1.md). Start with host/fake-GDB failure paths, then
 ELF/preflight, then one board. Record expected/actual results, failures and recovery
 for every row under the shared protocol below. E01 includes completed L0 work;
 its L1/L2 work remains pending.
@@ -350,7 +351,7 @@ The fixed primary source is the supplied PDF. Current HTML may change:
 Other primary sources are in section 4. External projects were neither installed
 nor executed. This is an original plan, not a full Markdown transcription of the manual.
 
-Limitations: no hardware results for new operations, no hardware proof on GCC14/15 GDB or
+Original R0 limitations (subsequent experiments: [R1](RC3_API_R1.md)): no hardware proof on GCC14/15 GDB or
 Linux; L0 does not test ABI, DWT/FPB, IRQ races or recovery. Existing TODO/STATUS/API
 include historical statements, so the baseline was checked against code and
 profile-specific evidence rather than summary counters alone.

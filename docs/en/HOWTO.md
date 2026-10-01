@@ -271,6 +271,18 @@ If the HAL rerun succeeds, report two runs rather than a single 15/15 PASS.
 
 ## Do not mix prepare and hardware reports from one session
 
+### Selecting another GDB version
+
+
+CLI `run --gdb` selects GDB for --package. With --session, GDB comes from the
+session's gdb field. Compare versions using local session copies with separate gdb
+and out fields and the same ELF/manifest, or pass `-DSTM32_GDBTEST_GDB=<path>` at
+CMake configure time. Keep global PATH unchanged for an isolated experiment.
+Verify gdb_version in result.json; use the original session to restore the previous
+GDB. See the [comparison example](RC3_API_R1.md).
+
+### Separating reports
+
 CTest prepare and CLI run write result.json to session.out. Run them serially
 or use separate sessions/out directories. Counting every new result.json without
 a mode/id filter can misattribute prepare output to a hardware scenario. Preserve
@@ -289,3 +301,11 @@ strict ELF types. Unknown hashes need review, not disabled preflight.
 Do not reuse a CMake cache containing /workspace paths on Windows: use a separate
 build/copy. WinError5 creating a restore report is not an MCU failure: retain
 ERROR, resolve access and confirm boot/blink separately.
+
+## Windows tests directory casing
+
+If the physical Windows directory is still named Tests, adding a new directory
+with `git add tests/<directory>` may skip files. Add explicit lowercase file paths
+(`git -c core.ignorecase=false add -- tests/<directory>/<file>`) and inspect `git diff --cached --name-only`.
+Do not introduce a second Tests root into the index. A new consumer must exclude
+its build/ directory using a local .gitignore.

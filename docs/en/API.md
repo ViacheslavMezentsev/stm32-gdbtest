@@ -2,6 +2,8 @@
 
 [Documentation](index.md) → API · [Русский](../ru/API.md)
 
+[Initial R1 hardware experiments](RC3_API_R1.md): F411, GDB14/16, 48/48 and failure checks.
+
 Preparing rc3: [GDB Python API research and hardware experiment plan](RC3_API_RESEARCH.md). Proposed methods are not implemented yet.
 
 Status: candidate in the release branch, not yet published — **0.1.0-rc.2** (Python `0.1.0rc2`), `API_VERSION = 1`. This numbers the

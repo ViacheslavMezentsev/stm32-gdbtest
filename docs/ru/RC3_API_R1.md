@@ -1,0 +1,141 @@
+# rc3 R1: первые аппаратные опыты API
+
+[Документация](index.md) · [English](../en/RC3_API_R1.md)
+
+02.10.2026, Windows. Ветка `codex/rc3-api-r1` продолжает исследовательскую
+`codex/rc3-gdb-python-research` на `9fce519`, которая основана на main `da42cd7`.
+Порядок принятия: исследование → R1; push/land выполняет владелец.
+Это **consumer-прототип**, не расширение публичного Target API. ТЗ0.58,
+`API_VERSION=1` и версия пакета не меняются.
+
+## Результат
+
+На **WeAct BlackPill F411CE / STM32F411CEU6**, ST-Link V2J43M28, OpenOCD0.12.0,
+SWD1МГц выполнено **48/48 PASS**: шесть сценариев, первый проход и три заранее
+заданных повтора на каждой из двух версий GDB. Использовался один ELF, собранный
+GCC13.3.1 с `-Og -g3 -fno-lto`, Cortex-M4, soft-float ABI.
+
+| GDB | Embedded Python | Основные сценарии |
+| --- | --- | --- |
+| 14.2.90.20240526-git (xPack GCC13) | 3.11.4 | 24/24 PASS |
+| 16.3.90.20250906-git (xPack GCC15) | 3.13.12 | 24/24 PASS |
+
+Отдельно на каждой версии проверены **ожидаемый ERROR сериализации** и
+**ожидаемый ERROR внешнего таймаута**. Четыре исходных отчёта остаются ERROR;
+PASS относится к протоколу проверки отказов. После каждого отказа независимый
+`HW_R1_CONTROL` дал PASS. После каждой аппаратной серии восстановлена подходящая
+прошивка consumer, `HW_BOOT/HW_GPIO` PASS, MCU оставлен в reset_run.
+HW_GPIO проверяет переключение регистра PC13, а не свет оптическим датчиком.
+
+ELF эксперимента SHA256:
+`38375f4f7d58cdb637c69ae099b47c03061230a9df4eecd530475cbc96a2fd19`.
+Restore ELF SHA256:
+`1ff37ae10a007401de5e0eaf826764f60a2849c8b7821c123f12caa28c2e79c3`.
+Подтверждены только эта плата/backend/build и эти операции. F030/F103/F401,
+GCC15-пересборка, IRQ/DMA/RTOS и ABI вызовов не проверялись этим пакетом.
+
+## Проект и сценарии
+
+[Consumer](../../tests/api-experiments/CMakeLists.txt) использует обычную программу:
+`main → process_sample → sum_bytes`, глобальную структуру и checksum.
+Все функции вызываются приложением естественно, hooks/специальных точек
+синхронизации в прошивке нет. IRQ и периферия для R1 не включаются.
+Startup и linker основаны на существующем CMSIS fixture.
+
+[Research](../../tests/api-experiments/lab/session.py) — локальный адаптер над GDB:
+ограниченные symbol/field/array paths вместо произвольного eval; материализованные
+типизированные снимки; stop epoch для отбраковки старых кадров; RAM только внутри
+объекта `sample`; scoped patch; hardware breakpoint ownership; отдельная JSON-область
+`research`. Внутренний `Target.report` использует мост адаптера; это не новый публичный
+метод ядра. Одна проверка намеренно читает корневой status для проверки изоляции.
+
+| Сценарий | Что доказано |
+| --- | --- |
+| HW_R1_VALUES | int32, uint64, float3.5, enum, массив, ограниченный char buffer; запрещены вызов/присваивание, индекс вне массива и отсутствующий символ |
+| HW_R1_FRAMES | Аргументы count/seed, три естественных кадра, сохранённый backtrace после resume; старый frame handle отвергнут |
+| HW_R1_RAM | Запись1/2/4/8байт, сверка всех байтов объекта вне области подмены; восстановление после обычного выхода и исключения; запрос вне разрешённого диапазона отвергнут |
+| HW_R1_STOPS | Функция, адрес, file:line; два hardware BP на одном PC; чужая точка и четыре fault guards сохранены; бюджет locations и отсутствующий symbol отвергнуты |
+| HW_R1_RECORD | Снимок не зависит от последующей мутации Python-объекта; отклонены повторное имя, >16KiB, NaN и не-JSON объект; ключ status не меняет корневой результат |
+| HW_R1_CONTROL | Естественный checksum по независимой арифметике Python, завершение одного цикла |
+
+[Сценарии](../../tests/api-experiments/profile/tests/board/test_research.py),
+[требования](../../tests/api-experiments/profile/tests/requirements.md),
+[host-регрессии](../../tests/api-experiments/host/test_session.py).
+Двенадцать host-тестов включают частично неуспешную запись с восстановлением,
+одновременный отказ тела и cleanup, multi-location бюджет чужой точки,
+ошибку разрешения и пустую location, stale frame и атомарность отказа record.
+
+## Исходный отказ сохранён
+
+Первый запуск остановился на `HW_R1_STOPS` с ERROR: сценарий ожидал `gdb.error`
+для отсутствующей функции, но GDB создал объект без location, и адаптер поднял
+`ValueError`. Предыдущие VALUES/FRAMES/RAM прошли; restore/boot/GPIO прошли.
+Контракт адаптера унифицирован в ValueError, добавлены две host-регрессии для
+обоих вариантов GDB. Успешные48 запусков — новая серия после исправления,
+не удаление исходного отказа и не автоматические повторы до PASS.
+
+## Доказательства и проверки
+
+[Обезличенная сводка](../research/rc3-r1-results.json) сохраняет каждый stage,
+сырые статусы, версии, число checks, хэши ELF и исходников. Полные локальные
+артефакты — `tests/api-experiments/build/evidence/`:
+
+- `20261001T232017.946898Z`: первый ERROR и успешное восстановление;
+- `20261001T232139.267425Z`:14 prepare +2 baseline +48 опытов +2 restore;
+- `20261001T232415.062597Z`:14 prepare +2 baseline +4 ожидаемых ERROR +4 положительных контроля +2 restore.
+
+Имена каталогов — UTC; местная дата опытов02.10.2026. В Git не включены серийные
+номера, локальные пути, TOML, ELF и сырые журналы. Положительная серия предшествовала
+добавлению ветки failure-paths в runner; исследуемый адаптер и шесть сценариев
+не менялись, их хэши есть в сводке. Позднее runner также стал отдельно сохранять
+primary_error и restore_error; одновременный отказ этих двух стадий на MCU не инъецировался.
+
+- Windows GCC13 build + CTest host/prepare: **8/8 PASS**.
+- Linux CI-образ GCC13 build + CTest host/prepare: **8/8 PASS**; это не Linux HW PASS.
+- Формат четырёх новых C/H файлов: PASS.
+- `python3 ci/run_checks.py docs format host`: docs3/3 и host PASS;
+  общий format FAIL на существующем HAL-коде, не изменённом этой веткой.
+  В диагностике есть `tests/hal-f030/src/platform.c`. Это не считается полным CI PASS.
+
+## Воспроизведение
+
+Сначала configure/build с Ninja и toolchain `tests/firmware/cmake/arm-gcc.cmake`.
+Build должен быть внутри `tests/api-experiments/build/`; CMake/runner ограничивают
+выходные каталоги корнем consumer. Затем:
+
+```text
+cmake --build tests/api-experiments/build/gcc13
+ctest --test-dir tests/api-experiments/build/gcc13 -L host --output-on-failure
+python -B tests/api-experiments/run_matrix.py --session <session.json> --restore-session <restore-session.json> --stand <local.toml> --gdb <GDB14> --gdb <GDB16>
+```
+
+Без `--execute` runner только готовит сценарии; с ним — сначала baseline,
+затем четыре прохода каждого GDB и restore в finally. Для отдельной серии
+ожидаемых ERROR добавить `--execute --failure-paths-only`.
+Сеанс восстановления должен иметь проверяемый manifest, F411CE и HW_BOOT/HW_GPIO.
+Исходные внешние файлы читаются, все новые отчёты остаются в этом consumer.
+Смена платы/backend требует отдельного согласования стенда.
+
+Runner задаёт GDB в локальной копии session и сравнивает один ELF. В текущем CLI
+`run --gdb` применяется к `--package`, а для `--session` используется поле `gdb`
+сессии; нельзя считать этот флаг переключателем GDB для обоих режимов.
+
+## Границы и следующий пакет
+
+R1 подтверждает **подмножество** E01–06/E20 из [плана](RC3_API_RESEARCH.md),
+не весь предложенный API. Пока нет typed NULL/unavailable/optimized-out матрицы,
+обобщённого read_string, shadowed locals/временного select, условий/ошибок conditions,
+exit/signal/fault классификации StopRecord, multi-location на реальном ELF и
+hardware exhaustion на resume. Функциональность GDB16 interrupt/timeout inferior
+calls не использована: испытанный timeout — внешний таймаут существующего runner.
+
+Бюджет консервативно считает locations; два BP на одном PC могут делить ресурс.
+Положительный опыт не измеряет физическое число FPB. Все создаваемые точки явно
+BP_HARDWARE_BREAKPOINT, а next/finish/software fallback не используются.
+Снимки ограничены простыми C-типами и не обещают атомарность с DMA. RAM rollback
+проверен только пока CPU стоит и никто другой не пишет объект; это не MMIO rollback.
+
+Следующий шаг — закрыть оставшиеся отрицательные ветви R1 и определить публичные
+контракты read/snapshot/record/StopRecord/ownership. Только затем переносить механизм
+в ядро с новой ревизией ТЗ, API/миграцией RU/EN и host-регрессиями. R2 (steps/finish/
+watchpoints) остаётся отдельной группой экспериментов.

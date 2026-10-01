@@ -2,6 +2,8 @@
 
 Documentation · [Русский](../ru/index.md)
 
+[Initial R1 hardware experiments](RC3_API_R1.md): F411, GDB14/16, 48/48 and failure checks.
+
 Preparing rc3: [GDB Python API research and hardware experiment plan](RC3_API_RESEARCH.md). Proposed methods are not implemented yet.
 
 [F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](F429_CMSIS_RTC_SLEEP.md)

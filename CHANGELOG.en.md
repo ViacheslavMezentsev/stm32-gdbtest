@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Added rc3 R1 consumer prototype for typed snapshots, frames, RAM rollback, ownership and evidence: F411/OpenOCD 48/48 on GDB14/16, expected serialization/timeout errors and restoration verified. Public API/specification unchanged.
+
 - Extended rc3 research with an L0 comparison of GDB14 and xPack GCC15 GDB16, preserving probe evidence; new methods remain unverified on hardware.
 
 - Added bilingual rc3 API research: GDB Python review, 20 experiments for four offered boards and a reproducible GDB14 L0 probe. No new hardware results; runtime/API/specification unchanged.
