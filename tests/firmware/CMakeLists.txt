@@ -48,7 +48,7 @@ if(CI_PROFILE STREQUAL "f030r8")
     # Cortex-M0 needs compiler runtime helpers for 32/64-bit integer division.
     target_link_libraries(ci_firmware PRIVATE gcc)
 elseif(CI_PROFILE STREQUAL "f103c8")
-    target_sources(ci_firmware PRIVATE src/adc_f103.c src/adc_units.c)
+    target_sources(ci_firmware PRIVATE src/adc_f103.c src/adc_units.c src/rtc_f103.c)
     target_link_libraries(ci_firmware PRIVATE gcc)
 endif()
 set_target_properties(ci_firmware PROPERTIES OUTPUT_NAME "ci-${CI_PROFILE}" SUFFIX .elf)

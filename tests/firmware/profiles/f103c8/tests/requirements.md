@@ -51,3 +51,18 @@ Enable DMA channel before sample: ownership guard yields error6 without publicat
 
 ## HW_CI_ADC_DISABLED
 Clear ADC ADON before sample: error3 without publication. This is not a HAL return-code injection.
+
+## HW_CI_RTC_INIT
+LSI, counter RTC prescaler39999, initial alarm2, EXTI17 rising, IRQ41/vector57; no backup-domain reset.
+
+## HW_CI_RTC_ALARM
+Two natural alarms enter exception57 with ALRF/EXTI17 pending; thread service rearms, one event per handler, application resumes.
+
+## HW_CI_RTC_DEADLINE
+Inject zero mask into LSI-ready wait; error3 after at least1000 ticks without changing backup configuration or publishing events. Not a physical oscillator fault.
+
+## HW_CI_SLEEP_SYSTICK
+Ordinary Sleep/WFI interrupted by SysTick exception15 with external IRQs masked; interrupted frame follows WFI, delay and ADC state retained.
+
+## HW_CI_SLEEP_TIM2
+With SysTick disabled and only TIM2 enabled, exception44 interrupts WFI; ticks do not advance, restore IRQ controls and resume. Not Stop/current measurement.

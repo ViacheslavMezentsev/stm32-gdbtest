@@ -129,6 +129,39 @@
           "quality": "uint32_t"
         }
       }
+    },
+    "ci_sleep_macros": {
+      "macros": {
+        "context": "board_delay_ms",
+        "expressions": [
+          "SCB",
+          "SysTick",
+          "NVIC",
+          "SCB_ICSR_VECTACTIVE_Msk"
+        ]
+      }
+    },
+    "ci_rtc_macros": {
+      "macros": {
+        "context": "RTC_Alarm_IRQHandler",
+        "expressions": [
+          "RTC",
+          "RCC",
+          "PWR",
+          "EXTI",
+          "NVIC",
+          "RTC_CRL_ALRF",
+          "RTC_CRL_CNF",
+          "RTC_CRL_RSF",
+          "RTC_CRL_RTOFF",
+          "RTC_CRH_ALRIE",
+          "RCC_BDCR_RTCSEL",
+          "RCC_BDCR_RTCEN",
+          "RCC_CSR_LSIRDY",
+          "SCB",
+          "SCB_ICSR_VECTACTIVE_Msk"
+        ]
+      }
     }
   }
 }

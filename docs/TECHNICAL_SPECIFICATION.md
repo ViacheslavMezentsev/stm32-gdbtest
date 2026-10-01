@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.47 (после rc.2, на согласовании) |
+| **Ревизия** | 0.48 (после rc.2, на согласовании) |
 | **Дата формирования** | 01.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0; после опубликованного кандидата 0.1.0-rc.2 (Python `0.1.0rc2`, `API_VERSION = 1`); rc.1 опубликован |
@@ -85,6 +85,16 @@
 | 0.46 | 01.10.2026 | F103 CMSIS: clocks/GPIO/SysTick/TIM2 одной группой, TC-134; rc.2 опубликован, следующие изменения вне тега. |
 
 | 0.47 | 01.10.2026 | F103 ADC/DMA/физические единицы/отказы одной группой, TC-135; API без изменений. |
+
+| 0.48 | 01.10.2026 | F103 RTC/Sleep/deadlines/recovery одной группой; TC-136, API без изменений. |
+
+### Изменения ревизии 0.48
+
+Изменённые и новые пункты ревизии 0.48 помечены `(р.0.48)`.
+
+| Пункты | Тип | Суть |
+| :--- | :--- | :--- |
+| 8.37, TC-136, матрица, G.24 | нов. | F1 counter/alarm RTC, WFI, ограниченные ожидания и recovery; границы аппаратного доказательства. |
 
 ### Изменения ревизии 0.47
 
@@ -1469,6 +1479,9 @@ flowchart LR
 
 8.36. CMSIS fixture F103 ДОЛЖНА выполнять калибровку ADC1 с дедлайнами 20 мс, scan CH16/17 через normal DMA1 channel1 (IRQ11), публиковать два raw перед счётчиком завершения и рассчитывать типовые VDDA/температуру с quality1 без заводских адресов других MCU. Восемь новых сценариев ДОЛЖНЫ проверять init/DMA/units, четыре численных и восемь невалидных наборов, отсутствие IRQ-уведомления (error4 через ≥20 ticks), занятый DMA (error6) и отключённый ADC (error3) без публикации. CI ДОЛЖЕН выполнять prepare для GCC13/14/15. DMA EN НЕ ДОЛЖЕН трактоваться как доказательство активной конверсии; точность температуры и TE/calibration fault injection вне проверенного объёма этой группы. `[N]` (р.0.47)
 
+8.37. CMSIS fixture F103 ДОЛЖНА проверяться пятью сценариями RTC_INIT/RTC_ALARM/RTC_DEADLINE/SLEEP_SYSTICK/SLEEP_TIM2: LSI counter RTC с PRL=39999 и начальным alarm=2, IRQ41/vector57 через EXTI17; два естественных alarm с перевооружением в основном потоке; инъекция нулевой маски LSIRDY с error3 через ≥1000 ticks без BDRST; interrupted WFI от exception15/44 с восстановлением обоих NVIC banks. Ожидания RTC ДОЛЖНЫ иметь дедлайн 1000 ticks и выполняться вне ISR, чтобы SysTick мог продвигаться. После инъекций и внешнего timeout ДОЛЖНЫ проверяться положительные RTC/ADC и восстановление HAL. Проверка НЕ ДОЛЖНА объявляться измерением тока, точности LSI, физического отказа генератора или переносом HAL callbacks. `[N]` (р.0.48)
+
+
 ---
 
 ## 9. Верификация
@@ -1623,6 +1636,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-133 | `PackageTests.test_reopen_preserves_reports_and_uses_clean_sources` | Два открытия: прежний ERROR-отчёт сохранён, изменённый ELF и лишний файл из первой распаковки не попадают во вторую; ошибка GDB сохраняет доказательства (р.0.44) |
 | TC-134 | F103 HW_CI_BOOT/GPIO/CLOCK/BLINK/TIM2_INIT/TIM2_IRQ/SYSTICK_IRQ; ci/run_checks.py | Семь prepare, clocks/GPIO и естественные IRQ на BluePill/J-Link; восстановление HAL; F103_CMSIS_BASELINE.md (р.0.46) |
 | TC-135 | F103 test_adc.py: восемь HW_CI_ADC_*; ci/run_checks.py | 15 prepare, естественный DMA/измерения, численные векторы и MMIO-инъекции; положительные повторы и HAL restore; F103_CMSIS_ADC_DMA.md (р.0.47) |
+| TC-136 | F103 test_rtc.py/test_sleep.py; CLI run | Пять новых prepare/HW, повтор RTC/ADC после deadline, timeout/recovery и HAL restore; F103_CMSIS_RTC_SLEEP.md (р.0.48) |
 
 ---
 
@@ -1809,6 +1823,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 8.34 | tests/hal-f030/run_hw.py | TC-131 (р.0.40) |
 | 8.35 | tests/firmware/src/board.c, startup.c, app.c; profiles/f103c8/tests; ci/run_checks.py | TC-134 (р.0.46) |
 | 8.36 | tests/firmware/src/adc_f103.c, adc_units.c; profiles/f103c8/tests/board/test_adc.py; ci/run_checks.py | TC-135 (р.0.47) |
+| 8.37 | tests/firmware/src/rtc_f103.c; profiles/f103c8/tests/board/test_rtc.py, test_sleep.py; ci/run_checks.py | TC-136 (р.0.48) |
 | 7.7.7, 8.9 | docs/ru/maintenance.md, VERSIONING.md, RC2_READINESS.md; release metadata | TC-132, инспекция перед публикацией (р.0.41) |
 
 ---
@@ -2001,7 +2016,7 @@ D.5. В ревизии 0.1 ссылки в коде отсутствуют; их
 Выпускная ветка согласует __version__, CLI, TC-65 и документацию на 0.1.0rc2;
 API/схемы не меняются. Аппаратная и интеграционная части TC-132 выполнены
 в объёме G.21, с ограничением USB ST server. Тег rc.2 опубликован на a0d6547, потребитель main2b9d75f принят;
-RC2_READINESS хранит доказательства. Группа F103 после тега проверяется отдельно. (р.0.46)
+RC2_READINESS хранит доказательства. Группы F103 после тега проверены отдельно: baseline, ADC/DMA и RTC/Sleep. Текущий протокол — G.24; это не расширяет состав выпущенного rc.2. (р.0.48)
 
 | № | Пункты ТЗ | Документация / ожидание | Состояние кода | Доработка |
 | :---: | :--- | :--- | :--- | :--- |
@@ -2076,3 +2091,6 @@ G.21. Код 5b7b466 прошёл Docs/Offline/Hardware; проверены вс
 G.22. Группа F103 clocks/GPIO/SysTick/TIM2 проверена на рабочей копии ветки от a0d6547: 7/7 HW, HAL boot/blink восстановлены. Исходный GPIO ERROR из-за имени макроса другого семейства сохранён, исправлен сценарий. ELF и ограничения — docs/ru/F103_CMSIS_BASELINE.md. Следующие группы объединяют ADC/DMA/арифметику/отказы и RTC/Sleep/deadlines/recovery; один push/CI/land на группу, без изменения API ядра. (р.0.46)
 
 G.23. Рабочая копия от352417c: F103/J-Link/Windows GCC13, 15/15 HW и три положительных ADC_DMA после state-инъекций; HAL boot/blink восстановлены. ELF и точные пределы — docs/ru/F103_CMSIS_ADC_DMA.md. Нельзя переносить F0 ADSTART/OVR или калибровочные слова на F1; busy означает guard владения DMA. Публичные API/схемы неизменны. (р.0.47)
+
+
+G.24. Рабочая копия от3e123ad: F103/J-Link/Windows GCC13, 20/20 HW и пять положительных повторов. Первый общий summary ERROR из-за ACL report/lock при HAL restore; отдельное восстановление PASS. Внешний timeout после marker дал ожидаемый ERROR с host recovery, затем RTC/ADC PASS и HAL boot/blink восстановлены. Протокол docs/ru/F103_CMSIS_RTC_SLEEP.md. RSF/RTOFF/DBP/source faults, RTC Sleep wakeup, rollover и backup retention не инжектировались; API/схемы неизменны. (р.0.48)

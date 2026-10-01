@@ -24,6 +24,9 @@ void app_loop( void )
     ( void ) app_step( &next, APP_MODE_BLINK );
     app_state = next;
     board_led_toggle();
+#if defined( STM32F103xB )
+    board_rtc_service();
+#endif
 #if defined( STM32F030x8 ) || defined( STM32F103xB )
     board_adc_sample();
 #endif

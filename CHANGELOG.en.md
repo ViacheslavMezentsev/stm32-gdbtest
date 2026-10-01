@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- F103 CMSIS: counter/alarm RTC, SysTick/TIM2 Sleep and deadline as one group. 20/20 HW, five repeats, host timeout/recovery and HAL restore; specification0.48. Initial restore access errors retained in evidence.
+
 - F103 CMSIS: ADC1 CH16/17 scan, normal DMA, typical physical units and three state injections. 15/15 HW + 3 positive repeats, HAL restored; specification0.47, API unchanged.
 
 - F103 CMSIS: clocks/GPIO/SysTick/TIM2 group, seven scenarios with macro contracts; 7/7 J-Link HW PASS, HAL restored. rc.2 published at a0d6547; subsequent changes are outside the tag.

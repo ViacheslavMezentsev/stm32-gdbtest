@@ -2,12 +2,18 @@
 
 ## Текущая работа
 
-- codex/f103-cmsis-adc-dma от main352417c; предыдущая группа прошла Docs/Offline и land.
-- [x] ADC/DMA, арифметика, timeout/busy/disabled: 15/15 HW + 3 повтора, HAL восстановлен.
-- [x] Windows prepare/traceability 16/16; протокол RU/EN, ТЗ 0.47.
-- [x] Локально Linux host + девять MCU/GCC сочетаний 10/10, Windows docs/host 4/4, формат PASS.
-- [ ] Один push всей группы, полный Docs/Offline именно опубликованного SHA, затем land.
-- [ ] Далее F103 RTC/Sleep/deadlines/recovery, затем группы F411.
+- codex/f103-cmsis-rtc-sleep от main3e123ad: RTC/Sleep/deadlines/recovery одной группой.
+- [x] 20/20 HW и пять повторов; внешний timeout/recovery; HAL восстановлен.
+- [x] Windows prepare/traceability21/21; протокол RU/EN и ТЗ0.48.
+- [x] Windows docs/host4/4, Linux host/девять MCU/GCC10/10, формат C/H PASS.
+- [ ] Один push всей группы; проверить полный Docs/Offline опубликованного SHA, затем land владельцем.
+- [ ] Далее F411 группами: clocks/GPIO/SysTick/TIM2; ADC/DMA/units/failures; RTC/Sleep/recovery.
+- [ ] После групп обновить gitlink потребителя; HAL-профили пока не удалять.
+
+## История группы F103 ADC/DMA (принята)
+
+- main3e123ad: Docs36841424006 и Offline36841423947 (все пять jobs) SUCCESS; land подтверждён.
+- 15/15 HW + три повтора; Windows prepare16/16, docs/host4/4, Linux host/firmware10/10; HAL восстановлен, ТЗ0.47.
 
 ## История группы F103 baseline (принята)
 
@@ -15,7 +21,7 @@
 - codex/f103-cmsis-baseline от main a0d6547 (опубликован rc.2).
 - [x] Группа clocks/GPIO/SysTick/TIM2: 7/7 HW, исходная HAL восстановлена.
 - [x] Windows host/prepare, Linux host + девять MCU/GCC сочетаний PASS; ТЗ 0.46, RU/EN протокол.
-- [ ] Один push всей группы, полный Docs/Offline на опубликованном SHA, затем land.
+- [x] main352417c: Docs36833032263 и Offline36833032031 (все пять jobs) SUCCESS; land подтверждён.
 - [ ] Следующие группы: F103 ADC/DMA/арифметика/отказы; RTC/Sleep/deadlines/recovery;
   затем F411. Не создавать отдельный цикл GitHub для каждой периферии.
 

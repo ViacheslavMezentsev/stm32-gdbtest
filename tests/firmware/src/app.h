@@ -25,8 +25,11 @@ void board_delay_ms( uint32_t delay_ms );
 void board_adc_init( void );
 void board_adc_sample( void );
 #endif
-#if defined( STM32F030x8 )
+#if defined( STM32F030x8 ) || defined( STM32F103xB )
 void board_rtc_init( void );
+#endif
+#if defined( STM32F103xB )
+void board_rtc_service( void );
 #endif
 uint32_t app_step( app_state_t* state, app_mode_t mode );
 void app_loop( void );

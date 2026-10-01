@@ -11,6 +11,7 @@ extern void DMA1_Channel1_IRQHandler( void );
 #elif defined( STM32F103xB )
 extern void SysTick_Handler( void );
 extern void TIM2_IRQHandler( void );
+extern void RTC_Alarm_IRQHandler( void );
 extern void DMA1_Channel1_IRQHandler( void );
 #endif
 
@@ -96,7 +97,12 @@ void ( *const vectors[] )( void ) = {
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
-    TIM2_IRQHandler
+    TIM2_IRQHandler,
+    /* IRQ29..40, followed by RTC Alarm IRQ41. */
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    RTC_Alarm_IRQHandler
 #else
     Default_Handler
 #endif

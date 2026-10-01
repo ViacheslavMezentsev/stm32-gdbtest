@@ -170,6 +170,11 @@ IRQ isolation changes the environment: restore enable bits in finally and finish
 with reset_run; do not hide restoration errors.
 [Code](../../tests/firmware/profiles/f030r8/tests/board/test_sleep.py), [protocol](F030_CMSIS_SLEEP.md).
 
+F103: RTC Alarm IRQ41 uses NVIC bank1; SysTick/TIM2 isolation must save
+and restore both banks, not only ISER[0]. Keep bounded RTC rearm waits in
+thread mode where SysTick can run, not in an ISR that blocks lower-priority
+SysTick. [F103 evidence](F103_CMSIS_RTC_SLEEP.md).
+
 ## Growing the guide
 
 Look for an existing card before adding one. New IDs identify distinct techniques;
