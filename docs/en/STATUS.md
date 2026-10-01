@@ -8,6 +8,9 @@ F103/J-Link and F411/OpenOCD lifecycles — 10/10 each. ST server completed afte
 USB reconnect, not an uninterrupted 10/10; the USB failure cause is unknown.
 All original HAL images restored. [Evidence and remaining gates](RC2_READINESS.md).
 
+rc.2 published at a0d6547. Next: [F103 CMSIS baseline](F103_CMSIS_BASELINE.md),
+7/7 HW on the new branch working tree; this is a post-tag change.
+
 ## Current scope and evidence
 
 | Area | Verified scope and limits |
@@ -16,7 +19,7 @@ All original HAL images restored. [Evidence and remaining gates](RC2_READINESS.m
 | Offline CI | Docs, format, host; CMSIS F030/F103/F411 × GCC13/14/15; separate GCC13 HAL F030, 19 CTest checks and 5 negative contracts. All five Offline jobs passed at 5b7b466 |
 | CMSIS F030 | 18 cases: boot/clock/GPIO/blink, TIM3, ADC/DMA/numeric vectors, Sleep, RTC and failures. HW: one complete 18/18 run at 5b7b466 locally on Windows; HAL restored. Earlier SSH/Orange Pi run at a48158c; see RC2_READINESS |
 | HAL F030 | Standalone tests/hal-f030: 17/17, six post-injection repeats, expected timeout ERROR, recovery and consumer HAL restoration — Windows/ST-Link/OpenOCD |
-| CMSIS F103/F411 | Two boot/GPIO cases each; full peripheral migration is not complete |
+| CMSIS F103/F411 | Post-rc.2: F103 7/7 HW clocks/GPIO/SysTick/TIM2; F411 has two boot/GPIO cases. Full migration remains incomplete |
 | minimal-consumer F411 | Separate CMake integration example without YAML; demonstrates module integration, not complete board peripherals |
 | BlackPill consumer | fb2d186 / module 67b7431: Offline SUCCESS, five profiles/120 CTest; Windows 25/25, F411/OpenOCD 22/22 + timeout/recovery/restore. Final gitlink follows module land |
 
@@ -24,8 +27,8 @@ Sources: [HAL→CMSIS](F030_CMSIS_ACCEPTANCE.md), [HAL protocol](F030_HAL_VALIDA
 [techniques](TESTING_TECHNIQUES.md), [CI](testing.md).
 The current Nucleo stand uses native ST-Link/OpenOCD; J-Link STLink results below are historical.
 F103 is WeAct BluePill-Plus/J-Link; F411 is BlackPill/ST-Link with OpenOCD and ST server.
-Remote runs, packages and the Hardware workflow were checked for rc.1; they have not
-been repeated on the rc.2 candidate. A standalone Linux PC with USB and WSL usbipd
+Remote runs, packages and the Hardware workflow were repeated for rc.2;
+exact SHAs and scope are in RC2_READINESS. A standalone Linux PC with USB and WSL usbipd
 remain unverified configurations. Case counts are not code coverage percentages.
 
 ## Stand layouts
@@ -33,7 +36,7 @@ remain unverified configurations. Case counts are not code coverage percentages.
 Local Windows and Orange Pi 5/Linux, Windows/WSL → server over SSH,
 pack/run --package and the Hardware workflow are implemented and were checked
 for rc.1. The historical matrix below is not final rc.2 acceptance.
-Candidate reruns follow the [release matrix](RC2_READINESS.md).
+rc.2 acceptance completed according to the [release matrix](RC2_READINESS.md).
 
 ## Final check of 0.1.0-rc.1, 2026-09-29
 

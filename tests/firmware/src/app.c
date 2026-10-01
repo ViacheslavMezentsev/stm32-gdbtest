@@ -2,7 +2,7 @@
 
 volatile app_state_t app_state;
 /* Initialized data keeps a non-empty .data load section in Flash. */
-#if defined( STM32F030x8 )
+#if defined( STM32F030x8 ) || defined( STM32F103xB )
 volatile uint32_t app_delay = 500U;
 #else
 volatile uint32_t app_delay = 200000U;
@@ -26,6 +26,8 @@ void app_loop( void )
     board_led_toggle();
 #if defined( STM32F030x8 )
     board_adc_sample();
+#endif
+#if defined( STM32F030x8 ) || defined( STM32F103xB )
     board_delay_ms( app_delay );
 #else
     for ( uint32_t delay = 0; delay < app_delay; ++delay )

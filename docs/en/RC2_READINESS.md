@@ -248,3 +248,8 @@ windows-host.log, f411-20260930T232546Z/summary.json and recovery/summary.json.
 Remaining gates: Docs and full Offline for the final documentation SHA, owner-approved
 module land, consumer gitlink update and its new CI. The owner then lands the consumer
 and publishes the signed tag/GitHub prerelease. No tag exists; release text is ready for review.
+
+Publication completed: v0.1.0-rc.2 → a0d6547, signed tag Verified; GitHub
+prerelease and tag text match docs/releases/v0.1.0-rc.2.md. Consumer main2b9d75f
+pins this SHA, Offline36797076345 SUCCESS. Historical pending stages above
+are complete; the tag remains immutable.

@@ -84,12 +84,70 @@ void board_led_toggle( void )
 #elif defined( STM32F103xB )
 #include "stm32f1xx.h"
 
-/* WeAct BluePill-Plus: LED on PB2, push-pull output 2 MHz. */
+/* WeAct BluePill-Plus: PB2, active-high LED, push-pull output 2 MHz. */
+uint32_t SystemCoreClock = 8000000U;
+volatile uint32_t board_ticks_ms;
+volatile uint32_t board_timer_events;
+
+void SysTick_Handler( void )
+{
+    board_ticks_ms++;
+}
+
+void TIM2_IRQHandler( void )
+{
+    if ( ( TIM2->SR & TIM_SR_UIF ) != 0U )
+    {
+        TIM2->SR = ~TIM_SR_UIF;
+        board_timer_events++;
+    }
+}
+
+void board_delay_ms( uint32_t delay_ms )
+{
+    const uint32_t start = board_ticks_ms;
+    while ( ( uint32_t ) ( board_ticks_ms - start ) < delay_ms )
+    {
+        __WFI();
+    }
+}
+
+static void board_timer_init( void )
+{
+    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+    ( void ) RCC->APB1ENR;
+    RCC->APB1RSTR |= RCC_APB1RSTR_TIM2RST;
+    RCC->APB1RSTR &= ~RCC_APB1RSTR_TIM2RST;
+    TIM2->PSC      = 7999U;
+    TIM2->ARR      = 99U;
+    TIM2->EGR      = TIM_EGR_UG;
+    /* Discard the update flag from loading the prescaler. */
+    TIM2->SR = 0U;
+    NVIC_ClearPendingIRQ( TIM2_IRQn );
+    NVIC_SetPriority( TIM2_IRQn, 2U );
+    TIM2->DIER = TIM_DIER_UIE;
+    NVIC_EnableIRQ( TIM2_IRQn );
+    TIM2->CR1 = TIM_CR1_CEN;
+}
+
 void board_init( void )
 {
-    RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;
+    RCC->CR |= RCC_CR_HSION;
+    while ( ( RCC->CR & RCC_CR_HSIRDY ) == 0U )
+    {
+    }
+    RCC->CFGR &= ~( RCC_CFGR_SW | RCC_CFGR_HPRE | RCC_CFGR_PPRE1 | RCC_CFGR_PPRE2 );
+    while ( ( RCC->CFGR & RCC_CFGR_SWS ) != RCC_CFGR_SWS_HSI )
+    {
+    }
+    RCC->CR         &= ~RCC_CR_PLLON;
+    SystemCoreClock  = 8000000U;
+    RCC->APB2ENR    |= RCC_APB2ENR_IOPBEN;
     ( void ) RCC->APB2ENR;
-    GPIOB->CRL = ( GPIOB->CRL & ~( GPIO_CRL_MODE2 | GPIO_CRL_CNF2 ) ) | GPIO_CRL_MODE2_1;
+    GPIOB->BSRR = GPIO_BSRR_BR2;
+    GPIOB->CRL  = ( GPIOB->CRL & ~( GPIO_CRL_MODE2 | GPIO_CRL_CNF2 ) ) | GPIO_CRL_MODE2_1;
+    ( void ) SysTick_Config( 8000000U / 1000U );
+    board_timer_init();
 }
 
 void board_led_toggle( void )

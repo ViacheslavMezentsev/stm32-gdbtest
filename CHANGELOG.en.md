@@ -6,11 +6,12 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- F103 CMSIS: clocks/GPIO/SysTick/TIM2 group, seven scenarios with macro contracts; 7/7 J-Link HW PASS, HAL restored. rc.2 published at a0d6547; subsequent changes are outside the tag.
+
 ## [0.1.0-rc.2] — 2026-10-01
 
 The candidate completed the agreed hardware and integration checks with an ST
-server limitation: manual USB reconnection was required. Publication and final-SHA
-checks remain pending: [evidence](docs/en/RC2_READINESS.md).
+server limitation: manual USB reconnection was required. Signed tag published at a0d6547, final CI accepted: [evidence](docs/en/RC2_READINESS.md).
 
 ### Fixed
 

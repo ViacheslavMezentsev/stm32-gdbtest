@@ -65,3 +65,5 @@ F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_D
 [Techniques catalogue TECH-001…008](TESTING_TECHNIQUES.md) — stable scenario references, build prerequisites, limits and restoration. Preserve TECH-001/003/004 references when migrating HAL scenarios.
 
 [Standalone F030 HAL regression](F030_HAL_REGRESSION.md): test consumer, no API changes.
+
+- [F103 CMSIS: clocks/GPIO/SysTick/TIM2](F103_CMSIS_BASELINE.md).

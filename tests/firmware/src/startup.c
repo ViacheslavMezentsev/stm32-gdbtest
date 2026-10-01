@@ -1,4 +1,4 @@
-/* Minimal Cortex-M startup: core vectors and F030 TIM3 IRQ. */
+/* Minimal Cortex-M startup: core vectors and profile-specific IRQs. */
 #include <stdint.h>
 
 extern uint32_t _estack, _sidata, _sdata, _edata, _sbss, _ebss;
@@ -8,6 +8,9 @@ extern void SysTick_Handler( void );
 extern void TIM3_IRQHandler( void );
 extern void RTC_IRQHandler( void );
 extern void DMA1_Channel1_IRQHandler( void );
+#elif defined( STM32F103xB )
+extern void SysTick_Handler( void );
+extern void TIM2_IRQHandler( void );
 #endif
 
 void Default_Handler( void )
@@ -64,7 +67,7 @@ void Reset_Handler( void )
 }
 
 // clang-format off
-/* Core exceptions, followed by F030 external slots: SP, Reset, NMI, HardFault, MemManage, BusFault, UsageFault, reserved, SVC, DebugMon, reserved, PendSV, SysTick. */
+/* Core exceptions, followed by profile-specific external slots: SP, Reset, NMI, HardFault, MemManage, BusFault, UsageFault, reserved, SVC, DebugMon, reserved, PendSV, SysTick. */
 __attribute__( ( section( ".isr_vector" ), used ) )
 void ( *const vectors[] )( void ) = {
     ( void ( * )( void ) )( &_estack ), Reset_Handler, Default_Handler, HardFault_Handler,
@@ -82,6 +85,17 @@ void ( *const vectors[] )( void ) = {
     Default_Handler, DMA1_Channel1_IRQHandler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     TIM3_IRQHandler
+#elif defined( STM32F103xB )
+    SysTick_Handler,
+    /* STM32F103xB external IRQ slots 0..27, then TIM2_IRQn=28. */
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    TIM2_IRQHandler
 #else
     Default_Handler
 #endif

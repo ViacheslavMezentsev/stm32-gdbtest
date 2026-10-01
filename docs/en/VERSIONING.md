@@ -2,11 +2,11 @@
 
 [Documentation](index.md) → Versions · [Русский](../ru/VERSIONING.md)
 
-[rc.2 plan](RC2_READINESS.md): tag `v0.1.0-rc.2`, Python `0.1.0rc2`; not released yet.
+[rc.2 plan](RC2_READINESS.md): tag `v0.1.0-rc.2`, Python `0.1.0rc2`; published at a0d6547.
 
 The format is MAJOR.MINOR.PATCH per [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html);
 Git tags have the `v` prefix. The first candidate is **v0.1.0-rc.1**, the first release
-**v0.1.0**. The release branch uses `0.1.0rc2`; tag `v0.1.0-rc.2` is not published yet; the
+**v0.1.0**. The release branch uses `0.1.0rc2`; tag `v0.1.0-rc.2` is published; the
 initial export from the stand project is not a release.
 
 Before 1.0: compatible fixes → 0.1.1; new features or API changes → 0.2.0 with an

@@ -8,6 +8,9 @@ F103/J-Link, F411/OpenOCD — по 10/10. ST server завершён после 
 это не непрерывный 10/10, причина USB-сбоя не установлена. Все исходные HAL
 восстановлены. [Подробный протокол и оставшиеся условия](RC2_READINESS.md).
 
+Опубликован rc.2 на a0d6547. Далее: [F103 CMSIS baseline](F103_CMSIS_BASELINE.md),
+7/7 HW на рабочей копии новой ветки; это изменение после тега.
+
 ## Текущий состав и доказательства
 
 | Область | Проверенный объём и границы |
@@ -16,7 +19,7 @@ F103/J-Link, F411/OpenOCD — по 10/10. ST server завершён после 
 | Offline CI | Docs, format, host; CMSIS F030/F103/F411 × GCC13/14/15; отдельный HAL F030 на GCC13, 19 CTest и 5 отрицательных contracts. Все пять jobs Offline прошли на 5b7b466 |
 | CMSIS F030 | 18 сценариев: boot/clock/GPIO/blink, TIM3, ADC/DMA/численные векторы, Sleep, RTC и отказы. HW: единый прогон 18/18 на 5b7b466 локально Windows; HAL восстановлен. Ранее SSH/Orange Pi на a48158c; см. RC2_READINESS |
 | HAL F030 | Автономный tests/hal-f030: 17/17, шесть повторов после инъекций, ожидаемый timeout ERROR, recovery и восстановление HAL потребителя — Windows/ST-Link/OpenOCD |
-| CMSIS F103/F411 | По два сценария boot/GPIO; полный перенос периферии ещё не выполнен |
+| CMSIS F103/F411 | После rc.2: F103 7/7 HW clocks/GPIO/SysTick/TIM2; F411 — два boot/GPIO. Полный перенос периферии не завершён |
 | minimal-consumer F411 | Отдельный пример подключения CMake без YAML; проверяет подключение модуля, не полную периферию платы |
 | Потребитель BlackPill | fb2d186 / модуль 67b7431: Offline SUCCESS, пять профилей/120 CTest; Windows 25/25, F411/OpenOCD 22/22 + timeout/recovery/restore. Итоговый gitlink обновляется после land модуля |
 
@@ -24,8 +27,8 @@ F103/J-Link, F411/OpenOCD — по 10/10. ST server завершён после 
 [техники](TESTING_TECHNIQUES.md), [CI](testing.md).
 Текущий Nucleo-стенд — родной ST-Link/OpenOCD; результаты J-Link STLink ниже исторические.
 F103 — WeAct BluePill-Plus/J-Link; F411 — BlackPill/ST-Link с OpenOCD и ST server.
-Удалённые запуски, пакеты и Hardware workflow проверялись при rc.1; повтор на
-кандидате rc.2 пока не выполнен. Отдельный Linux-ПК с USB и WSL usbipd остаются
+Удалённые запуски, пакеты и Hardware workflow повторены при приёмке rc.2;
+точные SHA и границы — RC2_READINESS. Отдельный Linux-ПК с USB и WSL usbipd остаются
 непроверенными конфигурациями. Число сценариев не является процентом покрытия.
 
 ## Схемы размещения стенда
@@ -33,7 +36,7 @@ F103 — WeAct BluePill-Plus/J-Link; F411 — BlackPill/ST-Link с OpenOCD и ST
 Локальные Windows и Orange Pi 5/Linux, Windows/WSL → сервер по SSH,
 pack/run --package и Hardware workflow реализованы и проверялись для rc.1.
 Это историческая матрица ниже, не итоговая приёмка rc.2.
-Повтор кандидата планируется по [матрице выпуска](RC2_READINESS.md).
+Приёмка rc.2 завершена по [матрице выпуска](RC2_READINESS.md).
 
 ## Итоговая проверка 0.1.0-rc.1, 2026-09-29
 

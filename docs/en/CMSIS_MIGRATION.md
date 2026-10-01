@@ -52,3 +52,11 @@ F030 RTC: LSI Alarm A, 16/16 HW PASS, HAL restored. Core API unchanged. [RTC](F0
 F030 busy ADC check; API unchanged. [Report](F030_ADC_BUSY.md).
 
 F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_DEADLINE.md).
+
+## Next work groups
+
+After rc.2: one branch per 3–4 related capabilities, several local commits,
+one push after combined validation, then full CI and land. Groups: clocks/GPIO/
+timer/IRQ; ADC/DMA/arithmetic/failures; RTC/Sleep/deadlines/recovery. F103 first,
+then F411; update the consumer gitlink after multiple groups as needed.
+First F103 group: [7/7 HW and HAL restoration](F103_CMSIS_BASELINE.md).

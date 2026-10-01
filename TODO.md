@@ -2,6 +2,19 @@
 
 ## Текущая работа
 
+- codex/f103-cmsis-baseline от main a0d6547 (опубликован rc.2).
+- [x] Группа clocks/GPIO/SysTick/TIM2: 7/7 HW, исходная HAL восстановлена.
+- [x] Windows host/prepare, Linux host + девять MCU/GCC сочетаний PASS; ТЗ 0.46, RU/EN протокол.
+- [ ] Один push всей группы, полный Docs/Offline на опубликованном SHA, затем land.
+- [ ] Следующие группы: F103 ADC/DMA/арифметика/отказы; RTC/Sleep/deadlines/recovery;
+  затем F411. Не создавать отдельный цикл GitHub для каждой периферии.
+
+## История выпуска rc.2 (завершён)
+
+Все условия ниже выполнены: тег a0d6547 Verified; потребитель main2b9d75f,
+Offline SUCCESS. Незакрытые отметки в исходном плане ниже — история подготовки.
+
+
 - codex/release-0.1.0-rc.2 от main eaf31ea: Python 0.1.0rc2, API_VERSION=1,
   ТЗ 0.45 к выпуску, итоговый текст docs/releases/v0.1.0-rc.2.md. Тег не создан.
 - [x] Документальный аудит eaf31ea принят: Docs и все пять Offline jobs SUCCESS.

@@ -234,12 +234,13 @@ of MCU, HAL, GDB and backend, not by the family: [current status](docs/en/STATUS
 
 ## Status
 
-**0.1.0-rc.1** is published; [rc.2](docs/en/RC2_READINESS.md) is being prepared.
+**0.1.0-rc.2** is published: [acceptance and limits](docs/en/RC2_READINESS.md).
 Since rc.1, manifest and HAL macro contracts were fixed, CMSIS F030 was expanded,
-and a standalone HAL F030 regression fixture was added. F103/F411 still provide
+and a standalone HAL F030 regression fixture was added. In rc.2, F103/F411 provide
 basic boot/GPIO cases. Verified scope and limits: [STATUS](docs/en/STATUS.md).
 The release branch uses Python version `0.1.0rc2`, `API_VERSION = 1`.
-Candidate acceptance is pending; the rc.2 tag is not published.
+The post-rc.2 branch expands F103: clocks/GPIO/SysTick/TIM2, seven scenarios;
+[report](docs/en/F103_CMSIS_BASELINE.md). The published tag is unchanged.
 
 RISC-V, full migration of other examples, external instrument control, child process
 supervision and Python packaging remain in the [roadmap](TODO.md).

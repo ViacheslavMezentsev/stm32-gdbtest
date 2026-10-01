@@ -65,3 +65,5 @@ F030: RTC deadline через инъекцию аргумента, API без и
 [Каталог техник TECH-001…008](TESTING_TECHNIQUES.md) — устойчивые ссылки из сценариев, условия сборки, ограничения и восстановление. При переносе HAL-сценариев сохранить ссылки TECH-001/003/004.
 
 [Автономная HAL-регрессия F030](F030_HAL_REGRESSION.md): тестовый consumer, без изменения API.
+
+- [F103 CMSIS: clocks/GPIO/SysTick/TIM2](F103_CMSIS_BASELINE.md).
