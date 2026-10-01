@@ -13,6 +13,9 @@ extern void SysTick_Handler( void );
 extern void TIM2_IRQHandler( void );
 extern void RTC_Alarm_IRQHandler( void );
 extern void DMA1_Channel1_IRQHandler( void );
+#elif defined( STM32F411xE )
+extern void SysTick_Handler( void );
+extern void TIM2_IRQHandler( void );
 #endif
 
 void Default_Handler( void )
@@ -103,6 +106,17 @@ void ( *const vectors[] )( void ) = {
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     RTC_Alarm_IRQHandler
+#elif defined( STM32F411xE )
+    SysTick_Handler,
+    /* F411 external IRQ0..27, followed by TIM2 IRQ28. */
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    Default_Handler, Default_Handler, Default_Handler, Default_Handler,
+    TIM2_IRQHandler
 #else
     Default_Handler
 #endif

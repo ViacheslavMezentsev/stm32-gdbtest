@@ -21,7 +21,7 @@ Initial restore ACL errors are preserved in the evidence.
 | Offline CI | Docs, format, host; CMSIS F030/F103/F411 × GCC13/14/15; separate GCC13 HAL F030, 19 CTest checks and 5 negative contracts. All five Offline jobs passed at 5b7b466 |
 | CMSIS F030 | 18 cases: boot/clock/GPIO/blink, TIM3, ADC/DMA/numeric vectors, Sleep, RTC and failures. HW: one complete 18/18 run at 5b7b466 locally on Windows; HAL restored. Earlier SSH/Orange Pi run at a48158c; see RC2_READINESS |
 | HAL F030 | Standalone tests/hal-f030: 17/17, six post-injection repeats, expected timeout ERROR, recovery and consumer HAL restoration — Windows/ST-Link/OpenOCD |
-| CMSIS F103/F411 | Post-rc.2: F103 20/20 HW clocks/GPIO/SysTick/TIM2/ADC/DMA/RTC/Sleep + 5 normal repeats, timeout/recovery; F411 has two boot/GPIO cases. Full migration remains incomplete |
+| CMSIS F103/F411 | Post-rc.2: F103 20/20 HW clocks/GPIO/SysTick/TIM2/ADC/DMA/RTC/Sleep + 5 normal repeats, timeout/recovery; F411 has seven baseline cases, 7/7 HW PASS, HAL restored. Full migration remains incomplete |
 | minimal-consumer F411 | Separate CMake integration example without YAML; demonstrates module integration, not complete board peripherals |
 | BlackPill consumer | fb2d186 / module 67b7431: Offline SUCCESS, five profiles/120 CTest; Windows 25/25, F411/OpenOCD 22/22 + timeout/recovery/restore. Final gitlink follows module land |
 
@@ -168,3 +168,5 @@ readback and reset/run; host 65. The profile schema is unchanged: HardFault and 
 diagnostic registers available on M0, without CFSR/HFSR. This does not check every
 Cortex-M0 or every F0 backend combination.
 [Consumer protocol](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/F030_JLINK_VALIDATION.md) (Russian).
+
+[F411 CMSIS baseline](F411_CMSIS_BASELINE.md): HSI16, PC13, SysTick, TIM2; post-rc.2.

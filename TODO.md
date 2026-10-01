@@ -2,13 +2,18 @@
 
 ## Текущая работа
 
-- codex/f103-cmsis-rtc-sleep от main3e123ad: RTC/Sleep/deadlines/recovery одной группой.
-- [x] 20/20 HW и пять повторов; внешний timeout/recovery; HAL восстановлен.
-- [x] Windows prepare/traceability21/21; протокол RU/EN и ТЗ0.48.
-- [x] Windows docs/host4/4, Linux host/девять MCU/GCC10/10, формат C/H PASS.
-- [ ] Один push всей группы; проверить полный Docs/Offline опубликованного SHA, затем land владельцем.
-- [ ] Далее F411 группами: clocks/GPIO/SysTick/TIM2; ADC/DMA/units/failures; RTC/Sleep/recovery.
-- [ ] После групп обновить gitlink потребителя; HAL-профили пока не удалять.
+- codex/f411-cmsis-baseline от main d97903c; одна ветка clocks/GPIO/SysTick/TIM2.
+- [x] F411/ST-Link/OpenOCD: 7/7 HW, исходная HAL восстановлена, boot/blink PASS.
+- [x] Windows prepare/traceability8/8, протокол RU/EN, ТЗ0.49.
+- [x] Windows docs/host4/4, формат PASS; Linux host/девять MCU/GCC10/10 PASS.
+- [ ] Один push группы; полный Docs/Offline опубликованного SHA, затем land владельцем.
+- [ ] Далее F411 ADC/DMA/units/failures, затем RTC/Sleep/recovery.
+- [ ] После групп обновить gitlink потребителя; старые HAL-профили пока сохранить.
+
+## История группы F103 RTC/Sleep (принята)
+
+- main d97903c: Docs36851177855 и Offline36851177857 (все пять jobs) SUCCESS; land подтверждён.
+- 20/20 HW + пять повторов, host timeout/recovery, HAL restore; протокол хранит ACL-ошибки первого restore. ТЗ0.48.
 
 ## История группы F103 ADC/DMA (принята)
 

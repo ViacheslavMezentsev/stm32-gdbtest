@@ -71,3 +71,5 @@ F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_D
 - [F103 CMSIS: ADC/DMA/units/failures](F103_CMSIS_ADC_DMA.md).
 
 - [F103 CMSIS: RTC/Sleep/deadlines/recovery](F103_CMSIS_RTC_SLEEP.md).
+
+- [F411 CMSIS: clocks/GPIO/SysTick/TIM2](F411_CMSIS_BASELINE.md).

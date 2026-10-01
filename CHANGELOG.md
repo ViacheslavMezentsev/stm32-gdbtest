@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- F411 CMSIS: группа clocks/GPIO/SysTick/TIM2, 7/7 HW OpenOCD, HAL восстановлен; ТЗ 0.49, API без изменений.
+
 - F103 CMSIS: RTC counter/alarm, Sleep от SysTick/TIM2 и дедлайн одной группой. 20/20 HW, пять повторов, host timeout/recovery и HAL restore; ТЗ 0.48. Ошибки доступа при первом restore сохранены в протоколе.
 
 - F103 CMSIS: ADC1 scan CH16/17, normal DMA, типовые физические единицы и три state-инъекции. 15/15 HW + 3 положительных повтора, HAL восстановлен; ТЗ 0.47, API без изменений.

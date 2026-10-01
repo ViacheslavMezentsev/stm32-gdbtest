@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- F411 CMSIS clocks/GPIO/SysTick/TIM2 group: 7/7 HW OpenOCD, HAL restored; specification0.49, unchanged API.
+
 - F103 CMSIS: counter/alarm RTC, SysTick/TIM2 Sleep and deadline as one group. 20/20 HW, five repeats, host timeout/recovery and HAL restore; specification0.48. Initial restore access errors retained in evidence.
 
 - F103 CMSIS: ADC1 CH16/17 scan, normal DMA, typical physical units and three state injections. 15/15 HW + 3 positive repeats, HAL restored; specification0.47, API unchanged.

@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.48 (после rc.2, на согласовании) |
+| **Ревизия** | 0.49 (после rc.2, на согласовании) |
 | **Дата формирования** | 01.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | 0.1.0; после опубликованного кандидата 0.1.0-rc.2 (Python `0.1.0rc2`, `API_VERSION = 1`); rc.1 опубликован |
@@ -87,6 +87,16 @@
 | 0.47 | 01.10.2026 | F103 ADC/DMA/физические единицы/отказы одной группой, TC-135; API без изменений. |
 
 | 0.48 | 01.10.2026 | F103 RTC/Sleep/deadlines/recovery одной группой; TC-136, API без изменений. |
+
+| 0.49 | 01.10.2026 | F411 CMSIS clocks/GPIO/SysTick/TIM2, TC-137; API без изменений. |
+
+### Изменения ревизии 0.49
+
+Изменённые и новые пункты ревизии 0.49 помечены `(р.0.49)`.
+
+| Пункты | Тип | Суть |
+| :--- | :--- | :--- |
+| 8.38, TC-137, матрица, G.25 | нов. | Семь baseline-сценариев F411 и границы аппаратного доказательства. |
 
 ### Изменения ревизии 0.48
 
@@ -1481,6 +1491,9 @@ flowchart LR
 
 8.37. CMSIS fixture F103 ДОЛЖНА проверяться пятью сценариями RTC_INIT/RTC_ALARM/RTC_DEADLINE/SLEEP_SYSTICK/SLEEP_TIM2: LSI counter RTC с PRL=39999 и начальным alarm=2, IRQ41/vector57 через EXTI17; два естественных alarm с перевооружением в основном потоке; инъекция нулевой маски LSIRDY с error3 через ≥1000 ticks без BDRST; interrupted WFI от exception15/44 с восстановлением обоих NVIC banks. Ожидания RTC ДОЛЖНЫ иметь дедлайн 1000 ticks и выполняться вне ISR, чтобы SysTick мог продвигаться. После инъекций и внешнего timeout ДОЛЖНЫ проверяться положительные RTC/ADC и восстановление HAL. Проверка НЕ ДОЛЖНА объявляться измерением тока, точности LSI, физического отказа генератора или переносом HAL callbacks. `[N]` (р.0.48)
 
+8.38. CMSIS fixture F411 ДОЛЖНА проходить BOOT/GPIO/CLOCK/BLINK/TIM2_INIT/TIM2_IRQ/SYSTICK_IRQ: HSI16 МГц без делителей шин, SysTick LOAD15999, PC13 active-low с исходным High, интервал ≥500 firmware ticks, TIM2 PSC15999/ARR99, IRQ28/vector44 и естественные исключения15/44 с публикацией счётчиков и возвратом в поток. CI ДОЛЖЕН выполнять prepare на GCC13/14/15. После аппаратной серии ДОЛЖНА восстанавливаться исходная HAL с boot/blink; результаты НЕ ДОЛЖНЫ трактоваться как метрология или проверка HAL callbacks. `[N]` (р.0.49)
+
+
 
 ---
 
@@ -1637,6 +1650,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-134 | F103 HW_CI_BOOT/GPIO/CLOCK/BLINK/TIM2_INIT/TIM2_IRQ/SYSTICK_IRQ; ci/run_checks.py | Семь prepare, clocks/GPIO и естественные IRQ на BluePill/J-Link; восстановление HAL; F103_CMSIS_BASELINE.md (р.0.46) |
 | TC-135 | F103 test_adc.py: восемь HW_CI_ADC_*; ci/run_checks.py | 15 prepare, естественный DMA/измерения, численные векторы и MMIO-инъекции; положительные повторы и HAL restore; F103_CMSIS_ADC_DMA.md (р.0.47) |
 | TC-136 | F103 test_rtc.py/test_sleep.py; CLI run | Пять новых prepare/HW, повтор RTC/ADC после deadline, timeout/recovery и HAL restore; F103_CMSIS_RTC_SLEEP.md (р.0.48) |
+| TC-137 | F411 test_ci.py; ci/run_checks.py | Семь prepare/HW, HAL restore; F411_CMSIS_BASELINE.md (р.0.49) |
 
 ---
 
@@ -1824,6 +1838,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 8.35 | tests/firmware/src/board.c, startup.c, app.c; profiles/f103c8/tests; ci/run_checks.py | TC-134 (р.0.46) |
 | 8.36 | tests/firmware/src/adc_f103.c, adc_units.c; profiles/f103c8/tests/board/test_adc.py; ci/run_checks.py | TC-135 (р.0.47) |
 | 8.37 | tests/firmware/src/rtc_f103.c; profiles/f103c8/tests/board/test_rtc.py, test_sleep.py; ci/run_checks.py | TC-136 (р.0.48) |
+| 8.38 | tests/firmware/src/board.c, app.c, startup.c; profiles/f411ce/tests/board/test_ci.py; ci/run_checks.py | TC-137 (р.0.49) |
 | 7.7.7, 8.9 | docs/ru/maintenance.md, VERSIONING.md, RC2_READINESS.md; release metadata | TC-132, инспекция перед публикацией (р.0.41) |
 
 ---
@@ -2094,3 +2109,6 @@ G.23. Рабочая копия от352417c: F103/J-Link/Windows GCC13, 15/15 HW
 
 
 G.24. Рабочая копия от3e123ad: F103/J-Link/Windows GCC13, 20/20 HW и пять положительных повторов. Первый общий summary ERROR из-за ACL report/lock при HAL restore; отдельное восстановление PASS. Внешний timeout после marker дал ожидаемый ERROR с host recovery, затем RTC/ADC PASS и HAL boot/blink восстановлены. Протокол docs/ru/F103_CMSIS_RTC_SLEEP.md. RSF/RTOFF/DBP/source faults, RTC Sleep wakeup, rollover и backup retention не инжектировались; API/схемы неизменны. (р.0.48)
+
+
+G.25. Рабочая копия от d97903c: F411/ST-Link/OpenOCD/Windows GCC13, 7/7 HW, HAL boot/blink восстановлены. ELF и ограничения — docs/ru/F411_CMSIS_BASELINE.md. Следующие группы — ADC/DMA/units/failures и RTC/Sleep/recovery; API/схемы и тег rc.2 неизменны. (р.0.49)

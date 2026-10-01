@@ -159,12 +159,73 @@ void board_led_toggle( void )
 #elif defined( STM32F411xE )
 #include "stm32f4xx.h"
 
-/* BlackPill F411: LED on PC13. */
+/* WeAct BlackPill F411: PC13, active-low LED; HSI nominal 16 MHz. */
+uint32_t SystemCoreClock = 16000000U;
+volatile uint32_t board_ticks_ms;
+volatile uint32_t board_timer_events;
+
+void SysTick_Handler( void )
+{
+    board_ticks_ms++;
+}
+
+void TIM2_IRQHandler( void )
+{
+    if ( ( TIM2->SR & TIM_SR_UIF ) != 0U )
+    {
+        TIM2->SR = ~TIM_SR_UIF;
+        board_timer_events++;
+    }
+}
+
+void board_delay_ms( uint32_t delay_ms )
+{
+    const uint32_t start = board_ticks_ms;
+    while ( ( uint32_t ) ( board_ticks_ms - start ) < delay_ms )
+    {
+        __WFI();
+    }
+}
+
+static void board_timer_init( void )
+{
+    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+    ( void ) RCC->APB1ENR;
+    RCC->APB1RSTR |= RCC_APB1RSTR_TIM2RST;
+    RCC->APB1RSTR &= ~RCC_APB1RSTR_TIM2RST;
+    TIM2->PSC      = 15999U;
+    TIM2->ARR      = 99U;
+    TIM2->EGR      = TIM_EGR_UG;
+    /* Discard the update flag from loading the prescaler. */
+    TIM2->SR = 0U;
+    NVIC_ClearPendingIRQ( TIM2_IRQn );
+    NVIC_SetPriority( TIM2_IRQn, 2U );
+    TIM2->DIER = TIM_DIER_UIE;
+    NVIC_EnableIRQ( TIM2_IRQn );
+    TIM2->CR1 = TIM_CR1_CEN;
+}
+
 void board_init( void )
 {
-    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
+    RCC->CR |= RCC_CR_HSION;
+    while ( ( RCC->CR & RCC_CR_HSIRDY ) == 0U )
+    {
+    }
+    RCC->CFGR &= ~( RCC_CFGR_SW | RCC_CFGR_HPRE | RCC_CFGR_PPRE1 | RCC_CFGR_PPRE2 );
+    while ( ( RCC->CFGR & RCC_CFGR_SWS ) != RCC_CFGR_SWS_HSI )
+    {
+    }
+    RCC->CR         &= ~RCC_CR_PLLON;
+    SystemCoreClock  = 16000000U;
+    RCC->AHB1ENR    |= RCC_AHB1ENR_GPIOCEN;
     ( void ) RCC->AHB1ENR;
-    GPIOC->MODER = ( GPIOC->MODER & ~GPIO_MODER_MODER13 ) | GPIO_MODER_MODER13_0;
+    GPIOC->BSRR     = GPIO_BSRR_BS13;
+    GPIOC->OTYPER  &= ~GPIO_OTYPER_OT13;
+    GPIOC->OSPEEDR &= ~GPIO_OSPEEDER_OSPEEDR13;
+    GPIOC->PUPDR   &= ~GPIO_PUPDR_PUPD13;
+    GPIOC->MODER    = ( GPIOC->MODER & ~GPIO_MODER_MODER13 ) | GPIO_MODER_MODER13_0;
+    ( void ) SysTick_Config( 16000000U / 1000U );
+    board_timer_init();
 }
 
 void board_led_toggle( void )
