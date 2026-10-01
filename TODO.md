@@ -1,6 +1,16 @@
 # Дорожная карта
 
-## Текущая работа
+## Текущая работа: подготовка 0.1.0rc3
+
+- Ветка `codex/rc3-gdb-python-research` от main `da42cd7`.
+- [x] API, техники и сценарии сверены с кодом; руководство GDB Python и внешние модели изучены.
+- [x] [План RU](docs/ru/RC3_API_RESEARCH.md) / [EN](docs/en/RC3_API_RESEARCH.md): P0/P1/P2, E01–E20, Nucleo-F030R8, BluePill-Plus, BlackPill F411CE/F401CC.
+- [x] Read-only L0 probe GDB14/Python3.11 без ELF, сервера и MCU; наличие API не означает HW PASS.
+- [ ] Выбрать первый пакет R1, согласовать стенд/restore; создать consumer fixture и выполнить опыты.
+- [ ] Новые API после доказательства: регрессии, API/миграции RU/EN, CHANGELOG, новая ревизия ТЗ.
+- Публикация ветки и land — владелец; пакет остаётся rc2, ТЗ0.58.
+
+## Предыдущая группа HAL GPIO/RCC
 
 - codex/f030-hal-gpio-rcc зависит от аудита4c51122: пять HAL-техник одной группой.
 - [x] Windows24/24 prepare/host, Linux HAL24/24 + negative contracts; host обеих ОС.

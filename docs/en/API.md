@@ -2,6 +2,8 @@
 
 [Documentation](index.md) → API · [Русский](../ru/API.md)
 
+Preparing rc3: [GDB Python API research and hardware experiment plan](RC3_API_RESEARCH.md). Proposed methods are not implemented yet.
+
 Status: candidate in the release branch, not yet published — **0.1.0-rc.2** (Python `0.1.0rc2`), `API_VERSION = 1`. This numbers the
 described API surface; it is not a 1.0 stability promise and not a GDB version. The
 module is delivered as a Git submodule; pip installation is not supported yet, and

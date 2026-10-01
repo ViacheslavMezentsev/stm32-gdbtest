@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- Подготовлен двуязычный план расширения API для rc3: обзор GDB Python, 20 опытов на четырёх предложенных платах и воспроизводимый L0 probe GDB14. Новых HW-результатов нет; runtime/API/ТЗ не изменены.
+
 - HAL F030 расширен до 22 cases: GPIO arguments/filtered call и RCC error/NULL; строгий выбор двух reviewed source variants, Linux/Windows prepare, ТЗ0.58.
 
 - Сверены пять CMSIS-профилей с HAL: 105 и 98 board cases; выделены пять HAL GPIO/RCC-проверок, которые нужно сохранить до удаления старых профилей. Ядро и ТЗ не меняются.

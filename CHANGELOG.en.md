@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Added bilingual rc3 API research: GDB Python review, 20 experiments for four offered boards and a reproducible GDB14 L0 probe. No new hardware results; runtime/API/specification unchanged.
+
 - Extended HAL F030 to 22 cases: GPIO arguments/filtered call and RCC error/NULL; strict selection of two reviewed source variants, Linux/Windows prepare, specification0.58.
 
 - Reviewed five CMSIS profiles against HAL: 105 and 98 board cases; identified five HAL GPIO/RCC checks to preserve before deleting old profiles. Core and specification unchanged.

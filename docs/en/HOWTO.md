@@ -12,6 +12,24 @@ commands are the same in both except for quoting (section "The `git land` alias"
 
 ## Git: working without pull requests
 
+### Local SSH signature verification
+
+The `gpg.ssh.allowedSignersFile needs to be configured` error from `git verify-commit`
+does not mean the signature is missing: Git needs trusted public keys. Create a
+local untracked file (for example under `build/`) containing
+`<email> namespaces="git" ssh-ed25519 <public-key>` from a previously verified
+public Signing Key. Then run:
+
+```text
+git -c gpg.ssh.allowedSignersFile=build/allowed-signers verify-commit HEAD
+```
+
+The setting applies only to this command; no rollback is needed. Do not commit keys
+or the local list. Success verifies against the selected key, not its GitHub
+registration or the server's Verified status.
+
+### Work sequence
+
 A branch `<agent>/<task>` is created from a fresh main and, after the checks, merged
 into main by fast-forward. This order applies to one maintainer working with agents and is reconsidered when the team grows. The GitHub web interface cannot merge without a pull
 request, and GitHub's automatic branch deletion works for pull requests only, so
