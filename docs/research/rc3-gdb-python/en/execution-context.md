@@ -84,3 +84,10 @@ These checks are recorded in [D4](technical-debt.md) and are not being run now.
 Foundation: the [consumer Research adapter](../../../../tests/api-experiments/lab/session.py)
 already materializes values, bounds frames and tracks continue; R11/R15/R18 supply
 hardware examples. The complete proposed `context` object does not yet exist.
+
+The [API proposal](api-proposal.md) refines the frame group: frames/frame,
+arguments/locals and caller helpers. context['frames'] and separate StackSnapshot
+use identical records and innermost-to-outermost order; stack metadata include
+complete and termination_reason (stack_end, depth_limit, unwind_error). Incomplete
+stacks cannot prove caller absence. This is the current chain, not call history;
+a graph of all calls is outside the snapshot.

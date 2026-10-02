@@ -27,6 +27,7 @@ the unverified capability.
 | D11 / B | Peripherals/time: R12 DMA invisible to watch, R13 does not measure sleep; MMIO read effects and no full rollback | Define observable signals, read/halt effects and external measurement where needed for a concrete contract; no global atomicity/timing claims |
 | D12 / B | Application behavior: R14 successive calls, not actual retry/backoff | Separate ordinary implementation of required retry/deadline, final sinks, order, attempt bounds and natural control |
 | D13 / C | Universal power-cycle, multiple-board orchestration, code coverage | Separate research with boundaries, stand and acceptance criteria; not automatically part of rc3 |
+| D14 / C | Dynamic call-history tree and static possible-call graph: no dedicated tools; backtrace shows only the current chain | Only upon separate demand define graph kind; dynamic recording must account for missed entry/exit events, recursion/IRQs, resource limits and timing distortion; static analysis for indirect calls and optimization. Outside initial API |
 
 Open D2/D4–D7 need discussion before adding corresponding API promises. Exclusions
 can be documented now; new measurements are paused. Each future closure needs a

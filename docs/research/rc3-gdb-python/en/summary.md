@@ -57,4 +57,4 @@ Next: discuss [tool layers and API criteria](scenario-tools.md), the
 This is a discussion proposal, not an approved rc3 scope or hardware resumption.
 
 The separate [API scope discussion](api-proposal.md) proposes signatures,
-packages A/B/C and questions Q1–Q8; decisions are not approved yet.
+packages A/B/C and questions Q1–Q9; decisions are not approved yet.

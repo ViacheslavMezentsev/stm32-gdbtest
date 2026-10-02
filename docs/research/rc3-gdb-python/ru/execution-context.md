@@ -85,3 +85,10 @@ RAM/MMIO/декодирование IRQ/RTOS не должны быть неяв
 Опора: [consumer Research](../../../../tests/api-experiments/lab/session.py)
 уже материализует значения, ограничивает кадры и отслеживает continue; R11/R15/R18
 дают аппаратные примеры. Полного предложенного объекта `context` пока нет.
+
+Группа кадров уточнена в [предложении API](api-proposal.md): frames/frame,
+arguments/locals и caller-helpers. context['frames'] и отдельный StackSnapshot
+используют одинаковые записи и порядок от внутреннего кадра к внешнему;
+метаданные стека включают complete и termination_reason (stack_end, depth_limit,
+unwind_error). Неполный стек не доказывает отсутствие caller. Это текущая цепочка,
+не история вызовов; граф всех вызовов не входит в снимок.

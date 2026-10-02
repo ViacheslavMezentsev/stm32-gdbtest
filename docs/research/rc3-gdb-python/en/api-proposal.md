@@ -2,7 +2,9 @@
 
 [Documentation](index.md) · [Русский](../ru/api-proposal.md)
 
-2026-10-02. Status: **discussion draft; decisions are not approved**.
+2026-10-02. Status: **discussion draft; contracts are not approved**.
+The owner requested a separate stack/caller group; this extends the discussion
+scope and does not authorize implementation.
 Branch `codex/rc3-api-r1`. Based on the [report summary](summary.md),
 [tool classification](scenario-tools.md) and [context proposal](execution-context.md).
 This proposes a public surface, not an implementation. Current
@@ -60,6 +62,69 @@ explicit advanced operation with documented boundaries. If the prohibition canno
 be enforced reliably, do not publish that contract. Until resolved, current `value`
 and raw GDB retain their existing limitations. Base context never uses evaluate.
 
+### 3.1. Frame stack and calling context
+
+Include explicit frame operations in A. Consumer foundations already exist:
+[Research.frames/frame/local](../../../../tests/api-experiments/lab/session.py)
+and [caller_is](../../../../tests/api-experiments/lab/navigation.py).
+[R2](r2.md) compares the helper with `$_caller_is`, [R6](r6.md) tests recursion,
+and [R15](r15.md) inline frames. These prove individual mechanisms; the general
+interfaces proposed below are not implemented.
+
+| Candidate | Contract for discussion |
+| --- | --- |
+| `t.frames(*, max_depth=8)` | StackSnapshot: innermost-to-outermost frames, run/stop/revision, complete and termination_reason. Reasons: stack_end, depth_limit, unwind_error; never present partial stacks as complete |
+| `t.frame(index=0, *, stack)` | FrameRef from the supplied snapshot without changing GDB selected frame. Index 0 is the innermost represented frame, including inline; invalid index is an explicit error |
+| `t.read(path, *, frame=ref)` | Previously proposed typed local/argument/this read in a particular frame; no fallback to a same-named global when a local is absent |
+| `t.arguments(*, frame, max_items=32)` | Bounded named argument snapshot with types/availability; explicitly mark incomplete enumeration |
+| `t.locals(*, frame, max_items=32)` | Visible locals in current lexical scope with symbol descriptions; shadowing must not silently lose values. Settle key/symbol-list representation before implementation |
+| `caller_is(stack, name, *, depth=1)` | Ready-made helper: exact name at one specified depth from frame 0; depth ≥ 1. Analog of the studied `$_caller_is`, not an all-ancestor search |
+| `find_caller(stack, name, *, max_depth=8)` | Ready-made helper: nearest matching ancestor at depths 1…max_depth; return FrameRef or None only after fully searching the requested range/reaching stack end |
+
+Target methods are primitives; both caller helpers are library techniques over a
+snapshot without further MCU reads. Match function names exactly, including the
+signature when supplied by GDB; do not implicitly normalize C++/clone names or
+enable regex. Recursive matches remain distinct frames; find_caller selects the
+nearest, while scenarios filter the frame list to obtain all matches.
+
+`caller_is` returns False on a known mismatch or proven stack end before the requested
+depth. If capture stopped earlier at a limit/unwind error, the result is unknown:
+raise an incomplete-stack error rather than False/None. find_caller may return an
+already found nearest ancestor when the path to it was read completely; no match
+within max_depth says nothing about more distant ancestors.
+
+Initial depth semantics count **all GDB-represented frames**, including inline/dummy;
+helpers never silently skip them. Distinguish frame kind and name/argument
+availability; an unavailable name on the search path is not a proven mismatch.
+Tail calls, IRQs and damaged stacks may affect completeness/representation; R6
+does not prove full support. t.frames and context['frames'] share frame, ordering
+and completeness models. FrameRef exposes no live gdb.Frame: fresh reads using
+stale refs after resume/mutation are rejected, while snapshot data stay readable.
+Choosing a frame never changes physical context['PC'].
+
+**Pseudocode, not current API:**
+
+```python
+stack = t.frames(max_depth=16)
+current = t.frame(0, stack=stack)
+depth = t.read('depth', frame=current)
+is_beta = caller_is(stack, 'route_beta', depth=3)
+ancestor = find_caller(stack, 'route_beta', max_depth=8)
+# A displayed backtrace uses the same immutable stack.frames records.
+```
+
+This shows the **current call chain** (backtrace), not every call made during a run.
+A frame list suffices for one stop; no separate graphical viewer is proposed.
+A dynamic call tree needs entry/exit recording, missed-event handling, recursion,
+IRQs and overhead accounting; no such tool exists here yet. A static possible-call
+graph from source/ELF is another separate task. Both graphs are outside the initial
+API; potential future demand is recorded as debt D14.
+
+Before implementation verify exact depth/search, absent callers, depth_limit and
+unwind_error, unavailable names, recursive/inline frames, shadowing, optimized_out,
+stale refs and no selected-frame side effects. This extends D4/D10 without resuming
+experiments.
+
 ## 4. Package B: resources and navigation
 
 | Candidate | Contract for discussion | Evidence |
@@ -106,6 +171,7 @@ consumer techniques.
 | --- | --- |
 | Context | [Proposed schema](execution-context.md): immutable PC/SP, bounded frames, run/stop/revision, availability; readable after resume |
 | FrameRef | Particular frame reference within run/stop/revision with index/kind; not just name/PC identity; interventions validate freshness |
+| StackSnapshot | Immutable frames, run/stop/revision, complete/termination_reason; incomplete unwinding retains available frames and diagnostics |
 | ValueSnapshot | type, width, kind, value, availability, provenance; bounded structures/arrays; void differs from missing result |
 | StopResult | Actual event, all point numbers, signal, Context; does not itself mean scenario PASS |
 | OperationResult | requested operation, outcome, StopResult; distinguish completed/target_reached, interrupted and frame_exited; require_completed() can explicitly reject incomplete execution |
@@ -160,13 +226,14 @@ All rows are **open**; recommendations are not owner decisions.
 | ID | Question | Recommendation for discussion |
 | --- | --- | --- |
 | Q1 | Flat Target or t.execution/t.memory/t.points? | Flat methods and separate result types for now; introduce namespaces when complexity warrants them |
-| Q2 | Initial scope? | A: context/read/resolve/record/disassemble; discuss B next and C separately; capabilities before claiming B/C support |
+| Q2 | Initial scope? | A: context/read/resolve/record/disassemble plus frames/frame/arguments/locals and caller helpers; B next, C separately; capabilities before claiming B/C support |
 | Q3 | Unexpected stop: exception or result? | Low-level interrupted result, explicit require_completed; infrastructure/fault errors raise with diagnostics |
 | Q4 | C expressions and side effects? | Separate bounded read, advanced evaluate and call; no universal read-only evaluator promise |
 | Q5 | Automatically choose multiple locations/split watch ranges? | No; explicit resolution/selection, technique composition and physical budget accounting |
 | Q6 | Approve context as dict? | Read-only Mapping with familiar ['PC']; immutable nested structures, separate export copy |
 | Q7 | Untested configuration? | No support claim; retain unverified status and diagnose limits before intervention where possible |
 | Q8 | Include aggregate forced return/RTOS now? | No; known FAIL and paused debt prevent a general promise |
+| Q9 | Caller semantics and stack completeness? | Exact depth separate from nearest-ancestor search; count all represented frames, never turn incompleteness into False; historical tree outside initial scope |
 
 Start discussion with **Q2 and Q6**: approve minimum observation scope and context
 shape, then Q3 for navigation. Record decisions here with date and owner's wording,

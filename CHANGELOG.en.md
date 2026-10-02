@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- rc3 API draft: added frame group (frames/frame/arguments/locals), exact-depth caller helper and nearest-ancestor search. Defined incomplete-stack and reference freshness boundaries, distinguished backtrace from call history, and recorded graphs as separate debt. RU/EN documentation only.
+
 - rc3 research: separate RU/EN API scope draft based on R1–R18 — observation, navigation and intervention packages, provisional signatures/result models, compatibility and owner decision questions. Implementation and HW remain paused.
 
 - rc3 research: summary of separate R1–R18 reports, API/technique/pattern classification, API criteria and named-context proposal. Owner paused RTOS and remaining HW stages, recorded as whole-research debt; this pause supersedes historical next steps below. Core and public API unchanged.
