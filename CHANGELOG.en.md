@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Combined both studies for main: GDB Python/API reports and the simulated adaptive tree with its workflow player. Experimental tools remain isolated; API agreement and hardware technical debt remain open.
+
 - Research2: HTML now uses a fixed workflow layout with rectangular cards and separate availability/result badges, preserving snapshot playback. The plan describes the proposed YAML direction.
 
 - Research2: isolated adaptive scenario-tree Python model, three-valued conditions and All/Any, dynamic pruning/reactivation, independent full-state JSON oracle and standalone HTML player. Simulation only; no core/API/specification or hardware changes.
