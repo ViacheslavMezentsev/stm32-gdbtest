@@ -2,6 +2,10 @@
 
 [Documentation](index.md) · [Русский](../ru/plan.md)
 
+**Current status 2026-10-02:** owner paused RTOS and remaining HW stages;
+[whole-research debt](technical-debt.md). R1–R18 have separate reports;
+[summary and discussion](summary.md) proceed now without waiting for the HW queue.
+
 [R2: navigation, calls and watchpoints](r2.md): 56/56 HLA and 8/8 native DAP; core promotion requires explicit owner approval.
 
 Date: 2026-10-02. Base: `da42cd74c27a01c21df47cd660e2533e9bcfc6d4`;
@@ -345,7 +349,7 @@ and code coverage remain separate tasks.
 ## Continuation queue after R9
 
 Agreed order of further experiments. Each stage ends with a local report stating
-limitations and the next stage. Final discussion follows the queue; core promotion
+limitations and the next stage. The owner paused the remaining queue; discussion proceeds now. Core promotion
 requires separate owner approval. Future series numbers are assigned as work
 proceeds because a stage may require several series. Host PASS does not substitute
 for board tests.
@@ -360,10 +364,10 @@ for board tests.
 | 6 | Optimized code: O2/Os, inline, unavailable values and multiple locations | [R15](r15.md): 32/32 HLA O2/Os; inline, two locations, optimized_out |
 | 7 | Remaining navigation: until/advance/nexti, source lines and unrelated stops | [R16](r16.md): 32/32 HLA; until with line, advance, nexti and separate point; scope ERROR retained |
 | 8 | ABI: void/double/hard-float, stack arguments, structures, then C++ | [R17](r17.md): scalar48/48; [R18](r18.md): aggregates/methods72 PASS,6 hidden-buffer FAILs; limits in reports |
-| 9 | RTOS tasks, context and filters in a separate ordinary firmware | Next |
-| 10 | Reliability: shared point address, foreign points, predicate errors, scope, settings restoration, call budget and bounded replay | Pending |
-| 11 | Selected techniques on F030/F103, confirm current wiring | Pending |
-| 12 | Consolidated capability/failure matrix and results discussion | After experiments |
+| 9 | RTOS tasks, context and filters in a separate ordinary firmware | Paused: [D1](technical-debt.md) |
+| 10 | Reliability: shared point address, foreign points, predicate errors, scope, settings restoration, call budget and bounded replay | Paused: [whole-research debt](technical-debt.md) |
+| 11 | Selected techniques on F030/F103, confirm current wiring | Paused: [whole-research debt](technical-debt.md) |
+| 12 | Consolidated capability/failure matrix and results discussion | Now: [R1–R18 summary](summary.md), discussion |
 
 ## Sources and reproducibility
 

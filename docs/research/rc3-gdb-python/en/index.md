@@ -3,9 +3,13 @@
 [Documentation](../../../en/index.md) · [Русский](../ru/index.md)
 
 One research project lives here: the original plan, series reports and sanitized
-results. Research is ongoing; reports retain the state of individual experiments,
+results. Hardware experiments paused on 2026-10-02; reports retain individual experiments,
 including FAIL/ERROR. This is not an approved public API extension.
 
+- [R1–R18 summary](summary.md) — all reports, findings and evidence boundaries.
+- [API, techniques and patterns](scenario-tools.md) — application areas, classification and API properties.
+- [Named execution context](execution-context.md) — snapshot contract proposal.
+- [Technical debt](technical-debt.md) — paused stages and open limitations.
 - [Research plan](plan.md) — GDB Python manual review and experiment program.
 - L0: [GDB14](../results/rc3-gdb14-capabilities.json), [GDB16](../results/rc3-gdb16-capabilities.json).
 

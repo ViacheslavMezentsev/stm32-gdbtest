@@ -2,7 +2,12 @@
 
 Документация · [English](../en/index.md)
 
-[Исследование GDB Python для rc3](../research/rc3-gdb-python/ru/index.md): план, отчёты R1–R8 и результаты.
+[Исследование GDB Python для rc3](../research/rc3-gdb-python/ru/index.md): план, отдельные отчёты R1–R18 и результаты.
+
+- [Сводка R1–R18](../research/rc3-gdb-python/ru/summary.md) — все отчёты, результаты и границы доказанного.
+- [API, техники и шаблоны](../research/rc3-gdb-python/ru/scenario-tools.md) — области применения, классификация и свойства API.
+- [Именованный контекст исполнения](../research/rc3-gdb-python/ru/execution-context.md) — предложение контракта снимка.
+- [Технический долг](../research/rc3-gdb-python/ru/technical-debt.md) — приостановленные этапы и открытые ограничения.
 
 [F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.](F429_CMSIS_RTC_SLEEP.md)
 

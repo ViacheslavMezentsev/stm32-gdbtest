@@ -2,7 +2,12 @@
 
 Documentation · [Русский](../ru/index.md)
 
-[GDB Python research for rc3](../research/rc3-gdb-python/en/index.md): plan, R1–R8 reports and results.
+[GDB Python research for rc3](../research/rc3-gdb-python/en/index.md): plan, separate R1–R18 reports and results.
+
+- [R1–R18 summary](../research/rc3-gdb-python/en/summary.md) — all reports, findings and evidence boundaries.
+- [API, techniques and patterns](../research/rc3-gdb-python/en/scenario-tools.md) — application areas, classification and API properties.
+- [Named execution context](../research/rc3-gdb-python/en/execution-context.md) — snapshot contract proposal.
+- [Technical debt](../research/rc3-gdb-python/en/technical-debt.md) — paused stages and open limitations.
 
 [F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](F429_CMSIS_RTC_SLEEP.md)
 
