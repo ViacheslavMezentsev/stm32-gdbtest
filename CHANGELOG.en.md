@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Consumer R8: code breakpoint budget and FinishBreakpoint headroom —16/16 HLA GDB14/16 and8/8 native DAP GDB16. Six slots, four guards; continuation after releasing a slot without reset. Original object-lifetime ERROR retained, restore PASS; core and firmware unchanged.
+
 - Consumer R7: watchpoint ranges/budget16/16 and unaligned decomposition8/8 on F411/GDB14/16 native DAP. Confirmed4/5 boundary and unaligned2/4-byte rejection; original FAIL/ERROR retained, restore PASS. Firmware and core unchanged.
 
 - Consumer R6: stack filtering, finish and return in recursion —24/24 F411 GDB14/16. Original callback-expectation failure retained; ABI regression32/32 and old SRET ELF-pin rejection verified. Core unchanged.

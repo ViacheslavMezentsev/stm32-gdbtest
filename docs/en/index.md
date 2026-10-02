@@ -2,6 +2,8 @@
 
 Documentation · [Русский](../ru/index.md)
 
+[R8: code breakpoint budget](RC3_API_R8.md): six slots, fault guards, finish headroom and continuation without reset.
+
 [R7: watchpoint ranges and budget](RC3_API_R7.md): alignment, point exhaustion, recovery and exact decomposition.
 
 [R6: stacks and recursive frames](RC3_API_R6.md): context selection, FinishBreakpoint and targeted return substitution.

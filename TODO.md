@@ -1,6 +1,15 @@
 # Дорожная карта
 
-## Текущая работа: consumer-эксперименты rc3 R7
+## Текущая работа: consumer-эксперименты rc3 R8
+
+- Ветка `codex/rc3-api-r1`, после `40901eb`; перенос в ядро только после утверждения владельца.
+- [x] FPB/finish: HLA16/16 GDB14/16, native DAP8/8 GDB16; шесть code-слотов с четырьмя guard, восстановление без reset.
+- [x] Исходный ERROR обращения к недействительной FinishBreakpoint сохранён. Все firmware restore PASS.
+- [x] Windows/Linux42/42 host/prepare; [протокол RU](docs/ru/RC3_API_R8.md) / [EN](docs/en/RC3_API_R8.md).
+- [ ] Далее IRQ/RTOS, прерванные calls и другие ABI/платы. Ядро и прошивка прежние.
+- Публичный API прежний; публикация/land — владелец.
+
+## Предыдущая работа: consumer-эксперименты rc3 R7
 
 - Ветка `codex/rc3-api-r1`, после `435639d`; перенос в ядро только после утверждения владельца.
 - [x] WIDTH/CAPACITY16/16, SPLIT8/8; отказы не скрыты, исходные FAIL/ERROR сохранены. Все restore PASS.

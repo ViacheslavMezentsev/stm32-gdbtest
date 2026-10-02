@@ -113,3 +113,9 @@ Probe one through eight bounded static word watches, stop on explicit insertion 
 
 ## HW_R7_SPLIT
 Split exact unaligned ranges into aligned hardware read points; verify each expected byte access and reach a sentinel before a second reader.
+
+## HW_R8_CAPACITY
+Probe distinct hardware code locations while preserving four fault guards; retain insertion rejection, release owned points and continue without reset.
+
+## HW_R8_FINISH
+Exhaust code-point headroom, observe FinishBreakpoint insertion rejection, release one owned point and verify the original natural return and caller result without reset.

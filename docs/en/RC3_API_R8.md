@@ -1,0 +1,71 @@
+# rc3 R8: code breakpoint budget and finish headroom
+
+[Documentation](index.md) · [Русский](../ru/RC3_API_R8.md)
+
+2026-10-02. Continuation of [R7](RC3_API_R7.md) after `40901eb` on
+`codex/rc3-api-r1`. Consumer only; core, API, specification and firmware unchanged.
+Same ELF: `7842e8ee9471ec777001a1fcc5be6e4a9625af3883eee7c8a1b15ebbcd6c5552`.
+Core promotion requires owner approval.
+
+## Measurement and techniques
+
+[Two scenarios](../../tests/api-experiments/profile/tests/board/test_code_limits.py)
+run on F411CE/ST-Link/OpenOCD0.12.0. Four fault guards remain enabled; their
+numbers and addresses are compared before and after owned-point cleanup.
+
+| Trial | Verified behavior |
+| --- | --- |
+| CAPACITY | Four guards plus one/two distinct code points insert successfully. A third additional point is rejected. Measured total budget6; two points available to the scenario |
+| FINISH | Four guards plus two unexecuted points exhaust the budget. Internal FinishBreakpoint insertion is rejected. Deleting one owned point allows that same FinishBreakpoint to fire and return773; caller checksum matches |
+
+CAPACITY deliberately creates raw `gdb.Breakpoint` objects outside the experimental
+adapter's preflight budget to measure physical insertion. Guards remain enabled.
+Point addresses are distinct and do not overlap guards. This does not authorize
+bypassing limits in ordinary scenarios.
+
+After rejection, only owned points are deleted. Continuation is verified without
+reset: CAPACITY reaches process_sample; FINISH retains the original sum_bytes
+frame and completes its natural call. End-of-series firmware restoration remains
+mandatory. This recovery applies to insertion rejection, not arbitrary ERRORs or
+a damaged inferior state.
+
+The tested finish needs one reserved slot: with four guards, there is room for
+one persistent user point and one finish operation slot. This does not establish
+the requirements of every next/step/until/advance command, which may use their
+own temporary points. R7's DWT data-watch budget is a separate resource rather
+than an additional count in a common pool.
+
+## FinishBreakpoint lifetime
+
+The first series measured capacity and completed finish after releasing a slot,
+but then raised ERROR when reading `finish.number`: the object was already invalid.
+This was a scenario error. The original report is retained and firmware was restored.
+
+The number is now saved before continue and compared with the event snapshot.
+After firing, `is_valid() == False` and retained `return_value == 773` are checked
+separately. Being able to read return_value does not make other invalid-object
+properties accessible. This also matters when recording temporary breakpoint events.
+
+## Results and reproduction
+
+| Interface | GDB14 | GDB16 |
+| --- | --- | --- |
+| HLA | 8/8 PASS | 8/8 PASS |
+| native DAP/SWD | Not tested | 8/8 PASS |
+
+Each cell contains two scenarios, an initial run and three predetermined repeats.
+The original series also contains one CAPACITY PASS and one FINISH ERROR, excluded
+from the positive matrix. Expected insertion rejections require specific GDB
+diagnostics, not merely the text `Command aborted.`.
+
+All three series completed restore HW_BOOT/HW_GPIO PASS. Windows/Linux build and
+host/prepare:42/42 PASS (40 prepare, traceability and20 host tests grouped together).
+Documentation3/3. No new C code; the earlier overall format FAIL remains unresolved.
+Linux HW and other boards were not tested. Native DAP success in R8 does not remove
+R4's repeated-step limitation in a self-loop.
+
+Add `--suite r8` to the [R1 command](RC3_API_R1.md#reproduction); for the separate
+native comparison, add `--native-stlink` and select GDB16 only. Without `--execute`,
+preparation only. The [sanitized protocol](../research/rc3-r8-results.json) records
+versions, hashes, rejections and restoration; raw logs remain in
+`tests/api-experiments/build/evidence/`.

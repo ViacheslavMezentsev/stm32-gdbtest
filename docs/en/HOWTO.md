@@ -362,3 +362,12 @@ or a fifth separate word point caused rejection. Preserve logs, delete owned poi
 and verify a positive control after reset. Do not classify every Command aborted
 as resource exhaustion. Exact1+1/1+2+1 decomposition observed unaligned2/4-byte
 ranges at the cost of two/three hardware points.
+
+## Finish needs a free point and becomes invalid after firing
+
+In [R8](RC3_API_R8.md), four fault guards and two owned code points fill all six
+F411 slots. FinishBreakpoint cannot insert; releasing one owned point allows the
+original call to continue without reset. Keep guards enabled. Save the
+FinishBreakpoint number before continue: after firing the object is invalid and
+reading number may raise RuntimeError even though return_value is retained.
+One reserved slot was verified for this finish, not every navigation command.
