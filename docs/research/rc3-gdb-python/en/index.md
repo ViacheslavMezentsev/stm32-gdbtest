@@ -6,6 +6,7 @@ One research project lives here: the original plan, series reports and sanitized
 results. Hardware experiments paused on 2026-10-02; reports retain individual experiments,
 including FAIL/ERROR. This is not an approved public API extension.
 
+- [API scope proposal](api-proposal.md) — operations, contracts, implementation packages and open questions.
 - [R1–R18 summary](summary.md) — all reports, findings and evidence boundaries.
 - [API, techniques and patterns](scenario-tools.md) — application areas, classification and API properties.
 - [Named execution context](execution-context.md) — snapshot contract proposal.

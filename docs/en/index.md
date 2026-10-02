@@ -4,6 +4,7 @@ Documentation · [Русский](../ru/index.md)
 
 [GDB Python research for rc3](../research/rc3-gdb-python/en/index.md): plan, separate R1–R18 reports and results.
 
+- [API scope proposal](../research/rc3-gdb-python/en/api-proposal.md) — operations, contracts, implementation packages and open questions.
 - [R1–R18 summary](../research/rc3-gdb-python/en/summary.md) — all reports, findings and evidence boundaries.
 - [API, techniques and patterns](../research/rc3-gdb-python/en/scenario-tools.md) — application areas, classification and API properties.
 - [Named execution context](../research/rc3-gdb-python/en/execution-context.md) — snapshot contract proposal.

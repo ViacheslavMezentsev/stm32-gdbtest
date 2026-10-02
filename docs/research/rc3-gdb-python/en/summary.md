@@ -55,3 +55,6 @@ Each report identifies exact ELF, builds, repeats and restoration.
 Next: discuss [tool layers and API criteria](scenario-tools.md), the
 [context proposal](execution-context.md), and select a first implementation scope.
 This is a discussion proposal, not an approved rc3 scope or hardware resumption.
+
+The separate [API scope discussion](api-proposal.md) proposes signatures,
+packages A/B/C and questions Q1–Q8; decisions are not approved yet.
