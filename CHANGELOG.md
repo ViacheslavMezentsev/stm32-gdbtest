@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- Consumer R12: DMA/watchpoints —16/16 F411/native DAP GDB14/16 на прежнем CMSIS ELF. Запись DMA подтверждена без buffer-watch события, положительные CPU-контроли и конечные приёмники проверены; restore PASS. Ядро и прошивка прежние; далее сон/пробуждение.
+
 - Consumer R11: SysTick/TIM2, аппаратный стек исключения, чтение прерванного контекста и естественный возврат —16/16 F411/HLA GDB14/16 на существующем CMSIS ELF. Исходные FAIL/ERROR сохранены, optimized_out явен, restore PASS. Ядро и исходники прошивок не менялись; далее DMA/watchpoints.
 
 - Consumer R10: fault и timeout незавершённого dummy-call —8+8 ожидаемых ERROR и16/16 положительных контролей F411/HLA GDB14/16. Диагностика, sidecar до timeout и recovery проверены; исходная ошибка имени регистра сохранена, restore PASS. Зафиксирована очередь дальнейших исследований, ядро и прошивка прежние.

@@ -399,3 +399,12 @@ Record that distinct state and compare PC with instructions; do not substitute0.
 Select calls using arguments/stack: the same function serves the ADC2ms delay and
 the main loop500ms delay. Return from the verified basic MSP IRQ used the hardware
 frame's saved PC; LR=0xfffffff9 is EXC_RETURN, not a code address.
+
+## DMA changed the buffer without a reported watchpoint stop
+
+In [R12](../research/rc3-gdb-python/en/r12.md), ADC→DMA writes on F411/native DAP
+completed without a write/access-watch event. Also check NDTR, completion flag,
+the buffer at exact IRQ entry before CPU reads and the final sinks. The same
+access-watch then caught a CPU read; a separate write-watch detected the counter
+write. No watch stop does not mean no DMA write; use an independent sentinel/timeout.
+This conclusion applies to the tested stand and mode.

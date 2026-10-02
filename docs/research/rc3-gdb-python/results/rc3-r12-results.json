@@ -1,0 +1,2171 @@
+{
+  "date": "2026-10-02",
+  "source_base": "2bd17d2",
+  "board": "WeAct BlackPill F411CE",
+  "mcu": "STM32F411CEU6",
+  "backend": "OpenOCD 0.12.0",
+  "runs": [
+    {
+      "status": "PASS",
+      "suite": "r12",
+      "elf_sha256": "f72026290b244f3c00f3dcda214cea0951f5634894b5f601a1b54e520bfa2571",
+      "restore_sha256": "1ff37ae10a007401de5e0eaf826764f60a2849c8b7821c123f12caa28c2e79c3",
+      "restored": true,
+      "source_sha256": {
+        ".gitignore": "f872b7dbd200d8629c7adac4d17dd7b26bc7ec9b4d57f1c5f2e6b14698c3c281",
+        "CMakeLists.txt": "0f76103275d33b8c6389647fbbdd022986878ceb9da0d5b7827ccdd3d2de3ecc",
+        "firmware_FLASH.ld": "11388a02e1e870b0b2a4d8b434c2043845302c97eba74d32d94252c1d8303496",
+        "host/test_commands.py": "f6bfe90975212cabc04a9ed80787b2659f3aff6512ff4c1d4fc66254fe76fe0e",
+        "host/test_failure_evidence.py": "c62d1ad56cce538e77442ab8b571230613d3724e30ce3c2f2a448c88a2035669",
+        "host/test_matrix.py": "a1fd886c5282c85ffd936ce3fb55d5ee4a264488e9ca877f32a1063e22b1ab18",
+        "host/test_navigation.py": "75ae48b4ac16d82795c825146767ab732191bb0031b2c18a35a7b122b6ab847a",
+        "host/test_session.py": "5a4c113efbf373f95b34382d92b54532b2b6212ec9ef1b69197c213574c1ba37",
+        "lab/__init__.py": "9a3b47b5d1b5b39e49b96fdf1605c58d413868823bbbb22bcfb5f73a8cd9dafc",
+        "lab/commands.py": "a5b00bc077bc5bc3054f5278088cdeac75def0ea5e49a2d71cff4dcc0fee0236",
+        "lab/failure_evidence.py": "0ab5c06d5014ff8427c01e932047ba75c4a91e180fbd57432104917aa0c303d1",
+        "lab/navigation.py": "f6038e1e6c6d2ebfeb4cd322c86ae8d07481fbea209ffa78f26252557568bfa4",
+        "lab/openocd_native.py": "f111cd82ef45faf644d275bb03973b73fa0e1595bdb36f37deb254ee0eb25257",
+        "lab/session.py": "a9973223a873a9a1be770c919ea91347a387d009285f8893a1cbbba044064458",
+        "profile/target.toml": "6c6d66767ff344da39045a964452011595d96b2fb631bde17a77fdfc4e5d7cdd",
+        "profile/tests/board/test_automation.py": "1ecbb6286122bf8dcb706823f99578ce5a62081c2b5d8c8e24499c2ef44234f9",
+        "profile/tests/board/test_call_failures.py": "474af1e93770c515faa9f0804e30719024b9d7842ea3665a0b59f71bbeda289c",
+        "profile/tests/board/test_code_limits.py": "48118d4963a046b2d1c11d8dd7589fba4af7d1bc225b30ef4a9c0c86d2a38ae1",
+        "profile/tests/board/test_dma_watch.py": "0871a85107f79474efe2c64c653eb7cc65cb7637669a1f028da7696ecbe549ec",
+        "profile/tests/board/test_interrupted_calls.py": "7bff7fa839a92b1126ce0ad2099a4012ed28a4d034a68cbe89fe3e4d4d528e22",
+        "profile/tests/board/test_irq_frames.py": "4faa98bc77cc20ae421b473e95514b54a2303f5328b2762dacaac3089c571375",
+        "profile/tests/board/test_navigation.py": "d8a77c90bce147c2b4e1a963ba3b93f3931dac50d90846378a5b23d4682a2b05",
+        "profile/tests/board/test_outputs.py": "a050a4948e3783b214a9eb9cc24e96235a4e074836570e329e440b5b381531fb",
+        "profile/tests/board/test_recursion.py": "516f96286b9d427fb7abca7cdb6b799dfa83f0e6888c7307d623f8e6d097fb31",
+        "profile/tests/board/test_research.py": "4cb6c50ebc76abdcc3d960d793695d54b0c6a7f4f26ba7222b8d4edcf43040bd",
+        "profile/tests/board/test_return_types.py": "a05b48e7f1ec86c6e64054e44d4610c56f1015d52e8c0f990dea17c97c4563ab",
+        "profile/tests/board/test_sret.py": "26e9c3bc3bbcaf6e488f273b3345fa3b33b1d2f3a125788180cacb3aa48e1a80",
+        "profile/tests/board/test_watch_limits.py": "821042c45a609a17622539280191aa6f1530ee2f588ac0a9e1fec1966fa5ea8b",
+        "profile/tests/board/test_watch_split.py": "893713470247d5b3a4c6df5b6d1339f4403a5c682d265eb03abe09b01236aaf5",
+        "profile/tests/requirements.md": "3f846a77d64f4a627e43cb80b2dadfe39f2f69ad65b71836134299799d72fe1d",
+        "run_matrix.py": "0ba3e62716f5132f282f945354429814971b3832d7b1b45d70dbe6e5d4ca62bc",
+        "src/app.c": "fbf20ab60780e6b89cb50c2f823e1665e24efed8f1d6cfb9433a4a1ba045c8c7",
+        "src/app.h": "02e11d2f0f506574e8fc3e72e05db31bf7a8c6e91bf86d166be78c69db8faa36",
+        "src/packet.c": "917dc51a5de233b90c49e525dd9a8bd44aa076a76c9bb4493fc22b5e2b4652b2",
+        "src/processing.c": "5ff9c27508d3f69b2905c9cf07ab660dc400fec2c8e7450f8ecd0b46290e73b0",
+        "src/returns.c": "e96e05d931cd0acecb37457efb5eaa25d9cfc321271386ffd8d9ba24680e7346",
+        "src/routes.c": "ce13ff6053a36b06a9c404da26781581cdeb9a2b5a959e0368a44cdd8b200e65",
+        "src/startup.c": "d0afbba98d70cfda1a1149b20ab7be03e41d3a6dd1f982d48c08f72bcc4a281e"
+      },
+      "directory": "20261002T081254.075554Z",
+      "interface": "native-dap-swd",
+      "stages": [
+        {
+          "label": "prepare_gdb0_HW_R12_WRITE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_gdb0_HW_R12_ACCESS",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_gdb1_HW_R12_WRITE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_gdb1_HW_R12_ACCESS",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_restore_HW_BOOT",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_restore_HW_GPIO",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "baseline_HW_BOOT",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 7,
+          "passed_checks": 7,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "baseline_HW_GPIO",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 12,
+          "passed_checks": 12,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "gdb0_round0_HW_R12_WRITE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 22,
+          "passed_checks": 22,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                6
+              ],
+              "signal": null,
+              "stop_id": 1,
+              "pc": 134218900,
+              "reason": "expected"
+            },
+            "dma_completion": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  8
+                ],
+                "signal": null,
+                "stop_id": 2
+              },
+              "before": "00000000",
+              "after": "ad03e705",
+              "watch_number": 7,
+              "sentinel_number": 8,
+              "pc": 134218608,
+              "ndtr": 0,
+              "status": 48,
+              "stream": 11286,
+              "sequences": 0
+            },
+            "cpu_write_control": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  9
+                ],
+                "signal": null,
+                "stop_id": 3
+              },
+              "sequence": 1
+            },
+            "stop_3": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218328,
+              "reason": "expected"
+            },
+            "consumed": {
+              "samples": [
+                941,
+                1511
+              ],
+              "sequences": 1
+            }
+          },
+          "assertions": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "first transfer not completed yet",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "hardware watch type",
+              "actual": 7,
+              "expected": 7,
+              "passed": true
+            },
+            {
+              "name": "completion sentinel reached",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "no reported buffer watch at DMA completion",
+              "actual": false,
+              "expected": false,
+              "passed": true
+            },
+            {
+              "name": "exact entry before CPU buffer reads",
+              "actual": 134218608,
+              "expected": 134218608,
+              "passed": true
+            },
+            {
+              "name": "DMA IRQ active",
+              "actual": 72,
+              "expected": 72,
+              "passed": true
+            },
+            {
+              "name": "DMA changed RAM",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "two halfwords transferred",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "transfer complete flag",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "normal-mode stream disabled",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "handler has not incremented sequence",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "ADC samples in 12-bit range",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "CPU control uses hardware write watch",
+              "actual": 7,
+              "expected": 7,
+              "passed": true
+            },
+            {
+              "name": "CPU write watch identity",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "CPU completed one sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "caller reached normal delay",
+              "actual": 500,
+              "expected": 500,
+              "passed": true
+            },
+            {
+              "name": "consumer copied temperature",
+              "actual": 941,
+              "expected": 941,
+              "passed": true
+            },
+            {
+              "name": "consumer copied reference",
+              "actual": 1511,
+              "expected": 1511,
+              "passed": true
+            },
+            {
+              "name": "exactly one completed sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "no application ADC error",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            }
+          ],
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 19,
+          "server_hardware_insertions": 20,
+          "rsp_insert_Z2": 2,
+          "rsp_insert_Z3": 0,
+          "rsp_insert_Z4": 0,
+          "raw_log_sha256": {
+            "gdb.log": "9e41ffa47001062e371bef9ac398a4a76ca555e7102808d6bf71f34e45bf7a22",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "1d3335dbb72fdf74991cc1585ca22ba73bc17f1aef208afacd95ba26a8ed7176"
+          }
+        },
+        {
+          "label": "gdb0_round0_HW_R12_ACCESS",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 21,
+          "passed_checks": 21,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                6
+              ],
+              "signal": null,
+              "stop_id": 1,
+              "pc": 134218900,
+              "reason": "expected"
+            },
+            "dma_completion": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  8
+                ],
+                "signal": null,
+                "stop_id": 2
+              },
+              "before": "00000000",
+              "after": "af03e905",
+              "watch_number": 7,
+              "sentinel_number": 8,
+              "pc": 134218608,
+              "ndtr": 0,
+              "status": 48,
+              "stream": 11286,
+              "sequences": 0
+            },
+            "cpu_access_control": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  7
+                ],
+                "signal": null,
+                "stop_id": 3
+              },
+              "function": "DMA2_Stream0_IRQHandler",
+              "pc": 134218638
+            },
+            "stop_3": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218328,
+              "reason": "expected"
+            },
+            "consumed": {
+              "samples": [
+                943,
+                1513
+              ],
+              "sequences": 1
+            }
+          },
+          "assertions": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "first transfer not completed yet",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "hardware watch type",
+              "actual": 9,
+              "expected": 9,
+              "passed": true
+            },
+            {
+              "name": "completion sentinel reached",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "no reported buffer watch at DMA completion",
+              "actual": false,
+              "expected": false,
+              "passed": true
+            },
+            {
+              "name": "exact entry before CPU buffer reads",
+              "actual": 134218608,
+              "expected": 134218608,
+              "passed": true
+            },
+            {
+              "name": "DMA IRQ active",
+              "actual": 72,
+              "expected": 72,
+              "passed": true
+            },
+            {
+              "name": "DMA changed RAM",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "two halfwords transferred",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "transfer complete flag",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "normal-mode stream disabled",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "handler has not incremented sequence",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "ADC samples in 12-bit range",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "same watch catches CPU buffer access",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "CPU reader is DMA handler",
+              "actual": "DMA2_Stream0_IRQHandler",
+              "expected": "DMA2_Stream0_IRQHandler",
+              "passed": true
+            },
+            {
+              "name": "caller reached normal delay",
+              "actual": 500,
+              "expected": 500,
+              "passed": true
+            },
+            {
+              "name": "consumer copied temperature",
+              "actual": 943,
+              "expected": 943,
+              "passed": true
+            },
+            {
+              "name": "consumer copied reference",
+              "actual": 1513,
+              "expected": 1513,
+              "passed": true
+            },
+            {
+              "name": "exactly one completed sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "no application ADC error",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            }
+          ],
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 19,
+          "server_hardware_insertions": 20,
+          "rsp_insert_Z2": 0,
+          "rsp_insert_Z3": 0,
+          "rsp_insert_Z4": 2,
+          "raw_log_sha256": {
+            "gdb.log": "5b89cac03f377cc3b611bf1f01294fc331554893026d8969eb380933210fe4fe",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "7e89f101d5633dcc0250cbcf2813978e74fdaf136372b884de32ca5f3fa5e293"
+          }
+        },
+        {
+          "label": "gdb0_round1_HW_R12_WRITE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 22,
+          "passed_checks": 22,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                6
+              ],
+              "signal": null,
+              "stop_id": 1,
+              "pc": 134218900,
+              "reason": "expected"
+            },
+            "dma_completion": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  8
+                ],
+                "signal": null,
+                "stop_id": 2
+              },
+              "before": "00000000",
+              "after": "af03e705",
+              "watch_number": 7,
+              "sentinel_number": 8,
+              "pc": 134218608,
+              "ndtr": 0,
+              "status": 48,
+              "stream": 11286,
+              "sequences": 0
+            },
+            "cpu_write_control": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  9
+                ],
+                "signal": null,
+                "stop_id": 3
+              },
+              "sequence": 1
+            },
+            "stop_3": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218328,
+              "reason": "expected"
+            },
+            "consumed": {
+              "samples": [
+                943,
+                1511
+              ],
+              "sequences": 1
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 19,
+          "server_hardware_insertions": 20,
+          "rsp_insert_Z2": 2,
+          "rsp_insert_Z3": 0,
+          "rsp_insert_Z4": 0,
+          "raw_log_sha256": {
+            "gdb.log": "c7301cccdd3657fed59848ee402fbdb9385d3b9d928d46daee44303c4b2cbef0",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "d5d4601452785c9239f32f7d5545a46e470383f915cccdfb73d48215a230513b"
+          }
+        },
+        {
+          "label": "gdb0_round1_HW_R12_ACCESS",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 21,
+          "passed_checks": 21,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                6
+              ],
+              "signal": null,
+              "stop_id": 1,
+              "pc": 134218900,
+              "reason": "expected"
+            },
+            "dma_completion": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  8
+                ],
+                "signal": null,
+                "stop_id": 2
+              },
+              "before": "00000000",
+              "after": "af03e805",
+              "watch_number": 7,
+              "sentinel_number": 8,
+              "pc": 134218608,
+              "ndtr": 0,
+              "status": 48,
+              "stream": 11286,
+              "sequences": 0
+            },
+            "cpu_access_control": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  7
+                ],
+                "signal": null,
+                "stop_id": 3
+              },
+              "function": "DMA2_Stream0_IRQHandler",
+              "pc": 134218638
+            },
+            "stop_3": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218328,
+              "reason": "expected"
+            },
+            "consumed": {
+              "samples": [
+                943,
+                1512
+              ],
+              "sequences": 1
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 19,
+          "server_hardware_insertions": 20,
+          "rsp_insert_Z2": 0,
+          "rsp_insert_Z3": 0,
+          "rsp_insert_Z4": 2,
+          "raw_log_sha256": {
+            "gdb.log": "7c02ea35213d325b7aeefdc394be9d961e4d4e230b3ee2cd31edb66a1d3d0447",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "2ca174dc719d69d7512bee9802b34741108d9f9800b2d73197491a7f59097e2c"
+          }
+        },
+        {
+          "label": "gdb0_round2_HW_R12_WRITE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 22,
+          "passed_checks": 22,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                6
+              ],
+              "signal": null,
+              "stop_id": 1,
+              "pc": 134218900,
+              "reason": "expected"
+            },
+            "dma_completion": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  8
+                ],
+                "signal": null,
+                "stop_id": 2
+              },
+              "before": "00000000",
+              "after": "af03e705",
+              "watch_number": 7,
+              "sentinel_number": 8,
+              "pc": 134218608,
+              "ndtr": 0,
+              "status": 48,
+              "stream": 11286,
+              "sequences": 0
+            },
+            "cpu_write_control": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  9
+                ],
+                "signal": null,
+                "stop_id": 3
+              },
+              "sequence": 1
+            },
+            "stop_3": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218328,
+              "reason": "expected"
+            },
+            "consumed": {
+              "samples": [
+                943,
+                1511
+              ],
+              "sequences": 1
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 19,
+          "server_hardware_insertions": 20,
+          "rsp_insert_Z2": 2,
+          "rsp_insert_Z3": 0,
+          "rsp_insert_Z4": 0,
+          "raw_log_sha256": {
+            "gdb.log": "c7301cccdd3657fed59848ee402fbdb9385d3b9d928d46daee44303c4b2cbef0",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "f49df84b7dc533e75028ed14fad41cc8b2d8f16f94bfe9f4271a398e8dc674d3"
+          }
+        },
+        {
+          "label": "gdb0_round2_HW_R12_ACCESS",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 21,
+          "passed_checks": 21,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                6
+              ],
+              "signal": null,
+              "stop_id": 1,
+              "pc": 134218900,
+              "reason": "expected"
+            },
+            "dma_completion": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  8
+                ],
+                "signal": null,
+                "stop_id": 2
+              },
+              "before": "00000000",
+              "after": "af03e805",
+              "watch_number": 7,
+              "sentinel_number": 8,
+              "pc": 134218608,
+              "ndtr": 0,
+              "status": 48,
+              "stream": 11286,
+              "sequences": 0
+            },
+            "cpu_access_control": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  7
+                ],
+                "signal": null,
+                "stop_id": 3
+              },
+              "function": "DMA2_Stream0_IRQHandler",
+              "pc": 134218638
+            },
+            "stop_3": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218328,
+              "reason": "expected"
+            },
+            "consumed": {
+              "samples": [
+                943,
+                1512
+              ],
+              "sequences": 1
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 19,
+          "server_hardware_insertions": 20,
+          "rsp_insert_Z2": 0,
+          "rsp_insert_Z3": 0,
+          "rsp_insert_Z4": 2,
+          "raw_log_sha256": {
+            "gdb.log": "7c02ea35213d325b7aeefdc394be9d961e4d4e230b3ee2cd31edb66a1d3d0447",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "c992b1f97c5efb3281232301b14de13e76bdf3d4235f38925b6ba604885a1fb3"
+          }
+        },
+        {
+          "label": "gdb0_round3_HW_R12_WRITE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 22,
+          "passed_checks": 22,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                6
+              ],
+              "signal": null,
+              "stop_id": 1,
+              "pc": 134218900,
+              "reason": "expected"
+            },
+            "dma_completion": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  8
+                ],
+                "signal": null,
+                "stop_id": 2
+              },
+              "before": "00000000",
+              "after": "af03e705",
+              "watch_number": 7,
+              "sentinel_number": 8,
+              "pc": 134218608,
+              "ndtr": 0,
+              "status": 48,
+              "stream": 11286,
+              "sequences": 0
+            },
+            "cpu_write_control": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  9
+                ],
+                "signal": null,
+                "stop_id": 3
+              },
+              "sequence": 1
+            },
+            "stop_3": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218328,
+              "reason": "expected"
+            },
+            "consumed": {
+              "samples": [
+                943,
+                1511
+              ],
+              "sequences": 1
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 19,
+          "server_hardware_insertions": 20,
+          "rsp_insert_Z2": 2,
+          "rsp_insert_Z3": 0,
+          "rsp_insert_Z4": 0,
+          "raw_log_sha256": {
+            "gdb.log": "c7301cccdd3657fed59848ee402fbdb9385d3b9d928d46daee44303c4b2cbef0",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "c6bf04faf94beffba845363da1760b95c0577beaf03461b3c0f7ac55e849ca2a"
+          }
+        },
+        {
+          "label": "gdb0_round3_HW_R12_ACCESS",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 21,
+          "passed_checks": 21,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                6
+              ],
+              "signal": null,
+              "stop_id": 1,
+              "pc": 134218900,
+              "reason": "expected"
+            },
+            "dma_completion": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  8
+                ],
+                "signal": null,
+                "stop_id": 2
+              },
+              "before": "00000000",
+              "after": "ae03e805",
+              "watch_number": 7,
+              "sentinel_number": 8,
+              "pc": 134218608,
+              "ndtr": 0,
+              "status": 48,
+              "stream": 11286,
+              "sequences": 0
+            },
+            "cpu_access_control": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  7
+                ],
+                "signal": null,
+                "stop_id": 3
+              },
+              "function": "DMA2_Stream0_IRQHandler",
+              "pc": 134218638
+            },
+            "stop_3": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218328,
+              "reason": "expected"
+            },
+            "consumed": {
+              "samples": [
+                942,
+                1512
+              ],
+              "sequences": 1
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 19,
+          "server_hardware_insertions": 20,
+          "rsp_insert_Z2": 0,
+          "rsp_insert_Z3": 0,
+          "rsp_insert_Z4": 2,
+          "raw_log_sha256": {
+            "gdb.log": "2ce66b910af7d819b394c9c4ab884300e898e3f8d96636fb6d4e0d7e0af52097",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "8f5a3c0f94437e495e384afc3249493301a10baca7dbf356e24a73b20710b548"
+          }
+        },
+        {
+          "label": "gdb1_round0_HW_R12_WRITE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 22,
+          "passed_checks": 22,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                6
+              ],
+              "signal": null,
+              "stop_id": 1,
+              "pc": 134218900,
+              "reason": "expected"
+            },
+            "dma_completion": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  8
+                ],
+                "signal": null,
+                "stop_id": 2
+              },
+              "before": "00000000",
+              "after": "af03e905",
+              "watch_number": 7,
+              "sentinel_number": 8,
+              "pc": 134218608,
+              "ndtr": 0,
+              "status": 48,
+              "stream": 11286,
+              "sequences": 0
+            },
+            "cpu_write_control": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  9
+                ],
+                "signal": null,
+                "stop_id": 3
+              },
+              "sequence": 1
+            },
+            "stop_3": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218328,
+              "reason": "expected"
+            },
+            "consumed": {
+              "samples": [
+                943,
+                1513
+              ],
+              "sequences": 1
+            }
+          },
+          "assertions": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "first transfer not completed yet",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "hardware watch type",
+              "actual": 7,
+              "expected": 7,
+              "passed": true
+            },
+            {
+              "name": "completion sentinel reached",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "no reported buffer watch at DMA completion",
+              "actual": false,
+              "expected": false,
+              "passed": true
+            },
+            {
+              "name": "exact entry before CPU buffer reads",
+              "actual": 134218608,
+              "expected": 134218608,
+              "passed": true
+            },
+            {
+              "name": "DMA IRQ active",
+              "actual": 72,
+              "expected": 72,
+              "passed": true
+            },
+            {
+              "name": "DMA changed RAM",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "two halfwords transferred",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "transfer complete flag",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "normal-mode stream disabled",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "handler has not incremented sequence",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "ADC samples in 12-bit range",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "CPU control uses hardware write watch",
+              "actual": 7,
+              "expected": 7,
+              "passed": true
+            },
+            {
+              "name": "CPU write watch identity",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "CPU completed one sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "caller reached normal delay",
+              "actual": 500,
+              "expected": 500,
+              "passed": true
+            },
+            {
+              "name": "consumer copied temperature",
+              "actual": 943,
+              "expected": 943,
+              "passed": true
+            },
+            {
+              "name": "consumer copied reference",
+              "actual": 1513,
+              "expected": 1513,
+              "passed": true
+            },
+            {
+              "name": "exactly one completed sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "no application ADC error",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            }
+          ],
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 19,
+          "server_hardware_insertions": 20,
+          "rsp_insert_Z2": 2,
+          "rsp_insert_Z3": 0,
+          "rsp_insert_Z4": 0,
+          "raw_log_sha256": {
+            "gdb.log": "7338a498687cdb8b386b1923065469305b18332c3cb994fbae1a0c9bac8f1652",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "7d4437e6373f72b912a0f8984e05fd0fa4f1f51d6fe33b88454b77f3ba9c274f"
+          }
+        },
+        {
+          "label": "gdb1_round0_HW_R12_ACCESS",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 21,
+          "passed_checks": 21,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                6
+              ],
+              "signal": null,
+              "stop_id": 1,
+              "pc": 134218900,
+              "reason": "expected"
+            },
+            "dma_completion": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  8
+                ],
+                "signal": null,
+                "stop_id": 2
+              },
+              "before": "00000000",
+              "after": "af03e705",
+              "watch_number": 7,
+              "sentinel_number": 8,
+              "pc": 134218608,
+              "ndtr": 0,
+              "status": 48,
+              "stream": 11286,
+              "sequences": 0
+            },
+            "cpu_access_control": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  7
+                ],
+                "signal": null,
+                "stop_id": 3
+              },
+              "function": "DMA2_Stream0_IRQHandler",
+              "pc": 134218638
+            },
+            "stop_3": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218328,
+              "reason": "expected"
+            },
+            "consumed": {
+              "samples": [
+                943,
+                1511
+              ],
+              "sequences": 1
+            }
+          },
+          "assertions": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "first transfer not completed yet",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "hardware watch type",
+              "actual": 9,
+              "expected": 9,
+              "passed": true
+            },
+            {
+              "name": "completion sentinel reached",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "no reported buffer watch at DMA completion",
+              "actual": false,
+              "expected": false,
+              "passed": true
+            },
+            {
+              "name": "exact entry before CPU buffer reads",
+              "actual": 134218608,
+              "expected": 134218608,
+              "passed": true
+            },
+            {
+              "name": "DMA IRQ active",
+              "actual": 72,
+              "expected": 72,
+              "passed": true
+            },
+            {
+              "name": "DMA changed RAM",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "two halfwords transferred",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "transfer complete flag",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "normal-mode stream disabled",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "handler has not incremented sequence",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "ADC samples in 12-bit range",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "same watch catches CPU buffer access",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "CPU reader is DMA handler",
+              "actual": "DMA2_Stream0_IRQHandler",
+              "expected": "DMA2_Stream0_IRQHandler",
+              "passed": true
+            },
+            {
+              "name": "caller reached normal delay",
+              "actual": 500,
+              "expected": 500,
+              "passed": true
+            },
+            {
+              "name": "consumer copied temperature",
+              "actual": 943,
+              "expected": 943,
+              "passed": true
+            },
+            {
+              "name": "consumer copied reference",
+              "actual": 1511,
+              "expected": 1511,
+              "passed": true
+            },
+            {
+              "name": "exactly one completed sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "no application ADC error",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            }
+          ],
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 19,
+          "server_hardware_insertions": 20,
+          "rsp_insert_Z2": 0,
+          "rsp_insert_Z3": 0,
+          "rsp_insert_Z4": 2,
+          "raw_log_sha256": {
+            "gdb.log": "751d0bbc4896bbbef6d4a61b3c10b8c1d1e96add3843f913fa8b2835cad87a68",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "bd7433136496438473fe710c488d51366cb3fda0bc44acef6a3d3eb82fe4cfb5"
+          }
+        },
+        {
+          "label": "gdb1_round1_HW_R12_WRITE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 22,
+          "passed_checks": 22,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                6
+              ],
+              "signal": null,
+              "stop_id": 1,
+              "pc": 134218900,
+              "reason": "expected"
+            },
+            "dma_completion": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  8
+                ],
+                "signal": null,
+                "stop_id": 2
+              },
+              "before": "00000000",
+              "after": "af03e805",
+              "watch_number": 7,
+              "sentinel_number": 8,
+              "pc": 134218608,
+              "ndtr": 0,
+              "status": 48,
+              "stream": 11286,
+              "sequences": 0
+            },
+            "cpu_write_control": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  9
+                ],
+                "signal": null,
+                "stop_id": 3
+              },
+              "sequence": 1
+            },
+            "stop_3": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218328,
+              "reason": "expected"
+            },
+            "consumed": {
+              "samples": [
+                943,
+                1512
+              ],
+              "sequences": 1
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 19,
+          "server_hardware_insertions": 20,
+          "rsp_insert_Z2": 2,
+          "rsp_insert_Z3": 0,
+          "rsp_insert_Z4": 0,
+          "raw_log_sha256": {
+            "gdb.log": "893158570cbd372e7ff2467edc5949e5bfff12047eb03d40e6963b76b6e1f409",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "5318e55bcf6d9c56c146b6441a08e9f79227167e52b2511a00113d62bb5d3333"
+          }
+        },
+        {
+          "label": "gdb1_round1_HW_R12_ACCESS",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 21,
+          "passed_checks": 21,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                6
+              ],
+              "signal": null,
+              "stop_id": 1,
+              "pc": 134218900,
+              "reason": "expected"
+            },
+            "dma_completion": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  8
+                ],
+                "signal": null,
+                "stop_id": 2
+              },
+              "before": "00000000",
+              "after": "b003e805",
+              "watch_number": 7,
+              "sentinel_number": 8,
+              "pc": 134218608,
+              "ndtr": 0,
+              "status": 48,
+              "stream": 11286,
+              "sequences": 0
+            },
+            "cpu_access_control": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  7
+                ],
+                "signal": null,
+                "stop_id": 3
+              },
+              "function": "DMA2_Stream0_IRQHandler",
+              "pc": 134218638
+            },
+            "stop_3": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218328,
+              "reason": "expected"
+            },
+            "consumed": {
+              "samples": [
+                944,
+                1512
+              ],
+              "sequences": 1
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 19,
+          "server_hardware_insertions": 20,
+          "rsp_insert_Z2": 0,
+          "rsp_insert_Z3": 0,
+          "rsp_insert_Z4": 2,
+          "raw_log_sha256": {
+            "gdb.log": "ecf37092ef7d9352272c504ca2d5eb1862895bd89e342ecc01b5d56614f0a5ae",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "74899ac25f97693730571efd28abda6a0dddd0f3d7b3c834ebf2b0889fe5a31d"
+          }
+        },
+        {
+          "label": "gdb1_round2_HW_R12_WRITE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 22,
+          "passed_checks": 22,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                6
+              ],
+              "signal": null,
+              "stop_id": 1,
+              "pc": 134218900,
+              "reason": "expected"
+            },
+            "dma_completion": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  8
+                ],
+                "signal": null,
+                "stop_id": 2
+              },
+              "before": "00000000",
+              "after": "af03e805",
+              "watch_number": 7,
+              "sentinel_number": 8,
+              "pc": 134218608,
+              "ndtr": 0,
+              "status": 48,
+              "stream": 11286,
+              "sequences": 0
+            },
+            "cpu_write_control": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  9
+                ],
+                "signal": null,
+                "stop_id": 3
+              },
+              "sequence": 1
+            },
+            "stop_3": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218328,
+              "reason": "expected"
+            },
+            "consumed": {
+              "samples": [
+                943,
+                1512
+              ],
+              "sequences": 1
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 19,
+          "server_hardware_insertions": 20,
+          "rsp_insert_Z2": 2,
+          "rsp_insert_Z3": 0,
+          "rsp_insert_Z4": 0,
+          "raw_log_sha256": {
+            "gdb.log": "893158570cbd372e7ff2467edc5949e5bfff12047eb03d40e6963b76b6e1f409",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "d5c224823239d39747d534bb528497e4d300a6418c69931a03be0828c98c1325"
+          }
+        },
+        {
+          "label": "gdb1_round2_HW_R12_ACCESS",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 21,
+          "passed_checks": 21,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                6
+              ],
+              "signal": null,
+              "stop_id": 1,
+              "pc": 134218900,
+              "reason": "expected"
+            },
+            "dma_completion": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  8
+                ],
+                "signal": null,
+                "stop_id": 2
+              },
+              "before": "00000000",
+              "after": "b003e805",
+              "watch_number": 7,
+              "sentinel_number": 8,
+              "pc": 134218608,
+              "ndtr": 0,
+              "status": 48,
+              "stream": 11286,
+              "sequences": 0
+            },
+            "cpu_access_control": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  7
+                ],
+                "signal": null,
+                "stop_id": 3
+              },
+              "function": "DMA2_Stream0_IRQHandler",
+              "pc": 134218638
+            },
+            "stop_3": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218328,
+              "reason": "expected"
+            },
+            "consumed": {
+              "samples": [
+                944,
+                1512
+              ],
+              "sequences": 1
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 19,
+          "server_hardware_insertions": 20,
+          "rsp_insert_Z2": 0,
+          "rsp_insert_Z3": 0,
+          "rsp_insert_Z4": 2,
+          "raw_log_sha256": {
+            "gdb.log": "ecf37092ef7d9352272c504ca2d5eb1862895bd89e342ecc01b5d56614f0a5ae",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "baeb8d62bf9c62dfd46c55ef4db2a1878f1af5c50ae58885a6624f4815f3c14a"
+          }
+        },
+        {
+          "label": "gdb1_round3_HW_R12_WRITE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 22,
+          "passed_checks": 22,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                6
+              ],
+              "signal": null,
+              "stop_id": 1,
+              "pc": 134218900,
+              "reason": "expected"
+            },
+            "dma_completion": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  8
+                ],
+                "signal": null,
+                "stop_id": 2
+              },
+              "before": "00000000",
+              "after": "af03e905",
+              "watch_number": 7,
+              "sentinel_number": 8,
+              "pc": 134218608,
+              "ndtr": 0,
+              "status": 48,
+              "stream": 11286,
+              "sequences": 0
+            },
+            "cpu_write_control": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  9
+                ],
+                "signal": null,
+                "stop_id": 3
+              },
+              "sequence": 1
+            },
+            "stop_3": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218328,
+              "reason": "expected"
+            },
+            "consumed": {
+              "samples": [
+                943,
+                1513
+              ],
+              "sequences": 1
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 19,
+          "server_hardware_insertions": 20,
+          "rsp_insert_Z2": 2,
+          "rsp_insert_Z3": 0,
+          "rsp_insert_Z4": 0,
+          "raw_log_sha256": {
+            "gdb.log": "7338a498687cdb8b386b1923065469305b18332c3cb994fbae1a0c9bac8f1652",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "bd77a772ef4ba169e3c8e4014faad4b2b963ba409ce1dfbd6a73e080b124d69c"
+          }
+        },
+        {
+          "label": "gdb1_round3_HW_R12_ACCESS",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 21,
+          "passed_checks": 21,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                6
+              ],
+              "signal": null,
+              "stop_id": 1,
+              "pc": 134218900,
+              "reason": "expected"
+            },
+            "dma_completion": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  8
+                ],
+                "signal": null,
+                "stop_id": 2
+              },
+              "before": "00000000",
+              "after": "ae03e705",
+              "watch_number": 7,
+              "sentinel_number": 8,
+              "pc": 134218608,
+              "ndtr": 0,
+              "status": 48,
+              "stream": 11286,
+              "sequences": 0
+            },
+            "cpu_access_control": {
+              "event": {
+                "event": "BreakpointEvent",
+                "breakpoints": [
+                  7
+                ],
+                "signal": null,
+                "stop_id": 3
+              },
+              "function": "DMA2_Stream0_IRQHandler",
+              "pc": 134218638
+            },
+            "stop_3": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218328,
+              "reason": "expected"
+            },
+            "consumed": {
+              "samples": [
+                942,
+                1511
+              ],
+              "sequences": 1
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 19,
+          "server_hardware_insertions": 20,
+          "rsp_insert_Z2": 0,
+          "rsp_insert_Z3": 0,
+          "rsp_insert_Z4": 2,
+          "raw_log_sha256": {
+            "gdb.log": "f299cf2288f51bf744f5c590bd3dc6d49c9e5930b318e066d75ff92ae779310a",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "8cd113fd382d7f1d089debd438e9b175a46b7a2d4e176b28cd80e4f0542d097f"
+          }
+        },
+        {
+          "label": "restore_HW_BOOT",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 7,
+          "passed_checks": 7,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "restore_HW_GPIO",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 12,
+          "passed_checks": 12,
+          "failed_checks": [],
+          "research": {}
+        }
+      ]
+    }
+  ],
+  "firmware": {
+    "consumer": "tests/firmware",
+    "manifest_sha256": "668c5b1fb09f41932a6e717ad0dda14c5f8a996bf0e702a99f2a8e5d18346fd0",
+    "compilers": [
+      {
+        "name": "arm-none-eabi-gcc.exe",
+        "sha256": "26c908ce6d90f964bb51a84e93f39e51b4207fb88582cc266eb7b42403300c95",
+        "version": "13.3.1"
+      }
+    ],
+    "units": [
+      {
+        "source": "src/startup.c",
+        "object_sha256": "8c52bb97e29cad3b93552716d8874744e31c83a11e52a09fd1f7a82eea69ec65",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-DSTM32F411xE",
+          "-g",
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "753731dddc4bbb9e7c937b284dcda1d5b4ca64eeccef2584f48d6aeb1d226187"
+      },
+      {
+        "source": "src/app.c",
+        "object_sha256": "c7de0ff1b799f41bd4d46331373f34262f711fca4bd704d10b0930b6ee3cbbc5",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-DSTM32F411xE",
+          "-g",
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "4aab26a26c58f0d1fdd64796e2054792eb88efb20d44f28517051f355d65e7ae"
+      },
+      {
+        "source": "src/board.c",
+        "object_sha256": "2801f3f5933bd84916b6eab592bed6f56e94f969ba2effd30e27d89ae39e86b1",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-DSTM32F411xE",
+          "-g",
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "20f89b2652590baea983b6c8388724d80deeac769c5101be897ed694ba19adf4"
+      },
+      {
+        "source": "src/adc_f411.c",
+        "object_sha256": "0c8224fea844f053a672f9913b607e3cfa871eb30cd042f64ce48d676806590a",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-DSTM32F411xE",
+          "-g",
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "5bf283deec00cce500d7d93fbf3cbb46c855cb74eb0e15a50652d4985282e16d"
+      },
+      {
+        "source": "src/adc_units.c",
+        "object_sha256": "a8ae752eacb320f17c1f2691f5c13ea327a5f71f4fdabbf94cf730a8ae824b63",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-DSTM32F411xE",
+          "-g",
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "b992a69e339cd0c72987b450123052a5f12609965160339c6cb370e8c4876043"
+      },
+      {
+        "source": "src/rtc_f4.c",
+        "object_sha256": "fd5df4e324102e993212966d978494665e8144e6fa7f6235d1c6884fb5686d2a",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-DSTM32F411xE",
+          "-g",
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "65c2f39ab3c0df8e586f3c838efd980f2c4f45baa9541883a4369a84c21c3321"
+      }
+    ],
+    "source_sha256": {
+      "src/adc_f030.c": "b4b1fd0d8e00acffae938273ff2e6108f9ca97b3ba9f883594b2612a25f51f8a",
+      "src/adc_f103.c": "0cf055837098360f29075bb982497ee355df26f8a93c7ec37c32be4606740427",
+      "src/adc_f401.c": "2c70de3eb6661d310c85b5d57e952229fe50efbda4de583d01a091bc78a8ce41",
+      "src/adc_f411.c": "49ed319c7eac1f15854b2745ae3842d1c9a16989ca22e2d057c0a6fc836a064e",
+      "src/adc_f429.c": "fba065d4fad7451b7cb6f6136aa0c4a440236c54eb6c8c9c4d4aa1296db18f78",
+      "src/adc_units.c": "1f71be46ce10e9aecd10827955a1f1c81b404926d915835ea73c39f9b9edbd43",
+      "src/adc_units.h": "76ec16414fff0eb07be75b80858794f846a56db5473557cc54301f77284defa9",
+      "src/app.c": "6cacb1f67a200cb11f8dcc081af2f8d4e2d4b83eefcbd5a8892435bf67f36f8a",
+      "src/app.h": "5d77f245692a70bbf645f298c2d5aa5ef1964c72e10591db429fb97c82b3024e",
+      "src/board.c": "3e56028771d7083b5b0e040b1cd5bf9a334747a1afa6110aeb970fd1eaddcb98",
+      "src/rtc_f030.c": "f6cbd42a523f85309b67cefc3ebfa8b13bb9843dbb8c15617b81b7f7cc2cc105",
+      "src/rtc_f103.c": "c3efec57053dea7b519a4d764006d289e133ae338a314140f269fbb10074b0ed",
+      "src/rtc_f4.c": "653930963e6856c9b84cd56993cebb882b0f4782af2fde9ad23ef55a24e9d418",
+      "src/startup.c": "d0afbba98d70cfda1a1149b20ab7be03e41d3a6dd1f982d48c08f72bcc4a281e"
+    }
+  }
+}

@@ -140,3 +140,9 @@ On the CMSIS F411 ELF, identify natural SysTick context, compare the GDB unwind 
 
 ## HW_R11_TIM2
 On the CMSIS F411 ELF, identify natural TIM2 context and its interrupted delay, verify the basic MSP exception stack and actual restored registers, timer work and subsequent application progress.
+
+## HW_R12_WRITE
+Observe DMA buffer mutation without a reported write-watch stop before the exact completion-handler entry; verify transfer state, a CPU write-watch control and normal consumer results on the CMSIS F411 ELF.
+
+## HW_R12_ACCESS
+Observe DMA completion independently of an access watch, then prove that the same watch detects the CPU reading the DMA buffer; verify consumer values and absence of ADC errors.
