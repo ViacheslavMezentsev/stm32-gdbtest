@@ -240,3 +240,5 @@ shape, then Q3 for navigation. Record decisions here with date and owner's wordi
 then refine contract proposals. Only separate implementation authorization starts
 core, specification, migration and required regression changes. Authorization to
 discuss API does not resume hardware experiments.
+
+Before selecting implementation scope agree [evolution rules and specification boundaries](api-evolution.md).

@@ -2,10 +2,15 @@
 
 [Documentation](../../../en/index.md) · [Русский](../ru/index.md)
 
+The current R1–R18 research cycle concluded on 2026-10-02 with open technical
+debt. Next: [API evolution conventions and specification boundaries](api-evolution.md).
+Outstanding HW checks remain paused; concluding the cycle does not accept them.
+
 One research project lives here: the original plan, series reports and sanitized
 results. Hardware experiments paused on 2026-10-02; reports retain individual experiments,
 including FAIL/ERROR. This is not an approved public API extension.
 
+- [API evolution and specification boundaries](api-evolution.md) — draft conventions, verification criteria and transition order.
 - [API scope proposal](api-proposal.md) — operations, contracts, implementation packages and open questions.
 - [R1–R18 summary](summary.md) — all reports, findings and evidence boundaries.
 - [API, techniques and patterns](scenario-tools.md) — application areas, classification and API properties.

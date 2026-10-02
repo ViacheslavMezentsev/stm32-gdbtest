@@ -4,6 +4,7 @@
 
 [Исследование GDB Python для rc3](../research/rc3-gdb-python/ru/index.md): план, отдельные отчёты R1–R18 и результаты.
 
+- [Эволюция API и разделение ТЗ](../research/rc3-gdb-python/ru/api-evolution.md) — проект соглашений, критерии проверки и порядок перехода.
 - [Предложение состава API](../research/rc3-gdb-python/ru/api-proposal.md) — операции, контракты, пакеты внедрения и открытые вопросы.
 - [Сводка R1–R18](../research/rc3-gdb-python/ru/summary.md) — все отчёты, результаты и границы доказанного.
 - [API, техники и шаблоны](../research/rc3-gdb-python/ru/scenario-tools.md) — области применения, классификация и свойства API.

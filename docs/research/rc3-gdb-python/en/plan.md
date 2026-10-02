@@ -2,6 +2,10 @@
 
 [Documentation](index.md) · [Русский](../ru/plan.md)
 
+The current R1–R18 research cycle concluded on 2026-10-02 with open technical
+debt. Next: [API evolution conventions and specification boundaries](api-evolution.md).
+Outstanding HW checks remain paused; concluding the cycle does not accept them.
+
 **Current status 2026-10-02:** owner paused RTOS and remaining HW stages;
 [whole-research debt](technical-debt.md). R1–R18 have separate reports;
 [summary and discussion](summary.md) proceed now without waiting for the HW queue.

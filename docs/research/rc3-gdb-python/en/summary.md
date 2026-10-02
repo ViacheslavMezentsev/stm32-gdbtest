@@ -2,6 +2,10 @@
 
 [Documentation](index.md) · [Русский](../ru/summary.md)
 
+The current R1–R18 research cycle concluded on 2026-10-02 with open technical
+debt. Next: [API evolution conventions and specification boundaries](api-evolution.md).
+Outstanding HW checks remain paused; concluding the cycle does not accept them.
+
 2026-10-02. Hardware experiments are paused by owner decision. RTOS and remaining
 checks are recorded as [technical debt](technical-debt.md). API extension discussion
 can proceed now without completing that queue. Core promotion requires separate
