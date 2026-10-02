@@ -8,6 +8,8 @@ from datetime import datetime, timezone
 import json
 from pathlib import Path
 import sys
+from unittest.mock import patch
+from lab.openocd_native import native_swd
 
 ROOT = Path(__file__).resolve().parent
 MODULE = ROOT.parents[1]
@@ -17,6 +19,7 @@ from stm32_gdbtest.collect import collect
 from stm32_gdbtest.backends import load_stand
 from stm32_gdbtest.profile import load_profile
 from stm32_gdbtest.runner import run
+from stm32_gdbtest import openocd
 
 
 def main():
@@ -26,9 +29,14 @@ def main():
     parser.add_argument('--stand', required=True, type=Path)
     parser.add_argument('--gdb', required=True, action='append', type=Path)
     parser.add_argument('--execute', action='store_true')
+    parser.add_argument('--suite', choices=('r1', 'r2'), default='r1')
+    parser.add_argument('--test', action='append', help='explicit subset; recorded in the protocol')
+    parser.add_argument('--native-stlink', action='store_true', help='consumer-only native DAP/SWD comparison')
     parser.add_argument('--failure-paths-only', action='store_true',
                         help='exercise expected serialization ERROR and host timeout, then positive control')
     args = parser.parse_args()
+    if args.failure_paths_only and args.suite != 'r1':
+        parser.error('--failure-paths-only belongs to r1')
     stand = load_stand(args.stand)
     if stand['backend'] != 'openocd' or stand['flash'] != 'if-different':
         raise ValueError('This experiment requires OpenOCD and if-different flashing')
@@ -37,9 +45,16 @@ def main():
         load_verified(session['build_manifest'], digest(session['elf']), session['profile'])
         if load_profile(session['profile'])['mcu'] != 'STM32F411CEU6':
             raise ValueError('Both firmware images must target STM32F411CEU6')
-    cases = collect(sessions[0]['tests'])
-    if {c['id'] for c in cases} != {'HW_R1_' + s for s in ('VALUES', 'FRAMES', 'RAM', 'STOPS', 'RECORD', 'CONTROL')}:
+    prefix = 'HW_' + args.suite.upper() + '_'
+    cases = [c for c in collect(sessions[0]['tests']) if c['id'].startswith(prefix)]
+    suffixes = (('VALUES', 'FRAMES', 'RAM', 'STOPS', 'RECORD', 'CONTROL') if args.suite == 'r1'
+                else ('CONDITION', 'HITCOUNT', 'RETURN', 'FINISH', 'STEP', 'WATCH', 'CALL', 'ASM'))
+    if {c['id'] for c in cases} != {prefix + s for s in suffixes}:
         raise ValueError('Unexpected research scenario inventory')
+    if args.test:
+        if not set(args.test) <= {c['id'] for c in cases}:
+            raise ValueError('Selected test is outside the suite')
+        cases = [c for c in cases if c['id'] in args.test]
     restores = {c['id']: c for c in collect(sessions[1]['tests'])}
     if not {'HW_BOOT', 'HW_GPIO'} <= restores.keys():
         raise ValueError('Restore image needs HW_BOOT and HW_GPIO controls')
@@ -48,7 +63,9 @@ def main():
             raise ValueError('Missing GDB: ' + str(gdb))
     out = ROOT / 'build/evidence' / datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S.%fZ')
     out.mkdir(parents=True)
-    summary = dict(status='ERROR', hardware=args.execute, stages=[],
+    summary = dict(status='ERROR', hardware=args.execute, suite=args.suite, stages=[],
+                   openocd_interface='native-dap-swd' if args.native_stlink else 'hla',
+                   selected_tests=[c['id'] for c in cases],
                    elf_sha256=digest(sessions[0]['elf']), restore_sha256=digest(sessions[1]['elf']))
     summary['source_sha256'] = {str(p.relative_to(ROOT)).replace('\\', '/'): digest(p)
                                 for p in sorted(ROOT.rglob('*')) if p.is_file()
@@ -59,7 +76,13 @@ def main():
         runs = out / label
         # All generated outputs stay inside this consumer. Inputs may be read-only external files.
         current = dict(session, root=str(ROOT), out=str(runs), gdb=str(gdb.resolve()))
-        code = run(current, case, stand_path=args.stand, prepare_only=prepare)
+        if args.native_stlink:
+            original = openocd.server_command
+            with patch.object(openocd, 'server_command',
+                              side_effect=lambda *a: native_swd(original(*a))):
+                code = run(current, case, stand_path=args.stand, prepare_only=prepare)
+        else:
+            code = run(current, case, stand_path=args.stand, prepare_only=prepare)
         reports = list(runs.glob('*/result.json'))
         if len(reports) != 1:
             raise RuntimeError('Expected exactly one report for ' + label)

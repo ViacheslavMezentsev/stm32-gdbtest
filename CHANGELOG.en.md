@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- R2 consumer experiments: navigation, conditional/temporary points, caller, C expressions, return/finish/call and assembly — 56/56 F411 HLA; watchpoints — 8/8 native DAP. Original HLA WATCH failures retained, firmware restored. Core unchanged; promotion requires explicit owner approval.
+
 - Added rc3 R1 consumer prototype for typed snapshots, frames, RAM rollback, ownership and evidence: F411/OpenOCD 48/48 on GDB14/16, expected serialization/timeout errors and restoration verified. Public API/specification unchanged.
 
 - Extended rc3 research with an L0 comparison of GDB14 and xPack GCC15 GDB16, preserving probe evidence; new methods remain unverified on hardware.

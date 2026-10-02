@@ -310,3 +310,13 @@ CMake build с путями /workspace нельзя использовать к�
 пути файлов (`git -c core.ignorecase=false add -- tests/<папка>/<файл>`) и сверяйте
 `git diff --cached --name-only`. Не добавляйте второй корень `Tests` в индекс.
 Новый consumer должен исключать свой `build/` локальным `.gitignore`.
+
+## Watchpoint установлен, но GDB не сообщает его номер
+
+На проверенном F411/OpenOCD0.12.0 через ST-Link HLA сервер отправлял T05 без
+watch/rwatch/awatch адреса. Не считать любую остановку успешным watchpoint.
+Сохраните RSP/server logs и проверьте используемый interface driver.
+В [эксперименте R2](RC3_API_R2.md) native stlink-dap/dapdirect_swd устранил проблему
+на том же стенде. Флаг --native-stlink реализован только в consumer runner;
+штатный модуль и установленный OpenOCD не менялись. Возврат — запуск без этого
+флага. Это не универсальная рекомендация переключать драйвер на любом стенде.

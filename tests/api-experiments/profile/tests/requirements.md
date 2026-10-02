@@ -17,3 +17,27 @@ Bounded immutable JSON evidence, duplicate/oversize/nonserializable input, names
 
 ## HW_R1_CONTROL
 Independent arithmetic oracle and monotonic completed cycle on the normal application path.
+
+## HW_R2_CONDITION
+A one-shot conditional hardware breakpoint stops on sequence 3, deletes itself and permits source C expressions/convenience variables.
+
+## HW_R2_HITCOUNT
+Ignore two entries, identify the third, recognize immediate/outer/wrong callers and separately report built-in caller function availability.
+
+## HW_R2_RETURN
+Forced return supplies 100 to the natural caller and changes its independently checked checksum.
+
+## HW_R2_FINISH
+FinishBreakpoint captures the natural uint32 return and selects the caller; backend enforces hardware-only insertion.
+
+## HW_R2_STEP
+Instruction stepping advances PC; bounded source step enters sum_bytes, finish returns, next skips child frames.
+
+## HW_R2_WATCH
+CPU write/read/access watchpoints use hardware types, produce expected stop identities and are deleted between trials.
+
+## HW_R2_CALL
+Direct invocation of a pure existing function yields 775 and restores PC/SP while preserving the input object.
+
+## HW_R2_ASM
+Jump to the existing default handler, recognize Thumb b-to-self via bytes and disassembly, confirm fixed PC with stepi, then reset to main.

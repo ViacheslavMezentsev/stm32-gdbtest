@@ -2,6 +2,8 @@
 
 [Документация](index.md) · [English](../en/RC3_API_R1.md)
 
+[R2: навигация, вызовы и watchpoints](RC3_API_R2.md): 56/56 HLA и 8/8 native DAP; перенос в ядро только после утверждения владельца.
+
 02.10.2026, Windows. Ветка `codex/rc3-api-r1` продолжает исследовательскую
 `codex/rc3-gdb-python-research` на `9fce519`, которая основана на main `da42cd7`.
 Порядок принятия: исследование → R1; push/land выполняет владелец.

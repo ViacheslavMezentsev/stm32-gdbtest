@@ -2,6 +2,8 @@
 
 [Documentation](index.md) · [Русский](../ru/RC3_API_R1.md)
 
+[R2: navigation, calls and watchpoints](RC3_API_R2.md): 56/56 HLA and 8/8 native DAP; core promotion requires explicit owner approval.
+
 2026-10-02, Windows. Branch `codex/rc3-api-r1` continues research branch
 `codex/rc3-gdb-python-research` at `9fce519`, based on main `da42cd7`.
 Acceptance order: research → R1; publication/land belongs to the owner.

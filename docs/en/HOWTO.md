@@ -309,3 +309,13 @@ with `git add tests/<directory>` may skip files. Add explicit lowercase file pat
 (`git -c core.ignorecase=false add -- tests/<directory>/<file>`) and inspect `git diff --cached --name-only`.
 Do not introduce a second Tests root into the index. A new consumer must exclude
 its build/ directory using a local .gitignore.
+
+## Watchpoint installed but GDB does not report its number
+
+On the tested F411/OpenOCD0.12.0 ST-Link HLA connection, the server sent T05 without
+watch/rwatch/awatch addresses. Do not treat any stop as watchpoint success.
+Keep RSP/server logs and inspect the interface driver. In the [R2 experiment](RC3_API_R2.md),
+native stlink-dap/dapdirect_swd resolved this on the same stand. The --native-stlink
+flag exists only in the consumer runner; the production module and installed
+OpenOCD remain unchanged. Omit the flag to revert. This is not a universal
+recommendation to switch drivers on other stands.

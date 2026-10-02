@@ -2,6 +2,8 @@
 
 Documentation · [Русский](../ru/index.md)
 
+[R2: navigation, calls and watchpoints](RC3_API_R2.md): 56/56 HLA and 8/8 native DAP; core promotion requires explicit owner approval.
+
 [Initial R1 hardware experiments](RC3_API_R1.md): F411, GDB14/16, 48/48 and failure checks.
 
 Preparing rc3: [GDB Python API research and hardware experiment plan](RC3_API_RESEARCH.md). Proposed methods are not implemented yet.

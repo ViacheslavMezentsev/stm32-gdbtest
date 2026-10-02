@@ -2,6 +2,8 @@
 
 [Documentation](index.md) · [Русский](../ru/RC3_API_RESEARCH.md)
 
+[R2: navigation, calls and watchpoints](RC3_API_R2.md): 56/56 HLA and 8/8 native DAP; core promotion requires explicit owner approval.
+
 Date: 2026-10-02. Base: `da42cd74c27a01c21df47cd660e2533e9bcfc6d4`;
 branch: `codex/rc3-gdb-python-research`. Target: **0.1.0rc3**.
 This is research and an experiment plan, **not an implemented API or hardware acceptance**.
