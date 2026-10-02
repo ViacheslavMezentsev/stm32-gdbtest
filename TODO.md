@@ -1,6 +1,15 @@
 # Дорожная карта
 
-## Текущая работа: consumer-эксперименты rc3 R3
+## Текущая работа: consumer-эксперименты rc3 R4
+
+- Ветка `codex/rc3-api-r1`, после `8ec9978`; перенос в ядро только после утверждения владельца.
+- [x] Выходной буфер + signed-статус: natural/success/error/short, 32/32 F411 GDB14/16 native DAP; restore PASS.
+- [x] Windows/Linux build/host/prepare 24/24, формат затронутого C PASS; [протокол RU](docs/ru/RC3_API_R4.md) / [EN](docs/en/RC3_API_R4.md).
+- [x] Регрессия нового ELF/GDB16: R1 24 PASS, R2 7 PASS + ASM ERROR native DAP; ASM HLA 4 PASS, R3 16 PASS. Все restore PASS, исходный ERROR сохранён.
+- [ ] Далее типы возврата, рекурсивные вызовы и границы DWT; ядро и публичный API прежние.
+- Публикация/land — владелец.
+
+## Предыдущая работа: consumer-эксперименты rc3 R3
 
 - Продолжаем `codex/rc3-api-r1` после R2-коммита `33938d2`; перенос в ядро только после утверждения владельца.
 - [x] Команды точек, progress deadline с переполнением, same-value watch/awatch, макросы и ветвления: 32/32 F411 GDB14/16 native DAP.

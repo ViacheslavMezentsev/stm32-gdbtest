@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Consumer R4: substitute output buffers and signed status of natural calls; success, error and short response — 32/32 F411 GDB14/16 native DAP, restore PASS. New ordinary firmware without hooks; public API unchanged. Regression retained an ASM ERROR on repeated native DAP stepi; HLA passed4/4 with the same ELF.
+
 - Consumer R3 experiments: breakpoint commands, counter wraparound, same-value watch/awatch, C macros and command composition — 32/32 F411 GDB14/16 native DAP; restore PASS. Core unchanged.
 
 - R2 consumer experiments: navigation, conditional/temporary points, caller, C expressions, return/finish/call and assembly — 56/56 F411 HLA; watchpoints — 8/8 native DAP. Original HLA WATCH failures retained, firmware restored. Core unchanged; promotion requires explicit owner approval.

@@ -327,3 +327,12 @@ stored the previous checksum: write-watch continued to the sentinel while
 access-watch stopped. `awatch` also catches reads: inspect the instruction and
 context to prove a write. An application counter with a watch predicate bounds
 progress but cannot replace the external host timeout when execution hangs.
+
+## Repeated stepi in an infinite loop: target not halted
+
+In [R4](RC3_API_R4.md), F411/OpenOCD native DAP completed `jump` and the first
+`stepi` in a Thumb self-loop; the next step reported `target not halted` and hit
+the external timeout. Preserve the ERROR and logs; verify host recovery/restore.
+HLA passed4/4 with the same ELF. This is a limited comparison, not an established
+root cause: native DAP watchpoint support does not prove reliable stepping.
+Do not hide the error by increasing the timeout or unconditionally retrying.

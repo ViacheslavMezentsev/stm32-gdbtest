@@ -53,3 +53,15 @@ A natural CPU store of an unchanged checksum is suppressed by write-watch and de
 
 ## HW_R3_LANGUAGE
 Source-context C macros, parameterized GDB branching, quoted semicolons and failure-short-circuiting command sequences work on the target debugger.
+
+## HW_R4_NATURAL
+Natural output-buffer call fills eight bytes and returns their count; caller computes an independent total and preserves packet metadata.
+
+## HW_R4_OUTPUT
+Replace a bounded output buffer and force success; natural caller consumes the supplied data, then the next call resumes normal behavior.
+
+## HW_R4_ERROR
+Supply poison output bytes and force a negative status; caller records the error without accepting the buffer, and the next natural call recovers.
+
+## HW_R4_SHORT
+Supply a short-packet status with poison tail; caller rejects the incomplete packet without accumulating its bytes, then recovers naturally.

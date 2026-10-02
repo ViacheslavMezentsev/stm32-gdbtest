@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- Consumer R4: подмена выходного буфера и signed-статуса естественного вызова; успех, ошибка и короткий ответ — 32/32 F411 GDB14/16 native DAP, restore PASS. Новая обычная прошивка без hooks; публичный API прежний. Регрессия сохранила ASM ERROR при повторном stepi на native DAP; HLA на том же ELF 4/4 PASS.
+
 - Consumer-опыты R3: команды точек, счётчик с переполнением, same-value watch/awatch, C-макросы и композиция команд — 32/32 F411 GDB14/16 native DAP; restore PASS. Ядро не изменено.
 
 - Consumer-опыты R2: навигация, условные/однократные точки, caller, C-выражения, return/finish/call и ассемблер — 56/56 F411 HLA; watchpoints — 8/8 native DAP. Исходные WATCH FAIL на HLA сохранены, firmware restore PASS. Ядро не изменено; перенос только после явного утверждения владельца.

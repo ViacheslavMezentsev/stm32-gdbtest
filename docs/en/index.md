@@ -2,6 +2,8 @@
 
 Documentation · [Русский](../ru/index.md)
 
+[R4: output buffers and return substitution](RC3_API_R4.md): natural calls, complete packets, errors and short responses.
+
 [R3: stop actions and counters](RC3_API_R3.md): 32/32 F411 native DAP; commands, wraparound, same-value writes.
 
 [R2: navigation, calls and watchpoints](RC3_API_R2.md): 56/56 HLA and 8/8 native DAP; core promotion requires explicit owner approval.
