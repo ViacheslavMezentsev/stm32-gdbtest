@@ -459,3 +459,12 @@ side effects; empty return skips the body. For hard-float, verify ELF attributes
 and early FPU initialization. Passing double through d0/d1 does not imply hardware
 double arithmetic: this application uses __aeabi_dadd. Inspect stack arguments
 at exact function entry before the prologue changes SP.
+
+## Structure return and C++ overloads
+
+In [R18](../research/rc3-gdb-python/en/r18.md), return completed without delivering
+Pair into its hidden buffer; HFA worked only in hard-float, Small in both ABIs.
+Check the caller value, type and transfer path of the current ELF. Do not carry
+the old pinned SRET technique to a new ELF without renewed analysis.
+Use a full method signature including const: short Converter::apply has two
+locations. Select direct calls by argument type and separately verify this.

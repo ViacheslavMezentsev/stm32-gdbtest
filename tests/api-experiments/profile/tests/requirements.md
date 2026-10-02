@@ -188,3 +188,21 @@ Force void and scalar returns, verify skipped side effects and caller-visible su
 
 ## HW_R17_CALL
 Invoke void/double/float/six-argument functions directly, verify values and side effects, restored PC/SP, and subsequent natural caller behavior.
+
+## HW_R18_FINISH
+Capture small/mixed/HFA aggregate and overloaded const-method results; reject ambiguous overload selection, verify this/arguments and caller sinks.
+
+## HW_R18_CALL
+Invoke aggregate functions and explicitly typed C++ overloads directly, verifying values, restored PC/SP and natural sinks.
+
+## HW_R18_CPP_RETURN
+Force scalar results from selected C++ overloads and verify caller consumption and subsequent natural behavior.
+
+## HW_R18_SMALL_RETURN
+Probe forced return of a four-byte aggregate; retain unsupported behavior as FAIL rather than accepting a wrong caller value.
+
+## HW_R18_PAIR_RETURN
+Probe forced return of a mixed eight-byte aggregate and preserve any failure of hidden-buffer result delivery.
+
+## HW_R18_HFA_RETURN
+Probe forced return of two float fields under the selected ABI and retain unsupported behavior as FAIL.

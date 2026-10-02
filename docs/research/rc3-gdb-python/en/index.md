@@ -28,5 +28,6 @@ including FAIL/ERROR. This is not an approved public API extension.
 | R15 | [O2/Os, inline frames and value availability](r15.md) | [JSON](../results/rc3-r15-results.json) |
 | R16 | [until, advance, nexti and stop reasons](r16.md) | [JSON](../results/rc3-r16-results.json) |
 | R17 | [Scalar types and soft/hard-float ABIs](r17.md) | [JSON](../results/rc3-r17-results.json) |
+| R18 | [Structures, HFA and C++ methods](r18.md) | [JSON](../results/rc3-r18-results.json) |
 
 [Consumer](../../../../tests/api-experiments/CMakeLists.txt) · [GDB probe](../../../../tools/research/gdb_api_probe.py)

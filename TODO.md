@@ -1,6 +1,16 @@
 # Дорожная карта
 
-## Текущая работа: consumer-эксперименты rc3 R17
+## Текущая работа: consumer-эксперименты rc3 R18
+
+- Ветка `codex/rc3-api-r1`, после `9890531`; перенос в ядро только после утверждения владельца.
+- [x] C++/агрегаты soft/hard:48/48 finish/call/методы +24 PASS/6 FAIL structure-return, F411/HLA GDB14/16. FAIL сохранены: Pair soft/hard, HFA soft; Small и HFA hard проходят.
+- [x] Проверены this, аргументы и выбор const-перегрузок, приёмники и естественное продолжение; ограничение R5 подтверждено. Default ELF прежний.
+- [x] Restore HW_BOOT/HW_GPIO PASS во всех14 сериях. [RU](docs/research/rc3-gdb-python/ru/r18.md) / [EN](docs/research/rc3-gdb-python/en/r18.md).
+- [x] Windows/Linux71/71 host/prepare для каждой ABI на каждой ОС; docs3/3, format1/1 на канонической копии.
+- [ ] Следующий этап: RTOS — обычная прошивка, задачи, контекст и фильтры; затем надёжность по [очереди](docs/research/rc3-gdb-python/ru/plan.md#очередь-продолжения-после-r9).
+- Ядро/API прежние; публикация/land — владелец.
+
+## Предыдущая работа: consumer-эксперименты rc3 R17
 
 - Ветка `codex/rc3-api-r1`, после `0fd9f8c`; перенос в ядро только после утверждения владельца.
 - [x] Scalar ABI soft/hard:48/48 F411/HLA GDB14/16; void/double/float/6 аргументов, finish/return/call и конечные приёмники.

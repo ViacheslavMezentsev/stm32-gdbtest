@@ -30,7 +30,7 @@ def main():
     parser.add_argument('--stand', required=True, type=Path)
     parser.add_argument('--gdb', required=True, action='append', type=Path)
     parser.add_argument('--execute', action='store_true')
-    parser.add_argument('--suite', choices=('r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9', 'r10', 'r11', 'r12', 'r13', 'r14', 'r15', 'r16', 'r17'), default='r1')
+    parser.add_argument('--suite', choices=('r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9', 'r10', 'r11', 'r12', 'r13', 'r14', 'r15', 'r16', 'r17', 'r18'), default='r1')
     parser.add_argument('--test', action='append', help='explicit subset; recorded in the protocol')
     parser.add_argument('--native-stlink', action='store_true', help='consumer-only native DAP/SWD comparison')
     parser.add_argument('--failure-paths-only', action='store_true',
@@ -63,6 +63,7 @@ def main():
         'r15': ('LOCATIONS', 'VALUES'),
         'r16': ('UNTIL', 'ADVANCE', 'NEXTI', 'INTERRUPT'),
         'r17': ('FINISH', 'RETURN', 'CALL'),
+        'r18': ('FINISH', 'CALL', 'CPP_RETURN', 'SMALL_RETURN', 'PAIR_RETURN', 'HFA_RETURN'),
         'r7': ('WIDTH', 'CAPACITY', 'SPLIT'),
         'r6': ('CONTEXT', 'FINISH', 'RETURN'),
         'r5': tuple(kind + '_' + mode for kind in ('WIDE', 'FLOAT', 'STRUCT')

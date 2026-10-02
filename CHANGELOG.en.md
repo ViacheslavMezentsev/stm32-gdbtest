@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Consumer R18: aggregates/HFA and C++ soft/hard —72 PASS,6 retained FAILs on F411/HLA GDB14/16. Finish/call and const overloads pass; forced Pair return fails delivery in both ABIs, HFA in soft. Small and hard HFA pass, restore PASS in all14 series. Core unchanged; RTOS next.
+
 - Consumer R17: scalar soft/hard-float ABIs —48/48 F411/HLA GDB14/16. Void, double, float and6 arguments verified through finish/return/call, stack and sinks; separate ordinary firmware and FPU initialization without hooks, restore PASS. Previous ELF and core unchanged; structures/HFA and C++ remain next.
 
 - Consumer R16: until/advance/nexti —32/32 F411/HLA GDB14/16 on the unchanged Og ELF. Verified source lines, advance completing at frame exit before its target, nexti interruption by a separate point and explicit continuation; initial scope ERROR retained, restore PASS. Core and firmware unchanged; ABI next.

@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- Consumer R18: структуры/HFA и C++ soft/hard —72 PASS,6 сохранённых FAIL на F411/HLA GDB14/16. Finish/call всех типов и const-перегрузки проходят; forced return Pair не доставляет результат в обоих ABI, HFA — в soft. Small и HFA hard проходят, restore PASS во всех14 сериях. Ядро прежнее; далее RTOS.
+
 - Consumer R17: scalar soft/hard-float ABI —48/48 F411/HLA GDB14/16. Void, double, float и6 аргументов проверены через finish/return/call, стек и потребителей; отдельная обычная прошивка и FPU-init без hooks, restore PASS. Прежний ELF и ядро неизменны; структуры/HFA и C++ остаются следующим подэтапом.
 
 - Consumer R16: until/advance/nexti —32/32 F411/HLA GDB14/16 на прежнем Og ELF. Проверены строки, завершение advance при выходе кадра до цели, прерывание nexti отдельной точкой и явное продолжение; первоначальный scope ERROR сохранён, restore PASS. Ядро и прошивка прежние; далее ABI.
