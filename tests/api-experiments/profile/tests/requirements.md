@@ -104,3 +104,12 @@ FinishBreakpoint tracks a selected recursive invocation despite repeated return 
 
 ## HW_R6_RETURN
 Force return only from the selected beta recursive frame, verify remaining caller additions, unchanged alpha and subsequent natural execution.
+
+## HW_R7_WIDTH
+Characterize aligned 1/2/4/8-byte and unaligned 2/4-byte hardware read ranges; retain insertion rejection and verify independent post-trial write-watch control.
+
+## HW_R7_CAPACITY
+Probe one through eight bounded static word watches, stop on explicit insertion rejection, preserve observations and confirm a fresh hardware write-watch after cleanup.
+
+## HW_R7_SPLIT
+Split exact unaligned ranges into aligned hardware read points; verify each expected byte access and reach a sentinel before a second reader.

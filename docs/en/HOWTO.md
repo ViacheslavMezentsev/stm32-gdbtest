@@ -353,3 +353,12 @@ to filter out. Do not base callback counts on an assumed ordering of two filters
 A verified approach uses one Python predicate reading arguments and the stack,
 or an independent CLI condition without a callback. Do not resume the MCU, select
 frames or delete breakpoints in stop; perform actions after the stop returns.
+
+## Watchpoint created, but continue reports Command aborted
+
+Inspect GDB output: Python may return only `Command aborted.` while the log contains
+`Could not insert hardware watchpoint N.`. In [R7](RC3_API_R7.md), an unaligned range
+or a fifth separate word point caused rejection. Preserve logs, delete owned points
+and verify a positive control after reset. Do not classify every Command aborted
+as resource exhaustion. Exact1+1/1+2+1 decomposition observed unaligned2/4-byte
+ranges at the cost of two/three hardware points.

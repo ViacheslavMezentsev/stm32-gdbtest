@@ -2,6 +2,8 @@
 
 Documentation · [Русский](../ru/index.md)
 
+[R7: watchpoint ranges and budget](RC3_API_R7.md): alignment, point exhaustion, recovery and exact decomposition.
+
 [R6: stacks and recursive frames](RC3_API_R6.md): context selection, FinishBreakpoint and targeted return substitution.
 
 [R5: return types and ABI](RC3_API_R5.md): uint64/float/struct; struct return limitation and return-buffer experiment.

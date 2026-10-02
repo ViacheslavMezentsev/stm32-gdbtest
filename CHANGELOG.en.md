@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Consumer R7: watchpoint ranges/budget16/16 and unaligned decomposition8/8 on F411/GDB14/16 native DAP. Confirmed4/5 boundary and unaligned2/4-byte rejection; original FAIL/ERROR retained, restore PASS. Firmware and core unchanged.
+
 - Consumer R6: stack filtering, finish and return in recursion —24/24 F411 GDB14/16. Original callback-expectation failure retained; ABI regression32/32 and old SRET ELF-pin rejection verified. Core unchanged.
 
 - Consumer R5: uint64/float/struct finish and call, scalar return —64/64 F411 GDB14/16; struct return retained FAIL on both versions. Substitution through a reviewed return buffer —8/8. Core unchanged.
