@@ -8,6 +8,7 @@
 - [x] Автономный [HTML-проигрыватель](docs/research/adaptive-test-tree/results/player.html): слайдер, Play/Pause, узлы и причины блокировки.
 - [x] [План и отчёт RU/EN](docs/research/adaptive-test-tree/ru/index.md); API/ТЗ/производственный runner не изменены, HW не запускалось.
 - [x] Windows host112 (8 skips), Linux host112 (4 skips); Docker docs/host4/4, модель14/14, воспроизводимость JSON/HTML и браузер проверены.
+- [x] Workflow-карточки с раздельной доступностью/результатами и неподвижными связями; будущий YAML-каркас описан в плане RU/EN.
 - [ ] Обсудить семантику модели и следующие эксперименты. Публикация/land — владелец.
 
 ## Предыдущая работа

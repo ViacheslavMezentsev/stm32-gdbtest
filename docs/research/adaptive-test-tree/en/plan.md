@@ -75,3 +75,26 @@ diagnostic insertion, TTL, persist/resume, CTest/JUnit integration or arbitrary
 condition interpreter. Reset is modeled by explicit null effects. Arbitrary-node
 dependency graphs, static fact-conflict analysis and large-tree scaling are possible
 future research, not promises.
+
+## Workflow view and the next YAML step
+
+The S1 player uses rectangular cards, fixed edges and states from snapshots.json.
+This extends presentation without changing scheduler semantics. The skeleton is
+currently extracted from the first snapshot; scenarios are still defined in node.json.
+
+A separate static YAML workflow description and an adapter into the current model
+are proposed. A YAML parser is not implemented. The format does not claim GitHub
+Actions compatibility: visual similarity does not define execution rules. Separate:
+
+- group hierarchy (`parent`/`children`) and inherited input;
+- execution-order dependencies (`needs`, if introduced), including cycle checks;
+- activation conditions on current facts/input, UNKNOWN and recomputation after each test;
+- ordered node scenarios and output expressions (All/Any and others);
+- run results stored separately from the skeleton.
+
+Current edges represent parent relationships only. An arbitrary needs graph is
+not supported yet. A ready-made viewer could be connected through a presentation
+adapter if it preserves separate eligibility and result states, reactivation and
+step playback. Library selection, YAML schema and validation are a separate next
+stage. Verification: equivalent JSON and YAML skeletons must yield identical full
+snapshots against an independent oracle; invalid references and cycles must be rejected.
