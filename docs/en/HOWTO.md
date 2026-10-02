@@ -408,3 +408,12 @@ the buffer at exact IRQ entry before CPU reads and the final sinks. The same
 access-watch then caught a CPU read; a separate write-watch detected the counter
 write. No watch stop does not mean no DMA write; use an independent sentinel/timeout.
 This conclusion applies to the tested stand and mode.
+
+## An IRQ occurred, but the WFI path is not yet confirmed
+
+In [R13](../research/rc3-gdb-python/en/r13.md), the first TIM2 interrupted context
+still at WFI. Check the function and post-instruction PC in the interrupted frame,
+with bounded attempts. Handler entry alone is insufficient. With SysTick disabled,
+TIM2 wakes the CPU but does not advance ticks or its delay. Restore IRQ masks and
+SysTick in finally, then check delay completion. This does not roll back pending,
+COUNTFLAG or timer phase; a PC after WFI does not measure sleep residency.

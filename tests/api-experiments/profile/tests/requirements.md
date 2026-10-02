@@ -146,3 +146,9 @@ Observe DMA buffer mutation without a reported write-watch stop before the exact
 
 ## HW_R12_ACCESS
 Observe DMA completion independently of an access watch, then prove that the same watch detects the CPU reading the DMA buffer; verify consumer values and absence of ADC errors.
+
+## HW_R13_SYSTICK
+Find WFI in the CMSIS delay function, isolate SysTick wakeups, observe a post-WFI exception frame and natural return, restore IRQ enable masks and confirm delay completion.
+
+## HW_R13_TIM2
+Isolate TIM2 with SysTick disabled, verify WFI/IRQ/return without advancing the delay timebase, restore enable/control bits and confirm eventual delay completion.

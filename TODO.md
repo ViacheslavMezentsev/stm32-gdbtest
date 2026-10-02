@@ -1,6 +1,15 @@
 # Дорожная карта
 
-## Текущая работа: consumer-эксперименты rc3 R12
+## Текущая работа: consumer-эксперименты rc3 R13
+
+- Ветка `codex/rc3-api-r1`, после `869f884`; перенос в ядро только после утверждения владельца.
+- [x] WFI/SysTick/TIM2:16/16 F411/HLA GDB14/16 на прежнем CMSIS ELF; PC, стек, возврат и восстановление задержки проверены.
+- [x] Restore HW_BOOT/HW_GPIO PASS, неожиданных FAIL/ERROR нет. [RU](docs/research/rc3-gdb-python/ru/r13.md) / [EN](docs/research/rc3-gdb-python/en/r13.md).
+- [x] Windows/Linux53/53 host/prepare, Linux CMSIS prepare2/2, docs3/3. Энергия и длительность сна не измерялись.
+- [ ] Следующий этап: последовательности перехватов — отказы, повторы, успех и порядок вызовов; затем оптимизированный код по [очереди](docs/research/rc3-gdb-python/ru/plan.md#очередь-продолжения-после-r9).
+- Ядро/API и исходники прошивок прежние; публикация/land — владелец.
+
+## Предыдущая работа: consumer-эксперименты rc3 R12
 
 - Ветка `codex/rc3-api-r1`, после `2bd17d2`; перенос в ядро только после утверждения владельца.
 - [x] DMA/write/access: 16/16 F411/native DAP GDB14/16, тот же CMSIS ELF. Буфер изменён до CPU-чтений без watch stop; CPU-контроли и приёмники PASS.

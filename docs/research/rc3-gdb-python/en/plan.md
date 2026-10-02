@@ -355,8 +355,8 @@ for board tests.
 | 1 | Fault and non-returning calls, diagnostics and recovery | [R10](r10.md): 16 expected ERRORs, 16/16 controls PASS; limitations in report |
 | 2 | IRQ, interrupted stack and exception return | [R11](r11.md): SysTick/TIM2 16/16; basic MSP, limitations in report |
 | 3 | DMA and watchpoint observation limits | [R12](r12.md): 16/16 native DAP; DMA writes without watch stops, CPU controls PASS |
-| 4 | WFI, sleep and wakeup | Next |
-| 5 | Interception sequences: failures, retries, success and call order | Pending |
+| 4 | WFI, sleep and wakeup | [R13](r13.md): 16/16 HLA, ordinary Sleep, SysTick/TIM2, delay restoration |
+| 5 | Interception sequences: failures, retries, success and call order | Next |
 | 6 | Optimized code: O2/Os, inline, unavailable values and multiple locations | Pending |
 | 7 | Remaining navigation: until/advance/nexti, source lines and unrelated stops | Pending |
 | 8 | ABI: void/double/hard-float, stack arguments, structures, then C++ | Pending |

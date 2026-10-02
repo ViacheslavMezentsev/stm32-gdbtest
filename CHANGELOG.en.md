@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Consumer R13: WFI/SysTick/TIM2 —16/16 F411/HLA GDB14/16 on the unchanged CMSIS ELF. Verified interrupted PC, natural return, distinct wakeup and ticks progress, and delay restoration; restore PASS. Core and firmware unchanged; interception sequences next.
+
 - Consumer R12: DMA/watchpoints —16/16 F411/native DAP GDB14/16 on the unchanged CMSIS ELF. Verified DMA writes without a buffer-watch event, positive CPU controls and final sinks; restore PASS. Core and firmware unchanged; sleep/wakeup next.
 
 - Consumer R11: SysTick/TIM2, hardware exception stack, interrupted context and natural return —16/16 F411/HLA GDB14/16 on the existing CMSIS ELF. Initial FAIL/ERROR retained, optimized_out explicit, restore PASS. Core and firmware sources unchanged; DMA/watchpoints next.

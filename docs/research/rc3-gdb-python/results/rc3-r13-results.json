@@ -1,0 +1,3048 @@
+{
+  "date": "2026-10-02",
+  "source_base": "869f884",
+  "board": "WeAct BlackPill F411CE",
+  "mcu": "STM32F411CEU6",
+  "backend": "OpenOCD 0.12.0",
+  "runs": [
+    {
+      "status": "PASS",
+      "suite": "r13",
+      "elf_sha256": "f72026290b244f3c00f3dcda214cea0951f5634894b5f601a1b54e520bfa2571",
+      "restore_sha256": "1ff37ae10a007401de5e0eaf826764f60a2849c8b7821c123f12caa28c2e79c3",
+      "restored": true,
+      "source_sha256": {
+        ".gitignore": "f872b7dbd200d8629c7adac4d17dd7b26bc7ec9b4d57f1c5f2e6b14698c3c281",
+        "CMakeLists.txt": "0f76103275d33b8c6389647fbbdd022986878ceb9da0d5b7827ccdd3d2de3ecc",
+        "firmware_FLASH.ld": "11388a02e1e870b0b2a4d8b434c2043845302c97eba74d32d94252c1d8303496",
+        "host/test_commands.py": "f6bfe90975212cabc04a9ed80787b2659f3aff6512ff4c1d4fc66254fe76fe0e",
+        "host/test_failure_evidence.py": "c62d1ad56cce538e77442ab8b571230613d3724e30ce3c2f2a448c88a2035669",
+        "host/test_matrix.py": "a1fd886c5282c85ffd936ce3fb55d5ee4a264488e9ca877f32a1063e22b1ab18",
+        "host/test_navigation.py": "75ae48b4ac16d82795c825146767ab732191bb0031b2c18a35a7b122b6ab847a",
+        "host/test_session.py": "5a4c113efbf373f95b34382d92b54532b2b6212ec9ef1b69197c213574c1ba37",
+        "lab/__init__.py": "9a3b47b5d1b5b39e49b96fdf1605c58d413868823bbbb22bcfb5f73a8cd9dafc",
+        "lab/commands.py": "a5b00bc077bc5bc3054f5278088cdeac75def0ea5e49a2d71cff4dcc0fee0236",
+        "lab/failure_evidence.py": "0ab5c06d5014ff8427c01e932047ba75c4a91e180fbd57432104917aa0c303d1",
+        "lab/navigation.py": "f6038e1e6c6d2ebfeb4cd322c86ae8d07481fbea209ffa78f26252557568bfa4",
+        "lab/openocd_native.py": "f111cd82ef45faf644d275bb03973b73fa0e1595bdb36f37deb254ee0eb25257",
+        "lab/session.py": "a9973223a873a9a1be770c919ea91347a387d009285f8893a1cbbba044064458",
+        "profile/target.toml": "6c6d66767ff344da39045a964452011595d96b2fb631bde17a77fdfc4e5d7cdd",
+        "profile/tests/board/test_automation.py": "1ecbb6286122bf8dcb706823f99578ce5a62081c2b5d8c8e24499c2ef44234f9",
+        "profile/tests/board/test_call_failures.py": "474af1e93770c515faa9f0804e30719024b9d7842ea3665a0b59f71bbeda289c",
+        "profile/tests/board/test_code_limits.py": "48118d4963a046b2d1c11d8dd7589fba4af7d1bc225b30ef4a9c0c86d2a38ae1",
+        "profile/tests/board/test_dma_watch.py": "0871a85107f79474efe2c64c653eb7cc65cb7637669a1f028da7696ecbe549ec",
+        "profile/tests/board/test_interrupted_calls.py": "7bff7fa839a92b1126ce0ad2099a4012ed28a4d034a68cbe89fe3e4d4d528e22",
+        "profile/tests/board/test_irq_frames.py": "4faa98bc77cc20ae421b473e95514b54a2303f5328b2762dacaac3089c571375",
+        "profile/tests/board/test_navigation.py": "d8a77c90bce147c2b4e1a963ba3b93f3931dac50d90846378a5b23d4682a2b05",
+        "profile/tests/board/test_outputs.py": "a050a4948e3783b214a9eb9cc24e96235a4e074836570e329e440b5b381531fb",
+        "profile/tests/board/test_recursion.py": "516f96286b9d427fb7abca7cdb6b799dfa83f0e6888c7307d623f8e6d097fb31",
+        "profile/tests/board/test_research.py": "4cb6c50ebc76abdcc3d960d793695d54b0c6a7f4f26ba7222b8d4edcf43040bd",
+        "profile/tests/board/test_return_types.py": "a05b48e7f1ec86c6e64054e44d4610c56f1015d52e8c0f990dea17c97c4563ab",
+        "profile/tests/board/test_sret.py": "26e9c3bc3bbcaf6e488f273b3345fa3b33b1d2f3a125788180cacb3aa48e1a80",
+        "profile/tests/board/test_watch_limits.py": "821042c45a609a17622539280191aa6f1530ee2f588ac0a9e1fec1966fa5ea8b",
+        "profile/tests/board/test_watch_split.py": "893713470247d5b3a4c6df5b6d1339f4403a5c682d265eb03abe09b01236aaf5",
+        "profile/tests/board/test_wfi_path.py": "8151cbf16e88a2beaa6a98fcd4cb4a3e5a9cd1a4930a81e298e26361207b3bd9",
+        "profile/tests/requirements.md": "7311111030bb7d48c99dbb66bb0d36081cc9bc09bafdc239177bff3a606b1f65",
+        "run_matrix.py": "db9c128013817ddf60dbf299adb604c453072cbd960ef0aeac942a98fa964c91",
+        "src/app.c": "fbf20ab60780e6b89cb50c2f823e1665e24efed8f1d6cfb9433a4a1ba045c8c7",
+        "src/app.h": "02e11d2f0f506574e8fc3e72e05db31bf7a8c6e91bf86d166be78c69db8faa36",
+        "src/packet.c": "917dc51a5de233b90c49e525dd9a8bd44aa076a76c9bb4493fc22b5e2b4652b2",
+        "src/processing.c": "5ff9c27508d3f69b2905c9cf07ab660dc400fec2c8e7450f8ecd0b46290e73b0",
+        "src/returns.c": "e96e05d931cd0acecb37457efb5eaa25d9cfc321271386ffd8d9ba24680e7346",
+        "src/routes.c": "ce13ff6053a36b06a9c404da26781581cdeb9a2b5a959e0368a44cdd8b200e65",
+        "src/startup.c": "d0afbba98d70cfda1a1149b20ab7be03e41d3a6dd1f982d48c08f72bcc4a281e"
+      },
+      "directory": "20261002T082503.043367Z",
+      "interface": "hla",
+      "stages": [
+        {
+          "label": "prepare_gdb0_HW_R13_SYSTICK",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_gdb0_HW_R13_TIM2",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_gdb1_HW_R13_SYSTICK",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_gdb1_HW_R13_TIM2",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_restore_HW_BOOT",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_restore_HW_GPIO",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "baseline_HW_BOOT",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 7,
+          "passed_checks": 7,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "baseline_HW_GPIO",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 12,
+          "passed_checks": 12,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "gdb0_round0_HW_R13_SYSTICK",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 17,
+          "passed_checks": 17,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                7
+              ],
+              "signal": null,
+              "stop_id": 2,
+              "pc": 134218334,
+              "reason": "expected"
+            },
+            "before_wfi": {
+              "pc": 134218334,
+              "instruction": {
+                "addr": 134218334,
+                "asm": "wfi",
+                "length": 2
+              },
+              "ticks": 2,
+              "timer": false,
+              "enabled": [
+                268435456,
+                16777728
+              ],
+              "systick_control": 7
+            },
+            "stop_2": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 3,
+              "pc": 134218276,
+              "reason": "expected"
+            },
+            "wake_0": {
+              "pc": 134218336,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "SysTick_Handler",
+                  "pc": 134218276,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 3
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218336,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 3
+                }
+              ]
+            },
+            "stop_4": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218336,
+              "reason": "expected"
+            },
+            "after_wake": {
+              "pc": 134218336,
+              "counter": 3,
+              "ticks": 3
+            },
+            "stop_6": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 5,
+              "pc": 134218120,
+              "reason": "expected"
+            }
+          },
+          "assertions": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "condition: delay_ms == 500",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "ordinary sleep without SLEEPONEXIT",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "one WFI in selected function",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "Thumb WFI encoding",
+              "actual": "30bf",
+              "expected": "30bf",
+              "passed": true
+            },
+            {
+              "name": "expected wake exception",
+              "actual": 15,
+              "expected": 15,
+              "passed": true
+            },
+            {
+              "name": "post-WFI interrupted context observed",
+              "actual": 134218336,
+              "expected": 134218336,
+              "passed": true
+            },
+            {
+              "name": "resumed thread mode",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "resumed stack",
+              "actual": 537001944,
+              "expected": 537001944,
+              "passed": true
+            },
+            {
+              "name": "wake handler performed work",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "IRQ enable masks restored",
+              "actual": [
+                268435456,
+                16777728
+              ],
+              "expected": [
+                268435456,
+                16777728
+              ],
+              "passed": true
+            },
+            {
+              "name": "SysTick control bits restored",
+              "actual": 7,
+              "expected": 7,
+              "passed": true
+            },
+            {
+              "name": "full delay eventually completed",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "one ADC sequence retained",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            }
+          ],
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 26,
+          "server_hardware_insertions": 26,
+          "raw_log_sha256": {
+            "gdb.log": "670d8aa3028e8b0c694f59a5183ca8c0479c65de6b6a4c5bf8fd18b7bbf5735f",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "2070f47ae1417745a5627d0db970450fb9a0aceeb245a1f4530ad51de090b315"
+          }
+        },
+        {
+          "label": "gdb0_round0_HW_R13_TIM2",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 19,
+          "passed_checks": 19,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                7
+              ],
+              "signal": null,
+              "stop_id": 2,
+              "pc": 134218334,
+              "reason": "expected"
+            },
+            "before_wfi": {
+              "pc": 134218334,
+              "instruction": {
+                "addr": 134218334,
+                "asm": "wfi",
+                "length": 2
+              },
+              "ticks": 2,
+              "timer": true,
+              "enabled": [
+                268435456,
+                16777728
+              ],
+              "systick_control": 7
+            },
+            "stop_2": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 3,
+              "pc": 134218292,
+              "reason": "expected"
+            },
+            "wake_0": {
+              "pc": 134218334,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "TIM2_IRQHandler",
+                  "pc": 134218292,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 3
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218334,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 3
+                }
+              ]
+            },
+            "stop_4": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218292,
+              "reason": "expected"
+            },
+            "wake_1": {
+              "pc": 134218336,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "TIM2_IRQHandler",
+                  "pc": 134218292,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 4
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218336,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 4
+                }
+              ]
+            },
+            "stop_6": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 5,
+              "pc": 134218336,
+              "reason": "expected"
+            },
+            "after_wake": {
+              "pc": 134218336,
+              "counter": 5,
+              "ticks": 2
+            },
+            "stop_8": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                11
+              ],
+              "signal": null,
+              "stop_id": 6,
+              "pc": 134218120,
+              "reason": "expected"
+            }
+          },
+          "assertions": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "condition: delay_ms == 500",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "ordinary sleep without SLEEPONEXIT",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "one WFI in selected function",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "Thumb WFI encoding",
+              "actual": "30bf",
+              "expected": "30bf",
+              "passed": true
+            },
+            {
+              "name": "expected wake exception",
+              "actual": 44,
+              "expected": 44,
+              "passed": true
+            },
+            {
+              "name": "expected wake exception",
+              "actual": 44,
+              "expected": 44,
+              "passed": true
+            },
+            {
+              "name": "post-WFI interrupted context observed",
+              "actual": 134218336,
+              "expected": 134218336,
+              "passed": true
+            },
+            {
+              "name": "resumed thread mode",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "resumed stack",
+              "actual": 537001944,
+              "expected": 537001944,
+              "passed": true
+            },
+            {
+              "name": "wake handler performed work",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "TIM2 wake does not advance SysTick timebase",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "IRQ enable masks restored",
+              "actual": [
+                268435456,
+                16777728
+              ],
+              "expected": [
+                268435456,
+                16777728
+              ],
+              "passed": true
+            },
+            {
+              "name": "SysTick control bits restored",
+              "actual": 7,
+              "expected": 7,
+              "passed": true
+            },
+            {
+              "name": "full delay eventually completed",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "one ADC sequence retained",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            }
+          ],
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 31,
+          "server_hardware_insertions": 31,
+          "raw_log_sha256": {
+            "gdb.log": "5d99ee7d9c8e19cfb9358eeac8ea56f76602ff63a3b9c1d5dad6473091dc6fb4",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "6715ed34a61d574823a99df0c2b1dbb9f42d2f98cd618da41a5fea5fe960cceb"
+          }
+        },
+        {
+          "label": "gdb0_round1_HW_R13_SYSTICK",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 17,
+          "passed_checks": 17,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                7
+              ],
+              "signal": null,
+              "stop_id": 2,
+              "pc": 134218334,
+              "reason": "expected"
+            },
+            "before_wfi": {
+              "pc": 134218334,
+              "instruction": {
+                "addr": 134218334,
+                "asm": "wfi",
+                "length": 2
+              },
+              "ticks": 2,
+              "timer": false,
+              "enabled": [
+                268435456,
+                16777728
+              ],
+              "systick_control": 7
+            },
+            "stop_2": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 3,
+              "pc": 134218276,
+              "reason": "expected"
+            },
+            "wake_0": {
+              "pc": 134218336,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "SysTick_Handler",
+                  "pc": 134218276,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 3
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218336,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 3
+                }
+              ]
+            },
+            "stop_4": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218336,
+              "reason": "expected"
+            },
+            "after_wake": {
+              "pc": 134218336,
+              "counter": 3,
+              "ticks": 3
+            },
+            "stop_6": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 5,
+              "pc": 134218120,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 26,
+          "server_hardware_insertions": 26,
+          "raw_log_sha256": {
+            "gdb.log": "894461223249fb08b6efd1615ca0bacb352f5f644d7a086c9fdd3c534acc00b9",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "864db6fc530bd91f408bacb0dd7e683c2f9d47b2f8a3f07e6b6ccab9301aa404"
+          }
+        },
+        {
+          "label": "gdb0_round1_HW_R13_TIM2",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 19,
+          "passed_checks": 19,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                7
+              ],
+              "signal": null,
+              "stop_id": 2,
+              "pc": 134218334,
+              "reason": "expected"
+            },
+            "before_wfi": {
+              "pc": 134218334,
+              "instruction": {
+                "addr": 134218334,
+                "asm": "wfi",
+                "length": 2
+              },
+              "ticks": 2,
+              "timer": true,
+              "enabled": [
+                268435456,
+                16777728
+              ],
+              "systick_control": 7
+            },
+            "stop_2": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 3,
+              "pc": 134218292,
+              "reason": "expected"
+            },
+            "wake_0": {
+              "pc": 134218334,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "TIM2_IRQHandler",
+                  "pc": 134218292,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 3
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218334,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 3
+                }
+              ]
+            },
+            "stop_4": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218292,
+              "reason": "expected"
+            },
+            "wake_1": {
+              "pc": 134218336,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "TIM2_IRQHandler",
+                  "pc": 134218292,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 4
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218336,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 4
+                }
+              ]
+            },
+            "stop_6": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 5,
+              "pc": 134218336,
+              "reason": "expected"
+            },
+            "after_wake": {
+              "pc": 134218336,
+              "counter": 5,
+              "ticks": 2
+            },
+            "stop_8": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                11
+              ],
+              "signal": null,
+              "stop_id": 6,
+              "pc": 134218120,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 31,
+          "server_hardware_insertions": 31,
+          "raw_log_sha256": {
+            "gdb.log": "7bbf202e26a36f53e81d50115a02d6bf5b3c8bd589ea209b7fbb4af65f857ddd",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "cb8dd5752514753c3efa1f5741a1a1f85afb415df6641c0369af4c06ef75c9db"
+          }
+        },
+        {
+          "label": "gdb0_round2_HW_R13_SYSTICK",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 17,
+          "passed_checks": 17,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                7
+              ],
+              "signal": null,
+              "stop_id": 2,
+              "pc": 134218334,
+              "reason": "expected"
+            },
+            "before_wfi": {
+              "pc": 134218334,
+              "instruction": {
+                "addr": 134218334,
+                "asm": "wfi",
+                "length": 2
+              },
+              "ticks": 2,
+              "timer": false,
+              "enabled": [
+                268435456,
+                16777728
+              ],
+              "systick_control": 7
+            },
+            "stop_2": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 3,
+              "pc": 134218276,
+              "reason": "expected"
+            },
+            "wake_0": {
+              "pc": 134218336,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "SysTick_Handler",
+                  "pc": 134218276,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 3
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218336,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 3
+                }
+              ]
+            },
+            "stop_4": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218336,
+              "reason": "expected"
+            },
+            "after_wake": {
+              "pc": 134218336,
+              "counter": 3,
+              "ticks": 3
+            },
+            "stop_6": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 5,
+              "pc": 134218120,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 26,
+          "server_hardware_insertions": 26,
+          "raw_log_sha256": {
+            "gdb.log": "c44b23c264752d7edb772f7df21e8f5d6a7321bc6cd39f771249cfe19d23fd36",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "670276378f14d2c88000665cf1b79edb9dc62fcd34122039c044a234036cab0c"
+          }
+        },
+        {
+          "label": "gdb0_round2_HW_R13_TIM2",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 19,
+          "passed_checks": 19,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                7
+              ],
+              "signal": null,
+              "stop_id": 2,
+              "pc": 134218334,
+              "reason": "expected"
+            },
+            "before_wfi": {
+              "pc": 134218334,
+              "instruction": {
+                "addr": 134218334,
+                "asm": "wfi",
+                "length": 2
+              },
+              "ticks": 2,
+              "timer": true,
+              "enabled": [
+                268435456,
+                16777728
+              ],
+              "systick_control": 7
+            },
+            "stop_2": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 3,
+              "pc": 134218292,
+              "reason": "expected"
+            },
+            "wake_0": {
+              "pc": 134218334,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "TIM2_IRQHandler",
+                  "pc": 134218292,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 3
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218334,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 3
+                }
+              ]
+            },
+            "stop_4": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218292,
+              "reason": "expected"
+            },
+            "wake_1": {
+              "pc": 134218336,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "TIM2_IRQHandler",
+                  "pc": 134218292,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 4
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218336,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 4
+                }
+              ]
+            },
+            "stop_6": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 5,
+              "pc": 134218336,
+              "reason": "expected"
+            },
+            "after_wake": {
+              "pc": 134218336,
+              "counter": 5,
+              "ticks": 2
+            },
+            "stop_8": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                11
+              ],
+              "signal": null,
+              "stop_id": 6,
+              "pc": 134218120,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 31,
+          "server_hardware_insertions": 31,
+          "raw_log_sha256": {
+            "gdb.log": "7bbf202e26a36f53e81d50115a02d6bf5b3c8bd589ea209b7fbb4af65f857ddd",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "2b15e5884e754341608c44487808ecd2fedef5dc0f4cbfadcc1a279c3c39aabc"
+          }
+        },
+        {
+          "label": "gdb0_round3_HW_R13_SYSTICK",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 17,
+          "passed_checks": 17,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                7
+              ],
+              "signal": null,
+              "stop_id": 2,
+              "pc": 134218334,
+              "reason": "expected"
+            },
+            "before_wfi": {
+              "pc": 134218334,
+              "instruction": {
+                "addr": 134218334,
+                "asm": "wfi",
+                "length": 2
+              },
+              "ticks": 2,
+              "timer": false,
+              "enabled": [
+                268435456,
+                16777728
+              ],
+              "systick_control": 7
+            },
+            "stop_2": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 3,
+              "pc": 134218276,
+              "reason": "expected"
+            },
+            "wake_0": {
+              "pc": 134218336,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "SysTick_Handler",
+                  "pc": 134218276,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 3
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218336,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 3
+                }
+              ]
+            },
+            "stop_4": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218336,
+              "reason": "expected"
+            },
+            "after_wake": {
+              "pc": 134218336,
+              "counter": 3,
+              "ticks": 3
+            },
+            "stop_6": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 5,
+              "pc": 134218120,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 26,
+          "server_hardware_insertions": 26,
+          "raw_log_sha256": {
+            "gdb.log": "bf65202ce1c37676cba3ed64f4ac1499b57a6c50ff6328a15444bf81ab8fecc2",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "de45d31310447a74d8de802981511da4897ca27b6037dd5344e33b7a1f933121"
+          }
+        },
+        {
+          "label": "gdb0_round3_HW_R13_TIM2",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 19,
+          "passed_checks": 19,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                7
+              ],
+              "signal": null,
+              "stop_id": 2,
+              "pc": 134218334,
+              "reason": "expected"
+            },
+            "before_wfi": {
+              "pc": 134218334,
+              "instruction": {
+                "addr": 134218334,
+                "asm": "wfi",
+                "length": 2
+              },
+              "ticks": 2,
+              "timer": true,
+              "enabled": [
+                268435456,
+                16777728
+              ],
+              "systick_control": 7
+            },
+            "stop_2": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 3,
+              "pc": 134218292,
+              "reason": "expected"
+            },
+            "wake_0": {
+              "pc": 134218334,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "TIM2_IRQHandler",
+                  "pc": 134218292,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 3
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218334,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 3
+                }
+              ]
+            },
+            "stop_4": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218292,
+              "reason": "expected"
+            },
+            "wake_1": {
+              "pc": 134218336,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "TIM2_IRQHandler",
+                  "pc": 134218292,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 4
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218336,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 4
+                }
+              ]
+            },
+            "stop_6": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 5,
+              "pc": 134218336,
+              "reason": "expected"
+            },
+            "after_wake": {
+              "pc": 134218336,
+              "counter": 5,
+              "ticks": 2
+            },
+            "stop_8": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                11
+              ],
+              "signal": null,
+              "stop_id": 6,
+              "pc": 134218120,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 31,
+          "server_hardware_insertions": 31,
+          "raw_log_sha256": {
+            "gdb.log": "7bbf202e26a36f53e81d50115a02d6bf5b3c8bd589ea209b7fbb4af65f857ddd",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "628db6e6678386c148c2666c788df2cc01b3b7b26edc4782572dd001b13b691d"
+          }
+        },
+        {
+          "label": "gdb1_round0_HW_R13_SYSTICK",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 17,
+          "passed_checks": 17,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                7
+              ],
+              "signal": null,
+              "stop_id": 2,
+              "pc": 134218334,
+              "reason": "expected"
+            },
+            "before_wfi": {
+              "pc": 134218334,
+              "instruction": {
+                "addr": 134218334,
+                "asm": "wfi",
+                "length": 2
+              },
+              "ticks": 2,
+              "timer": false,
+              "enabled": [
+                268435456,
+                16777728
+              ],
+              "systick_control": 7
+            },
+            "stop_2": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 3,
+              "pc": 134218276,
+              "reason": "expected"
+            },
+            "wake_0": {
+              "pc": 134218336,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "SysTick_Handler",
+                  "pc": 134218276,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 3
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218336,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 3
+                }
+              ]
+            },
+            "stop_4": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218336,
+              "reason": "expected"
+            },
+            "after_wake": {
+              "pc": 134218336,
+              "counter": 3,
+              "ticks": 3
+            },
+            "stop_6": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 5,
+              "pc": 134218120,
+              "reason": "expected"
+            }
+          },
+          "assertions": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "condition: delay_ms == 500",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "ordinary sleep without SLEEPONEXIT",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "one WFI in selected function",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "Thumb WFI encoding",
+              "actual": "30bf",
+              "expected": "30bf",
+              "passed": true
+            },
+            {
+              "name": "expected wake exception",
+              "actual": 15,
+              "expected": 15,
+              "passed": true
+            },
+            {
+              "name": "post-WFI interrupted context observed",
+              "actual": 134218336,
+              "expected": 134218336,
+              "passed": true
+            },
+            {
+              "name": "resumed thread mode",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "resumed stack",
+              "actual": 537001944,
+              "expected": 537001944,
+              "passed": true
+            },
+            {
+              "name": "wake handler performed work",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "IRQ enable masks restored",
+              "actual": [
+                268435456,
+                16777728
+              ],
+              "expected": [
+                268435456,
+                16777728
+              ],
+              "passed": true
+            },
+            {
+              "name": "SysTick control bits restored",
+              "actual": 7,
+              "expected": 7,
+              "passed": true
+            },
+            {
+              "name": "full delay eventually completed",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "one ADC sequence retained",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            }
+          ],
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 26,
+          "server_hardware_insertions": 26,
+          "raw_log_sha256": {
+            "gdb.log": "add7268cea68b7334f8a481b5222f4a07f6c90b073d16223a188e61fc3546264",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "918bdc3158c9f29e45e42e0643a58632e71d341d056f3a2b7e41661a5440269b"
+          }
+        },
+        {
+          "label": "gdb1_round0_HW_R13_TIM2",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 19,
+          "passed_checks": 19,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                7
+              ],
+              "signal": null,
+              "stop_id": 2,
+              "pc": 134218334,
+              "reason": "expected"
+            },
+            "before_wfi": {
+              "pc": 134218334,
+              "instruction": {
+                "addr": 134218334,
+                "asm": "wfi",
+                "length": 2
+              },
+              "ticks": 2,
+              "timer": true,
+              "enabled": [
+                268435456,
+                16777728
+              ],
+              "systick_control": 7
+            },
+            "stop_2": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 3,
+              "pc": 134218292,
+              "reason": "expected"
+            },
+            "wake_0": {
+              "pc": 134218334,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "TIM2_IRQHandler",
+                  "pc": 134218292,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 3
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218334,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 3
+                }
+              ]
+            },
+            "stop_4": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218292,
+              "reason": "expected"
+            },
+            "wake_1": {
+              "pc": 134218336,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "TIM2_IRQHandler",
+                  "pc": 134218292,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 4
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218336,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 4
+                }
+              ]
+            },
+            "stop_6": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 5,
+              "pc": 134218336,
+              "reason": "expected"
+            },
+            "after_wake": {
+              "pc": 134218336,
+              "counter": 5,
+              "ticks": 2
+            },
+            "stop_8": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                11
+              ],
+              "signal": null,
+              "stop_id": 6,
+              "pc": 134218120,
+              "reason": "expected"
+            }
+          },
+          "assertions": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "condition: delay_ms == 500",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "ordinary sleep without SLEEPONEXIT",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "one WFI in selected function",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "Thumb WFI encoding",
+              "actual": "30bf",
+              "expected": "30bf",
+              "passed": true
+            },
+            {
+              "name": "expected wake exception",
+              "actual": 44,
+              "expected": 44,
+              "passed": true
+            },
+            {
+              "name": "expected wake exception",
+              "actual": 44,
+              "expected": 44,
+              "passed": true
+            },
+            {
+              "name": "post-WFI interrupted context observed",
+              "actual": 134218336,
+              "expected": 134218336,
+              "passed": true
+            },
+            {
+              "name": "resumed thread mode",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "resumed stack",
+              "actual": 537001944,
+              "expected": 537001944,
+              "passed": true
+            },
+            {
+              "name": "wake handler performed work",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "TIM2 wake does not advance SysTick timebase",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "IRQ enable masks restored",
+              "actual": [
+                268435456,
+                16777728
+              ],
+              "expected": [
+                268435456,
+                16777728
+              ],
+              "passed": true
+            },
+            {
+              "name": "SysTick control bits restored",
+              "actual": 7,
+              "expected": 7,
+              "passed": true
+            },
+            {
+              "name": "full delay eventually completed",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "one ADC sequence retained",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            }
+          ],
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 31,
+          "server_hardware_insertions": 31,
+          "raw_log_sha256": {
+            "gdb.log": "09367a6b1047a9d79b26057ef28430dd9650485c13b3a674bc942ce0bc33000d",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "bb9dd3e2107068cfb971109cbc022b74806c6d1b003899367b132f9fec3fe5bf"
+          }
+        },
+        {
+          "label": "gdb1_round1_HW_R13_SYSTICK",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 17,
+          "passed_checks": 17,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                7
+              ],
+              "signal": null,
+              "stop_id": 2,
+              "pc": 134218334,
+              "reason": "expected"
+            },
+            "before_wfi": {
+              "pc": 134218334,
+              "instruction": {
+                "addr": 134218334,
+                "asm": "wfi",
+                "length": 2
+              },
+              "ticks": 2,
+              "timer": false,
+              "enabled": [
+                268435456,
+                16777728
+              ],
+              "systick_control": 7
+            },
+            "stop_2": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 3,
+              "pc": 134218276,
+              "reason": "expected"
+            },
+            "wake_0": {
+              "pc": 134218336,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "SysTick_Handler",
+                  "pc": 134218276,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 3
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218336,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 3
+                }
+              ]
+            },
+            "stop_4": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218336,
+              "reason": "expected"
+            },
+            "after_wake": {
+              "pc": 134218336,
+              "counter": 3,
+              "ticks": 3
+            },
+            "stop_6": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 5,
+              "pc": 134218120,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 26,
+          "server_hardware_insertions": 26,
+          "raw_log_sha256": {
+            "gdb.log": "302de02518f44e8251348f67935dff8009f280989ad60f678294b0df9793ade1",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "25322eacbc5582572c6bf0b584ee4958cc10e3859f454ff4e3487ff0b6efbf48"
+          }
+        },
+        {
+          "label": "gdb1_round1_HW_R13_TIM2",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 19,
+          "passed_checks": 19,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                7
+              ],
+              "signal": null,
+              "stop_id": 2,
+              "pc": 134218334,
+              "reason": "expected"
+            },
+            "before_wfi": {
+              "pc": 134218334,
+              "instruction": {
+                "addr": 134218334,
+                "asm": "wfi",
+                "length": 2
+              },
+              "ticks": 2,
+              "timer": true,
+              "enabled": [
+                268435456,
+                16777728
+              ],
+              "systick_control": 7
+            },
+            "stop_2": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 3,
+              "pc": 134218292,
+              "reason": "expected"
+            },
+            "wake_0": {
+              "pc": 134218334,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "TIM2_IRQHandler",
+                  "pc": 134218292,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 3
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218334,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 3
+                }
+              ]
+            },
+            "stop_4": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218292,
+              "reason": "expected"
+            },
+            "wake_1": {
+              "pc": 134218336,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "TIM2_IRQHandler",
+                  "pc": 134218292,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 4
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218336,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 4
+                }
+              ]
+            },
+            "stop_6": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 5,
+              "pc": 134218336,
+              "reason": "expected"
+            },
+            "after_wake": {
+              "pc": 134218336,
+              "counter": 5,
+              "ticks": 2
+            },
+            "stop_8": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                11
+              ],
+              "signal": null,
+              "stop_id": 6,
+              "pc": 134218120,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 31,
+          "server_hardware_insertions": 31,
+          "raw_log_sha256": {
+            "gdb.log": "12d7849b8853ea7b1468002c882dabab095d690fca09c2f59e834d289c3eedc9",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "cc3a7b5a9704d85da7c8c6e00fc54ae15de9a224681fd723baab1610cb17fb83"
+          }
+        },
+        {
+          "label": "gdb1_round2_HW_R13_SYSTICK",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 17,
+          "passed_checks": 17,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                7
+              ],
+              "signal": null,
+              "stop_id": 2,
+              "pc": 134218334,
+              "reason": "expected"
+            },
+            "before_wfi": {
+              "pc": 134218334,
+              "instruction": {
+                "addr": 134218334,
+                "asm": "wfi",
+                "length": 2
+              },
+              "ticks": 2,
+              "timer": false,
+              "enabled": [
+                268435456,
+                16777728
+              ],
+              "systick_control": 7
+            },
+            "stop_2": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 3,
+              "pc": 134218276,
+              "reason": "expected"
+            },
+            "wake_0": {
+              "pc": 134218336,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "SysTick_Handler",
+                  "pc": 134218276,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 3
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218336,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 3
+                }
+              ]
+            },
+            "stop_4": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218336,
+              "reason": "expected"
+            },
+            "after_wake": {
+              "pc": 134218336,
+              "counter": 3,
+              "ticks": 3
+            },
+            "stop_6": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 5,
+              "pc": 134218120,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 26,
+          "server_hardware_insertions": 26,
+          "raw_log_sha256": {
+            "gdb.log": "add7268cea68b7334f8a481b5222f4a07f6c90b073d16223a188e61fc3546264",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "ebd481cdf4462aa2ea9d4b65c0bc2928dcc9debf1fc16de1c132653176b432d1"
+          }
+        },
+        {
+          "label": "gdb1_round2_HW_R13_TIM2",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 19,
+          "passed_checks": 19,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                7
+              ],
+              "signal": null,
+              "stop_id": 2,
+              "pc": 134218334,
+              "reason": "expected"
+            },
+            "before_wfi": {
+              "pc": 134218334,
+              "instruction": {
+                "addr": 134218334,
+                "asm": "wfi",
+                "length": 2
+              },
+              "ticks": 2,
+              "timer": true,
+              "enabled": [
+                268435456,
+                16777728
+              ],
+              "systick_control": 7
+            },
+            "stop_2": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 3,
+              "pc": 134218292,
+              "reason": "expected"
+            },
+            "wake_0": {
+              "pc": 134218334,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "TIM2_IRQHandler",
+                  "pc": 134218292,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 3
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218334,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 3
+                }
+              ]
+            },
+            "stop_4": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218292,
+              "reason": "expected"
+            },
+            "wake_1": {
+              "pc": 134218336,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "TIM2_IRQHandler",
+                  "pc": 134218292,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 4
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218336,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 4
+                }
+              ]
+            },
+            "stop_6": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 5,
+              "pc": 134218336,
+              "reason": "expected"
+            },
+            "after_wake": {
+              "pc": 134218336,
+              "counter": 5,
+              "ticks": 2
+            },
+            "stop_8": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                11
+              ],
+              "signal": null,
+              "stop_id": 6,
+              "pc": 134218120,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 31,
+          "server_hardware_insertions": 31,
+          "raw_log_sha256": {
+            "gdb.log": "931f25d30196368894bc8b66743d47bf5a8d2eed98dfee50814d8cc32d9dbbfb",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "2c1a0bfef861cf955d6fffc3bd4d19a5386df9617941a5867594615de81dd8f9"
+          }
+        },
+        {
+          "label": "gdb1_round3_HW_R13_SYSTICK",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 17,
+          "passed_checks": 17,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                7
+              ],
+              "signal": null,
+              "stop_id": 2,
+              "pc": 134218334,
+              "reason": "expected"
+            },
+            "before_wfi": {
+              "pc": 134218334,
+              "instruction": {
+                "addr": 134218334,
+                "asm": "wfi",
+                "length": 2
+              },
+              "ticks": 2,
+              "timer": false,
+              "enabled": [
+                268435456,
+                16777728
+              ],
+              "systick_control": 7
+            },
+            "stop_2": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 3,
+              "pc": 134218276,
+              "reason": "expected"
+            },
+            "wake_0": {
+              "pc": 134218336,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "SysTick_Handler",
+                  "pc": 134218276,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 3
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218336,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 3
+                }
+              ]
+            },
+            "stop_4": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218336,
+              "reason": "expected"
+            },
+            "after_wake": {
+              "pc": 134218336,
+              "counter": 3,
+              "ticks": 3
+            },
+            "stop_6": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 5,
+              "pc": 134218120,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 26,
+          "server_hardware_insertions": 26,
+          "raw_log_sha256": {
+            "gdb.log": "5b3508df296254e1315470e11b2b53f591a9a78b0b23a7bc452755f11b27ccf3",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "aa591938a04cce2a882b3511eec7d4c916a737b195768684f4d5ec34c98043d6"
+          }
+        },
+        {
+          "label": "gdb1_round3_HW_R13_TIM2",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 19,
+          "passed_checks": 19,
+          "failed_checks": [],
+          "research": {
+            "stop_0": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                7
+              ],
+              "signal": null,
+              "stop_id": 2,
+              "pc": 134218334,
+              "reason": "expected"
+            },
+            "before_wfi": {
+              "pc": 134218334,
+              "instruction": {
+                "addr": 134218334,
+                "asm": "wfi",
+                "length": 2
+              },
+              "ticks": 2,
+              "timer": true,
+              "enabled": [
+                268435456,
+                16777728
+              ],
+              "systick_control": 7
+            },
+            "stop_2": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 3,
+              "pc": 134218292,
+              "reason": "expected"
+            },
+            "wake_0": {
+              "pc": 134218334,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "TIM2_IRQHandler",
+                  "pc": 134218292,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 3
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218334,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 3
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 3
+                }
+              ]
+            },
+            "stop_4": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                9
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134218292,
+              "reason": "expected"
+            },
+            "wake_1": {
+              "pc": 134218336,
+              "function": "board_delay_ms",
+              "frames": [
+                {
+                  "name": "TIM2_IRQHandler",
+                  "pc": 134218292,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": null,
+                  "pc": 4294967289,
+                  "type": 4,
+                  "stop_id": 4
+                },
+                {
+                  "name": "board_delay_ms",
+                  "pc": 134218336,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": "app_loop",
+                  "pc": 134218168,
+                  "type": 0,
+                  "stop_id": 4
+                },
+                {
+                  "name": "main",
+                  "pc": 134218190,
+                  "type": 0,
+                  "stop_id": 4
+                }
+              ]
+            },
+            "stop_6": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                10
+              ],
+              "signal": null,
+              "stop_id": 5,
+              "pc": 134218336,
+              "reason": "expected"
+            },
+            "after_wake": {
+              "pc": 134218336,
+              "counter": 5,
+              "ticks": 2
+            },
+            "stop_8": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                11
+              ],
+              "signal": null,
+              "stop_id": 6,
+              "pc": 134218120,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 31,
+          "server_hardware_insertions": 31,
+          "raw_log_sha256": {
+            "gdb.log": "09367a6b1047a9d79b26057ef28430dd9650485c13b3a674bc942ce0bc33000d",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "8cbe27ef2f1b4d157da9a29d81f9159eb94af1748cf257b2b3d497ea38e525bb"
+          }
+        },
+        {
+          "label": "restore_HW_BOOT",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 7,
+          "passed_checks": 7,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "restore_HW_GPIO",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 12,
+          "passed_checks": 12,
+          "failed_checks": [],
+          "research": {}
+        }
+      ]
+    }
+  ],
+  "firmware": {
+    "consumer": "tests/firmware",
+    "manifest_sha256": "668c5b1fb09f41932a6e717ad0dda14c5f8a996bf0e702a99f2a8e5d18346fd0",
+    "compilers": [
+      {
+        "name": "arm-none-eabi-gcc.exe",
+        "sha256": "26c908ce6d90f964bb51a84e93f39e51b4207fb88582cc266eb7b42403300c95",
+        "version": "13.3.1"
+      }
+    ],
+    "units": [
+      {
+        "source": "src/startup.c",
+        "object_sha256": "8c52bb97e29cad3b93552716d8874744e31c83a11e52a09fd1f7a82eea69ec65",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-DSTM32F411xE",
+          "-g",
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "753731dddc4bbb9e7c937b284dcda1d5b4ca64eeccef2584f48d6aeb1d226187"
+      },
+      {
+        "source": "src/app.c",
+        "object_sha256": "c7de0ff1b799f41bd4d46331373f34262f711fca4bd704d10b0930b6ee3cbbc5",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-DSTM32F411xE",
+          "-g",
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "4aab26a26c58f0d1fdd64796e2054792eb88efb20d44f28517051f355d65e7ae"
+      },
+      {
+        "source": "src/board.c",
+        "object_sha256": "2801f3f5933bd84916b6eab592bed6f56e94f969ba2effd30e27d89ae39e86b1",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-DSTM32F411xE",
+          "-g",
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "20f89b2652590baea983b6c8388724d80deeac769c5101be897ed694ba19adf4"
+      },
+      {
+        "source": "src/adc_f411.c",
+        "object_sha256": "0c8224fea844f053a672f9913b607e3cfa871eb30cd042f64ce48d676806590a",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-DSTM32F411xE",
+          "-g",
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "5bf283deec00cce500d7d93fbf3cbb46c855cb74eb0e15a50652d4985282e16d"
+      },
+      {
+        "source": "src/adc_units.c",
+        "object_sha256": "a8ae752eacb320f17c1f2691f5c13ea327a5f71f4fdabbf94cf730a8ae824b63",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-DSTM32F411xE",
+          "-g",
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "b992a69e339cd0c72987b450123052a5f12609965160339c6cb370e8c4876043"
+      },
+      {
+        "source": "src/rtc_f4.c",
+        "object_sha256": "fd5df4e324102e993212966d978494665e8144e6fa7f6235d1c6884fb5686d2a",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-DSTM32F411xE",
+          "-g",
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "65c2f39ab3c0df8e586f3c838efd980f2c4f45baa9541883a4369a84c21c3321"
+      }
+    ],
+    "source_sha256": {
+      "src/adc_f030.c": "b4b1fd0d8e00acffae938273ff2e6108f9ca97b3ba9f883594b2612a25f51f8a",
+      "src/adc_f103.c": "0cf055837098360f29075bb982497ee355df26f8a93c7ec37c32be4606740427",
+      "src/adc_f401.c": "2c70de3eb6661d310c85b5d57e952229fe50efbda4de583d01a091bc78a8ce41",
+      "src/adc_f411.c": "49ed319c7eac1f15854b2745ae3842d1c9a16989ca22e2d057c0a6fc836a064e",
+      "src/adc_f429.c": "fba065d4fad7451b7cb6f6136aa0c4a440236c54eb6c8c9c4d4aa1296db18f78",
+      "src/adc_units.c": "1f71be46ce10e9aecd10827955a1f1c81b404926d915835ea73c39f9b9edbd43",
+      "src/adc_units.h": "76ec16414fff0eb07be75b80858794f846a56db5473557cc54301f77284defa9",
+      "src/app.c": "6cacb1f67a200cb11f8dcc081af2f8d4e2d4b83eefcbd5a8892435bf67f36f8a",
+      "src/app.h": "5d77f245692a70bbf645f298c2d5aa5ef1964c72e10591db429fb97c82b3024e",
+      "src/board.c": "3e56028771d7083b5b0e040b1cd5bf9a334747a1afa6110aeb970fd1eaddcb98",
+      "src/rtc_f030.c": "f6cbd42a523f85309b67cefc3ebfa8b13bb9843dbb8c15617b81b7f7cc2cc105",
+      "src/rtc_f103.c": "c3efec57053dea7b519a4d764006d289e133ae338a314140f269fbb10074b0ed",
+      "src/rtc_f4.c": "653930963e6856c9b84cd56993cebb882b0f4782af2fde9ad23ef55a24e9d418",
+      "src/startup.c": "d0afbba98d70cfda1a1149b20ab7be03e41d3a6dd1f982d48c08f72bcc4a281e"
+    }
+  }
+}
