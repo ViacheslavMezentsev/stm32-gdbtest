@@ -1,6 +1,15 @@
 # Дорожная карта
 
-## Текущая работа: consumer-эксперименты rc3 R8
+## Текущая работа: consumer-эксперименты rc3 R9
+
+- Ветка `codex/rc3-api-r1`, после `e9b389e`; перенос в ядро только после утверждения владельца.
+- [x] Прерванные calls: resume и вложенный intercept16/16 F411/HLA GDB14/16, restore HW_BOOT/HW_GPIO PASS.
+- [x] DUMMY_FRAME распознаётся по типу, а не имени; восстановление регистров не откатывает RAM, исходное Python-выражение не возобновляется.
+- [x] Windows/Linux44/44 host/prepare; [протокол RU](docs/research/rc3-gdb-python/ru/r9.md) / [EN](docs/research/rc3-gdb-python/en/r9.md).
+- [ ] Далее fault/timeout во время call и IRQ; затем RTOS и переносимость других плат/ABI. Ядро и прошивка прежние.
+- Публичный API прежний; публикация/land — владелец.
+
+## Предыдущая работа: consumer-эксперименты rc3 R8
 
 - Ветка `codex/rc3-api-r1`, после `40901eb`; перенос в ядро только после утверждения владельца.
 - [x] FPB/finish: HLA16/16 GDB14/16, native DAP8/8 GDB16; шесть code-слотов с четырьмя guard, восстановление без reset.

@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Consumer R9: interrupted dummy calls and nested result substitution —16/16 F411/HLA GDB14/16. Verified register restoration, persistent RAM effects and natural execution after intervention; restore PASS. Core and firmware unchanged.
+
 - Grouped rc3 GDB Python research under docs/research/rc3-gdb-python: RU/EN plan and reports, JSON results and local indexes. Updated links and CI language-pair checks; result data unchanged.
 
 - Consumer R8: code breakpoint budget and FinishBreakpoint headroom —16/16 HLA GDB14/16 and8/8 native DAP GDB16. Six slots, four guards; continuation after releasing a slot without reset. Original object-lifetime ERROR retained, restore PASS; core and firmware unchanged.

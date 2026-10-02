@@ -371,3 +371,13 @@ original call to continue without reset. Keep guards enabled. Save the
 FinishBreakpoint number before continue: after firing the object is invalid and
 reading number may raise RuntimeError even though return_value is retained.
 One reserved slot was verified for this finish, not every navigation command.
+
+## Call hit a breakpoint and expression evaluation raised an error
+
+In [R9](../research/rc3-gdb-python/en/r9.md) this is an expected interruption,
+but it must be identified by the owned point and DUMMY_FRAME, not arbitrary gdb.error.
+The dummy frame's name was Reset_Handler: use frame.type(). After deleting the
+owned point, continue completed the call and restored PC/SP/LR/r0–r12, but the
+original parse_and_eval did not return its result and RAM changes persisted.
+Check the caller's sink; a fresh call is a separate action with fresh side effects.
+This experiment does not prove recovery after fault/timeout.

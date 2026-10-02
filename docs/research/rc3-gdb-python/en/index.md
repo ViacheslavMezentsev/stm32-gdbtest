@@ -19,5 +19,6 @@ including FAIL/ERROR. This is not an approved public API extension.
 | R6 | [Stack filtering and recursive frames](r6.md) | [JSON](../results/rc3-r6-results.json) |
 | R7 | [Watchpoint ranges and budget](r7.md) | [JSON](../results/rc3-r7-results.json) |
 | R8 | [Code breakpoint budget and finish headroom](r8.md) | [JSON](../results/rc3-r8-results.json) |
+| R9 | [Interrupted calls and nested result substitution](r9.md) | [JSON](../results/rc3-r9-results.json) |
 
 [Consumer](../../../../tests/api-experiments/CMakeLists.txt) · [GDB probe](../../../../tools/research/gdb_api_probe.py)

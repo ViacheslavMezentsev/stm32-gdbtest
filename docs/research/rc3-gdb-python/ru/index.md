@@ -19,5 +19,6 @@
 | R6 | [Отбор по стеку и рекурсивные кадры](r6.md) | [JSON](../results/rc3-r6-results.json) |
 | R7 | [Диапазоны и бюджет watchpoints](r7.md) | [JSON](../results/rc3-r7-results.json) |
 | R8 | [Бюджет точек по коду и резерв для finish](r8.md) | [JSON](../results/rc3-r8-results.json) |
+| R9 | [Прерванные вызовы и подмена вложенного результата](r9.md) | [JSON](../results/rc3-r9-results.json) |
 
 [Consumer](../../../../tests/api-experiments/CMakeLists.txt) · [GDB probe](../../../../tools/research/gdb_api_probe.py)

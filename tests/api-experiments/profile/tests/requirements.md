@@ -119,3 +119,9 @@ Probe distinct hardware code locations while preserving four fault guards; retai
 
 ## HW_R8_FINISH
 Exhaust code-point headroom, observe FinishBreakpoint insertion rejection, release one owned point and verify the original natural return and caller result without reset.
+
+## HW_R9_RESUME
+Identify a breakpoint-interrupted inferior call and its dummy frame; resume without reset, verify restored registers and RAM, then obtain a result from a fresh call and confirm natural execution.
+
+## HW_R9_INTERCEPT
+Force an error from a nested function inside a dummy call, resume the outer call, verify register restoration and persistent caller RAM effects, then confirm a normal call and natural execution.
