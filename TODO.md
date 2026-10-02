@@ -1,6 +1,15 @@
 # Дорожная карта
 
-## Текущая работа: consumer-эксперименты rc3 R10
+## Текущая работа: consumer-эксперименты rc3 R11
+
+- Ветка `codex/rc3-api-r1`, после `7f06a5d`; перенос в ядро только после утверждения владельца.
+- [x] SysTick/TIM2: 16/16 HW F411/HLA GDB14/16 на существующей CMSIS-прошивке; стек GDB и аппаратный кадр, locals, естественный return, restore PASS.
+- [x] Сохранены исходный FAIL выбора delay2мс и ERROR чтения start; добавлены условие delay500мс и явный optimized_out.
+- [x] Windows/Linux49/49 host/prepare, затронутые3/3; R11 prepare на CMSIS ELF, Linux2/2. [RU](docs/research/rc3-gdb-python/ru/r11.md) / [EN](docs/research/rc3-gdb-python/en/r11.md).
+- [ ] Следующий этап: DMA и watchpoints, затем сон/пробуждение; продолжать по [очереди](docs/research/rc3-gdb-python/ru/plan.md#очередь-продолжения-после-r9).
+- Ядро/API и исходники обеих прошивок прежние. Для R11 нужен CMSIS ELF, не api_firmware; публикация/land — владелец.
+
+## Предыдущая работа: consumer-эксперименты rc3 R10
 
 - Ветка `codex/rc3-api-r1`, после `67066e2`; перенос в ядро только после утверждения владельца.
 - [x] F411/HLA GDB14/16: 8 ожидаемых fault ERROR +8 timeout ERROR, 16/16 контролей PASS, restore HW_BOOT/HW_GPIO PASS.

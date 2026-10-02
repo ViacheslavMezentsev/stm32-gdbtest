@@ -353,8 +353,8 @@ for board tests.
 | Order | Stage | State |
 | --- | --- | --- |
 | 1 | Fault and non-returning calls, diagnostics and recovery | [R10](r10.md): 16 expected ERRORs, 16/16 controls PASS; limitations in report |
-| 2 | IRQ, interrupted stack and exception return | Next |
-| 3 | DMA and watchpoint observation limits | Pending |
+| 2 | IRQ, interrupted stack and exception return | [R11](r11.md): SysTick/TIM2 16/16; basic MSP, limitations in report |
+| 3 | DMA and watchpoint observation limits | Next |
 | 4 | WFI, sleep and wakeup | Pending |
 | 5 | Interception sequences: failures, retries, success and call order | Pending |
 | 6 | Optimized code: O2/Os, inline, unavailable values and multiple locations | Pending |

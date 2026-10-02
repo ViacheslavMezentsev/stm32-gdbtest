@@ -134,3 +134,9 @@ Retain ERROR for a non-returning inferior call; persist entry into the thread-mo
 
 ## HW_R10_CONTROL
 After each expected error, verify reset-cleared fault status, thread mode, a fresh inferior call and normal application checksum.
+
+## HW_R11_SYSTICK
+On the CMSIS F411 ELF, identify natural SysTick context, compare the GDB unwind with the hardware exception stack, read interrupted locals with selection restoration and verify natural exception return and application progress.
+
+## HW_R11_TIM2
+On the CMSIS F411 ELF, identify natural TIM2 context and its interrupted delay, verify the basic MSP exception stack and actual restored registers, timer work and subsequent application progress.

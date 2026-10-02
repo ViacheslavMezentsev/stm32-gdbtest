@@ -30,7 +30,7 @@ def main():
     parser.add_argument('--stand', required=True, type=Path)
     parser.add_argument('--gdb', required=True, action='append', type=Path)
     parser.add_argument('--execute', action='store_true')
-    parser.add_argument('--suite', choices=('r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9', 'r10'), default='r1')
+    parser.add_argument('--suite', choices=('r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9', 'r10', 'r11'), default='r1')
     parser.add_argument('--test', action='append', help='explicit subset; recorded in the protocol')
     parser.add_argument('--native-stlink', action='store_true', help='consumer-only native DAP/SWD comparison')
     parser.add_argument('--failure-paths-only', action='store_true',
@@ -56,6 +56,7 @@ def main():
         'r8': ('CAPACITY', 'FINISH'),
         'r9': ('RESUME', 'INTERCEPT'),
         'r10': ('FAULT', 'TIMEOUT', 'CONTROL'),
+        'r11': ('SYSTICK', 'TIM2'),
         'r7': ('WIDTH', 'CAPACITY', 'SPLIT'),
         'r6': ('CONTEXT', 'FINISH', 'RETURN'),
         'r5': tuple(kind + '_' + mode for kind in ('WIDE', 'FLOAT', 'STRUCT')

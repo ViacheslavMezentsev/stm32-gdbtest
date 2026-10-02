@@ -21,5 +21,6 @@
 | R8 | [Бюджет точек по коду и резерв для finish](r8.md) | [JSON](../results/rc3-r8-results.json) |
 | R9 | [Прерванные вызовы и подмена вложенного результата](r9.md) | [JSON](../results/rc3-r9-results.json) |
 | R10 | [Fault и timeout незавершённого вызова](r10.md) | [JSON](../results/rc3-r10-results.json) |
+| R11 | [Контекст IRQ и естественный возврат](r11.md) | [JSON](../results/rc3-r11-results.json) |
 
 [Consumer](../../../../tests/api-experiments/CMakeLists.txt) · [GDB probe](../../../../tools/research/gdb_api_probe.py)

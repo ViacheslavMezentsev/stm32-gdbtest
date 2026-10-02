@@ -390,3 +390,12 @@ the stack; gdb.error alone is insufficient. This GDB uses xPSR: xpsr gave Bad re
 On external timeout GDB cannot write its report from finally. Persist verified
 entry into the hazardous operation first, then require TimeoutExpired, successful
 recovery and a separate control. Missing evidence must not count as an expected ERROR.
+
+## An interrupted function's local variable is unavailable
+
+In [R11](../research/rc3-gdb-python/en/r11.md), TIM2 interrupted board_delay_ms at
+its first instruction, before start initialization. GDB marked start optimized_out.
+Record that distinct state and compare PC with instructions; do not substitute0.
+Select calls using arguments/stack: the same function serves the ADC2ms delay and
+the main loop500ms delay. Return from the verified basic MSP IRQ used the hardware
+frame's saved PC; LR=0xfffffff9 is EXC_RETURN, not a code address.

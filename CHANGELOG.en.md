@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Consumer R11: SysTick/TIM2, hardware exception stack, interrupted context and natural return —16/16 F411/HLA GDB14/16 on the existing CMSIS ELF. Initial FAIL/ERROR retained, optimized_out explicit, restore PASS. Core and firmware sources unchanged; DMA/watchpoints next.
+
 - Consumer R10: fault and timeout of an unfinished dummy call —8+8 expected ERRORs and16/16 positive controls on F411/HLA GDB14/16. Verified diagnostics, pre-timeout sidecar and recovery; original register-name error retained, restore PASS. Further research queue recorded; core and firmware unchanged.
 
 - Consumer R9: interrupted dummy calls and nested result substitution —16/16 F411/HLA GDB14/16. Verified register restoration, persistent RAM effects and natural execution after intervention; restore PASS. Core and firmware unchanged.
