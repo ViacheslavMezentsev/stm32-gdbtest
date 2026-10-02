@@ -167,3 +167,15 @@ Reject an ambiguous location through the single-location adapter, then observe b
 
 ## HW_R15_VALUES
 Observe local-value availability across one machine instruction in optimized inline code; reject optimized-out snapshots and verify natural caller results.
+
+## HW_R16_UNTIL
+Resolve a source return line, use until to complete the current loop, and verify exact PC, frame, loop result and caller consumption.
+
+## HW_R16_ADVANCE
+Advance into a child by source line, then distinguish current-frame exit from reaching an address outside that frame; verify the natural result.
+
+## HW_R16_NEXTI
+Step over a natural BL with nexti, checking the instruction after the call, selected frame, result register and caller consumption.
+
+## HW_R16_INTERRUPT
+Recognize nexti interrupted by a separate callee breakpoint, reject target completion, remove the interfering point and explicitly finish navigation.

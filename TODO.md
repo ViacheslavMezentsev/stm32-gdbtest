@@ -1,6 +1,15 @@
 # Дорожная карта
 
-## Текущая работа: consumer-эксперименты rc3 R15
+## Текущая работа: consumer-эксперименты rc3 R16
+
+- Ветка `codex/rc3-api-r1`, после `d043fec`; перенос в ядро только после утверждения владельца.
+- [x] until/advance/nexti:32/32 F411/HLA GDB14/16 на прежнем Og ELF; строки, выход кадра до цели и прерывание отдельной точкой.
+- [x] Исходный ERROR чтения i вне области видимости сохранён; исправленная проверка отличает scope от optimized_out. Restore HW_BOOT/HW_GPIO PASS в обеих сериях. [RU](docs/research/rc3-gdb-python/ru/r16.md) / [EN](docs/research/rc3-gdb-python/en/r16.md).
+- [x] Windows/Linux62/62 host/prepare, после исправления затронутые4/4 на каждой ОС; docs3/3.
+- [ ] Следующий этап: ABI void/double/hard-float, стековые аргументы, структуры и C++; затем RTOS по [очереди](docs/research/rc3-gdb-python/ru/plan.md#очередь-продолжения-после-r9).
+- Ядро/API и прошивка прежние; публикация/land — владелец.
+
+## Предыдущая работа: consumer-эксперименты rc3 R15
 
 - Ветка `codex/rc3-api-r1`, после `77b6c4e`; перенос в ядро только после утверждения владельца.
 - [x] O2/Os:32/32 F411/HLA GDB14/16; обычная отдельная прошивка без hooks, inline-кадры, две locations и потеря input после умножения.

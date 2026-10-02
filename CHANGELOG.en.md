@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Consumer R16: until/advance/nexti —32/32 F411/HLA GDB14/16 on the unchanged Og ELF. Verified source lines, advance completing at frame exit before its target, nexti interruption by a separate point and explicit continuation; initial scope ERROR retained, restore PASS. Core and firmware unchanged; ABI next.
+
 - Consumer R15: O2/Os —32/32 F411/HLA GDB14/16 on a separate ordinary firmware. Verified inline frames, two locations of one breakpoint, argument loss after an instruction and final outputs; restore PASS. Retained initial startup link failure and offline function disappearance; previous Og ELF unchanged. Core unchanged; navigation next.
 
 - Consumer R14: interception sequences —24/24 F411/HLA GDB14/16 on the unchanged api_firmware. Verified errors/success, retention of accepted results, arguments, counts and selected call order; expected wrong-order rejection retained, restore PASS. Core and firmware unchanged; optimized code next.

@@ -441,3 +441,12 @@ A Linux format check on a Windows bind mount with physical Tests may miss the
 tests/hal-f030/src/platform.c exclusion. Check a copy of current sources using
 canonical git ls-files paths, retaining CI/config and module access; do not
 reformat excluded platform code just to obtain PASS.
+
+## A navigation command returned without reaching its target
+
+In [R16](../research/rc3-gdb-python/en/r16.md), advance completed at current-frame
+exit before its target, while a separate callee point interrupted nexti.
+Check event, PC and frame, then explicitly continue to the required boundary.
+StopEvent without a user point number is normal for the tested until/advance.
+After leaving for, i is out of scope: missing symbols differ from optimized_out
+and do not prove navigation failure. Check the result consumed by the caller.
