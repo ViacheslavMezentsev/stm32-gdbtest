@@ -381,3 +381,12 @@ owned point, continue completed the call and restored PC/SP/LR/r0–r12, but the
 original parse_and_eval did not return its result and RAM changes persisted.
 Check the caller's sink; a fresh call is a separate action with fresh side effects.
 This experiment does not prove recovery after fault/timeout.
+
+## Fault inside call and loss of the report on timeout
+
+In [R10](../research/rc3-gdb-python/en/r10.md), a guard intercepted HardFault as a
+BreakpointEvent. Confirm the cause using point identity, xPSR, CFSR/HFSR/BFAR and
+the stack; gdb.error alone is insufficient. This GDB uses xPSR: xpsr gave Bad register.
+On external timeout GDB cannot write its report from finally. Persist verified
+entry into the hazardous operation first, then require TimeoutExpired, successful
+recovery and a separate control. Missing evidence must not count as an expected ERROR.

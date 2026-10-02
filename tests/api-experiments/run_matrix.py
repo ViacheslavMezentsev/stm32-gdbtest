@@ -10,6 +10,7 @@ from pathlib import Path
 import sys
 from unittest.mock import patch
 from lab.openocd_native import native_swd
+from lab.failure_evidence import validate as validate_failure
 
 ROOT = Path(__file__).resolve().parent
 MODULE = ROOT.parents[1]
@@ -29,7 +30,7 @@ def main():
     parser.add_argument('--stand', required=True, type=Path)
     parser.add_argument('--gdb', required=True, action='append', type=Path)
     parser.add_argument('--execute', action='store_true')
-    parser.add_argument('--suite', choices=('r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9'), default='r1')
+    parser.add_argument('--suite', choices=('r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9', 'r10'), default='r1')
     parser.add_argument('--test', action='append', help='explicit subset; recorded in the protocol')
     parser.add_argument('--native-stlink', action='store_true', help='consumer-only native DAP/SWD comparison')
     parser.add_argument('--failure-paths-only', action='store_true',
@@ -54,6 +55,7 @@ def main():
         'r4': ('NATURAL', 'OUTPUT', 'ERROR', 'SHORT'),
         'r8': ('CAPACITY', 'FINISH'),
         'r9': ('RESUME', 'INTERCEPT'),
+        'r10': ('FAULT', 'TIMEOUT', 'CONTROL'),
         'r7': ('WIDTH', 'CAPACITY', 'SPLIT'),
         'r6': ('CONTEXT', 'FINISH', 'RETURN'),
         'r5': tuple(kind + '_' + mode for kind in ('WIDE', 'FLOAT', 'STRUCT')
@@ -62,6 +64,8 @@ def main():
     if {c['id'] for c in cases} != {prefix + s for s in suffixes}:
         raise ValueError('Unexpected research scenario inventory')
     if args.test:
+        if args.suite == 'r10':
+            parser.error('r10 requires both failures and their controls')
         if not set(args.test) <= {c['id'] for c in cases}:
             raise ValueError('Selected test is outside the suite')
         cases = [c for c in cases if c['id'] in args.test]
@@ -118,6 +122,15 @@ def main():
                 for name in ('HW_BOOT', 'HW_GPIO'):
                     execute('baseline_' + name, sessions[1], restores[name], args.gdb[0], False)
                 for index, gdb in enumerate(args.gdb):
+                    if args.suite == 'r10':
+                        control = next(c for c in cases if c['id'] == 'HW_R10_CONTROL')
+                        for repeat in range(4):
+                            for case in (c for c in cases if c['id'] != control['id']):
+                                label = f'gdb{index}_round{repeat}_{case["id"]}'
+                                report, directory = execute(label, sessions[0], case, gdb, False, expected=2)
+                                validate_failure(case['id'], report, directory)
+                                execute(label + '_control', sessions[0], control, gdb, False)
+                        continue
                     if args.failure_paths_only:
                         negative = out / 'negative-tests'
                         negative.mkdir(exist_ok=True)

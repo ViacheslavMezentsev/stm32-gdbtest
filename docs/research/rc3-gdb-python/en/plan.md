@@ -342,6 +342,29 @@ schema; permitted call/IRQ interventions; natural versus dummy-call interception
 final stand and restore project. Universal power-cycle, multiple-board orchestration
 and code coverage remain separate tasks.
 
+## Continuation queue after R9
+
+Agreed order of further experiments. Each stage ends with a local report stating
+limitations and the next stage. Final discussion follows the queue; core promotion
+requires separate owner approval. Future series numbers are assigned as work
+proceeds because a stage may require several series. Host PASS does not substitute
+for board tests.
+
+| Order | Stage | State |
+| --- | --- | --- |
+| 1 | Fault and non-returning calls, diagnostics and recovery | [R10](r10.md): 16 expected ERRORs, 16/16 controls PASS; limitations in report |
+| 2 | IRQ, interrupted stack and exception return | Next |
+| 3 | DMA and watchpoint observation limits | Pending |
+| 4 | WFI, sleep and wakeup | Pending |
+| 5 | Interception sequences: failures, retries, success and call order | Pending |
+| 6 | Optimized code: O2/Os, inline, unavailable values and multiple locations | Pending |
+| 7 | Remaining navigation: until/advance/nexti, source lines and unrelated stops | Pending |
+| 8 | ABI: void/double/hard-float, stack arguments, structures, then C++ | Pending |
+| 9 | RTOS tasks, context and filters in a separate ordinary firmware | Pending |
+| 10 | Reliability: shared point address, foreign points, predicate errors, scope, settings restoration, call budget and bounded replay | Pending |
+| 11 | Selected techniques on F030/F103, confirm current wiring | Pending |
+| 12 | Consolidated capability/failure matrix and results discussion | After experiments |
+
 ## Sources and reproducibility
 
 The fixed primary source is the supplied PDF. Current HTML may change:

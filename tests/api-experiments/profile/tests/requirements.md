@@ -125,3 +125,12 @@ Identify a breakpoint-interrupted inferior call and its dummy frame; resume with
 
 ## HW_R9_INTERCEPT
 Force an error from a nested function inside a dummy call, resume the outer call, verify register restoration and persistent caller RAM effects, then confirm a normal call and natural execution.
+
+## HW_R10_FAULT
+Retain ERROR for a CPU read past F411 SRAM during an inferior call; identify HardFault guard, active exception, precise BusFault address and dummy frame before reset_run teardown.
+
+## HW_R10_TIMEOUT
+Retain ERROR for a non-returning inferior call; persist entry into the thread-mode dummy loop, enforce external host timeout and confirm host recovery.
+
+## HW_R10_CONTROL
+After each expected error, verify reset-cleared fault status, thread mode, a fresh inferior call and normal application checksum.
