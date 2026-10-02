@@ -65,3 +65,33 @@ Supply poison output bytes and force a negative status; caller records the error
 
 ## HW_R4_SHORT
 Supply a short-packet status with poison tail; caller rejects the incomplete packet without accumulating its bytes, then recovers naturally.
+
+## HW_R5_WIDE_FINISH
+Verify WIDE FINISH against an independent value and natural caller sink, then confirm the next normal call.
+
+## HW_R5_WIDE_RETURN
+Verify WIDE RETURN against an independent value and natural caller sink, then confirm the next normal call.
+
+## HW_R5_WIDE_CALL
+Verify WIDE CALL against an independent value and natural caller sink, then confirm the next normal call.
+
+## HW_R5_FLOAT_FINISH
+Verify FLOAT FINISH against an independent value and natural caller sink, then confirm the next normal call.
+
+## HW_R5_FLOAT_RETURN
+Verify FLOAT RETURN against an independent value and natural caller sink, then confirm the next normal call.
+
+## HW_R5_FLOAT_CALL
+Verify FLOAT CALL against an independent value and natural caller sink, then confirm the next normal call.
+
+## HW_R5_STRUCT_FINISH
+Verify STRUCT FINISH against an independent value and natural caller sink, then confirm the next normal call.
+
+## HW_R5_STRUCT_RETURN
+Verify STRUCT RETURN against an independent value and natural caller sink, then confirm the next normal call.
+
+## HW_R5_STRUCT_CALL
+Verify STRUCT CALL against an independent value and natural caller sink, then confirm the next normal call.
+
+## HW_R5_STRUCT_SRET
+A reviewed ELF and exact entry prove the hidden return slot; bounded stack-buffer substitution plus bare return reaches the caller, preserves neighbors and restores natural behavior.

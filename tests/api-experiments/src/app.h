@@ -33,3 +33,17 @@ extern volatile int32_t packet_status;
 extern volatile uint32_t packet_total;
 int32_t read_packet( uint8_t* output, uint32_t capacity );
 void process_packet( void );
+
+struct ReturnPair
+{
+    int32_t code;
+    uint32_t count;
+};
+extern struct ReturnPair pair_input;
+extern volatile uint64_t accepted_wide;
+extern volatile float accepted_gain;
+extern volatile struct ReturnPair accepted_pair;
+uint64_t calculate_wide( uint64_t value );
+float calculate_gain( float value );
+struct ReturnPair transform_pair( struct ReturnPair input );
+void process_returns( void );

@@ -336,3 +336,12 @@ the external timeout. Preserve the ERROR and logs; verify host recovery/restore.
 HLA passed4/4 with the same ELF. This is a limited comparison, not an established
 root cause: native DAP watchpoint support does not prove reliable stepping.
 Do not hide the error by increasing the timeout or unconditionally retrying.
+
+## Struct return did not produce the expected value
+
+Absence of a GDB exception does not prove substitution. In [R5](RC3_API_R5.md),
+both versions selected the caller, but it read previous hidden return-buffer bytes.
+Verify the caller-visible value. For the reviewed ELF, writing the result through
+the hidden pointer followed by a bare return worked. This requires ABI, exact-entry,
+size and bounds checks; it is not a universal replacement for `return` or permission
+to write through an arbitrary r0.

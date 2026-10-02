@@ -12,6 +12,7 @@ int main( void )
     {
         checksum = process_sample( &sample, cycles );
         process_packet();
+        process_returns();
         cycles++;
     }
 }

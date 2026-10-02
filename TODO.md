@@ -1,6 +1,15 @@
 # Дорожная карта
 
-## Текущая работа: consumer-эксперименты rc3 R4
+## Текущая работа: consumer-эксперименты rc3 R5
+
+- Ветка `codex/rc3-api-r1`, после `2c6c8a6`; перенос в ядро только после утверждения владельца.
+- [x] Матрица типов возврата:64/64; struct-return FAIL GDB14/16 сохранён; адресный SRET-прототип8/8.
+- [x] Windows/Linux host/prepare34/34; [протокол RU](docs/ru/RC3_API_R5.md) / [EN](docs/en/RC3_API_R5.md).
+- [x] Регрессия нового ELF/GDB16: R4 16/16 и R3 DEADLINE/SAMEVALUE 8/8; все restore PASS.
+- [ ] Далее void/double/hard-float, рекурсия/IRQ, границы DWT и прерванные calls. Полная регрессия прежних серий на новом ELF не заявляется.
+- Публичный API прежний; публикация/land — владелец.
+
+## Предыдущая работа: consumer-эксперименты rc3 R4
 
 - Ветка `codex/rc3-api-r1`, после `8ec9978`; перенос в ядро только после утверждения владельца.
 - [x] Выходной буфер + signed-статус: natural/success/error/short, 32/32 F411 GDB14/16 native DAP; restore PASS.

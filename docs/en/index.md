@@ -2,6 +2,8 @@
 
 Documentation · [Русский](../ru/index.md)
 
+[R5: return types and ABI](RC3_API_R5.md): uint64/float/struct; struct return limitation and return-buffer experiment.
+
 [R4: output buffers and return substitution](RC3_API_R4.md): natural calls, complete packets, errors and short responses.
 
 [R3: stop actions and counters](RC3_API_R3.md): 32/32 F411 native DAP; commands, wraparound, same-value writes.
