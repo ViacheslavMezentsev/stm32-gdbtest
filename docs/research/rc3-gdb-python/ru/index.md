@@ -1,0 +1,23 @@
+# Исследование GDB Python API для rc3
+
+[Документация](../../../ru/index.md) · [English](../en/index.md)
+
+Материалы одного исследования собраны здесь: исходный план, отчёты серий и
+обезличенные результаты. Исследование продолжается; отчёты фиксируют состояние
+конкретных опытов, включая FAIL/ERROR. Это не утверждённое расширение публичного API.
+
+- [План исследования](plan.md) — обзор руководства GDB Python и программа экспериментов.
+- L0: [GDB14](../results/rc3-gdb14-capabilities.json), [GDB16](../results/rc3-gdb16-capabilities.json).
+
+| Серия | Отчёт | Результаты |
+| --- | --- | --- |
+| R1 | [Типизированные данные, кадры, RAM и отчёты](r1.md) | [JSON](../results/rc3-r1-results.json) |
+| R2 | [Навигация, вызовы, watchpoints и ассемблер](r2.md) | [JSON](../results/rc3-r2-results.json) |
+| R3 | [Команды точек, счётчики и запись прежнего значения](r3.md) | [JSON](../results/rc3-r3-results.json) |
+| R4 | [Выходные буферы и подмена статуса](r4.md) | [JSON](../results/rc3-r4-results.json) |
+| R5 | [Типы возврата и скрытый буфер структуры](r5.md) | [JSON](../results/rc3-r5-results.json) |
+| R6 | [Отбор по стеку и рекурсивные кадры](r6.md) | [JSON](../results/rc3-r6-results.json) |
+| R7 | [Диапазоны и бюджет watchpoints](r7.md) | [JSON](../results/rc3-r7-results.json) |
+| R8 | [Бюджет точек по коду и резерв для finish](r8.md) | [JSON](../results/rc3-r8-results.json) |
+
+[Consumer](../../../../tests/api-experiments/CMakeLists.txt) · [GDB probe](../../../../tools/research/gdb_api_probe.py)

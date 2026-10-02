@@ -279,7 +279,7 @@ session's gdb field. Compare versions using local session copies with separate g
 and out fields and the same ELF/manifest, or pass `-DSTM32_GDBTEST_GDB=<path>` at
 CMake configure time. Keep global PATH unchanged for an isolated experiment.
 Verify gdb_version in result.json; use the original session to restore the previous
-GDB. See the [comparison example](RC3_API_R1.md).
+GDB. See the [comparison example](../research/rc3-gdb-python/en/r1.md).
 
 ### Separating reports
 
@@ -314,7 +314,7 @@ its build/ directory using a local .gitignore.
 
 On the tested F411/OpenOCD0.12.0 ST-Link HLA connection, the server sent T05 without
 watch/rwatch/awatch addresses. Do not treat any stop as watchpoint success.
-Keep RSP/server logs and inspect the interface driver. In the [R2 experiment](RC3_API_R2.md),
+Keep RSP/server logs and inspect the interface driver. In the [R2 experiment](../research/rc3-gdb-python/en/r2.md),
 native stlink-dap/dapdirect_swd resolved this on the same stand. The --native-stlink
 flag exists only in the consumer runner; the production module and installed
 OpenOCD remain unchanged. Omit the flag to revert. This is not a universal
@@ -322,7 +322,7 @@ recommendation to switch drivers on other stands.
 
 ## Watch does not stop on a same-value store
 
-`watch` reports value changes, not every store. In [R3](RC3_API_R3.md), the CPU
+`watch` reports value changes, not every store. In [R3](../research/rc3-gdb-python/en/r3.md), the CPU
 stored the previous checksum: write-watch continued to the sentinel while
 access-watch stopped. `awatch` also catches reads: inspect the instruction and
 context to prove a write. An application counter with a watch predicate bounds
@@ -330,7 +330,7 @@ progress but cannot replace the external host timeout when execution hangs.
 
 ## Repeated stepi in an infinite loop: target not halted
 
-In [R4](RC3_API_R4.md), F411/OpenOCD native DAP completed `jump` and the first
+In [R4](../research/rc3-gdb-python/en/r4.md), F411/OpenOCD native DAP completed `jump` and the first
 `stepi` in a Thumb self-loop; the next step reported `target not halted` and hit
 the external timeout. Preserve the ERROR and logs; verify host recovery/restore.
 HLA passed4/4 with the same ELF. This is a limited comparison, not an established
@@ -339,7 +339,7 @@ Do not hide the error by increasing the timeout or unconditionally retrying.
 
 ## Struct return did not produce the expected value
 
-Absence of a GDB exception does not prove substitution. In [R5](RC3_API_R5.md),
+Absence of a GDB exception does not prove substitution. In [R5](../research/rc3-gdb-python/en/r5.md),
 both versions selected the caller, but it read previous hidden return-buffer bytes.
 Verify the caller-visible value. For the reviewed ELF, writing the result through
 the hidden pointer followed by a bare return worked. This requires ABI, exact-entry,
@@ -348,7 +348,7 @@ to write through an arbitrary r0.
 
 ## Condition and Python stop produce unexpected callback counts
 
-In [R6](RC3_API_R6.md), the callback also saw entries the scenario expected condition
+In [R6](../research/rc3-gdb-python/en/r6.md), the callback also saw entries the scenario expected condition
 to filter out. Do not base callback counts on an assumed ordering of two filters.
 A verified approach uses one Python predicate reading arguments and the stack,
 or an independent CLI condition without a callback. Do not resume the MCU, select
@@ -357,7 +357,7 @@ frames or delete breakpoints in stop; perform actions after the stop returns.
 ## Watchpoint created, but continue reports Command aborted
 
 Inspect GDB output: Python may return only `Command aborted.` while the log contains
-`Could not insert hardware watchpoint N.`. In [R7](RC3_API_R7.md), an unaligned range
+`Could not insert hardware watchpoint N.`. In [R7](../research/rc3-gdb-python/en/r7.md), an unaligned range
 or a fifth separate word point caused rejection. Preserve logs, delete owned points
 and verify a positive control after reset. Do not classify every Command aborted
 as resource exhaustion. Exact1+1/1+2+1 decomposition observed unaligned2/4-byte
@@ -365,7 +365,7 @@ ranges at the cost of two/three hardware points.
 
 ## Finish needs a free point and becomes invalid after firing
 
-In [R8](RC3_API_R8.md), four fault guards and two owned code points fill all six
+In [R8](../research/rc3-gdb-python/en/r8.md), four fault guards and two owned code points fill all six
 F411 slots. FinishBreakpoint cannot insert; releasing one owned point allows the
 original call to continue without reset. Keep guards enabled. Save the
 FinishBreakpoint number before continue: after firing the object is invalid and

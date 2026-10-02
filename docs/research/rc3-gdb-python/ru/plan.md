@@ -1,8 +1,8 @@
 # rc3: исследование расширения Target API
 
-[Документация](index.md) · [English](../en/RC3_API_RESEARCH.md)
+[Документация](index.md) · [English](../en/plan.md)
 
-[R2: навигация, вызовы и watchpoints](RC3_API_R2.md): 56/56 HLA и 8/8 native DAP; перенос в ядро только после утверждения владельца.
+[R2: навигация, вызовы и watchpoints](r2.md): 56/56 HLA и 8/8 native DAP; перенос в ядро только после утверждения владельца.
 
 Дата: 02.10.2026. База: `da42cd74c27a01c21df47cd660e2533e9bcfc6d4`,
 ветка `codex/rc3-gdb-python-research`. Цель — выбрать расширения для **0.1.0rc3**.
@@ -37,11 +37,11 @@
 
 | Источник | Роль |
 | --- | --- |
-| [API](API.md), [Target](../../stm32_gdbtest/target.py), [agent](../../stm32_gdbtest/agent.py) | Публичные операции, выполнение, результаты и teardown |
-| [Написание тестов](TEST_AUTHORING.md), [TECH-001…009](TESTING_TECHNIQUES.md) | Контекст, IRQ, инъекции, векторы и Sleep |
-| [Контракты](CONTRACTS.md), [макросы](HAL_MACRO_GUIDE.md), [совместимость](../../stm32_gdbtest/compatibility.py) | ELF/preflight, source review и текущие проверки наличия API |
-| [CMSIS-сверка](CMSIS_ACCEPTANCE.md), [HAL GPIO/RCC](F030_HAL_GPIO_RCC.md) | Что сохранено при миграции; границы аппаратных доказательств |
-| [Проверки](testing.md), [приёмка rc2](RC2_READINESS.md) | Offline/HW, recovery, восстановление и сохранение ошибок |
+| [API](../../../ru/API.md), [Target](../../../../stm32_gdbtest/target.py), [agent](../../../../stm32_gdbtest/agent.py) | Публичные операции, выполнение, результаты и teardown |
+| [Написание тестов](../../../ru/TEST_AUTHORING.md), [TECH-001…009](../../../ru/TESTING_TECHNIQUES.md) | Контекст, IRQ, инъекции, векторы и Sleep |
+| [Контракты](../../../ru/CONTRACTS.md), [макросы](../../../ru/HAL_MACRO_GUIDE.md), [совместимость](../../../../stm32_gdbtest/compatibility.py) | ELF/preflight, source review и текущие проверки наличия API |
+| [CMSIS-сверка](../../../ru/CMSIS_ACCEPTANCE.md), [HAL GPIO/RCC](../../../ru/F030_HAL_GPIO_RCC.md) | Что сохранено при миграции; границы аппаратных доказательств |
+| [Проверки](../../../ru/testing.md), [приёмка rc2](../../../ru/RC2_READINESS.md) | Offline/HW, recovery, восстановление и сохранение ошибок |
 
 AST-инвентаризация текущей базы: **24 файла с 121 декоратором `@case`**:
 98 CMSIS (F030:18, F103/F401/F411/F429: по20), 22 HAL F030 и один minimal-consumer.
@@ -51,12 +51,12 @@ boot/GPIO/clock, ADC/DMA, численных векторов, RTC/deadline, Sle
 
 | Существующая техника и пример | Что уже возможно | Пробел API |
 | --- | --- | --- |
-| TECH-001/002, [RTC F103](../../tests/firmware/profiles/f103c8/tests/board/test_rtc.py) | Сохранить адрес/маску до смены macro context | Нет типизированного снимка и явного объекта контекста |
-| TECH-003, [HAL runtime](../../tests/hal-f030/hal_scenarios/peripheral_runtime.py) | Дождаться callback/IRQ, сверить handle и публикацию | Нет общих ожиданий порядка/числа событий |
-| TECH-004/005/009, [GPIO/RCC](../../tests/hal-f030/profile/tests/board/test_hal_methods.py) | Условный `reach`, NULL аргумент, принудительный return | Нет управляемой серии перехватов, capture аргументов и out-buffer |
-| TECH-006, [ADC F411](../../tests/firmware/profiles/f411ce/tests/board/test_adc.py) | MMIO-инъекция, guard и timeout | Нельзя обобщать `set_value` на W1C/WO/read-to-clear: его before/after сами читают MMIO |
-| TECH-007, [F030 vectors](../../tests/firmware/profiles/f030r8/tests/board/test_ci.py) | Подмена аргументов естественного вызова, независимые векторы | `value` всегда делает `int`; нет массива, строки, float и снимка структуры |
-| TECH-008, [Sleep F411](../../tests/firmware/profiles/f411ce/tests/board/test_sleep.py) | Прямые `gdb.Frame.older/type/pc`, проверка WFI | Нет публичного backtrace/disassembly; сценарии пишут во внутренний `report` |
+| TECH-001/002, [RTC F103](../../../../tests/firmware/profiles/f103c8/tests/board/test_rtc.py) | Сохранить адрес/маску до смены macro context | Нет типизированного снимка и явного объекта контекста |
+| TECH-003, [HAL runtime](../../../../tests/hal-f030/hal_scenarios/peripheral_runtime.py) | Дождаться callback/IRQ, сверить handle и публикацию | Нет общих ожиданий порядка/числа событий |
+| TECH-004/005/009, [GPIO/RCC](../../../../tests/hal-f030/profile/tests/board/test_hal_methods.py) | Условный `reach`, NULL аргумент, принудительный return | Нет управляемой серии перехватов, capture аргументов и out-buffer |
+| TECH-006, [ADC F411](../../../../tests/firmware/profiles/f411ce/tests/board/test_adc.py) | MMIO-инъекция, guard и timeout | Нельзя обобщать `set_value` на W1C/WO/read-to-clear: его before/after сами читают MMIO |
+| TECH-007, [F030 vectors](../../../../tests/firmware/profiles/f030r8/tests/board/test_ci.py) | Подмена аргументов естественного вызова, независимые векторы | `value` всегда делает `int`; нет массива, строки, float и снимка структуры |
+| TECH-008, [Sleep F411](../../../../tests/firmware/profiles/f411ce/tests/board/test_sleep.py) | Прямые `gdb.Frame.older/type/pc`, проверка WFI | Нет публичного backtrace/disassembly; сценарии пишут во внутренний `report` |
 
 `check` уже принимает Python-объекты, сравнимые через `==`; ограничение скалярами
 находится главным образом в `value/fields`, а не в самом сравнении. JSON-совместимость
@@ -69,7 +69,7 @@ boot/GPIO/clock, ADC/DMA, численных векторов, RTC/deadline, Sle
 
 ## 2. Руководство GDB: версия и карта чтения
 
-Источник владельца: [gdb.pdf](../en/gdb.pdf), оставлен в исходном месте без изменений.
+Источник владельца: [gdb.pdf](../../../en/gdb.pdf), оставлен в исходном месте без изменений.
 Титул: **GDB 19.0.50.20260922-git**, 1006 PDF-страниц.
 SHA-256: `4f1dc20f2053dfe96a9db5e2f4f34a4398f67b72072609a01f468f031219d4b2`.
 Это development manual, а не обещание наличия методов в поставляемом toolchain.
@@ -122,8 +122,8 @@ SHA-256: `4f1dc20f2053dfe96a9db5e2f4f34a4398f67b72072609a01f468f031219d4b2`.
 
 ### Выполненный опыт без MCU
 
-02.10.2026 запущен [probe](../../tools/research/gdb_api_probe.py) с `-nx -nh -batch`,
-без ELF, сервера и target connection; [машиночитаемый результат](../research/rc3-gdb14-capabilities.json).
+02.10.2026 запущен [probe](../../../../tools/research/gdb_api_probe.py) с `-nx -nh -batch`,
+без ELF, сервера и target connection; [машиночитаемый результат](../results/rc3-gdb14-capabilities.json).
 GDB **14.2.90.20240526-git**, встроенный Python **3.11.4**, xPack GCC13.3.1-1.1, Windows.
 
 | Проверка | Результат |
@@ -151,7 +151,7 @@ L3 — повторяемость, отказные ветви и восстан
 
 После уточнения владельца проверен установленный xPack GCC **15.2.1-1.1**:
 GDB **16.3.90.20250906-git**, Python **3.13.12**.
-[Результат L0](../research/rc3-gdb16-capabilities.json) получен тем же probe без MCU.
+[Результат L0](../results/rc3-gdb16-capabilities.json) получен тем же probe без MCU.
 В сравнении с GDB14 присутствуют `Value.bytes`, `gdb.interrupt`, параметры
 `direct-call-timeout`, `indirect-call-timeout`, `unwind-on-timeout`.
 Значения параметров: `None` (unlimited), `30` и `false` соответственно.
@@ -268,7 +268,7 @@ RTTI и исключений. FreeRTOS — отдельная поздняя п�
 ## 6. Матрица экспериментов
 
 На момент обзора R0 **E01…E20 ещё не выполнялись на MCU**. Последующие результаты
-подмножества R1 приведены в [аппаратном протоколе](RC3_API_R1.md). Сначала host/fake-GDB отрицательные ветви,
+подмножества R1 приведены в [аппаратном протоколе](r1.md). Сначала host/fake-GDB отрицательные ветви,
 затем ELF/preflight, затем одна плата. Для каждой строки сохраняются expected и actual,
 включая отказ и восстановление; общая процедура ниже применяется ко всем строкам.
 E01 включает уже выполненный L0, но его L1/L2 ещё предстоит выполнить.
@@ -366,7 +366,7 @@ StopRecord; бюджет/схема RAM и watchpoints; допустимые в�
 и не устанавливались. Печатные формулировки сведены к собственному плану, полного
 переноса текста руководства в Markdown нет.
 
-Ограничения исходного обзора R0 (последующие опыты — [R1](RC3_API_R1.md)): не доказана
+Ограничения исходного обзора R0 (последующие опыты — [R1](r1.md)): не доказана
 аппаратная работа на GDB из GCC14/15 и Linux; L0 не проверяет ABI, DWT/FPB, гонки IRQ или recovery.
 Старые TODO/STATUS/API содержат исторические формулировки, поэтому база сверялась
 с кодом и профильными протоколами, а не только со сводными счётчиками.

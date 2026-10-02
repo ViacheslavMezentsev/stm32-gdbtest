@@ -1,8 +1,8 @@
 # rc3: Target API extension research
 
-[Documentation](index.md) · [Русский](../ru/RC3_API_RESEARCH.md)
+[Documentation](index.md) · [Русский](../ru/plan.md)
 
-[R2: navigation, calls and watchpoints](RC3_API_R2.md): 56/56 HLA and 8/8 native DAP; core promotion requires explicit owner approval.
+[R2: navigation, calls and watchpoints](r2.md): 56/56 HLA and 8/8 native DAP; core promotion requires explicit owner approval.
 
 Date: 2026-10-02. Base: `da42cd74c27a01c21df47cd660e2533e9bcfc6d4`;
 branch: `codex/rc3-gdb-python-research`. Target: **0.1.0rc3**.
@@ -33,11 +33,11 @@ need separate experiments and need not block the first useful rc3 feature set.
 
 | Source | Purpose |
 | --- | --- |
-| [API](API.md), [Target](../../stm32_gdbtest/target.py), [agent](../../stm32_gdbtest/agent.py) | Public operations, execution, results and teardown |
-| [Test authoring](TEST_AUTHORING.md), [TECH-001…009](TESTING_TECHNIQUES.md) | Context, IRQ, injection, vectors and Sleep |
-| [Contracts](CONTRACTS.md), [macros](HAL_MACRO_GUIDE.md), [compatibility](../../stm32_gdbtest/compatibility.py) | ELF/preflight, source review and existing API presence checks |
-| [CMSIS reconciliation](CMSIS_ACCEPTANCE.md), [HAL GPIO/RCC](F030_HAL_GPIO_RCC.md) | Migration coverage and hardware evidence boundaries |
-| [Checks](testing.md), [rc2 acceptance](RC2_READINESS.md) | Offline/HW, recovery, restoration and preserving errors |
+| [API](../../../en/API.md), [Target](../../../../stm32_gdbtest/target.py), [agent](../../../../stm32_gdbtest/agent.py) | Public operations, execution, results and teardown |
+| [Test authoring](../../../en/TEST_AUTHORING.md), [TECH-001…009](../../../en/TESTING_TECHNIQUES.md) | Context, IRQ, injection, vectors and Sleep |
+| [Contracts](../../../en/CONTRACTS.md), [macros](../../../en/HAL_MACRO_GUIDE.md), [compatibility](../../../../stm32_gdbtest/compatibility.py) | ELF/preflight, source review and existing API presence checks |
+| [CMSIS reconciliation](../../../en/CMSIS_ACCEPTANCE.md), [HAL GPIO/RCC](../../../en/F030_HAL_GPIO_RCC.md) | Migration coverage and hardware evidence boundaries |
+| [Checks](../../../en/testing.md), [rc2 acceptance](../../../en/RC2_READINESS.md) | Offline/HW, recovery, restoration and preserving errors |
 
 An AST inventory of this base found **24 files with 121 `@case` decorators**:
 98 CMSIS (18 F030 and 20 each F103/F401/F411/F429), 22 HAL F030 and one minimal
@@ -47,12 +47,12 @@ ADC/DMA, numerical vectors, RTC/deadline, Sleep and HAL injections.
 
 | Technique and example | Existing ability | API gap |
 | --- | --- | --- |
-| TECH-001/002, [F103 RTC](../../tests/firmware/profiles/f103c8/tests/board/test_rtc.py) | Save address/mask before changing macro context | No typed snapshot or explicit context object |
-| TECH-003, [HAL runtime](../../tests/hal-f030/hal_scenarios/peripheral_runtime.py) | Await callback/IRQ, check handle and publication | No common count/order expectations |
-| TECH-004/005/009, [GPIO/RCC](../../tests/hal-f030/profile/tests/board/test_hal_methods.py) | Conditional reach, NULL argument, forced return | No managed interception sequence, argument capture or output buffer |
-| TECH-006, [F411 ADC](../../tests/firmware/profiles/f411ce/tests/board/test_adc.py) | MMIO injection, guard and timeout | `set_value` before/after reads cannot be generalized to W1C/WO/read-to-clear |
-| TECH-007, [F030 vectors](../../tests/firmware/profiles/f030r8/tests/board/test_ci.py) | Replace natural-call arguments, independent vectors | `value` converts to int; no arrays, strings, float or structure snapshots |
-| TECH-008, [F411 Sleep](../../tests/firmware/profiles/f411ce/tests/board/test_sleep.py) | Direct frame walk and WFI check | No public backtrace/disassembly; scenarios write internal `report` |
+| TECH-001/002, [F103 RTC](../../../../tests/firmware/profiles/f103c8/tests/board/test_rtc.py) | Save address/mask before changing macro context | No typed snapshot or explicit context object |
+| TECH-003, [HAL runtime](../../../../tests/hal-f030/hal_scenarios/peripheral_runtime.py) | Await callback/IRQ, check handle and publication | No common count/order expectations |
+| TECH-004/005/009, [GPIO/RCC](../../../../tests/hal-f030/profile/tests/board/test_hal_methods.py) | Conditional reach, NULL argument, forced return | No managed interception sequence, argument capture or output buffer |
+| TECH-006, [F411 ADC](../../../../tests/firmware/profiles/f411ce/tests/board/test_adc.py) | MMIO injection, guard and timeout | `set_value` before/after reads cannot be generalized to W1C/WO/read-to-clear |
+| TECH-007, [F030 vectors](../../../../tests/firmware/profiles/f030r8/tests/board/test_ci.py) | Replace natural-call arguments, independent vectors | `value` converts to int; no arrays, strings, float or structure snapshots |
+| TECH-008, [F411 Sleep](../../../../tests/firmware/profiles/f411ce/tests/board/test_sleep.py) | Direct frame walk and WFI check | No public backtrace/disassembly; scenarios write internal `report` |
 
 `check` already accepts Python objects comparable with `==`; scalar limitations
 mainly come from `value/fields`. JSON compatibility remains the caller's responsibility.
@@ -64,7 +64,7 @@ objects, not all actual hardware locations, external or internal breakpoints.
 
 ## 2. GDB manual: version and reading map
 
-The owner supplied [gdb.pdf](gdb.pdf), retained unchanged in its original location.
+The owner supplied [gdb.pdf](../../../en/gdb.pdf), retained unchanged in its original location.
 Title: **GDB 19.0.50.20260922-git**, 1006 PDF pages.
 SHA-256: `4f1dc20f2053dfe96a9db5e2f4f34a4398f67b72072609a01f468f031219d4b2`.
 This development manual does not establish availability in the installed toolchain.
@@ -117,8 +117,8 @@ The Python part of chapter 23 and related sections were reviewed.
 
 ### Completed experiment without an MCU
 
-On 2026-10-02 the [probe](../../tools/research/gdb_api_probe.py) ran with `-nx -nh -batch`,
-without an ELF, server or target connection. See the [machine-readable result](../research/rc3-gdb14-capabilities.json).
+On 2026-10-02 the [probe](../../../../tools/research/gdb_api_probe.py) ran with `-nx -nh -batch`,
+without an ELF, server or target connection. See the [machine-readable result](../results/rc3-gdb14-capabilities.json).
 Environment: GDB **14.2.90.20240526-git**, embedded Python **3.11.4**,
 xPack GCC13.3.1-1.1, Windows.
 
@@ -147,7 +147,7 @@ these levels and unavailability reasons, not just a GDB version check.
 
 Following the owner's update, installed xPack GCC **15.2.1-1.1** was checked:
 GDB **16.3.90.20250906-git**, Python **3.13.12**.
-The same probe produced this [L0 result](../research/rc3-gdb16-capabilities.json)
+The same probe produced this [L0 result](../results/rc3-gdb16-capabilities.json)
 without an MCU. Compared with GDB14, `Value.bytes`, `gdb.interrupt`,
 `direct-call-timeout`, `indirect-call-timeout` and `unwind-on-timeout` are present.
 Parameter values are respectively `None` (unlimited), `30` and `false`.
@@ -259,7 +259,7 @@ RTTI and exceptions. Add a later FreeRTOS program only if E18 needs it.
 ## 6. Experiment matrix
 
 At the R0 review, **E01…E20 had not run on an MCU**. Subsequent results for an R1
-subset are recorded in the [hardware protocol](RC3_API_R1.md). Start with host/fake-GDB failure paths, then
+subset are recorded in the [hardware protocol](r1.md). Start with host/fake-GDB failure paths, then
 ELF/preflight, then one board. Record expected/actual results, failures and recovery
 for every row under the shared protocol below. E01 includes completed L0 work;
 its L1/L2 work remains pending.
@@ -353,7 +353,7 @@ The fixed primary source is the supplied PDF. Current HTML may change:
 Other primary sources are in section 4. External projects were neither installed
 nor executed. This is an original plan, not a full Markdown transcription of the manual.
 
-Original R0 limitations (subsequent experiments: [R1](RC3_API_R1.md)): no hardware proof on GCC14/15 GDB or
+Original R0 limitations (subsequent experiments: [R1](r1.md)): no hardware proof on GCC14/15 GDB or
 Linux; L0 does not test ABI, DWT/FPB, IRQ races or recovery. Existing TODO/STATUS/API
 include historical statements, so the baseline was checked against code and
 profile-specific evidence rather than summary counters alone.

@@ -5,7 +5,8 @@
 - Ветка `codex/rc3-api-r1`, после `40901eb`; перенос в ядро только после утверждения владельца.
 - [x] FPB/finish: HLA16/16 GDB14/16, native DAP8/8 GDB16; шесть code-слотов с четырьмя guard, восстановление без reset.
 - [x] Исходный ERROR обращения к недействительной FinishBreakpoint сохранён. Все firmware restore PASS.
-- [x] Windows/Linux42/42 host/prepare; [протокол RU](docs/ru/RC3_API_R8.md) / [EN](docs/en/RC3_API_R8.md).
+- [x] Windows/Linux42/42 host/prepare; [протокол RU](docs/research/rc3-gdb-python/ru/r8.md) / [EN](docs/research/rc3-gdb-python/en/r8.md).
+- [x] План, отчёты R1–R8 и результаты собраны в [папке исследования](docs/research/rc3-gdb-python/ru/index.md); правила структуры и CI обновлены.
 - [ ] Далее IRQ/RTOS, прерванные calls и другие ABI/платы. Ядро и прошивка прежние.
 - Публичный API прежний; публикация/land — владелец.
 
@@ -13,7 +14,7 @@
 
 - Ветка `codex/rc3-api-r1`, после `435639d`; перенос в ядро только после утверждения владельца.
 - [x] WIDTH/CAPACITY16/16, SPLIT8/8; отказы не скрыты, исходные FAIL/ERROR сохранены. Все restore PASS.
-- [x] Windows/Linux40/40 host/prepare; [протокол RU](docs/ru/RC3_API_R7.md) / [EN](docs/en/RC3_API_R7.md).
+- [x] Windows/Linux40/40 host/prepare; [протокол RU](docs/research/rc3-gdb-python/ru/r7.md) / [EN](docs/research/rc3-gdb-python/en/r7.md).
 - [x] Тот же ELF R6, без новых hooks или правок ядра. Измерена граница4/5 word-точек на F411 native DAP.
 - [ ] Далее FPB, IRQ/RTOS, прерванные calls и переносимость других ABI/плат.
 - Публичный API прежний; публикация/land — владелец.
@@ -22,7 +23,7 @@
 
 - Ветка `codex/rc3-api-r1`, после `191244d`; перенос в ядро только после утверждения владельца.
 - [x] Отбор по стеку и рекурсивные finish/return:24/24; первый FAIL предположения callback сохранён.
-- [x] Windows/Linux37/37 host/prepare; [протокол RU](docs/ru/RC3_API_R6.md) / [EN](docs/en/RC3_API_R6.md).
+- [x] Windows/Linux37/37 host/prepare; [протокол RU](docs/research/rc3-gdb-python/ru/r6.md) / [EN](docs/research/rc3-gdb-python/en/r6.md).
 - [x] Новый ELF/GDB16: положительная ABI-регрессия32/32, старый SRET отклоняет ELF до записи. Все restore PASS.
 - [ ] Далее границы DWT/FPB, IRQ/RTOS, прерванные calls; полный прежний HW-набор не заявляется.
 - Публичный API прежний; публикация/land — владелец.
@@ -31,7 +32,7 @@
 
 - Ветка `codex/rc3-api-r1`, после `2c6c8a6`; перенос в ядро только после утверждения владельца.
 - [x] Матрица типов возврата:64/64; struct-return FAIL GDB14/16 сохранён; адресный SRET-прототип8/8.
-- [x] Windows/Linux host/prepare34/34; [протокол RU](docs/ru/RC3_API_R5.md) / [EN](docs/en/RC3_API_R5.md).
+- [x] Windows/Linux host/prepare34/34; [протокол RU](docs/research/rc3-gdb-python/ru/r5.md) / [EN](docs/research/rc3-gdb-python/en/r5.md).
 - [x] Регрессия нового ELF/GDB16: R4 16/16 и R3 DEADLINE/SAMEVALUE 8/8; все restore PASS.
 - [ ] Далее void/double/hard-float, рекурсия/IRQ, границы DWT и прерванные calls. Полная регрессия прежних серий на новом ELF не заявляется.
 - Публичный API прежний; публикация/land — владелец.
@@ -40,7 +41,7 @@
 
 - Ветка `codex/rc3-api-r1`, после `8ec9978`; перенос в ядро только после утверждения владельца.
 - [x] Выходной буфер + signed-статус: natural/success/error/short, 32/32 F411 GDB14/16 native DAP; restore PASS.
-- [x] Windows/Linux build/host/prepare 24/24, формат затронутого C PASS; [протокол RU](docs/ru/RC3_API_R4.md) / [EN](docs/en/RC3_API_R4.md).
+- [x] Windows/Linux build/host/prepare 24/24, формат затронутого C PASS; [протокол RU](docs/research/rc3-gdb-python/ru/r4.md) / [EN](docs/research/rc3-gdb-python/en/r4.md).
 - [x] Регрессия нового ELF/GDB16: R1 24 PASS, R2 7 PASS + ASM ERROR native DAP; ASM HLA 4 PASS, R3 16 PASS. Все restore PASS, исходный ERROR сохранён.
 - [ ] Далее типы возврата, рекурсивные вызовы и границы DWT; ядро и публичный API прежние.
 - Публикация/land — владелец.
@@ -49,7 +50,7 @@
 
 - Продолжаем `codex/rc3-api-r1` после R2-коммита `33938d2`; перенос в ядро только после утверждения владельца.
 - [x] Команды точек, progress deadline с переполнением, same-value watch/awatch, макросы и ветвления: 32/32 F411 GDB14/16 native DAP.
-- [x] Restore HW_BOOT/HW_GPIO PASS; [протокол RU](docs/ru/RC3_API_R3.md) / [EN](docs/en/RC3_API_R3.md).
+- [x] Restore HW_BOOT/HW_GPIO PASS; [протокол RU](docs/research/rc3-gdb-python/ru/r3.md) / [EN](docs/research/rc3-gdb-python/en/r3.md).
 - [x] Windows/Linux build/host/prepare 20/20; 20 host-регрессий. Старый общий format FAIL остаётся.
 - [ ] Границы DWT, рекурсия/IRQ, выходные буферы/ABI и interrupted calls; другие платы отдельно.
 - Публикация/land — владелец. Публичный API, ТЗ и версия пакета прежние.
@@ -60,7 +61,7 @@
 - **Перенос в ядро и изменение публичного API — только после явного утверждения владельца.**
 - [x] Навигация, C-контекст, caller, условные/однократные точки, return/finish/call, ассемблер: 56/56 на F411 с GDB14/16, HLA.
 - [x] WATCH FAIL на HLA сохранён для обеих версий; native DAP/SWD сравнение: 8/8, write/read/access events распознаются.
-- [x] После каждой серии restore + HW_BOOT/HW_GPIO PASS; [протокол RU](docs/ru/RC3_API_R2.md) / [EN](docs/en/RC3_API_R2.md).
+- [x] После каждой серии restore + HW_BOOT/HW_GPIO PASS; [протокол RU](docs/research/rc3-gdb-python/ru/r2.md) / [EN](docs/research/rc3-gdb-python/en/r2.md).
 - [x] Windows/Linux build/host/prepare 16/16; 17 host-регрессий. Старый общий format FAIL не исправлялся.
 - [ ] Same-value store, границы watchpoints, условия/рекурсия/IRQ, out-buffer/ABI и interrupted calls — следующие эксперименты, без переноса в ядро.
 
@@ -70,7 +71,7 @@
 - [x] Обычная прошивка F411 без hooks, шесть сценариев, двенадцать host-регрессий адаптера.
 - [x] Windows/Linux build + host/prepare 8/8; формат новых C/H PASS, общий format FAIL на прежнем HAL-коде.
 - [x] F411/ST-Link/OpenOCD: 48/48 на одном ELF с GDB14/16; 4 ожидаемых ERROR и положительные контроли; restore boot/GPIO PASS.
-- [x] Исходный ERROR сохранён, [протокол RU](docs/ru/RC3_API_R1.md) / [EN](docs/en/RC3_API_R1.md).
+- [x] Исходный ERROR сохранён, [протокол RU](docs/research/rc3-gdb-python/ru/r1.md) / [EN](docs/research/rc3-gdb-python/en/r1.md).
 - [ ] Оставшиеся границы E01–06/E20 и публичные контракты; перенос в ядро только с новой ревизией ТЗ и API/миграциями.
 - Публикация/land — владелец. Это прототип, версия пакета и API не меняются.
 
@@ -78,7 +79,7 @@
 
 - Ветка `codex/rc3-gdb-python-research` от main `da42cd7`.
 - [x] API, техники и сценарии сверены с кодом; руководство GDB Python и внешние модели изучены.
-- [x] [План RU](docs/ru/RC3_API_RESEARCH.md) / [EN](docs/en/RC3_API_RESEARCH.md): P0/P1/P2, E01–E20, Nucleo-F030R8, BluePill-Plus, BlackPill F411CE/F401CC.
+- [x] [План RU](docs/research/rc3-gdb-python/ru/plan.md) / [EN](docs/research/rc3-gdb-python/en/plan.md): P0/P1/P2, E01–E20, Nucleo-F030R8, BluePill-Plus, BlackPill F411CE/F401CC.
 - [x] Read-only L0 probe GDB14/Python3.11 без ELF, сервера и MCU; наличие API не означает HW PASS.
 - [x] L0 GDB16/Python3.13 из GCC15: дополнительные API и timeout-параметры присутствуют; сравнение с GDB14 сохранено.
 - [ ] Выбрать первый пакет R1, согласовать стенд/restore; создать consumer fixture и выполнить опыты.

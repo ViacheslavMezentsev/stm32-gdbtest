@@ -2,11 +2,11 @@
 
 [Documentation](index.md) → API · [Русский](../ru/API.md)
 
-[R2: navigation, calls and watchpoints](RC3_API_R2.md): 56/56 HLA and 8/8 native DAP; core promotion requires explicit owner approval.
+[R2: navigation, calls and watchpoints](../research/rc3-gdb-python/en/r2.md): 56/56 HLA and 8/8 native DAP; core promotion requires explicit owner approval.
 
-[Initial R1 hardware experiments](RC3_API_R1.md): F411, GDB14/16, 48/48 and failure checks.
+[Initial R1 hardware experiments](../research/rc3-gdb-python/en/r1.md): F411, GDB14/16, 48/48 and failure checks.
 
-Preparing rc3: [GDB Python API research and hardware experiment plan](RC3_API_RESEARCH.md). Proposed methods are not implemented yet.
+Preparing rc3: [GDB Python API research and hardware experiment plan](../research/rc3-gdb-python/en/plan.md). Proposed methods are not implemented yet.
 
 Status: candidate in the release branch, not yet published — **0.1.0-rc.2** (Python `0.1.0rc2`), `API_VERSION = 1`. This numbers the
 described API surface; it is not a 1.0 stability promise and not a GDB version. The

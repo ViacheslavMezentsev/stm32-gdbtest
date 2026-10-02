@@ -2,23 +2,7 @@
 
 Documentation · [Русский](../ru/index.md)
 
-[R8: code breakpoint budget](RC3_API_R8.md): six slots, fault guards, finish headroom and continuation without reset.
-
-[R7: watchpoint ranges and budget](RC3_API_R7.md): alignment, point exhaustion, recovery and exact decomposition.
-
-[R6: stacks and recursive frames](RC3_API_R6.md): context selection, FinishBreakpoint and targeted return substitution.
-
-[R5: return types and ABI](RC3_API_R5.md): uint64/float/struct; struct return limitation and return-buffer experiment.
-
-[R4: output buffers and return substitution](RC3_API_R4.md): natural calls, complete packets, errors and short responses.
-
-[R3: stop actions and counters](RC3_API_R3.md): 32/32 F411 native DAP; commands, wraparound, same-value writes.
-
-[R2: navigation, calls and watchpoints](RC3_API_R2.md): 56/56 HLA and 8/8 native DAP; core promotion requires explicit owner approval.
-
-[Initial R1 hardware experiments](RC3_API_R1.md): F411, GDB14/16, 48/48 and failure checks.
-
-Preparing rc3: [GDB Python API research and hardware experiment plan](RC3_API_RESEARCH.md). Proposed methods are not implemented yet.
+[GDB Python research for rc3](../research/rc3-gdb-python/en/index.md): plan, R1–R8 reports and results.
 
 [F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](F429_CMSIS_RTC_SLEEP.md)
 

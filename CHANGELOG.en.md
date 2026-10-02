@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Grouped rc3 GDB Python research under docs/research/rc3-gdb-python: RU/EN plan and reports, JSON results and local indexes. Updated links and CI language-pair checks; result data unchanged.
+
 - Consumer R8: code breakpoint budget and FinishBreakpoint headroom —16/16 HLA GDB14/16 and8/8 native DAP GDB16. Six slots, four guards; continuation after releasing a slot without reset. Original object-lifetime ERROR retained, restore PASS; core and firmware unchanged.
 
 - Consumer R7: watchpoint ranges/budget16/16 and unaligned decomposition8/8 on F411/GDB14/16 native DAP. Confirmed4/5 boundary and unaligned2/4-byte rejection; original FAIL/ERROR retained, restore PASS. Firmware and core unchanged.

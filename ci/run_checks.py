@@ -74,18 +74,25 @@ def check_links():
 
 
 def check_pairs():
-    ru = {p.name for p in (ROOT / "docs/ru").glob("*.md")}
-    en = {p.name for p in (ROOT / "docs/en").glob("*.md")}
-    missing = sorted(f"docs/en/{n}" for n in ru - en) + sorted(f"docs/ru/{n}" for n in en - ru)
+    groups = [ROOT / "docs"]
+    research = ROOT / "docs/research"
+    if research.is_dir():
+        groups.extend(sorted(p for p in research.iterdir() if p.is_dir()))
+    missing = []
+    for group in groups:
+        ru = {p.name for p in (group / "ru").glob("*.md")}
+        en = {p.name for p in (group / "en").glob("*.md")}
+        missing.extend(str((group / "en" / n).relative_to(ROOT)) for n in sorted(ru - en))
+        missing.extend(str((group / "ru" / n).relative_to(ROOT)) for n in sorted(en - ru))
+        # Each localized group has its own map and matching translated pages.
+        for lang, other in (("ru", "en"), ("en", "ru")):
+            for page in sorted((group / lang).glob("*.md")):
+                head = "\n".join(page.read_text(encoding="utf-8").splitlines()[:4])
+                if f"(../{other}/{page.name})" not in head or (page.name != "index.md" and "(index.md)" not in head):
+                    missing.append(f"navigation line in {page.relative_to(ROOT)}")
     for base in ("README", "CHANGELOG"):
         if not ((ROOT / f"{base}.md").exists() and (ROOT / f"{base}.en.md").exists()):
             missing.append(f"{base}.md / {base}.en.md")
-    # Spec 7.7.13: every page links its language's map and the same page in the other language.
-    for lang, other in (("ru", "en"), ("en", "ru")):
-        for page in sorted((ROOT / "docs" / lang).glob("*.md")):
-            head = "\n".join(page.read_text(encoding="utf-8").splitlines()[:4])
-            if f"(../{other}/{page.name})" not in head or (page.name != "index.md" and "(index.md)" not in head):
-                missing.append(f"navigation line in docs/{lang}/{page.name}")
     if missing:
         raise CheckError("Missing RU/EN pair: " + ", ".join(missing))
 

@@ -109,6 +109,22 @@ CI workflows run for any branch, so a new prefix needs no workflow change.
   what, how, dependencies, links); exact results and limits go to STATUS, history
   to the CHANGELOG and protocols.
 
+
+### Research materials
+
+Each research project lives in its own `docs/research/<topic>/` directory.
+Use lowercase names with hyphens. Plans and reports live in `ru/` and `en/`
+with matching filenames; each localized `index.md` links the plan, series reports
+and results. Sanitized machine-readable results live in `results/` without
+language duplication. Example:
+[GDB Python research for rc3](../research/rc3-gdb-python/en/index.md).
+
+A new topic gets its own directory and links from both main documentation maps.
+Research pages link their local index and language counterpart; local maps link
+back to the main documentation. CI checks these pairs. Historical results,
+including FAIL/ERROR, are not rewritten when moved. Do not commit raw logs,
+ELF files, local TOML or personal data.
+
 ## Checks
 
 1. Offline checks in the CI Docker image: `python3 ci/run_checks.py` — the docs, format, host
