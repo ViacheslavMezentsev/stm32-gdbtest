@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Consumer R14: interception sequences —24/24 F411/HLA GDB14/16 on the unchanged api_firmware. Verified errors/success, retention of accepted results, arguments, counts and selected call order; expected wrong-order rejection retained, restore PASS. Core and firmware unchanged; optimized code next.
+
 - Consumer R13: WFI/SysTick/TIM2 —16/16 F411/HLA GDB14/16 on the unchanged CMSIS ELF. Verified interrupted PC, natural return, distinct wakeup and ticks progress, and delay restoration; restore PASS. Core and firmware unchanged; interception sequences next.
 
 - Consumer R12: DMA/watchpoints —16/16 F411/native DAP GDB14/16 on the unchanged CMSIS ELF. Verified DMA writes without a buffer-watch event, positive CPU controls and final sinks; restore PASS. Core and firmware unchanged; sleep/wakeup next.

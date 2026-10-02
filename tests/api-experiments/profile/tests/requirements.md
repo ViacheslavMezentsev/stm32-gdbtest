@@ -152,3 +152,12 @@ Find WFI in the CMSIS delay function, isolate SysTick wakeups, observe a post-WF
 
 ## HW_R13_TIM2
 Isolate TIM2 with SysTick disabled, verify WFI/IRQ/return without advancing the delay timebase, restore enable/control bits and confirm eventual delay completion.
+
+## HW_R14_SEQUENCE
+Intercept consecutive natural packet reads with two errors followed by success; verify arguments, projected call order, counts, caller consumption and natural behavior after removing interception.
+
+## HW_R14_RETAIN
+Verify that an error and a short packet preserve the last accepted total across a finite interception sequence, followed by a natural successful read.
+
+## HW_R14_ORDER
+Reject an intentionally wrong call-order expectation at a real target stop without consuming it or modifying the target, then verify normal execution.

@@ -24,5 +24,6 @@ including FAIL/ERROR. This is not an approved public API extension.
 | R11 | [IRQ context and natural exception return](r11.md) | [JSON](../results/rc3-r11-results.json) |
 | R12 | [DMA writes and watchpoint observations](r12.md) | [JSON](../results/rc3-r12-results.json) |
 | R13 | [WFI, wakeup and delay progress](r13.md) | [JSON](../results/rc3-r13-results.json) |
+| R14 | [Interception sequences and call order](r14.md) | [JSON](../results/rc3-r14-results.json) |
 
 [Consumer](../../../../tests/api-experiments/CMakeLists.txt) · [GDB probe](../../../../tools/research/gdb_api_probe.py)

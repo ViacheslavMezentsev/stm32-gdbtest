@@ -417,3 +417,12 @@ with bounded attempts. Handler entry alone is insufficient. With SysTick disable
 TIM2 wakes the CPU but does not advance ticks or its delay. Restore IRQ masks and
 SysTick in finally, then check delay completion. This does not roll back pending,
 COUNTFLAG or timer phase; a PC after WFI does not measure sleep residency.
+
+## Waiting for names sequentially can miss an extra call
+
+To verify order, keep points for all selected names active simultaneously when
+the hardware budget permits. [R14](../research/rc3-gdb-python/en/r14.md) checks
+point identity, PC and a finite event list; mismatch does not advance the list.
+Between interventions, check what the caller consumed. An error after success may
+retain the previous accepted result rather than clear it. Four guards and two
+points already occupy six F411 slots; an additional finish requires headroom.

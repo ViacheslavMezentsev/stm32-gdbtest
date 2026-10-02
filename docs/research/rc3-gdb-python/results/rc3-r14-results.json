@@ -1,0 +1,4464 @@
+{
+  "date": "2026-10-02",
+  "source_base": "f28ea37",
+  "board": "WeAct BlackPill F411CE",
+  "mcu": "STM32F411CEU6",
+  "backend": "OpenOCD 0.12.0",
+  "runs": [
+    {
+      "status": "PASS",
+      "suite": "r14",
+      "elf_sha256": "7842e8ee9471ec777001a1fcc5be6e4a9625af3883eee7c8a1b15ebbcd6c5552",
+      "restore_sha256": "1ff37ae10a007401de5e0eaf826764f60a2849c8b7821c123f12caa28c2e79c3",
+      "restored": true,
+      "source_sha256": {
+        ".gitignore": "f872b7dbd200d8629c7adac4d17dd7b26bc7ec9b4d57f1c5f2e6b14698c3c281",
+        "CMakeLists.txt": "0f76103275d33b8c6389647fbbdd022986878ceb9da0d5b7827ccdd3d2de3ecc",
+        "firmware_FLASH.ld": "11388a02e1e870b0b2a4d8b434c2043845302c97eba74d32d94252c1d8303496",
+        "host/test_commands.py": "f6bfe90975212cabc04a9ed80787b2659f3aff6512ff4c1d4fc66254fe76fe0e",
+        "host/test_failure_evidence.py": "c62d1ad56cce538e77442ab8b571230613d3724e30ce3c2f2a448c88a2035669",
+        "host/test_matrix.py": "a1fd886c5282c85ffd936ce3fb55d5ee4a264488e9ca877f32a1063e22b1ab18",
+        "host/test_navigation.py": "75ae48b4ac16d82795c825146767ab732191bb0031b2c18a35a7b122b6ab847a",
+        "host/test_sequence.py": "42614672ada588aa8ad8d1042bb26a067eb682eef1dbe1d0a910ce75977eed04",
+        "host/test_session.py": "5a4c113efbf373f95b34382d92b54532b2b6212ec9ef1b69197c213574c1ba37",
+        "lab/__init__.py": "9a3b47b5d1b5b39e49b96fdf1605c58d413868823bbbb22bcfb5f73a8cd9dafc",
+        "lab/commands.py": "a5b00bc077bc5bc3054f5278088cdeac75def0ea5e49a2d71cff4dcc0fee0236",
+        "lab/failure_evidence.py": "0ab5c06d5014ff8427c01e932047ba75c4a91e180fbd57432104917aa0c303d1",
+        "lab/navigation.py": "f6038e1e6c6d2ebfeb4cd322c86ae8d07481fbea209ffa78f26252557568bfa4",
+        "lab/openocd_native.py": "f111cd82ef45faf644d275bb03973b73fa0e1595bdb36f37deb254ee0eb25257",
+        "lab/sequence.py": "087a0ee4ca286d49027ddac64d06962823edddb4304f2457aac212529803d850",
+        "lab/session.py": "a9973223a873a9a1be770c919ea91347a387d009285f8893a1cbbba044064458",
+        "profile/target.toml": "6c6d66767ff344da39045a964452011595d96b2fb631bde17a77fdfc4e5d7cdd",
+        "profile/tests/board/test_automation.py": "1ecbb6286122bf8dcb706823f99578ce5a62081c2b5d8c8e24499c2ef44234f9",
+        "profile/tests/board/test_call_failures.py": "474af1e93770c515faa9f0804e30719024b9d7842ea3665a0b59f71bbeda289c",
+        "profile/tests/board/test_code_limits.py": "48118d4963a046b2d1c11d8dd7589fba4af7d1bc225b30ef4a9c0c86d2a38ae1",
+        "profile/tests/board/test_dma_watch.py": "0871a85107f79474efe2c64c653eb7cc65cb7637669a1f028da7696ecbe549ec",
+        "profile/tests/board/test_interrupted_calls.py": "7bff7fa839a92b1126ce0ad2099a4012ed28a4d034a68cbe89fe3e4d4d528e22",
+        "profile/tests/board/test_irq_frames.py": "4faa98bc77cc20ae421b473e95514b54a2303f5328b2762dacaac3089c571375",
+        "profile/tests/board/test_navigation.py": "d8a77c90bce147c2b4e1a963ba3b93f3931dac50d90846378a5b23d4682a2b05",
+        "profile/tests/board/test_outputs.py": "a050a4948e3783b214a9eb9cc24e96235a4e074836570e329e440b5b381531fb",
+        "profile/tests/board/test_recursion.py": "516f96286b9d427fb7abca7cdb6b799dfa83f0e6888c7307d623f8e6d097fb31",
+        "profile/tests/board/test_research.py": "4cb6c50ebc76abdcc3d960d793695d54b0c6a7f4f26ba7222b8d4edcf43040bd",
+        "profile/tests/board/test_return_types.py": "a05b48e7f1ec86c6e64054e44d4610c56f1015d52e8c0f990dea17c97c4563ab",
+        "profile/tests/board/test_sequences.py": "e5383dab61e4602b2624e9407150d04a91ac63efca31f3e3695226a8de5aa15b",
+        "profile/tests/board/test_sret.py": "26e9c3bc3bbcaf6e488f273b3345fa3b33b1d2f3a125788180cacb3aa48e1a80",
+        "profile/tests/board/test_watch_limits.py": "821042c45a609a17622539280191aa6f1530ee2f588ac0a9e1fec1966fa5ea8b",
+        "profile/tests/board/test_watch_split.py": "893713470247d5b3a4c6df5b6d1339f4403a5c682d265eb03abe09b01236aaf5",
+        "profile/tests/board/test_wfi_path.py": "8151cbf16e88a2beaa6a98fcd4cb4a3e5a9cd1a4930a81e298e26361207b3bd9",
+        "profile/tests/requirements.md": "e434eaf4898c822d9defb05d57760be78d10cd0273b12c3989156ee47a998cc6",
+        "run_matrix.py": "2b29555d398db5a6289ddda66b403a6ab80e44bd3c518b6d1bbd62e37546b9e6",
+        "src/app.c": "fbf20ab60780e6b89cb50c2f823e1665e24efed8f1d6cfb9433a4a1ba045c8c7",
+        "src/app.h": "02e11d2f0f506574e8fc3e72e05db31bf7a8c6e91bf86d166be78c69db8faa36",
+        "src/packet.c": "917dc51a5de233b90c49e525dd9a8bd44aa076a76c9bb4493fc22b5e2b4652b2",
+        "src/processing.c": "5ff9c27508d3f69b2905c9cf07ab660dc400fec2c8e7450f8ecd0b46290e73b0",
+        "src/returns.c": "e96e05d931cd0acecb37457efb5eaa25d9cfc321271386ffd8d9ba24680e7346",
+        "src/routes.c": "ce13ff6053a36b06a9c404da26781581cdeb9a2b5a959e0368a44cdd8b200e65",
+        "src/startup.c": "d0afbba98d70cfda1a1149b20ab7be03e41d3a6dd1f982d48c08f72bcc4a281e"
+      },
+      "directory": "20261002T083838.761345Z",
+      "interface": "hla",
+      "stages": [
+        {
+          "label": "prepare_gdb0_HW_R14_SEQUENCE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_gdb0_HW_R14_RETAIN",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_gdb0_HW_R14_ORDER",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_gdb1_HW_R14_SEQUENCE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_gdb1_HW_R14_RETAIN",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_gdb1_HW_R14_ORDER",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_restore_HW_BOOT",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "prepare_restore_HW_GPIO",
+          "status": "PASS",
+          "code": 0,
+          "gdb": null,
+          "teardown": null,
+          "python": null,
+          "image_verified": null,
+          "checks": 0,
+          "passed_checks": 0,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "baseline_HW_BOOT",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 7,
+          "passed_checks": 7,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "baseline_HW_GPIO",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 12,
+          "passed_checks": 12,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "gdb0_round0_HW_R14_SEQUENCE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 38,
+          "passed_checks": 38,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "action_0": {
+              "status": -5,
+              "data": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "output": 536870964
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "event_4": {
+              "name": "read_packet",
+              "cycle": 1,
+              "pc": 134218136
+            },
+            "action_1": {
+              "status": -5,
+              "data": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "output": 536870964
+            },
+            "event_5": {
+              "name": "process_packet",
+              "cycle": 2,
+              "pc": 134217940
+            },
+            "event_6": {
+              "name": "read_packet",
+              "cycle": 2,
+              "pc": 134218136
+            },
+            "action_2": {
+              "status": 8,
+              "data": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "output": 536870964
+            },
+            "event_7": {
+              "name": "process_packet",
+              "cycle": 3,
+              "pc": 134217940
+            },
+            "event_8": {
+              "name": "read_packet",
+              "cycle": 3,
+              "pc": 134218136
+            },
+            "event_9": {
+              "name": "process_packet",
+              "cycle": 4,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 9,
+              "actions": [
+                -5,
+                -5,
+                8,
+                null
+              ],
+              "total": 770
+            },
+            "stop_13": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 10,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "assertions": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "forced return selected caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "previous status consumed",
+              "actual": -5,
+              "expected": -5,
+              "passed": true
+            },
+            {
+              "name": "last accepted total retained",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "previous bytes retained",
+              "actual": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "forced return selected caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "previous status consumed",
+              "actual": -5,
+              "expected": -5,
+              "passed": true
+            },
+            {
+              "name": "last accepted total retained",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "previous bytes retained",
+              "actual": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "expected": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "forced return selected caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "previous status consumed",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "last accepted total retained",
+              "actual": 52,
+              "expected": 52,
+              "passed": true
+            },
+            {
+              "name": "previous bytes retained",
+              "actual": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "expected": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "exact final iteration",
+              "actual": 4,
+              "expected": 4,
+              "passed": true
+            },
+            {
+              "name": "final status consumed",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "final accepted total",
+              "actual": 770,
+              "expected": 770,
+              "passed": true
+            },
+            {
+              "name": "final output data",
+              "actual": [
+                0,
+                1,
+                2,
+                3,
+                127,
+                128,
+                254,
+                255
+              ],
+              "expected": [
+                0,
+                1,
+                2,
+                3,
+                127,
+                128,
+                254,
+                255
+              ],
+              "passed": true
+            },
+            {
+              "name": "packet prefix intact",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "packet suffix intact",
+              "actual": 7,
+              "expected": 7,
+              "passed": true
+            },
+            {
+              "name": "natural status after removal",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "natural total after removal",
+              "actual": 770,
+              "expected": 770,
+              "passed": true
+            }
+          ],
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 59,
+          "server_hardware_insertions": 59,
+          "raw_log_sha256": {
+            "gdb.log": "2e8e142d054260c9560eb51ac9c7e6013e1d2398b9fb6ef93f0080e0a61b9ff6",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "b9e86a396fed98a73b4f951dacda252ca96ce1634b588b665b7d981514ffc50b"
+          }
+        },
+        {
+          "label": "gdb0_round0_HW_R14_RETAIN",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 38,
+          "passed_checks": 38,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "action_0": {
+              "status": 8,
+              "data": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "output": 536870964
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "event_4": {
+              "name": "read_packet",
+              "cycle": 1,
+              "pc": 134218136
+            },
+            "action_1": {
+              "status": -5,
+              "data": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "output": 536870964
+            },
+            "event_5": {
+              "name": "process_packet",
+              "cycle": 2,
+              "pc": 134217940
+            },
+            "event_6": {
+              "name": "read_packet",
+              "cycle": 2,
+              "pc": 134218136
+            },
+            "action_2": {
+              "status": 3,
+              "data": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "output": 536870964
+            },
+            "event_7": {
+              "name": "process_packet",
+              "cycle": 3,
+              "pc": 134217940
+            },
+            "event_8": {
+              "name": "read_packet",
+              "cycle": 3,
+              "pc": 134218136
+            },
+            "event_9": {
+              "name": "process_packet",
+              "cycle": 4,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 9,
+              "actions": [
+                8,
+                -5,
+                3,
+                null
+              ],
+              "total": 770
+            },
+            "stop_13": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 10,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "assertions": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "forced return selected caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "previous status consumed",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "last accepted total retained",
+              "actual": 36,
+              "expected": 36,
+              "passed": true
+            },
+            {
+              "name": "previous bytes retained",
+              "actual": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "forced return selected caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "previous status consumed",
+              "actual": -5,
+              "expected": -5,
+              "passed": true
+            },
+            {
+              "name": "last accepted total retained",
+              "actual": 36,
+              "expected": 36,
+              "passed": true
+            },
+            {
+              "name": "previous bytes retained",
+              "actual": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "expected": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "forced return selected caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "previous status consumed",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "last accepted total retained",
+              "actual": 36,
+              "expected": 36,
+              "passed": true
+            },
+            {
+              "name": "previous bytes retained",
+              "actual": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "expected": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "exact final iteration",
+              "actual": 4,
+              "expected": 4,
+              "passed": true
+            },
+            {
+              "name": "final status consumed",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "final accepted total",
+              "actual": 770,
+              "expected": 770,
+              "passed": true
+            },
+            {
+              "name": "final output data",
+              "actual": [
+                0,
+                1,
+                2,
+                3,
+                127,
+                128,
+                254,
+                255
+              ],
+              "expected": [
+                0,
+                1,
+                2,
+                3,
+                127,
+                128,
+                254,
+                255
+              ],
+              "passed": true
+            },
+            {
+              "name": "packet prefix intact",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "packet suffix intact",
+              "actual": 7,
+              "expected": 7,
+              "passed": true
+            },
+            {
+              "name": "natural status after removal",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "natural total after removal",
+              "actual": 770,
+              "expected": 770,
+              "passed": true
+            }
+          ],
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 59,
+          "server_hardware_insertions": 59,
+          "raw_log_sha256": {
+            "gdb.log": "56e66d48ba4e154920355c81dc818e78c1bcce391ded477d66b262cd9e836cc5",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "879692591cdc4919d58882deb1f03d890774d53d70abba93c8c0a9534e354823"
+          }
+        },
+        {
+          "label": "gdb0_round0_HW_R14_ORDER",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 16,
+          "passed_checks": 16,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "expected_rejection": {
+              "error": "Call order at 0: expected process_packet, observed read_packet",
+              "frames": [
+                {
+                  "name": "read_packet",
+                  "pc": 134218136,
+                  "type": 0,
+                  "stop_id": 2
+                },
+                {
+                  "name": "process_packet",
+                  "pc": 134217950,
+                  "type": 0,
+                  "stop_id": 2
+                },
+                {
+                  "name": "main",
+                  "pc": 134217888,
+                  "type": 0,
+                  "stop_id": 2
+                }
+              ]
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 3,
+              "actions": [
+                null
+              ],
+              "total": 770
+            },
+            "stop_5": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "assertions": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "specific order mismatch",
+              "actual": "Call order at 0: expected process_packet, observed read_packet",
+              "expected": "Call order at 0: expected process_packet, observed read_packet",
+              "passed": true
+            },
+            {
+              "name": "mismatch did not consume expectation",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "exact final iteration",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "final status consumed",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "final accepted total",
+              "actual": 770,
+              "expected": 770,
+              "passed": true
+            },
+            {
+              "name": "final output data",
+              "actual": [
+                0,
+                1,
+                2,
+                3,
+                127,
+                128,
+                254,
+                255
+              ],
+              "expected": [
+                0,
+                1,
+                2,
+                3,
+                127,
+                128,
+                254,
+                255
+              ],
+              "passed": true
+            },
+            {
+              "name": "packet prefix intact",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "packet suffix intact",
+              "actual": 7,
+              "expected": 7,
+              "passed": true
+            },
+            {
+              "name": "natural status after removal",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "natural total after removal",
+              "actual": 770,
+              "expected": 770,
+              "passed": true
+            }
+          ],
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 23,
+          "server_hardware_insertions": 23,
+          "raw_log_sha256": {
+            "gdb.log": "541cae575d634af5aee33a4b5d95028714e35282551439410d05891b80529212",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "8d85708073068bc2fb0d03b9fd2793835065a685f42a4572e9ea1dcea0c2d795"
+          }
+        },
+        {
+          "label": "gdb0_round1_HW_R14_SEQUENCE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 38,
+          "passed_checks": 38,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "action_0": {
+              "status": -5,
+              "data": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "output": 536870964
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "event_4": {
+              "name": "read_packet",
+              "cycle": 1,
+              "pc": 134218136
+            },
+            "action_1": {
+              "status": -5,
+              "data": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "output": 536870964
+            },
+            "event_5": {
+              "name": "process_packet",
+              "cycle": 2,
+              "pc": 134217940
+            },
+            "event_6": {
+              "name": "read_packet",
+              "cycle": 2,
+              "pc": 134218136
+            },
+            "action_2": {
+              "status": 8,
+              "data": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "output": 536870964
+            },
+            "event_7": {
+              "name": "process_packet",
+              "cycle": 3,
+              "pc": 134217940
+            },
+            "event_8": {
+              "name": "read_packet",
+              "cycle": 3,
+              "pc": 134218136
+            },
+            "event_9": {
+              "name": "process_packet",
+              "cycle": 4,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 9,
+              "actions": [
+                -5,
+                -5,
+                8,
+                null
+              ],
+              "total": 770
+            },
+            "stop_13": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 10,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 59,
+          "server_hardware_insertions": 59,
+          "raw_log_sha256": {
+            "gdb.log": "0543e1a57de5a8c73eacd66f5e01232ae063818a9b06f6fc0a1f2d4526c168df",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "49b9612d0d3417f07aab19f2af8ab2abeada4ed87ecc9368b1c09d0ed57a0c43"
+          }
+        },
+        {
+          "label": "gdb0_round1_HW_R14_RETAIN",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 38,
+          "passed_checks": 38,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "action_0": {
+              "status": 8,
+              "data": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "output": 536870964
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "event_4": {
+              "name": "read_packet",
+              "cycle": 1,
+              "pc": 134218136
+            },
+            "action_1": {
+              "status": -5,
+              "data": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "output": 536870964
+            },
+            "event_5": {
+              "name": "process_packet",
+              "cycle": 2,
+              "pc": 134217940
+            },
+            "event_6": {
+              "name": "read_packet",
+              "cycle": 2,
+              "pc": 134218136
+            },
+            "action_2": {
+              "status": 3,
+              "data": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "output": 536870964
+            },
+            "event_7": {
+              "name": "process_packet",
+              "cycle": 3,
+              "pc": 134217940
+            },
+            "event_8": {
+              "name": "read_packet",
+              "cycle": 3,
+              "pc": 134218136
+            },
+            "event_9": {
+              "name": "process_packet",
+              "cycle": 4,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 9,
+              "actions": [
+                8,
+                -5,
+                3,
+                null
+              ],
+              "total": 770
+            },
+            "stop_13": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 10,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 59,
+          "server_hardware_insertions": 59,
+          "raw_log_sha256": {
+            "gdb.log": "536efd56d5cfec09fb248a1ce8eb5aa6e301a958ef17f898e97e63493c9205f9",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "c2795f89f6c0cd1e9e3fcd4db75d760fc2fa4cb96491340d2c930c928c8f3d86"
+          }
+        },
+        {
+          "label": "gdb0_round1_HW_R14_ORDER",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 16,
+          "passed_checks": 16,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "expected_rejection": {
+              "error": "Call order at 0: expected process_packet, observed read_packet",
+              "frames": [
+                {
+                  "name": "read_packet",
+                  "pc": 134218136,
+                  "type": 0,
+                  "stop_id": 2
+                },
+                {
+                  "name": "process_packet",
+                  "pc": 134217950,
+                  "type": 0,
+                  "stop_id": 2
+                },
+                {
+                  "name": "main",
+                  "pc": 134217888,
+                  "type": 0,
+                  "stop_id": 2
+                }
+              ]
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 3,
+              "actions": [
+                null
+              ],
+              "total": 770
+            },
+            "stop_5": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 23,
+          "server_hardware_insertions": 23,
+          "raw_log_sha256": {
+            "gdb.log": "23eb7eb0c2ecfcee85e915db16f644b802c9f4cc692314bf40ead17242991d25",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "05c940ce8e272b4f30f8ff37f400cfc9df084f0d82896c764603081efdcabaed"
+          }
+        },
+        {
+          "label": "gdb0_round2_HW_R14_SEQUENCE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 38,
+          "passed_checks": 38,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "action_0": {
+              "status": -5,
+              "data": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "output": 536870964
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "event_4": {
+              "name": "read_packet",
+              "cycle": 1,
+              "pc": 134218136
+            },
+            "action_1": {
+              "status": -5,
+              "data": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "output": 536870964
+            },
+            "event_5": {
+              "name": "process_packet",
+              "cycle": 2,
+              "pc": 134217940
+            },
+            "event_6": {
+              "name": "read_packet",
+              "cycle": 2,
+              "pc": 134218136
+            },
+            "action_2": {
+              "status": 8,
+              "data": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "output": 536870964
+            },
+            "event_7": {
+              "name": "process_packet",
+              "cycle": 3,
+              "pc": 134217940
+            },
+            "event_8": {
+              "name": "read_packet",
+              "cycle": 3,
+              "pc": 134218136
+            },
+            "event_9": {
+              "name": "process_packet",
+              "cycle": 4,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 9,
+              "actions": [
+                -5,
+                -5,
+                8,
+                null
+              ],
+              "total": 770
+            },
+            "stop_13": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 10,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 59,
+          "server_hardware_insertions": 59,
+          "raw_log_sha256": {
+            "gdb.log": "4d9b5ce44a07cba3d1f12466abd8b07796659b643ba73adeed647cbb65cef411",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "166720df11c6792c5b73aa640a5ec8a5df2b74a5370a4e998e810e1e3d59e692"
+          }
+        },
+        {
+          "label": "gdb0_round2_HW_R14_RETAIN",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 38,
+          "passed_checks": 38,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "action_0": {
+              "status": 8,
+              "data": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "output": 536870964
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "event_4": {
+              "name": "read_packet",
+              "cycle": 1,
+              "pc": 134218136
+            },
+            "action_1": {
+              "status": -5,
+              "data": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "output": 536870964
+            },
+            "event_5": {
+              "name": "process_packet",
+              "cycle": 2,
+              "pc": 134217940
+            },
+            "event_6": {
+              "name": "read_packet",
+              "cycle": 2,
+              "pc": 134218136
+            },
+            "action_2": {
+              "status": 3,
+              "data": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "output": 536870964
+            },
+            "event_7": {
+              "name": "process_packet",
+              "cycle": 3,
+              "pc": 134217940
+            },
+            "event_8": {
+              "name": "read_packet",
+              "cycle": 3,
+              "pc": 134218136
+            },
+            "event_9": {
+              "name": "process_packet",
+              "cycle": 4,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 9,
+              "actions": [
+                8,
+                -5,
+                3,
+                null
+              ],
+              "total": 770
+            },
+            "stop_13": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 10,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 59,
+          "server_hardware_insertions": 59,
+          "raw_log_sha256": {
+            "gdb.log": "38f9002524bc06ca6d090970fc8140db220c8659342ef80f5567295387539595",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "65746f9ef4f0d3df9563db0337517ccf6ca0492bbcb6b529e1a5c8dc452280df"
+          }
+        },
+        {
+          "label": "gdb0_round2_HW_R14_ORDER",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 16,
+          "passed_checks": 16,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "expected_rejection": {
+              "error": "Call order at 0: expected process_packet, observed read_packet",
+              "frames": [
+                {
+                  "name": "read_packet",
+                  "pc": 134218136,
+                  "type": 0,
+                  "stop_id": 2
+                },
+                {
+                  "name": "process_packet",
+                  "pc": 134217950,
+                  "type": 0,
+                  "stop_id": 2
+                },
+                {
+                  "name": "main",
+                  "pc": 134217888,
+                  "type": 0,
+                  "stop_id": 2
+                }
+              ]
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 3,
+              "actions": [
+                null
+              ],
+              "total": 770
+            },
+            "stop_5": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 23,
+          "server_hardware_insertions": 23,
+          "raw_log_sha256": {
+            "gdb.log": "cc9019509c4919cb095cc6f9e8b6693f023f17c961e85f4b665c04bf721db151",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "7e622f0178c00995d252bb39fba372579c986ff4bc331ea0234b9b1102320768"
+          }
+        },
+        {
+          "label": "gdb0_round3_HW_R14_SEQUENCE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 38,
+          "passed_checks": 38,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "action_0": {
+              "status": -5,
+              "data": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "output": 536870964
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "event_4": {
+              "name": "read_packet",
+              "cycle": 1,
+              "pc": 134218136
+            },
+            "action_1": {
+              "status": -5,
+              "data": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "output": 536870964
+            },
+            "event_5": {
+              "name": "process_packet",
+              "cycle": 2,
+              "pc": 134217940
+            },
+            "event_6": {
+              "name": "read_packet",
+              "cycle": 2,
+              "pc": 134218136
+            },
+            "action_2": {
+              "status": 8,
+              "data": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "output": 536870964
+            },
+            "event_7": {
+              "name": "process_packet",
+              "cycle": 3,
+              "pc": 134217940
+            },
+            "event_8": {
+              "name": "read_packet",
+              "cycle": 3,
+              "pc": 134218136
+            },
+            "event_9": {
+              "name": "process_packet",
+              "cycle": 4,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 9,
+              "actions": [
+                -5,
+                -5,
+                8,
+                null
+              ],
+              "total": 770
+            },
+            "stop_13": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 10,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 59,
+          "server_hardware_insertions": 59,
+          "raw_log_sha256": {
+            "gdb.log": "446c03433cd72956b5875f52a50de928f7daff4469462fb9dd3e23f889d7b77c",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "db44416481381a80ab5c8b81ffee05be2d2cc8b55621e9373133645a55888e2a"
+          }
+        },
+        {
+          "label": "gdb0_round3_HW_R14_RETAIN",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 38,
+          "passed_checks": 38,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "action_0": {
+              "status": 8,
+              "data": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "output": 536870964
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "event_4": {
+              "name": "read_packet",
+              "cycle": 1,
+              "pc": 134218136
+            },
+            "action_1": {
+              "status": -5,
+              "data": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "output": 536870964
+            },
+            "event_5": {
+              "name": "process_packet",
+              "cycle": 2,
+              "pc": 134217940
+            },
+            "event_6": {
+              "name": "read_packet",
+              "cycle": 2,
+              "pc": 134218136
+            },
+            "action_2": {
+              "status": 3,
+              "data": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "output": 536870964
+            },
+            "event_7": {
+              "name": "process_packet",
+              "cycle": 3,
+              "pc": 134217940
+            },
+            "event_8": {
+              "name": "read_packet",
+              "cycle": 3,
+              "pc": 134218136
+            },
+            "event_9": {
+              "name": "process_packet",
+              "cycle": 4,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 9,
+              "actions": [
+                8,
+                -5,
+                3,
+                null
+              ],
+              "total": 770
+            },
+            "stop_13": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 10,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 59,
+          "server_hardware_insertions": 59,
+          "raw_log_sha256": {
+            "gdb.log": "baeb732523bd0b3910be5249de7441d608f624fd40bad2d8b5b6298ff26b8266",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "300b390061d4382b4925a0bf2264d9cc43e55aada4f9ef3c725286ca91808a3f"
+          }
+        },
+        {
+          "label": "gdb0_round3_HW_R14_ORDER",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 16,
+          "passed_checks": 16,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "expected_rejection": {
+              "error": "Call order at 0: expected process_packet, observed read_packet",
+              "frames": [
+                {
+                  "name": "read_packet",
+                  "pc": 134218136,
+                  "type": 0,
+                  "stop_id": 2
+                },
+                {
+                  "name": "process_packet",
+                  "pc": 134217950,
+                  "type": 0,
+                  "stop_id": 2
+                },
+                {
+                  "name": "main",
+                  "pc": 134217888,
+                  "type": 0,
+                  "stop_id": 2
+                }
+              ]
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 3,
+              "actions": [
+                null
+              ],
+              "total": 770
+            },
+            "stop_5": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 23,
+          "server_hardware_insertions": 23,
+          "raw_log_sha256": {
+            "gdb.log": "b13afeeef11a2040811665e9e82f3a2be85784b053beff2ed75778ae3a2979b1",
+            "prepare.log": "297968aaab7c204cbda62e73ad79e192ad218d74dc8405bf5d125630d2fe2fe1",
+            "server.log": "b51c29239a9c2774252b4d5a7bd30ed1ca423fa8806f616aa7f0dc2c571a99a2"
+          }
+        },
+        {
+          "label": "gdb1_round0_HW_R14_SEQUENCE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 38,
+          "passed_checks": 38,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "action_0": {
+              "status": -5,
+              "data": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "output": 536870964
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "event_4": {
+              "name": "read_packet",
+              "cycle": 1,
+              "pc": 134218136
+            },
+            "action_1": {
+              "status": -5,
+              "data": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "output": 536870964
+            },
+            "event_5": {
+              "name": "process_packet",
+              "cycle": 2,
+              "pc": 134217940
+            },
+            "event_6": {
+              "name": "read_packet",
+              "cycle": 2,
+              "pc": 134218136
+            },
+            "action_2": {
+              "status": 8,
+              "data": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "output": 536870964
+            },
+            "event_7": {
+              "name": "process_packet",
+              "cycle": 3,
+              "pc": 134217940
+            },
+            "event_8": {
+              "name": "read_packet",
+              "cycle": 3,
+              "pc": 134218136
+            },
+            "event_9": {
+              "name": "process_packet",
+              "cycle": 4,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 9,
+              "actions": [
+                -5,
+                -5,
+                8,
+                null
+              ],
+              "total": 770
+            },
+            "stop_13": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 10,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "assertions": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "forced return selected caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "previous status consumed",
+              "actual": -5,
+              "expected": -5,
+              "passed": true
+            },
+            {
+              "name": "last accepted total retained",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "previous bytes retained",
+              "actual": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "forced return selected caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "previous status consumed",
+              "actual": -5,
+              "expected": -5,
+              "passed": true
+            },
+            {
+              "name": "last accepted total retained",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "previous bytes retained",
+              "actual": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "expected": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "forced return selected caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "previous status consumed",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "last accepted total retained",
+              "actual": 52,
+              "expected": 52,
+              "passed": true
+            },
+            {
+              "name": "previous bytes retained",
+              "actual": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "expected": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "exact final iteration",
+              "actual": 4,
+              "expected": 4,
+              "passed": true
+            },
+            {
+              "name": "final status consumed",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "final accepted total",
+              "actual": 770,
+              "expected": 770,
+              "passed": true
+            },
+            {
+              "name": "final output data",
+              "actual": [
+                0,
+                1,
+                2,
+                3,
+                127,
+                128,
+                254,
+                255
+              ],
+              "expected": [
+                0,
+                1,
+                2,
+                3,
+                127,
+                128,
+                254,
+                255
+              ],
+              "passed": true
+            },
+            {
+              "name": "packet prefix intact",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "packet suffix intact",
+              "actual": 7,
+              "expected": 7,
+              "passed": true
+            },
+            {
+              "name": "natural status after removal",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "natural total after removal",
+              "actual": 770,
+              "expected": 770,
+              "passed": true
+            }
+          ],
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 59,
+          "server_hardware_insertions": 59,
+          "raw_log_sha256": {
+            "gdb.log": "eef7687358e13676d8919988bb87c6ce51e6c560479b0fbbd9859f79a575a71f",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "f3cda60dcbfbafd8e093442afe4101a794bf0b59a28f37067cd2dbf7b3ee987c"
+          }
+        },
+        {
+          "label": "gdb1_round0_HW_R14_RETAIN",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 38,
+          "passed_checks": 38,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "action_0": {
+              "status": 8,
+              "data": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "output": 536870964
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "event_4": {
+              "name": "read_packet",
+              "cycle": 1,
+              "pc": 134218136
+            },
+            "action_1": {
+              "status": -5,
+              "data": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "output": 536870964
+            },
+            "event_5": {
+              "name": "process_packet",
+              "cycle": 2,
+              "pc": 134217940
+            },
+            "event_6": {
+              "name": "read_packet",
+              "cycle": 2,
+              "pc": 134218136
+            },
+            "action_2": {
+              "status": 3,
+              "data": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "output": 536870964
+            },
+            "event_7": {
+              "name": "process_packet",
+              "cycle": 3,
+              "pc": 134217940
+            },
+            "event_8": {
+              "name": "read_packet",
+              "cycle": 3,
+              "pc": 134218136
+            },
+            "event_9": {
+              "name": "process_packet",
+              "cycle": 4,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 9,
+              "actions": [
+                8,
+                -5,
+                3,
+                null
+              ],
+              "total": 770
+            },
+            "stop_13": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 10,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "assertions": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "forced return selected caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "previous status consumed",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "last accepted total retained",
+              "actual": 36,
+              "expected": 36,
+              "passed": true
+            },
+            {
+              "name": "previous bytes retained",
+              "actual": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "forced return selected caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "previous status consumed",
+              "actual": -5,
+              "expected": -5,
+              "passed": true
+            },
+            {
+              "name": "last accepted total retained",
+              "actual": 36,
+              "expected": 36,
+              "passed": true
+            },
+            {
+              "name": "previous bytes retained",
+              "actual": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "expected": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "forced return selected caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "previous status consumed",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "last accepted total retained",
+              "actual": 36,
+              "expected": 36,
+              "passed": true
+            },
+            {
+              "name": "previous bytes retained",
+              "actual": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "expected": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "exact final iteration",
+              "actual": 4,
+              "expected": 4,
+              "passed": true
+            },
+            {
+              "name": "final status consumed",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "final accepted total",
+              "actual": 770,
+              "expected": 770,
+              "passed": true
+            },
+            {
+              "name": "final output data",
+              "actual": [
+                0,
+                1,
+                2,
+                3,
+                127,
+                128,
+                254,
+                255
+              ],
+              "expected": [
+                0,
+                1,
+                2,
+                3,
+                127,
+                128,
+                254,
+                255
+              ],
+              "passed": true
+            },
+            {
+              "name": "packet prefix intact",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "packet suffix intact",
+              "actual": 7,
+              "expected": 7,
+              "passed": true
+            },
+            {
+              "name": "natural status after removal",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "natural total after removal",
+              "actual": 770,
+              "expected": 770,
+              "passed": true
+            }
+          ],
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 59,
+          "server_hardware_insertions": 59,
+          "raw_log_sha256": {
+            "gdb.log": "c3088ee3793bfbff98f22510bb2e0035e3d481c866aaa19437668046a5686531",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "8c621021f3fb7ffcfdbfd2f97ef02d790b93eb36d3beb9510d6a707c6939398b"
+          }
+        },
+        {
+          "label": "gdb1_round0_HW_R14_ORDER",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 16,
+          "passed_checks": 16,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "expected_rejection": {
+              "error": "Call order at 0: expected process_packet, observed read_packet",
+              "frames": [
+                {
+                  "name": "read_packet",
+                  "pc": 134218136,
+                  "type": 0,
+                  "stop_id": 2
+                },
+                {
+                  "name": "process_packet",
+                  "pc": 134217950,
+                  "type": 0,
+                  "stop_id": 2
+                },
+                {
+                  "name": "main",
+                  "pc": 134217888,
+                  "type": 0,
+                  "stop_id": 2
+                }
+              ]
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 3,
+              "actions": [
+                null
+              ],
+              "total": 770
+            },
+            "stop_5": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "assertions": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "exact iteration",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "natural caller",
+              "actual": "process_packet",
+              "expected": "process_packet",
+              "passed": true
+            },
+            {
+              "name": "output pointer",
+              "actual": 536870964,
+              "expected": 536870964,
+              "passed": true
+            },
+            {
+              "name": "output capacity",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "specific order mismatch",
+              "actual": "Call order at 0: expected process_packet, observed read_packet",
+              "expected": "Call order at 0: expected process_packet, observed read_packet",
+              "passed": true
+            },
+            {
+              "name": "mismatch did not consume expectation",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "exact final iteration",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "final status consumed",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "final accepted total",
+              "actual": 770,
+              "expected": 770,
+              "passed": true
+            },
+            {
+              "name": "final output data",
+              "actual": [
+                0,
+                1,
+                2,
+                3,
+                127,
+                128,
+                254,
+                255
+              ],
+              "expected": [
+                0,
+                1,
+                2,
+                3,
+                127,
+                128,
+                254,
+                255
+              ],
+              "passed": true
+            },
+            {
+              "name": "packet prefix intact",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "packet suffix intact",
+              "actual": 7,
+              "expected": 7,
+              "passed": true
+            },
+            {
+              "name": "natural status after removal",
+              "actual": 8,
+              "expected": 8,
+              "passed": true
+            },
+            {
+              "name": "natural total after removal",
+              "actual": 770,
+              "expected": 770,
+              "passed": true
+            }
+          ],
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 23,
+          "server_hardware_insertions": 23,
+          "raw_log_sha256": {
+            "gdb.log": "2f2f00e15b2ec224ab3f07d569f82f218a848d7b0892663e0ed0f40d835f6778",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "100fd7da589a110d0b267e7c759fc12a5fb04fa6e258d9610a293b1499a6625d"
+          }
+        },
+        {
+          "label": "gdb1_round1_HW_R14_SEQUENCE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 38,
+          "passed_checks": 38,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "action_0": {
+              "status": -5,
+              "data": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "output": 536870964
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "event_4": {
+              "name": "read_packet",
+              "cycle": 1,
+              "pc": 134218136
+            },
+            "action_1": {
+              "status": -5,
+              "data": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "output": 536870964
+            },
+            "event_5": {
+              "name": "process_packet",
+              "cycle": 2,
+              "pc": 134217940
+            },
+            "event_6": {
+              "name": "read_packet",
+              "cycle": 2,
+              "pc": 134218136
+            },
+            "action_2": {
+              "status": 8,
+              "data": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "output": 536870964
+            },
+            "event_7": {
+              "name": "process_packet",
+              "cycle": 3,
+              "pc": 134217940
+            },
+            "event_8": {
+              "name": "read_packet",
+              "cycle": 3,
+              "pc": 134218136
+            },
+            "event_9": {
+              "name": "process_packet",
+              "cycle": 4,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 9,
+              "actions": [
+                -5,
+                -5,
+                8,
+                null
+              ],
+              "total": 770
+            },
+            "stop_13": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 10,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 59,
+          "server_hardware_insertions": 59,
+          "raw_log_sha256": {
+            "gdb.log": "47f21b5db21917f515e2e784f1bcc9fe82279bd55255248492cb6e05fa6a8136",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "75d4e2275c5db487d44f4cc94b86786a258a31b6afdc7c489cea8054e7fe8f89"
+          }
+        },
+        {
+          "label": "gdb1_round1_HW_R14_RETAIN",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 38,
+          "passed_checks": 38,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "action_0": {
+              "status": 8,
+              "data": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "output": 536870964
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "event_4": {
+              "name": "read_packet",
+              "cycle": 1,
+              "pc": 134218136
+            },
+            "action_1": {
+              "status": -5,
+              "data": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "output": 536870964
+            },
+            "event_5": {
+              "name": "process_packet",
+              "cycle": 2,
+              "pc": 134217940
+            },
+            "event_6": {
+              "name": "read_packet",
+              "cycle": 2,
+              "pc": 134218136
+            },
+            "action_2": {
+              "status": 3,
+              "data": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "output": 536870964
+            },
+            "event_7": {
+              "name": "process_packet",
+              "cycle": 3,
+              "pc": 134217940
+            },
+            "event_8": {
+              "name": "read_packet",
+              "cycle": 3,
+              "pc": 134218136
+            },
+            "event_9": {
+              "name": "process_packet",
+              "cycle": 4,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 9,
+              "actions": [
+                8,
+                -5,
+                3,
+                null
+              ],
+              "total": 770
+            },
+            "stop_13": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 10,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 59,
+          "server_hardware_insertions": 59,
+          "raw_log_sha256": {
+            "gdb.log": "33023cd775d09620014b2f78348519e896c16c629984e15264dabca4a466e6d1",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "0778de29be8fa9a87b3ba1891ce24d450396ab0d6e29251bf98ec6df7006cb30"
+          }
+        },
+        {
+          "label": "gdb1_round1_HW_R14_ORDER",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 16,
+          "passed_checks": 16,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "expected_rejection": {
+              "error": "Call order at 0: expected process_packet, observed read_packet",
+              "frames": [
+                {
+                  "name": "read_packet",
+                  "pc": 134218136,
+                  "type": 0,
+                  "stop_id": 2
+                },
+                {
+                  "name": "process_packet",
+                  "pc": 134217950,
+                  "type": 0,
+                  "stop_id": 2
+                },
+                {
+                  "name": "main",
+                  "pc": 134217888,
+                  "type": 0,
+                  "stop_id": 2
+                }
+              ]
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 3,
+              "actions": [
+                null
+              ],
+              "total": 770
+            },
+            "stop_5": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 23,
+          "server_hardware_insertions": 23,
+          "raw_log_sha256": {
+            "gdb.log": "ecb6a6ba9c8afe1c5415eb9a4613ac7e37cc5177c7eb16e3624e6c0bd9c43b01",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "1af51ec3e8ed541c741608b0a0d88caca2a588a25be3b6a796de652ce8a2bfe8"
+          }
+        },
+        {
+          "label": "gdb1_round2_HW_R14_SEQUENCE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 38,
+          "passed_checks": 38,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "action_0": {
+              "status": -5,
+              "data": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "output": 536870964
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "event_4": {
+              "name": "read_packet",
+              "cycle": 1,
+              "pc": 134218136
+            },
+            "action_1": {
+              "status": -5,
+              "data": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "output": 536870964
+            },
+            "event_5": {
+              "name": "process_packet",
+              "cycle": 2,
+              "pc": 134217940
+            },
+            "event_6": {
+              "name": "read_packet",
+              "cycle": 2,
+              "pc": 134218136
+            },
+            "action_2": {
+              "status": 8,
+              "data": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "output": 536870964
+            },
+            "event_7": {
+              "name": "process_packet",
+              "cycle": 3,
+              "pc": 134217940
+            },
+            "event_8": {
+              "name": "read_packet",
+              "cycle": 3,
+              "pc": 134218136
+            },
+            "event_9": {
+              "name": "process_packet",
+              "cycle": 4,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 9,
+              "actions": [
+                -5,
+                -5,
+                8,
+                null
+              ],
+              "total": 770
+            },
+            "stop_13": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 10,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 59,
+          "server_hardware_insertions": 59,
+          "raw_log_sha256": {
+            "gdb.log": "53cd99f69eb511a4283bad588c31be9cc06628b0c2d8f1bd382c395184151c6f",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "8270b2defab892401a46bdac27bb8f32864bf0d027b9cf1c566a2b9368997216"
+          }
+        },
+        {
+          "label": "gdb1_round2_HW_R14_RETAIN",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 38,
+          "passed_checks": 38,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "action_0": {
+              "status": 8,
+              "data": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "output": 536870964
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "event_4": {
+              "name": "read_packet",
+              "cycle": 1,
+              "pc": 134218136
+            },
+            "action_1": {
+              "status": -5,
+              "data": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "output": 536870964
+            },
+            "event_5": {
+              "name": "process_packet",
+              "cycle": 2,
+              "pc": 134217940
+            },
+            "event_6": {
+              "name": "read_packet",
+              "cycle": 2,
+              "pc": 134218136
+            },
+            "action_2": {
+              "status": 3,
+              "data": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "output": 536870964
+            },
+            "event_7": {
+              "name": "process_packet",
+              "cycle": 3,
+              "pc": 134217940
+            },
+            "event_8": {
+              "name": "read_packet",
+              "cycle": 3,
+              "pc": 134218136
+            },
+            "event_9": {
+              "name": "process_packet",
+              "cycle": 4,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 9,
+              "actions": [
+                8,
+                -5,
+                3,
+                null
+              ],
+              "total": 770
+            },
+            "stop_13": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 10,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 59,
+          "server_hardware_insertions": 59,
+          "raw_log_sha256": {
+            "gdb.log": "4b87ca9eee54e0679ae2d2eb97c044f90054e1ee04c9ba3e17430636f527d1bd",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "28f0baa4fee67587ff964def7b43d97fc5335654551248686d96757c1cd4ddce"
+          }
+        },
+        {
+          "label": "gdb1_round2_HW_R14_ORDER",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 16,
+          "passed_checks": 16,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "expected_rejection": {
+              "error": "Call order at 0: expected process_packet, observed read_packet",
+              "frames": [
+                {
+                  "name": "read_packet",
+                  "pc": 134218136,
+                  "type": 0,
+                  "stop_id": 2
+                },
+                {
+                  "name": "process_packet",
+                  "pc": 134217950,
+                  "type": 0,
+                  "stop_id": 2
+                },
+                {
+                  "name": "main",
+                  "pc": 134217888,
+                  "type": 0,
+                  "stop_id": 2
+                }
+              ]
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 3,
+              "actions": [
+                null
+              ],
+              "total": 770
+            },
+            "stop_5": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 23,
+          "server_hardware_insertions": 23,
+          "raw_log_sha256": {
+            "gdb.log": "4150db0732f8e7800c809465b2d4972381569b4fb97d7bc14eceb0eaa4b4e6a1",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "300ae56b0a71dccfab4f449224fa6ae66e08b0dcea3a23b082c71114878f2fef"
+          }
+        },
+        {
+          "label": "gdb1_round3_HW_R14_SEQUENCE",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 38,
+          "passed_checks": 38,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "action_0": {
+              "status": -5,
+              "data": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "output": 536870964
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "event_4": {
+              "name": "read_packet",
+              "cycle": 1,
+              "pc": 134218136
+            },
+            "action_1": {
+              "status": -5,
+              "data": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "output": 536870964
+            },
+            "event_5": {
+              "name": "process_packet",
+              "cycle": 2,
+              "pc": 134217940
+            },
+            "event_6": {
+              "name": "read_packet",
+              "cycle": 2,
+              "pc": 134218136
+            },
+            "action_2": {
+              "status": 8,
+              "data": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "output": 536870964
+            },
+            "event_7": {
+              "name": "process_packet",
+              "cycle": 3,
+              "pc": 134217940
+            },
+            "event_8": {
+              "name": "read_packet",
+              "cycle": 3,
+              "pc": 134218136
+            },
+            "event_9": {
+              "name": "process_packet",
+              "cycle": 4,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 9,
+              "actions": [
+                -5,
+                -5,
+                8,
+                null
+              ],
+              "total": 770
+            },
+            "stop_13": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 10,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 59,
+          "server_hardware_insertions": 59,
+          "raw_log_sha256": {
+            "gdb.log": "440972a147f32e925e06cca641320ac61c9f7b749b893ce0078acb33e5cd7604",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "5a475a1124cededdeb07cfc0ebfcd0048fabddadcd32cf8bea71afe9f8dc601e"
+          }
+        },
+        {
+          "label": "gdb1_round3_HW_R14_RETAIN",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 38,
+          "passed_checks": 38,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "action_0": {
+              "status": 8,
+              "data": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "output": 536870964
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "event_4": {
+              "name": "read_packet",
+              "cycle": 1,
+              "pc": 134218136
+            },
+            "action_1": {
+              "status": -5,
+              "data": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "output": 536870964
+            },
+            "event_5": {
+              "name": "process_packet",
+              "cycle": 2,
+              "pc": 134217940
+            },
+            "event_6": {
+              "name": "read_packet",
+              "cycle": 2,
+              "pc": 134218136
+            },
+            "action_2": {
+              "status": 3,
+              "data": [
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "output": 536870964
+            },
+            "event_7": {
+              "name": "process_packet",
+              "cycle": 3,
+              "pc": 134217940
+            },
+            "event_8": {
+              "name": "read_packet",
+              "cycle": 3,
+              "pc": 134218136
+            },
+            "event_9": {
+              "name": "process_packet",
+              "cycle": 4,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 9,
+              "actions": [
+                8,
+                -5,
+                3,
+                null
+              ],
+              "total": 770
+            },
+            "stop_13": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 10,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 59,
+          "server_hardware_insertions": 59,
+          "raw_log_sha256": {
+            "gdb.log": "c0b59877640a3a222a4700a281b8c5ca563504a7d03fd898bf02c6c0b5c7009a",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "e2d4a30f3bdddaf21f68c41d8110ec0d39f78cdb59f2acdf3b36727e6b390eef"
+          }
+        },
+        {
+          "label": "gdb1_round3_HW_R14_ORDER",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "16.3.90.20250906-git",
+          "teardown": "reset_run",
+          "python": "3.13.12",
+          "image_verified": true,
+          "checks": 16,
+          "passed_checks": 16,
+          "failed_checks": [],
+          "research": {
+            "event_1": {
+              "name": "process_packet",
+              "cycle": 0,
+              "pc": 134217940
+            },
+            "event_2": {
+              "name": "read_packet",
+              "cycle": 0,
+              "pc": 134218136
+            },
+            "expected_rejection": {
+              "error": "Call order at 0: expected process_packet, observed read_packet",
+              "frames": [
+                {
+                  "name": "read_packet",
+                  "pc": 134218136,
+                  "type": 0,
+                  "stop_id": 2
+                },
+                {
+                  "name": "process_packet",
+                  "pc": 134217950,
+                  "type": 0,
+                  "stop_id": 2
+                },
+                {
+                  "name": "main",
+                  "pc": 134217888,
+                  "type": 0,
+                  "stop_id": 2
+                }
+              ]
+            },
+            "event_3": {
+              "name": "process_packet",
+              "cycle": 1,
+              "pc": 134217940
+            },
+            "sequence_complete": {
+              "events": 3,
+              "actions": [
+                null
+              ],
+              "total": 770
+            },
+            "stop_5": {
+              "event": "BreakpointEvent",
+              "breakpoints": [
+                8
+              ],
+              "signal": null,
+              "stop_id": 4,
+              "pc": 134217940,
+              "reason": "expected"
+            }
+          },
+          "rsp_insert_Z0": 0,
+          "rsp_insert_Z1": 23,
+          "server_hardware_insertions": 23,
+          "raw_log_sha256": {
+            "gdb.log": "3abf4a236958872c750f6f4dae9e26e772274d77f143d1ac959402389a6da712",
+            "prepare.log": "1f45c1e4e61b2001875aeb5db1a58af4f8e00c1d600e01b303dd106b5fc47f12",
+            "server.log": "5005ada53090ece3a0342b88a3c7e0be12494ccf4dda5b46a505f80e788928a5"
+          }
+        },
+        {
+          "label": "restore_HW_BOOT",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 7,
+          "passed_checks": 7,
+          "failed_checks": [],
+          "research": {}
+        },
+        {
+          "label": "restore_HW_GPIO",
+          "status": "PASS",
+          "code": 0,
+          "gdb": "14.2.90.20240526-git",
+          "teardown": "reset_run",
+          "python": "3.11.4",
+          "image_verified": true,
+          "checks": 12,
+          "passed_checks": 12,
+          "failed_checks": [],
+          "research": {}
+        }
+      ]
+    }
+  ],
+  "firmware": {
+    "consumer": "tests/api-experiments",
+    "manifest_sha256": "485e744022c24f27052fb79b4a63a97df63d7f2ef2068e75c521a8820c5dd163",
+    "compilers": [
+      {
+        "name": "arm-none-eabi-gcc.exe",
+        "sha256": "26c908ce6d90f964bb51a84e93f39e51b4207fb88582cc266eb7b42403300c95",
+        "version": "13.3.1"
+      }
+    ],
+    "units": [
+      {
+        "source": "src/startup.c",
+        "object_sha256": "a2f2e8a58467a0a56e11a94e03658745c8ceb39dac72a947a55fbf4f301c6b69",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-fno-lto",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "e2df5c7bba841071370f0cd3fd08c9dc380e495e1b6a7eed245f59221cc537c5"
+      },
+      {
+        "source": "src/app.c",
+        "object_sha256": "33b0a899f8b1ad4453635f74b449cf95d001f148901cd46330ea4faaeffa9f1c",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-fno-lto",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "c0136fe7110f90fb2fc0c955c24b5c9e450fe88b5fff2915cfcd498d53a678df"
+      },
+      {
+        "source": "src/processing.c",
+        "object_sha256": "1fc180f43c47c68354942832af7a2cf3dff7c70360df6be2df711e9468190a57",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-fno-lto",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "d156287e7e740efe5aa684218677b116b0e1b3f129eafc97713b859baac4e2ab"
+      },
+      {
+        "source": "src/packet.c",
+        "object_sha256": "951a23166a701a8b4e9e5a02a79a65399c4b14a7c4e5fa918b7d32125666e1a7",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-fno-lto",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "8af2f1cae0933f28026a0a184f1a9b45b0b96288dddb76b8e112a61cf52823a7"
+      },
+      {
+        "source": "src/returns.c",
+        "object_sha256": "3e8f105daa4ea2f318a5b82e0a47e8a8d418ddb2db64119414db47a5267ba680",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-fno-lto",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "f956a8a65e037a2a3771e2c6b633b35263aa74037eba4951d57ddd4ecf07c569"
+      },
+      {
+        "source": "src/routes.c",
+        "object_sha256": "28db63218af3a5bfc18fd584a34780ad9f8b62b3ac6592f3dc002a37aa6e3d7b",
+        "compiler": "arm-none-eabi-gcc.exe",
+        "flags": [
+          "-mcpu=cortex-m4",
+          "-mthumb",
+          "-mfloat-abi=soft",
+          "-std=c11",
+          "-Og",
+          "-g3",
+          "-fno-lto",
+          "-ffunction-sections",
+          "-fdata-sections"
+        ],
+        "command_sha256": "72b9cafbeb61be4b2a43d113a690892bf3f14291cba34432006e211698efd484"
+      }
+    ],
+    "source_sha256": {
+      "src/app.c": "fbf20ab60780e6b89cb50c2f823e1665e24efed8f1d6cfb9433a4a1ba045c8c7",
+      "src/app.h": "02e11d2f0f506574e8fc3e72e05db31bf7a8c6e91bf86d166be78c69db8faa36",
+      "src/packet.c": "917dc51a5de233b90c49e525dd9a8bd44aa076a76c9bb4493fc22b5e2b4652b2",
+      "src/processing.c": "5ff9c27508d3f69b2905c9cf07ab660dc400fec2c8e7450f8ecd0b46290e73b0",
+      "src/returns.c": "e96e05d931cd0acecb37457efb5eaa25d9cfc321271386ffd8d9ba24680e7346",
+      "src/routes.c": "ce13ff6053a36b06a9c404da26781581cdeb9a2b5a959e0368a44cdd8b200e65",
+      "src/startup.c": "d0afbba98d70cfda1a1149b20ab7be03e41d3a6dd1f982d48c08f72bcc4a281e"
+    }
+  }
+}

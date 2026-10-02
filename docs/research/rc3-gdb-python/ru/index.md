@@ -24,5 +24,6 @@
 | R11 | [Контекст IRQ и естественный возврат](r11.md) | [JSON](../results/rc3-r11-results.json) |
 | R12 | [Запись DMA и наблюдение через watchpoints](r12.md) | [JSON](../results/rc3-r12-results.json) |
 | R13 | [WFI, пробуждение и ход задержки](r13.md) | [JSON](../results/rc3-r13-results.json) |
+| R14 | [Последовательности перехватов и порядок вызовов](r14.md) | [JSON](../results/rc3-r14-results.json) |
 
 [Consumer](../../../../tests/api-experiments/CMakeLists.txt) · [GDB probe](../../../../tools/research/gdb_api_probe.py)
