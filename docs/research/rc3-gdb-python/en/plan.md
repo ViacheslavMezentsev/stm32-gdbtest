@@ -357,8 +357,8 @@ for board tests.
 | 3 | DMA and watchpoint observation limits | [R12](r12.md): 16/16 native DAP; DMA writes without watch stops, CPU controls PASS |
 | 4 | WFI, sleep and wakeup | [R13](r13.md): 16/16 HLA, ordinary Sleep, SysTick/TIM2, delay restoration |
 | 5 | Interception sequences: failures, retries, success and call order | [R14](r14.md): 24/24 HLA; finite natural-call sequences, errors/success/order |
-| 6 | Optimized code: O2/Os, inline, unavailable values and multiple locations | Next |
-| 7 | Remaining navigation: until/advance/nexti, source lines and unrelated stops | Pending |
+| 6 | Optimized code: O2/Os, inline, unavailable values and multiple locations | [R15](r15.md): 32/32 HLA O2/Os; inline, two locations, optimized_out |
+| 7 | Remaining navigation: until/advance/nexti, source lines and unrelated stops | Next |
 | 8 | ABI: void/double/hard-float, stack arguments, structures, then C++ | Pending |
 | 9 | RTOS tasks, context and filters in a separate ordinary firmware | Pending |
 | 10 | Reliability: shared point address, foreign points, predicate errors, scope, settings restoration, call budget and bounded replay | Pending |

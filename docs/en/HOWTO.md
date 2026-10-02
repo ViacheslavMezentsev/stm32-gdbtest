@@ -426,3 +426,18 @@ point identity, PC and a finite event list; mismatch does not advance the list.
 Between interventions, check what the caller consumed. An error after success may
 retain the previous accepted result rather than clear it. Four guards and two
 points already occupy six F411 slots; an additional finish requires headroom.
+
+## Optimization changes breakpoints and local availability
+
+In [R15](../research/rc3-gdb-python/en/r15.md), one inline function has two addresses
+and an argument disappears after one stepi. Budget locations, check PC and frame
+type, and preserve is_optimized_out separately. An available product before mul
+does not prove execution: check the final output.
+O2 also converted startup loops into memcpy/memset, absent with -nostdlib.
+This consumer disables only tree-loop-distribute-patterns for optimized startup;
+the rest of the application retains the selected optimization.
+
+A Linux format check on a Windows bind mount with physical Tests may miss the
+tests/hal-f030/src/platform.c exclusion. Check a copy of current sources using
+canonical git ls-files paths, retaining CI/config and module access; do not
+reformat excluded platform code just to obtain PASS.

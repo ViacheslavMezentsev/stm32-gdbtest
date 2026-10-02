@@ -25,5 +25,6 @@ including FAIL/ERROR. This is not an approved public API extension.
 | R12 | [DMA writes and watchpoint observations](r12.md) | [JSON](../results/rc3-r12-results.json) |
 | R13 | [WFI, wakeup and delay progress](r13.md) | [JSON](../results/rc3-r13-results.json) |
 | R14 | [Interception sequences and call order](r14.md) | [JSON](../results/rc3-r14-results.json) |
+| R15 | [O2/Os, inline frames and value availability](r15.md) | [JSON](../results/rc3-r15-results.json) |
 
 [Consumer](../../../../tests/api-experiments/CMakeLists.txt) · [GDB probe](../../../../tools/research/gdb_api_probe.py)

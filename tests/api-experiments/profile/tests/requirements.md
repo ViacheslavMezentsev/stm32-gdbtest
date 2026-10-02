@@ -161,3 +161,9 @@ Verify that an error and a short packet preserve the last accepted total across 
 
 ## HW_R14_ORDER
 Reject an intentionally wrong call-order expectation at a real target stop without consuming it or modifying the target, then verify normal execution.
+
+## HW_R15_LOCATIONS
+Reject an ambiguous location through the single-location adapter, then observe both inline instances with one raw hardware breakpoint within the physical location budget, verifying frames, arguments and final outputs.
+
+## HW_R15_VALUES
+Observe local-value availability across one machine instruction in optimized inline code; reject optimized-out snapshots and verify natural caller results.

@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Consumer R15: O2/Os —32/32 F411/HLA GDB14/16 on a separate ordinary firmware. Verified inline frames, two locations of one breakpoint, argument loss after an instruction and final outputs; restore PASS. Retained initial startup link failure and offline function disappearance; previous Og ELF unchanged. Core unchanged; navigation next.
+
 - Consumer R14: interception sequences —24/24 F411/HLA GDB14/16 on the unchanged api_firmware. Verified errors/success, retention of accepted results, arguments, counts and selected call order; expected wrong-order rejection retained, restore PASS. Core and firmware unchanged; optimized code next.
 
 - Consumer R13: WFI/SysTick/TIM2 —16/16 F411/HLA GDB14/16 on the unchanged CMSIS ELF. Verified interrupted PC, natural return, distinct wakeup and ticks progress, and delay restoration; restore PASS. Core and firmware unchanged; interception sequences next.
