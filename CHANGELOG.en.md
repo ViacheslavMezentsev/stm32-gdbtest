@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Research2: isolated adaptive scenario-tree Python model, three-valued conditions and All/Any, dynamic pruning/reactivation, independent full-state JSON oracle and standalone HTML player. Simulation only; no core/API/specification or hardware changes.
+
 - Concluded the current R1–R18 research cycle with open technical debt. Added RU/EN draft API evolution conventions, system/API specification boundaries, operation contract cards and outcome verification. Normative specifications and core unchanged; HW remains paused.
 
 - rc3 API draft: added frame group (frames/frame/arguments/locals), exact-depth caller helper and nearest-ancestor search. Defined incomplete-stack and reference freshness boundaries, distinguished backtrace from call history, and recorded graphs as separate debt. RU/EN documentation only.

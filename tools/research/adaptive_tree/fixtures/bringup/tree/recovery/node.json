@@ -1,0 +1,21 @@
+{
+  "id": "recovery",
+  "enabled": true,
+  "activation": true,
+  "output": {
+    "ok": {
+      "results": "all"
+    }
+  },
+  "tests": [
+    {
+      "id": "recover",
+      "outcome": "PASS",
+      "effects": {
+        "keys": true,
+        "link": true
+      },
+      "reason": ""
+    }
+  ]
+}

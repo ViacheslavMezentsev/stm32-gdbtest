@@ -1,0 +1,18 @@
+{
+  "id": "disabled",
+  "enabled": false,
+  "activation": true,
+  "output": {
+    "ok": {
+      "results": "all"
+    }
+  },
+  "tests": [
+    {
+      "id": "never",
+      "outcome": "PASS",
+      "effects": {},
+      "reason": ""
+    }
+  ]
+}

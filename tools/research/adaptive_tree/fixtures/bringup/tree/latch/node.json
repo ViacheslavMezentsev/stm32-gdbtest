@@ -1,0 +1,26 @@
+{
+  "id": "latch",
+  "enabled": true,
+  "activation": true,
+  "output": {
+    "ok": {
+      "results": "all"
+    },
+    "keys": {
+      "fact": "keys"
+    }
+  },
+  "tests": [
+    {
+      "id": "release",
+      "outcome": "PASS",
+      "effects": {
+        "keys": true
+      },
+      "reason": ""
+    }
+  ],
+  "children": [
+    "keys"
+  ]
+}

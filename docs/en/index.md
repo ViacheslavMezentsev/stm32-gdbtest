@@ -2,6 +2,8 @@
 
 Documentation · [Русский](../ru/index.md)
 
+[Research 2: adaptive scenario tree](../research/adaptive-test-tree/en/index.md) — simulated engine, JSON oracle and HTML player.
+
 [GDB Python research for rc3](../research/rc3-gdb-python/en/index.md): plan, separate R1–R18 reports and results.
 
 - [API evolution and specification boundaries](../research/rc3-gdb-python/en/api-evolution.md) — draft conventions, verification criteria and transition order.

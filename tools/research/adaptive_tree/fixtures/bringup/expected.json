@@ -1,0 +1,1474 @@
+[
+  {
+    "schema": 1,
+    "step": 0,
+    "facts": {
+      "keys": null,
+      "link": null
+    },
+    "provenance": {
+      "keys": {
+        "step": 0,
+        "source": "initial"
+      },
+      "link": {
+        "step": 0,
+        "source": "initial"
+      }
+    },
+    "results": {},
+    "nodes": {
+      "board": {
+        "parent": null,
+        "input": {},
+        "output": {
+          "keys": null,
+          "link": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {}
+      },
+      "latch": {
+        "parent": "board",
+        "input": {
+          "keys": null,
+          "link": null
+        },
+        "output": {
+          "ok": null,
+          "keys": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "release": "PENDING"
+        }
+      },
+      "keys": {
+        "parent": "latch",
+        "input": {
+          "ok": null,
+          "keys": null
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": null,
+        "active": false,
+        "reason": "condition_unknown",
+        "complete": false,
+        "tests": {
+          "key1": "BLOCKED",
+          "key2": "BLOCKED"
+        }
+      },
+      "comm": {
+        "parent": "board",
+        "input": {
+          "keys": null,
+          "link": null
+        },
+        "output": {
+          "ok": null,
+          "link": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "handshake": "PENDING"
+        }
+      },
+      "protocol": {
+        "parent": "comm",
+        "input": {
+          "ok": null,
+          "link": null
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": null,
+        "active": false,
+        "reason": "condition_unknown",
+        "complete": false,
+        "tests": {
+          "exchange": "BLOCKED"
+        }
+      },
+      "temperature": {
+        "parent": "board",
+        "input": {
+          "keys": null,
+          "link": null
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "sample": "PENDING"
+        }
+      },
+      "recovery": {
+        "parent": "board",
+        "input": {
+          "keys": null,
+          "link": null
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "recover": "PENDING"
+        }
+      },
+      "disabled": {
+        "parent": "board",
+        "input": {
+          "keys": null,
+          "link": null
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": false,
+        "reason": "disabled",
+        "complete": false,
+        "tests": {
+          "never": "DISABLED"
+        }
+      }
+    },
+    "eligible": [
+      "release",
+      "handshake",
+      "sample",
+      "recover"
+    ],
+    "next": "release",
+    "terminal": false
+  },
+  {
+    "schema": 1,
+    "step": 1,
+    "facts": {
+      "keys": true,
+      "link": null
+    },
+    "provenance": {
+      "keys": {
+        "step": 1,
+        "source": "release"
+      },
+      "link": {
+        "step": 0,
+        "source": "initial"
+      }
+    },
+    "results": {
+      "release": {
+        "status": "PASS",
+        "step": 1,
+        "node": "latch",
+        "reason": ""
+      }
+    },
+    "nodes": {
+      "board": {
+        "parent": null,
+        "input": {},
+        "output": {
+          "keys": true,
+          "link": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {}
+      },
+      "latch": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": null
+        },
+        "output": {
+          "ok": true,
+          "keys": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "release": "PASS"
+        }
+      },
+      "keys": {
+        "parent": "latch",
+        "input": {
+          "ok": true,
+          "keys": true
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "key1": "PENDING",
+          "key2": "PENDING"
+        }
+      },
+      "comm": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": null
+        },
+        "output": {
+          "ok": null,
+          "link": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "handshake": "PENDING"
+        }
+      },
+      "protocol": {
+        "parent": "comm",
+        "input": {
+          "ok": null,
+          "link": null
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": null,
+        "active": false,
+        "reason": "condition_unknown",
+        "complete": false,
+        "tests": {
+          "exchange": "BLOCKED"
+        }
+      },
+      "temperature": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": null
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "sample": "PENDING"
+        }
+      },
+      "recovery": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": null
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "recover": "PENDING"
+        }
+      },
+      "disabled": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": null
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": false,
+        "reason": "disabled",
+        "complete": false,
+        "tests": {
+          "never": "DISABLED"
+        }
+      }
+    },
+    "eligible": [
+      "key1",
+      "key2",
+      "handshake",
+      "sample",
+      "recover"
+    ],
+    "next": "key1",
+    "terminal": false
+  },
+  {
+    "schema": 1,
+    "step": 2,
+    "facts": {
+      "keys": false,
+      "link": null
+    },
+    "provenance": {
+      "keys": {
+        "step": 2,
+        "source": "key1"
+      },
+      "link": {
+        "step": 0,
+        "source": "initial"
+      }
+    },
+    "results": {
+      "release": {
+        "status": "PASS",
+        "step": 1,
+        "node": "latch",
+        "reason": ""
+      },
+      "key1": {
+        "status": "FAIL",
+        "step": 2,
+        "node": "keys",
+        "reason": "latch jammed"
+      }
+    },
+    "nodes": {
+      "board": {
+        "parent": null,
+        "input": {},
+        "output": {
+          "keys": false,
+          "link": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {}
+      },
+      "latch": {
+        "parent": "board",
+        "input": {
+          "keys": false,
+          "link": null
+        },
+        "output": {
+          "ok": true,
+          "keys": false
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "release": "PASS"
+        }
+      },
+      "keys": {
+        "parent": "latch",
+        "input": {
+          "ok": true,
+          "keys": false
+        },
+        "output": {
+          "ok": false
+        },
+        "condition": false,
+        "active": false,
+        "reason": "condition_false",
+        "complete": false,
+        "tests": {
+          "key1": "FAIL",
+          "key2": "BLOCKED"
+        }
+      },
+      "comm": {
+        "parent": "board",
+        "input": {
+          "keys": false,
+          "link": null
+        },
+        "output": {
+          "ok": null,
+          "link": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "handshake": "PENDING"
+        }
+      },
+      "protocol": {
+        "parent": "comm",
+        "input": {
+          "ok": null,
+          "link": null
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": null,
+        "active": false,
+        "reason": "condition_unknown",
+        "complete": false,
+        "tests": {
+          "exchange": "BLOCKED"
+        }
+      },
+      "temperature": {
+        "parent": "board",
+        "input": {
+          "keys": false,
+          "link": null
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "sample": "PENDING"
+        }
+      },
+      "recovery": {
+        "parent": "board",
+        "input": {
+          "keys": false,
+          "link": null
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "recover": "PENDING"
+        }
+      },
+      "disabled": {
+        "parent": "board",
+        "input": {
+          "keys": false,
+          "link": null
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": false,
+        "reason": "disabled",
+        "complete": false,
+        "tests": {
+          "never": "DISABLED"
+        }
+      }
+    },
+    "eligible": [
+      "handshake",
+      "sample",
+      "recover"
+    ],
+    "next": "handshake",
+    "terminal": false
+  },
+  {
+    "schema": 1,
+    "step": 3,
+    "facts": {
+      "keys": false,
+      "link": false
+    },
+    "provenance": {
+      "keys": {
+        "step": 2,
+        "source": "key1"
+      },
+      "link": {
+        "step": 3,
+        "source": "handshake"
+      }
+    },
+    "results": {
+      "release": {
+        "status": "PASS",
+        "step": 1,
+        "node": "latch",
+        "reason": ""
+      },
+      "key1": {
+        "status": "FAIL",
+        "step": 2,
+        "node": "keys",
+        "reason": "latch jammed"
+      },
+      "handshake": {
+        "status": "FAIL",
+        "step": 3,
+        "node": "comm",
+        "reason": "no exchange"
+      }
+    },
+    "nodes": {
+      "board": {
+        "parent": null,
+        "input": {},
+        "output": {
+          "keys": false,
+          "link": false
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {}
+      },
+      "latch": {
+        "parent": "board",
+        "input": {
+          "keys": false,
+          "link": false
+        },
+        "output": {
+          "ok": true,
+          "keys": false
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "release": "PASS"
+        }
+      },
+      "keys": {
+        "parent": "latch",
+        "input": {
+          "ok": true,
+          "keys": false
+        },
+        "output": {
+          "ok": false
+        },
+        "condition": false,
+        "active": false,
+        "reason": "condition_false",
+        "complete": false,
+        "tests": {
+          "key1": "FAIL",
+          "key2": "BLOCKED"
+        }
+      },
+      "comm": {
+        "parent": "board",
+        "input": {
+          "keys": false,
+          "link": false
+        },
+        "output": {
+          "ok": false,
+          "link": false
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "handshake": "FAIL"
+        }
+      },
+      "protocol": {
+        "parent": "comm",
+        "input": {
+          "ok": false,
+          "link": false
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": false,
+        "active": false,
+        "reason": "condition_false",
+        "complete": false,
+        "tests": {
+          "exchange": "BLOCKED"
+        }
+      },
+      "temperature": {
+        "parent": "board",
+        "input": {
+          "keys": false,
+          "link": false
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "sample": "PENDING"
+        }
+      },
+      "recovery": {
+        "parent": "board",
+        "input": {
+          "keys": false,
+          "link": false
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "recover": "PENDING"
+        }
+      },
+      "disabled": {
+        "parent": "board",
+        "input": {
+          "keys": false,
+          "link": false
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": false,
+        "reason": "disabled",
+        "complete": false,
+        "tests": {
+          "never": "DISABLED"
+        }
+      }
+    },
+    "eligible": [
+      "sample",
+      "recover"
+    ],
+    "next": "sample",
+    "terminal": false
+  },
+  {
+    "schema": 1,
+    "step": 4,
+    "facts": {
+      "keys": false,
+      "link": false
+    },
+    "provenance": {
+      "keys": {
+        "step": 2,
+        "source": "key1"
+      },
+      "link": {
+        "step": 3,
+        "source": "handshake"
+      }
+    },
+    "results": {
+      "release": {
+        "status": "PASS",
+        "step": 1,
+        "node": "latch",
+        "reason": ""
+      },
+      "key1": {
+        "status": "FAIL",
+        "step": 2,
+        "node": "keys",
+        "reason": "latch jammed"
+      },
+      "handshake": {
+        "status": "FAIL",
+        "step": 3,
+        "node": "comm",
+        "reason": "no exchange"
+      },
+      "sample": {
+        "status": "PASS",
+        "step": 4,
+        "node": "temperature",
+        "reason": ""
+      }
+    },
+    "nodes": {
+      "board": {
+        "parent": null,
+        "input": {},
+        "output": {
+          "keys": false,
+          "link": false
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {}
+      },
+      "latch": {
+        "parent": "board",
+        "input": {
+          "keys": false,
+          "link": false
+        },
+        "output": {
+          "ok": true,
+          "keys": false
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "release": "PASS"
+        }
+      },
+      "keys": {
+        "parent": "latch",
+        "input": {
+          "ok": true,
+          "keys": false
+        },
+        "output": {
+          "ok": false
+        },
+        "condition": false,
+        "active": false,
+        "reason": "condition_false",
+        "complete": false,
+        "tests": {
+          "key1": "FAIL",
+          "key2": "BLOCKED"
+        }
+      },
+      "comm": {
+        "parent": "board",
+        "input": {
+          "keys": false,
+          "link": false
+        },
+        "output": {
+          "ok": false,
+          "link": false
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "handshake": "FAIL"
+        }
+      },
+      "protocol": {
+        "parent": "comm",
+        "input": {
+          "ok": false,
+          "link": false
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": false,
+        "active": false,
+        "reason": "condition_false",
+        "complete": false,
+        "tests": {
+          "exchange": "BLOCKED"
+        }
+      },
+      "temperature": {
+        "parent": "board",
+        "input": {
+          "keys": false,
+          "link": false
+        },
+        "output": {
+          "ok": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "sample": "PASS"
+        }
+      },
+      "recovery": {
+        "parent": "board",
+        "input": {
+          "keys": false,
+          "link": false
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "recover": "PENDING"
+        }
+      },
+      "disabled": {
+        "parent": "board",
+        "input": {
+          "keys": false,
+          "link": false
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": false,
+        "reason": "disabled",
+        "complete": false,
+        "tests": {
+          "never": "DISABLED"
+        }
+      }
+    },
+    "eligible": [
+      "recover"
+    ],
+    "next": "recover",
+    "terminal": false
+  },
+  {
+    "schema": 1,
+    "step": 5,
+    "facts": {
+      "keys": true,
+      "link": true
+    },
+    "provenance": {
+      "keys": {
+        "step": 5,
+        "source": "recover"
+      },
+      "link": {
+        "step": 5,
+        "source": "recover"
+      }
+    },
+    "results": {
+      "release": {
+        "status": "PASS",
+        "step": 1,
+        "node": "latch",
+        "reason": ""
+      },
+      "key1": {
+        "status": "FAIL",
+        "step": 2,
+        "node": "keys",
+        "reason": "latch jammed"
+      },
+      "handshake": {
+        "status": "FAIL",
+        "step": 3,
+        "node": "comm",
+        "reason": "no exchange"
+      },
+      "sample": {
+        "status": "PASS",
+        "step": 4,
+        "node": "temperature",
+        "reason": ""
+      },
+      "recover": {
+        "status": "PASS",
+        "step": 5,
+        "node": "recovery",
+        "reason": ""
+      }
+    },
+    "nodes": {
+      "board": {
+        "parent": null,
+        "input": {},
+        "output": {
+          "keys": true,
+          "link": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {}
+      },
+      "latch": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": true
+        },
+        "output": {
+          "ok": true,
+          "keys": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "release": "PASS"
+        }
+      },
+      "keys": {
+        "parent": "latch",
+        "input": {
+          "ok": true,
+          "keys": true
+        },
+        "output": {
+          "ok": false
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "key1": "FAIL",
+          "key2": "PENDING"
+        }
+      },
+      "comm": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": true
+        },
+        "output": {
+          "ok": false,
+          "link": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "handshake": "FAIL"
+        }
+      },
+      "protocol": {
+        "parent": "comm",
+        "input": {
+          "ok": false,
+          "link": true
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "exchange": "PENDING"
+        }
+      },
+      "temperature": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": true
+        },
+        "output": {
+          "ok": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "sample": "PASS"
+        }
+      },
+      "recovery": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": true
+        },
+        "output": {
+          "ok": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "recover": "PASS"
+        }
+      },
+      "disabled": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": true
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": false,
+        "reason": "disabled",
+        "complete": false,
+        "tests": {
+          "never": "DISABLED"
+        }
+      }
+    },
+    "eligible": [
+      "key2",
+      "exchange"
+    ],
+    "next": "key2",
+    "terminal": false
+  },
+  {
+    "schema": 1,
+    "step": 6,
+    "facts": {
+      "keys": true,
+      "link": true
+    },
+    "provenance": {
+      "keys": {
+        "step": 5,
+        "source": "recover"
+      },
+      "link": {
+        "step": 5,
+        "source": "recover"
+      }
+    },
+    "results": {
+      "release": {
+        "status": "PASS",
+        "step": 1,
+        "node": "latch",
+        "reason": ""
+      },
+      "key1": {
+        "status": "FAIL",
+        "step": 2,
+        "node": "keys",
+        "reason": "latch jammed"
+      },
+      "handshake": {
+        "status": "FAIL",
+        "step": 3,
+        "node": "comm",
+        "reason": "no exchange"
+      },
+      "sample": {
+        "status": "PASS",
+        "step": 4,
+        "node": "temperature",
+        "reason": ""
+      },
+      "recover": {
+        "status": "PASS",
+        "step": 5,
+        "node": "recovery",
+        "reason": ""
+      },
+      "key2": {
+        "status": "PASS",
+        "step": 6,
+        "node": "keys",
+        "reason": ""
+      }
+    },
+    "nodes": {
+      "board": {
+        "parent": null,
+        "input": {},
+        "output": {
+          "keys": true,
+          "link": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {}
+      },
+      "latch": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": true
+        },
+        "output": {
+          "ok": true,
+          "keys": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "release": "PASS"
+        }
+      },
+      "keys": {
+        "parent": "latch",
+        "input": {
+          "ok": true,
+          "keys": true
+        },
+        "output": {
+          "ok": false
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "key1": "FAIL",
+          "key2": "PASS"
+        }
+      },
+      "comm": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": true
+        },
+        "output": {
+          "ok": false,
+          "link": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "handshake": "FAIL"
+        }
+      },
+      "protocol": {
+        "parent": "comm",
+        "input": {
+          "ok": false,
+          "link": true
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": false,
+        "tests": {
+          "exchange": "PENDING"
+        }
+      },
+      "temperature": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": true
+        },
+        "output": {
+          "ok": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "sample": "PASS"
+        }
+      },
+      "recovery": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": true
+        },
+        "output": {
+          "ok": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "recover": "PASS"
+        }
+      },
+      "disabled": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": true
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": false,
+        "reason": "disabled",
+        "complete": false,
+        "tests": {
+          "never": "DISABLED"
+        }
+      }
+    },
+    "eligible": [
+      "exchange"
+    ],
+    "next": "exchange",
+    "terminal": false
+  },
+  {
+    "schema": 1,
+    "step": 7,
+    "facts": {
+      "keys": true,
+      "link": true
+    },
+    "provenance": {
+      "keys": {
+        "step": 5,
+        "source": "recover"
+      },
+      "link": {
+        "step": 5,
+        "source": "recover"
+      }
+    },
+    "results": {
+      "release": {
+        "status": "PASS",
+        "step": 1,
+        "node": "latch",
+        "reason": ""
+      },
+      "key1": {
+        "status": "FAIL",
+        "step": 2,
+        "node": "keys",
+        "reason": "latch jammed"
+      },
+      "handshake": {
+        "status": "FAIL",
+        "step": 3,
+        "node": "comm",
+        "reason": "no exchange"
+      },
+      "sample": {
+        "status": "PASS",
+        "step": 4,
+        "node": "temperature",
+        "reason": ""
+      },
+      "recover": {
+        "status": "PASS",
+        "step": 5,
+        "node": "recovery",
+        "reason": ""
+      },
+      "key2": {
+        "status": "PASS",
+        "step": 6,
+        "node": "keys",
+        "reason": ""
+      },
+      "exchange": {
+        "status": "PASS",
+        "step": 7,
+        "node": "protocol",
+        "reason": ""
+      }
+    },
+    "nodes": {
+      "board": {
+        "parent": null,
+        "input": {},
+        "output": {
+          "keys": true,
+          "link": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {}
+      },
+      "latch": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": true
+        },
+        "output": {
+          "ok": true,
+          "keys": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "release": "PASS"
+        }
+      },
+      "keys": {
+        "parent": "latch",
+        "input": {
+          "ok": true,
+          "keys": true
+        },
+        "output": {
+          "ok": false
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "key1": "FAIL",
+          "key2": "PASS"
+        }
+      },
+      "comm": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": true
+        },
+        "output": {
+          "ok": false,
+          "link": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "handshake": "FAIL"
+        }
+      },
+      "protocol": {
+        "parent": "comm",
+        "input": {
+          "ok": false,
+          "link": true
+        },
+        "output": {
+          "ok": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "exchange": "PASS"
+        }
+      },
+      "temperature": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": true
+        },
+        "output": {
+          "ok": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "sample": "PASS"
+        }
+      },
+      "recovery": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": true
+        },
+        "output": {
+          "ok": true
+        },
+        "condition": true,
+        "active": true,
+        "reason": null,
+        "complete": true,
+        "tests": {
+          "recover": "PASS"
+        }
+      },
+      "disabled": {
+        "parent": "board",
+        "input": {
+          "keys": true,
+          "link": true
+        },
+        "output": {
+          "ok": null
+        },
+        "condition": true,
+        "active": false,
+        "reason": "disabled",
+        "complete": false,
+        "tests": {
+          "never": "DISABLED"
+        }
+      }
+    },
+    "eligible": [],
+    "next": null,
+    "terminal": true
+  }
+]

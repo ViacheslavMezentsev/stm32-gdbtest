@@ -1,0 +1,43 @@
+{
+  "simulation_only": true,
+  "model_tests": {
+    "passed": 14
+  },
+  "windows_host": {
+    "run": 112,
+    "skipped": 8,
+    "status": "PASS"
+  },
+  "linux_host": {
+    "run": 112,
+    "skipped": 4,
+    "status": "PASS"
+  },
+  "docker_ci": {
+    "docs": 3,
+    "host": 1,
+    "passed": 4
+  },
+  "research_navigation": "PASS",
+  "stored_artifacts_reproducible": true,
+  "browser": {
+    "transport": "localhost",
+    "checks": [
+      "initial",
+      "blocked_step3",
+      "reactivated_step5",
+      "first_previous_next",
+      "slider_home_end",
+      "play_pause",
+      "automatic_stop",
+      "node_details"
+    ],
+    "console_errors": 0
+  },
+  "sha256": {
+    "tools/research/adaptive_tree/engine.py": "2974961c348da3655d042a472424f228e031ba7a0822ad0ff9af36b65e10f572",
+    "tools/research/adaptive_tree/test_engine.py": "5744b2b6a6f3d9ebceda63aa511e82b84fad3501925cd250778efb3afa3033ab",
+    "tools/research/adaptive_tree/fixtures/bringup/expected.json": "43f8b67f6ecf79197d120a859ea74cb9b47ed738329bed6a08ff6443f032748f",
+    "docs/research/adaptive-test-tree/results/snapshots.json": "43f8b67f6ecf79197d120a859ea74cb9b47ed738329bed6a08ff6443f032748f"
+  }
+}

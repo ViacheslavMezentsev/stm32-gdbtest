@@ -1,0 +1,20 @@
+{
+  "id": "protocol",
+  "enabled": true,
+  "activation": {
+    "input": "link"
+  },
+  "output": {
+    "ok": {
+      "results": "all"
+    }
+  },
+  "tests": [
+    {
+      "id": "exchange",
+      "outcome": "PASS",
+      "effects": {},
+      "reason": ""
+    }
+  ]
+}

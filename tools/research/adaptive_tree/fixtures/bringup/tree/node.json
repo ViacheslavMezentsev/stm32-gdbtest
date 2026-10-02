@@ -1,0 +1,18 @@
+{
+  "id": "board",
+  "output": {
+    "keys": {
+      "fact": "keys"
+    },
+    "link": {
+      "fact": "link"
+    }
+  },
+  "children": [
+    "latch",
+    "comm",
+    "temperature",
+    "recovery",
+    "disabled"
+  ]
+}

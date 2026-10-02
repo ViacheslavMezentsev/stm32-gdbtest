@@ -1,0 +1,18 @@
+{
+  "id": "temperature",
+  "enabled": true,
+  "activation": true,
+  "output": {
+    "ok": {
+      "results": "all"
+    }
+  },
+  "tests": [
+    {
+      "id": "sample",
+      "outcome": "PASS",
+      "effects": {},
+      "reason": ""
+    }
+  ]
+}

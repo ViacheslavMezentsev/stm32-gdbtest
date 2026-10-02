@@ -2,6 +2,8 @@
 
 Документация · [English](../en/index.md)
 
+[Исследование 2: адаптивное дерево сценариев](../research/adaptive-test-tree/ru/index.md) — имитационный движок, JSON-эталон и HTML-проигрыватель.
+
 [Исследование GDB Python для rc3](../research/rc3-gdb-python/ru/index.md): план, отдельные отчёты R1–R18 и результаты.
 
 - [Эволюция API и разделение ТЗ](../research/rc3-gdb-python/ru/api-evolution.md) — проект соглашений, критерии проверки и порядок перехода.
