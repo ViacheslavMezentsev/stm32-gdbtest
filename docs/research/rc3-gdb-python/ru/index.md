@@ -27,5 +27,6 @@
 | R14 | [Последовательности перехватов и порядок вызовов](r14.md) | [JSON](../results/rc3-r14-results.json) |
 | R15 | [O2/Os, inline и доступность значений](r15.md) | [JSON](../results/rc3-r15-results.json) |
 | R16 | [until, advance, nexti и причины остановки](r16.md) | [JSON](../results/rc3-r16-results.json) |
+| R17 | [Скалярные типы и soft/hard-float ABI](r17.md) | [JSON](../results/rc3-r17-results.json) |
 
 [Consumer](../../../../tests/api-experiments/CMakeLists.txt) · [GDB probe](../../../../tools/research/gdb_api_probe.py)

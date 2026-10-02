@@ -1,6 +1,16 @@
 # Дорожная карта
 
-## Текущая работа: consumer-эксперименты rc3 R16
+## Текущая работа: consumer-эксперименты rc3 R17
+
+- Ветка `codex/rc3-api-r1`, после `0fd9f8c`; перенос в ядро только после утверждения владельца.
+- [x] Scalar ABI soft/hard:48/48 F411/HLA GDB14/16; void/double/float/6 аргументов, finish/return/call и конечные приёмники.
+- [x] FPU включена обычным main hard-сборки; double использует VFP ABI с программной арифметикой. Прежний Og ELF сохранился.
+- [x] Restore HW_BOOT/HW_GPIO PASS в обеих матрицах, неожиданных FAIL/ERROR нет. [RU](docs/research/rc3-gdb-python/ru/r17.md) / [EN](docs/research/rc3-gdb-python/en/r17.md).
+- [x] Windows/Linux65/65 host/prepare для каждой ABI на каждой ОС; docs3/3, format1/1 на канонической копии.
+- [ ] Следующий подэтап ABI: структуры/HFA и C++; затем RTOS по [очереди](docs/research/rc3-gdb-python/ru/plan.md#очередь-продолжения-после-r9). Исходный struct-return FAIL R5 остаётся открытым.
+- Ядро/API прежние; публикация/land — владелец.
+
+## Предыдущая работа: consumer-эксперименты rc3 R16
 
 - Ветка `codex/rc3-api-r1`, после `d043fec`; перенос в ядро только после утверждения владельца.
 - [x] until/advance/nexti:32/32 F411/HLA GDB14/16 на прежнем Og ELF; строки, выход кадра до цели и прерывание отдельной точкой.

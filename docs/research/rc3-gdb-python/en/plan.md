@@ -359,7 +359,7 @@ for board tests.
 | 5 | Interception sequences: failures, retries, success and call order | [R14](r14.md): 24/24 HLA; finite natural-call sequences, errors/success/order |
 | 6 | Optimized code: O2/Os, inline, unavailable values and multiple locations | [R15](r15.md): 32/32 HLA O2/Os; inline, two locations, optimized_out |
 | 7 | Remaining navigation: until/advance/nexti, source lines and unrelated stops | [R16](r16.md): 32/32 HLA; until with line, advance, nexti and separate point; scope ERROR retained |
-| 8 | ABI: void/double/hard-float, stack arguments, structures, then C++ | Next |
+| 8 | ABI: void/double/hard-float, stack arguments, structures, then C++ | [R17](r17.md): 48/48 scalar soft/hard; structures/HFA and C++ next |
 | 9 | RTOS tasks, context and filters in a separate ordinary firmware | Pending |
 | 10 | Reliability: shared point address, foreign points, predicate errors, scope, settings restoration, call budget and bounded replay | Pending |
 | 11 | Selected techniques on F030/F103, confirm current wiring | Pending |

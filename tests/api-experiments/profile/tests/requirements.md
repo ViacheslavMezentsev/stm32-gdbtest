@@ -179,3 +179,12 @@ Step over a natural BL with nexti, checking the instruction after the call, sele
 
 ## HW_R16_INTERRUPT
 Recognize nexti interrupted by a separate callee breakpoint, reject target completion, remove the interfering point and explicitly finish navigation.
+
+## HW_R17_FINISH
+Capture natural void/double/float/six-argument results, inspect stack-passed arguments and verify caller effects under the selected floating-point ABI.
+
+## HW_R17_RETURN
+Force void and scalar returns, verify skipped side effects and caller-visible substitutions, then confirm natural execution resumes.
+
+## HW_R17_CALL
+Invoke void/double/float/six-argument functions directly, verify values and side effects, restored PC/SP, and subsequent natural caller behavior.

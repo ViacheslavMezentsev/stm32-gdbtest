@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- Consumer R17: scalar soft/hard-float ABI —48/48 F411/HLA GDB14/16. Void, double, float и6 аргументов проверены через finish/return/call, стек и потребителей; отдельная обычная прошивка и FPU-init без hooks, restore PASS. Прежний ELF и ядро неизменны; структуры/HFA и C++ остаются следующим подэтапом.
+
 - Consumer R16: until/advance/nexti —32/32 F411/HLA GDB14/16 на прежнем Og ELF. Проверены строки, завершение advance при выходе кадра до цели, прерывание nexti отдельной точкой и явное продолжение; первоначальный scope ERROR сохранён, restore PASS. Ядро и прошивка прежние; далее ABI.
 
 - Consumer R15: O2/Os —32/32 F411/HLA GDB14/16 на отдельной обычной прошивке. Проверены inline-кадры, две locations одного breakpoint, потеря аргумента после инструкции и конечные выходы; restore PASS. Сохранены первоначальная ошибка линковки startup и offline-исчезновение функции; прежний Og ELF не изменился. Ядро прежнее; далее навигация.

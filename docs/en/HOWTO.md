@@ -450,3 +450,12 @@ Check event, PC and frame, then explicitly continue to the required boundary.
 StopEvent without a user point number is normal for the tested until/advance.
 After leaving for, i is out of scope: missing symbols differ from optimized_out
 and do not prove navigation failure. Check the result consumed by the caller.
+
+## Void and hard-float need different result criteria
+
+In [R17](../research/rc3-gdb-python/en/r17.md), void is checked through its RAM
+effect rather than a scalar return_value. Direct call restores PC/SP but retains
+side effects; empty return skips the body. For hard-float, verify ELF attributes
+and early FPU initialization. Passing double through d0/d1 does not imply hardware
+double arithmetic: this application uses __aeabi_dadd. Inspect stack arguments
+at exact function entry before the prologue changes SP.
