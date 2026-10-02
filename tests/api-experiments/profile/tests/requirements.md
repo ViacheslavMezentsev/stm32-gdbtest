@@ -41,3 +41,15 @@ Direct invocation of a pure existing function yields 775 and restores PC/SP whil
 
 ## HW_R2_ASM
 Jump to the existing default handler, recognize Thumb b-to-self via bytes and disassembly, confirm fixed PC with stepi, then reset to main.
+
+## HW_R3_COMMANDS
+Breakpoint command list intercepts one call, forces a return and resumes to a verified sentinel; commands after continue are skipped and later calls execute naturally.
+
+## HW_R3_DEADLINE
+A hardware watchpoint on an unsigned progress predicate stops after three completed cycles, including counter wraparound; it is not a wall-clock timeout.
+
+## HW_R3_SAMEVALUE
+A natural CPU store of an unchanged checksum is suppressed by write-watch and detected by access-watch, with a separate sentinel proving progress.
+
+## HW_R3_LANGUAGE
+Source-context C macros, parameterized GDB branching, quoted semicolons and failure-short-circuiting command sequences work on the target debugger.

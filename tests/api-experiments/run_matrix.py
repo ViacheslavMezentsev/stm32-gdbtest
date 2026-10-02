@@ -29,7 +29,7 @@ def main():
     parser.add_argument('--stand', required=True, type=Path)
     parser.add_argument('--gdb', required=True, action='append', type=Path)
     parser.add_argument('--execute', action='store_true')
-    parser.add_argument('--suite', choices=('r1', 'r2'), default='r1')
+    parser.add_argument('--suite', choices=('r1', 'r2', 'r3'), default='r1')
     parser.add_argument('--test', action='append', help='explicit subset; recorded in the protocol')
     parser.add_argument('--native-stlink', action='store_true', help='consumer-only native DAP/SWD comparison')
     parser.add_argument('--failure-paths-only', action='store_true',
@@ -47,8 +47,11 @@ def main():
             raise ValueError('Both firmware images must target STM32F411CEU6')
     prefix = 'HW_' + args.suite.upper() + '_'
     cases = [c for c in collect(sessions[0]['tests']) if c['id'].startswith(prefix)]
-    suffixes = (('VALUES', 'FRAMES', 'RAM', 'STOPS', 'RECORD', 'CONTROL') if args.suite == 'r1'
-                else ('CONDITION', 'HITCOUNT', 'RETURN', 'FINISH', 'STEP', 'WATCH', 'CALL', 'ASM'))
+    suffixes = {
+        'r1': ('VALUES', 'FRAMES', 'RAM', 'STOPS', 'RECORD', 'CONTROL'),
+        'r2': ('CONDITION', 'HITCOUNT', 'RETURN', 'FINISH', 'STEP', 'WATCH', 'CALL', 'ASM'),
+        'r3': ('COMMANDS', 'DEADLINE', 'SAMEVALUE', 'LANGUAGE'),
+    }[args.suite]
     if {c['id'] for c in cases} != {prefix + s for s in suffixes}:
         raise ValueError('Unexpected research scenario inventory')
     if args.test:

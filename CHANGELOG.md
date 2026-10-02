@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- Consumer-опыты R3: команды точек, счётчик с переполнением, same-value watch/awatch, C-макросы и композиция команд — 32/32 F411 GDB14/16 native DAP; restore PASS. Ядро не изменено.
+
 - Consumer-опыты R2: навигация, условные/однократные точки, caller, C-выражения, return/finish/call и ассемблер — 56/56 F411 HLA; watchpoints — 8/8 native DAP. Исходные WATCH FAIL на HLA сохранены, firmware restore PASS. Ядро не изменено; перенос только после явного утверждения владельца.
 
 - Consumer-прототип rc3 R1: типизированные снимки, кадры, RAM rollback, ownership и отчёты; F411/OpenOCD 48/48 на GDB14/16, ожидаемые ERROR сериализации/таймаута и restore проверены. Публичный API и ТЗ не изменены.

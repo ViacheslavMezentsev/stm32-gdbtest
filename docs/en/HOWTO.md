@@ -319,3 +319,11 @@ native stlink-dap/dapdirect_swd resolved this on the same stand. The --native-st
 flag exists only in the consumer runner; the production module and installed
 OpenOCD remain unchanged. Omit the flag to revert. This is not a universal
 recommendation to switch drivers on other stands.
+
+## Watch does not stop on a same-value store
+
+`watch` reports value changes, not every store. In [R3](RC3_API_R3.md), the CPU
+stored the previous checksum: write-watch continued to the sentinel while
+access-watch stopped. `awatch` also catches reads: inspect the instruction and
+context to prove a write. An application counter with a watch predicate bounds
+progress but cannot replace the external host timeout when execution hangs.
