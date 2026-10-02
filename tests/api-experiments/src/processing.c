@@ -37,3 +37,12 @@ void process_returns( void )
     accepted_gain = calculate_gain( sample.gain );
     accepted_pair = transform_pair( pair_input );
 }
+
+volatile uint32_t route_a_result;
+volatile uint32_t route_b_result;
+
+void process_routes( void )
+{
+    route_a_result = route_alpha();
+    route_b_result = route_beta();
+}

@@ -95,3 +95,12 @@ Verify STRUCT CALL against an independent value and natural caller sink, then co
 
 ## HW_R5_STRUCT_SRET
 A reviewed ELF and exact entry prove the hidden return slot; bounded stack-buffer substitution plus bare return reaches the caller, preserves neighbors and restores natural behavior.
+
+## HW_R6_CONTEXT
+Read-only Python stop filtering distinguishes equal-depth recursive calls by ancestry and arguments; native caller predicate agrees and ignored calls run naturally.
+
+## HW_R6_FINISH
+FinishBreakpoint tracks a selected recursive invocation despite repeated return addresses; return value, caller arguments, PC and SP identify the correct frame.
+
+## HW_R6_RETURN
+Force return only from the selected beta recursive frame, verify remaining caller additions, unchanged alpha and subsequent natural execution.

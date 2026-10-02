@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Consumer R6: stack filtering, finish and return in recursion —24/24 F411 GDB14/16. Original callback-expectation failure retained; ABI regression32/32 and old SRET ELF-pin rejection verified. Core unchanged.
+
 - Consumer R5: uint64/float/struct finish and call, scalar return —64/64 F411 GDB14/16; struct return retained FAIL on both versions. Substitution through a reviewed return buffer —8/8. Core unchanged.
 
 - Consumer R4: substitute output buffers and signed status of natural calls; success, error and short response — 32/32 F411 GDB14/16 native DAP, restore PASS. New ordinary firmware without hooks; public API unchanged. Regression retained an ASM ERROR on repeated native DAP stepi; HLA passed4/4 with the same ELF.

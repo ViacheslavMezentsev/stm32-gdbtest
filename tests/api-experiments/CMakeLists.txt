@@ -3,7 +3,7 @@ project(rc3_api_experiments LANGUAGES C)
 include(CTest)
 find_package(Python3 3.11 COMPONENTS Interpreter REQUIRED)
 get_filename_component(MODULE "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
-add_executable(api_firmware src/startup.c src/app.c src/processing.c src/packet.c src/returns.c)
+add_executable(api_firmware src/startup.c src/app.c src/processing.c src/packet.c src/returns.c src/routes.c)
 set_target_properties(api_firmware PROPERTIES SUFFIX .elf)
 set(arch -mcpu=cortex-m4 -mthumb -mfloat-abi=soft)
 target_compile_options(api_firmware PRIVATE ${arch} -std=c11 -Og -g3 -fno-lto

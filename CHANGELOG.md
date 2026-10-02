@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- Consumer R6: фильтрация по стеку, finish и return в рекурсии —24/24 F411 GDB14/16. Первоначальная ошибка ожидания callback сохранена; регрессия ABI32/32 и отказ старого SRET по ELF-pin проверены. Ядро прежнее.
+
 - Consumer R5: uint64/float/struct finish и call, scalar return —64/64 F411 GDB14/16; return структуры сохранил FAIL на обеих версиях. Подмена через проверенный возвратный буфер —8/8. Ядро прежнее.
 
 - Consumer R4: подмена выходного буфера и signed-статуса естественного вызова; успех, ошибка и короткий ответ — 32/32 F411 GDB14/16 native DAP, restore PASS. Новая обычная прошивка без hooks; публичный API прежний. Регрессия сохранила ASM ERROR при повторном stepi на native DAP; HLA на том же ELF 4/4 PASS.

@@ -2,6 +2,8 @@
 
 Documentation · [Русский](../ru/index.md)
 
+[R6: stacks and recursive frames](RC3_API_R6.md): context selection, FinishBreakpoint and targeted return substitution.
+
 [R5: return types and ABI](RC3_API_R5.md): uint64/float/struct; struct return limitation and return-buffer experiment.
 
 [R4: output buffers and return substitution](RC3_API_R4.md): natural calls, complete packets, errors and short responses.

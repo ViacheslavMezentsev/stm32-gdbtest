@@ -345,3 +345,11 @@ Verify the caller-visible value. For the reviewed ELF, writing the result throug
 the hidden pointer followed by a bare return worked. This requires ABI, exact-entry,
 size and bounds checks; it is not a universal replacement for `return` or permission
 to write through an arbitrary r0.
+
+## Condition and Python stop produce unexpected callback counts
+
+In [R6](RC3_API_R6.md), the callback also saw entries the scenario expected condition
+to filter out. Do not base callback counts on an assumed ordering of two filters.
+A verified approach uses one Python predicate reading arguments and the stack,
+or an independent CLI condition without a callback. Do not resume the MCU, select
+frames or delete breakpoints in stop; perform actions after the stop returns.

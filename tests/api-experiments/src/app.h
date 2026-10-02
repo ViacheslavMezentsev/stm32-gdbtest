@@ -47,3 +47,10 @@ uint64_t calculate_wide( uint64_t value );
 float calculate_gain( float value );
 struct ReturnPair transform_pair( struct ReturnPair input );
 void process_returns( void );
+
+extern volatile uint32_t route_a_result;
+extern volatile uint32_t route_b_result;
+uint32_t walk_route( uint32_t depth, uint32_t seed );
+uint32_t route_alpha( void );
+uint32_t route_beta( void );
+void process_routes( void );
