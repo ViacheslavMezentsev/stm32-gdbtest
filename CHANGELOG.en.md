@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Standardized the teaching style of 35 production scenario/helper files: RU/EN headers, English explanations, 120-character lines and no optional trailing commas. Executable ASTs match the previous revision.
+
 - Migrated production scenarios: 44 table blocks / 282 checks; session.toml and VDDA/temperature series on five CMSIS profiles. HW 103/103 CMSIS, 22/22 HAL F030, 1/1 minimal consumer; separate recovery/restoration checks. Main specification 0.63; API 0.2.2 unchanged. [Report](docs/research/api-extension/en/scenario-migration.md).
 
 - Integrated the first package: record/records, public RecordError, config/config_props, explicit SESSION_CONFIG and TOML snapshot transport to GDB/packages. Legacy mode retained. Development version 0.2.0.dev0, API_VERSION=1; API spec 0.2.2, system spec 0.62. Paired scenarios checked on F030/F103/F411; release remains separate.

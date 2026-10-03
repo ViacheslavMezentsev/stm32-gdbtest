@@ -2,6 +2,20 @@
 
 [Documentation](index.md) · [Русский](../ru/TESTING_TECHNIQUES.md)
 
+## Production scenario style
+
+- Module header: concise purpose in Russian and English; all other comments are English.
+- A brief purpose comment precedes each function. Use two blank lines between functions and after imports.
+- Separate meaningful blocks inside functions with one blank line; explain check groups and nontrivial loops.
+- Keep lines of up to 120 characters intact. Split longer constructs at meaningful boundaries.
+- Omit optional trailing commas in calls, lists, dictionaries and tables.
+  A singleton tuple requires its comma: `labels=("adc",)`.
+
+Applied to 35 production CMSIS/HAL scenario and minimal-consumer helper files.
+Executable ASTs were compared with `ebf1bf8`: no differences (module docstrings excluded).
+Historical research snapshots remain unchanged; the hardware campaign was not repeated.
+
+
 Production first-package examples and five-MCU verification: [TECH-010/011](../research/api-extension/en/scenario-migration.md).
 
 A practical companion to [test authoring](TEST_AUTHORING.md). HAL techniques

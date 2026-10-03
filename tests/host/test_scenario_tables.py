@@ -35,7 +35,10 @@ class ScenarioTablesTests(unittest.TestCase):
         fixtures = json.loads(Path(__file__).with_name('scenario_tables.json').read_text(encoding='utf-8'))
         for index, block in enumerate(fixtures['blocks']):
             source = (ROOT / block['file']).read_text(encoding='utf-8')
-            self.assertIn(block['replacement'], source)
+            # Formatting and teaching comments may change; the migrated statement must not.
+            actual_nodes = [ast.dump(node) for node in ast.walk(ast.parse(source))]
+            for statement in ast.parse(textwrap.dedent(block['replacement'])).body:
+                self.assertIn(ast.dump(statement), actual_nodes)
             helper = next(n for n in ast.parse(source).body
                           if isinstance(n, ast.FunctionDef) and n.name == '_check_values')
             namespace = {}

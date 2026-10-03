@@ -1,4 +1,7 @@
-"""F030R8 expectations from IOC/CMSIS/RM0360; validated via J-Link STLink/SWD."""
+"""
+RU: Ожидаемые параметры платы и независимые векторы измерений.
+EN: Board expectations and independent measurement reference vectors.
+"""
 EXPECTED = {
     "clock": [
         ("HSI", "(RCC->CFGR & RCC_CFGR_SWS_Msk) >> RCC_CFGR_SWS_Pos", 0),
@@ -21,6 +24,7 @@ EXPECTED = {
     "timer_enabled": "TIM3->CR1 & TIM_CR1_CEN",
     "dma_remaining": "DMA1_Channel1->CNDTR",
     "measurement_quality": 3,
+
     # One factory temperature anchor; voltage/temperature accuracy is not measured.
-    "adc_vectors": [("*(unsigned short *)0x1FFFF7B8", "*(unsigned short *)0x1FFFF7BA", 3300, 30000)],
+    "adc_vectors": [("*(unsigned short *)0x1FFFF7B8", "*(unsigned short *)0x1FFFF7BA", 3300, 30000)]
 }
