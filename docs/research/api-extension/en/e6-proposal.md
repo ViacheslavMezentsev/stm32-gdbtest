@@ -184,7 +184,7 @@ Proposed, unapproved interface: keys match config.* names and retain TOML struct
 ```python
 mcu = t.config["target"]["mcu"]
 image_end = t.config["image"]["image"]["end"]
-limit = t.config["api"]["journal"]["max_records"]
+limit = t.config["api"]["records"]["max_records"]
 ```
 
 Repeated image denotes the selected document and its existing [image] table.
@@ -216,12 +216,15 @@ before connection.
 
 ### Next proposal: api.toml contents
 
-Not approved; numbers come from the research prototype:
+Approved by the owner on 2026-10-03: `[records]` is shared by `record()` /
+`records()`. Section names follow public methods or related method groups, not
+internal implementation names such as Journal. Other structure rules and numbers
+below remain proposed; numbers come from the research prototype:
 
 ```toml
 schema = 1
 
-[journal]
+[records]
 max_records = 128
 max_nodes = 4096
 max_text_bytes = 65536
@@ -229,7 +232,7 @@ max_depth = 8
 max_integer_bits = 256
 ```
 
-Propose requiring schema when the file exists; journal and individual fields may
+Propose requiring schema when the file exists; records and individual fields may
 be omitted in favor of documented defaults. Unknown fields, unsupported schema
 and invalid values give ERROR before connection. Limits are positive integers,
 excluding bool. Upper bounds require Q6/Q19 evaluation; arbitrary sizes are not
