@@ -124,34 +124,37 @@ approval of conventions/API specification and core integration; no release targe
 
 ## Questions and proposals for review after the stages
 
-This list grows with experiments. All items are open; E5/E6 owns decisions and
-experimental implementation does not imply approval. IDs are local to this study.
+This register owns Q1–Q19 statuses; E6 contains proposals, not decisions.
+Closed requires an explicit owner decision recorded with its date. Closing a
+question does not imply implementation or acceptance. Deferred questions remain
+Open; composite questions retain partial decisions but stay Open until every part
+is resolved. IDs are stable. As of 2026-10-03 none are closed; Q16 is partly resolved.
 
-| ID | Source | Question / proposal | Review |
-| --- | --- | --- | --- |
-| Q1 | E1 | Keep records as detached mutable copies or unify with deeply immutable snapshots? | E5 |
-| Q2 | E1/E2 | How to extract Snapshot data and pass it to record conveniently without losing types? Direct Snapshot recording is currently rejected; automatic export is out of scope. | E5 |
-| Q3 | E2/E3 | Shared provenance model: actual run/image ID, inferior/thread/core, stop/revision; associate read with context capture time. | E3/E5 |
-| Q4 | E2/E3 | Refine availability/errors: missing fields, optimized-out, unreadable and partial stacks; keep distinct from assertion FAIL. | E5 |
-| Q5 | E3 | Which operations automatically invalidate snapshots? Raw monitor/reset/reconnect and thread/core switches need policy; current explicit invalidate is incomplete. | E5 |
-| Q6 | E1/E2 | Is the benefit sufficient without fewer lines? Measure copying memory/time, define limits and convenient access; avoid replacing locals with journals unnecessarily. | E5 |
-| Q7 | E3 | Probe required capabilities of the installed GDB instead of inferring support from version: the tested build lacks FIRST_ERROR. | E5 |
-| Q8 | E3 | Classify older=None + NO_REASON separately as unconfirmed_end? Current unwind_error retains reason but does not imply corruption; agree on tri-state caller and exact signal/inline depth counting. | E5 |
-| Q9 | E4 | Separate timeout_s or only a case budget? General finish requires HW timeout/recovery and distinct fault/exit outcomes; host doubles are insufficient. | E5 |
-| Q10 | E4 | Explicit hardware point plus ABI read, or gdb.FinishBreakpoint? Compare result capture and resources; scalar PASS does not establish wider types. | E5 |
-| Q11 | E4 | How to represent locations, foreign/coincident points and cleanup errors? Currently uses conservative object counts and cleanup_errors list. | E5 |
-| Q12 | E4 | Which configurations and negative HW cases are mandatory before finish acceptance? HAL F030, signed/other ABIs and invalidation integration remain unverified in E4. | E5/E6 |
-| Q13 | E5 | How to retain primary and all disconnect/cleanup failures in a common result? C.close can mask a primary error; F keeps cleanup errors in its backend. | E6 |
-| Q14 | E5 | Approve Mapping with frames/state_revision/stop/meta/availability or explicitly narrow the draft? current must account for selected thread/inferior/image; currently it can falsely report freshness. | E6 |
-| Q15 | E5 | Keep caller_is → bool/None or use a named result that cannot implicitly become False? Incomplete stacks need an explicit decision. | E6 |
-| Q16 | E5 | Accept record/records first and defer finish? Agree on initial scope, SemVer/release target (current policy: 0.2.0), and API_VERSION format/rules independently of schemas/specifications. | E6 |
+| ID | Source | Question / proposal | Review | Status | Decision / basis |
+| --- | --- | --- | --- | --- | --- |
+| Q1 | E1 | Keep records as detached mutable copies or unify with deeply immutable snapshots? | E5 | Open | Not approved; recommendation in E6. |
+| Q2 | E1/E2 | How to extract Snapshot data and pass it to record conveniently without losing types? Direct Snapshot recording is currently rejected; automatic export is out of scope. | E5 | Open | Not approved; recommendation in E6. |
+| Q3 | E2/E3 | Shared provenance model: actual run/image ID, inferior/thread/core, stop/revision; associate read with context capture time. | E3/E5 | Open | Not approved; recommendation in E6. |
+| Q4 | E2/E3 | Refine availability/errors: missing fields, optimized-out, unreadable and partial stacks; keep distinct from assertion FAIL. | E5 | Open | Not approved; recommendation in E6. |
+| Q5 | E3 | Which operations automatically invalidate snapshots? Raw monitor/reset/reconnect and thread/core switches need policy; current explicit invalidate is incomplete. | E5 | Open | Not approved; recommendation in E6. |
+| Q6 | E1/E2 | Is the benefit sufficient without fewer lines? Measure copying memory/time, define limits and convenient access; avoid replacing locals with journals unnecessarily. | E5 | Open | Not approved; recommendation in E6. |
+| Q7 | E3 | Probe required capabilities of the installed GDB instead of inferring support from version: the tested build lacks FIRST_ERROR. | E5 | Open | Not approved; recommendation in E6. |
+| Q8 | E3 | Classify older=None + NO_REASON separately as unconfirmed_end? Current unwind_error retains reason but does not imply corruption; agree on tri-state caller and exact signal/inline depth counting. | E5 | Open | Not approved; recommendation in E6. |
+| Q9 | E4 | Separate timeout_s or only a case budget? General finish requires HW timeout/recovery and distinct fault/exit outcomes; host doubles are insufficient. | E5 | Open | Not approved; recommendation in E6. |
+| Q10 | E4 | Explicit hardware point plus ABI read, or gdb.FinishBreakpoint? Compare result capture and resources; scalar PASS does not establish wider types. | E5 | Open | Not approved; recommendation in E6. |
+| Q11 | E4 | How to represent locations, foreign/coincident points and cleanup errors? Currently uses conservative object counts and cleanup_errors list. | E5 | Open | Not approved; recommendation in E6. |
+| Q12 | E4 | Which configurations and negative HW cases are mandatory before finish acceptance? HAL F030, signed/other ABIs and invalidation integration remain unverified in E4. | E5/E6 | Open | Not approved; recommendation in E6. |
+| Q13 | E5 | How to retain primary and all disconnect/cleanup failures in a common result? C.close can mask a primary error; F keeps cleanup errors in its backend. | E6 | Open | Not approved; recommendation in E6. |
+| Q14 | E5 | Approve Mapping with frames/state_revision/stop/meta/availability or explicitly narrow the draft? current must account for selected thread/inferior/image; currently it can falsely report freshness. | E6 | Open | Not approved; recommendation in E6. |
+| Q15 | E5 | Keep caller_is → bool/None or use a named result that cannot implicitly become False? Incomplete stacks need an explicit decision. | E6 | Open | Not approved; recommendation in E6. |
+| Q16 | E5 | Accept record/records first and defer finish? Agree on initial scope, SemVer/release target (current policy: 0.2.0), and API_VERSION format/rules independently of schemas/specifications. | E6 | Open | Partial: on 2026-10-03 the owner approved a separate API spec, X.Y.Z and baseline 0.1.0. Extension scope, increment rules, package version and API_VERSION remain unresolved. |
 
 [E1–E4 continuation on F0/F1](portability.md): 8/8 HW per board, limitations and retained prepare ERROR. [API spec 0.1.0](../../../TECHNICAL_SPECIFICATION_API.md) captures current rc.2 without integrating extensions. Next: Q1–Q16 review and E6 approval.
 
 [E6: proposed first package](e6-proposal.md) — record/records contracts, Q1–Q16 recommendations, versions and acceptance. New Q17–Q19 are appended to the queue; core integration is not approved.
 
-| ID | Source | Question / proposal | Review |
-| --- | --- | --- | --- |
-| Q17 | E6 | Fixed or configurable first-package limits? Recommend fixed. | E6 |
-| Q18 | E6 | Approve RecordError.code/limit and public exception import. | E6 |
-| Q19 | E6 | Set acceptable memory/time from A5; logical limits do not guarantee RSS/latency. | Acceptance |
+| ID | Source | Question / proposal | Review | Status | Decision / basis |
+| --- | --- | --- | --- | --- | --- |
+| Q17 | E6 | Fixed or configurable first-package limits? Recommend fixed. | E6 | Open | Not approved; recommendation in E6. |
+| Q18 | E6 | Approve RecordError.code/limit and public exception import. | E6 | Open | Not approved; recommendation in E6. |
+| Q19 | E6 | Set acceptable memory/time from A5; logical limits do not guarantee RSS/latency. | Acceptance | Open | Not approved; recommendation in E6. |

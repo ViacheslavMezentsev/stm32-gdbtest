@@ -84,6 +84,10 @@ Approve the contract first, then authorize implementation separately. The new
 revision describes accepted requirements; implementation/verification status is
 tracked separately. A version increment is neither a release nor hardware acceptance.
 
+
+Q1–Q19 statuses and accepted decisions are maintained in the [plan register](plan.md).
+Recommendations in this document do not close questions by themselves.
+
 ## 5. Q1–Q16 disposition
 
 These are recommendations; the plan's questions remain open.
