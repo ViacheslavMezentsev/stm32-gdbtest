@@ -34,6 +34,7 @@ Parentheses indicate operations, not final signatures. settings and sources are 
 | No separate method | watch(...) | Data-access point with explicit read/write and hardware limits |
 | No separate method | finish(*, frame=...) | Natural return of an existing invocation and available value; current invocation by default |
 | No separate method | until(location=None, ...) | Navigation within the current invocation; agree GDB semantics with and without location |
+| Internal boot/runner reset and backend commands | reset(...) | Additional candidate: explicit MCU reset from a scenario; mode, final state and backend limits need design |
 | No separate method | call(...) | Additional firmware call initiated by the scenario, distinct from finish/ret |
 | Direct gdb.execute(...) | execute(command) | Explicit GDB command access with logging and invalidation rules |
 | Direct GDB frame access | context(...)/frames(...) | Shared snapshot/frame-reference model for reading, navigation and return |
@@ -60,6 +61,15 @@ must not be disguised as ordinary results. External timeout may prevent a return
 runner ERROR/recovery remains separate.
 
 ## Work stages
+
+The owner proposed reset as an additional candidate on 2026-10-04. Define reset kind,
+backend/board support, halt or run afterward, timeout and actual outcome. Do not promise
+uniform peripheral or external-circuit reset across boards. Reset must not implicitly
+flash, erase memory or reconnect. Agree point/guard handling, FrameRef lifetime and
+records/checks history: the candidate policy preserves scenario history, invalidates old
+frame references and records a reset boundary. Stopping at main must be explicit
+composition or an explicitly selected mode. Distinguish this contract from initial boot
+and runner recovery; neither signature nor implementation inclusion is approved yet.
 
 - [x] Record 0.3.0 target and names for design.
 - [x] Consolidate baseline audit, accepted requirements and coverage gaps: arguments,
