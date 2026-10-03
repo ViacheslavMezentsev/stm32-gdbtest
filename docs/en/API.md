@@ -6,9 +6,11 @@
 
 Production first-package examples and five-MCU verification: [accepted results](API_ACCEPTANCE.md).
 
+[Methods and properties reference](api/index.md) — individual cards, examples and support versions.
+
 ## First package: records and configuration
 
-Candidate `0.2.0rc1` targets 0.2.0; `API_VERSION=1`, api.toml schema=1. Not released. [API spec 0.2.2](../TECHNICAL_SPECIFICATION_API.md), [accepted results](API_ACCEPTANCE.md).
+Candidate `0.2.0rc1` targets 0.2.0; `API_VERSION=1`, api.toml schema=1. Not released. [API spec 0.2.4](../TECHNICAL_SPECIFICATION_API.md), [accepted results](API_ACCEPTANCE.md).
 
 `record(name, data)` appends a deep copy and returns None. `records(name=None)` returns detached mutable copies: `{'sequence': 1, 'name': 'adc', 'data': ...}`. Names may repeat. The filter is an exact nonempty str; None selects all. Insertion order and sequence starting at 1 survive filtering.
 
@@ -147,14 +149,14 @@ imported only inside GDB):
 
 | Operation | Contract |
 | --- | --- |
-| `check(name, actual, expected)` | Records the result; a mismatch raises `CheckFailed` → FAIL |
-| `value(expression)` | `gdb.parse_and_eval`, refuses optimized-out values, returns `int` |
-| `fields(expression, expected)` | Per-field comparison of scalar fields with an `int` or a C expression |
-| `reach(function, when=None)` | Temporary hardware breakpoint, `continue`, checks stop reason, frame and condition; the frame name is compared without `[clone …]` and parameters (LTO clones) |
-| `breakpoint(function, temporary=False, when=None)` | Hardware breakpoint with pending and profile budget checks |
-| `set_value(expression, value)` | Explicit write with a before/after log; the author checks that an MMIO write is safe |
-| `force_return(expression)` | Forced return from the current frame with a log; the function body is skipped |
-| `clear()` | Deletes the Target's breakpoints, including those on fault handlers |
+| [`check(name, actual, expected)`](api/check.md) | Records the result; a mismatch raises `CheckFailed` → FAIL |
+| [`value(expression)`](api/value.md) | `gdb.parse_and_eval`, refuses optimized-out values, returns `int` |
+| [`fields(expression, expected)`](api/fields.md) | Per-field comparison of scalar fields with an `int` or a C expression |
+| [`reach(function, when=None)`](api/reach.md) | Temporary hardware breakpoint, `continue`, checks stop reason, frame and condition; the frame name is compared without `[clone …]` and parameters (LTO clones) |
+| [`breakpoint(function, temporary=False, when=None)`](api/breakpoint.md) | Hardware breakpoint with pending and profile budget checks |
+| [`set_value(expression, value)`](api/set_value.md) | Explicit write with a before/after log; the author checks that an MMIO write is safe |
+| [`force_return(expression)`](api/force_return.md) | Forced return from the current frame with a log; the function body is skipped |
+| [`clear()`](api/clear.md) | Deletes the Target's breakpoints, including those on fault handlers |
 
 `boot`, `close`, `on_stop`, `report`, `owned`, `stops` and Target creation are the
 agent's internal lifecycle. GDB calls are allowed only on its main thread. `-g3`

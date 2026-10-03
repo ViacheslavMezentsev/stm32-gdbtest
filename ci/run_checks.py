@@ -80,15 +80,17 @@ def check_pairs():
     groups = [ROOT / "docs"]
     missing = []
     for group in groups:
-        ru = {p.name for p in (group / "ru").glob("*.md")}
-        en = {p.name for p in (group / "en").glob("*.md")}
+        ru = {p.relative_to(group / "ru") for p in (group / "ru").rglob("*.md")}
+        en = {p.relative_to(group / "en") for p in (group / "en").rglob("*.md")}
         missing.extend(str((group / "en" / n).relative_to(ROOT)) for n in sorted(ru - en))
         missing.extend(str((group / "ru" / n).relative_to(ROOT)) for n in sorted(en - ru))
         # Each localized group has its own map and matching translated pages.
         for lang, other in (("ru", "en"), ("en", "ru")):
-            for page in sorted((group / lang).glob("*.md")):
+            for page in sorted((group / lang).rglob("*.md")):
                 head = "\n".join(page.read_text(encoding="utf-8").splitlines()[:4])
-                if f"(../{other}/{page.name})" not in head or (page.name != "index.md" and "(index.md)" not in head):
+                translation = group / other / page.relative_to(group / lang)
+                link = Path(os.path.relpath(translation, page.parent)).as_posix()
+                if f"({link})" not in head or (page.name != "index.md" and "(index.md)" not in head):
                     missing.append(f"navigation line in {page.relative_to(ROOT)}")
     for base in ("README", "CHANGELOG"):
         if not ((ROOT / f"{base}.md").exists() and (ROOT / f"{base}.en.md").exists()):

@@ -6,9 +6,11 @@
 
 Штатные примеры первого пакета и проверка на пяти MCU: [принятые результаты](API_ACCEPTANCE.md).
 
+[Справочник методов и свойств](api/index.md) — отдельные карточки, примеры и версии поддержки.
+
 ## Первый пакет: журнал и конфигурация
 
-Кандидат `0.2.0rc1` для целевого 0.2.0; `API_VERSION=1`, api.toml schema=1. Выпуска ещё нет. [ТЗ API 0.2.3](../TECHNICAL_SPECIFICATION_API.md), [принятые результаты](API_ACCEPTANCE.md).
+Кандидат `0.2.0rc1` для целевого 0.2.0; `API_VERSION=1`, api.toml schema=1. Выпуска ещё нет. [ТЗ API 0.2.4](../TECHNICAL_SPECIFICATION_API.md), [принятые результаты](API_ACCEPTANCE.md).
 
 `record(name, data)` добавляет глубокую копию и возвращает None. `records(name=None)` возвращает независимые изменяемые копии: `{'sequence': 1, 'name': 'adc', 'data': ...}`. Имена могут повторяться. Фильтр — точный непустой str; None выбирает всё. Порядок добавления и sequence от 1 сохраняются при фильтрации.
 
@@ -145,14 +147,14 @@ def gpio(t):
 
 | Операция | Контракт |
 | --- | --- |
-| `check(name, actual, expected)` | Запись результата; несовпадение вызывает `CheckFailed` → FAIL |
-| `value(expression)` | `gdb.parse_and_eval`, отказ для optimized-out, возвращает `int` |
-| `fields(expression, expected)` | Поэлементное сравнение скалярных полей с `int` или C-выражением |
-| `reach(function, when=None)` | Временная аппаратная точка, `continue`, проверка причины остановки, кадра и условия; имя кадра сравнивается без `[clone …]` и параметров (клоны LTO) |
-| `breakpoint(function, temporary=False, when=None)` | Аппаратная точка с проверкой pending и бюджета профиля |
-| `set_value(expression, value)` | Явная запись с журналом before/after; допустимость записи в MMIO проверяет автор |
-| `force_return(expression)` | Принудительный return из текущего кадра с журналом; тело функции не выполняется |
-| `clear()` | Удалить точки останова Target, включая точки на fault handlers |
+| [`check(name, actual, expected)`](api/check.md) | Запись результата; несовпадение вызывает `CheckFailed` → FAIL |
+| [`value(expression)`](api/value.md) | `gdb.parse_and_eval`, отказ для optimized-out, возвращает `int` |
+| [`fields(expression, expected)`](api/fields.md) | Поэлементное сравнение скалярных полей с `int` или C-выражением |
+| [`reach(function, when=None)`](api/reach.md) | Временная аппаратная точка, `continue`, проверка причины остановки, кадра и условия; имя кадра сравнивается без `[clone …]` и параметров (клоны LTO) |
+| [`breakpoint(function, temporary=False, when=None)`](api/breakpoint.md) | Аппаратная точка с проверкой pending и бюджета профиля |
+| [`set_value(expression, value)`](api/set_value.md) | Явная запись с журналом before/after; допустимость записи в MMIO проверяет автор |
+| [`force_return(expression)`](api/force_return.md) | Принудительный return из текущего кадра с журналом; тело функции не выполняется |
+| [`clear()`](api/clear.md) | Удалить точки останова Target, включая точки на fault handlers |
 
 `boot`, `close`, `on_stop`, `report`, `owned`, `stops` и создание Target —
 внутренний жизненный цикл агента. Вызовы GDB допустимы только в его основном
