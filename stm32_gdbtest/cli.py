@@ -74,6 +74,10 @@ def main():
     if args.command == "pack":
         from stm32_gdbtest.package import pack
         session = json.loads(args.session.read_text(encoding="utf-8"))
+        if 'session_config' in session:
+            from stm32_gdbtest.configuration import capture
+            from stm32_gdbtest.config_transport import dumps
+            session['_config_capsule'] = dumps(capture(session))
         try:
             manifest = pack(session, args.output, args.test, args.include,
                             prepare=lambda test: "PASS" if run(session, test, prepare_only=True) == 0 else "ERROR")

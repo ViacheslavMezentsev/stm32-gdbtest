@@ -7,6 +7,11 @@ import tomllib
 
 def load_profile(path):
     data = tomllib.loads(Path(path).read_text(encoding="utf-8"))
+    return validate_profile(data)
+
+
+def validate_profile(data):
+    """Validate a parsed snapshot without reading its original source again."""
     required = {"schema", "name", "mcu", "openocd_target", "flash_start", "flash_size",
                 "breakpoint_limit", "fault_handlers", "core_registers", "reset_halt",
                 "reset_run", "identity", "diagnostic_registers"}

@@ -13,7 +13,8 @@ import time
 import traceback
 
 from stm32_gdbtest.backends import load_stand, server_spec
-from stm32_gdbtest.profile import load_profile
+from stm32_gdbtest.configuration import capture, thaw
+from stm32_gdbtest.config_transport import dumps
 from stm32_gdbtest.processes import FLAGS, probe_identity, probe_lock, spawn_options, stop_tree
 from stm32_gdbtest import remote as remote_host
 from stm32_gdbtest.reports import CODES, write_reports
@@ -73,7 +74,9 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
             report["backend"] = stand["backend"]
             if stand.get("remote"):
                 report["server_host"] = stand["remote"]["host"]
-        profile = load_profile(session["profile"])
+        configuration = capture(session, image_policy=image_policy)
+        session = dict(session, _configuration=configuration)
+        profile = thaw(configuration.config['target'])
         report["profile"] = profile
         if prepare_only:
             # ТЗ 5.16.1: no debugger ownership, server or GDB connection in preparation.
@@ -119,7 +122,15 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
         full_policy = None
         program_elf = None
         program_sha = None
-        if session.get("image_policy_path"):
+        configuration = session.get('_configuration')
+        if configuration:
+            (out / 'config.json').write_text(dumps(configuration), encoding='utf-8')
+        if configuration and configuration.config['image'] is not None:
+            full_policy = thaw(configuration.config['image']['image'])
+            policy_sha = configuration.config_props['image']['sha256']
+            report['image_policy'] = dict(full_policy, source_sha256=policy_sha)
+            (out / 'image-policy.json').write_text(json.dumps(report['image_policy'], indent=2), encoding='utf-8')
+        elif not configuration and session.get("image_policy_path"):
             full_policy, policy_sha = load_policy(session["image_policy_path"], profile)
             report["image_policy"] = dict(full_policy, source_sha256=policy_sha)
             (out / "image-policy.json").write_text(json.dumps(report["image_policy"], indent=2), encoding="utf-8")
@@ -127,7 +138,8 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
         elf.write_bytes(Path(session["elf"]).read_bytes())
         report["elf_sha256"] = hashlib.sha256(elf.read_bytes()).hexdigest()
         if session.get("build_manifest"):
-            manifest = load_verified(session["build_manifest"], report["elf_sha256"], session["profile"])
+            manifest = load_verified(session["build_manifest"], report["elf_sha256"], session["profile"],
+                profile_sha256=configuration.config_props['target']['sha256'] if configuration else None)
             report["build_manifest"] = manifest
             (out / "build-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
         names = test.get("contracts", [])
@@ -220,6 +232,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
         report["backend_commands"] = dict(reset_halt=backend["reset_halt"], finish=backend["finish"],
                                           setup=backend.get("setup", []))
         run_data = dict(test=test, elf=str(elf), image=str(image), result=str(agent_result),
+                        configuration=dumps(configuration) if configuration else None,
                         identity_policy=session.get("identity_policy", "warn"), root=str(project_root),
                         endpoint=endpoint, flash=stand["flash"], profile=profile, load_regions=regions,
                         full_image_policy=full_policy, program_elf=str(program_elf) if program_elf else None,

@@ -2,6 +2,8 @@
 
 [Research](index.md) · [Русский](../ru/readiness.md)
 
+[First-package integration](core-integration.md) authorized and implemented: Target, session.toml, snapshot/package; 7/7 HW on each of three stands. Development 0.2.0.dev0; release separate. Material below preserves earlier stages.
+
 [Records bounds](config-bounds.md): implemented in the prototype; Linux 91/91 PASS, Windows 90 PASS/1 skip. Next: discuss first-package integration.
 
 [TECH-010/011 hardware pairs on F030/F103/F411](techniques-three-boards.md): 7/7 HW and 7/7 prepare each; original checks preserved, restoration PASS. F103 Flash warning retained. Research facades, not core integration.

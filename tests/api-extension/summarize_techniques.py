@@ -41,6 +41,7 @@ def summarize(directory):
                 gdb=new['gdb_version'], python=new['python_version'],
                 elf_sha256=summary['elf_sha256'], manifest_sha256=summary['manifest_sha256'],
                 restore_elf_sha256=summary['restore_elf_sha256'],
+                integrated_api=new.get('integrated_api', False),
                 table_checks_identical=True, series_original_checks_preserved=True,
                 original=old['e1_evidence'], configured=new['tech011_evidence'], stages=stages)
 
@@ -55,5 +56,7 @@ if __name__ == '__main__':
                   source_sha256={name: hashlib.sha256((root/name).read_bytes()).hexdigest()
                     for name in ('table_checks.py', 'table_variants.py', 'measurement_technique.py',
                                  'board/test_techniques.py', 'run_hw.py')},
+                  core_sha256={name: hashlib.sha256((root.parents[1]/'stm32_gdbtest'/name).read_bytes()).hexdigest()
+                    for name in ('target.py', 'records.py', 'configuration.py', 'config_transport.py', 'runner.py', 'agent.py')},
                   boards=[summarize(directory) for directory in args.directories])
     Path(args.output).write_text(json.dumps(report, indent=2), encoding='utf-8')

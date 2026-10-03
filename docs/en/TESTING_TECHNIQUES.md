@@ -247,7 +247,8 @@ context requirements. Single checks need no helper; for one structure's fields a
 consider the existing fields operation.
 
 **Verified:** 82 paired host cases for RTC F030, ADC F411 and TIM2 F103; 47 candidate
-blocks including board variants. No new hardware PASS.
+blocks including board variants. Hardware pairs confirmed on F030/F103/F411;
+see the update below.
 [Report, variants and boundaries](../research/api-extension/en/table-checks.md).
 
 <a id="tech-011"></a>
@@ -256,8 +257,9 @@ blocks including board variants. No new hardware PASS.
 
 **Purpose:** stop after MCU publication, read ordinary values, record them and
 calculate statistics after completing the series.
-**Availability:** accepted API package is not integrated; currently uses a research
-facade. This is a consumer technique, not another core operation.
+**Availability:** record/records and config are integrated into development Target
+0.2.0.dev0. The historical facade remains for comparison. This is a consumer
+technique, not another core operation.
 
 1. Set count/expected quality/units in scenario parameters. Place consumer api.toml
    settings in [user.measurement] and validate them in the scenario.
@@ -285,3 +287,5 @@ results do not replace acceptance of the new variant.
 [Python/GDB examples, paired scenario and evidence](../research/api-extension/en/measurement-technique.md).
 
 [Update 2026-10-03: TECH-010/011 verified on three boards](../research/api-extension/en/techniques-three-boards.md): F030, F103, F411; 7/7 HW each with restoration. Earlier host-only boundaries still apply to negative cases; core unchanged.
+
+[Acceptance after core integration](../research/api-extension/en/core-integration.md): three stands repeated, TECH-011 uses actual Target; 7/7 HW each, restoration PASS.

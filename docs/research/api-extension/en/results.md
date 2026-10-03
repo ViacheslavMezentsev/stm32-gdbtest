@@ -2,6 +2,8 @@
 
 [Research](index.md) · [Русский](../ru/results.md)
 
+[First-package integration](core-integration.md) authorized and implemented: Target, session.toml, snapshot/package; 7/7 HW on each of three stands. Development 0.2.0.dev0; release separate. Material below preserves earlier stages.
+
 As of 2026-10-03, E1 prototype host checks passed: 22/22.
 [E1 report](e1.md), [registry](../results/registry.json).
 GDB/F411: 10 observations, baseline/experiment/restore 4/4 PASS; two corrected

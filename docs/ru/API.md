@@ -2,7 +2,69 @@
 
 [Документация](index.md) → API · [English](../en/API.md)
 
-[Спецификация API 0.2.1](../TECHNICAL_SPECIFICATION_API.md) — база rc.2 и принятые требования первого расширения; отдельное ТЗ на русском. Ядро ещё rc.2: record/records и config/config_props в него не перенесены. [Статус и миграция](../research/api-extension/ru/m5-contract.md).
+## Первый пакет: журнал и конфигурация
+
+Разработка `0.2.0.dev0` для целевого 0.2.0; `API_VERSION=1`, api.toml schema=1. Выпуска ещё нет. [ТЗ API 0.2.2](../TECHNICAL_SPECIFICATION_API.md), [приёмка ядра](../research/api-extension/ru/core-integration.md).
+
+`record(name, data)` добавляет глубокую копию и возвращает None. `records(name=None)` возвращает независимые изменяемые копии: `{'sequence': 1, 'name': 'adc', 'data': ...}`. Имена могут повторяться. Фильтр — точный непустой str; None выбирает всё. Порядок добавления и sequence от 1 сохраняются при фильтрации.
+
+Данные: точные встроенные None/bool/int, конечный float, корректный Unicode str, list и dict со строковыми ключами. Подклассы, tuple, bytes, объекты GDB, циклы и NaN/Inf отвергаются. Повторные ссылки без цикла копируются независимо. Ошибка не расходует бюджет или sequence. Журнал принадлежит одному вызову сценария и сохраняется при clear/reset/continue; автоматического экспорта, чтения MCU и изменения результата проверки нет.
+
+```python
+from statistics import mean, stdev
+from stm32_gdbtest import RecordError
+
+# После каждого согласованного места остановки:
+target.record('adc', {'vdda_mv': target.value('board_measurement.vdda_mv')})
+# После серии из минимум двух измерений:
+values = [r['data']['vdda_mv'] for r in target.records('adc')]
+result = {'mean_mv': mean(values), 'sample_stdev_mv': stdev(values)}
+```
+
+Срезы, фильтры и any/all — обычный Python. RecordError(ValueError) импортируется без GDB. code: invalid_name/unsupported_type/invalid_text/non_finite/cycle/limit_exceeded. Для limit_exceeded поле limit: records/nodes/depth/text_bytes/integer_bits. Текст и приоритет одновременных нарушений не фиксированы. Необработанная ошибка — ERROR; check по-прежнему даёт FAIL. MemoryError не подменяется.
+
+| records | Default | Максимум |
+|---|---:|---:|
+| max_records | 128 | 1024 |
+| max_nodes | 4096 | 32768 |
+| max_text_bytes | 65536 | 524288 |
+| max_depth | 8 | 32 |
+| max_integer_bits | 256 | 1024 |
+
+Значения — целые от 1 до максимума, не bool. Записи/узлы/байты ограничивают весь журнал; глубина data считается от 0, integer_bits — int.bit_length. Узлы включают имена, ключи, значения и контейнеры; UTF-8 байты — имена, ключи и строки. Служебная обёртка не учитывается. Это не ограничение RSS или числа удерживаемых копий.
+
+### Явная конфигурация и миграция
+
+```cmake
+stm32_gdbtest_attach(firmware_target
+    PROFILE_DIR "${PROJECT_SOURCE_DIR}/hil"
+    SESSION_CONFIG "${PROJECT_SOURCE_DIR}/hil/session.toml")
+```
+
+```toml
+# session.toml: относительные ссылки от его каталога
+[config]
+target = "target.toml"
+api = "api.toml"
+image = "full_image.toml" # необязательно
+```
+
+```toml
+# api.toml
+schema = 1
+[records]
+max_records = 256
+[user.measurement]
+count = 10
+```
+
+`target.config['api']['user']['measurement']['count']` читает параметр сценария. config содержит api/target/image с defaults; невыбранный image — None, выбранный сохраняет вложенность `['image']['image']`. config_props содержит те же роли: data без defaults, sha256 исходных байтов и reference для файла, None для отсутствующего. Свойства и вложенные контейнеры неизменяемы; массивы становятся tuple. Даты/время и неизвестные поля TOML сохраняются. reference не обещает доступность исходного пути на другом хосте.
+
+SESSION_CONFIG несовместим с PROFILE, --image-policy и STM32_GDBTEST_IMAGE_POLICY. PROFILE_DIR по-прежнему выбирает сценарии. target обязателен; неуказанный api даёт defaults, image — режим секций ELF. Выбранный неверный/отсутствующий файл даёт ERROR до MCU. Неизвестные api-поля доступны сценарию; строгие схемы target/image прежние.
+
+CLI --session принимает прежний генерируемый JSON ELF/GDB/tests с добавленной ссылкой session_config. profile выводится из TOML; после смены target повторите CMake configure/build. Без SESSION_CONFIG нет автопоиска: старые вызовы работают, config_props описывает фактические legacy-источники, api — defaults.
+
+Новый pack сохраняет TOML в служебной капсуле (base64/SHA256/отпечаток defaults); runner/GDB валидируют её без исходных файлов. Для новых пакетов нужен инструмент с поддержкой расширения; старые инструменты не следует использовать. Старые пакеты читаются в legacy-режиме. Для изменения зафиксированной конфигурации подготовьте новый пакет. Это не экспорт record/records.
 
 [R2: навигация, вызовы и watchpoints](../research/rc3-gdb-python/ru/r2.md): 56/56 HLA и 8/8 native DAP; перенос в ядро только после утверждения владельца.
 
@@ -10,7 +72,7 @@
 
 Подготовка rc3: [исследование GDB Python API и план аппаратных экспериментов](../research/rc3-gdb-python/ru/plan.md). Методы пока не реализованы.
 
-Статус: кандидат в выпускной ветке, ещё не опубликован — **0.1.0-rc.2** (Python `0.1.0rc2`), `API_VERSION = 1`. Это номер описанной
+Статус: разработка **0.2.0** (Python `0.2.0.dev0`), без выпуска, `API_VERSION = 1`. Это номер описанной
 поверхности API, а не обещание стабильности релиза 1.0 и не версия GDB. Модуль
 поставляется Git-подмодулем; установка через pip пока не поддерживается, уникальность
 имени перед публикацией ещё предстоит проверить. Требования — [ТЗ](../TECHNICAL_SPECIFICATION.md).

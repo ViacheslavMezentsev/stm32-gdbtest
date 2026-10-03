@@ -2,7 +2,69 @@
 
 [Documentation](index.md) → API · [Русский](../ru/API.md)
 
-[API specification 0.2.1](../TECHNICAL_SPECIFICATION_API.md) — rc.2 baseline and accepted first-extension requirements; separate Russian specification. Core remains rc.2: record/records and config/config_props are not integrated. [Status and migration](../research/api-extension/en/m5-contract.md).
+## First package: records and configuration
+
+Development `0.2.0.dev0` targets 0.2.0; `API_VERSION=1`, api.toml schema=1. Not released. [API spec 0.2.2](../TECHNICAL_SPECIFICATION_API.md), [core acceptance](../research/api-extension/en/core-integration.md).
+
+`record(name, data)` appends a deep copy and returns None. `records(name=None)` returns detached mutable copies: `{'sequence': 1, 'name': 'adc', 'data': ...}`. Names may repeat. The filter is an exact nonempty str; None selects all. Insertion order and sequence starting at 1 survive filtering.
+
+Data accepts exact built-in None/bool/int, finite float, valid Unicode str, list and dict with string keys. Subclasses, tuple, bytes, GDB objects, cycles and NaN/Inf are rejected. Shared acyclic references are copied independently. Failures consume neither budget nor sequence. Each scenario invocation owns its journal, retained across clear/reset/continue; there is no automatic export, MCU read or change to check outcomes.
+
+```python
+from statistics import mean, stdev
+from stm32_gdbtest import RecordError
+
+# At each agreed stop:
+target.record('adc', {'vdda_mv': target.value('board_measurement.vdda_mv')})
+# After at least two measurements:
+values = [r['data']['vdda_mv'] for r in target.records('adc')]
+result = {'mean_mv': mean(values), 'sample_stdev_mv': stdev(values)}
+```
+
+Slices, filters and any/all use ordinary Python. RecordError(ValueError) imports without GDB. Codes: invalid_name/unsupported_type/invalid_text/non_finite/cycle/limit_exceeded. For limit_exceeded, limit is records/nodes/depth/text_bytes/integer_bits. Message text and precedence of simultaneous violations are unspecified. Uncaught errors produce ERROR; check still produces FAIL. MemoryError is not disguised.
+
+| records | Default | Maximum |
+|---|---:|---:|
+| max_records | 128 | 1024 |
+| max_nodes | 4096 | 32768 |
+| max_text_bytes | 65536 | 524288 |
+| max_depth | 8 | 32 |
+| max_integer_bits | 256 | 1024 |
+
+Values are integers from 1 through the maximum, excluding bool. Records/nodes/bytes limit the whole journal; data depth starts at 0, integer_bits uses int.bit_length. Nodes count names, keys, values and containers; UTF-8 bytes count names, keys and strings. The envelope is excluded. These are not RSS or retained-copy limits.
+
+### Explicit configuration and migration
+
+```cmake
+stm32_gdbtest_attach(firmware_target
+    PROFILE_DIR "${PROJECT_SOURCE_DIR}/hil"
+    SESSION_CONFIG "${PROJECT_SOURCE_DIR}/hil/session.toml")
+```
+
+```toml
+# session.toml: relative references resolve from its directory
+[config]
+target = "target.toml"
+api = "api.toml"
+image = "full_image.toml" # optional
+```
+
+```toml
+# api.toml
+schema = 1
+[records]
+max_records = 256
+[user.measurement]
+count = 10
+```
+
+`target.config['api']['user']['measurement']['count']` reads a scenario parameter. config contains api/target/image with defaults; absent image is None, selected image retains `['image']['image']` nesting. config_props has the same roles: data without defaults, source-byte sha256 and reference for a file, None for an absent file. Properties and nested containers are immutable; arrays become tuples. TOML dates/times and unknown fields survive. reference does not guarantee source-path availability on another host.
+
+SESSION_CONFIG conflicts with PROFILE, --image-policy and STM32_GDBTEST_IMAGE_POLICY. PROFILE_DIR still selects scenarios. target is required; omitted api selects defaults, image selects ELF sections. An explicitly selected missing/invalid file produces ERROR before MCU access. Unknown api fields survive; target/image schemas stay strict.
+
+CLI --session accepts the existing generated ELF/GDB/tests JSON with an added session_config reference. profile derives from TOML; repeat CMake configure/build after changing target. Without SESSION_CONFIG there is no discovery: old calls work, config_props describes actual legacy sources and api uses defaults.
+
+New pack captures TOML in an internal capsule (base64/SHA256/defaults fingerprint); runner/GDB validate it without original files. New packages require tools supporting the extension; do not use older tools. Old packages use legacy mode. Prepare a new package to change its captured configuration. This is not a record/records export format.
 
 [R2: navigation, calls and watchpoints](../research/rc3-gdb-python/en/r2.md): 56/56 HLA and 8/8 native DAP; core promotion requires explicit owner approval.
 
@@ -10,7 +72,7 @@
 
 Preparing rc3: [GDB Python API research and hardware experiment plan](../research/rc3-gdb-python/en/plan.md). Proposed methods are not implemented yet.
 
-Status: candidate in the release branch, not yet published — **0.1.0-rc.2** (Python `0.1.0rc2`), `API_VERSION = 1`. This numbers the
+Status: development toward **0.2.0** (Python `0.2.0.dev0`), not released, `API_VERSION = 1`. This numbers the
 described API surface; it is not a 1.0 stability promise and not a GDB version. The
 module is delivered as a Git submodule; pip installation is not supported yet, and
 the name still has to be checked for uniqueness before publishing. Requirements:

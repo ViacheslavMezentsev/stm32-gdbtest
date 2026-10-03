@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Integrated the first package: record/records, public RecordError, config/config_props, explicit SESSION_CONFIG and TOML snapshot transport to GDB/packages. Legacy mode retained. Development version 0.2.0.dev0, API_VERSION=1; API spec 0.2.2, system spec 0.62. Paired scenarios checked on F030/F103/F411; release remains separate.
+
 - Documented the accepted first extension: API spec 0.2.0 and system spec 0.60, record/records, errors and session.toml configuration. Module target 0.2.0, API_VERSION=1; integration not authorized, numeric bounds open. Core behavior unchanged.
 
 - Combined both studies for main: GDB Python/API reports and the simulated adaptive tree with its workflow player. Experimental tools remain isolated; API agreement and hardware technical debt remain open.

@@ -2,6 +2,8 @@
 
 ## Исследование расширения API — 03.10.2026
 
+- [Первый пакет в ядре](docs/research/api-extension/ru/core-integration.md): перенос разрешён владельцем, версия разработки 0.2.0.dev0. Host/offline и по 7/7 HW F030/F103/F411, восстановление PASS; release/push/merge не выполнялись. Предыдущие пункты — история этапов.
+
 - [Границы records](docs/research/api-extension/ru/config-bounds.md): все пять параметров проверяются в загрузчике и при получении снимка; Linux 91/91 PASS, Windows 90 PASS/1 skip. Далее обсуждение переноса первого пакета; ядро прежнее.
 
 - [Три стенда TECH-010/011](docs/research/api-extension/ru/techniques-three-boards.md): F030/F103/F411 по 7/7 HW и prepare, парные проверки сохранены, F411 HAL и F0/F1 CMSIS восстановлены. F103 Flash warning сохранён. Далее верхние границы настроек прототипа; ядро прежнее.

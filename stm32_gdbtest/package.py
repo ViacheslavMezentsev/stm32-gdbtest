@@ -16,10 +16,13 @@ import zipfile
 from stm32_gdbtest import __version__
 from stm32_gdbtest.collect import collect
 from stm32_gdbtest.toolchain import find_gdb
+from stm32_gdbtest.configuration import capture
+from stm32_gdbtest.config_transport import dumps, loads
+from stm32_gdbtest.build_manifest import load_verified
 
 SCHEMA = 1
 MANIFEST = "ddtt-package.json"
-RESERVED = {"firmware.elf", "build-manifest.json", "profile", "runs", MANIFEST}
+RESERVED = {"firmware.elf", "build-manifest.json", "profile", "runs", "config.json", MANIFEST}
 
 
 def _sha(path):
@@ -54,6 +57,7 @@ def _files(session, include):
 
 def pack(session, output, test_ids=None, include=(), prepare=None):
     """Write the package; `prepare(test)` runs the preflight of each packaged scenario."""
+    configuration = capture(session) if ('session_config' in session or '_config_capsule' in session) else None
     tests = collect(session["tests"])
     if test_ids:
         unknown = sorted(set(test_ids) - {t["id"] for t in tests})
@@ -68,20 +72,39 @@ def pack(session, output, test_ids=None, include=(), prepare=None):
         if failed:
             raise RuntimeError("Preparation failed, package not written: " + ", ".join(failed))
     files, tests_dir = _files(session, include)
+    # Freeze payloads before hashing/writing; selected TOML bytes come from capture.
+    captured_paths = {}
+    if configuration and session.get('session_config'):
+        entry = Path(session['session_config']).resolve()
+        captured_paths[entry] = configuration._source_bytes['session']
+        for role, prop in configuration.config_props.items():
+            if prop is not None:
+                captured_paths[(entry.parent / prop['reference']).resolve()] = configuration._source_bytes[role]
+    payloads = {name: (configuration._source_bytes['target']
+                     if configuration and name == 'profile/target.toml' else
+                     captured_paths[path] if path in captured_paths else path.read_bytes())
+                for name, path in files.items()}
+    if configuration:
+        payloads['config.json'] = dumps(configuration).encode('utf-8')
+        if session.get('build_manifest'):
+            load_verified(session['build_manifest'], hashlib.sha256(payloads['firmware.elf']).hexdigest(),
+                          session['profile'], profile_sha256=configuration.config_props['target']['sha256'])
     manifest = dict(schema=SCHEMA, format="ddtt-package", tool="stm32-gdbtest", tool_version=__version__,
                     created_utc=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                    elf_sha256=_sha(files["firmware.elf"]), tests_dir=tests_dir,
+                    elf_sha256=hashlib.sha256(payloads['firmware.elf']).hexdigest(), tests_dir=tests_dir,
                     tests=[dict(id=t["id"], file=Path(t["path"]).name, function=t["function"],
                                 timeout_s=t["timeout_s"], labels=t["labels"], contracts=t["contracts"])
                            for t in tests],
-                    prepared=prepared, files={name: _sha(path) for name, path in sorted(files.items())})
+                    prepared=prepared, files={name: hashlib.sha256(raw).hexdigest() for name, raw in sorted(payloads.items())})
+    if configuration:
+        manifest['configuration'] = 'config.json'
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
     partial = output.with_name(output.name + ".part")
     with zipfile.ZipFile(partial, "w", zipfile.ZIP_DEFLATED) as bundle:
         bundle.writestr(MANIFEST, json.dumps(manifest, indent=2) + "\n")
-        for name, path in sorted(files.items()):
-            bundle.write(path, name)
+        for name, raw in sorted(payloads.items()):
+            bundle.writestr(name, raw)
     partial.replace(output)
     return manifest
 
@@ -127,4 +150,15 @@ def open_package(path, workdir, gdb=None):
                                 tool_version=manifest["tool_version"], prepared=manifest.get("prepared", {})))
     if "build-manifest.json" in files:
         session["build_manifest"] = str(target / "build-manifest.json")
+    if 'configuration' in manifest:
+        if manifest['configuration'] != 'config.json' or 'config.json' not in files:
+            raise ValueError('Missing or unsupported package configuration')
+        capsule = (target / 'config.json').read_text(encoding='utf-8')
+        configuration = loads(capsule)
+        if configuration.config_props['target']['sha256'] != _sha(target / 'profile/target.toml'):
+            raise ValueError('Package profile differs from configuration')
+        if session.get('build_manifest'):
+            load_verified(session['build_manifest'], manifest['elf_sha256'], session['profile'],
+                          profile_sha256=configuration.config_props['target']['sha256'])
+        session['_config_capsule'] = capsule
     return session

@@ -17,6 +17,8 @@ from stm32_gdbtest.compatibility import inspect_gdb_api, require_gdb_api
 from stm32_gdbtest.identity import check_target
 from stm32_gdbtest.image import compare_regions, validate_regions
 from stm32_gdbtest.full_image import compare_full, validate_image
+from stm32_gdbtest.config_transport import loads
+from stm32_gdbtest.configuration import thaw
 
 
 def main():
@@ -29,6 +31,11 @@ def main():
     connected = False
     target = None
     try:
+        configuration = loads(session['configuration']) if session.get('configuration') else None
+        if configuration and (thaw(configuration.config['target']) != profile or
+                (thaw(configuration.config['image']['image']) if configuration.config['image'] else None)
+                != session.get('full_image_policy')):
+            raise ValueError('Configuration differs from prepared profile/image')
         for command in ("set pagination off", "set confirm off", "set breakpoint pending off",
                         "set remotetimeout 5", "set python print-stack full"):
             gdb.execute(command)
@@ -80,7 +87,7 @@ def main():
         if not matches:
             raise RuntimeError("Flash does not match the selected ELF image")
         report["image_verified"] = True
-        target = Target(report, profile)
+        target = Target(report, profile, configuration)
         target.boot(session["reset_halt"])
         spec = importlib.util.spec_from_file_location("board_test", session["test"]["path"])
         module = importlib.util.module_from_spec(spec)

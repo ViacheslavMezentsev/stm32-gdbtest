@@ -21,9 +21,12 @@ def main():
     parser.add_argument("--restore-session", type=Path, required=True)
     parser.add_argument("--stand", type=Path, required=True)
     parser.add_argument("--execute", action="store_true")
+    parser.add_argument("--core", action="store_true", help="use integrated session configuration for technique pairs")
     parser.add_argument("--case", choices=("all", "techniques", "HW_E1_MEASUREMENTS", "HW_E1_ADC_PAIR", "HW_E2_READ", "HW_E3_CONTEXT", "HW_E4_FINISH"),
                         default="HW_E1_MEASUREMENTS")
     args = parser.parse_args()
+    if args.core and args.case != 'techniques':
+        parser.error('--core requires --case techniques')
     sessions = [json.loads(p.read_text(encoding="utf-8"))
                 for p in (args.session, args.restore_session)]
     stand = load_stand(args.stand)
@@ -66,11 +69,17 @@ def main():
         if research:
             # Reuse the firmware's original contract registry; case path is explicit.
             current.update(root=str(HERE))
+            if args.core:
+                profile = {'STM32F030R8T6': 'f030r8', 'STM32F103C8T6': 'f103c8',
+                           'STM32F411CEU6': 'f411ce'}[load_profile(session['profile'])['mcu']]
+                current['session_config'] = str(HERE/'config'/profile/'session.toml')
         code = run(current, case, stand_path=args.stand, prepare_only=prepare)
         paths = list((output / label).glob("*/result.json"))
         if len(paths) != 1:
             raise RuntimeError("missing unique report: " + label)
         report = json.loads(paths[0].read_text(encoding="utf-8"))
+        if args.core and case['id'] == 'HW_TECH011_SERIES' and not prepare and not report.get('integrated_api'):
+            raise RuntimeError('expected actual Target API, not research facade')
         summary["stages"].append({"label": label, "code": code, "status": report["status"],
                                   "report": str(paths[0].relative_to(output))})
         if code or report["status"] != "PASS":

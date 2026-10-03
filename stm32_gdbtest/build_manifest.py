@@ -146,13 +146,13 @@ def snapshot(root, build, elf, profile, ninja, target=None, extra_inputs=()):
                              "Linker flags and prebuilt runtime library contents are not captured"])
 
 
-def load_verified(path, elf_hash, profile):
+def load_verified(path, elf_hash, profile, *, profile_sha256=None):
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     if not isinstance(data, dict) or type(data.get("schema")) is not int or data["schema"] != 1:
         raise ValueError("Unsupported build manifest schema")
     if data.get("elf_sha256") != elf_hash:
         raise ValueError("Build manifest does not match ELF; rebuild the selected firmware")
-    if data.get("profile_sha256") != digest(profile):
+    if data.get("profile_sha256") != (profile_sha256 if profile_sha256 is not None else digest(profile)):
         raise ValueError("Build manifest does not match target profile; rebuild firmware")
     for key in ("compilers", "units", "inputs"):
         if not isinstance(data.get(key), list) or not data[key]:

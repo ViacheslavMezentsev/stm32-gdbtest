@@ -3,6 +3,8 @@
 import re
 
 import gdb
+from stm32_gdbtest.records import Journal
+from stm32_gdbtest.configuration import DEFAULTS, freeze
 
 _CLONE = re.compile(r"\s*\[clone [^\]]*\]")
 
@@ -34,12 +36,32 @@ class CheckFailed(AssertionError):
 
 
 class Target:
-    def __init__(self, report, profile):
+    def __init__(self, report, profile, configuration=None):
         self.report = report
         self.profile = profile
+        self._config = configuration.config if configuration else freeze(dict(
+            target=profile, api=dict(schema=1, records=dict(DEFAULTS)), image=None))
+        self._config_props = configuration.config_props if configuration else freeze(
+            dict(target=None, api=None, image=None))
+        limits = self._config['api']['records']
+        self._journal = Journal(**{key: limits[key] for key in DEFAULTS})
         self.owned = []
         self.stops = []
         gdb.events.stop.connect(self.on_stop)
+
+    @property
+    def config(self):
+        return self._config
+
+    @property
+    def config_props(self):
+        return self._config_props
+
+    def record(self, name, data):
+        return self._journal.record(name, data)
+
+    def records(self, name=None):
+        return self._journal.records(name)
 
     def on_stop(self, event):
         # Capture primitive values now: temporary breakpoint objects expire after stop.

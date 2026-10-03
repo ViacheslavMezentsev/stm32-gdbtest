@@ -77,7 +77,7 @@ class PrepareTests(unittest.TestCase):
             output, tool_run = self.tools()
             with self.subTest(mcu=mcu), output, tool_run, \
                     patch("stm32_gdbtest.runner.load_stand", return_value=stand), \
-                    patch("stm32_gdbtest.runner.load_profile", return_value=profile), \
+                    patch("stm32_gdbtest.configuration._target_from_snapshot", return_value=profile), \
                     patch("stm32_gdbtest.runner.subprocess.Popen") as popen:
                 run(dict(self.session, out=str(self.root / mcu)), self.test, "stand.toml", prepare_only=True)
                 popen.assert_not_called()

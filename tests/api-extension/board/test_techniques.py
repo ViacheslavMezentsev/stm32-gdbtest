@@ -30,11 +30,14 @@ def configured_measurements(target):
     import gdb
     profile = {'STM32F030R8T6': 'f030r8', 'STM32F103C8T6': 'f103c8',
                'STM32F411CEU6': 'f411ce'}[target.profile['mcu']]
-    snapshot = load_session(Path(__file__).resolve().parents[1]/'config'/profile/'session.toml')
+    # Core acceptance uses the runner's captured configuration and actual Target.
+    # The historical prototype path remains available for paired comparison.
+    integrated = target.config_props['api'] is not None
+    snapshot = target if integrated else load_session(Path(__file__).resolve().parents[1]/'config'/profile/'session.toml')
     target.check('configuration matches MCU', snapshot.config['target']['mcu'], target.profile['mcu'])
     target.check('configured measurement quality',
                  snapshot.config['api']['user']['measurement']['expected_quality'], settings(target)['quality'])
-    t = RecordingTarget(ConfiguredTarget(target, snapshot), **snapshot.config['api']['records'])
+    t = target if integrated else RecordingTarget(ConfiguredTarget(target, snapshot), **snapshot.config['api']['records'])
     summary, records = configured_series(t)
     samples = [r['data'] for r in records if r['name'] == 'mcu.measurement']
     voltage = mean_in_gdb([s['vdda_mv'] for s in samples], gdb)
@@ -44,3 +47,4 @@ def configured_measurements(target):
     # Harness export, not part of the record API.
     target.report['tech011_evidence'] = dict(summary=summary, records=records,
                                             gdb_means=dict(vdda_mv=voltage, temperature_c=temperature))
+    target.report['integrated_api'] = integrated

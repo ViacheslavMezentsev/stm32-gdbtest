@@ -50,7 +50,10 @@ def memory(fn):
     return result, {'retained_bytes': retained, 'peak_bytes': peak}
 
 
-def run(output):
+def run(output, *, core=False):
+    global Journal, RecordError
+    if core:
+        from stm32_gdbtest.records import Journal, RecordError
     nested = 1
     for _ in range(8):
         nested = [nested]
@@ -76,7 +79,7 @@ def run(output):
     cases[-1] = ('depth_32', 1, deep, {'max_depth': 32})
     report = {'schema': 1, 'hardware': False, 'python': platform.python_version(),
               'platform': sys.platform, 'pointer_bits': 64 if sys.maxsize > 2**32 else 32,
-              'journal_sha256': hashlib.sha256(Path(__file__).with_name('evidence.py').read_bytes()).hexdigest(),
+              'journal_sha256': hashlib.sha256((Path(__file__).resolve().parents[2]/'stm32_gdbtest/records.py' if core else Path(__file__).with_name('evidence.py')).read_bytes()).hexdigest(),
               'cases': [], 'boundary_checks': [],
               'method': {'repeats': 9, 'batch': 10, 'warmup': 1,
                          'gc_enabled': gc.isenabled(),
@@ -140,4 +143,4 @@ def run(output):
 
 
 if __name__ == '__main__':
-    run(sys.argv[1])
+    run(sys.argv[1], core="--core" in sys.argv[2:])

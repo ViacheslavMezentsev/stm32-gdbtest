@@ -2,6 +2,8 @@
 
 [Документация](index.md) → Текущее состояние · [English](../en/STATUS.md)
 
+[Первый пакет API интегрирован](../research/api-extension/ru/core-integration.md): 0.2.0.dev0, ТЗ API 0.2.2/общее 0.62; host/offline и три стенда PASS. Выпуск отдельно. Ниже — исторические этапы.
+
 [F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.](F429_CMSIS_RTC_SLEEP.md)
 
 [F429 ADC/DMA/units/failures:15/15 HW +3 повтора, HAL восстановлена; ТЗ0.56.](F429_CMSIS_ADC_DMA.md)
