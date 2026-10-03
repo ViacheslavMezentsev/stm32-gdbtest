@@ -179,7 +179,9 @@ New session.toml is the proposed user-authored configuration entry point; it doe
 not automatically replace JSON. TOML loading, CMake/CLI/JSON integration and legacy
 launch compatibility require a contract.
 
-Proposed, unapproved interface: keys match config.* names and retain TOML structure:
+Approved by the owner on 2026-10-03: t.config contains effective configuration,
+validated known parameters and added defaults. Explicit values are not overwritten;
+unknown fields are retained. Keys match config.* names and nesting preserves TOML:
 
 ```python
 mcu = t.config["target"]["mcu"]
@@ -188,7 +190,24 @@ limit = t.config["api"]["records"]["max_records"]
 ```
 
 Repeated image denotes the selected document and its existing [image] table.
-A more convenient interface can be discussed without changing the file.
+
+t.config_props is the approved name for source configuration properties:
+
+```python
+props = t.config_props["api"]
+if props is not None:
+    original = props["data"]
+    digest = props["sha256"]
+    reference = props["reference"]
+```
+
+data is parsed TOML without added defaults, comments or formatting; sha256 hashes
+original bytes; reference is the link from session.toml, not a guarantee that this
+path exists on a remote stand. Both views are deeply immutable and derived from
+a single read of each selected file during preparation. Without config.api,
+config_props["api"] is None while config["api"] contains defaults. Without
+config.image both corresponding values are None. An invalid referenced file is
+still an error, not absence. The name config_sources is not used.
 
 Items 1–3 approved by the owner on 2026-10-03; items 4–5 remain proposals:
 
@@ -201,11 +220,11 @@ Items 1–3 approved by the owner on 2026-10-03; items 4–5 remain proposals:
    documented API defaults. config.image is optional: absence retains ELF load-section
    verification. An explicitly referenced missing or invalid file gives ERROR before
    MCU connection; no substitute file or defaults replace an erroneous file.
-   Numeric defaults and omitted fields within api.toml remain under discussion.
+   Numeric defaults remain undecided; omitted known fields using defaults are approved.
 4. Decide where script-specific parameters belong; separate api.toml does not
    automatically place board thresholds/expectations there.
-5. Define source/hash metadata, stand configuration access and reproduction storage.
-   Distinguish supplied defaults from source contents.
+5. data/sha256/reference metadata and source/effective distinction are approved
+   above. Stand configuration access and reproduction storage remain undecided.
 
 Q20 remains open with file roles/links accepted. Decorator/override precedence is
 not approved. The system spec owns loading/validation/transport; the API spec owns
@@ -247,12 +266,16 @@ verified. File schema is distinct from API specification revision and API_VERSIO
 Scenarios may read consumer data from API-unknown sections; consumers validate their
 application semantics. A dedicated namespace and future API-name collision rules
 remain open in Q20. Full-content transport (including TOML types not directly
-representable in JSON) and raw/defaults access need contracts; silent field loss
-is unacceptable. Accepting structure does not approve numeric defaults.
+representable in JSON) needs a contract; source/defaults access is approved as
+config_props/config. Silent field loss is unacceptable. Accepting structure does
+not approve numeric defaults.
 
 Acceptance additions: unknown sections/nested keys remain readable; known fields
 with invalid type/range are rejected even alongside unknown keys; missing known
 fields receive defaults. Retained consumer fields follow snapshot immutability.
+For config_props also verify hashes against original bytes, no defaults in data,
+defaults in config, None for omitted files and nested immutability of both views.
+These are future acceptance checks, not results from an implemented API.
 
 ### How session.json is currently produced
 
