@@ -18,6 +18,7 @@ Historical reports from that study remain unchanged.
 - [E2: bounded typed reads](e2.md).
 - [E3: stack and minimal context](e3.md).
 - [E4: natural return and foreign stops](e4.md).
+- [E5: conventions conformance and acceptance readiness](e5.md).
 - [Machine-readable run registry](../results/registry.json).
 - Contract foundations: [API proposal](../../rc3-gdb-python/en/api-proposal.md) and
   [evolution conventions](../../rc3-gdb-python/en/api-evolution.md).

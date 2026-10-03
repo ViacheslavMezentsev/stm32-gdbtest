@@ -141,3 +141,7 @@ experimental implementation does not imply approval. IDs are local to this study
 | Q10 | E4 | Explicit hardware point plus ABI read, or gdb.FinishBreakpoint? Compare result capture and resources; scalar PASS does not establish wider types. | E5 |
 | Q11 | E4 | How to represent locations, foreign/coincident points and cleanup errors? Currently uses conservative object counts and cleanup_errors list. | E5 |
 | Q12 | E4 | Which configurations and negative HW cases are mandatory before finish acceptance? HAL F030, signed/other ABIs and invalidation integration remain unverified in E4. | E5/E6 |
+| Q13 | E5 | How to retain primary and all disconnect/cleanup failures in a common result? C.close can mask a primary error; F keeps cleanup errors in its backend. | E6 |
+| Q14 | E5 | Approve Mapping with frames/state_revision/stop/meta/availability or explicitly narrow the draft? current must account for selected thread/inferior/image; currently it can falsely report freshness. | E6 |
+| Q15 | E5 | Keep caller_is → bool/None or use a named result that cannot implicitly become False? Incomplete stacks need an explicit decision. | E6 |
+| Q16 | E5 | Accept record/records first and defer finish? Agree on initial scope, SemVer/release target (current policy: 0.2.0), and API_VERSION format/rules independently of schemas/specifications. | E6 |
