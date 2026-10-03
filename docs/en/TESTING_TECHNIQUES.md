@@ -283,3 +283,5 @@ separate actions with separate restoration requirements.
 anchors, GDB14/GDB16 with 4 arithmetic sets each without MCU. Historical E1 hardware
 results do not replace acceptance of the new variant.
 [Python/GDB examples, paired scenario and evidence](../research/api-extension/en/measurement-technique.md).
+
+[Update 2026-10-03: TECH-010/011 verified on three boards](../research/api-extension/en/techniques-three-boards.md): F030, F103, F411; 7/7 HW each with restoration. Earlier host-only boundaries still apply to negative cases; core unchanged.

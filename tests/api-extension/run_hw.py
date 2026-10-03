@@ -21,7 +21,7 @@ def main():
     parser.add_argument("--restore-session", type=Path, required=True)
     parser.add_argument("--stand", type=Path, required=True)
     parser.add_argument("--execute", action="store_true")
-    parser.add_argument("--case", choices=("all", "HW_E1_MEASUREMENTS", "HW_E1_ADC_PAIR", "HW_E2_READ", "HW_E3_CONTEXT", "HW_E4_FINISH"),
+    parser.add_argument("--case", choices=("all", "techniques", "HW_E1_MEASUREMENTS", "HW_E1_ADC_PAIR", "HW_E2_READ", "HW_E3_CONTEXT", "HW_E4_FINISH"),
                         default="HW_E1_MEASUREMENTS")
     args = parser.parse_args()
     sessions = [json.loads(p.read_text(encoding="utf-8"))
@@ -38,10 +38,19 @@ def main():
     baseline_id = "HW_CI_SLEEP_SYSTICK" if args.case == "HW_E3_CONTEXT" else "HW_CI_ADC_UNITS"
     baseline = next(c for c in collect(sessions[0]["tests"]) if c["id"] == baseline_id)
     experiments = [c for c in collect(HERE / 'board')
-                   if (args.case == 'all' and c['id'] != 'HW_E1_ADC_PAIR') or c['id'] == args.case]
+                   if (args.case == 'all' and c['id'] in ('HW_E1_MEASUREMENTS', 'HW_E2_READ', 'HW_E3_CONTEXT', 'HW_E4_FINISH')) or c['id'] == args.case]
     baselines = [baseline]
     if args.case == 'all':
         baselines.append(next(c for c in collect(sessions[0]['tests']) if c['id'] == 'HW_CI_SLEEP_SYSTICK'))
+    if args.case == 'techniques':
+        native, table = {
+            'STM32F030R8T6': ('HW_CI_RTC_INIT', 'HW_TECH010_F030'),
+            'STM32F103C8T6': ('HW_CI_TIM2_INIT', 'HW_TECH010_F103'),
+            'STM32F411CEU6': ('HW_CI_ADC_INIT', 'HW_TECH010_F411'),
+        }[load_profile(sessions[0]['profile'])['mcu']]
+        baselines.append(next(c for c in collect(sessions[0]['tests']) if c['id'] == native))
+        cases = {c['id']: c for c in collect(HERE/'board')}
+        experiments = [cases[name] for name in (table, 'HW_E1_MEASUREMENTS', 'HW_TECH011_SERIES')]
     restores = {c["id"]: c for c in collect(sessions[1]["tests"])}
     restore_ids = ('HW_BOOT','HW_GPIO') if 'HW_BOOT' in restores else ('HW_CI_BOOT','HW_CI_GPIO')
     restore_cases = [restores[name] for name in restore_ids]

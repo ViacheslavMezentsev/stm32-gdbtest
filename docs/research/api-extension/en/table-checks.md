@@ -2,6 +2,8 @@
 
 [Research](index.md) · [Русский](../ru/table-checks.md)
 
+[TECH-010/011 hardware pairs on F030/F103/F411](techniques-three-boards.md): 7/7 HW and 7/7 prepare each; original checks preserved, restoration PASS. F103 Flash warning retained. Research facades, not core integration.
+
 2026-10-03. The technique is frequently applicable: the [source survey](../results/table-survey.json)
 found 47 adjacent blocks of at least 3 checks, totaling 301 checks across 20 CMSIS
 scenario files in five profiles. These are structural candidates, not 47 independent

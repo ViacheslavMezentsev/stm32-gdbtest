@@ -2,6 +2,8 @@
 
 [Исследование](index.md) · [English](../en/measurement-technique.md)
 
+[Аппаратные пары TECH-010/011 на F030/F103/F411](techniques-three-boards.md): по 7/7 HW и 7/7 prepare; исходные проверки сохранены, восстановление PASS. Предупреждение Flash F103 сохранено. Это исследовательские оболочки, не интеграция ядра.
+
 03.10.2026. Техника объединяет ранее проверенную серию VDDA/температуры и принятый
 контракт record/records/config. [Парный вариант](../../../../tests/api-extension/measurement_technique.py)
 работает через исследовательские RecordingTarget/ConfiguredTarget; production rc.2

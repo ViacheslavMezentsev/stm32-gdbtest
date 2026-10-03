@@ -2,6 +2,8 @@
 
 [Research](index.md) · [Русский](../ru/readiness.md)
 
+[TECH-010/011 hardware pairs on F030/F103/F411](techniques-three-boards.md): 7/7 HW and 7/7 prepare each; original checks preserved, restoration PASS. F103 Flash warning retained. Research facades, not core integration.
+
 Owner decision 2026-10-03: numeric bounds/cost criterion and public RecordError import accepted. Q6/Q19 and API spec questions 10.2.4–10.2.5 closed; API spec 0.2.1, system spec 0.61. Upper-bound implementation and core integration are pending; integration approval remains separate.
 
 Snapshot on 2026-10-03, after `5f7d749`. The first package is sufficiently researched

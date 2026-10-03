@@ -1,0 +1,6 @@
+schema = 1
+[records]
+max_records = 128
+[user.measurement]
+count = 10
+expected_quality = 1

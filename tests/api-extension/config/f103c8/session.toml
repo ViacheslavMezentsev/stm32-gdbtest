@@ -1,0 +1,3 @@
+[config]
+target = "../../../firmware/profiles/f103c8/target.toml"
+api = "api.toml"

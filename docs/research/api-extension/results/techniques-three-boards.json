@@ -1,0 +1,5338 @@
+{
+  "schema": 1,
+  "status": "PASS",
+  "hardware": true,
+  "source_sha256": {
+    "table_checks.py": "423724026ae4c99be67ae98548144d407223ced6cb8bfb36a1af35cd643c7380",
+    "table_variants.py": "980c1942c8e0f61e63fc486054a24f19f49b7e9bc4d3101767bc8d644ed80885",
+    "measurement_technique.py": "953df60f36702aab2e4f3f98c78d241015e49b6b76b69ef84a9bc9abeaac64a4",
+    "board/test_techniques.py": "80be19b59ba52f56030ee053058dfc41b428d67d2e707c104aaffe428453264e",
+    "run_hw.py": "0448c67b36f36089fe2c11003b2ba41d65d9a84429d149fbdf0702bc98772bc9"
+  },
+  "boards": [
+    {
+      "mcu": "STM32F030R8T6",
+      "backend": "openocd",
+      "gdb": "14.2.90.20240526-git",
+      "python": "3.11.4",
+      "elf_sha256": "d6bfed5a23f6d25935df02e4b5b0b4049c950c61313132cc99e1106c400f4206",
+      "manifest_sha256": "3dca304accd2b23be23aebcd137b26eb2797f9b6a9b00c0c78b5ec089d51ee05",
+      "restore_elf_sha256": "d6bfed5a23f6d25935df02e4b5b0b4049c950c61313132cc99e1106c400f4206",
+      "table_checks_identical": true,
+      "series_original_checks_preserved": true,
+      "original": {
+        "summary": {
+          "count": 10,
+          "vdda": {
+            "unit": "mV",
+            "mean": 3307.6,
+            "stdev": 0.8432740427115678
+          },
+          "temperature": {
+            "unit": "degC",
+            "mean": 33.633,
+            "stdev": 0.130850211225575
+          },
+          "stdev_ddof": 1
+        },
+        "records": [
+          {
+            "sequence": 1,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 1,
+              "quality": 3,
+              "vdda_mv": 3308,
+              "temperature_mdeg_c": 33439
+            }
+          },
+          {
+            "sequence": 2,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 2,
+              "quality": 3,
+              "vdda_mv": 3308,
+              "temperature_mdeg_c": 33627
+            }
+          },
+          {
+            "sequence": 3,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 3,
+              "quality": 3,
+              "vdda_mv": 3306,
+              "temperature_mdeg_c": 33657
+            }
+          },
+          {
+            "sequence": 4,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 4,
+              "quality": 3,
+              "vdda_mv": 3308,
+              "temperature_mdeg_c": 33627
+            }
+          },
+          {
+            "sequence": 5,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 5,
+              "quality": 3,
+              "vdda_mv": 3308,
+              "temperature_mdeg_c": 33627
+            }
+          },
+          {
+            "sequence": 6,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 6,
+              "quality": 3,
+              "vdda_mv": 3308,
+              "temperature_mdeg_c": 33815
+            }
+          },
+          {
+            "sequence": 7,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 7,
+              "quality": 3,
+              "vdda_mv": 3306,
+              "temperature_mdeg_c": 33845
+            }
+          },
+          {
+            "sequence": 8,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 8,
+              "quality": 3,
+              "vdda_mv": 3308,
+              "temperature_mdeg_c": 33627
+            }
+          },
+          {
+            "sequence": 9,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 9,
+              "quality": 3,
+              "vdda_mv": 3308,
+              "temperature_mdeg_c": 33439
+            }
+          },
+          {
+            "sequence": 10,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 10,
+              "quality": 3,
+              "vdda_mv": 3308,
+              "temperature_mdeg_c": 33627
+            }
+          },
+          {
+            "sequence": 11,
+            "name": "mcu.summary",
+            "data": {
+              "count": 10,
+              "vdda": {
+                "unit": "mV",
+                "mean": 3307.6,
+                "stdev": 0.8432740427115678
+              },
+              "temperature": {
+                "unit": "degC",
+                "mean": 33.633,
+                "stdev": 0.130850211225575
+              },
+              "stdev_ddof": 1
+            }
+          }
+        ]
+      },
+      "configured": {
+        "summary": {
+          "count": 10,
+          "vdda": {
+            "unit": "mV",
+            "mean": 3307.2,
+            "stdev": 1.0327955589886446
+          },
+          "temperature": {
+            "unit": "degC",
+            "mean": 33.6014,
+            "stdev": 0.12897131464011616
+          },
+          "stdev_ddof": 1
+        },
+        "records": [
+          {
+            "sequence": 1,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 1,
+              "quality": 3,
+              "vdda_mv": 3306,
+              "temperature_mdeg_c": 33845
+            }
+          },
+          {
+            "sequence": 2,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 2,
+              "quality": 3,
+              "vdda_mv": 3308,
+              "temperature_mdeg_c": 33627
+            }
+          },
+          {
+            "sequence": 3,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 3,
+              "quality": 3,
+              "vdda_mv": 3308,
+              "temperature_mdeg_c": 33627
+            }
+          },
+          {
+            "sequence": 4,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 4,
+              "quality": 3,
+              "vdda_mv": 3308,
+              "temperature_mdeg_c": 33439
+            }
+          },
+          {
+            "sequence": 5,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 5,
+              "quality": 3,
+              "vdda_mv": 3306,
+              "temperature_mdeg_c": 33657
+            }
+          },
+          {
+            "sequence": 6,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 6,
+              "quality": 3,
+              "vdda_mv": 3308,
+              "temperature_mdeg_c": 33439
+            }
+          },
+          {
+            "sequence": 7,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 7,
+              "quality": 3,
+              "vdda_mv": 3306,
+              "temperature_mdeg_c": 33657
+            }
+          },
+          {
+            "sequence": 8,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 8,
+              "quality": 3,
+              "vdda_mv": 3308,
+              "temperature_mdeg_c": 33627
+            }
+          },
+          {
+            "sequence": 9,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 9,
+              "quality": 3,
+              "vdda_mv": 3306,
+              "temperature_mdeg_c": 33657
+            }
+          },
+          {
+            "sequence": 10,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 10,
+              "quality": 3,
+              "vdda_mv": 3308,
+              "temperature_mdeg_c": 33439
+            }
+          },
+          {
+            "sequence": 11,
+            "name": "mcu.summary",
+            "data": {
+              "count": 10,
+              "vdda": {
+                "unit": "mV",
+                "mean": 3307.2,
+                "stdev": 1.0327955589886446
+              },
+              "temperature": {
+                "unit": "degC",
+                "mean": 33.6014,
+                "stdev": 0.12897131464011616
+              },
+              "stdev_ddof": 1
+            }
+          }
+        ],
+        "gdb_means": {
+          "vdda_mv": 3307.2,
+          "temperature_c": 33.6014
+        }
+      },
+      "stages": [
+        {
+          "label": "prepare_baseline_HW_CI_ADC_UNITS",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_baseline_HW_CI_RTC_INIT",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_experiment_HW_TECH010_F030",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_experiment_HW_E1_MEASUREMENTS",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_experiment_HW_TECH011_SERIES",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_restore_HW_CI_BOOT",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_restore_HW_CI_GPIO",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "baseline_HW_CI_ADC_UNITS",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "single-point provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": []
+        },
+        {
+          "label": "baseline_HW_CI_RTC_INIT",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_led_toggle",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_led_toggle",
+              "actual": "board_led_toggle",
+              "expected": "board_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "LSI ready",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "LSI RTC clock enabled",
+              "actual": 33280,
+              "expected": 33280,
+              "passed": true
+            },
+            {
+              "name": "RTC prescalers",
+              "actual": 8323383,
+              "expected": 8323383,
+              "passed": true
+            },
+            {
+              "name": "24-hour Alarm A enabled with IRQ",
+              "actual": 4352,
+              "expected": 4352,
+              "passed": true
+            },
+            {
+              "name": "all calendar fields masked",
+              "actual": 2155905152,
+              "expected": 2155905152,
+              "passed": true
+            },
+            {
+              "name": "subseconds masked",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "initialization completed",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "shadow synchronized",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "EXTI17 enabled rising edge",
+              "actual": 131072,
+              "expected": 131072,
+              "passed": true
+            },
+            {
+              "name": "EXTI17 falling edge off",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "RTC NVIC enabled",
+              "actual": 4,
+              "expected": 4,
+              "passed": true
+            },
+            {
+              "name": "RTC vector",
+              "actual": 134219336,
+              "expected": 134219336,
+              "passed": true
+            },
+            {
+              "name": "no RTC error",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": []
+        },
+        {
+          "label": "experiment_HW_TECH010_F030",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_led_toggle",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_led_toggle",
+              "actual": "board_led_toggle",
+              "expected": "board_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "LSI ready",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "LSI RTC clock enabled",
+              "actual": 33280,
+              "expected": 33280,
+              "passed": true
+            },
+            {
+              "name": "RTC prescalers",
+              "actual": 8323383,
+              "expected": 8323383,
+              "passed": true
+            },
+            {
+              "name": "24-hour Alarm A enabled with IRQ",
+              "actual": 4352,
+              "expected": 4352,
+              "passed": true
+            },
+            {
+              "name": "all calendar fields masked",
+              "actual": 2155905152,
+              "expected": 2155905152,
+              "passed": true
+            },
+            {
+              "name": "subseconds masked",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "initialization completed",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "shadow synchronized",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "EXTI17 enabled rising edge",
+              "actual": 131072,
+              "expected": 131072,
+              "passed": true
+            },
+            {
+              "name": "EXTI17 falling edge off",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "RTC NVIC enabled",
+              "actual": 4,
+              "expected": 4,
+              "passed": true
+            },
+            {
+              "name": "RTC vector",
+              "actual": 134219336,
+              "expected": 134219336,
+              "passed": true
+            },
+            {
+              "name": "no RTC error",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": []
+        },
+        {
+          "label": "experiment_HW_E1_MEASUREMENTS",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": []
+        },
+        {
+          "label": "experiment_HW_TECH011_SERIES",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "configuration matches MCU",
+              "actual": "STM32F030R8T6",
+              "expected": "STM32F030R8T6",
+              "passed": true
+            },
+            {
+              "name": "configured measurement quality",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "GDB/Python VDDA mean",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "GDB/Python temperature mean",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": []
+        },
+        {
+          "label": "restore_HW_CI_BOOT",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "initialized interval",
+              "actual": 500,
+              "expected": 500,
+              "passed": true
+            },
+            {
+              "name": "BSS loop count",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "BSS LED state",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "BSS milliseconds",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "actual": "app_loop",
+              "expected": "app_loop",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "actual": "app_loop",
+              "expected": "app_loop",
+              "passed": true
+            },
+            {
+              "name": "app_state.ticks advanced",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": []
+        },
+        {
+          "label": "restore_HW_CI_GPIO",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_led_toggle",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_led_toggle",
+              "actual": "board_led_toggle",
+              "expected": "board_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "PA5 clock",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "PA5 output",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "push-pull",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "low speed",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "no pull",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "initial LED off",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "mcu": "STM32F103C8T6",
+      "backend": "jlink",
+      "gdb": "14.2.90.20240526-git",
+      "python": "3.11.4",
+      "elf_sha256": "4c611ea2b9c6e618fe62d74e9879d4310bf59c085e32d1f7c1bcc6d049c18746",
+      "manifest_sha256": "7a9dc25706216569f7c72f8e7e8b3444b799dff2f37c454080f803ab8d41c2c2",
+      "restore_elf_sha256": "4c611ea2b9c6e618fe62d74e9879d4310bf59c085e32d1f7c1bcc6d049c18746",
+      "table_checks_identical": true,
+      "series_original_checks_preserved": true,
+      "original": {
+        "summary": {
+          "count": 10,
+          "vdda": {
+            "unit": "mV",
+            "mean": 3313.2,
+            "stdev": 0.6324555320336759
+          },
+          "temperature": {
+            "unit": "degC",
+            "mean": 24.3458,
+            "stdev": 0.09395601807938385
+          },
+          "stdev_ddof": 1
+        },
+        "records": [
+          {
+            "sequence": 1,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 1,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24481
+            }
+          },
+          {
+            "sequence": 2,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 2,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24481
+            }
+          },
+          {
+            "sequence": 3,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 3,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24293
+            }
+          },
+          {
+            "sequence": 4,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 4,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24481
+            }
+          },
+          {
+            "sequence": 5,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 5,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24293
+            }
+          },
+          {
+            "sequence": 6,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 6,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24293
+            }
+          },
+          {
+            "sequence": 7,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 7,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24293
+            }
+          },
+          {
+            "sequence": 8,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 8,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24293
+            }
+          },
+          {
+            "sequence": 9,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 9,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24293
+            }
+          },
+          {
+            "sequence": 10,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 10,
+              "quality": 1,
+              "vdda_mv": 3315,
+              "temperature_mdeg_c": 24257
+            }
+          },
+          {
+            "sequence": 11,
+            "name": "mcu.summary",
+            "data": {
+              "count": 10,
+              "vdda": {
+                "unit": "mV",
+                "mean": 3313.2,
+                "stdev": 0.6324555320336759
+              },
+              "temperature": {
+                "unit": "degC",
+                "mean": 24.3458,
+                "stdev": 0.09395601807938385
+              },
+              "stdev_ddof": 1
+            }
+          }
+        ]
+      },
+      "configured": {
+        "summary": {
+          "count": 10,
+          "vdda": {
+            "unit": "mV",
+            "mean": 3313.4,
+            "stdev": 0.8432740427115678
+          },
+          "temperature": {
+            "unit": "degC",
+            "mean": 24.3798,
+            "stdev": 0.10748105776264917
+          },
+          "stdev_ddof": 1
+        },
+        "records": [
+          {
+            "sequence": 1,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 1,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24481
+            }
+          },
+          {
+            "sequence": 2,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 2,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24481
+            }
+          },
+          {
+            "sequence": 3,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 3,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24293
+            }
+          },
+          {
+            "sequence": 4,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 4,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24481
+            }
+          },
+          {
+            "sequence": 5,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 5,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24481
+            }
+          },
+          {
+            "sequence": 6,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 6,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24481
+            }
+          },
+          {
+            "sequence": 7,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 7,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24293
+            }
+          },
+          {
+            "sequence": 8,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 8,
+              "quality": 1,
+              "vdda_mv": 3315,
+              "temperature_mdeg_c": 24257
+            }
+          },
+          {
+            "sequence": 9,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 9,
+              "quality": 1,
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24293
+            }
+          },
+          {
+            "sequence": 10,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 10,
+              "quality": 1,
+              "vdda_mv": 3315,
+              "temperature_mdeg_c": 24257
+            }
+          },
+          {
+            "sequence": 11,
+            "name": "mcu.summary",
+            "data": {
+              "count": 10,
+              "vdda": {
+                "unit": "mV",
+                "mean": 3313.4,
+                "stdev": 0.8432740427115678
+              },
+              "temperature": {
+                "unit": "degC",
+                "mean": 24.3798,
+                "stdev": 0.10748105776264917
+              },
+              "stdev_ddof": 1
+            }
+          }
+        ],
+        "gdb_means": {
+          "vdda_mv": 3313.4,
+          "temperature_c": 24.3798
+        }
+      },
+      "stages": [
+        {
+          "label": "prepare_baseline_HW_CI_ADC_UNITS",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_baseline_HW_CI_TIM2_INIT",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_experiment_HW_TECH010_F103",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_experiment_HW_E1_MEASUREMENTS",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_experiment_HW_TECH011_SERIES",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_restore_HW_CI_BOOT",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_restore_HW_CI_GPIO",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "baseline_HW_CI_ADC_UNITS",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "typical provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ]
+        },
+        {
+          "label": "baseline_HW_CI_TIM2_INIT",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_led_toggle",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_led_toggle",
+              "actual": "board_led_toggle",
+              "expected": "board_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "TIM2 clock",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "TIM2 prescaler",
+              "actual": 7999,
+              "expected": 7999,
+              "passed": true
+            },
+            {
+              "name": "TIM2 period",
+              "actual": 99,
+              "expected": 99,
+              "passed": true
+            },
+            {
+              "name": "TIM2 internal clock",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "TIM2 upcounter enabled",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "update interrupt only",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "NVIC TIM2 enabled",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "TIM2 vector",
+              "actual": 134218236,
+              "expected": 134218236,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ]
+        },
+        {
+          "label": "experiment_HW_TECH010_F103",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_led_toggle",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_led_toggle",
+              "actual": "board_led_toggle",
+              "expected": "board_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "TIM2 clock",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "TIM2 prescaler",
+              "actual": 7999,
+              "expected": 7999,
+              "passed": true
+            },
+            {
+              "name": "TIM2 period",
+              "actual": 99,
+              "expected": 99,
+              "passed": true
+            },
+            {
+              "name": "TIM2 internal clock",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "TIM2 upcounter enabled",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "update interrupt only",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "NVIC TIM2 enabled",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "TIM2 vector",
+              "actual": 134218236,
+              "expected": 134218236,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ]
+        },
+        {
+          "label": "experiment_HW_E1_MEASUREMENTS",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ]
+        },
+        {
+          "label": "experiment_HW_TECH011_SERIES",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "configuration matches MCU",
+              "actual": "STM32F103C8T6",
+              "expected": "STM32F103C8T6",
+              "passed": true
+            },
+            {
+              "name": "configured measurement quality",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "GDB/Python VDDA mean",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "GDB/Python temperature mean",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ]
+        },
+        {
+          "label": "restore_HW_CI_BOOT",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "initialized interval",
+              "actual": 500,
+              "expected": 500,
+              "passed": true
+            },
+            {
+              "name": "BSS loop count",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "BSS LED state",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "BSS milliseconds",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "actual": "app_loop",
+              "expected": "app_loop",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "actual": "app_loop",
+              "expected": "app_loop",
+              "passed": true
+            },
+            {
+              "name": "app_state.ticks advanced",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ]
+        },
+        {
+          "label": "restore_HW_CI_GPIO",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_led_toggle",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_led_toggle",
+              "actual": "board_led_toggle",
+              "expected": "board_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "PB2 clock",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "PB2 output",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "initial LED off",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ]
+        }
+      ]
+    },
+    {
+      "mcu": "STM32F411CEU6",
+      "backend": "openocd",
+      "gdb": "14.2.90.20240526-git",
+      "python": "3.11.4",
+      "elf_sha256": "f72026290b244f3c00f3dcda214cea0951f5634894b5f601a1b54e520bfa2571",
+      "manifest_sha256": "668c5b1fb09f41932a6e717ad0dda14c5f8a996bf0e702a99f2a8e5d18346fd0",
+      "restore_elf_sha256": "1ff37ae10a007401de5e0eaf826764f60a2849c8b7821c123f12caa28c2e79c3",
+      "table_checks_identical": true,
+      "series_original_checks_preserved": true,
+      "original": {
+        "summary": {
+          "count": 10,
+          "vdda": {
+            "unit": "mV",
+            "mean": 3302.6,
+            "stdev": 0.9660917830792959
+          },
+          "temperature": {
+            "unit": "degC",
+            "mean": 27.0626,
+            "stdev": 0.1777971378347303
+          },
+          "stdev_ddof": 1
+        },
+        "records": [
+          {
+            "sequence": 1,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 1,
+              "quality": 2,
+              "vdda_mv": 3302,
+              "temperature_mdeg_c": 27035
+            }
+          },
+          {
+            "sequence": 2,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 2,
+              "quality": 2,
+              "vdda_mv": 3302,
+              "temperature_mdeg_c": 27035
+            }
+          },
+          {
+            "sequence": 3,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 3,
+              "quality": 2,
+              "vdda_mv": 3302,
+              "temperature_mdeg_c": 27035
+            }
+          },
+          {
+            "sequence": 4,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 4,
+              "quality": 2,
+              "vdda_mv": 3302,
+              "temperature_mdeg_c": 27035
+            }
+          },
+          {
+            "sequence": 5,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 5,
+              "quality": 2,
+              "vdda_mv": 3302,
+              "temperature_mdeg_c": 27352
+            }
+          },
+          {
+            "sequence": 6,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 6,
+              "quality": 2,
+              "vdda_mv": 3304,
+              "temperature_mdeg_c": 27232
+            }
+          },
+          {
+            "sequence": 7,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 7,
+              "quality": 2,
+              "vdda_mv": 3304,
+              "temperature_mdeg_c": 26916
+            }
+          },
+          {
+            "sequence": 8,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 8,
+              "quality": 2,
+              "vdda_mv": 3304,
+              "temperature_mdeg_c": 27232
+            }
+          },
+          {
+            "sequence": 9,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 9,
+              "quality": 2,
+              "vdda_mv": 3302,
+              "temperature_mdeg_c": 26719
+            }
+          },
+          {
+            "sequence": 10,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 10,
+              "quality": 2,
+              "vdda_mv": 3302,
+              "temperature_mdeg_c": 27035
+            }
+          },
+          {
+            "sequence": 11,
+            "name": "mcu.summary",
+            "data": {
+              "count": 10,
+              "vdda": {
+                "unit": "mV",
+                "mean": 3302.6,
+                "stdev": 0.9660917830792959
+              },
+              "temperature": {
+                "unit": "degC",
+                "mean": 27.0626,
+                "stdev": 0.1777971378347303
+              },
+              "stdev_ddof": 1
+            }
+          }
+        ]
+      },
+      "configured": {
+        "summary": {
+          "count": 10,
+          "vdda": {
+            "unit": "mV",
+            "mean": 3302.2,
+            "stdev": 1.1352924243950935
+          },
+          "temperature": {
+            "unit": "degC",
+            "mean": 27.2132,
+            "stdev": 0.1829752867344536
+          },
+          "stdev_ddof": 1
+        },
+        "records": [
+          {
+            "sequence": 1,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 1,
+              "quality": 2,
+              "vdda_mv": 3304,
+              "temperature_mdeg_c": 27232
+            }
+          },
+          {
+            "sequence": 2,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 2,
+              "quality": 2,
+              "vdda_mv": 3302,
+              "temperature_mdeg_c": 27035
+            }
+          },
+          {
+            "sequence": 3,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 3,
+              "quality": 2,
+              "vdda_mv": 3302,
+              "temperature_mdeg_c": 27352
+            }
+          },
+          {
+            "sequence": 4,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 4,
+              "quality": 2,
+              "vdda_mv": 3304,
+              "temperature_mdeg_c": 27549
+            }
+          },
+          {
+            "sequence": 5,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 5,
+              "quality": 2,
+              "vdda_mv": 3302,
+              "temperature_mdeg_c": 27035
+            }
+          },
+          {
+            "sequence": 6,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 6,
+              "quality": 2,
+              "vdda_mv": 3302,
+              "temperature_mdeg_c": 27352
+            }
+          },
+          {
+            "sequence": 7,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 7,
+              "quality": 2,
+              "vdda_mv": 3302,
+              "temperature_mdeg_c": 27035
+            }
+          },
+          {
+            "sequence": 8,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 8,
+              "quality": 2,
+              "vdda_mv": 3302,
+              "temperature_mdeg_c": 27352
+            }
+          },
+          {
+            "sequence": 9,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 9,
+              "quality": 2,
+              "vdda_mv": 3300,
+              "temperature_mdeg_c": 27155
+            }
+          },
+          {
+            "sequence": 10,
+            "name": "mcu.measurement",
+            "data": {
+              "sequence": 10,
+              "quality": 2,
+              "vdda_mv": 3302,
+              "temperature_mdeg_c": 27035
+            }
+          },
+          {
+            "sequence": 11,
+            "name": "mcu.summary",
+            "data": {
+              "count": 10,
+              "vdda": {
+                "unit": "mV",
+                "mean": 3302.2,
+                "stdev": 1.1352924243950935
+              },
+              "temperature": {
+                "unit": "degC",
+                "mean": 27.2132,
+                "stdev": 0.1829752867344536
+              },
+              "stdev_ddof": 1
+            }
+          }
+        ],
+        "gdb_means": {
+          "vdda_mv": 3302.2,
+          "temperature_c": 27.2132
+        }
+      },
+      "stages": [
+        {
+          "label": "prepare_baseline_HW_CI_ADC_UNITS",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_baseline_HW_CI_ADC_INIT",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_experiment_HW_TECH010_F411",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_experiment_HW_E1_MEASUREMENTS",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_experiment_HW_TECH011_SERIES",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_restore_HW_BOOT",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "prepare_restore_HW_GPIO",
+          "status": "PASS",
+          "checks": [],
+          "image_verified": null,
+          "teardown": null,
+          "warnings": []
+        },
+        {
+          "label": "baseline_HW_CI_ADC_UNITS",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "factory provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": []
+        },
+        {
+          "label": "baseline_HW_CI_ADC_INIT",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "ADC1 clock",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "DMA2 clock",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "ADC clock PCLK2/2 (8 MHz)",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "scan only, independent ADC",
+              "actual": 256,
+              "expected": 256,
+              "passed": true
+            },
+            {
+              "name": "ADC enabled, internal sources, DMA, software trigger",
+              "actual": 769,
+              "expected": 769,
+              "passed": true
+            },
+            {
+              "name": "sample CH18/17 at 480 cycles",
+              "actual": 132120576,
+              "expected": 132120576,
+              "passed": true
+            },
+            {
+              "name": "two regular ranks",
+              "actual": 1048576,
+              "expected": 1048576,
+              "passed": true
+            },
+            {
+              "name": "CH18 then CH17",
+              "actual": 562,
+              "expected": 562,
+              "passed": true
+            },
+            {
+              "name": "normal DMA halfwords, TC/TE/DME IRQ",
+              "actual": 11286,
+              "expected": 11286,
+              "passed": true
+            },
+            {
+              "name": "ADC data address",
+              "actual": 1073815628,
+              "expected": 1073815628,
+              "passed": true
+            },
+            {
+              "name": "SRAM buffer address",
+              "actual": 536870960,
+              "expected": 536870960,
+              "passed": true
+            },
+            {
+              "name": "DMA NVIC enabled",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "DMA vector",
+              "actual": 134218608,
+              "expected": 134218608,
+              "passed": true
+            },
+            {
+              "name": "internal sources without VBAT",
+              "actual": 8388608,
+              "expected": 8388608,
+              "passed": true
+            },
+            {
+              "name": "direct DMA mode",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "no init error",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": []
+        },
+        {
+          "label": "experiment_HW_TECH010_F411",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "ADC1 clock",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "DMA2 clock",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "ADC clock PCLK2/2 (8 MHz)",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "scan only, independent ADC",
+              "actual": 256,
+              "expected": 256,
+              "passed": true
+            },
+            {
+              "name": "ADC enabled, internal sources, DMA, software trigger",
+              "actual": 769,
+              "expected": 769,
+              "passed": true
+            },
+            {
+              "name": "sample CH18/17 at 480 cycles",
+              "actual": 132120576,
+              "expected": 132120576,
+              "passed": true
+            },
+            {
+              "name": "two regular ranks",
+              "actual": 1048576,
+              "expected": 1048576,
+              "passed": true
+            },
+            {
+              "name": "CH18 then CH17",
+              "actual": 562,
+              "expected": 562,
+              "passed": true
+            },
+            {
+              "name": "normal DMA halfwords, TC/TE/DME IRQ",
+              "actual": 11286,
+              "expected": 11286,
+              "passed": true
+            },
+            {
+              "name": "ADC data address",
+              "actual": 1073815628,
+              "expected": 1073815628,
+              "passed": true
+            },
+            {
+              "name": "SRAM buffer address",
+              "actual": 536870960,
+              "expected": 536870960,
+              "passed": true
+            },
+            {
+              "name": "DMA NVIC enabled",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "DMA vector",
+              "actual": 134218608,
+              "expected": 134218608,
+              "passed": true
+            },
+            {
+              "name": "internal sources without VBAT",
+              "actual": 8388608,
+              "expected": 8388608,
+              "passed": true
+            },
+            {
+              "name": "direct DMA mode",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "no init error",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": []
+        },
+        {
+          "label": "experiment_HW_E1_MEASUREMENTS",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": []
+        },
+        {
+          "label": "experiment_HW_TECH011_SERIES",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "configuration matches MCU",
+              "actual": "STM32F411CEU6",
+              "expected": "STM32F411CEU6",
+              "passed": true
+            },
+            {
+              "name": "configured measurement quality",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 2,
+              "expected": 2,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "GDB/Python VDDA mean",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "GDB/Python temperature mean",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": []
+        },
+        {
+          "label": "restore_HW_BOOT",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: loop",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: loop",
+              "actual": "loop",
+              "expected": "loop",
+              "passed": true
+            },
+            {
+              "name": "no fault",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "reset clocks",
+              "actual": 16000000,
+              "expected": 16000000,
+              "passed": true
+            },
+            {
+              "name": "HSI /1",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": []
+        },
+        {
+          "label": "restore_HW_GPIO",
+          "status": "PASS",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: platform_led_toggle",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: platform_led_toggle",
+              "actual": "platform_led_toggle",
+              "expected": "platform_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "PC13 output",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "initial off",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: platform_led_toggle",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: platform_led_toggle",
+              "actual": "platform_led_toggle",
+              "expected": "platform_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "on",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: platform_led_toggle",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: platform_led_toggle",
+              "actual": "platform_led_toggle",
+              "expected": "platform_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "off",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            }
+          ],
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

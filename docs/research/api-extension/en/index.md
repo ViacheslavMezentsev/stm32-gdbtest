@@ -2,6 +2,8 @@
 
 [Documentation](../../../en/index.md) · [Русский](../ru/index.md)
 
+[TECH-010/011 hardware pairs on F030/F103/F411](techniques-three-boards.md): 7/7 HW and 7/7 prepare each; original checks preserved, restoration PASS. F103 Flash warning retained. Research facades, not core integration.
+
 [First-package readiness matrix](readiness.md) — current contracts, evidence and remaining decisions; integration not authorized.
 
 [M5: accepted first-package contract](m5-contract.md) — API spec 0.2.0, system spec 0.60; rc.2 core, separate integration approval.

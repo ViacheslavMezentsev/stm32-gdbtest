@@ -2,6 +2,8 @@
 
 [Research](index.md) · [Русский](../ru/measurement-technique.md)
 
+[TECH-010/011 hardware pairs on F030/F103/F411](techniques-three-boards.md): 7/7 HW and 7/7 prepare each; original checks preserved, restoration PASS. F103 Flash warning retained. Research facades, not core integration.
+
 2026-10-03. Combines the earlier VDDA/temperature series with accepted record/records/
 config contracts. The [paired variant](../../../../tests/api-extension/measurement_technique.py)
 uses research RecordingTarget/ConfiguredTarget; production rc.2 lacks these operations.
