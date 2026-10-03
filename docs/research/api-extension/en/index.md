@@ -2,6 +2,8 @@
 
 [Documentation](../../../en/index.md) · [Русский](../ru/index.md)
 
+[Records bounds](config-bounds.md): implemented in the prototype; Linux 91/91 PASS, Windows 90 PASS/1 skip. Next: discuss first-package integration.
+
 [TECH-010/011 hardware pairs on F030/F103/F411](techniques-three-boards.md): 7/7 HW and 7/7 prepare each; original checks preserved, restoration PASS. F103 Flash warning retained. Research facades, not core integration.
 
 [First-package readiness matrix](readiness.md) — current contracts, evidence and remaining decisions; integration not authorized.

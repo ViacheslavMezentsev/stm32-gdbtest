@@ -2,6 +2,8 @@
 
 ## Исследование расширения API — 03.10.2026
 
+- [Границы records](docs/research/api-extension/ru/config-bounds.md): все пять параметров проверяются в загрузчике и при получении снимка; Linux 91/91 PASS, Windows 90 PASS/1 skip. Далее обсуждение переноса первого пакета; ядро прежнее.
+
 - [Три стенда TECH-010/011](docs/research/api-extension/ru/techniques-three-boards.md): F030/F103/F411 по 7/7 HW и prepare, парные проверки сохранены, F411 HAL и F0/F1 CMSIS восстановлены. F103 Flash warning сохранён. Далее верхние границы настроек прототипа; ядро прежнее.
 
 - [TECH-011](docs/research/api-extension/ru/measurement-technique.md): парная конфигурируемая серия, записи/mean/СКО, GDB-арифметика без повторного чтения MCU. Пять парных исходов и четыре численных набора в каждом GDB14/16; аппаратная приёмка нового варианта впереди.

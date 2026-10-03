@@ -11,7 +11,7 @@ import unittest
 
 from config_transport import dumps, loads, open_config, pack_config
 from session_config import ConfigError, load_session
-from test_session_config import TARGET
+from test_session_config import LIMITS, TARGET
 
 
 API = '''schema=1
@@ -100,6 +100,25 @@ class TransportTests(unittest.TestCase):
     def test_duplicate_json_keys_rejected(self):
         with self.assertRaises(ConfigError):
             loads('{"schema":1,"schema":1}')
+
+    def test_upper_bounds_revalidated_with_valid_hash(self):
+        original = dumps(self.snapshot())
+        for name, (_, maximum) in LIMITS.items():
+            for value in (maximum, maximum + 1):
+                with self.subTest(name=name, value=value):
+                    data = json.loads(original)
+                    raw = f'schema=1\n[records]\n{name}={value}\n'.encode()
+                    data["files"]["api"] = dict(
+                        base64=base64.b64encode(raw).decode(),
+                        sha256=hashlib.sha256(raw).hexdigest())
+                    if value == maximum:
+                        self.assertEqual(loads(json.dumps(data)).config["api"]["records"][name], value)
+                    else:
+                        with self.assertRaises(ConfigError) as caught:
+                            loads(json.dumps(data))
+                        self.assertEqual(caught.exception.code, "transport")
+                        self.assertIsInstance(caught.exception.__cause__, ConfigError)
+                        self.assertEqual(caught.exception.__cause__.code, "api_parameter")
 
 
 if __name__ == "__main__":

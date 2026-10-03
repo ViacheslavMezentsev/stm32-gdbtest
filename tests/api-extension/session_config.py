@@ -12,9 +12,12 @@ from stm32_gdbtest.full_image import validate_policy
 from stm32_gdbtest.profile import load_profile
 
 
-# Experimental defaults, not an approved resource budget.
+# Accepted configuration bounds (API specification 0.2.1).
 DEFAULTS = MappingProxyType(dict(max_records=128, max_nodes=4096, max_text_bytes=65536,
                                 max_depth=8, max_integer_bits=256))
+MAXIMUMS = MappingProxyType(dict(max_records=1024, max_nodes=32768,
+                                max_text_bytes=524288, max_depth=32,
+                                max_integer_bits=1024))
 
 
 class ConfigError(ValueError):
@@ -55,8 +58,8 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
                  reader=None):
     """Capture selected TOML files once, validate, and build detached read views.
 
-    Positive limit validation is experimental; upper bounds await Q6/Q19.
-    This function supports only the new mode. Legacy/CMake/package work is M4.
+    Known record limits are exact integers in the accepted inclusive ranges.
+    Unknown API fields remain available to the scenario without interpretation.
     """
     environ = os.environ if environ is None else environ
     if profile is not None or image_policy is not None or environ.get(
@@ -118,8 +121,9 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
     if type(records) is not dict:
         raise ConfigError("api_parameter", "records must be a table")
     for name in DEFAULTS:
-        if name in records and (type(records[name]) is not int or records[name] <= 0):
-            raise ConfigError("api_parameter", "records." + name)
+        if name in records and (type(records[name]) is not int or
+                                not 1 <= records[name] <= MAXIMUMS[name]):
+            raise ConfigError("api_parameter", f"records.{name}: expected integer 1..{MAXIMUMS[name]}")
     effective_api = dict(api, records={**DEFAULTS, **records})
     effective = dict(target=target, api=effective_api, image=image)
     return Configuration(freeze(effective), freeze(props), session_sha,

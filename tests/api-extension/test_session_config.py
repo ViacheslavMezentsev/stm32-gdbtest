@@ -36,6 +36,11 @@ fill=255
 crc="crc32-iso-hdlc"
 '''
 
+# Independent oracle from API specification 0.2.1, not loader constants.
+LIMITS = dict(max_records=(128, 1024), max_nodes=(4096, 32768),
+              max_text_bytes=(65536, 524288), max_depth=(8, 32),
+              max_integer_bits=(256, 1024))
+
 
 class SessionConfigTests(unittest.TestCase):
     def setUp(self):
@@ -111,12 +116,39 @@ class SessionConfigTests(unittest.TestCase):
                          hashlib.sha256(expected_bytes).hexdigest())
 
     def test_known_parameter_types_and_ranges(self):
-        for value in ('0', '-1', 'true', '1.5', '"12"', '[]'):
-            with self.subTest(value=value):
-                self.write("api.toml", 'schema=1\n[records]\nextra="allowed"\nmax_records='+value)
-                with self.assertRaises(ConfigError) as caught:
-                    self.load('target="target.toml"\napi="api.toml"')
-                self.assertEqual(caught.exception.code, "api_parameter")
+        for name, (_, maximum) in LIMITS.items():
+            for value in ('0', '-1', str(maximum + 1), 'true', 'false',
+                          '1.5', '"12"', '[]', '{}'):
+                with self.subTest(name=name, value=value):
+                    self.write("api.toml", f'schema=1\n[records]\n{name}={value}')
+                    with self.assertRaises(ConfigError) as caught:
+                        self.load('target="target.toml"\napi="api.toml"')
+                    self.assertEqual(caught.exception.code, "api_parameter")
+                    self.assertIn("records." + name, str(caught.exception))
+
+    def test_defaults_and_inclusive_boundaries(self):
+        for content in (None, 'schema=1', 'schema=1\n[records]'):
+            links = 'target="target.toml"'
+            if content is not None:
+                self.write("api.toml", content)
+                links += '\napi="api.toml"'
+            with self.subTest(content=content):
+                self.assertEqual(dict(self.load(links).config["api"]["records"]),
+                                 {k: v[0] for k, v in LIMITS.items()})
+        for name, (default, maximum) in LIMITS.items():
+            for value in (1, default, maximum):
+                with self.subTest(name=name, value=value):
+                    self.write("api.toml", f'schema=1\n[records]\n{name}={value}')
+                    result = self.load('target="target.toml"\napi="api.toml"')
+                    self.assertEqual(result.config["api"]["records"][name], value)
+
+    def test_unknown_fields_do_not_inherit_known_limits(self):
+        self.write("api.toml", 'schema=1\n[records]\ncustom_limit=999999999\n'
+                   '[custom]\nmax_records=-1\n')
+        result = self.load('target="target.toml"\napi="api.toml"')
+        for api in (result.config["api"], result.config_props["api"]["data"]):
+            self.assertEqual(api["records"]["custom_limit"], 999999999)
+            self.assertEqual(api["custom"]["max_records"], -1)
 
     def test_schema_and_known_table_shape(self):
         for text in ('[custom]\nx=1', 'schema=true', 'schema=2', 'schema="1"',
