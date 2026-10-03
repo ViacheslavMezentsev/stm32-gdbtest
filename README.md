@@ -245,7 +245,7 @@ STM32F103CBT6. H503 не поддержан. Поддержка определя
 После rc.1 исправлены manifest и HAL macro contracts, расширен CMSIS F030,
 добавлена самостоятельная HAL F030-регрессия. В rc.2 F103/F411 сохраняют базовые
 boot/GPIO-сценарии. Точный проверенный объём и ограничения — [STATUS](docs/ru/STATUS.md).
-В выпускной ветке версия Python — `0.1.0rc2`, `API_VERSION = 1`.
+В выпускной ветке версия Python — `0.2.0rc1`, `API_VERSION = 1`.
 Ветка после rc.2 расширяет F103: clocks/GPIO/SysTick/TIM2/ADC/DMA, 15 сценариев;
 [протокол](docs/ru/F103_CMSIS_ADC_DMA.md). Опубликованный тег неизменен.
 
@@ -284,3 +284,5 @@ tools в модуль не входят. GDB-Python — отдельный ин�
 - [stm32-cmake-yml](https://github.com/ViacheslavMezentsev/stm32-cmake-yml) — связанный проект сборки STM32; для работы модуля он не обязателен.
 
 Лицензия — [MIT](LICENSE). [Происхождение](SOURCE.md), [правила для разработчиков и агентов](AGENTS.md), [сопровождение](docs/ru/maintenance.md).
+
+[Подготовка и миграция v0.2.0-rc.1](docs/ru/RC020_READINESS.md).

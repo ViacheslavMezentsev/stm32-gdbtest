@@ -5,7 +5,7 @@ from stm32_gdbtest.records import RecordError
 
 # Source checkouts may be read-only, including GDB imports and the -m entry point.
 sys.dont_write_bytecode = True
-__version__ = "0.2.0.dev0"
+__version__ = "0.2.0rc1"
 API_VERSION = 1
 __all__ = ["case", "API_VERSION", "__version__", "RecordError"]
 

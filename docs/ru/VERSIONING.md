@@ -2,6 +2,8 @@
 
 [Документация](index.md) → Версии · [English](../en/VERSIONING.md)
 
+[Подготовка v0.2.0-rc.1](RC020_READINESS.md): версия Python 0.2.0rc1; выпуск ещё не опубликован. Исторические сведения ниже сохраняются.
+
 [План rc.2](RC2_READINESS.md): тег `v0.1.0-rc.2`, Python `0.1.0rc2`; опубликован на a0d6547.
 
 Формат — MAJOR.MINOR.PATCH по [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html);

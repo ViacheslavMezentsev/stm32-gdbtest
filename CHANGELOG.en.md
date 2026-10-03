@@ -6,6 +6,10 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+## [0.2.0-rc.1] - 2026-10-03
+
+Candidate agreed; local preparation, not published. [Acceptance and migration](docs/en/RC020_READINESS.md).
+
 - Standardized the teaching style of 35 production scenario/helper files: RU/EN headers, English explanations, 120-character lines and no optional trailing commas. Executable ASTs match the previous revision.
 
 - Migrated production scenarios: 44 table blocks / 282 checks; session.toml and VDDA/temperature series on five CMSIS profiles. HW 103/103 CMSIS, 22/22 HAL F030, 1/1 minimal consumer; separate recovery/restoration checks. Main specification 0.63; API 0.2.2 unchanged. [Report](docs/research/api-extension/en/scenario-migration.md).

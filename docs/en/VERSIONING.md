@@ -2,6 +2,8 @@
 
 [Documentation](index.md) → Versions · [Русский](../ru/VERSIONING.md)
 
+[Preparing v0.2.0-rc.1](RC020_READINESS.md): Python 0.2.0rc1; not published yet. Historical evidence follows.
+
 [rc.2 plan](RC2_READINESS.md): tag `v0.1.0-rc.2`, Python `0.1.0rc2`; published at a0d6547.
 
 The format is MAJOR.MINOR.PATCH per [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html);

@@ -247,7 +247,7 @@ of MCU, HAL, GDB and backend, not by the family: [current status](docs/en/STATUS
 Since rc.1, manifest and HAL macro contracts were fixed, CMSIS F030 was expanded,
 and a standalone HAL F030 regression fixture was added. In rc.2, F103/F411 provide
 basic boot/GPIO cases. Verified scope and limits: [STATUS](docs/en/STATUS.md).
-The release branch uses Python version `0.1.0rc2`, `API_VERSION = 1`.
+The release branch uses Python version `0.2.0rc1`, `API_VERSION = 1`.
 The post-rc.2 branch expands F103: clocks/GPIO/SysTick/TIM2/ADC/DMA, 15 scenarios;
 [report](docs/en/F103_CMSIS_ADC_DMA.md). The published tag is unchanged.
 
@@ -287,3 +287,5 @@ then move on to [writing tests](docs/en/TEST_AUTHORING.md) — by hand or with a
 - [stm32-cmake-yml](https://github.com/ViacheslavMezentsev/stm32-cmake-yml) — a related STM32 build project; not required by the module.
 
 License — [MIT](LICENSE). [Origin](SOURCE.md), [rules for developers and agents](AGENTS.md), [maintenance](docs/en/maintenance.md).
+
+[v0.2.0-rc.1 preparation and migration](docs/en/RC020_READINESS.md).

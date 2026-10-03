@@ -2,6 +2,8 @@
 
 Documentation · [Русский](../ru/index.md)
 
+[Preparing v0.2.0-rc.1](RC020_READINESS.md): Python 0.2.0rc1; not published yet. Historical evidence follows.
+
 [API specification 0.2.1](../TECHNICAL_SPECIFICATION_API.md) — rc.2 baseline and accepted first-extension requirements; separate Russian specification. Core remains rc.2: record/records and config/config_props are not integrated. [Status and migration](../research/api-extension/en/m5-contract.md).
 
 [API extension research](../research/api-extension/en/index.md) — record/read/frames/context/finish using existing scenarios, plan and results.

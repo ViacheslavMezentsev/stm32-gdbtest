@@ -5,10 +5,10 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.63 (штатные сценарии проверены на пяти платах; выпуск отдельно) |
+| **Ревизия** | 0.64 (к выпуску v0.2.0-rc.1; приёмка) |
 | **Дата формирования** | 03.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
-| **Целевая версия** | Первый пакет расширения — 0.2.0, prerelease отдельно; действующее ядро `0.1.0rc2`, `API_VERSION = 1` (р.0.60) |
+| **Целевая версия** | v0.2.0-rc.1; Python `0.2.0rc1`, API_VERSION=1, ТЗ API 0.2.2 (р.0.64) |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
@@ -115,6 +115,16 @@
 | 0.62 | 03.10.2026 | Разрешён перенос первого пакета; Target, SESSION_CONFIG и снимок конфигурации интегрированы, host/offline и три аппаратные пары проверены. ТЗ API 0.2.2, рабочая версия 0.2.0.dev0; без выпуска. |
 
 | 0.63 | 03.10.2026 | Миграция штатных сценариев: таблицы и record/config; 103 CMSIS, 22 HAL, один пример на пяти платах. TC-152; ТЗ API 0.2.2 без изменений. |
+
+| 0.64 | 03.10.2026 | Согласован кандидат v0.2.0-rc.1, Python 0.2.0rc1; независимые версии API сохранены. Приёмка и миграция выделены в RC020_READINESS. |
+
+### Изменения ревизии 0.64
+
+Изменённые пункты помечены `(р.0.64)`.
+
+| Пункты | Тип | Суть |
+| :--- | :---: | :--- |
+| 8.48, 9.2, 10.3, приложения A/F | изм. | Версия кандидата, критерии и статус выпускной приёмки |
 
 ### Изменения ревизии 0.63
 
@@ -1727,10 +1737,10 @@ config/config_props с используемым profile/image и defaults; по�
 
 ---
 
-8.48. Первый совместимый пакет расширения ДОЛЖЕН планироваться на 0.2.0 с
-API_VERSION=1 и api.toml schema=1; рабочая версия — 0.2.0.dev0. Разрешённая
-владельцем 03.10.2026 интеграция ДОЛЖНА проходить отдельную приёмку ядра;
-выпуск и его prerelease ДОЛЖНЫ согласовываться отдельно. `[U]` (р.0.62)
+8.48. Первый совместимый пакет расширения ДОЛЖЕН поставляться кандидатом
+v0.2.0-rc.1 (Python 0.2.0rc1) с API_VERSION=1 и api.toml schema=1.
+Приёмка кандидата ДОЛЖНА предшествовать слиянию, тегу и публикации; стабильная
+версия 0.2.0 согласуется отдельно. `[U]` (р.0.64)
 
 8.49. Миграция штатных сценариев на первый пакет API ДОЛЖНА сохранять порядок
 чтений и проверок и прекращение после ошибки. Приёмка ДОЛЖНА отдельно учитывать
@@ -1905,7 +1915,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-148 | T/I: SESSION_CONFIG old/new/conflict; api/image отсутствуют, неверны; известные и unknown поля | Явный выбор, прежний legacy, defaults только для невыбранного файла; отказ до MCU, unknown сохранены (р.0.60) |
 | TC-149 | T: изменение/удаление исходников после захвата, TOML-типы, повреждённый перенос и несовместимые defaults | Один снимок, совпадающие views; исходные пути не нужны, неверный пакет даёт ERROR (р.0.60) |
 | TC-150 | T/I: старый JSON/пакет/CLI, новый prepare/pack/open, устаревшие manifest/profile | Источники и свойства фактические, новая поверхность по ТЗ API; legacy сохранён, ошибки до MCU (р.0.60) |
-| TC-151 | I/T/D: разрешение интеграции, версии, host/offline и TECH-010/011 на трёх MCU (р.0.62) | Версии независимы, старые сценарии и новый пакет приняты отдельно после разрешения; пределы ТЗ API согласованы (р.0.60) |
+| TC-151 | I/T/D: интеграция и выпускная приёмка кандидата по RC020_READINESS (р.0.64) | Версии независимы, старые сценарии и новый пакет приняты отдельно после разрешения; пределы ТЗ API согласованы (р.0.60) |
 | TC-152 | T/I/D: test_scenario_tables, test_measurement_scenarios, run_suite; пять плат (р.0.63) | Порядок и первый отказ совпадают с базой; неверная серия без summary; 103 CMSIS + 22 HAL + 1 пример, recovery и восстановление отдельно |
 
 ---
@@ -2109,7 +2119,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | 8.46 | tests/firmware/src/rtc_f4.c, startup.c; profiles/f429zi/tests/board/test_rtc.py, test_sleep.py; ci/run_checks.py | TC-145 (р.0.57) |
 | 8.47 | tests/hal-f030/profile/tests/board/test_hal_methods.py; contracts.json; run_hw.py; ci/hal_f030.py | TC-146 (р.0.58) |
 | 7.7.7, 8.9 | docs/ru/maintenance.md, VERSIONING.md, RC2_READINESS.md; release metadata | TC-132, инспекция перед публикацией (р.0.41) |
-| 8.48 | Перенос разрешён и проверен; выпуск отдельно (р.0.62) | TC-151 (I/T/D) |
+| 8.48 | Кандидат 0.2.0rc1; docs/ru/RC020_READINESS.md (р.0.64) | TC-151 (I/T/D) |
 | 8.49 | Миграция сценариев, host-регрессия и аппаратный протокол (р.0.63) | TC-152 (T/I/D) |
 
 ---
@@ -2199,7 +2209,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | Блокировка Linux | `<STM32_GDBTEST_LOCK_DIR или системный каталог временных файлов (/tmp, TMPDIR)>/stm32-gdbtest-locks/probe.v1.<sha256>.lock`, запись `pid=<PID>` (р.0.7) | 5.4.8, 5.4.9 |
 | Окружение стенда Linux | Python 3.11.16, CMake 3.28.3, Ninja 1.12.1, GCC 13.3.1-1.1, OpenOCD 0.12.0-7; `~/.local/stm32-gdbtest` (р.0.7) | 6.10.4 |
 | Каталог временных файлов | `build/hwtest-tmp` | 6.1.4 |
-| Цель расширения / api.toml schema | 0.2.0 / 1; разработка 0.2.0.dev0 (р.0.62) | 8.48 |
+| Цель расширения / api.toml schema | 0.2.0-rc.1 / 1; Python 0.2.0rc1 (р.0.64) | 8.48 |
 | `__version__` / `API_VERSION` | `0.1.0rc2` / `1` (р.0.42) | 5.15.3 |
 | `prepare.<ID>` TIMEOUT | 90 с (р.0.3) | 5.13.14 |
 | GCC CI | xPack 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1 (р.0.3) | 8.13 |
@@ -2301,6 +2311,10 @@ D.5. В ревизии 0.1 ссылки в коде отсутствуют; их
 ---
 
 ## Приложение F. Расхождения документации и кода
+
+Кандидат v0.2.0-rc.1 согласован; Python 0.2.0rc1, ТЗ API 0.2.2.
+Приёмка и миграция — [RC020_READINESS](ru/RC020_READINESS.md); публикация
+не выполнена. Следующие абзацы сохраняют историю. (р.0.64)
 
 Штатные сценарии пересмотрены: [кампания пяти плат](research/api-extension/ru/scenario-migration.md),
 103 CMSIS + 22 HAL + 1 минимальный пример PASS; ожидаемые timeout ERROR, повторы
