@@ -2,6 +2,8 @@
 
 Documentation · [Русский](../ru/index.md)
 
+[API specification 0.1.0](../TECHNICAL_SPECIFICATION_API.md) — current rc.2 contract; separate Russian specification, independent of API_VERSION.
+
 [API extension research](../research/api-extension/en/index.md) — record/read/frames/context/finish using existing scenarios, plan and results.
 
 [Research 2: adaptive scenario tree](../research/adaptive-test-tree/en/index.md) — simulated engine, JSON oracle and HTML player.

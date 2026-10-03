@@ -1,4 +1,4 @@
-"""Explicit F411 E1 run with prepare, baseline and unconditional restore attempt."""
+"""Explicit F0/F1/F411 experiments with prepare, baseline and restore attempts."""
 
 import argparse
 from datetime import datetime, timezone
@@ -21,23 +21,30 @@ def main():
     parser.add_argument("--restore-session", type=Path, required=True)
     parser.add_argument("--stand", type=Path, required=True)
     parser.add_argument("--execute", action="store_true")
-    parser.add_argument("--case", choices=("HW_E1_MEASUREMENTS", "HW_E1_ADC_PAIR", "HW_E2_READ", "HW_E3_CONTEXT", "HW_E4_FINISH"),
+    parser.add_argument("--case", choices=("all", "HW_E1_MEASUREMENTS", "HW_E1_ADC_PAIR", "HW_E2_READ", "HW_E3_CONTEXT", "HW_E4_FINISH"),
                         default="HW_E1_MEASUREMENTS")
     args = parser.parse_args()
     sessions = [json.loads(p.read_text(encoding="utf-8"))
                 for p in (args.session, args.restore_session)]
     stand = load_stand(args.stand)
-    if stand["backend"] != "openocd" or stand["flash"] != "if-different":
-        raise ValueError("requires OpenOCD with if-different")
+    if stand["backend"] not in ('openocd', 'jlink') or stand["flash"] != "if-different":
+        raise ValueError("requires OpenOCD/J-Link with if-different")
     for session in sessions:
         load_verified(session["build_manifest"], digest(session["elf"]), session["profile"])
-        if load_profile(session["profile"])["mcu"] != "STM32F411CEU6":
-            raise ValueError("requires F411CE images")
+        if load_profile(session["profile"])["mcu"] not in ('STM32F411CEU6','STM32F030R8T6','STM32F103C8T6'):
+            raise ValueError("requires a configured research board")
+    if load_profile(sessions[0]['profile'])['mcu'] != load_profile(sessions[1]['profile'])['mcu']:
+        raise ValueError('experiment and restore MCU differ')
     baseline_id = "HW_CI_SLEEP_SYSTICK" if args.case == "HW_E3_CONTEXT" else "HW_CI_ADC_UNITS"
     baseline = next(c for c in collect(sessions[0]["tests"]) if c["id"] == baseline_id)
-    experiment = next(c for c in collect(HERE / "board") if c["id"] == args.case)
+    experiments = [c for c in collect(HERE / 'board')
+                   if (args.case == 'all' and c['id'] != 'HW_E1_ADC_PAIR') or c['id'] == args.case]
+    baselines = [baseline]
+    if args.case == 'all':
+        baselines.append(next(c for c in collect(sessions[0]['tests']) if c['id'] == 'HW_CI_SLEEP_SYSTICK'))
     restores = {c["id"]: c for c in collect(sessions[1]["tests"])}
-    restore_cases = [restores[name] for name in ("HW_BOOT", "HW_GPIO")]
+    restore_ids = ('HW_BOOT','HW_GPIO') if 'HW_BOOT' in restores else ('HW_CI_BOOT','HW_CI_GPIO')
+    restore_cases = [restores[name] for name in restore_ids]
     output = HERE / "build" / datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
     output.mkdir(parents=True)
     summary = {"status": "ERROR", "stages": [], "hardware": args.execute,
@@ -63,14 +70,18 @@ def main():
             raise RuntimeError("missing verification/reset_run: " + label)
 
     try:
-        execute("prepare_baseline", sessions[0], baseline, True)
-        execute("prepare_experiment", sessions[0], experiment, True, True)
+        for case in baselines:
+            execute('prepare_baseline_' + case['id'], sessions[0], case, True)
+        for case in experiments:
+            execute('prepare_experiment_' + case['id'], sessions[0], case, True, True)
         for case in restore_cases:
             execute("prepare_restore_" + case["id"], sessions[1], case, True)
         if args.execute:
             try:
-                execute("baseline", sessions[0], baseline)
-                execute("experiment", sessions[0], experiment, research=True)
+                for case in baselines:
+                    execute('baseline_' + case['id'], sessions[0], case)
+                for case in experiments:
+                    execute('experiment_' + case['id'], sessions[0], case, research=True)
             finally:
                 errors = []
                 for case in restore_cases:

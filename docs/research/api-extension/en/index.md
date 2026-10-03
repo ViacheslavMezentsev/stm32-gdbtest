@@ -28,3 +28,5 @@ Promotion into `stm32_gdbtest`, public API changes, API_VERSION changes and norm
 specification changes require a separate decision. Creating this branch does not
 approve the draft conventions. Hardware stages and RTOS work from the first study
 remain paused; new hardware runs require separate planning and a confirmed current bench.
+
+[E1–E4 continuation on F0/F1](portability.md): 8/8 HW per board, limitations and retained prepare ERROR. [API spec 0.1.0](../../../TECHNICAL_SPECIFICATION_API.md) captures current rc.2 without integrating extensions. Next: Q1–Q16 review and E6 approval.

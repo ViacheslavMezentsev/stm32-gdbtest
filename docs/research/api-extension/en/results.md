@@ -18,3 +18,5 @@ preparation errors before connection are retained. Documentation checks are sepa
 
 After each stage, update this table, add a separate report and name the next step.
 Do not import hardware outcomes from the first study as new results.
+
+[E1–E4 continuation on F0/F1](portability.md): 8/8 HW per board, limitations and retained prepare ERROR. [API spec 0.1.0](../../../TECHNICAL_SPECIFICATION_API.md) captures current rc.2 without integrating extensions. Next: Q1–Q16 review and E6 approval.

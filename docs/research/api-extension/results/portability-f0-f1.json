@@ -1,0 +1,3236 @@
+{
+  "date": "2026-10-03",
+  "source_commit": "6da79d5",
+  "source_note": "plus board_config and run_hw portability changes in the accompanying commit",
+  "attempts": [
+    {
+      "status": "ERROR",
+      "elf_sha256": "64e7deacb33e70f352cca54c4d0f323910f03287b56e157004f3a01aa407e1ec",
+      "manifest_sha256": "f318a2ed3867384bfc88b3fdb9c0761849fdd76a9e12cb221624b90800ea504a",
+      "restore_elf_sha256": "64e7deacb33e70f352cca54c4d0f323910f03287b56e157004f3a01aa407e1ec",
+      "board": "F030R8",
+      "backend": "openocd",
+      "stages": [
+        {
+          "label": "prepare_baseline_HW_CI_ADC_UNITS",
+          "status": "ERROR",
+          "code": 2,
+          "checks": [],
+          "reason": "ADC contract rejected the stale ELF before hardware access; rebuilt existing firmware, then repeated preparation."
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "elf_sha256": "d6bfed5a23f6d25935df02e4b5b0b4049c950c61313132cc99e1106c400f4206",
+      "manifest_sha256": "3dca304accd2b23be23aebcd137b26eb2797f9b6a9b00c0c78b5ec089d51ee05",
+      "restore_elf_sha256": "d6bfed5a23f6d25935df02e4b5b0b4049c950c61313132cc99e1106c400f4206",
+      "board": "F030R8",
+      "backend": "openocd",
+      "stages": [
+        {
+          "label": "prepare_baseline_HW_CI_ADC_UNITS",
+          "status": "PASS",
+          "code": 0,
+          "checks": []
+        },
+        {
+          "label": "prepare_baseline_HW_CI_SLEEP_SYSTICK",
+          "status": "PASS",
+          "code": 0,
+          "checks": []
+        },
+        {
+          "label": "prepare_experiment_HW_E3_CONTEXT",
+          "status": "PASS",
+          "code": 0,
+          "checks": []
+        },
+        {
+          "label": "prepare_experiment_HW_E4_FINISH",
+          "status": "PASS",
+          "code": 0,
+          "checks": []
+        },
+        {
+          "label": "prepare_experiment_HW_E2_READ",
+          "status": "PASS",
+          "code": 0,
+          "checks": []
+        },
+        {
+          "label": "prepare_experiment_HW_E1_MEASUREMENTS",
+          "status": "PASS",
+          "code": 0,
+          "checks": []
+        },
+        {
+          "label": "prepare_restore_HW_CI_BOOT",
+          "status": "PASS",
+          "code": 0,
+          "checks": []
+        },
+        {
+          "label": "prepare_restore_HW_CI_GPIO",
+          "status": "PASS",
+          "code": 0,
+          "checks": []
+        },
+        {
+          "label": "baseline_HW_CI_ADC_UNITS",
+          "status": "PASS",
+          "code": 0,
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [],
+          "flash_capacity": {
+            "address": 536868812,
+            "raw_kib": 64,
+            "observed_bytes": 65536,
+            "profile_bytes": 65536,
+            "image_bytes": 3060,
+            "evidence": "16-bit factory size register interpreted by selected profile"
+          },
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "single-point provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "label": "baseline_HW_CI_SLEEP_SYSTICK",
+          "status": "PASS",
+          "code": 0,
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [],
+          "flash_capacity": {
+            "address": 536868812,
+            "raw_kib": 64,
+            "observed_bytes": 65536,
+            "profile_bytes": 65536,
+            "image_bytes": 3060,
+            "evidence": "16-bit factory size register interpreted by selected profile"
+          },
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "condition: delay_ms == 500",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "ordinary Sleep, no SLEEPONEXIT",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: SysTick_Handler",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: SysTick_Handler",
+              "actual": "SysTick_Handler",
+              "expected": "SysTick_Handler",
+              "passed": true
+            },
+            {
+              "name": "expected exception",
+              "actual": 15,
+              "expected": 15,
+              "passed": true
+            },
+            {
+              "name": "interrupted instruction is WFI",
+              "actual": 48944,
+              "expected": 48944,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "actual": "app_loop",
+              "expected": "app_loop",
+              "passed": true
+            },
+            {
+              "name": "delay completed",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "ADC sequence retained",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "label": "experiment_HW_E3_CONTEXT",
+          "status": "PASS",
+          "code": 0,
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [],
+          "flash_capacity": {
+            "address": 536868812,
+            "raw_kib": 64,
+            "observed_bytes": 65536,
+            "profile_bytes": 65536,
+            "image_bytes": 3060,
+            "evidence": "16-bit factory size register interpreted by selected profile"
+          },
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "condition: delay_ms == 500",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "ordinary Sleep, no SLEEPONEXIT",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: SysTick_Handler",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: SysTick_Handler",
+              "actual": "SysTick_Handler",
+              "expected": "SysTick_Handler",
+              "passed": true
+            },
+            {
+              "name": "expected exception",
+              "actual": 15,
+              "expected": 15,
+              "passed": true
+            },
+            {
+              "name": "interrupted instruction is WFI",
+              "actual": 48944,
+              "expected": 48944,
+              "passed": true
+            },
+            {
+              "name": "caller at explicit depth",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "PC is handler PC",
+              "actual": 134218148,
+              "expected": 134218148,
+              "passed": true
+            },
+            {
+              "name": "SP is handler SP",
+              "actual": 536879032,
+              "expected": 536879032,
+              "passed": true
+            },
+            {
+              "name": "PC independent of selected frame",
+              "actual": 134218148,
+              "expected": 134218148,
+              "passed": true
+            },
+            {
+              "name": "SP independent of selected frame",
+              "actual": 536879032,
+              "expected": 536879032,
+              "passed": true
+            },
+            {
+              "name": "depth limit explicit",
+              "actual": "depth_limit",
+              "expected": "depth_limit",
+              "passed": true
+            },
+            {
+              "name": "truncated caller unknown",
+              "actual": null,
+              "expected": null,
+              "passed": true
+            },
+            {
+              "name": "WFI interrupted context observed",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "mutation invalidates context",
+              "actual": false,
+              "expected": false,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "actual": "app_loop",
+              "expected": "app_loop",
+              "passed": true
+            },
+            {
+              "name": "resume invalidates context",
+              "actual": false,
+              "expected": false,
+              "passed": true
+            },
+            {
+              "name": "history still readable",
+              "actual": 134218148,
+              "expected": 134218148,
+              "passed": true
+            },
+            {
+              "name": "delay completed",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "ADC sequence retained",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "event handlers released",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            }
+          ],
+          "e3_evidence": {
+            "observations": [
+              {
+                "attempt": 0,
+                "context": {
+                  "PC": 134218148,
+                  "SP": 536879032,
+                  "stack": {
+                    "frames": [
+                      {
+                        "index": 0,
+                        "kind": "normal",
+                        "function": "SysTick_Handler",
+                        "pc": 134218148
+                      },
+                      {
+                        "index": 1,
+                        "kind": "signal",
+                        "function": null,
+                        "pc": 4294967289
+                      },
+                      {
+                        "index": 2,
+                        "kind": "normal",
+                        "function": "board_delay_ms",
+                        "pc": 134218172
+                      },
+                      {
+                        "index": 3,
+                        "kind": "normal",
+                        "function": "app_loop",
+                        "pc": 134217992
+                      },
+                      {
+                        "index": 4,
+                        "kind": "normal",
+                        "function": "main",
+                        "pc": 134218014
+                      }
+                    ],
+                    "complete": false,
+                    "termination": "unwind_error",
+                    "reason": "no reason"
+                  },
+                  "run_id": "37e003d799f14d7e8b8b85ccf1c3a7aa",
+                  "stop_id": 2,
+                  "revision": 6
+                },
+                "preceding_halfword": 48944
+              }
+            ],
+            "event_handlers_after_close": 0
+          }
+        },
+        {
+          "label": "experiment_HW_E4_FINISH",
+          "status": "PASS",
+          "code": 0,
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [],
+          "flash_capacity": {
+            "address": 536868812,
+            "raw_kib": 64,
+            "observed_bytes": 65536,
+            "profile_bytes": 65536,
+            "image_bytes": 3060,
+            "evidence": "16-bit factory size register interpreted by selected profile"
+          },
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_step",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: app_step",
+              "actual": "app_step",
+              "expected": "app_step",
+              "passed": true
+            },
+            {
+              "name": "natural scalar return",
+              "actual": [
+                "returned",
+                "available",
+                1
+              ],
+              "expected": [
+                "returned",
+                "available",
+                1
+              ],
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_led_toggle",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_led_toggle",
+              "actual": "board_led_toggle",
+              "expected": "board_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "caller published value",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "natural void return",
+              "actual": [
+                "returned",
+                "void"
+              ],
+              "expected": [
+                "returned",
+                "void"
+              ],
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "actual": "app_loop",
+              "expected": "app_loop",
+              "passed": true
+            },
+            {
+              "name": "foreign stop is interruption",
+              "actual": "interrupted",
+              "expected": "interrupted",
+              "passed": true
+            },
+            {
+              "name": "foreign breakpoint preserved",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "foreign breakpoint reported",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "capacity refused before continue",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "only original fault guards remain",
+              "actual": [
+                1
+              ],
+              "expected": [
+                1
+              ],
+              "passed": true
+            }
+          ],
+          "e4_evidence": [
+            {
+              "outcome": "returned",
+              "value_state": "available",
+              "value": 1,
+              "type_name": "unsigned long",
+              "breakpoints": [
+                4
+              ],
+              "signal": null
+            },
+            {
+              "outcome": "returned",
+              "value_state": "void",
+              "value": null,
+              "type_name": "void",
+              "breakpoints": [
+                6
+              ],
+              "signal": null
+            },
+            {
+              "outcome": "interrupted",
+              "value_state": "not_returned",
+              "value": null,
+              "type_name": "void",
+              "breakpoints": [
+                8
+              ],
+              "signal": null
+            }
+          ]
+        },
+        {
+          "label": "experiment_HW_E2_READ",
+          "status": "PASS",
+          "code": 0,
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [],
+          "flash_capacity": {
+            "address": 536868812,
+            "raw_kib": 64,
+            "observed_bytes": 65536,
+            "profile_bytes": 65536,
+            "image_bytes": 3060,
+            "evidence": "16-bit factory size register interpreted by selected profile"
+          },
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "same scalar: vdda_mv",
+              "actual": 3308,
+              "expected": 3308,
+              "passed": true
+            },
+            {
+              "name": "same scalar: temperature_mdeg_c",
+              "actual": 33627,
+              "expected": 33627,
+              "passed": true
+            },
+            {
+              "name": "same scalar: quality",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "same buffer",
+              "actual": [
+                1764,
+                1519
+              ],
+              "expected": [
+                1764,
+                1519
+              ],
+              "passed": true
+            },
+            {
+              "name": "negative read outcomes",
+              "actual": {
+                "board_adc_sample()": "invalid_path",
+                "e2_missing_symbol": "missing_symbol",
+                "board_adc_buffer": "array_bounds"
+              },
+              "expected": {
+                "board_adc_sample()": "invalid_path",
+                "e2_missing_symbol": "missing_symbol",
+                "board_adc_buffer": "array_bounds"
+              },
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "snapshot retained after resume",
+              "actual": {
+                "vdda_mv": 3308,
+                "temperature_mdeg_c": 33627,
+                "quality": 3
+              },
+              "expected": {
+                "vdda_mv": 3308,
+                "temperature_mdeg_c": 33627,
+                "quality": 3
+              },
+              "passed": true
+            }
+          ],
+          "e2_evidence": {
+            "values": {
+              "vdda_mv": 3308,
+              "temperature_mdeg_c": 33627,
+              "quality": 3
+            },
+            "raw": [
+              1764,
+              1519
+            ],
+            "errors": {
+              "board_adc_sample()": "invalid_path",
+              "e2_missing_symbol": "missing_symbol",
+              "board_adc_buffer": "array_bounds"
+            },
+            "types": {
+              "vdda_mv": "uint32_t",
+              "temperature_mdeg_c": "int32_t",
+              "quality": "uint32_t"
+            }
+          }
+        },
+        {
+          "label": "experiment_HW_E1_MEASUREMENTS",
+          "status": "PASS",
+          "code": 0,
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [],
+          "flash_capacity": {
+            "address": 536868812,
+            "raw_kib": 64,
+            "observed_bytes": 65536,
+            "profile_bytes": 65536,
+            "image_bytes": 3060,
+            "evidence": "16-bit factory size register interpreted by selected profile"
+          },
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 3,
+              "expected": 3,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            }
+          ],
+          "e1_evidence": {
+            "summary": {
+              "count": 10,
+              "vdda": {
+                "unit": "mV",
+                "mean": 3307.4,
+                "stdev": 0.9660917830792959
+              },
+              "temperature": {
+                "unit": "degC",
+                "mean": 33.6172,
+                "stdev": 0.11501284952367478
+              },
+              "stdev_ddof": 1
+            },
+            "records": [
+              {
+                "sequence": 1,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 1,
+                  "quality": 3,
+                  "vdda_mv": 3308,
+                  "temperature_mdeg_c": 33439
+                }
+              },
+              {
+                "sequence": 2,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 2,
+                  "quality": 3,
+                  "vdda_mv": 3308,
+                  "temperature_mdeg_c": 33627
+                }
+              },
+              {
+                "sequence": 3,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 3,
+                  "quality": 3,
+                  "vdda_mv": 3306,
+                  "temperature_mdeg_c": 33845
+                }
+              },
+              {
+                "sequence": 4,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 4,
+                  "quality": 3,
+                  "vdda_mv": 3308,
+                  "temperature_mdeg_c": 33627
+                }
+              },
+              {
+                "sequence": 5,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 5,
+                  "quality": 3,
+                  "vdda_mv": 3306,
+                  "temperature_mdeg_c": 33657
+                }
+              },
+              {
+                "sequence": 6,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 6,
+                  "quality": 3,
+                  "vdda_mv": 3308,
+                  "temperature_mdeg_c": 33627
+                }
+              },
+              {
+                "sequence": 7,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 7,
+                  "quality": 3,
+                  "vdda_mv": 3308,
+                  "temperature_mdeg_c": 33439
+                }
+              },
+              {
+                "sequence": 8,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 8,
+                  "quality": 3,
+                  "vdda_mv": 3308,
+                  "temperature_mdeg_c": 33627
+                }
+              },
+              {
+                "sequence": 9,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 9,
+                  "quality": 3,
+                  "vdda_mv": 3306,
+                  "temperature_mdeg_c": 33657
+                }
+              },
+              {
+                "sequence": 10,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 10,
+                  "quality": 3,
+                  "vdda_mv": 3308,
+                  "temperature_mdeg_c": 33627
+                }
+              },
+              {
+                "sequence": 11,
+                "name": "mcu.summary",
+                "data": {
+                  "count": 10,
+                  "vdda": {
+                    "unit": "mV",
+                    "mean": 3307.4,
+                    "stdev": 0.9660917830792959
+                  },
+                  "temperature": {
+                    "unit": "degC",
+                    "mean": 33.6172,
+                    "stdev": 0.11501284952367478
+                  },
+                  "stdev_ddof": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "label": "restore_HW_CI_BOOT",
+          "status": "PASS",
+          "code": 0,
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [],
+          "flash_capacity": {
+            "address": 536868812,
+            "raw_kib": 64,
+            "observed_bytes": 65536,
+            "profile_bytes": 65536,
+            "image_bytes": 3060,
+            "evidence": "16-bit factory size register interpreted by selected profile"
+          },
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "initialized interval",
+              "actual": 500,
+              "expected": 500,
+              "passed": true
+            },
+            {
+              "name": "BSS loop count",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "BSS LED state",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "BSS milliseconds",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "actual": "app_loop",
+              "expected": "app_loop",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "actual": "app_loop",
+              "expected": "app_loop",
+              "passed": true
+            },
+            {
+              "name": "app_state.ticks advanced",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "label": "restore_HW_CI_GPIO",
+          "status": "PASS",
+          "code": 0,
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [],
+          "flash_capacity": {
+            "address": 536868812,
+            "raw_kib": 64,
+            "observed_bytes": 65536,
+            "profile_bytes": 65536,
+            "image_bytes": 3060,
+            "evidence": "16-bit factory size register interpreted by selected profile"
+          },
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_led_toggle",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_led_toggle",
+              "actual": "board_led_toggle",
+              "expected": "board_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "PA5 clock",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "PA5 output",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "push-pull",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "low speed",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "no pull",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "initial LED off",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "elf_sha256": "4c611ea2b9c6e618fe62d74e9879d4310bf59c085e32d1f7c1bcc6d049c18746",
+      "manifest_sha256": "7a9dc25706216569f7c72f8e7e8b3444b799dff2f37c454080f803ab8d41c2c2",
+      "restore_elf_sha256": "4c611ea2b9c6e618fe62d74e9879d4310bf59c085e32d1f7c1bcc6d049c18746",
+      "board": "F103C8-profile",
+      "backend": "jlink",
+      "stages": [
+        {
+          "label": "prepare_baseline_HW_CI_ADC_UNITS",
+          "status": "PASS",
+          "code": 0,
+          "checks": []
+        },
+        {
+          "label": "prepare_baseline_HW_CI_SLEEP_SYSTICK",
+          "status": "PASS",
+          "code": 0,
+          "checks": []
+        },
+        {
+          "label": "prepare_experiment_HW_E3_CONTEXT",
+          "status": "PASS",
+          "code": 0,
+          "checks": []
+        },
+        {
+          "label": "prepare_experiment_HW_E4_FINISH",
+          "status": "PASS",
+          "code": 0,
+          "checks": []
+        },
+        {
+          "label": "prepare_experiment_HW_E2_READ",
+          "status": "PASS",
+          "code": 0,
+          "checks": []
+        },
+        {
+          "label": "prepare_experiment_HW_E1_MEASUREMENTS",
+          "status": "PASS",
+          "code": 0,
+          "checks": []
+        },
+        {
+          "label": "prepare_restore_HW_CI_BOOT",
+          "status": "PASS",
+          "code": 0,
+          "checks": []
+        },
+        {
+          "label": "prepare_restore_HW_CI_GPIO",
+          "status": "PASS",
+          "code": 0,
+          "checks": []
+        },
+        {
+          "label": "baseline_HW_CI_ADC_UNITS",
+          "status": "PASS",
+          "code": 0,
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ],
+          "flash_capacity": {
+            "address": 536868832,
+            "raw_kib": 128,
+            "observed_bytes": 131072,
+            "profile_bytes": 65536,
+            "image_bytes": 2904,
+            "evidence": "16-bit factory size register interpreted by selected profile"
+          },
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "typical provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "label": "baseline_HW_CI_SLEEP_SYSTICK",
+          "status": "PASS",
+          "code": 0,
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ],
+          "flash_capacity": {
+            "address": 536868832,
+            "raw_kib": 128,
+            "observed_bytes": 131072,
+            "profile_bytes": 65536,
+            "image_bytes": 2904,
+            "evidence": "16-bit factory size register interpreted by selected profile"
+          },
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "condition: delay_ms == 500",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "ordinary Sleep, no SLEEPONEXIT",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: SysTick_Handler",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: SysTick_Handler",
+              "actual": "SysTick_Handler",
+              "expected": "SysTick_Handler",
+              "passed": true
+            },
+            {
+              "name": "expected exception",
+              "actual": 15,
+              "expected": 15,
+              "passed": true
+            },
+            {
+              "name": "interrupted instruction is WFI",
+              "actual": 48944,
+              "expected": 48944,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "actual": "app_loop",
+              "expected": "app_loop",
+              "passed": true
+            },
+            {
+              "name": "delay completed",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "ADC sequence retained",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "label": "experiment_HW_E3_CONTEXT",
+          "status": "PASS",
+          "code": 0,
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ],
+          "flash_capacity": {
+            "address": 536868832,
+            "raw_kib": 128,
+            "observed_bytes": 131072,
+            "profile_bytes": 65536,
+            "image_bytes": 2904,
+            "evidence": "16-bit factory size register interpreted by selected profile"
+          },
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "condition: delay_ms == 500",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "ordinary Sleep, no SLEEPONEXIT",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: SysTick_Handler",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: SysTick_Handler",
+              "actual": "SysTick_Handler",
+              "expected": "SysTick_Handler",
+              "passed": true
+            },
+            {
+              "name": "expected exception",
+              "actual": 15,
+              "expected": 15,
+              "passed": true
+            },
+            {
+              "name": "interrupted instruction is WFI",
+              "actual": 48944,
+              "expected": 48944,
+              "passed": true
+            },
+            {
+              "name": "caller at explicit depth",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "PC is handler PC",
+              "actual": 134218220,
+              "expected": 134218220,
+              "passed": true
+            },
+            {
+              "name": "SP is handler SP",
+              "actual": 536891320,
+              "expected": 536891320,
+              "passed": true
+            },
+            {
+              "name": "PC independent of selected frame",
+              "actual": 134218220,
+              "expected": 134218220,
+              "passed": true
+            },
+            {
+              "name": "SP independent of selected frame",
+              "actual": 536891320,
+              "expected": 536891320,
+              "passed": true
+            },
+            {
+              "name": "depth limit explicit",
+              "actual": "depth_limit",
+              "expected": "depth_limit",
+              "passed": true
+            },
+            {
+              "name": "truncated caller unknown",
+              "actual": null,
+              "expected": null,
+              "passed": true
+            },
+            {
+              "name": "WFI interrupted context observed",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "mutation invalidates context",
+              "actual": false,
+              "expected": false,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "actual": "app_loop",
+              "expected": "app_loop",
+              "passed": true
+            },
+            {
+              "name": "resume invalidates context",
+              "actual": false,
+              "expected": false,
+              "passed": true
+            },
+            {
+              "name": "history still readable",
+              "actual": 134218220,
+              "expected": 134218220,
+              "passed": true
+            },
+            {
+              "name": "delay completed",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "ADC sequence retained",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "event handlers released",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            }
+          ],
+          "e3_evidence": {
+            "observations": [
+              {
+                "attempt": 0,
+                "context": {
+                  "PC": 134218220,
+                  "SP": 536891320,
+                  "stack": {
+                    "frames": [
+                      {
+                        "index": 0,
+                        "kind": "normal",
+                        "function": "SysTick_Handler",
+                        "pc": 134218220
+                      },
+                      {
+                        "index": 1,
+                        "kind": "signal",
+                        "function": null,
+                        "pc": 4294967289
+                      },
+                      {
+                        "index": 2,
+                        "kind": "normal",
+                        "function": "board_delay_ms",
+                        "pc": 134218280
+                      },
+                      {
+                        "index": 3,
+                        "kind": "normal",
+                        "function": "app_loop",
+                        "pc": 134218112
+                      },
+                      {
+                        "index": 4,
+                        "kind": "normal",
+                        "function": "main",
+                        "pc": 134218134
+                      }
+                    ],
+                    "complete": false,
+                    "termination": "unwind_error",
+                    "reason": "no reason"
+                  },
+                  "run_id": "a2daeab1653f4b51b40559e556652d71",
+                  "stop_id": 2,
+                  "revision": 7
+                },
+                "preceding_halfword": 48944
+              }
+            ],
+            "event_handlers_after_close": 0
+          }
+        },
+        {
+          "label": "experiment_HW_E4_FINISH",
+          "status": "PASS",
+          "code": 0,
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ],
+          "flash_capacity": {
+            "address": 536868832,
+            "raw_kib": 128,
+            "observed_bytes": 131072,
+            "profile_bytes": 65536,
+            "image_bytes": 2904,
+            "evidence": "16-bit factory size register interpreted by selected profile"
+          },
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_step",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: app_step",
+              "actual": "app_step",
+              "expected": "app_step",
+              "passed": true
+            },
+            {
+              "name": "natural scalar return",
+              "actual": [
+                "returned",
+                "available",
+                1
+              ],
+              "expected": [
+                "returned",
+                "available",
+                1
+              ],
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_led_toggle",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_led_toggle",
+              "actual": "board_led_toggle",
+              "expected": "board_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "caller published value",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "natural void return",
+              "actual": [
+                "returned",
+                "void"
+              ],
+              "expected": [
+                "returned",
+                "void"
+              ],
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "actual": "app_loop",
+              "expected": "app_loop",
+              "passed": true
+            },
+            {
+              "name": "foreign stop is interruption",
+              "actual": "interrupted",
+              "expected": "interrupted",
+              "passed": true
+            },
+            {
+              "name": "foreign breakpoint preserved",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "foreign breakpoint reported",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "capacity refused before continue",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "only original fault guards remain",
+              "actual": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "expected": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "passed": true
+            }
+          ],
+          "e4_evidence": [
+            {
+              "outcome": "returned",
+              "value_state": "available",
+              "value": 1,
+              "type_name": "unsigned long",
+              "breakpoints": [
+                7
+              ],
+              "signal": null
+            },
+            {
+              "outcome": "returned",
+              "value_state": "void",
+              "value": null,
+              "type_name": "void",
+              "breakpoints": [
+                9
+              ],
+              "signal": null
+            },
+            {
+              "outcome": "interrupted",
+              "value_state": "not_returned",
+              "value": null,
+              "type_name": "void",
+              "breakpoints": [
+                11
+              ],
+              "signal": null
+            }
+          ]
+        },
+        {
+          "label": "experiment_HW_E2_READ",
+          "status": "PASS",
+          "code": 0,
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ],
+          "flash_capacity": {
+            "address": 536868832,
+            "raw_kib": 128,
+            "observed_bytes": 131072,
+            "profile_bytes": 65536,
+            "image_bytes": 2904,
+            "evidence": "16-bit factory size register interpreted by selected profile"
+          },
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "same scalar: vdda_mv",
+              "actual": 3313,
+              "expected": 3313,
+              "passed": true
+            },
+            {
+              "name": "same scalar: temperature_mdeg_c",
+              "actual": 24293,
+              "expected": 24293,
+              "passed": true
+            },
+            {
+              "name": "same scalar: quality",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "same buffer",
+              "actual": [
+                1771,
+                1483
+              ],
+              "expected": [
+                1771,
+                1483
+              ],
+              "passed": true
+            },
+            {
+              "name": "negative read outcomes",
+              "actual": {
+                "board_adc_sample()": "invalid_path",
+                "e2_missing_symbol": "missing_symbol",
+                "board_adc_buffer": "array_bounds"
+              },
+              "expected": {
+                "board_adc_sample()": "invalid_path",
+                "e2_missing_symbol": "missing_symbol",
+                "board_adc_buffer": "array_bounds"
+              },
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "snapshot retained after resume",
+              "actual": {
+                "vdda_mv": 3313,
+                "temperature_mdeg_c": 24293,
+                "quality": 1
+              },
+              "expected": {
+                "vdda_mv": 3313,
+                "temperature_mdeg_c": 24293,
+                "quality": 1
+              },
+              "passed": true
+            }
+          ],
+          "e2_evidence": {
+            "values": {
+              "vdda_mv": 3313,
+              "temperature_mdeg_c": 24293,
+              "quality": 1
+            },
+            "raw": [
+              1771,
+              1483
+            ],
+            "errors": {
+              "board_adc_sample()": "invalid_path",
+              "e2_missing_symbol": "missing_symbol",
+              "board_adc_buffer": "array_bounds"
+            },
+            "types": {
+              "vdda_mv": "uint32_t",
+              "temperature_mdeg_c": "int32_t",
+              "quality": "uint32_t"
+            }
+          }
+        },
+        {
+          "label": "experiment_HW_E1_MEASUREMENTS",
+          "status": "PASS",
+          "code": 0,
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ],
+          "flash_capacity": {
+            "address": 536868832,
+            "raw_kib": 128,
+            "observed_bytes": 131072,
+            "profile_bytes": 65536,
+            "image_bytes": 2904,
+            "evidence": "16-bit factory size register interpreted by selected profile"
+          },
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_adc_sample",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_adc_sample",
+              "actual": "board_adc_sample",
+              "expected": "board_adc_sample",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_delay_ms",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_delay_ms",
+              "actual": "board_delay_ms",
+              "expected": "board_delay_ms",
+              "passed": true
+            },
+            {
+              "name": "new ADC sequence",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "measurement provenance",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "plausible VDDA",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "plausible die temperature",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            }
+          ],
+          "e1_evidence": {
+            "summary": {
+              "count": 10,
+              "vdda": {
+                "unit": "mV",
+                "mean": 3313,
+                "stdev": 0.0
+              },
+              "temperature": {
+                "unit": "degC",
+                "mean": 24.1802,
+                "stdev": 0.09708278254493198
+              },
+              "stdev_ddof": 1
+            },
+            "records": [
+              {
+                "sequence": 1,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 1,
+                  "quality": 1,
+                  "vdda_mv": 3313,
+                  "temperature_mdeg_c": 24105
+                }
+              },
+              {
+                "sequence": 2,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 2,
+                  "quality": 1,
+                  "vdda_mv": 3313,
+                  "temperature_mdeg_c": 24105
+                }
+              },
+              {
+                "sequence": 3,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 3,
+                  "quality": 1,
+                  "vdda_mv": 3313,
+                  "temperature_mdeg_c": 24105
+                }
+              },
+              {
+                "sequence": 4,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 4,
+                  "quality": 1,
+                  "vdda_mv": 3313,
+                  "temperature_mdeg_c": 24293
+                }
+              },
+              {
+                "sequence": 5,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 5,
+                  "quality": 1,
+                  "vdda_mv": 3313,
+                  "temperature_mdeg_c": 24105
+                }
+              },
+              {
+                "sequence": 6,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 6,
+                  "quality": 1,
+                  "vdda_mv": 3313,
+                  "temperature_mdeg_c": 24293
+                }
+              },
+              {
+                "sequence": 7,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 7,
+                  "quality": 1,
+                  "vdda_mv": 3313,
+                  "temperature_mdeg_c": 24105
+                }
+              },
+              {
+                "sequence": 8,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 8,
+                  "quality": 1,
+                  "vdda_mv": 3313,
+                  "temperature_mdeg_c": 24293
+                }
+              },
+              {
+                "sequence": 9,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 9,
+                  "quality": 1,
+                  "vdda_mv": 3313,
+                  "temperature_mdeg_c": 24105
+                }
+              },
+              {
+                "sequence": 10,
+                "name": "mcu.measurement",
+                "data": {
+                  "sequence": 10,
+                  "quality": 1,
+                  "vdda_mv": 3313,
+                  "temperature_mdeg_c": 24293
+                }
+              },
+              {
+                "sequence": 11,
+                "name": "mcu.summary",
+                "data": {
+                  "count": 10,
+                  "vdda": {
+                    "unit": "mV",
+                    "mean": 3313,
+                    "stdev": 0.0
+                  },
+                  "temperature": {
+                    "unit": "degC",
+                    "mean": 24.1802,
+                    "stdev": 0.09708278254493198
+                  },
+                  "stdev_ddof": 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          "label": "restore_HW_CI_BOOT",
+          "status": "PASS",
+          "code": 0,
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ],
+          "flash_capacity": {
+            "address": 536868832,
+            "raw_kib": 128,
+            "observed_bytes": 131072,
+            "profile_bytes": 65536,
+            "image_bytes": 2904,
+            "evidence": "16-bit factory size register interpreted by selected profile"
+          },
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "initialized interval",
+              "actual": 500,
+              "expected": 500,
+              "passed": true
+            },
+            {
+              "name": "BSS loop count",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "BSS LED state",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "BSS milliseconds",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "actual": "app_loop",
+              "expected": "app_loop",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "actual": "app_loop",
+              "expected": "app_loop",
+              "passed": true
+            },
+            {
+              "name": "app_state.ticks advanced",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "label": "restore_HW_CI_GPIO",
+          "status": "PASS",
+          "code": 0,
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "image_verified": true,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ],
+          "flash_capacity": {
+            "address": 536868832,
+            "raw_kib": 128,
+            "observed_bytes": 131072,
+            "profile_bytes": 65536,
+            "image_bytes": 2904,
+            "evidence": "16-bit factory size register interpreted by selected profile"
+          },
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "actual": "main",
+              "expected": "main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_led_toggle",
+              "actual": true,
+              "expected": true,
+              "passed": true
+            },
+            {
+              "name": "frame: board_led_toggle",
+              "actual": "board_led_toggle",
+              "expected": "board_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "PB2 clock",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "PB2 output",
+              "actual": 1,
+              "expected": 1,
+              "passed": true
+            },
+            {
+              "name": "initial LED off",
+              "actual": 0,
+              "expected": 0,
+              "passed": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

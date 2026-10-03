@@ -102,6 +102,8 @@ def level_docs(record):
     if not check_spec or not Path(check_spec).is_file():
         raise CheckError("Set CHECK_SPEC to embedded-tech-spec/scripts/check_spec.py (preinstalled in the CI image)")
     record("docs.spec", lambda: run([sys.executable, check_spec, ROOT / "docs/TECHNICAL_SPECIFICATION.md", "--strict"]))
+    record("docs.api-spec", lambda: run([sys.executable, ROOT / "ci/check_api_spec.py", check_spec,
+                                        ROOT / "docs/TECHNICAL_SPECIFICATION_API.md", "--strict"]))
     record("docs.links", check_links)
     record("docs.pairs", check_pairs)
 

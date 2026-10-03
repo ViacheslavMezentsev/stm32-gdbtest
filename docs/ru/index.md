@@ -2,6 +2,8 @@
 
 Документация · [English](../en/index.md)
 
+[Спецификация API 0.1.0](../TECHNICAL_SPECIFICATION_API.md) — текущий контракт rc.2; отдельное ТЗ на русском, независимо от API_VERSION.
+
 [Исследование расширения API](../research/api-extension/ru/index.md) — record/read/frames/context/finish на текущих сценариях, план и результаты.
 
 [Исследование 2: адаптивное дерево сценариев](../research/adaptive-test-tree/ru/index.md) — имитационный движок, JSON-эталон и HTML-проигрыватель.

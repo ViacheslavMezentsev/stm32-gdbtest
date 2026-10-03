@@ -2,6 +2,8 @@
 
 [Документация](index.md) → API · [English](../en/API.md)
 
+[Спецификация API 0.1.0](../TECHNICAL_SPECIFICATION_API.md) — текущий контракт rc.2; отдельное ТЗ на русском, независимо от API_VERSION.
+
 [R2: навигация, вызовы и watchpoints](../research/rc3-gdb-python/ru/r2.md): 56/56 HLA и 8/8 native DAP; перенос в ядро только после утверждения владельца.
 
 [Первые аппаратные опыты R1](../research/rc3-gdb-python/ru/r1.md): F411, GDB14/16, 48/48 и проверки отказов.

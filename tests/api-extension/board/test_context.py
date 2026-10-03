@@ -4,6 +4,7 @@ from dataclasses import asdict
 import gdb
 from stm32_gdbtest import case
 from stack_context import GdbContexts, interrupted_frame, caller_is
+from board_config import settings
 
 
 @case('HW_E3_CONTEXT', contracts=('ci_sleep_macros',))
@@ -13,8 +14,9 @@ def context(t):
         t.reach('board_delay_ms', when='delay_ms == 500')
         t.check('ordinary Sleep, no SLEEPONEXIT', t.value('SCB->SCR & 6'), 0)
         enabled = t.value('NVIC->ISER[0]')
-        enabled1 = t.value('NVIC->ISER[1]')
-        t.set_value('NVIC->ICER[1]', enabled1)
+        enabled1 = t.value('NVIC->ISER[1]') if settings(t)['nvic_banks'] > 1 else None
+        if enabled1 is not None:
+            t.set_value('NVIC->ICER[1]', enabled1)
         t.set_value('NVIC->ICER[0]', enabled)
         contexts.invalidate()  # explicit notification for interventions outside facade
         before = t.value('board_ticks_ms')
@@ -51,7 +53,8 @@ def context(t):
             t.check('WFI interrupted context observed', matched is not None, True)
         finally:
             t.set_value('NVIC->ISER[0]', enabled)
-            t.set_value('NVIC->ISER[1]', enabled1)
+            if enabled1 is not None:
+                t.set_value('NVIC->ISER[1]', enabled1)
             contexts.invalidate()
         t.check('mutation invalidates context', contexts.current(matched), False)
         fresh = contexts.capture()

@@ -145,3 +145,5 @@ experimental implementation does not imply approval. IDs are local to this study
 | Q14 | E5 | Approve Mapping with frames/state_revision/stop/meta/availability or explicitly narrow the draft? current must account for selected thread/inferior/image; currently it can falsely report freshness. | E6 |
 | Q15 | E5 | Keep caller_is → bool/None or use a named result that cannot implicitly become False? Incomplete stacks need an explicit decision. | E6 |
 | Q16 | E5 | Accept record/records first and defer finish? Agree on initial scope, SemVer/release target (current policy: 0.2.0), and API_VERSION format/rules independently of schemas/specifications. | E6 |
+
+[E1–E4 continuation on F0/F1](portability.md): 8/8 HW per board, limitations and retained prepare ERROR. [API spec 0.1.0](../../../TECHNICAL_SPECIFICATION_API.md) captures current rc.2 without integrating extensions. Next: Q1–Q16 review and E6 approval.

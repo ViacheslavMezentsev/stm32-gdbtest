@@ -57,6 +57,14 @@
       "result": "e4-f411.json",
       "host_tests": 44,
       "restore": "PASS-both-attempts"
+    },
+    {
+      "id": "portability-f0-f1-2026-10-03",
+      "kind": "hardware",
+      "status": "prepare-ERROR-then-PASS",
+      "result": "portability-f0-f1.json",
+      "hardware_runs": 16,
+      "restore": "PASS-both-boards"
     }
   ]
 }

@@ -2,6 +2,8 @@
 
 [Documentation](index.md) → API · [Русский](../ru/API.md)
 
+[API specification 0.1.0](../TECHNICAL_SPECIFICATION_API.md) — current rc.2 contract; separate Russian specification, independent of API_VERSION.
+
 [R2: navigation, calls and watchpoints](../research/rc3-gdb-python/en/r2.md): 56/56 HLA and 8/8 native DAP; core promotion requires explicit owner approval.
 
 [Initial R1 hardware experiments](../research/rc3-gdb-python/en/r1.md): F411, GDB14/16, 48/48 and failure checks.

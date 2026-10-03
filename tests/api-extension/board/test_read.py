@@ -2,18 +2,20 @@
 
 from stm32_gdbtest import case
 from typed_read import Reader, GdbBackend, ReadError
+from board_config import settings
 
 
 @case("HW_E2_READ", contracts=("ci_adc_units",))
 def read_snapshots(t):
-    reader = Reader(GdbBackend(), ram_ranges=((0x20000000, 0x20020000),))
+    config = settings(t)
+    reader = Reader(GdbBackend(), ram_ranges=((0x20000000, config['ram_end']),))
     t.reach('board_adc_sample')
     t.reach('board_delay_ms')
     snapshot = reader.read('board_adc_reading', fields=('vdda_mv', 'temperature_mdeg_c', 'quality'))
     values = {name: field.value for name, field in snapshot.value}
     for name, value in values.items():
         t.check('same scalar: ' + name, value, t.value('board_adc_reading.' + name))
-    t.check('factory provenance', values['quality'], 2)
+    t.check('measurement provenance', values['quality'], config['quality'])
     t.check('plausible VDDA', 2800 <= values['vdda_mv'] <= 3600, True)
     t.check('plausible die temperature', -40000 <= values['temperature_mdeg_c'] <= 125000, True)
     samples = reader.read('board_adc_buffer', count=2)

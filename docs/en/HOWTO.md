@@ -468,3 +468,11 @@ Check the caller value, type and transfer path of the current ELF. Do not carry
 the old pinned SRET technique to a new ELF without renewed analysis.
 Use a full method signature including const: short Converter::apply has two
 locations. Select direct calls by argument type and separately verify this.
+
+## Three-component API specification revision
+
+The upstream skill checker recognizes two-component revisions. For the API spec
+use `python ci/check_api_spec.py <path-to-check_spec.py> docs/TECHNICAL_SPECIFICATION_API.md --strict`.
+The adapter widens only revision patterns and refuses a changed upstream pattern
+structure. The installed skill is unchanged. Docker CI includes this in the docs
+level; the overall specification still uses the upstream checker directly.

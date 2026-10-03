@@ -50,7 +50,7 @@ class MeasurementTests(unittest.TestCase):
         self.assertEqual(result["count"], 3)
 
     def test_invalid_quality(self):
-        with self.assertRaisesRegex(AssertionError, "factory provenance"):
+        with self.assertRaisesRegex(AssertionError, "measurement provenance"):
             f411_measurement_series(ScriptedTarget(quality=0), 3)
 
     def test_short_series_and_bad_counts(self):

@@ -2,6 +2,9 @@
 
 ## Исследование расширения API — 03.10.2026
 
+- Продолжение F0/F1: по 8/8 HW PASS (baseline, E1–E4, BOOT/GPIO restore); stale ELF prepare ERROR сохранён, F1 Flash mismatch остаётся предупреждением. [Отчёт](docs/research/api-extension/ru/portability.md).
+- По решению владельца создано [ТЗ API 0.1.0](docs/TECHNICAL_SPECIFICATION_API.md) для текущего rc.2, общее ТЗ 0.59 делегирует контракты. Три компонента относятся к ревизии документа; API_VERSION=1 и ядро прежние. Далее согласование контрактов расширения/Q1–Q16, не автоматический перенос.
+
 - E5 завершён: [матрица соответствия](docs/research/api-extension/ru/e5.md) правилам E1–E12 и моделям трёх проектов; пакет целиком к переносу не готов. Рекомендация: сначала согласовать record/records; read/context доработать, finish оставить экспериментальным. Q1–Q16 открыты, E6 ждёт решения владельца; ядро и версии прежние.
 
 - E4: ограниченный natural finish Cortex-M void/integer, host 44/44; F411 первый ERROR (истёкший объект точки), исправленный опыт 4/4 PASS, оба restore PASS. [Отчёт](docs/research/api-extension/ru/e4.md). Полный контракт/timeout/HW fault остаются долгом Q9–Q12; следующий этап E5, ядро не изменено.

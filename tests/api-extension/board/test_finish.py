@@ -31,11 +31,12 @@ def exercise(t):
         t.check('foreign breakpoint reported', other.number in result.breakpoints, True)
     finally:
         if other.is_valid(): other.delete()
-    # Two additional points fill the six-slot profile alongside four fault guards.
+    # Fill the profile-specific budget without dropping any fault guard.
     extras = []
     try:
-        extras.append(t.breakpoint('board_adc_sample'))
-        extras.append(t.breakpoint('board_delay_ms'))
+        remaining = t.profile['breakpoint_limit'] - len(guards)
+        for function in ('board_adc_sample', 'board_delay_ms', 'app_step')[:remaining]:
+            extras.append(t.breakpoint(function))
         refused = False
         try:
             finish(backend)
