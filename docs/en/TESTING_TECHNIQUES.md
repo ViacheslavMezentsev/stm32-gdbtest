@@ -31,6 +31,7 @@ or API field is introduced.
 | Controlled failures | [004 function return](#tech-004), [005 argument](#tech-005), [006 MMIO](#tech-006) |
 | Numerical checks | [007 vectors](#tech-007) |
 | Sleep and interrupts | [008 WFI context](#tech-008) |
+| Check organization | [010 tables](#tech-010) |
 
 The cards derive from executed examples. Another MCU, HAL, GCC or backend needs
 fresh validation. Linked code/protocols do not promise identical results in every environment.
@@ -205,3 +206,45 @@ NULL injection here requires reviewing the guard before dereferencing.
 A HAL package name is not a hash: mutable/const RCC variants require different
 strict contracts. An unknown hash is an error, not a reason to drop type checks.
 [Working cases and limits](F030_HAL_GPIO_RCC.md); source review is not HW evidence.
+
+
+<a id="tech-010"></a>
+
+## TECH-010 — Sequential table-driven checks
+
+**Purpose:** remove repeated check/value plumbing from adjacent register assertions.
+**Prerequisites:** one stopped context, available symbols/macros and expectations
+independent of the setting being checked. Works with current rc.2; this is a consumer
+helper, not a new API operation.
+
+```python
+def check_values(target, checks):
+    for name, expression, expected in checks:
+        actual = target.value(expression)
+        if isinstance(expected, str):
+            expected = target.value(expected)
+        target.check(name, actual, expected)
+
+# After reach and context preparation:
+check_values(target, [
+    ('RTC prescalers', 'RTC->PRER', (127 << 16) | 249),
+    ('RTC vector', '(unsigned int)vectors[57] & ~1U',
+     '(unsigned int)RTC_Alarm_IRQHandler & ~1U'),
+])
+```
+
+These numbers/symbols target the corresponding F4 configuration, not every MCU.
+String expectations are GDB expressions; numeric expectations are ready values.
+Order remains actual → expected → check, stopping on the first exception with each
+check's own label. An empty table checks nothing; authors ensure nonempty dynamic inputs.
+
+**Boundaries:** keep reach/writes/dependent calculations outside tables; never place
+value calls in table entries. Reads are sequential, not an atomic snapshot; FIFO/
+read-to-clear and running peripherals during halt retain their original constraints.
+No resume or write is added, nor automatic restoration. Preserve case/contracts and
+context requirements. Single checks need no helper; for one structure's fields also
+consider the existing fields operation.
+
+**Verified:** 82 paired host cases for RTC F030, ADC F411 and TIM2 F103; 47 candidate
+blocks including board variants. No new hardware PASS.
+[Report, variants and boundaries](../research/api-extension/en/table-checks.md).

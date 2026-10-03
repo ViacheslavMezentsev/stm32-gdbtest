@@ -50,3 +50,5 @@ GitHub подтверждён через GitHub API и совпадает с л�
 [RecordError: структурированные отказы](record-errors.md) — code/limit реализованы в прототипе, GDB14/GDB16 по 18/18 PASS; далее legacy config/config_props.
 
 [Legacy config/config_props](legacy-config.md) — старые JSON/пакеты, приоритет image, захват и неизменяемость; GDB14/GDB16 по 6/6. Далее итоговая матрица готовности.
+
+[TECH-010: табличные проверки](table-checks.md) — 47 блоков-кандидатов, 82 парных случая; техника поверх rc.2, без нового API/HW.

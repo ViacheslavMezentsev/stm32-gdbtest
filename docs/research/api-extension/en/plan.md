@@ -180,3 +180,5 @@ Other questions remain open. Contract decisions do not authorize core integratio
 [Legacy config/config_props](legacy-config.md) — old JSON/packages, image precedence, capture and immutability; GDB14/GDB16 6/6 each. Next: consolidated readiness matrix.
 
 Owner decision 2026-10-03: numeric bounds/cost criterion and public RecordError import accepted. Q6/Q19 and API spec questions 10.2.4–10.2.5 closed; API spec 0.2.1, system spec 0.61. Upper-bound implementation and core integration are pending; integration approval remains separate.
+
+[TECH-010: table-driven checks](table-checks.md) — 47 candidate blocks, 82 paired cases; technique over rc.2, no new API/HW.
