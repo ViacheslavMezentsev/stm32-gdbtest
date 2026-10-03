@@ -290,3 +290,5 @@ run.json for the GDB agent. Results are separate. Image policy currently comes f
 --image-policy or the environment, not those eight CMake-generated fields. This is
 an internal format without a stable user-schema promise; generated files are not
 normally edited manually.
+
+[Q20: session.toml migration plan](session-migration.md) — CMake/CLI, shared snapshots, conflicts, compatibility and M1–M6 checks. Proposal only, not core integration approval.

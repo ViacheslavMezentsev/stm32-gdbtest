@@ -2,6 +2,8 @@
 
 ## Исследование расширения API — 03.10.2026
 
+- Подготовлен [проект внедрения session.toml](docs/research/api-extension/ru/session-migration.md): явный SESSION_CONFIG, сохранение служебного JSON и старого режима, единый снимок конфигурации, конфликты и упаковка. M1 требует согласования; ядро прежнее, HW не запускалось.
+
 - Подготовлен [E6: проект первого пакета](docs/research/api-extension/ru/e6-proposal.md): record/records, J1–J12, ошибки, версии, разбор Q1–Q16 и будущая приёмка A1–A6. Q17–Q19 добавлены в очередь. Это предложение; ТЗ API 0.1.0 и ядро прежние, новых HW-прогонов нет.
 
 - Продолжение F0/F1: по 8/8 HW PASS (baseline, E1–E4, BOOT/GPIO restore); stale ELF prepare ERROR сохранён, F1 Flash mismatch остаётся предупреждением. [Отчёт](docs/research/api-extension/ru/portability.md).

@@ -1,0 +1,109 @@
+# Q20: migration to session.toml
+
+[Study](index.md) · [Русский](../ru/session-migration.md)
+
+2026-10-03. Integration proposal based on 74cc842. File composition and
+config/config_props are approved; CMake options, internal JSON fields and conflict
+rules below remain proposed. No core changes or new hardware runs.
+
+## Current behavior
+
+STM32GDBTest.cmake selects PROFILE or PROFILE_DIR/target.toml, generates eight-field
+session.json and registers CTest with --session <JSON>. CLI reads JSON directly;
+runner independently selects image policy from --image-policy/environment. Simply
+giving scripts a TOML reference is insufficient: image verification and scenarios
+must use the same settings. package.py explicitly includes ELF, target, scenarios
+and manifest; new configuration files are not included automatically.
+
+## 1. User configuration and build description
+
+Retain internal session.json, with session.toml owning api/target/image selection
+in the new mode:
+
+```toml
+# profile/session.toml
+[config]
+api = "api.toml"
+target = "target.toml"
+image = "full_image.toml"
+```
+
+Propose explicit CMake SESSION_CONFIG:
+
+```cmake
+# Proposed syntax, not implemented
+stm32_gdbtest_attach(firmware
+    PROFILE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/profile"
+    SESSION_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/profile/session.toml")
+```
+
+PROFILE_DIR retains scenarios/requirements/contracts responsibility, not an
+additional target source. Reject simultaneous SESSION_CONFIG and PROFILE: the new
+mode selects config.target. Without SESSION_CONFIG preserve legacy behavior,
+including PROFILE and existing precedence. No automatic session.toml discovery.
+
+Add session_config to generated JSON; ELF/GDB/tests/root/out/stand and manifest
+remain build-integration data. Retain profile if internal consumers require it,
+but derive it from config.target and check agreement rather than having two sources.
+Users need not edit the eight old fields. run --session <generated JSON> is unchanged.
+Direct --session session.toml is not proposed yet: TOML has no ELF/GDB/tests/out.
+
+## 2. Shared loading mechanism
+
+1. One host loader reads TOML and referenced files, resolves paths relative to TOML,
+   validates known settings and retains unknown api.toml fields. CMake uses this
+   Python mechanism for target selection, not an independent TOML parser.
+2. During run preparation, runner captures bytes, parsed data and defaults once.
+   Image checks and GDB config/config_props use the same image/target snapshot.
+   No source rereads inside GDB; ELF/manifest consistency checks remain mandatory.
+3. Configure and run preparation are different phases, not permanent caching.
+   Within a run, hashes/data share one read per file. Later edits do not affect it.
+4. CMake tracks session.toml and selected target. Changed target selection requires
+   regeneration/manifest refresh; stale selection is rejected before connection.
+   api/image are separate run inputs; changing journal limits alone should not
+   require firmware recompilation.
+
+## 3. Conflicts and absence
+
+Propose preventing CLI/environment overrides of config.api/target/image in new
+mode. --image-policy or STM32_GDBTEST_IMAGE_POLICY produces preconnection ERROR
+identifying the conflict. Select another session.toml for another image policy;
+even identical duplicate references are not permitted as a second source.
+Without config.image retain the approved ELF-section behavior; environment cannot
+silently select another policy.
+
+--stand, --timeout and --identity-policy retain current roles: no corresponding
+new TOML keys exist. config covers api/target/image and does not promise every
+process parameter. Stand/timeout access would be a separate schema extension.
+Legacy mode retains existing CLI/environment precedence. Errors in explicitly
+selected TOML/files never fall back to legacy mode.
+
+## 4. Stand transfer and compatibility
+
+pack/--package and remote runs must transfer content snapshots, not depend on
+original absolute paths. reference retains the original diagnostic link; extraction
+paths do not replace its meaning. Verify raw-byte integrity and parsed-data agreement.
+TOML types such as dates/times need explicit portable representation; do not silently
+stringify them or discard unknown keys for JSON convenience.
+
+Evaluate package manifest/report schema impacts separately, without automatically
+assigning versions. Old packages/JSON launches belong in regression. Legacy-mode
+config/config_props requires an explicit contract: target from profile, API defaults,
+image from the actual selected policy. Metadata must not invent session.toml;
+its precise legacy form remains an unresolved Q20 detail.
+
+## 5. Work sequence and criteria
+
+| Step | Result |
+| --- | --- |
+| M1 | Approve explicit SESSION_CONFIG, retained JSON and conflict rules |
+| M2 | Research-only host loader prototype and independent TOML fixtures; no MCU required |
+| M3 | Test required/optional inputs, types/ranges, defaults, unknown keys, nested immutability, hashes, paths and provenance |
+| M4 | Test legacy/new modes, CMake configure/prepare, target/API changes, packing and all TOML types in transport |
+| M5 | After contract approval, add API spec requirements and overall spec system requirements/references |
+| M6 | After integration authorization, integrate, regress and run agreed first-package hardware acceptance |
+
+M3/M4 negatives: missing target; absent api versus selected nonexistent api;
+invalid known field alongside valid unknown data; source edits after capture;
+CLI/env conflict; stale manifest; changed cwd; remote host without source tree.
+These are planned checks, not obtained results. Q20 remains open.
