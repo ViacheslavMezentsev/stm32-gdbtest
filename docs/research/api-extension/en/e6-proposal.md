@@ -144,56 +144,69 @@ implement and run acceptance.
 - Q19: set acceptable memory/time costs from A5 measurements; logical limits are
   not measured RSS/latency guarantees.
 
-## Q20: external configuration files and scenario environment
+## Q20: session.toml and linked files
 
-Owner clarification on 2026-10-03: settings originate in external files like
-target.toml/full-image.toml. Scenarios should access those files or their contents
-to know their launch environment. Additional files and their responsibilities
-require discussion. The previous decorator/override precedence was not approved.
+Approved by the owner on 2026-10-03: external session.toml links configurations
+for the scenario session. api.toml separately describes API settings/features;
+the combined scenario.toml proposal is superseded. The scenario can read its
+launch configuration; the concrete read interface remains under discussion.
 
-Inspected at 470d90c:
+```toml
+# session.toml
+[config]
+api = "api.toml"
+target = "target.toml"
+image = "full_image.toml"
+```
 
-- profile.load_profile reads target.toml under strict schema 1; arbitrary keys
-  are rejected. Target already receives profile, but this is an internal mutable
-  dictionary, not an agreed public configuration interface.
-- full_image.load_policy accepts only [image], validates against profile, and
-  returns that table plus the original file SHA256.
-- runner passes profile/full_image_policy via run.json; agent gives Target only
-  profile. There is no general scenario interface to loaded configurations.
-
-Proposal for discussion:
+This expresses the approved config.api/config.target/config.image links in TOML.
 
 | File | Responsibility | Status |
 | --- | --- | --- |
-| target.toml | MCU and hardware profile constraints | Existing |
-| full-image.toml | Image region, fill and CRC | Existing; applies when selected |
-| scenario.toml | API settings and per-ID scenario parameters | One proposed new file; name/schema undecided |
+| session.toml | Select linked session configuration files | Approved, not implemented |
+| api.toml | API settings used in the session, including journal limits | Separation approved; content schema open |
+| target.toml | MCU and hardware profile constraints | Existing schema 1 |
+| full_image.toml | Image region, fill and CRC policy | Existing [image] schema, selected filename |
 
-The new file could use [api.journal] for common limits and
-[scenarios.HW_ADC.parameters] for consumer data. Per-scenario limit overrides,
-file optionality and defaults need explicit decisions. Separate api.toml and
-scenarios.toml are possible if owners differ; no such requirement exists yet,
-so one additional file is proposed initially.
+Links select names; existing full-image.toml files are not renamed. Inspected at
+470d90c: profile.load_profile strictly validates target; full_image.load_policy
+reads [image], validates against target and returns the table plus file SHA256.
+Runner passes profile/full_image_policy to the agent via run.json; Target receives
+only the internal mutable profile. No general public configuration read API exists.
 
-Proposed content access preserving source document structure:
+Existing session.json is a generated internal launch artifact accepted by --session.
+New session.toml is the proposed user-authored configuration entry point; it does
+not automatically replace JSON. TOML loading, CMake/CLI/JSON integration and legacy
+launch compatibility require a contract.
+
+Proposed, unapproved interface: keys match config.* names and retain TOML structure:
 
 ```python
 mcu = t.config["target"]["mcu"]
-image_end = t.config["full_image"]["image"]["end"]
-limit = t.config["scenario"]["api"]["journal"]["max_records"]
-threshold = t.config["scenario"]["scenarios"]["HW_ADC"]["parameters"]["vdda_min_mv"]
+image_end = t.config["image"]["image"]["end"]
+limit = t.config["api"]["journal"]["max_records"]
 ```
 
-This is a sketch, not implemented API. If full-image policy is not applied,
-propose t.config["full_image"] is None rather than invented file contents.
-Read validated snapshots of the selected files actually used for this run;
-GDB need not reopen original paths, which may not exist on a remote stand.
-Propose deeply immutable snapshots; keep source identity/hash separate from
-contents, and distinguish inserted defaults/effective settings from source data.
+Repeated image denotes the selected document and its existing [image] table.
+A more convenient interface can be discussed without changing the file.
 
-The system spec owns selection/loading/validation/transport; the API spec owns
-public reading and limit use. Environment file scope (including stand access),
-scenario.toml schema, absence behavior, source metadata and reproduction storage
-remain open in Q20. Q6/Q19 remain open. Acceptance covers selected versus adjacent
-files, absent policy, source modification after capture, remote execution,
-nested mutation refusal and validation before connection.
+Proposals for the next decision:
+
+1. Resolve relative config.* paths against session.toml, not cwd; no implicit
+   search for same-named files in neighboring directories.
+2. Load/validate selected files before MCU connection; expose immutable content
+   snapshots rather than reopening paths in GDB. Source edits after preparation
+   do not change the current run; remote hosts need no original user-host paths.
+3. Distinguish absent optional references from errors in explicitly selected files.
+   Mandatory links, defaults and operation without image remain undecided.
+4. Decide where script-specific parameters belong; separate api.toml does not
+   automatically place board thresholds/expectations there.
+5. Define source/hash metadata, stand configuration access and reproduction storage.
+   Distinguish supplied defaults from source contents.
+
+Q20 remains open with file roles/links accepted. Decorator/override precedence is
+not approved. The system spec owns loading/validation/transport; the API spec owns
+public reads and limits. Core and API spec 0.1.0 remain unchanged. Q6/Q19 stay open.
+Acceptance covers selected versus adjacent files, absent references versus broken
+paths, edits after capture, remote execution, nested mutation refusal and validation
+before connection.
