@@ -335,3 +335,22 @@ This is an accepted requirement, not completed integration. Prior legacy regress
 do not prove these properties exist in production Target. Test the adapter separately
 before new-core acceptance. Q20 remains open for integration details and future name
 collisions; numeric bounds belong to Q6/Q19.
+
+### Approved: parameter names and schema evolution — 2026-10-03
+
+schema determines known api.toml parameters and their meaning. A newer tool must
+not reinterpret unknown fields under an older schema. Recognizing a new parameter
+requires a new schema version and explicit migration; old files retain their meaning
+within a supported old schema.
+
+[user], for example [user.measurement], is recommended for consumer data and is
+not interpreted by the API. This is a convention, not a ban on other unknown fields
+or sections: they remain retained and readable. A new schema version does not
+automatically approve package/API_VERSION/API-spec changes.
+
+Q20 is closed within the agreed first-package scope: files, references, defaults/
+validation, read-only interfaces, transport, legacy mode and naming rules are defined.
+Implementation/acceptance remain M5/M6 work; closing a question does not complete
+them. Numeric bounds/costs remain Q6/Q19, versions/final scope Q16. Additional stand
+information is not included automatically. Earlier unresolved-Q20 lists above are
+discussion history; the plan register owns current status.
