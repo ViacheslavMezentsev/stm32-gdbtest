@@ -130,7 +130,7 @@ This register owns Q1–Q20 statuses; E6 distinguishes initial proposals from su
 Closed requires an explicit owner decision recorded with its date. Closing a
 question does not imply implementation or acceptance. Deferred questions remain
 Open; composite questions retain partial decisions but stay Open until every part
-is resolved. IDs are stable. As of 2026-10-03 Q1, Q2, Q16, Q17, Q18 and Q20 are closed for the first package; Q4 and Q5 are partly resolved.
+is resolved. IDs are stable. As of 2026-10-03 Q1, Q2, Q6, Q16, Q17, Q18, Q19 and Q20 are closed for the first package; Q4 and Q5 are partly resolved.
 Other questions remain open. Contract decisions do not authorize core integration.
 
 | ID | Source | Question / proposal | Review | Status | Decision / basis |
@@ -140,7 +140,7 @@ Other questions remain open. Contract decisions do not authorize core integratio
 | Q3 | E2/E3 | Shared provenance model: actual run/image ID, inferior/thread/core, stop/revision; associate read with context capture time. | E3/E5 | Open | Not approved; recommendation in E6. |
 | Q4 | E2/E3 | Refine availability/errors: missing fields, optimized-out, unreadable and partial stacks; keep distinct from assertion FAIL. | E5 | Open | Partly approved 2026-10-03: record/records diagnostics per Q18. read/context/stack availability and errors remain open. |
 | Q5 | E3 | Which operations automatically invalidate snapshots? Raw monitor/reset/reconnect and thread/core switches need policy; current explicit invalidate is incomplete. | E5 | Open | Partial owner decision 2026-10-03: the journal retains history across continue/reset within a scenario; a new scenario starts empty. Context/read freshness rules remain unresolved. |
-| Q6 | E1/E2 | Is the benefit sufficient without fewer lines? Measure copying memory/time, define limits and convenient access; avoid replacing locals with journals unnecessarily. | E5 | Open | Measurements completed 2026-10-03; records-cost.md proposes bounds and criteria. Awaiting owner approval. |
+| Q6 | E1/E2 | Is the benefit sufficient without fewer lines? Measure copying memory/time, define limits and convenient access; avoid replacing locals with journals unnecessarily. | E5 | Closed | Owner accepted bounds and cost-review criterion 2026-10-03; API spec 0.2.1 clauses 6.3–6.5. Implementation acceptance remains separate. |
 | Q7 | E3 | Probe required capabilities of the installed GDB instead of inferring support from version: the tested build lacks FIRST_ERROR. | E5 | Open | Not approved; recommendation in E6. |
 | Q8 | E3 | Classify older=None + NO_REASON separately as unconfirmed_end? Current unwind_error retains reason but does not imply corruption; agree on tri-state caller and exact signal/inline depth counting. | E5 | Open | Not approved; recommendation in E6. |
 | Q9 | E4 | Separate timeout_s or only a case budget? General finish requires HW timeout/recovery and distinct fault/exit outcomes; host doubles are insufficient. | E5 | Open | Not approved; recommendation in E6. |
@@ -160,7 +160,7 @@ Other questions remain open. Contract decisions do not authorize core integratio
 | --- | --- | --- | --- | --- | --- |
 | Q17 | E6 | Fixed or configurable first-package limits? | E6 | Closed | Owner decision 2026-10-03: limits are scenario parameters with external configuration; the scenario can read its launch configuration. General mechanism contract: Q20. |
 | Q18 | E6 | Approve RecordError.code/limit and public exception import. | E6 | Closed | Owner approved 2026-10-03: public RecordError with code and limit for limit_exceeded. invalid_name/unsupported_type/invalid_text/non_finite/cycle/limit_exceeded. Rejection leaves no partial entry/budget consumption; unhandled error is ERROR, check mismatch is FAIL; system errors not disguised. |
-| Q19 | E6 | Set acceptable memory/time from A5; logical limits do not guarantee RSS/latency. | Acceptance | Open | Measurements completed 2026-10-03; records-cost.md proposes bounds and criteria. Awaiting owner approval. |
+| Q19 | E6 | Set acceptable memory/time from A5; logical limits do not guarantee RSS/latency. | Acceptance | Closed | Owner accepted bounds and cost-review criterion 2026-10-03; API spec 0.2.1 clauses 6.3–6.5. Implementation acceptance remains separate. |
 | Q20 | Q17 decision | General scenario configuration: schema, sources/precedence, validation, read-only access, exposed data boundaries and reproducibility. | Before first-package implementation | Closed | Owner decisions 2026-10-03: session.toml and api/target/image; relative paths; required/optional/defaults; known-value validation with unknown-field retention; config/config_props; TOML+SHA256 transport/defaults compatibility; legacy mode. Known names tied to schema, explicit schema change for new parameters, recommended uninterpreted [user]. First-package contract closed; see E6. Implementation/acceptance M5/M6, numeric bounds Q6/Q19, versions Q16. |
 
 [Q20: session.toml migration plan](session-migration.md) — CMake/CLI, shared snapshots, conflicts, compatibility and M1–M6 checks. Proposal only, not core integration approval.
@@ -178,3 +178,5 @@ Other questions remain open. Contract decisions do not authorize core integratio
 [RecordError: structured rejection](record-errors.md) — prototype code/limit implemented, GDB14/GDB16 18/18 PASS each; next legacy config/config_props.
 
 [Legacy config/config_props](legacy-config.md) — old JSON/packages, image precedence, capture and immutability; GDB14/GDB16 6/6 each. Next: consolidated readiness matrix.
+
+Owner decision 2026-10-03: numeric bounds/cost criterion and public RecordError import accepted. Q6/Q19 and API spec questions 10.2.4–10.2.5 closed; API spec 0.2.1, system spec 0.61. Upper-bound implementation and core integration are pending; integration approval remains separate.

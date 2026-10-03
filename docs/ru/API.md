@@ -2,7 +2,7 @@
 
 [Документация](index.md) → API · [English](../en/API.md)
 
-[Спецификация API 0.2.0](../TECHNICAL_SPECIFICATION_API.md) — база rc.2 и принятые требования первого расширения; отдельное ТЗ на русском. Ядро ещё rc.2: record/records и config/config_props в него не перенесены. [Статус и миграция](../research/api-extension/ru/m5-contract.md).
+[Спецификация API 0.2.1](../TECHNICAL_SPECIFICATION_API.md) — база rc.2 и принятые требования первого расширения; отдельное ТЗ на русском. Ядро ещё rc.2: record/records и config/config_props в него не перенесены. [Статус и миграция](../research/api-extension/ru/m5-contract.md).
 
 [R2: навигация, вызовы и watchpoints](../research/rc3-gdb-python/ru/r2.md): 56/56 HLA и 8/8 native DAP; перенос в ядро только после утверждения владельца.
 

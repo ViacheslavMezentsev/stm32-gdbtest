@@ -2,7 +2,7 @@
 
 Документация · [English](../en/index.md)
 
-[Спецификация API 0.2.0](../TECHNICAL_SPECIFICATION_API.md) — база rc.2 и принятые требования первого расширения; отдельное ТЗ на русском. Ядро ещё rc.2: record/records и config/config_props в него не перенесены. [Статус и миграция](../research/api-extension/ru/m5-contract.md).
+[Спецификация API 0.2.1](../TECHNICAL_SPECIFICATION_API.md) — база rc.2 и принятые требования первого расширения; отдельное ТЗ на русском. Ядро ещё rc.2: record/records и config/config_props в него не перенесены. [Статус и миграция](../research/api-extension/ru/m5-contract.md).
 
 [Исследование расширения API](../research/api-extension/ru/index.md) — record/read/frames/context/finish на текущих сценариях, план и результаты.
 

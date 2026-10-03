@@ -2,6 +2,8 @@
 
 [Research](index.md) · [Русский](../ru/records-cost.md)
 
+Owner decision 2026-10-03: numeric bounds/cost criterion and public RecordError import accepted. Q6/Q19 and API spec questions 10.2.4–10.2.5 closed; API spec 0.2.1, system spec 0.61. Upper-bound implementation and core integration are pending; integration approval remains separate.
+
 2026-10-03. Measured the unchanged evidence.Journal prototype; core and specifications
 unchanged. This proposes numeric limits; it neither approves them nor accepts a future Target.
 

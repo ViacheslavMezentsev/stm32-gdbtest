@@ -2,6 +2,8 @@
 
 [Research](index.md) · [Русский](../ru/readiness.md)
 
+Owner decision 2026-10-03: numeric bounds/cost criterion and public RecordError import accepted. Q6/Q19 and API spec questions 10.2.4–10.2.5 closed; API spec 0.2.1, system spec 0.61. Upper-bound implementation and core integration are pending; integration approval remains separate.
+
 Snapshot on 2026-10-03, after `5f7d749`. The first package is sufficiently researched
 to discuss integration. Core integration and acceptance remain unperformed and
 unauthorized. Normative sources: [API spec 0.2.0](../../../TECHNICAL_SPECIFICATION_API.md)
@@ -40,9 +42,9 @@ occurred in the latest stages.
 
 | Decision | Recommendation | Status |
 | --- | --- | --- |
-| Q6/Q19, API 10.2.4 | defaults/max: records 128/1024, nodes 4096/32768, text_bytes 65536/524288, depth 8/32, integer_bits 256/1024 | Proposal, awaiting approval |
-| Cost criterion | Repeat suite during integration; investigate >2x median regression in comparable environments; no RSS/latency guarantee | Proposal, awaiting approval |
-| API 10.2.5 | `from stm32_gdbtest import RecordError`; subclass ValueError, importable without GDB | Proposal, awaiting approval |
+| Q6/Q19, API 10.2.4 | defaults/max: records 128/1024, nodes 4096/32768, text_bytes 65536/524288, depth 8/32, integer_bits 256/1024 | Approved 2026-10-03 |
+| Cost criterion | Repeat suite during integration; investigate >2x median regression in comparable environments; no RSS/latency guarantee | Approved 2026-10-03 |
+| API 10.2.5 | `from stm32_gdbtest import RecordError`; subclass ValueError, importable without GDB | Approved 2026-10-03 |
 | Integration | Accepted first package only, as a separate stage with documentation and regression | Not authorized |
 
 Root-package import avoids scenario dependencies on internal modules. The exception
@@ -83,3 +85,24 @@ future cleanup model Q13.
 
 Next discussion: two contract decisions—numeric bounds/criterion and public import/
 base class. Their acceptance alone does not authorize core integration.
+
+## Scenario adaptation: before and after integration
+
+Proposed sequence (next-stage explanation, not integration authorization):
+
+1. **Before core integration:** enforce accepted bounds in the isolated configuration;
+   choose 2–3 representative scenarios (VDDA/temperature series, HAL/ADC with several
+   observations, configurable scenario). Build paired facade variants, retaining
+   original controls and reusing earlier E1 variants. Preserve assertions and coverage.
+2. Verify configuration/prepare, then paired runs on an agreed stand. Compare check
+   semantics and outcomes, not identical temperatures across runs. Mark hardware
+   unverified if the stand is unavailable.
+3. **After separate authorization:** integrate the API and replace the facade with
+   real Target in experimental scenarios. Repeat host/prepare and hardware acceptance,
+   including baseline/restore and negative outcomes.
+4. **After acceptance:** adapt remaining suitable scenarios where records/config add
+   value. Simple checks can retain value/check; rewriting every scenario is unnecessary.
+
+Next practical step: enforce and test approved prototype upper bounds, then select
+and prepare paired scenarios. This evaluates usability before integration and
+verifies actual core compatibility afterward.
