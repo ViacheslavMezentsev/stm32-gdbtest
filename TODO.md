@@ -2,6 +2,8 @@
 
 ## Исследование расширения API — 03.10.2026
 
+- Подготовлен [E6: проект первого пакета](docs/research/api-extension/ru/e6-proposal.md): record/records, J1–J12, ошибки, версии, разбор Q1–Q16 и будущая приёмка A1–A6. Q17–Q19 добавлены в очередь. Это предложение; ТЗ API 0.1.0 и ядро прежние, новых HW-прогонов нет.
+
 - Продолжение F0/F1: по 8/8 HW PASS (baseline, E1–E4, BOOT/GPIO restore); stale ELF prepare ERROR сохранён, F1 Flash mismatch остаётся предупреждением. [Отчёт](docs/research/api-extension/ru/portability.md).
 - По решению владельца создано [ТЗ API 0.1.0](docs/TECHNICAL_SPECIFICATION_API.md) для текущего rc.2, общее ТЗ 0.59 делегирует контракты. Три компонента относятся к ревизии документа; API_VERSION=1 и ядро прежние. Далее согласование контрактов расширения/Q1–Q16, не автоматический перенос.
 

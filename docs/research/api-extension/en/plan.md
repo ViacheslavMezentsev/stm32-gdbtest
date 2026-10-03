@@ -147,3 +147,11 @@ experimental implementation does not imply approval. IDs are local to this study
 | Q16 | E5 | Accept record/records first and defer finish? Agree on initial scope, SemVer/release target (current policy: 0.2.0), and API_VERSION format/rules independently of schemas/specifications. | E6 |
 
 [E1–E4 continuation on F0/F1](portability.md): 8/8 HW per board, limitations and retained prepare ERROR. [API spec 0.1.0](../../../TECHNICAL_SPECIFICATION_API.md) captures current rc.2 without integrating extensions. Next: Q1–Q16 review and E6 approval.
+
+[E6: proposed first package](e6-proposal.md) — record/records contracts, Q1–Q16 recommendations, versions and acceptance. New Q17–Q19 are appended to the queue; core integration is not approved.
+
+| ID | Source | Question / proposal | Review |
+| --- | --- | --- | --- |
+| Q17 | E6 | Fixed or configurable first-package limits? Recommend fixed. | E6 |
+| Q18 | E6 | Approve RecordError.code/limit and public exception import. | E6 |
+| Q19 | E6 | Set acceptable memory/time from A5; logical limits do not guarantee RSS/latency. | Acceptance |
