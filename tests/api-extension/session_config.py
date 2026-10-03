@@ -1,6 +1,6 @@
 """Research-only host loader. No CLI, GDB, firmware or runner integration."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import hashlib
 import os
 from pathlib import Path
@@ -38,6 +38,7 @@ class Configuration:
     config: object
     config_props: object
     session_sha256: str
+    _source_bytes: object = field(repr=False)
 
 
 def _target_from_snapshot(raw):
@@ -76,7 +77,7 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
             cache[source] = (raw, data, hashlib.sha256(raw).hexdigest())
         return cache[source]
 
-    _, session, session_sha = capture(path)
+    session_raw, session, session_sha = capture(path)
     if set(session) != {"config"} or type(session["config"]) is not dict:
         raise ConfigError("session", "expected [config]")
     links = session["config"]
@@ -121,4 +122,5 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
             raise ConfigError("api_parameter", "records." + name)
     effective_api = dict(api, records={**DEFAULTS, **records})
     effective = dict(target=target, api=effective_api, image=image)
-    return Configuration(freeze(effective), freeze(props), session_sha)
+    return Configuration(freeze(effective), freeze(props), session_sha,
+                         MappingProxyType(dict(raw_documents, session=session_raw)))

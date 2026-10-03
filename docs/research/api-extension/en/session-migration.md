@@ -109,3 +109,5 @@ CLI/env conflict; stale manifest; changed cwd; remote host without source tree.
 These are planned checks, not obtained results. Q20 remains open.
 
 [M2/M3: host configuration prototype](config-loader.md) — 12 new tests, Windows 56/56 including E1–E4, initial CRLF test-expectation FAIL retained. Next M4; core unchanged.
+
+[M4: transport and CMake](config-transport.md) — Linux 64/64, Windows 63 PASS/1 skip; JSON/config-ZIP, actual old/new/conflict configure, legacy prepare PASS. M4 partial: production package/agent not integrated.

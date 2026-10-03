@@ -77,6 +77,37 @@
       "scope": "M2/M3 local snapshot; no CMake/package/remote or hardware execution",
       "linux_ci": "PASS",
       "docs_checks": "4/4 PASS"
+    },
+    {
+      "id": "config-transport-host-2026-10-03",
+      "kind": "host-and-prepare",
+      "status": "fixture-FAIL-then-PASS",
+      "host_tests": 64,
+      "windows": {
+        "passed": 63,
+        "skipped": 1
+      },
+      "linux_ci": {
+        "passed": 64,
+        "skipped": 0
+      },
+      "initial_results": [
+        "CMake skipped because only native cc was detected",
+        "CMake FAIL: empty scenario fixture rejected by production collect"
+      ],
+      "legacy_host": {
+        "tests": 114,
+        "skipped": 4,
+        "status": "PASS"
+      },
+      "legacy_prepare": {
+        "id": "HW_CI_ADC_UNITS",
+        "status": "PASS",
+        "mode": "prepare",
+        "connection_attempted": false,
+        "elf_sha256": "d6bfed5a23f6d25935df02e4b5b0b4049c950c61313132cc99e1106c400f4206"
+      },
+      "scope": "Partial M4: config-only archive, CMake configure; no production package or GDB-agent integration"
     }
   ]
 }

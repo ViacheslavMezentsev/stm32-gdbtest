@@ -24,3 +24,5 @@ GDB/F411: 10 измерений, baseline/опыт/restore 4/4 PASS; две ис
 [E6: проект первого пакета](e6-proposal.md) — контракты record/records, предложения по Q1–Q16, версиям и приёмке. Новые Q17–Q19 добавлены в конец очереди; перенос в ядро не утверждён.
 
 [M2/M3: host-прототип конфигурации](config-loader.md) — 12 новых тестов, Windows 56/56 с E1–E4, сохранён первоначальный FAIL тестового ожидания CRLF. Далее M4; ядро прежнее.
+
+[M4: транспорт и CMake](config-transport.md) — Linux 64/64, Windows 63 PASS/1 skip; JSON/config-ZIP, реальные configure old/new/conflict, старый prepare PASS. M4 частичен: production пакет/агент ещё не интегрированы.

@@ -2,6 +2,8 @@
 
 ## Исследование расширения API — 03.10.2026
 
+- [M4 частично](docs/research/api-extension/ru/config-transport.md): JSON/config-ZIP сохраняет TOML-типы; CMake old/new/conflict, Linux 64/64 PASS, Windows 63 PASS/1 skip; fixture FAIL сохранён. Старый F030 prepare PASS без подключения; core host 114 (4 skips) PASS. Далее сквозной research prepare/package/facade, не перенос в ядро.
+
 - Подготовлен [проект внедрения session.toml](docs/research/api-extension/ru/session-migration.md): явный SESSION_CONFIG, сохранение служебного JSON и старого режима, единый снимок конфигурации, конфликты и упаковка. M1 принят; [host-прототип M2/M3](docs/research/api-extension/ru/config-loader.md) проверен: Windows 56/56, первый FAIL тестового ожидания сохранён. Далее M4: интеграция/перенос. Ядро прежнее, HW не запускалось.
 
 - Подготовлен [E6: проект первого пакета](docs/research/api-extension/ru/e6-proposal.md): record/records, J1–J12, ошибки, версии, разбор Q1–Q16 и будущая приёмка A1–A6. Q17–Q19 добавлены в очередь. Это предложение; ТЗ API 0.1.0 и ядро прежние, новых HW-прогонов нет.

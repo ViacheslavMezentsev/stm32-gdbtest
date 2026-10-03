@@ -164,3 +164,5 @@ MMIO, RTOS и расширенные ассемблерные операции �
 [Q20: план внедрения session.toml](session-migration.md) — CMake/CLI, единый снимок, конфликты, совместимость и host-проверки M1–M6. Пока проект, не разрешение переноса в ядро.
 
 [M2/M3: host-прототип конфигурации](config-loader.md) — 12 новых тестов, Windows 56/56 с E1–E4, сохранён первоначальный FAIL тестового ожидания CRLF. Далее M4; ядро прежнее.
+
+[M4: транспорт и CMake](config-transport.md) — Linux 64/64, Windows 63 PASS/1 skip; JSON/config-ZIP, реальные configure old/new/conflict, старый prepare PASS. M4 частичен: production пакет/агент ещё не интегрированы.
