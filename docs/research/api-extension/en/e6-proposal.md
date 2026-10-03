@@ -292,3 +292,19 @@ an internal format without a stable user-schema promise; generated files are not
 normally edited manually.
 
 [Q20: session.toml migration plan](session-migration.md) — CMake/CLI, shared snapshots, conflicts, compatibility and M1–M6 checks. Proposal only, not core integration approval.
+
+### Approved: TOML transport and defaults compatibility — 2026-10-03
+
+Owner decision: transfer original selected TOML bytes as base64 in internal JSON
+with SHA256. The receiver verifies hashes and parses transferred bytes without
+opening original paths. TOML types and unknown fields survive; scenarios see
+ordinary immutable config/config_props, not base64 API values.
+
+Preparation and execution defaults must match. Mismatch produces ERROR before
+connection, with no automatic receiver-default substitution. Use a compatible
+tool version or prepare the package again. M4 tested a defaults fingerprint;
+the envelope algorithm/version will be fixed during integration. Matching defaults
+alone does not prove compatibility of all other versioned contracts.
+
+This part of Q20 is approved; legacy config_props, bounds/name collisions and
+integration details remain. Normative API 0.1.0 and core are unchanged.

@@ -113,3 +113,19 @@ These are planned checks, not obtained results. Q20 remains open.
 [M4: transport and CMake](config-transport.md) — Linux 64/64, Windows 63 PASS/1 skip; JSON/config-ZIP, actual old/new/conflict configure, legacy prepare PASS. M4 partial: production package/agent not integrated.
 
 [M4: end-to-end pipeline](config-pipeline.md) — real F030 ELF prepare PASS, production package, GDB-Python 6/6 without MCU; Linux 68/68, Windows 67 PASS/1 skip. Next: remaining contract decisions before M5.
+
+### Approved: TOML transport and defaults compatibility — 2026-10-03
+
+Owner decision: transfer original selected TOML bytes as base64 in internal JSON
+with SHA256. The receiver verifies hashes and parses transferred bytes without
+opening original paths. TOML types and unknown fields survive; scenarios see
+ordinary immutable config/config_props, not base64 API values.
+
+Preparation and execution defaults must match. Mismatch produces ERROR before
+connection, with no automatic receiver-default substitution. Use a compatible
+tool version or prepare the package again. M4 tested a defaults fingerprint;
+the envelope algorithm/version will be fixed during integration. Matching defaults
+alone does not prove compatibility of all other versioned contracts.
+
+This part of Q20 is approved; legacy config_props, bounds/name collisions and
+integration details remain. Normative API 0.1.0 and core are unchanged.
