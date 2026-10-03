@@ -2,6 +2,8 @@
 
 ## Исследование расширения API — 03.10.2026
 
+- [M4 сквозной pipeline](docs/research/api-extension/ru/config-pipeline.md): F030 ELF full-image prepare PASS, штатный pack/open, GDB-Python 6/6 через оболочку без MCU; host Linux 68/68, Windows 67 PASS/1 skip. Проверен устаревший manifest. Далее оставшиеся контракты перед M5; production agent/CLI не изменены.
+
 - [M4 частично](docs/research/api-extension/ru/config-transport.md): JSON/config-ZIP сохраняет TOML-типы; CMake old/new/conflict, Linux 64/64 PASS, Windows 63 PASS/1 skip; fixture FAIL сохранён. Старый F030 prepare PASS без подключения; core host 114 (4 skips) PASS. Далее сквозной research prepare/package/facade, не перенос в ядро.
 
 - Подготовлен [проект внедрения session.toml](docs/research/api-extension/ru/session-migration.md): явный SESSION_CONFIG, сохранение служебного JSON и старого режима, единый снимок конфигурации, конфликты и упаковка. M1 принят; [host-прототип M2/M3](docs/research/api-extension/ru/config-loader.md) проверен: Windows 56/56, первый FAIL тестового ожидания сохранён. Далее M4: интеграция/перенос. Ядро прежнее, HW не запускалось.

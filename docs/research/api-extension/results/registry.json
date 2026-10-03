@@ -108,6 +108,24 @@
         "elf_sha256": "d6bfed5a23f6d25935df02e4b5b0b4049c950c61313132cc99e1106c400f4206"
       },
       "scope": "Partial M4: config-only archive, CMake configure; no production package or GDB-agent integration"
+    },
+    {
+      "id": "config-pipeline-2026-10-03",
+      "kind": "host-prepare-gdb-no-target",
+      "status": "PASS",
+      "result": "config-pipeline.json",
+      "host_tests": 68,
+      "linux_ci": {
+        "passed": 68,
+        "skipped": 0
+      },
+      "windows": {
+        "passed": 67,
+        "skipped": 1
+      },
+      "gdb_checks": 6,
+      "hardware": false,
+      "scope": "production prepare/pack/open plus research facade in GDB; no production agent integration"
     }
   ]
 }

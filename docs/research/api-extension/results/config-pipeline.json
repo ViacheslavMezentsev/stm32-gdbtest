@@ -1,0 +1,64 @@
+{
+  "status": "PASS",
+  "hardware": false,
+  "prepare": {
+    "prepared": [
+      {
+        "id": "HW_CI_ADC_UNITS",
+        "status": "PASS"
+      }
+    ],
+    "elf_sha256": "d6bfed5a23f6d25935df02e4b5b0b4049c950c61313132cc99e1106c400f4206",
+    "config_sha256": "ee430b61fb5126f02adb29cd7ad14ded904fb892273e7a820786f3210555ff93"
+  },
+  "gdb": {
+    "checks": [
+      {
+        "name": "packaged MCU",
+        "actual": "STM32F030R8T6",
+        "expected": "STM32F030R8T6",
+        "passed": true
+      },
+      {
+        "name": "custom parameter",
+        "actual": 3,
+        "expected": 3,
+        "passed": true
+      },
+      {
+        "name": "TOML date preserved",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "raw has no defaults",
+        "actual": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "name": "effective has defaults",
+        "actual": 8,
+        "expected": 8,
+        "passed": true
+      },
+      {
+        "name": "configured journal",
+        "actual": 3300,
+        "expected": 3300,
+        "passed": true
+      }
+    ],
+    "status": "PASS",
+    "connection_attempted": false
+  },
+  "prepare_evidence": {
+    "status": "PASS",
+    "mode": "prepare",
+    "connection_attempted": false,
+    "elf_sha256": "d6bfed5a23f6d25935df02e4b5b0b4049c950c61313132cc99e1106c400f4206",
+    "gdb_version": null
+  },
+  "image_scope": "full-image"
+}

@@ -63,3 +63,5 @@ legacy source/props needs an exact contract. Actual GDB-agent transfer, new prod
 prepare/package and remote execution remain unverified. Final transport and defaults
 compatibility policy need decisions; fingerprint is a tested candidate, not approved.
 M5/core integration not started; Q20 remains open.
+
+[M4: end-to-end pipeline](config-pipeline.md) — real F030 ELF prepare PASS, production package, GDB-Python 6/6 without MCU; Linux 68/68, Windows 67 PASS/1 skip. Next: remaining contract decisions before M5.
