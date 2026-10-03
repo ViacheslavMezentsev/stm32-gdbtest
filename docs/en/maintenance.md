@@ -110,20 +110,20 @@ CI workflows run for any branch, so a new prefix needs no workflow change.
   to the CHANGELOG and protocols.
 
 
-### Research materials
+### Local development and public documentation
 
-Each research project lives in its own `docs/research/<topic>/` directory.
-Use lowercase names with hyphens. Plans and reports live in `ru/` and `en/`
-with matching filenames; each localized `index.md` links the plan, series reports
-and results. Sanitized machine-readable results live in `results/` without
-language duplication. Example:
-[GDB Python research for rc3](../research/rc3-gdb-python/en/index.md).
+Research plans, prototypes and raw results remain local under `docs/research/`;
+the entire directory is excluded from Git. Experimental test directories use the
+`dev-*` prefix and the `tests/**/dev-*/` ignore filter. Existing experimental
+directories and `tools/research/` are also explicitly excluded in .gitignore.
+Do not force-add these files to the index.
 
-A new topic gets its own directory and links from both main documentation maps.
-Research pages link their local index and language counterpart; local maps link
-back to the main documentation. CI checks these pairs. Historical results,
-including FAIL/ERROR, are not rewritten when moved. Do not commit raw logs,
-ELF files, local TOML or personal data.
+Publish accepted contracts, techniques and acceptance results sufficient for users,
+without links to local material. Production host tests, board fixtures and examples
+remain public. In the release branch, run `python ci/run_checks.py docs`:
+the separate docs.public check reads local-development filters from .gitignore and
+rejects tracked private files and links into them, even if the target exists locally.
+This governs the current tree; prior Git history is not automatically purged.
 
 ## Checks
 

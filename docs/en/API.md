@@ -4,11 +4,11 @@
 
 [Preparing v0.2.0-rc.1](RC020_READINESS.md): Python 0.2.0rc1; not published yet. Historical evidence follows.
 
-Production first-package examples and five-MCU verification: [TECH-010/011](../research/api-extension/en/scenario-migration.md).
+Production first-package examples and five-MCU verification: [accepted results](API_ACCEPTANCE.md).
 
 ## First package: records and configuration
 
-Development `0.2.0.dev0` targets 0.2.0; `API_VERSION=1`, api.toml schema=1. Not released. [API spec 0.2.2](../TECHNICAL_SPECIFICATION_API.md), [core acceptance](../research/api-extension/en/core-integration.md).
+Candidate `0.2.0rc1` targets 0.2.0; `API_VERSION=1`, api.toml schema=1. Not released. [API spec 0.2.2](../TECHNICAL_SPECIFICATION_API.md), [accepted results](API_ACCEPTANCE.md).
 
 `record(name, data)` appends a deep copy and returns None. `records(name=None)` returns detached mutable copies: `{'sequence': 1, 'name': 'adc', 'data': ...}`. Names may repeat. The filter is an exact nonempty str; None selects all. Insertion order and sequence starting at 1 survive filtering.
 
@@ -70,13 +70,7 @@ CLI --session accepts the existing generated ELF/GDB/tests JSON with an added se
 
 New pack captures TOML in an internal capsule (base64/SHA256/defaults fingerprint); runner/GDB validate it without original files. New packages require tools supporting the extension; do not use older tools. Old packages use legacy mode. Prepare a new package to change its captured configuration. This is not a record/records export format.
 
-[R2: navigation, calls and watchpoints](../research/rc3-gdb-python/en/r2.md): 56/56 HLA and 8/8 native DAP; core promotion requires explicit owner approval.
-
-[Initial R1 hardware experiments](../research/rc3-gdb-python/en/r1.md): F411, GDB14/16, 48/48 and failure checks.
-
-Preparing rc3: [GDB Python API research and hardware experiment plan](../research/rc3-gdb-python/en/plan.md). Proposed methods are not implemented yet.
-
-Status: development toward **0.2.0** (Python `0.2.0.dev0`), not released, `API_VERSION = 1`. This numbers the
+Status: development toward **0.2.0** (Python `0.2.0rc1`), not released, `API_VERSION = 1`. This numbers the
 described API surface; it is not a 1.0 stability promise and not a GDB version. The
 module is delivered as a Git submodule; pip installation is not supported yet, and
 the name still has to be checked for uniqueness before publishing. Requirements:

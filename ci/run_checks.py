@@ -33,6 +33,7 @@ OUT = ROOT / "build/ci"
 sys.path.insert(0, str(ROOT))
 from stm32_gdbtest.contracts import select_contracts  # noqa: E402
 from stm32_gdbtest.image import parse_sections  # noqa: E402
+from ci.public_docs import check as check_public, files as public_files, is_private, private_patterns  # noqa: E402
 
 
 class CheckError(RuntimeError):
@@ -61,9 +62,11 @@ LINK = re.compile(r"\]\(([^)\s]+)\)")
 
 def check_links():
     broken = []
-    for path in sorted(ROOT.rglob("*.md")):
-        if any(part in ("build", ".git") for part in path.relative_to(ROOT).parts):
+    patterns = private_patterns(ROOT)
+    for relative in sorted(public_files(ROOT)):
+        if relative.suffix != '.md' or is_private(relative, patterns):
             continue
+        path = ROOT / relative
         for target in LINK.findall(path.read_text(encoding="utf-8")):
             if re.match(r"[a-z]+:", target) or target.startswith("#"):
                 continue
@@ -75,9 +78,6 @@ def check_links():
 
 def check_pairs():
     groups = [ROOT / "docs"]
-    research = ROOT / "docs/research"
-    if research.is_dir():
-        groups.extend(sorted(p for p in research.iterdir() if p.is_dir()))
     missing = []
     for group in groups:
         ru = {p.name for p in (group / "ru").glob("*.md")}
@@ -106,17 +106,18 @@ def level_docs(record):
                                         ROOT / "docs/TECHNICAL_SPECIFICATION_API.md", "--strict"]))
     record("docs.links", check_links)
     record("docs.pairs", check_pairs)
+    record("docs.public", lambda: check_public(ROOT))
 
 
 # --- format ---------------------------------------------------------------------------------
 
 def level_format(record):
     def check():
-        sources = [p for p in sorted(ROOT.rglob("*")) if p.suffix in (".c", ".h", ".cpp", ".hpp")
-                   and not any(part in ("build", ".git") for part in p.relative_to(ROOT).parts)
+        sources = [ROOT / p for p in sorted(public_files(ROOT)) if p.suffix in (".c", ".h", ".cpp", ".hpp")
+                   and not is_private(p, private_patterns(ROOT))
                    # Preserve imported CubeMX and platform code; check owned application sources.
-                   and not p.is_relative_to(ROOT / "tests/hal-f030/Core")
-                   and p != ROOT / "tests/hal-f030/src/platform.c"]
+                   and not p.is_relative_to(Path("tests/hal-f030/Core"))
+                   and p != Path("tests/hal-f030/src/platform.c")]
         run(["clang-format", "--dry-run", "--Werror", *sources], log=OUT / "format.log")
         return f"{len(sources)} files"
     record("format.clang-format", check)

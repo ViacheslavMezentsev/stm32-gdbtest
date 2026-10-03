@@ -1,0 +1,3241 @@
+{
+  "schema": 1,
+  "candidate_commit": "972af7c2a6a14598875f86d573aa8ddb6ded0db1",
+  "python_version": "0.2.0rc1",
+  "api_specification": "0.2.3",
+  "hardware": [
+    {
+      "label": "f030r8-openocd",
+      "passed": 10,
+      "total": 10,
+      "steps": [
+        {
+          "step": "build",
+          "status": "PASS",
+          "seconds": 9.7
+        },
+        {
+          "step": "prepare",
+          "status": "PASS",
+          "seconds": 0.4,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "PASS",
+            "mode": "prepare",
+            "started_utc": "20261003T183126.188769Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "backend": "openocd",
+            "report_sha256": "d8572216c3d6cd0e81e0cca55a99bd14fa55014b380bcf22fc75f79406142979",
+            "checks": []
+          }
+        },
+        {
+          "step": "boot",
+          "status": "PASS",
+          "seconds": 2.3,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183126.588271Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "d27a3bd87060ae3c05c75221734f58ce2c3f347fc07fa63699396a6df5a61e28",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "initialized interval",
+                "passed": true
+              },
+              {
+                "name": "BSS loop count",
+                "passed": true
+              },
+              {
+                "name": "BSS LED state",
+                "passed": true
+              },
+              {
+                "name": "BSS milliseconds",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "app_state.ticks advanced",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "gpio",
+          "status": "PASS",
+          "seconds": 1.6,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183128.856929Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "21001040fc8f867ef39be98fd54811822f7dcde29e389d88ad397f3f03228c09",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PA5 clock",
+                "passed": true
+              },
+              {
+                "name": "PA5 output",
+                "passed": true
+              },
+              {
+                "name": "push-pull",
+                "passed": true
+              },
+              {
+                "name": "low speed",
+                "passed": true
+              },
+              {
+                "name": "no pull",
+                "passed": true
+              },
+              {
+                "name": "initial LED off",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "strict",
+          "status": "PASS",
+          "seconds": 2.1,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183130.449595Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "0a2f8f1862bc549f787192dd6407380e11828d2d843f2fd8e26ae461ac46b0ce",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "initialized interval",
+                "passed": true
+              },
+              {
+                "name": "BSS loop count",
+                "passed": true
+              },
+              {
+                "name": "BSS LED state",
+                "passed": true
+              },
+              {
+                "name": "BSS milliseconds",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "app_state.ticks advanced",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "full-a5",
+          "status": "PASS",
+          "seconds": 3.2,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183132.590553Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "image_verified": true,
+            "flashed": true,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "6850cf5ad6c78ffc19042e9912539e26cd15f71173569c0fc13afd811c6cfd81",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PA5 clock",
+                "passed": true
+              },
+              {
+                "name": "PA5 output",
+                "passed": true
+              },
+              {
+                "name": "push-pull",
+                "passed": true
+              },
+              {
+                "name": "low speed",
+                "passed": true
+              },
+              {
+                "name": "no pull",
+                "passed": true
+              },
+              {
+                "name": "initial LED off",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "verify-only-ff",
+          "status": "PASS",
+          "seconds": 1.5,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "ERROR",
+            "mode": "hardware",
+            "started_utc": "20261003T183135.810527Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "74f10043ccef659889db70e4f7c724e55402ce3dd9d046e922ce7218302a2a88",
+            "checks": [],
+            "error_category": "image_verification"
+          }
+        },
+        {
+          "step": "full-ff",
+          "status": "PASS",
+          "seconds": 3.2,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183137.313847Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "image_verified": true,
+            "flashed": true,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "4157e11534bcbc56dcbf8212ef9f5ce7f9ff804a6305c4dca6ba0fb1620d6e59",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PA5 clock",
+                "passed": true
+              },
+              {
+                "name": "PA5 output",
+                "passed": true
+              },
+              {
+                "name": "push-pull",
+                "passed": true
+              },
+              {
+                "name": "low speed",
+                "passed": true
+              },
+              {
+                "name": "no pull",
+                "passed": true
+              },
+              {
+                "name": "initial LED off",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "timeout",
+          "status": "PASS",
+          "seconds": 1.9,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "ERROR",
+            "mode": "hardware",
+            "started_utc": "20261003T183140.481302Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "teardown": "reset_run (host recovery)",
+            "backend": "openocd",
+            "report_sha256": "664f7d962d0fefe58709cddb907736c53d6dc319c52525bd7a9df2a533afc8df",
+            "checks": [],
+            "error_category": "TimeoutExpired"
+          }
+        },
+        {
+          "step": "after-recovery",
+          "status": "PASS",
+          "seconds": 1.7,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183142.326250Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "e06f564961db83624d2ac811cb577dfc7d32fbac8ac3b86d11cfb16e0a92cc5d",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PA5 clock",
+                "passed": true
+              },
+              {
+                "name": "PA5 output",
+                "passed": true
+              },
+              {
+                "name": "push-pull",
+                "passed": true
+              },
+              {
+                "name": "low speed",
+                "passed": true
+              },
+              {
+                "name": "no pull",
+                "passed": true
+              },
+              {
+                "name": "initial LED off",
+                "passed": true
+              }
+            ]
+          }
+        }
+      ],
+      "restore": [
+        {
+          "id": "HW_CI_BOOT",
+          "status": "PASS",
+          "mode": "hardware",
+          "started_utc": "20261003T183143.974486Z",
+          "elf_sha256": "c19159268d78df1baaf7786469f800eafef2fc9a224bec5f2386eee8ce8900f8",
+          "image_verified": true,
+          "flashed": false,
+          "teardown": "reset_run",
+          "warnings": [],
+          "backend": "openocd",
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "report_sha256": "433e1d97bceed10bdbd519c83ac01f739cdaf1833a3cf8fe857e311c1f7d23ce",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "passed": true
+            },
+            {
+              "name": "initialized interval",
+              "passed": true
+            },
+            {
+              "name": "BSS loop count",
+              "passed": true
+            },
+            {
+              "name": "BSS LED state",
+              "passed": true
+            },
+            {
+              "name": "BSS milliseconds",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "passed": true
+            },
+            {
+              "name": "app_state.ticks advanced",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "HW_CI_GPIO",
+          "status": "PASS",
+          "mode": "hardware",
+          "started_utc": "20261003T183146.033873Z",
+          "elf_sha256": "c19159268d78df1baaf7786469f800eafef2fc9a224bec5f2386eee8ce8900f8",
+          "image_verified": true,
+          "flashed": false,
+          "teardown": "reset_run",
+          "warnings": [],
+          "backend": "openocd",
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "report_sha256": "57587464cdd45faf1dace019874d94f29c2a9f4c51c9aa3ccf2ea7fe8a17ea6e",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "frame: board_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "PA5 clock",
+              "passed": true
+            },
+            {
+              "name": "PA5 output",
+              "passed": true
+            },
+            {
+              "name": "push-pull",
+              "passed": true
+            },
+            {
+              "name": "low speed",
+              "passed": true
+            },
+            {
+              "name": "no pull",
+              "passed": true
+            },
+            {
+              "name": "initial LED off",
+              "passed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "f103c8-jlink",
+      "passed": 10,
+      "total": 10,
+      "steps": [
+        {
+          "step": "build",
+          "status": "PASS",
+          "seconds": 11.1
+        },
+        {
+          "step": "prepare",
+          "status": "PASS",
+          "seconds": 0.5,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "PASS",
+            "mode": "prepare",
+            "started_utc": "20261003T183140.197003Z",
+            "elf_sha256": "0bfd84e1269da7c461dd2eceadfdac5e4c844934ebada73a3e8f5700a62306c3",
+            "backend": "jlink",
+            "report_sha256": "eff4cf7737c8b3a18ec09bb45ad99d02cc6af75a7b3b111fb1977cb173ddeaf4",
+            "checks": []
+          }
+        },
+        {
+          "step": "boot",
+          "status": "PASS",
+          "seconds": 2.1,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183140.659404Z",
+            "elf_sha256": "0bfd84e1269da7c461dd2eceadfdac5e4c844934ebada73a3e8f5700a62306c3",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [
+              "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+            ],
+            "backend": "jlink",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "1cc6de2ff1c4cbcb4e25e7fe892ed7ad745335ad2f44f38d15ce08539feb7297",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "initialized interval",
+                "passed": true
+              },
+              {
+                "name": "BSS loop count",
+                "passed": true
+              },
+              {
+                "name": "BSS LED state",
+                "passed": true
+              },
+              {
+                "name": "BSS milliseconds",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "app_state.ticks advanced",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "gpio",
+          "status": "PASS",
+          "seconds": 1.4,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183142.753779Z",
+            "elf_sha256": "0bfd84e1269da7c461dd2eceadfdac5e4c844934ebada73a3e8f5700a62306c3",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [
+              "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+            ],
+            "backend": "jlink",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "60116c4e6a4d58248f754d7011e68f4c42eb4583bf3b385bafd424cc4d5ed681",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PB2 clock",
+                "passed": true
+              },
+              {
+                "name": "PB2 output",
+                "passed": true
+              },
+              {
+                "name": "initial LED off",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "strict",
+          "status": "PASS",
+          "seconds": 2.0,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183144.156646Z",
+            "elf_sha256": "0bfd84e1269da7c461dd2eceadfdac5e4c844934ebada73a3e8f5700a62306c3",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [
+              "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+            ],
+            "backend": "jlink",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "49a1e85b6d8c36007625e4473c83fa9df13cb8fe4d5598fc924c35c61a9ca7a4",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "initialized interval",
+                "passed": true
+              },
+              {
+                "name": "BSS loop count",
+                "passed": true
+              },
+              {
+                "name": "BSS LED state",
+                "passed": true
+              },
+              {
+                "name": "BSS milliseconds",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "app_state.ticks advanced",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "full-a5",
+          "status": "PASS",
+          "seconds": 2.5,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183146.162994Z",
+            "elf_sha256": "0bfd84e1269da7c461dd2eceadfdac5e4c844934ebada73a3e8f5700a62306c3",
+            "image_verified": true,
+            "flashed": true,
+            "teardown": "reset_run",
+            "warnings": [
+              "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+            ],
+            "backend": "jlink",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "5f6b2b492864b0a65d426bbdc534c83ce1b9806943c66391bb47de67b22233b6",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PB2 clock",
+                "passed": true
+              },
+              {
+                "name": "PB2 output",
+                "passed": true
+              },
+              {
+                "name": "initial LED off",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "verify-only-ff",
+          "status": "PASS",
+          "seconds": 1.5,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "ERROR",
+            "mode": "hardware",
+            "started_utc": "20261003T183148.611202Z",
+            "elf_sha256": "0bfd84e1269da7c461dd2eceadfdac5e4c844934ebada73a3e8f5700a62306c3",
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [
+              "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+            ],
+            "backend": "jlink",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "9e52154e44efd0b95ecfaa6597d76dc1856c192aae68d8614c753ce845b15a22",
+            "checks": [],
+            "error_category": "image_verification"
+          }
+        },
+        {
+          "step": "full-ff",
+          "status": "PASS",
+          "seconds": 2.2,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183150.118229Z",
+            "elf_sha256": "0bfd84e1269da7c461dd2eceadfdac5e4c844934ebada73a3e8f5700a62306c3",
+            "image_verified": true,
+            "flashed": true,
+            "teardown": "reset_run",
+            "warnings": [
+              "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+            ],
+            "backend": "jlink",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "4e1c0f9ba98cabf905fb29c88155a0d1523c931865832cb814a6d2a4e5d6155b",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PB2 clock",
+                "passed": true
+              },
+              {
+                "name": "PB2 output",
+                "passed": true
+              },
+              {
+                "name": "initial LED off",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "timeout",
+          "status": "PASS",
+          "seconds": 1.6,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "ERROR",
+            "mode": "hardware",
+            "started_utc": "20261003T183152.356290Z",
+            "elf_sha256": "0bfd84e1269da7c461dd2eceadfdac5e4c844934ebada73a3e8f5700a62306c3",
+            "teardown": "reset_run (host recovery)",
+            "backend": "jlink",
+            "report_sha256": "ddfd1b97b5130b150dbc6d4dc9dfdb00e494fb5fd255280d5ecc8f40a3514f7f",
+            "checks": [],
+            "error_category": "TimeoutExpired"
+          }
+        },
+        {
+          "step": "after-recovery",
+          "status": "PASS",
+          "seconds": 1.3,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183153.939483Z",
+            "elf_sha256": "0bfd84e1269da7c461dd2eceadfdac5e4c844934ebada73a3e8f5700a62306c3",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [
+              "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+            ],
+            "backend": "jlink",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "01b072bd3cab9fc6199e19209ca7353401069cd6eec137cd52dbcf83ef485b93",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PB2 clock",
+                "passed": true
+              },
+              {
+                "name": "PB2 output",
+                "passed": true
+              },
+              {
+                "name": "initial LED off",
+                "passed": true
+              }
+            ]
+          }
+        }
+      ],
+      "restore": [
+        {
+          "id": "HW_CI_BOOT",
+          "status": "PASS",
+          "mode": "hardware",
+          "started_utc": "20261003T183155.168262Z",
+          "elf_sha256": "cc902faf6e44973b1f890b36a3ede59e5a129bdb26e3a5de26b00658f049791d",
+          "image_verified": true,
+          "flashed": false,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ],
+          "backend": "jlink",
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "report_sha256": "dc1294a812f85a92d0bfa151c8cc1c2521de9278cd4900e0b13f838462b521e1",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "passed": true
+            },
+            {
+              "name": "initialized interval",
+              "passed": true
+            },
+            {
+              "name": "BSS loop count",
+              "passed": true
+            },
+            {
+              "name": "BSS LED state",
+              "passed": true
+            },
+            {
+              "name": "BSS milliseconds",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "passed": true
+            },
+            {
+              "name": "app_state.ticks advanced",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "HW_CI_GPIO",
+          "status": "PASS",
+          "mode": "hardware",
+          "started_utc": "20261003T183157.047832Z",
+          "elf_sha256": "cc902faf6e44973b1f890b36a3ede59e5a129bdb26e3a5de26b00658f049791d",
+          "image_verified": true,
+          "flashed": false,
+          "teardown": "reset_run",
+          "warnings": [
+            "Flash capacity differs: profile 65536 bytes, observed 131072 bytes; image fits both"
+          ],
+          "backend": "jlink",
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "report_sha256": "bcc1824a89b1d5ef6a93d6c8a9bb3c8772e7547cd5b0ab249afeb8233770cf2b",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "frame: board_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "PB2 clock",
+              "passed": true
+            },
+            {
+              "name": "PB2 output",
+              "passed": true
+            },
+            {
+              "name": "initial LED off",
+              "passed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "f411ce-openocd",
+      "passed": 10,
+      "total": 10,
+      "steps": [
+        {
+          "step": "build",
+          "status": "PASS",
+          "seconds": 11.7
+        },
+        {
+          "step": "prepare",
+          "status": "PASS",
+          "seconds": 0.4,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "PASS",
+            "mode": "prepare",
+            "started_utc": "20261003T183152.490257Z",
+            "elf_sha256": "43df99a06a7ca836167e3dc444aeb6decfc68c99e3129a366c53a46f8a96f28d",
+            "backend": "openocd",
+            "report_sha256": "12e658480fa416639ca5e251061c41c642e6ea890a674cecbb10141646a61d6c",
+            "checks": []
+          }
+        },
+        {
+          "step": "boot",
+          "status": "PASS",
+          "seconds": 2.7,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183152.897937Z",
+            "elf_sha256": "43df99a06a7ca836167e3dc444aeb6decfc68c99e3129a366c53a46f8a96f28d",
+            "image_verified": true,
+            "flashed": true,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "67b97048b42430045de7efa40426692afb255fd262756ab14f1a63c9a119f393",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "initialized interval",
+                "passed": true
+              },
+              {
+                "name": "BSS loop count",
+                "passed": true
+              },
+              {
+                "name": "BSS LED state",
+                "passed": true
+              },
+              {
+                "name": "BSS milliseconds",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "app_state.ticks advanced",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "gpio",
+          "status": "PASS",
+          "seconds": 1.7,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183155.580365Z",
+            "elf_sha256": "43df99a06a7ca836167e3dc444aeb6decfc68c99e3129a366c53a46f8a96f28d",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "ea9f3b1631a14a3f712c8a3de11ad80029e9485ef8114795dbe2878b631a93d9",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PC13 clock",
+                "passed": true
+              },
+              {
+                "name": "PC13 output",
+                "passed": true
+              },
+              {
+                "name": "push-pull",
+                "passed": true
+              },
+              {
+                "name": "low speed",
+                "passed": true
+              },
+              {
+                "name": "no pull",
+                "passed": true
+              },
+              {
+                "name": "initial LED off (High)",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "strict",
+          "status": "PASS",
+          "seconds": 2.3,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183157.288517Z",
+            "elf_sha256": "43df99a06a7ca836167e3dc444aeb6decfc68c99e3129a366c53a46f8a96f28d",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "e89f9948f6548a23d865326913d4045efbbb3af514a63d1e5b79ec3a719ef2e3",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "initialized interval",
+                "passed": true
+              },
+              {
+                "name": "BSS loop count",
+                "passed": true
+              },
+              {
+                "name": "BSS LED state",
+                "passed": true
+              },
+              {
+                "name": "BSS milliseconds",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "app_state.ticks advanced",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "full-a5",
+          "status": "PASS",
+          "seconds": 2.7,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183159.588510Z",
+            "elf_sha256": "43df99a06a7ca836167e3dc444aeb6decfc68c99e3129a366c53a46f8a96f28d",
+            "image_verified": true,
+            "flashed": true,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "c691cbe10d5ed9561e2d15f13962f7859d1b659dc7d58aed90c024318cf42245",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PC13 clock",
+                "passed": true
+              },
+              {
+                "name": "PC13 output",
+                "passed": true
+              },
+              {
+                "name": "push-pull",
+                "passed": true
+              },
+              {
+                "name": "low speed",
+                "passed": true
+              },
+              {
+                "name": "no pull",
+                "passed": true
+              },
+              {
+                "name": "initial LED off (High)",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "verify-only-ff",
+          "status": "PASS",
+          "seconds": 1.6,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "ERROR",
+            "mode": "hardware",
+            "started_utc": "20261003T183202.331412Z",
+            "elf_sha256": "43df99a06a7ca836167e3dc444aeb6decfc68c99e3129a366c53a46f8a96f28d",
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "caa745607727c86a64de76975757868c6708b8df2583ad3be1c706d82fbd4a2b",
+            "checks": [],
+            "error_category": "image_verification"
+          }
+        },
+        {
+          "step": "full-ff",
+          "status": "PASS",
+          "seconds": 2.7,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183203.939970Z",
+            "elf_sha256": "43df99a06a7ca836167e3dc444aeb6decfc68c99e3129a366c53a46f8a96f28d",
+            "image_verified": true,
+            "flashed": true,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "f85bd360db6f132e033ccdd779d06da3e47da6fdaf374123b27029a2bef86dee",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PC13 clock",
+                "passed": true
+              },
+              {
+                "name": "PC13 output",
+                "passed": true
+              },
+              {
+                "name": "push-pull",
+                "passed": true
+              },
+              {
+                "name": "low speed",
+                "passed": true
+              },
+              {
+                "name": "no pull",
+                "passed": true
+              },
+              {
+                "name": "initial LED off (High)",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "timeout",
+          "status": "PASS",
+          "seconds": 1.8,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "ERROR",
+            "mode": "hardware",
+            "started_utc": "20261003T183206.628667Z",
+            "elf_sha256": "43df99a06a7ca836167e3dc444aeb6decfc68c99e3129a366c53a46f8a96f28d",
+            "teardown": "reset_run (host recovery)",
+            "backend": "openocd",
+            "report_sha256": "1b1bd686e8ab140631c00acbdc09230125f0e306f2e50b9031ed3c87b1ff3455",
+            "checks": [],
+            "error_category": "TimeoutExpired"
+          }
+        },
+        {
+          "step": "after-recovery",
+          "status": "PASS",
+          "seconds": 1.7,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183208.456818Z",
+            "elf_sha256": "43df99a06a7ca836167e3dc444aeb6decfc68c99e3129a366c53a46f8a96f28d",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "837846b77633ee3b85db3fbb2e002c361c9faf7741c8d75f068b2f94250e848e",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PC13 clock",
+                "passed": true
+              },
+              {
+                "name": "PC13 output",
+                "passed": true
+              },
+              {
+                "name": "push-pull",
+                "passed": true
+              },
+              {
+                "name": "low speed",
+                "passed": true
+              },
+              {
+                "name": "no pull",
+                "passed": true
+              },
+              {
+                "name": "initial LED off (High)",
+                "passed": true
+              }
+            ]
+          }
+        }
+      ],
+      "restore": [
+        {
+          "id": "HW_BOOT",
+          "status": "PASS",
+          "mode": "hardware",
+          "started_utc": "20261003T183210.143584Z",
+          "elf_sha256": "1ff37ae10a007401de5e0eaf826764f60a2849c8b7821c123f12caa28c2e79c3",
+          "image_verified": true,
+          "flashed": true,
+          "teardown": "reset_run",
+          "warnings": [],
+          "backend": "openocd",
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "report_sha256": "ae5185cdf5f3f4899ff6e4f84505d8ff22d55d8f3232242f5329563ca066e8db",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: loop",
+              "passed": true
+            },
+            {
+              "name": "frame: loop",
+              "passed": true
+            },
+            {
+              "name": "no fault",
+              "passed": true
+            },
+            {
+              "name": "reset clocks",
+              "passed": true
+            },
+            {
+              "name": "HSI /1",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "HW_GPIO",
+          "status": "PASS",
+          "mode": "hardware",
+          "started_utc": "20261003T183212.125546Z",
+          "elf_sha256": "1ff37ae10a007401de5e0eaf826764f60a2849c8b7821c123f12caa28c2e79c3",
+          "image_verified": true,
+          "flashed": false,
+          "teardown": "reset_run",
+          "warnings": [],
+          "backend": "openocd",
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "report_sha256": "3da38c4181d1b8e858b473fe6a4b9794ae7a213e8dd7d151626d20cef977e8dc",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: platform_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "frame: platform_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "PC13 output",
+              "passed": true
+            },
+            {
+              "name": "initial off",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: platform_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "frame: platform_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "on",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: platform_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "frame: platform_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "off",
+              "passed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "f411ce-stlink",
+      "passed": 10,
+      "total": 10,
+      "steps": [
+        {
+          "step": "build",
+          "status": "PASS",
+          "seconds": 10.7
+        },
+        {
+          "step": "prepare",
+          "status": "PASS",
+          "seconds": 0.4,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "PASS",
+            "mode": "prepare",
+            "started_utc": "20261003T183314.223299Z",
+            "elf_sha256": "c013f36bf7871e9a1b529e5d1c5b04481d9e85d6aabe80b520320630fa30f623",
+            "backend": "stlink",
+            "report_sha256": "48a0bd644081f7aeecad81a383cf7a037797561fe19bca6bede8803dd851dac4",
+            "checks": []
+          }
+        },
+        {
+          "step": "boot",
+          "status": "PASS",
+          "seconds": 3.0,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183314.629299Z",
+            "elf_sha256": "c013f36bf7871e9a1b529e5d1c5b04481d9e85d6aabe80b520320630fa30f623",
+            "image_verified": true,
+            "flashed": true,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "stlink",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "7dc05cd456bc1a1ccf332f69b9e59acc47674de4792c3305ac7c1825c7daba58",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "initialized interval",
+                "passed": true
+              },
+              {
+                "name": "BSS loop count",
+                "passed": true
+              },
+              {
+                "name": "BSS LED state",
+                "passed": true
+              },
+              {
+                "name": "BSS milliseconds",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "app_state.ticks advanced",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "gpio",
+          "status": "PASS",
+          "seconds": 1.3,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183317.581546Z",
+            "elf_sha256": "c013f36bf7871e9a1b529e5d1c5b04481d9e85d6aabe80b520320630fa30f623",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "stlink",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "d04cb8e0d194c51b5dffb5d9edaa7749d194211353e3cf58c19f148cee4b6a8e",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PC13 clock",
+                "passed": true
+              },
+              {
+                "name": "PC13 output",
+                "passed": true
+              },
+              {
+                "name": "push-pull",
+                "passed": true
+              },
+              {
+                "name": "low speed",
+                "passed": true
+              },
+              {
+                "name": "no pull",
+                "passed": true
+              },
+              {
+                "name": "initial LED off (High)",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "strict",
+          "status": "PASS",
+          "seconds": 1.9,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183318.874569Z",
+            "elf_sha256": "c013f36bf7871e9a1b529e5d1c5b04481d9e85d6aabe80b520320630fa30f623",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "stlink",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "e96350288f03dffc7174183d2ead33eb901ef34d320efeb7c1c2a25f2e1fa525",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "initialized interval",
+                "passed": true
+              },
+              {
+                "name": "BSS loop count",
+                "passed": true
+              },
+              {
+                "name": "BSS LED state",
+                "passed": true
+              },
+              {
+                "name": "BSS milliseconds",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "app_state.ticks advanced",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "full-a5",
+          "status": "PASS",
+          "seconds": 3.2,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183320.797509Z",
+            "elf_sha256": "c013f36bf7871e9a1b529e5d1c5b04481d9e85d6aabe80b520320630fa30f623",
+            "image_verified": true,
+            "flashed": true,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "stlink",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "aca6dd33c9ead5b6e802d29f4c850128e0e54596088652b666cef836a500c354",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PC13 clock",
+                "passed": true
+              },
+              {
+                "name": "PC13 output",
+                "passed": true
+              },
+              {
+                "name": "push-pull",
+                "passed": true
+              },
+              {
+                "name": "low speed",
+                "passed": true
+              },
+              {
+                "name": "no pull",
+                "passed": true
+              },
+              {
+                "name": "initial LED off (High)",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "verify-only-ff",
+          "status": "PASS",
+          "seconds": 1.5,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "ERROR",
+            "mode": "hardware",
+            "started_utc": "20261003T183324.026629Z",
+            "elf_sha256": "c013f36bf7871e9a1b529e5d1c5b04481d9e85d6aabe80b520320630fa30f623",
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "stlink",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "3cf41554fc89dfb37493bfeafee8664c6a3796a6aecc73aac38e71521be8b75d",
+            "checks": [],
+            "error_category": "image_verification"
+          }
+        },
+        {
+          "step": "full-ff",
+          "status": "PASS",
+          "seconds": 3.3,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183325.464974Z",
+            "elf_sha256": "c013f36bf7871e9a1b529e5d1c5b04481d9e85d6aabe80b520320630fa30f623",
+            "image_verified": true,
+            "flashed": true,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "stlink",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "9a087d68accff2d30a48cb7358cd9956a8493fe0de30290a87e5a3071737fa30",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PC13 clock",
+                "passed": true
+              },
+              {
+                "name": "PC13 output",
+                "passed": true
+              },
+              {
+                "name": "push-pull",
+                "passed": true
+              },
+              {
+                "name": "low speed",
+                "passed": true
+              },
+              {
+                "name": "no pull",
+                "passed": true
+              },
+              {
+                "name": "initial LED off (High)",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "timeout",
+          "status": "PASS",
+          "seconds": 1.7,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "ERROR",
+            "mode": "hardware",
+            "started_utc": "20261003T183328.870201Z",
+            "elf_sha256": "c013f36bf7871e9a1b529e5d1c5b04481d9e85d6aabe80b520320630fa30f623",
+            "teardown": "reset_run (host recovery)",
+            "backend": "stlink",
+            "report_sha256": "f05975af02a596f6734402456c7cfd250b97a9301459a40a2a31fb51ed43f504",
+            "checks": [],
+            "error_category": "TimeoutExpired"
+          }
+        },
+        {
+          "step": "after-recovery",
+          "status": "PASS",
+          "seconds": 1.4,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183330.524577Z",
+            "elf_sha256": "c013f36bf7871e9a1b529e5d1c5b04481d9e85d6aabe80b520320630fa30f623",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "stlink",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "12be903a924c5f300f545eec24d57d89c96a211250f08db1468c2d7e557acac7",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PC13 clock",
+                "passed": true
+              },
+              {
+                "name": "PC13 output",
+                "passed": true
+              },
+              {
+                "name": "push-pull",
+                "passed": true
+              },
+              {
+                "name": "low speed",
+                "passed": true
+              },
+              {
+                "name": "no pull",
+                "passed": true
+              },
+              {
+                "name": "initial LED off (High)",
+                "passed": true
+              }
+            ]
+          }
+        }
+      ],
+      "restore": [
+        {
+          "id": "HW_BOOT",
+          "status": "PASS",
+          "mode": "hardware",
+          "started_utc": "20261003T183331.914656Z",
+          "elf_sha256": "1ff37ae10a007401de5e0eaf826764f60a2849c8b7821c123f12caa28c2e79c3",
+          "image_verified": true,
+          "flashed": true,
+          "teardown": "reset_run",
+          "warnings": [],
+          "backend": "stlink",
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "report_sha256": "a76f2b504f1137269500e312bec987d0e7536882762c174acf25e9039c6911df",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: loop",
+              "passed": true
+            },
+            {
+              "name": "frame: loop",
+              "passed": true
+            },
+            {
+              "name": "no fault",
+              "passed": true
+            },
+            {
+              "name": "reset clocks",
+              "passed": true
+            },
+            {
+              "name": "HSI /1",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "HW_GPIO",
+          "status": "PASS",
+          "mode": "hardware",
+          "started_utc": "20261003T183333.795498Z",
+          "elf_sha256": "1ff37ae10a007401de5e0eaf826764f60a2849c8b7821c123f12caa28c2e79c3",
+          "image_verified": true,
+          "flashed": false,
+          "teardown": "reset_run",
+          "warnings": [],
+          "backend": "stlink",
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "report_sha256": "63f30d17eb0c94e86e7ae060167e10745fdd4b7098be8a5c8e56e22fb7a97d0f",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: platform_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "frame: platform_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "PC13 output",
+              "passed": true
+            },
+            {
+              "name": "initial off",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: platform_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "frame: platform_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "on",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: platform_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "frame: platform_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "off",
+              "passed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "f030r8-openocd-package",
+      "passed": 10,
+      "total": 10,
+      "steps": [
+        {
+          "step": "build",
+          "status": "PASS",
+          "seconds": 0.0
+        },
+        {
+          "step": "prepare",
+          "status": "PASS",
+          "seconds": 0.5,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "PASS",
+            "mode": "prepare",
+            "started_utc": "20261003T183710.399460Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "backend": "openocd",
+            "report_sha256": "dac3e3e630244d405528b0e2c629183308d02704b1f2a6dde7971374bbb47eea",
+            "checks": []
+          }
+        },
+        {
+          "step": "boot",
+          "status": "PASS",
+          "seconds": 2.3,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183710.865739Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "939e61c93ad16dac7734b9050afe8dc4e69841eec8ccadb357766a1978c4ad45",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "initialized interval",
+                "passed": true
+              },
+              {
+                "name": "BSS loop count",
+                "passed": true
+              },
+              {
+                "name": "BSS LED state",
+                "passed": true
+              },
+              {
+                "name": "BSS milliseconds",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "app_state.ticks advanced",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "gpio",
+          "status": "PASS",
+          "seconds": 1.7,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183713.173719Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "9ddc708f55eeecc5b8a40b4826c9ac902fc7e9b2c751c77532169e45fcdfa3a0",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PA5 clock",
+                "passed": true
+              },
+              {
+                "name": "PA5 output",
+                "passed": true
+              },
+              {
+                "name": "push-pull",
+                "passed": true
+              },
+              {
+                "name": "low speed",
+                "passed": true
+              },
+              {
+                "name": "no pull",
+                "passed": true
+              },
+              {
+                "name": "initial LED off",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "strict",
+          "status": "PASS",
+          "seconds": 2.3,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183714.867377Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "702871a87bd65bd9a09aecd4c76083fdf41f3fdb7cd9ef5cd547c00b6919ef9b",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "initialized interval",
+                "passed": true
+              },
+              {
+                "name": "BSS loop count",
+                "passed": true
+              },
+              {
+                "name": "BSS LED state",
+                "passed": true
+              },
+              {
+                "name": "BSS milliseconds",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: app_loop",
+                "passed": true
+              },
+              {
+                "name": "frame: app_loop",
+                "passed": true
+              },
+              {
+                "name": "app_state.ticks advanced",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "full-a5",
+          "status": "PASS",
+          "seconds": 3.2,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183717.149602Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "image_verified": true,
+            "flashed": true,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "91d6bacae4947e424c7e34c8bcf08d5fefd8288f966c9f6125fc5ebc76e60b1c",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PA5 clock",
+                "passed": true
+              },
+              {
+                "name": "PA5 output",
+                "passed": true
+              },
+              {
+                "name": "push-pull",
+                "passed": true
+              },
+              {
+                "name": "low speed",
+                "passed": true
+              },
+              {
+                "name": "no pull",
+                "passed": true
+              },
+              {
+                "name": "initial LED off",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "verify-only-ff",
+          "status": "PASS",
+          "seconds": 1.6,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "ERROR",
+            "mode": "hardware",
+            "started_utc": "20261003T183720.383400Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "3b5a47ad308046bf37041fbb6c1b2e070ac894c0259722af514e34d63863f614",
+            "checks": [],
+            "error_category": "image_verification"
+          }
+        },
+        {
+          "step": "full-ff",
+          "status": "PASS",
+          "seconds": 3.3,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183721.991665Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "image_verified": true,
+            "flashed": true,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "f3c42be6c620148afcab7583091226d79ba384ebcd813550d60ef051505c1600",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PA5 clock",
+                "passed": true
+              },
+              {
+                "name": "PA5 output",
+                "passed": true
+              },
+              {
+                "name": "push-pull",
+                "passed": true
+              },
+              {
+                "name": "low speed",
+                "passed": true
+              },
+              {
+                "name": "no pull",
+                "passed": true
+              },
+              {
+                "name": "initial LED off",
+                "passed": true
+              }
+            ]
+          }
+        },
+        {
+          "step": "timeout",
+          "status": "PASS",
+          "seconds": 1.7,
+          "result": {
+            "id": "HW_CI_BOOT",
+            "status": "ERROR",
+            "mode": "hardware",
+            "started_utc": "20261003T183725.288417Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "teardown": "reset_run (host recovery)",
+            "backend": "openocd",
+            "report_sha256": "8b522c84376d2f4614776d457e82e7c30efacac94b36cc9729ab51eded37be74",
+            "checks": [],
+            "error_category": "TimeoutExpired"
+          }
+        },
+        {
+          "step": "after-recovery",
+          "status": "PASS",
+          "seconds": 1.6,
+          "result": {
+            "id": "HW_CI_GPIO",
+            "status": "PASS",
+            "mode": "hardware",
+            "started_utc": "20261003T183726.924253Z",
+            "elf_sha256": "515bc27921f65ac2f7cf18a8f81a21053ef5e3b9dac87e49836af6522d3d60a1",
+            "image_verified": true,
+            "flashed": false,
+            "teardown": "reset_run",
+            "warnings": [],
+            "backend": "openocd",
+            "gdb_version": "14.2.90.20240526-git",
+            "python_version": "3.11.4",
+            "report_sha256": "fe40be654045cad7ce10e424481546a4a1f2f6c65c67695485070a7d34df33d5",
+            "checks": [
+              {
+                "name": "breakpoint reached: main",
+                "passed": true
+              },
+              {
+                "name": "frame: main",
+                "passed": true
+              },
+              {
+                "name": "breakpoint reached: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "frame: board_led_toggle",
+                "passed": true
+              },
+              {
+                "name": "PA5 clock",
+                "passed": true
+              },
+              {
+                "name": "PA5 output",
+                "passed": true
+              },
+              {
+                "name": "push-pull",
+                "passed": true
+              },
+              {
+                "name": "low speed",
+                "passed": true
+              },
+              {
+                "name": "no pull",
+                "passed": true
+              },
+              {
+                "name": "initial LED off",
+                "passed": true
+              }
+            ]
+          }
+        }
+      ],
+      "restore": [
+        {
+          "id": "HW_CI_BOOT",
+          "status": "PASS",
+          "mode": "hardware",
+          "started_utc": "20261003T183728.377610Z",
+          "elf_sha256": "c19159268d78df1baaf7786469f800eafef2fc9a224bec5f2386eee8ce8900f8",
+          "image_verified": true,
+          "flashed": false,
+          "teardown": "reset_run",
+          "warnings": [],
+          "backend": "openocd",
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "report_sha256": "824e46f1c291012fb966ac14046348dda7e8831a3c9f6536d2fbf96c4b2cbfb8",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "passed": true
+            },
+            {
+              "name": "initialized interval",
+              "passed": true
+            },
+            {
+              "name": "BSS loop count",
+              "passed": true
+            },
+            {
+              "name": "BSS LED state",
+              "passed": true
+            },
+            {
+              "name": "BSS milliseconds",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: app_loop",
+              "passed": true
+            },
+            {
+              "name": "frame: app_loop",
+              "passed": true
+            },
+            {
+              "name": "app_state.ticks advanced",
+              "passed": true
+            }
+          ]
+        },
+        {
+          "id": "HW_CI_GPIO",
+          "status": "PASS",
+          "mode": "hardware",
+          "started_utc": "20261003T183730.255303Z",
+          "elf_sha256": "c19159268d78df1baaf7786469f800eafef2fc9a224bec5f2386eee8ce8900f8",
+          "image_verified": true,
+          "flashed": false,
+          "teardown": "reset_run",
+          "warnings": [],
+          "backend": "openocd",
+          "gdb_version": "14.2.90.20240526-git",
+          "python_version": "3.11.4",
+          "report_sha256": "56869e399e31645ce92b42715bdbd20a75750bfd1d1e1f3a43616bcee1d007f4",
+          "checks": [
+            {
+              "name": "breakpoint reached: main",
+              "passed": true
+            },
+            {
+              "name": "frame: main",
+              "passed": true
+            },
+            {
+              "name": "breakpoint reached: board_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "frame: board_led_toggle",
+              "passed": true
+            },
+            {
+              "name": "PA5 clock",
+              "passed": true
+            },
+            {
+              "name": "PA5 output",
+              "passed": true
+            },
+            {
+              "name": "push-pull",
+              "passed": true
+            },
+            {
+              "name": "low speed",
+              "passed": true
+            },
+            {
+              "name": "no pull",
+              "passed": true
+            },
+            {
+              "name": "initial LED off",
+              "passed": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "consumer": {
+    "commit": "c8dc670",
+    "gitlink": "972af7c2a6a14598875f86d573aa8ddb6ded0db1",
+    "mode": 160000,
+    "legacy_offline": "3/3 PASS",
+    "session_config_offline": "3/3 PASS",
+    "original_session_api_unavailable": true,
+    "package_sha256": "099c866f0a0d0558b3c430b355b82d6e9eb6d592e7d68fe1b3768a09597ba4f2",
+    "hardware": {
+      "id": "HW_CONSUMER_GPIO",
+      "status": "PASS",
+      "mode": "hardware",
+      "started_utc": "20261003T183503.458884Z",
+      "elf_sha256": "ec58bb209f27e1770a9626cecf6ac4faa9e5775b3a6c1e703e22dae3ae7c9693",
+      "image_verified": true,
+      "flashed": true,
+      "teardown": "reset_run",
+      "warnings": [],
+      "backend": "openocd",
+      "gdb_version": "14.2.90.20240526-git",
+      "python_version": "3.11.4",
+      "report_sha256": "1052abac9fe70b9931079fadf365b290181df4dfeec58b532d00d2d3ad838134",
+      "checks": [
+        {
+          "name": "breakpoint reached: main",
+          "passed": true
+        },
+        {
+          "name": "frame: main",
+          "passed": true
+        },
+        {
+          "name": "breakpoint reached: app_loop",
+          "passed": true
+        },
+        {
+          "name": "frame: app_loop",
+          "passed": true
+        },
+        {
+          "name": "GPIOC clock",
+          "passed": true
+        },
+        {
+          "name": "PC13 output",
+          "passed": true
+        },
+        {
+          "name": "consumer configuration",
+          "passed": true
+        },
+        {
+          "name": "consumer journal",
+          "passed": true
+        }
+      ]
+    },
+    "restore": [
+      {
+        "id": "HW_BOOT",
+        "status": "PASS",
+        "mode": "hardware",
+        "started_utc": "20261003T183505.562124Z",
+        "elf_sha256": "1ff37ae10a007401de5e0eaf826764f60a2849c8b7821c123f12caa28c2e79c3",
+        "image_verified": true,
+        "flashed": true,
+        "teardown": "reset_run",
+        "warnings": [],
+        "backend": "openocd",
+        "gdb_version": "14.2.90.20240526-git",
+        "python_version": "3.11.4",
+        "report_sha256": "efa635afc8c81d7d0f3ff0ed8d79809e046e4e19b3f7f94362ffbe9efbee6866",
+        "checks": [
+          {
+            "name": "breakpoint reached: main",
+            "passed": true
+          },
+          {
+            "name": "frame: main",
+            "passed": true
+          },
+          {
+            "name": "breakpoint reached: loop",
+            "passed": true
+          },
+          {
+            "name": "frame: loop",
+            "passed": true
+          },
+          {
+            "name": "no fault",
+            "passed": true
+          },
+          {
+            "name": "reset clocks",
+            "passed": true
+          },
+          {
+            "name": "HSI /1",
+            "passed": true
+          }
+        ]
+      },
+      {
+        "id": "HW_GPIO",
+        "status": "PASS",
+        "mode": "hardware",
+        "started_utc": "20261003T183507.491258Z",
+        "elf_sha256": "1ff37ae10a007401de5e0eaf826764f60a2849c8b7821c123f12caa28c2e79c3",
+        "image_verified": true,
+        "flashed": false,
+        "teardown": "reset_run",
+        "warnings": [],
+        "backend": "openocd",
+        "gdb_version": "14.2.90.20240526-git",
+        "python_version": "3.11.4",
+        "report_sha256": "6970ed205c521e8fbe5375a1d808d628d8913af69fb9b525aa9b6fa21ee31810",
+        "checks": [
+          {
+            "name": "breakpoint reached: main",
+            "passed": true
+          },
+          {
+            "name": "frame: main",
+            "passed": true
+          },
+          {
+            "name": "breakpoint reached: platform_led_toggle",
+            "passed": true
+          },
+          {
+            "name": "frame: platform_led_toggle",
+            "passed": true
+          },
+          {
+            "name": "PC13 output",
+            "passed": true
+          },
+          {
+            "name": "initial off",
+            "passed": true
+          },
+          {
+            "name": "breakpoint reached: platform_led_toggle",
+            "passed": true
+          },
+          {
+            "name": "frame: platform_led_toggle",
+            "passed": true
+          },
+          {
+            "name": "on",
+            "passed": true
+          },
+          {
+            "name": "breakpoint reached: platform_led_toggle",
+            "passed": true
+          },
+          {
+            "name": "frame: platform_led_toggle",
+            "passed": true
+          },
+          {
+            "name": "off",
+            "passed": true
+          }
+        ]
+      }
+    ]
+  },
+  "runtime_sha256": {
+    "stm32_gdbtest/__init__.py": "a0d818854da6b7da4a7f8c9ca9eca5823512895ca99d41623a6971756341ecea",
+    "stm32_gdbtest/__main__.py": "07bb221d3355bb1b2a2e242032903c8ef35ad43ca389110a7ebaae052a2955ba",
+    "stm32_gdbtest/agent.py": "257721f6d360ecc8c827870da7c3f4c468f8717eed62b8b3377e66d7dcf2f2f4",
+    "stm32_gdbtest/backends.py": "4f59816b1f8dd37e3426589833002c43f58b22638a4363f1eab8f9554be52567",
+    "stm32_gdbtest/build_manifest.py": "ba00334c4bee9e703d17532a336c12c07716685c1bd4228b2cfd85d8f0ae3b8a",
+    "stm32_gdbtest/cli.py": "3fd045b571820e295162cefc4dba9e1127dfbe52eb8682e1d16c3b4f65f1d9c2",
+    "stm32_gdbtest/cmake/STM32GDBTest.cmake": "2da434e92ae77039750038b9cb968b4ddff0ced35168ea9be78fff5806bf0fb5",
+    "stm32_gdbtest/collect.py": "0a3073bb5c03a8d9d31435ba89cfb68015f1046b9b8879ac8e765740bd8fcc25",
+    "stm32_gdbtest/compatibility.py": "c2df583f487232df16911d1eddf7e26074b8d0e21a7cae0a356e1dc76c744293",
+    "stm32_gdbtest/config_transport.py": "6851b932bfa81dd583eb5e32c94507563f1aae3c9958654397b60871fbd6eeba",
+    "stm32_gdbtest/configuration.py": "7ec6c61cbc545059dcc6654e5df83459fa99844d1c5f87c2b71a1130b2bfd561",
+    "stm32_gdbtest/contract_preflight.py": "ec055a50edc8366e2c3db5999e4a590bc753414953e01658f589e2adb00b9055",
+    "stm32_gdbtest/contracts.py": "26f5979973bf8b414732950cef5ccbdf1b8057b2f1c1f266cd1e3a2f215cbf34",
+    "stm32_gdbtest/doctor.py": "8f7ebed217f7293d5d058d2988ed2bd8b247aaf6b997d9b918b84fa1f5434282",
+    "stm32_gdbtest/full_image.py": "dddfb5f773dab08cc91e2e77d2edb40476febe1e217378d25af098c8a6d32206",
+    "stm32_gdbtest/identity.py": "d30620d1c2a4568b0362872d84937aaa53735a1808f0b67e908196405640afe7",
+    "stm32_gdbtest/image.py": "60a892623c2607b4f44935574292501045e194463ebae435b4f44b4979a9101b",
+    "stm32_gdbtest/openocd.py": "31b458217fe6f388c0aaf15d5598edbb5777ed36d1bbab7fc13fa1717bd82496",
+    "stm32_gdbtest/package.py": "aaaf0b6de79990d701bcb95415386d29848b64dd2f1745ac1171181e8d14791d",
+    "stm32_gdbtest/processes.py": "9c20445d2d4562c845d67d5f688cf59c823a4f6aa6a713b727b4f695302b92f8",
+    "stm32_gdbtest/profile.py": "68bdf4ff0684eab9fd1068654d3e3cd8c81d926ff710a62a86135b6ec518e700",
+    "stm32_gdbtest/records.py": "f3314f426197d13bb374b4f6fc8d87df25ea89a881285811999a173b3bc76a29",
+    "stm32_gdbtest/remote.py": "bc2c4454a2884fe74a18154df1e6fdd5a19973447d46d9943e594ef5f8f66e3c",
+    "stm32_gdbtest/remote_helper.py": "64dc59e5e33eb5e13be0c7f409f0f24f9718f6e71c8087a11b03f85e3a3be6ac",
+    "stm32_gdbtest/reports.py": "a373de45810c8728ac69a10e06abd6f52848c148fc5849d35b0bcdd201958d65",
+    "stm32_gdbtest/runner.py": "4ba36b3f07b0143c33a3eea59e59067e90cf9d975f4b159275d3387ba1fa0c8c",
+    "stm32_gdbtest/target.py": "f3f81667d0e06c12c96f39b4cf6435b63ac77b7cf6ad14ce1f3661da1308ba74",
+    "stm32_gdbtest/toolchain.py": "aa41738eb09dc5ab7594ffd813634b9d66e902db46ef15c32845deb85521cdb7"
+  },
+  "windows_host": {
+    "total": 164,
+    "pass": 153,
+    "skip": 11,
+    "log_sha256": "cffa585a55fcb5ec6a1018efb131b563905aa9c897ce45ebd94df84f328eda5d"
+  },
+  "linux_host_repeat": {
+    "schema": 1,
+    "levels": [
+      "host"
+    ],
+    "cmake": "3.28.3",
+    "passed": 1,
+    "total": 1,
+    "results": [
+      {
+        "name": "host.unittest",
+        "status": "PASS",
+        "seconds": 30.1,
+        "detail": null
+      }
+    ]
+  },
+  "api_specification_at_hardware_acceptance": "0.2.2",
+  "linux_initial_matrix": {
+    "schema": 1,
+    "levels": [
+      "docs",
+      "format",
+      "host",
+      "firmware",
+      "hal"
+    ],
+    "cmake": "3.28.3",
+    "passed": 21,
+    "total": 22,
+    "results": [
+      {
+        "name": "docs.spec",
+        "status": "PASS",
+        "seconds": 0.0,
+        "detail": "Пунктов: 401 (нормативных 347); тест-кейсов: 152; вопросов: 25; ревизий: 64. Ошибок: 0; предупреждений: 0.\n"
+      },
+      {
+        "name": "docs.api-spec",
+        "status": "PASS",
+        "seconds": 0.1,
+        "detail": "Пунктов: 49 (нормативных 39); тест-кейсов: 13; вопросов: 5; ревизий: 4. Ошибок: 0; предупреждений: 0.\n"
+      },
+      {
+        "name": "docs.links",
+        "status": "PASS",
+        "seconds": 13.8,
+        "detail": null
+      },
+      {
+        "name": "docs.pairs",
+        "status": "PASS",
+        "seconds": 1.2,
+        "detail": null
+      },
+      {
+        "name": "format.clang-format",
+        "status": "PASS",
+        "seconds": 5.5,
+        "detail": "33 files"
+      },
+      {
+        "name": "host.unittest",
+        "status": "FAIL",
+        "seconds": 27.4,
+        "detail": "Obsolete CLI version expectation 0.2.0.dev0; updated to 0.2.0rc1, host rerun PASS."
+      },
+      {
+        "name": "firmware.f030r8.gcc-13.3.1-1.1",
+        "status": "PASS",
+        "seconds": 45.7,
+        "detail": "10 negative contracts rejected"
+      },
+      {
+        "name": "firmware.f103c8.gcc-13.3.1-1.1",
+        "status": "PASS",
+        "seconds": 70.2,
+        "detail": "10 negative contracts rejected"
+      },
+      {
+        "name": "firmware.f411ce.gcc-13.3.1-1.1",
+        "status": "PASS",
+        "seconds": 56.5,
+        "detail": "10 negative contracts rejected"
+      },
+      {
+        "name": "firmware.f401cc.gcc-13.3.1-1.1",
+        "status": "PASS",
+        "seconds": 67.5,
+        "detail": "10 negative contracts rejected"
+      },
+      {
+        "name": "firmware.f429zi.gcc-13.3.1-1.1",
+        "status": "PASS",
+        "seconds": 44.7,
+        "detail": "10 negative contracts rejected"
+      },
+      {
+        "name": "firmware.f030r8.gcc-14.2.1-1.1",
+        "status": "PASS",
+        "seconds": 62.9,
+        "detail": "10 negative contracts rejected"
+      },
+      {
+        "name": "firmware.f103c8.gcc-14.2.1-1.1",
+        "status": "PASS",
+        "seconds": 64.1,
+        "detail": "10 negative contracts rejected"
+      },
+      {
+        "name": "firmware.f411ce.gcc-14.2.1-1.1",
+        "status": "PASS",
+        "seconds": 75.3,
+        "detail": "10 negative contracts rejected"
+      },
+      {
+        "name": "firmware.f401cc.gcc-14.2.1-1.1",
+        "status": "PASS",
+        "seconds": 71.0,
+        "detail": "10 negative contracts rejected"
+      },
+      {
+        "name": "firmware.f429zi.gcc-14.2.1-1.1",
+        "status": "PASS",
+        "seconds": 75.5,
+        "detail": "10 negative contracts rejected"
+      },
+      {
+        "name": "firmware.f030r8.gcc-15.2.1-1.1",
+        "status": "PASS",
+        "seconds": 64.1,
+        "detail": "10 negative contracts rejected"
+      },
+      {
+        "name": "firmware.f103c8.gcc-15.2.1-1.1",
+        "status": "PASS",
+        "seconds": 73.2,
+        "detail": "10 negative contracts rejected"
+      },
+      {
+        "name": "firmware.f411ce.gcc-15.2.1-1.1",
+        "status": "PASS",
+        "seconds": 68.9,
+        "detail": "10 negative contracts rejected"
+      },
+      {
+        "name": "firmware.f401cc.gcc-15.2.1-1.1",
+        "status": "PASS",
+        "seconds": 57.1,
+        "detail": "10 negative contracts rejected"
+      },
+      {
+        "name": "firmware.f429zi.gcc-15.2.1-1.1",
+        "status": "PASS",
+        "seconds": 64.4,
+        "detail": "10 negative contracts rejected"
+      },
+      {
+        "name": "hal.f030.gcc13",
+        "status": "PASS",
+        "seconds": 38.7,
+        "detail": "24 CTest, 22 fresh prepare reports, positive + 5 rejected HAL contracts"
+      }
+    ]
+  },
+  "public_tree_ci": {
+    "schema": 1,
+    "levels": [
+      "docs",
+      "format",
+      "host",
+      "hal"
+    ],
+    "cmake": "3.28.3",
+    "passed": 8,
+    "total": 8,
+    "results": [
+      {
+        "name": "docs.spec",
+        "status": "PASS",
+        "seconds": 0.0,
+        "detail": "Пунктов: 406 (нормативных 352); тест-кейсов: 154; вопросов: 25; ревизий: 65. Ошибок: 0; предупреждений: 0.\n"
+      },
+      {
+        "name": "docs.api-spec",
+        "status": "PASS",
+        "seconds": 0.0,
+        "detail": "Пунктов: 49 (нормативных 39); тест-кейсов: 13; вопросов: 5; ревизий: 5. Ошибок: 0; предупреждений: 0.\n"
+      },
+      {
+        "name": "docs.links",
+        "status": "PASS",
+        "seconds": 1.2,
+        "detail": null
+      },
+      {
+        "name": "docs.pairs",
+        "status": "PASS",
+        "seconds": 0.1,
+        "detail": null
+      },
+      {
+        "name": "docs.public",
+        "status": "PASS",
+        "seconds": 0.6,
+        "detail": null
+      },
+      {
+        "name": "format.clang-format",
+        "status": "PASS",
+        "seconds": 0.6,
+        "detail": "19 files"
+      },
+      {
+        "name": "host.unittest",
+        "status": "PASS",
+        "seconds": 26.9,
+        "detail": null
+      },
+      {
+        "name": "hal.f030.gcc13",
+        "status": "PASS",
+        "seconds": 27.5,
+        "detail": "24 CTest, 22 fresh prepare reports, positive + 5 rejected HAL contracts"
+      }
+    ]
+  },
+  "public_tree_host": {
+    "windows": {
+      "total": 155,
+      "pass": 144,
+      "skip": 11
+    },
+    "linux": {
+      "total": 155,
+      "pass": 151,
+      "skip": 4
+    },
+    "removed_local_simulation_tests": 14,
+    "new_publication_tests": 5
+  },
+  "public_tree_boundary": {
+    "untracked_local_files": 278,
+    "preserved_bytes_verified": true,
+    "history_rewritten": false
+  },
+  "core_benchmark": {
+    "cases": 13,
+    "boundaries": 5,
+    "status": "PASS",
+    "scope": "promoted core-only benchmark smoke; not a new hardware or cross-version timing claim"
+  },
+  "environment_verification": {
+    "level": "L0",
+    "status": "PASS",
+    "image": "stm32-gdbtest-ci:hal",
+    "command": "python3 /opt/stm32-gdbtest-ci/verify.py",
+    "log_sha256": "069ca4aa92479b4531bf03684c372ae4dd415c82cb3154513ffe1c12517bb9c9",
+    "scope": "tool versions, pinned sources and GDB-Python in the existing image; no image rebuild or archive checksum recheck"
+  }
+}

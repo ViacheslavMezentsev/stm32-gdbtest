@@ -8,21 +8,19 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [0.2.0-rc.1] - 2026-10-03
 
+- Local research and prototypes are excluded from the published tree while retained in the developer workspace. Accepted results are documented separately; docs.public checks files and links against .gitignore filters. Main specification 0.65 defines L0–L6; API specification 0.2.3 clarifies public criteria without method changes.
+
 Candidate agreed; local preparation, not published. [Acceptance and migration](docs/en/RC020_READINESS.md).
 
 - Standardized the teaching style of 35 production scenario/helper files: RU/EN headers, English explanations, 120-character lines and no optional trailing commas. Executable ASTs match the previous revision.
 
-- Migrated production scenarios: 44 table blocks / 282 checks; session.toml and VDDA/temperature series on five CMSIS profiles. HW 103/103 CMSIS, 22/22 HAL F030, 1/1 minimal consumer; separate recovery/restoration checks. Main specification 0.63; API 0.2.2 unchanged. [Report](docs/research/api-extension/en/scenario-migration.md).
+- Migrated production scenarios: 44 table blocks / 282 checks; session.toml and VDDA/temperature series on five CMSIS profiles. HW 103/103 CMSIS, 22/22 HAL F030, 1/1 minimal consumer; separate recovery/restoration checks. Main specification 0.63; API 0.2.2 unchanged. [accepted results](docs/en/API_ACCEPTANCE.md).
 
 - Integrated the first package: record/records, public RecordError, config/config_props, explicit SESSION_CONFIG and TOML snapshot transport to GDB/packages. Legacy mode retained. Development version 0.2.0.dev0, API_VERSION=1; API spec 0.2.2, system spec 0.62. Paired scenarios checked on F030/F103/F411; release remains separate.
 
 - Documented the accepted first extension: API spec 0.2.0 and system spec 0.60, record/records, errors and session.toml configuration. Module target 0.2.0, API_VERSION=1; integration not authorized, numeric bounds open. Core behavior unchanged.
 
 - Combined both studies for main: GDB Python/API reports and the simulated adaptive tree with its workflow player. Experimental tools remain isolated; API agreement and hardware technical debt remain open.
-
-- Research2: HTML now uses a fixed workflow layout with rectangular cards and separate availability/result badges, preserving snapshot playback. The plan describes the proposed YAML direction.
-
-- Research2: isolated adaptive scenario-tree Python model, three-valued conditions and All/Any, dynamic pruning/reactivation, independent full-state JSON oracle and standalone HTML player. Simulation only; no core/API/specification or hardware changes.
 
 - Concluded the current R1–R18 research cycle with open technical debt. Added RU/EN draft API evolution conventions, system/API specification boundaries, operation contract cards and outcome verification. Normative specifications and core unchanged; HW remains paused.
 

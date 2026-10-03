@@ -279,7 +279,7 @@ session's gdb field. Compare versions using local session copies with separate g
 and out fields and the same ELF/manifest, or pass `-DSTM32_GDBTEST_GDB=<path>` at
 CMake configure time. Keep global PATH unchanged for an isolated experiment.
 Verify gdb_version in result.json; use the original session to restore the previous
-GDB. See the [comparison example](../research/rc3-gdb-python/en/r1.md).
+GDB. See the recorded checks.
 
 ### Separating reports
 
@@ -314,7 +314,7 @@ its build/ directory using a local .gitignore.
 
 On the tested F411/OpenOCD0.12.0 ST-Link HLA connection, the server sent T05 without
 watch/rwatch/awatch addresses. Do not treat any stop as watchpoint success.
-Keep RSP/server logs and inspect the interface driver. In the [R2 experiment](../research/rc3-gdb-python/en/r2.md),
+Keep RSP/server logs and inspect the interface driver. In the recorded checks,
 native stlink-dap/dapdirect_swd resolved this on the same stand. The --native-stlink
 flag exists only in the consumer runner; the production module and installed
 OpenOCD remain unchanged. Omit the flag to revert. This is not a universal
@@ -322,7 +322,7 @@ recommendation to switch drivers on other stands.
 
 ## Watch does not stop on a same-value store
 
-`watch` reports value changes, not every store. In [R3](../research/rc3-gdb-python/en/r3.md), the CPU
+`watch` reports value changes, not every store. In recorded checks, the CPU
 stored the previous checksum: write-watch continued to the sentinel while
 access-watch stopped. `awatch` also catches reads: inspect the instruction and
 context to prove a write. An application counter with a watch predicate bounds
@@ -330,7 +330,7 @@ progress but cannot replace the external host timeout when execution hangs.
 
 ## Repeated stepi in an infinite loop: target not halted
 
-In [R4](../research/rc3-gdb-python/en/r4.md), F411/OpenOCD native DAP completed `jump` and the first
+In recorded checks, F411/OpenOCD native DAP completed `jump` and the first
 `stepi` in a Thumb self-loop; the next step reported `target not halted` and hit
 the external timeout. Preserve the ERROR and logs; verify host recovery/restore.
 HLA passed4/4 with the same ELF. This is a limited comparison, not an established
@@ -339,7 +339,7 @@ Do not hide the error by increasing the timeout or unconditionally retrying.
 
 ## Struct return did not produce the expected value
 
-Absence of a GDB exception does not prove substitution. In [R5](../research/rc3-gdb-python/en/r5.md),
+Absence of a GDB exception does not prove substitution. In recorded checks,
 both versions selected the caller, but it read previous hidden return-buffer bytes.
 Verify the caller-visible value. For the reviewed ELF, writing the result through
 the hidden pointer followed by a bare return worked. This requires ABI, exact-entry,
@@ -348,7 +348,7 @@ to write through an arbitrary r0.
 
 ## Condition and Python stop produce unexpected callback counts
 
-In [R6](../research/rc3-gdb-python/en/r6.md), the callback also saw entries the scenario expected condition
+In recorded checks, the callback also saw entries the scenario expected condition
 to filter out. Do not base callback counts on an assumed ordering of two filters.
 A verified approach uses one Python predicate reading arguments and the stack,
 or an independent CLI condition without a callback. Do not resume the MCU, select
@@ -357,7 +357,7 @@ frames or delete breakpoints in stop; perform actions after the stop returns.
 ## Watchpoint created, but continue reports Command aborted
 
 Inspect GDB output: Python may return only `Command aborted.` while the log contains
-`Could not insert hardware watchpoint N.`. In [R7](../research/rc3-gdb-python/en/r7.md), an unaligned range
+`Could not insert hardware watchpoint N.`. In recorded checks, an unaligned range
 or a fifth separate word point caused rejection. Preserve logs, delete owned points
 and verify a positive control after reset. Do not classify every Command aborted
 as resource exhaustion. Exact1+1/1+2+1 decomposition observed unaligned2/4-byte
@@ -365,7 +365,7 @@ ranges at the cost of two/three hardware points.
 
 ## Finish needs a free point and becomes invalid after firing
 
-In [R8](../research/rc3-gdb-python/en/r8.md), four fault guards and two owned code points fill all six
+In recorded checks, four fault guards and two owned code points fill all six
 F411 slots. FinishBreakpoint cannot insert; releasing one owned point allows the
 original call to continue without reset. Keep guards enabled. Save the
 FinishBreakpoint number before continue: after firing the object is invalid and
@@ -374,7 +374,7 @@ One reserved slot was verified for this finish, not every navigation command.
 
 ## Call hit a breakpoint and expression evaluation raised an error
 
-In [R9](../research/rc3-gdb-python/en/r9.md) this is an expected interruption,
+In recorded checks this is an expected interruption,
 but it must be identified by the owned point and DUMMY_FRAME, not arbitrary gdb.error.
 The dummy frame's name was Reset_Handler: use frame.type(). After deleting the
 owned point, continue completed the call and restored PC/SP/LR/r0–r12, but the
@@ -384,7 +384,7 @@ This experiment does not prove recovery after fault/timeout.
 
 ## Fault inside call and loss of the report on timeout
 
-In [R10](../research/rc3-gdb-python/en/r10.md), a guard intercepted HardFault as a
+In recorded checks, a guard intercepted HardFault as a
 BreakpointEvent. Confirm the cause using point identity, xPSR, CFSR/HFSR/BFAR and
 the stack; gdb.error alone is insufficient. This GDB uses xPSR: xpsr gave Bad register.
 On external timeout GDB cannot write its report from finally. Persist verified
@@ -393,7 +393,7 @@ recovery and a separate control. Missing evidence must not count as an expected 
 
 ## An interrupted function's local variable is unavailable
 
-In [R11](../research/rc3-gdb-python/en/r11.md), TIM2 interrupted board_delay_ms at
+In recorded checks, TIM2 interrupted board_delay_ms at
 its first instruction, before start initialization. GDB marked start optimized_out.
 Record that distinct state and compare PC with instructions; do not substitute0.
 Select calls using arguments/stack: the same function serves the ADC2ms delay and
@@ -402,7 +402,7 @@ frame's saved PC; LR=0xfffffff9 is EXC_RETURN, not a code address.
 
 ## DMA changed the buffer without a reported watchpoint stop
 
-In [R12](../research/rc3-gdb-python/en/r12.md), ADC→DMA writes on F411/native DAP
+In recorded checks, ADC→DMA writes on F411/native DAP
 completed without a write/access-watch event. Also check NDTR, completion flag,
 the buffer at exact IRQ entry before CPU reads and the final sinks. The same
 access-watch then caught a CPU read; a separate write-watch detected the counter
@@ -411,7 +411,7 @@ This conclusion applies to the tested stand and mode.
 
 ## An IRQ occurred, but the WFI path is not yet confirmed
 
-In [R13](../research/rc3-gdb-python/en/r13.md), the first TIM2 interrupted context
+In recorded checks, the first TIM2 interrupted context
 still at WFI. Check the function and post-instruction PC in the interrupted frame,
 with bounded attempts. Handler entry alone is insufficient. With SysTick disabled,
 TIM2 wakes the CPU but does not advance ticks or its delay. Restore IRQ masks and
@@ -421,7 +421,7 @@ COUNTFLAG or timer phase; a PC after WFI does not measure sleep residency.
 ## Waiting for names sequentially can miss an extra call
 
 To verify order, keep points for all selected names active simultaneously when
-the hardware budget permits. [R14](../research/rc3-gdb-python/en/r14.md) checks
+the hardware budget permits. recorded checks checks
 point identity, PC and a finite event list; mismatch does not advance the list.
 Between interventions, check what the caller consumed. An error after success may
 retain the previous accepted result rather than clear it. Four guards and two
@@ -429,7 +429,7 @@ points already occupy six F411 slots; an additional finish requires headroom.
 
 ## Optimization changes breakpoints and local availability
 
-In [R15](../research/rc3-gdb-python/en/r15.md), one inline function has two addresses
+In recorded checks, one inline function has two addresses
 and an argument disappears after one stepi. Budget locations, check PC and frame
 type, and preserve is_optimized_out separately. An available product before mul
 does not prove execution: check the final output.
@@ -444,7 +444,7 @@ reformat excluded platform code just to obtain PASS.
 
 ## A navigation command returned without reaching its target
 
-In [R16](../research/rc3-gdb-python/en/r16.md), advance completed at current-frame
+In recorded checks, advance completed at current-frame
 exit before its target, while a separate callee point interrupted nexti.
 Check event, PC and frame, then explicitly continue to the required boundary.
 StopEvent without a user point number is normal for the tested until/advance.
@@ -453,7 +453,7 @@ and do not prove navigation failure. Check the result consumed by the caller.
 
 ## Void and hard-float need different result criteria
 
-In [R17](../research/rc3-gdb-python/en/r17.md), void is checked through its RAM
+In recorded checks, void is checked through its RAM
 effect rather than a scalar return_value. Direct call restores PC/SP but retains
 side effects; empty return skips the body. For hard-float, verify ELF attributes
 and early FPU initialization. Passing double through d0/d1 does not imply hardware
@@ -462,7 +462,7 @@ at exact function entry before the prologue changes SP.
 
 ## Structure return and C++ overloads
 
-In [R18](../research/rc3-gdb-python/en/r18.md), return completed without delivering
+In recorded checks, return completed without delivering
 Pair into its hidden buffer; HFA worked only in hard-float, Small in both ABIs.
 Check the caller value, type and transfer path of the current ELF. Do not carry
 the old pinned SRET technique to a new ELF without renewed analysis.

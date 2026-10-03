@@ -4,21 +4,6 @@
 
 [Подготовка v0.2.0-rc.1](RC020_READINESS.md): версия Python 0.2.0rc1; выпуск ещё не опубликован. Исторические сведения ниже сохраняются.
 
-[Спецификация API 0.2.1](../TECHNICAL_SPECIFICATION_API.md) — база rc.2 и принятые требования первого расширения; отдельное ТЗ на русском. Ядро ещё rc.2: record/records и config/config_props в него не перенесены. [Статус и миграция](../research/api-extension/ru/m5-contract.md).
-
-[Исследование расширения API](../research/api-extension/ru/index.md) — record/read/frames/context/finish на текущих сценариях, план и результаты.
-
-[Исследование 2: адаптивное дерево сценариев](../research/adaptive-test-tree/ru/index.md) — имитационный движок, JSON-эталон и HTML-проигрыватель.
-
-[Исследование GDB Python для rc3](../research/rc3-gdb-python/ru/index.md): план, отдельные отчёты R1–R18 и результаты.
-
-- [Эволюция API и разделение ТЗ](../research/rc3-gdb-python/ru/api-evolution.md) — проект соглашений, критерии проверки и порядок перехода.
-- [Предложение состава API](../research/rc3-gdb-python/ru/api-proposal.md) — операции, контракты, пакеты внедрения и открытые вопросы.
-- [Сводка R1–R18](../research/rc3-gdb-python/ru/summary.md) — все отчёты, результаты и границы доказанного.
-- [API, техники и шаблоны](../research/rc3-gdb-python/ru/scenario-tools.md) — области применения, классификация и свойства API.
-- [Именованный контекст исполнения](../research/rc3-gdb-python/ru/execution-context.md) — предложение контракта снимка.
-- [Технический долг](../research/rc3-gdb-python/ru/technical-debt.md) — приостановленные этапы и открытые ограничения.
-
 [F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.](F429_CMSIS_RTC_SLEEP.md)
 
 [F429 ADC/DMA/units/failures:15/15 HW +3 повтора, HAL восстановлена; ТЗ0.56.](F429_CMSIS_ADC_DMA.md)
@@ -112,3 +97,6 @@ F030: RTC deadline через инъекцию аргумента, API без и
 [Итоговая сверка пяти профилей и оставшиеся HAL-проверки](CMSIS_ACCEPTANCE.md).
 
 [HAL F030: пять GPIO/RCC-техник и варианты исходников](F030_HAL_GPIO_RCC.md).
+
+
+[Принятый API и результаты](API_ACCEPTANCE.md).

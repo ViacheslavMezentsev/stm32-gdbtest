@@ -4,7 +4,7 @@
 
 [Preparing v0.2.0-rc.1](RC020_READINESS.md): Python 0.2.0rc1; not published yet. Historical evidence follows.
 
-[First API package integrated](../research/api-extension/en/core-integration.md): 0.2.0.dev0, API spec 0.2.2/system 0.62; host/offline and three stands PASS. Release separate. Historical stages follow.
+[Accepted API](API_ACCEPTANCE.md): candidate 0.2.0rc1; current acceptance and limits: [RC020_READINESS](RC020_READINESS.md). Historical stages follow.
 
 [F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](F429_CMSIS_RTC_SLEEP.md)
 

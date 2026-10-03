@@ -4,7 +4,7 @@
 
 [Подготовка v0.2.0-rc.1](RC020_READINESS.md): версия Python 0.2.0rc1; выпуск ещё не опубликован. Исторические сведения ниже сохраняются.
 
-[Первый пакет API интегрирован](../research/api-extension/ru/core-integration.md): 0.2.0.dev0, ТЗ API 0.2.2/общее 0.62; host/offline и три стенда PASS. Выпуск отдельно. Ниже — исторические этапы.
+[Принятый API](API_ACCEPTANCE.md): кандидат 0.2.0rc1; актуальная приёмка и границы — [RC020_READINESS](RC020_READINESS.md). Далее — история предыдущих этапов.
 
 [F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.](F429_CMSIS_RTC_SLEEP.md)
 

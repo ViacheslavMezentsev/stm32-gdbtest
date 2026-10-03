@@ -1,3 +1,0 @@
-[config]
-target = "../../../firmware/profiles/f411ce/target.toml"
-api = "api.toml"

@@ -42,3 +42,11 @@ desktop.ini
 
 /tests/hal-f030/build/
 /tests/hal-f030/CMakeUserPresets.json
+
+# BEGIN local development materials (also used by ci/public_docs.py)
+/docs/research/
+/tools/research/
+/tests/api-experiments/
+/tests/api-extension/
+/tests/**/dev-*/
+# END local development materials

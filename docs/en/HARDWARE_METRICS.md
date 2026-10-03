@@ -4,11 +4,10 @@
 
 ## Current recorded snapshot — 2026-10-03
 
-[Complete local campaign](../research/api-extension/en/scenario-migration.md)
+[accepted results](API_ACCEPTANCE.md)
 on a working tree based on `7ed6d0a`: F030R8 19/19, F103C8 21/21, F401CC 21/21,
 F411CE 21/21, F429ZI 21/21. Total: **103 CMSIS cases, five board models**.
-Windows/GCC13/GDB14; all five complete suites ran. The JSON report includes
-changed-source/ELF hashes and individual execution results.
+Windows/GCC13/GDB14; all five complete suites ran. The public summary lists the scope and limits of this historical result.
 
 README shows 103 and 2026-10-03. `Hardware: historical snapshot` denotes recorded
 working-tree evidence, not current main or CI status. The total excludes HAL

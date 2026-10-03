@@ -16,7 +16,7 @@ Executable ASTs were compared with `ebf1bf8`: no differences (module docstrings 
 Historical research snapshots remain unchanged; the hardware campaign was not repeated.
 
 
-Production first-package examples and five-MCU verification: [TECH-010/011](../research/api-extension/en/scenario-migration.md).
+Production first-package examples and five-MCU verification: [accepted results](API_ACCEPTANCE.md).
 
 A practical companion to [test authoring](TEST_AUTHORING.md). HAL techniques
 remain documented after examples migrate to CMSIS: firmware changes, but
@@ -262,10 +262,9 @@ No resume or write is added, nor automatic restoration. Preserve case/contracts 
 context requirements. Single checks need no helper; for one structure's fields also
 consider the existing fields operation.
 
-**Verified:** 82 paired host cases for RTC F030, ADC F411 and TIM2 F103; 47 candidate
-blocks including board variants. Hardware pairs confirmed on F030/F103/F411;
-see the update below.
-[Report, variants and boundaries](../research/api-extension/en/table-checks.md).
+**Verified:** production migration of 44 blocks/282 checks and host comparison
+of evaluation order and first failure. Code: tests/host/test_scenario_tables.py;
+[accepted results](API_ACCEPTANCE.md).
 
 <a id="tech-011"></a>
 
@@ -274,7 +273,7 @@ see the update below.
 **Purpose:** stop after MCU publication, read ordinary values, record them and
 calculate statistics after completing the series.
 **Availability:** record/records and config are integrated into development Target
-0.2.0.dev0. The historical facade remains for comparison. This is a consumer
+0.2.0rc1.  This is a consumer
 technique, not another core operation.
 
 1. Set count/expected quality/units in scenario parameters. Place consumer api.toml
@@ -297,11 +296,7 @@ Python calculations use captured data. For GDB arithmetic, transfer numbers with
 thread and restore scratch variables. set_value, firmware calls and continuation are
 separate actions with separate restoration requirements.
 
-**Verified:** paired VDDA/temperature variant (5 outcomes), known mean/deviation
-anchors, GDB14/GDB16 with 4 arithmetic sets each without MCU. Historical E1 hardware
-results do not replace acceptance of the new variant.
-[Python/GDB examples, paired scenario and evidence](../research/api-extension/en/measurement-technique.md).
-
-[Update 2026-10-03: TECH-010/011 verified on three boards](../research/api-extension/en/techniques-three-boards.md): F030, F103, F411; 7/7 HW each with restoration. Earlier host-only boundaries still apply to negative cases; core unchanged.
-
-[Acceptance after core integration](../research/api-extension/en/core-integration.md): three stands repeated, TECH-011 uses actual Target; 7/7 HW each, restoration PASS.
+**Verified:** production VDDA/temperature series on five CMSIS profiles;
+numerical mean/stdev anchors and negative cases: tests/host/test_measurement_scenarios.py.
+[Scenario example](../../tests/firmware/profiles/f411ce/tests/board/test_measurements.py),
+[accepted results](API_ACCEPTANCE.md).

@@ -2,6 +2,26 @@
 
 [Documentation](index.md) → Checks and CI · [Русский](../ru/testing.md)
 
+## Evidence levels
+
+The normative classification is main specification 9.3, not a CI command sequence.
+
+| Level | Confirms | Does not confirm | Tools |
+| --- | --- | --- | --- |
+| L0 | Environment, dependency versions and hashes | Module logic | ci/docker/verify.py, doctor |
+| L1 | Documents, links, RU/EN pairs and publication boundaries | Text semantics or code behavior | docs, docs.public |
+| L2 | Host logic with substitutes | Actual GDB/backend/MCU | tests/host |
+| L3 | CMake Configure/Generate and test registration | Compilation or execution | CMake host tests, consumer |
+| L4 | ELF/images, sections and manifest | Firmware execution | CMSIS/HAL GCC matrix |
+| L5 | Offline GDB, DWARF, contracts and preparation | MCU or peripherals | prepare, contract_preflight |
+| L6 | Execution and recovery on a specific stand | All platforms or coverage | run_hw.py, run_suite.py |
+
+Command groups below can span several levels; format is a separate style check.
+QEMU/Renode are not implemented acceptance levels. L6 is part of release acceptance.
+`docs.public` reads the designated .gitignore filters and rejects local-only material
+and references into it, regardless of whether the developer has the file locally.
+
+
 CI checks the module up to the GDB server: without a debugger, a board or MCU
 access. Hardware scenarios run separately on an agreed stand
 ([maintenance](maintenance.md#working-with-hardware)). CI requirements are items
@@ -16,7 +36,7 @@ access. Hardware scenarios run separately on an agreed stand
 | host | Module host tests `tests/host` | Linux in the Docker image, Windows (Python 3.11, 3.13) and Ubuntu 20.04 x86_64/aarch64 on the stand environment Python, Offline workflow |
 | stand | Installing the Linux stand environment in a clean `ubuntu:20.04`, `doctor`, the `build` and `prepare` steps of `run_hw.py` for three profiles | `linux-stand` job of the Offline workflow on `ubuntu-24.04` and `ubuntu-24.04-arm` |
 | firmware | Building the F030R8, F103C8, F411CE CI firmware with every GCC in the lock file; build manifest; CTest `host` (traceability, `prepare.<ID>` with offline contracts); full-image preparation; rejection of a too small image policy; 10 negative ELF contract variants; presence and 4-byte alignment of load sections, including `.data` | `ci/run_checks.py firmware` in the Docker image, Offline workflow |
-| hal | HAL F030/GCC13: 19 CTest, 17 prepare JSON, positive and 5 negative contracts; no server | `ci/run_checks.py hal`, Offline workflow |
+| hal | HAL F030/GCC13: 24 CTest, 22 prepare JSON, positive and 5 negative contracts; no server | `ci/run_checks.py hal`, Offline workflow |
 
 The CI firmware lives in [tests/firmware](../../tests/firmware/README.md): CMSIS without
 HAL and without stm32-cmake-yml, one profile each for Cortex-M0, M3 and M4. The

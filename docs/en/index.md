@@ -4,21 +4,6 @@ Documentation · [Русский](../ru/index.md)
 
 [Preparing v0.2.0-rc.1](RC020_READINESS.md): Python 0.2.0rc1; not published yet. Historical evidence follows.
 
-[API specification 0.2.1](../TECHNICAL_SPECIFICATION_API.md) — rc.2 baseline and accepted first-extension requirements; separate Russian specification. Core remains rc.2: record/records and config/config_props are not integrated. [Status and migration](../research/api-extension/en/m5-contract.md).
-
-[API extension research](../research/api-extension/en/index.md) — record/read/frames/context/finish using existing scenarios, plan and results.
-
-[Research 2: adaptive scenario tree](../research/adaptive-test-tree/en/index.md) — simulated engine, JSON oracle and HTML player.
-
-[GDB Python research for rc3](../research/rc3-gdb-python/en/index.md): plan, separate R1–R18 reports and results.
-
-- [API evolution and specification boundaries](../research/rc3-gdb-python/en/api-evolution.md) — draft conventions, verification criteria and transition order.
-- [API scope proposal](../research/rc3-gdb-python/en/api-proposal.md) — operations, contracts, implementation packages and open questions.
-- [R1–R18 summary](../research/rc3-gdb-python/en/summary.md) — all reports, findings and evidence boundaries.
-- [API, techniques and patterns](../research/rc3-gdb-python/en/scenario-tools.md) — application areas, classification and API properties.
-- [Named execution context](../research/rc3-gdb-python/en/execution-context.md) — snapshot contract proposal.
-- [Technical debt](../research/rc3-gdb-python/en/technical-debt.md) — paused stages and open limitations.
-
 [F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](F429_CMSIS_RTC_SLEEP.md)
 
 [F429 ADC/DMA/units/failures:15/15 HW +3 repeats, HAL restored; specification0.56.](F429_CMSIS_ADC_DMA.md)
@@ -112,3 +97,6 @@ F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_D
 [Five-profile acceptance review and remaining HAL checks](CMSIS_ACCEPTANCE.md).
 
 [HAL F030: five GPIO/RCC techniques and source variants](F030_HAL_GPIO_RCC.md).
+
+
+[Accepted API and results](API_ACCEPTANCE.md).
