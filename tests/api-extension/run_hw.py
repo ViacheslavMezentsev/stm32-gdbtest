@@ -21,7 +21,7 @@ def main():
     parser.add_argument("--restore-session", type=Path, required=True)
     parser.add_argument("--stand", type=Path, required=True)
     parser.add_argument("--execute", action="store_true")
-    parser.add_argument("--case", choices=("HW_E1_MEASUREMENTS", "HW_E1_ADC_PAIR", "HW_E2_READ"),
+    parser.add_argument("--case", choices=("HW_E1_MEASUREMENTS", "HW_E1_ADC_PAIR", "HW_E2_READ", "HW_E3_CONTEXT"),
                         default="HW_E1_MEASUREMENTS")
     args = parser.parse_args()
     sessions = [json.loads(p.read_text(encoding="utf-8"))
@@ -33,7 +33,8 @@ def main():
         load_verified(session["build_manifest"], digest(session["elf"]), session["profile"])
         if load_profile(session["profile"])["mcu"] != "STM32F411CEU6":
             raise ValueError("requires F411CE images")
-    baseline = next(c for c in collect(sessions[0]["tests"]) if c["id"] == "HW_CI_ADC_UNITS")
+    baseline_id = "HW_CI_SLEEP_SYSTICK" if args.case == "HW_E3_CONTEXT" else "HW_CI_ADC_UNITS"
+    baseline = next(c for c in collect(sessions[0]["tests"]) if c["id"] == baseline_id)
     experiment = next(c for c in collect(HERE / "board") if c["id"] == args.case)
     restores = {c["id"]: c for c in collect(sessions[1]["tests"])}
     restore_cases = [restores[name] for name in ("HW_BOOT", "HW_GPIO")]

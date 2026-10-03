@@ -2,6 +2,8 @@
 
 ## Исследование расширения API — 03.10.2026
 
+- E3: минимальный context/stack и caller, host 36/36; F411 первый ERROR (константа GDB отсутствует), исправленный опыт и restore 4/4 PASS. Оба восстановления PASS, ERROR сохранён. [Отчёт](docs/research/api-extension/ru/e3.md); вопросы Q1–Q8 в конце плана, далее E4.
+
 - E2: ограниченный read глобальных объектов RAM, типизированные неизменяемые снимки; host 29/29, F411 baseline/опыт/restore 4/4 PASS. [Отчёт](docs/research/api-extension/ru/e2.md). Эргономика, provenance/availability и frame остаются вопросами E3/E5; далее frames/context. HAL восстановлен, ядро прежнее.
 
 - В конец плана добавлены E5 (сверка свойств с api-evolution/api-proposal/execution-context) и условный E6 (принятие API, версия, вопросы, ТЗ и миграция сценариев после согласования). Это не утверждение переноса в ядро.

@@ -121,3 +121,19 @@ RTOS and advanced assembly operations are outside E1–E4. Counter arithmetic,
 ranges and MCU-specific expectations remain consumer techniques.
 The study produces an API scope recommendation and limitations, followed by separate
 approval of conventions/API specification and core integration; no release target is implied.
+
+## Questions and proposals for review after the stages
+
+This list grows with experiments. All items are open; E5/E6 owns decisions and
+experimental implementation does not imply approval. IDs are local to this study.
+
+| ID | Source | Question / proposal | Review |
+| --- | --- | --- | --- |
+| Q1 | E1 | Keep records as detached mutable copies or unify with deeply immutable snapshots? | E5 |
+| Q2 | E1/E2 | How to extract Snapshot data and pass it to record conveniently without losing types? Direct Snapshot recording is currently rejected; automatic export is out of scope. | E5 |
+| Q3 | E2/E3 | Shared provenance model: actual run/image ID, inferior/thread/core, stop/revision; associate read with context capture time. | E3/E5 |
+| Q4 | E2/E3 | Refine availability/errors: missing fields, optimized-out, unreadable and partial stacks; keep distinct from assertion FAIL. | E5 |
+| Q5 | E3 | Which operations automatically invalidate snapshots? Raw monitor/reset/reconnect and thread/core switches need policy; current explicit invalidate is incomplete. | E5 |
+| Q6 | E1/E2 | Is the benefit sufficient without fewer lines? Measure copying memory/time, define limits and convenient access; avoid replacing locals with journals unnecessarily. | E5 |
+| Q7 | E3 | Probe required capabilities of the installed GDB instead of inferring support from version: the tested build lacks FIRST_ERROR. | E5 |
+| Q8 | E3 | Classify older=None + NO_REASON separately as unconfirmed_end? Current unwind_error retains reason but does not imply corruption; agree on tri-state caller and exact signal/inline depth counting. | E5 |

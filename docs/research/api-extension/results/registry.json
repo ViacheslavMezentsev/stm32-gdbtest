@@ -41,6 +41,14 @@
       "host_tests": 29,
       "hardware_runs": 4,
       "restore": "PASS"
+    },
+    {
+      "id": "e3-f411-2026-10-03",
+      "kind": "host-and-hardware",
+      "status": "ERROR-then-corrected-PASS",
+      "result": "e3-f411.json",
+      "host_tests": 36,
+      "restore": "PASS-both-attempts"
     }
   ]
 }

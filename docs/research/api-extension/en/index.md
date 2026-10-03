@@ -16,6 +16,7 @@ Historical reports from that study remain unchanged.
 - [E1: runtime journal and VDDA/temperature statistics](e1.md).
 - [E1: paired comparison and conclusions](e1-comparison.md).
 - [E2: bounded typed reads](e2.md).
+- [E3: stack and minimal context](e3.md).
 - [Machine-readable run registry](../results/registry.json).
 - Contract foundations: [API proposal](../../rc3-gdb-python/en/api-proposal.md) and
   [evolution conventions](../../rc3-gdb-python/en/api-evolution.md).
