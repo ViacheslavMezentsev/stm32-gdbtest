@@ -23,6 +23,15 @@
       "preparation_errors": 2,
       "hardware_runs": 4,
       "restore": "PASS"
+    },
+    {
+      "id": "e1-paired-2026-10-03",
+      "kind": "host-and-hardware",
+      "status": "PASS",
+      "result": "e1-paired.json",
+      "host_tests": 22,
+      "hardware_runs": 4,
+      "restore": "PASS"
     }
   ]
 }
