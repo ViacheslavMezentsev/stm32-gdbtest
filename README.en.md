@@ -5,8 +5,8 @@
 
 [![Hardware evidence](https://img.shields.io/badge/Hardware-historical%20snapshot-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
 [![Board models tested](https://img.shields.io/badge/Boards%20tested-5-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
-[![Recorded hardware cases](https://img.shields.io/badge/HW%20cases%20%28recorded%29-98-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
-[![Latest recorded hardware verification](https://img.shields.io/badge/HW%20verified%20%28latest%29-2026--10--01-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
+[![Recorded hardware cases](https://img.shields.io/badge/HW%20cases%20%28recorded%29-103-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
+[![Latest recorded hardware verification](https://img.shields.io/badge/HW%20verified%20%28latest%29-2026--10--03-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
 
 [Русский](README.md)
 
@@ -211,7 +211,7 @@ link is watched by a heartbeat. ST-LINK GDB Server is not available on Linux aar
 (ST does not ship it for arm64), so OpenOCD and J-Link are used on Orange Pi.
 Details: [Linux stand](docs/en/LINUX_STAND.md), [GDB servers](docs/en/BACKENDS.md).
 
-**Reading the counters.** `Hardware: historical snapshot`, `Boards tested` and `HW cases (recorded)` describe recorded CMSIS hardware evidence: five board models and 98 distinct profile/fixture/scenario combinations. Repeats and builds do not increase this count; `HW verified (latest)` is the date of the newest included experiment. This is a historical snapshot across revisions, not a single run of current main or a coverage percentage. See the [metric definitions and results table](docs/en/HARDWARE_METRICS.md) for scope and evidence.
+**Reading the counters.** `Hardware: historical snapshot`, `Boards tested` and `HW cases (recorded)` describe recorded CMSIS hardware evidence: five board models and 103 distinct profile/fixture/scenario combinations. Repeats and builds do not increase this count; `HW verified (latest)` is the date of the newest included experiment. This records a complete local working-tree campaign based on `7ed6d0a` on 2026-10-03, not verification of current main or a coverage percentage. See the [metric definitions and results table](docs/en/HARDWARE_METRICS.md) for scope and evidence.
 
 ## MCU profiles
 

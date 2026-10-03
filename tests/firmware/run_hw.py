@@ -116,8 +116,24 @@ def main():
                                     for table, values in tables.items()), encoding="utf-8")
     def scenario(test_id, *extra, stand=stand_path, image_policy=None, expect=0):
         run_env = dict(env, STM32_GDBTEST_IMAGE_POLICY=str(image_policy)) if image_policy else env
-        result = command([*cli, "--test", test_id, "--stand", stand, *extra], log, run_env)
-        reports = sorted(runs.glob(f"**/*-{test_id}-*/result.json"), key=lambda p: p.stat().st_mtime)
+        selected_cli = cli
+        selected_runs = runs
+        if image_policy:
+            # Separate legacy-image descriptor deliberately tests the old interface.
+            if args.package:
+                sys.path.insert(0, str(ROOT))
+                from stm32_gdbtest.package import open_package
+                data = open_package(package, workdir)
+                selected_runs = Path(data['out'])
+            else:
+                data = json.loads(session.read_text(encoding='utf-8'))
+            data.pop('session_config', None)
+            data.pop('_config_capsule', None)
+            legacy = out / 'session-legacy-image.json'
+            legacy.write_text(json.dumps(data), encoding='utf-8')
+            selected_cli = [sys.executable, '-B', ROOT / 'stm32_gdbtest/cli.py', 'run', '--session', legacy]
+        result = command([*selected_cli, "--test", test_id, "--stand", stand, *extra], log, run_env)
+        reports = sorted(selected_runs.glob(f"**/*-{test_id}-*/result.json"), key=lambda p: p.stat().st_mtime)
         report = json.loads(reports[-1].read_text(encoding="utf-8")) if reports else {}
         if result.returncode != expect:
             raise StepError(f"exit {result.returncode}, expected {expect}: {report.get('error', result.stdout[-2000:])}")

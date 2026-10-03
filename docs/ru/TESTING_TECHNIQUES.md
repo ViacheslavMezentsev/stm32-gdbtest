@@ -2,6 +2,8 @@
 
 [Документация](index.md) · [English](../en/TESTING_TECHNIQUES.md)
 
+Штатные примеры первого пакета и проверка на пяти MCU: [TECH-010/011](../research/api-extension/ru/scenario-migration.md).
+
 Практическое дополнение к [руководству автора](TEST_AUTHORING.md). HAL-приёмы
 сохраняются здесь после перехода примеров на CMSIS: меняется реализация firmware,
 но опыт работы с GDB, DWARF, callback и инъекциями остаётся полезным.

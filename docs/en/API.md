@@ -2,6 +2,8 @@
 
 [Documentation](index.md) → API · [Русский](../ru/API.md)
 
+Production first-package examples and five-MCU verification: [TECH-010/011](../research/api-extension/en/scenario-migration.md).
+
 ## First package: records and configuration
 
 Development `0.2.0.dev0` targets 0.2.0; `API_VERSION=1`, api.toml schema=1. Not released. [API spec 0.2.2](../TECHNICAL_SPECIFICATION_API.md), [core acceptance](../research/api-extension/en/core-integration.md).

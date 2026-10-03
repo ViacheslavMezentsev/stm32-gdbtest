@@ -66,3 +66,8 @@ Ordinary Sleep/WFI interrupted by SysTick exception15 with external IRQs masked;
 
 ## HW_CI_SLEEP_TIM2
 With SysTick disabled and only TIM2 enabled, exception44 interrupts WFI; ticks do not advance, restore IRQ controls and resume. Not Stop/current measurement.
+
+## HW_CI_ADC_SERIES
+Capture configured 2..20 contiguous published ADC samples; validate quality and ranges,
+then retain raw measurements and mean/sample standard deviation (ddof=1) using runtime records.
+A missing, stale or invalid sample prevents a successful summary. Not sensor calibration.

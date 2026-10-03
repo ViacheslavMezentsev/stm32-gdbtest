@@ -212,7 +212,7 @@ def firmware_pair(gcc, profile):
 
     # CTest host label: traceability and prepare.<ID> with requested offline contracts.
     ctest = run(["ctest", "--test-dir", build, "-L", "host", "--output-on-failure"], env=env, log=log)
-    expected_cases = ["HW_CI_BOOT", "HW_CI_GPIO"]
+    expected_cases = ["HW_CI_BOOT", "HW_CI_GPIO", "HW_CI_ADC_SERIES"]
     if profile == "f030r8":
         expected_cases += ["HW_CI_CLOCK", "HW_CI_BLINK", "HW_CI_TIM3_INIT", "HW_CI_TIM3_IRQ",
                            "HW_CI_ADC_INIT", "HW_CI_ADC_DMA", "HW_CI_ADC_TIMEOUT",
@@ -244,13 +244,16 @@ def firmware_pair(gcc, profile):
 
     # Full image policy: canonical BIN and transport ELF are prepared and checked.
     policy = FIRMWARE / f"profiles/{profile}/full-image.toml"
-    report = prepare(build, session_path, "HW_CI_GPIO", dict(env, STM32_GDBTEST_IMAGE_POLICY=str(policy)))
+    # Exercise the preserved legacy image-policy interface in a separate descriptor.
+    legacy_path = build / "hwtest/session-legacy-image.json"
+    legacy_path.write_text(json.dumps({k: v for k, v in session.items() if k != 'session_config'}), encoding='utf-8')
+    report = prepare(build, legacy_path, "HW_CI_GPIO", dict(env, STM32_GDBTEST_IMAGE_POLICY=str(policy)))
     if report["image_verification"]["scope"] != "full-image" or not report.get("program_elf_sha256"):
         raise CheckError("Full-image preparation report is incomplete")
     small = build / "small-image.toml"
     small.write_text(policy.read_text(encoding="utf-8").replace("end = 0x08004000", "end = 0x08000100"),
                      encoding="utf-8")
-    report = prepare(build, session_path, "HW_CI_GPIO", dict(env, STM32_GDBTEST_IMAGE_POLICY=str(small)), expect=2)
+    report = prepare(build, legacy_path, "HW_CI_GPIO", dict(env, STM32_GDBTEST_IMAGE_POLICY=str(small)), expect=2)
     if "exceeds full image range" not in report.get("error", ""):
         raise CheckError("Too small image policy was not rejected")
 

@@ -67,3 +67,8 @@ With both external NVIC banks masked, exception15 interrupts WFI; delay complete
 
 ## HW_CI_SLEEP_TIM2
 Only IRQ28 enabled, SysTick stopped: exception44 interrupts WFI without tick advance; restore controls and resume. Not Stop or a power measurement.
+
+## HW_CI_ADC_SERIES
+Capture configured 2..20 contiguous published ADC samples; validate quality and ranges,
+then retain raw measurements and mean/sample standard deviation (ddof=1) using runtime records.
+A missing, stale or invalid sample prevents a successful summary. Not sensor calibration.

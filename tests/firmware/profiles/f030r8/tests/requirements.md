@@ -105,3 +105,8 @@ error3 at board_rtc_fault after at least 1000 SysTick ticks, unchanged BDCR,
 zero app loops and alarm events. This checks the shared wait deadline and
 error propagation, not physical LSI failure or every RTC initialization path.
 Teardown reset_run restores execution; no backup-domain mutation is injected.
+
+## HW_CI_ADC_SERIES
+Capture configured 2..20 contiguous published ADC samples; validate quality and ranges,
+then retain raw measurements and mean/sample standard deviation (ddof=1) using runtime records.
+A missing, stale or invalid sample prevents a successful summary. Not sensor calibration.

@@ -2,6 +2,23 @@
 
 [Documentation](index.md) · [Русский](../ru/HARDWARE_METRICS.md)
 
+## Current recorded snapshot — 2026-10-03
+
+[Complete local campaign](../research/api-extension/en/scenario-migration.md)
+on a working tree based on `7ed6d0a`: F030R8 19/19, F103C8 21/21, F401CC 21/21,
+F411CE 21/21, F429ZI 21/21. Total: **103 CMSIS cases, five board models**.
+Windows/GCC13/GDB14; all five complete suites ran. The JSON report includes
+changed-source/ELF hashes and individual execution results.
+
+README shows 103 and 2026-10-03. `Hardware: historical snapshot` denotes recorded
+working-tree evidence, not current main or CI status. The total excludes HAL
+F030 22/22, minimal consumer 1/1, repeats and restoration. See the report for
+limits and warnings. Unique counts use profile/fixture/ID, not algorithms or
+assertions. Hardware workflow still does not automatically run this full set.
+
+## Previous snapshot (retained history)
+
+
 Snapshot dated 2026-10-01, with F030/F103/F411 sources in main `591c096`; F401 accepted at `9d22410`; F429 RTC/Sleep added in a dependent branch from `52c49fd`. README
 badges are currently static and updated with this table after reviewing evidence.
 The blue `Hardware: historical snapshot` describes the evidence category, not

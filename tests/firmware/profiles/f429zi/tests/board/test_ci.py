@@ -1,13 +1,26 @@
 from stm32_gdbtest import case
 
 
+
+
+def _check_values(target, rows):
+    # TECH-010: evaluate each actual, then its expected expression, then check.
+    for name, expression, expected in rows:
+        actual = target.value(expression)
+        if isinstance(expected, str):
+            expected = target.value(expected)
+        target.check(name, actual, expected)
+
+
 @case("HW_CI_BOOT", labels=("boot",), contracts=("ci_app_api",))
 def boot(target):
     # Target.boot has already reached main, before board_init.
-    target.check("initialized interval", target.value("app_delay"), 500)
-    target.check("BSS loop count", target.value("app_state.ticks"), 0)
-    target.check("BSS LED state", target.value("app_state.led"), 0)
-    target.check("BSS milliseconds", target.value("board_ticks_ms"), 0)
+    _check_values(target, [
+        ('initialized interval', 'app_delay', 500),
+        ('BSS loop count', 'app_state.ticks', 0),
+        ('BSS LED state', 'app_state.led', 0),
+        ('BSS milliseconds', 'board_ticks_ms', 0),
+    ])
     target.reach("app_loop")
     before = target.value("app_state.ticks")
     target.reach("app_loop")
@@ -18,12 +31,14 @@ def boot(target):
 def gpio(target):
     # CMSIS macros are visible in board.c, the translation unit that includes the device header.
     target.reach("board_led_toggle")
-    target.check("PG13 clock", target.value("(RCC->AHB1ENR & RCC_AHB1ENR_GPIOGEN) != 0"), 1)
-    target.check("PG13 output", target.value("GPIOG->MODER & GPIO_MODER_MODER13"), 1 << 26)
-    target.check("push-pull", target.value("GPIOG->OTYPER & GPIO_OTYPER_OT13"), 0)
-    target.check("low speed", target.value("GPIOG->OSPEEDR & GPIO_OSPEEDER_OSPEEDR13"), 0)
-    target.check("no pull", target.value("GPIOG->PUPDR & GPIO_PUPDR_PUPD13"), 0)
-    target.check("initial LED off (Low)", target.value("GPIOG->ODR & GPIO_ODR_OD13"), 0)
+    _check_values(target, [
+        ('PG13 clock', '(RCC->AHB1ENR & RCC_AHB1ENR_GPIOGEN) != 0', 1),
+        ('PG13 output', 'GPIOG->MODER & GPIO_MODER_MODER13', 1 << 26),
+        ('push-pull', 'GPIOG->OTYPER & GPIO_OTYPER_OT13', 0),
+        ('low speed', 'GPIOG->OSPEEDR & GPIO_OSPEEDER_OSPEEDR13', 0),
+        ('no pull', 'GPIOG->PUPDR & GPIO_PUPDR_PUPD13', 0),
+        ('initial LED off (Low)', 'GPIOG->ODR & GPIO_ODR_OD13', 0),
+    ])
 
 
 @case("HW_CI_CLOCK", labels=("clock",), contracts=("ci_clock_macros",))
@@ -54,14 +69,16 @@ def blink(target):
 @case("HW_CI_TIM2_INIT", labels=("timer", "init"), contracts=("ci_timer_macros",))
 def timer_init(target):
     target.reach("board_led_toggle")
-    target.check("TIM2 clock", target.value("(RCC->APB1ENR & RCC_APB1ENR_TIM2EN) != 0"), 1)
-    target.check("TIM2 prescaler", target.value("TIM2->PSC"), 15999)
-    target.check("TIM2 period", target.value("TIM2->ARR"), 99)
-    target.check("TIM2 internal clock", target.value("TIM2->SMCR"), 0)
-    target.check("TIM2 upcounter enabled", target.value("TIM2->CR1"), 1)
-    target.check("update interrupt only", target.value("TIM2->DIER"), 1)
-    target.check("NVIC TIM2 enabled", target.value("(NVIC->ISER[0] >> 28) & 1"), 1)
-    target.check("TIM2 vector", target.value("(unsigned int)vectors[44] & ~1U"), target.value("(unsigned int)TIM2_IRQHandler & ~1U"))
+    _check_values(target, [
+        ('TIM2 clock', '(RCC->APB1ENR & RCC_APB1ENR_TIM2EN) != 0', 1),
+        ('TIM2 prescaler', 'TIM2->PSC', 15999),
+        ('TIM2 period', 'TIM2->ARR', 99),
+        ('TIM2 internal clock', 'TIM2->SMCR', 0),
+        ('TIM2 upcounter enabled', 'TIM2->CR1', 1),
+        ('update interrupt only', 'TIM2->DIER', 1),
+        ('NVIC TIM2 enabled', '(NVIC->ISER[0] >> 28) & 1', 1),
+        ('TIM2 vector', '(unsigned int)vectors[44] & ~1U', '(unsigned int)TIM2_IRQHandler & ~1U'),
+    ])
 
 
 @case("HW_CI_TIM2_IRQ", labels=("timer", "irq"), contracts=("ci_timer_macros",))

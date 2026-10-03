@@ -1,5 +1,7 @@
 # Дорожная карта
 
+- [Миграция штатных сценариев](docs/research/api-extension/ru/scenario-migration.md) завершена: 103 CMSIS + 22 HAL + 1 пример, пять плат; следующие действия — обсуждение версии 0.2.0. Ветка `codex/api-extension-research`, без push/merge. Старые пункты ниже — история.
+
 ## Исследование расширения API — 03.10.2026
 
 - [Первый пакет в ядре](docs/research/api-extension/ru/core-integration.md): перенос разрешён владельцем, версия разработки 0.2.0.dev0. Host/offline и по 7/7 HW F030/F103/F411, восстановление PASS; release/push/merge не выполнялись. Предыдущие пункты — история этапов.

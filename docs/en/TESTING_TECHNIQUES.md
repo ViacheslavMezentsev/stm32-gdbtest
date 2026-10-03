@@ -2,6 +2,8 @@
 
 [Documentation](index.md) · [Русский](../ru/TESTING_TECHNIQUES.md)
 
+Production first-package examples and five-MCU verification: [TECH-010/011](../research/api-extension/en/scenario-migration.md).
+
 A practical companion to [test authoring](TEST_AUTHORING.md). HAL techniques
 remain documented after examples migrate to CMSIS: firmware changes, but
 experience with GDB, DWARF, callbacks and injections remains useful.

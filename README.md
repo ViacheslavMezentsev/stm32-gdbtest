@@ -5,8 +5,8 @@
 
 [![Hardware evidence](https://img.shields.io/badge/Hardware-historical%20snapshot-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
 [![Board models tested](https://img.shields.io/badge/Boards%20tested-5-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
-[![Recorded hardware cases](https://img.shields.io/badge/HW%20cases%20%28recorded%29-98-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
-[![Latest recorded hardware verification](https://img.shields.io/badge/HW%20verified%20%28latest%29-2026--10--01-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
+[![Recorded hardware cases](https://img.shields.io/badge/HW%20cases%20%28recorded%29-103-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
+[![Latest recorded hardware verification](https://img.shields.io/badge/HW%20verified%20%28latest%29-2026--10--03-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
 
 [English](README.en.md)
 
@@ -209,7 +209,7 @@ Linux aarch64 недоступен (ST не выпускает его для arm
 используются OpenOCD и J-Link. Подробности: [Linux-стенд](docs/ru/LINUX_STAND.md),
 [GDB-серверы](docs/ru/BACKENDS.md).
 
-**Как читать счётчики.** `Hardware: historical snapshot`, `Boards tested` и `HW cases (recorded)` описывают сохранённые аппаратные протоколы CMSIS-примеров: пять моделей плат и 98 уникальных сочетаний «профиль + fixture + сценарий». Повторы и сборки не увеличивают это число; `HW verified (latest)` — дата самого нового включённого опыта. Это исторический срез разных ревизий, а не единый прогон текущего main и не процент покрытия. Состав, границы и результаты приведены в [описании метрик и таблице проверок](docs/ru/HARDWARE_METRICS.md).
+**Как читать счётчики.** `Hardware: historical snapshot`, `Boards tested` и `HW cases (recorded)` описывают сохранённые аппаратные протоколы CMSIS-примеров: пять моделей плат и 103 уникальных сочетаний «профиль + fixture + сценарий». Повторы и сборки не увеличивают это число; `HW verified (latest)` — дата самого нового включённого опыта. Это полный локальный прогон рабочей копии от `7ed6d0a` от 03.10.2026, а не проверка текущего main и не процент покрытия. Состав, границы и результаты приведены в [описании метрик и таблице проверок](docs/ru/HARDWARE_METRICS.md).
 
 ## Профили MCU
 

@@ -2,44 +2,61 @@
 from stm32_gdbtest import case
 
 
+
+
+def _check_values(target, rows):
+    # TECH-010: evaluate each actual, then its expected expression, then check.
+    for name, expression, expected in rows:
+        actual = target.value(expression)
+        if isinstance(expected, str):
+            expected = target.value(expected)
+        target.check(name, actual, expected)
+
+
 @case("HW_CI_ADC_INIT", labels=("adc", "dma", "init"), contracts=("ci_adc_macros",))
 def adc_init(t):
     # TECH-001/002: independent expectations, device macros in adc_f411.c.
     t.reach("board_adc_sample")
-    t.check("ADC1 clock", t.value("(RCC->APB2ENR & RCC_APB2ENR_ADC1EN) != 0"), 1)
-    t.check("DMA2 clock", t.value("(RCC->AHB1ENR & RCC_AHB1ENR_DMA2EN) != 0"), 1)
-    t.check("ADC clock PCLK2/2 (8 MHz)", t.value("ADC->CCR & ADC_CCR_ADCPRE"), 0)
-    t.check("scan only, independent ADC", t.value("ADC1->CR1"), 0x100)
-    t.check("ADC enabled, internal sources, DMA, software trigger", t.value("ADC1->CR2"), 0x301)
-    t.check("sample CH18/17 at 480 cycles", t.value("ADC1->SMPR1"), 0x7E00000)
-    t.check("two regular ranks", t.value("ADC1->SQR1"), 1 << 20)
-    t.check("CH18 then CH17", t.value("ADC1->SQR3"), 18 | (17 << 5))
-    t.check("normal DMA halfwords, TC/TE/DME IRQ", t.value("DMA2_Stream0->CR"), 0x2C16)
-    t.check("ADC data address", t.value("DMA2_Stream0->PAR"), t.value("&ADC1->DR"))
-    t.check("SRAM buffer address", t.value("DMA2_Stream0->M0AR"), t.value("&board_adc_buffer[0]"))
-    t.check("DMA NVIC enabled", t.value("(NVIC->ISER[1] >> 24) & 1"), 1)
-    t.check("DMA vector", t.value("(unsigned int)vectors[72] & ~1U"), t.value("(unsigned int)DMA2_Stream0_IRQHandler & ~1U"))
-    t.check("internal sources without VBAT", t.value("ADC->CCR"), 1 << 23)
-    t.check("direct DMA mode", t.value("DMA2_Stream0->FCR & 0x84"), 0)
-    t.check("no init error", t.value("board_adc_error"), 0)
+    _check_values(t, [
+        ('ADC1 clock', '(RCC->APB2ENR & RCC_APB2ENR_ADC1EN) != 0', 1),
+        ('DMA2 clock', '(RCC->AHB1ENR & RCC_AHB1ENR_DMA2EN) != 0', 1),
+        ('ADC clock PCLK2/2 (8 MHz)', 'ADC->CCR & ADC_CCR_ADCPRE', 0),
+        ('scan only, independent ADC', 'ADC1->CR1', 256),
+        ('ADC enabled, internal sources, DMA, software trigger', 'ADC1->CR2', 769),
+        ('sample CH18/17 at 480 cycles', 'ADC1->SMPR1', 132120576),
+        ('two regular ranks', 'ADC1->SQR1', 1 << 20),
+        ('CH18 then CH17', 'ADC1->SQR3', 18 | 17 << 5),
+        ('normal DMA halfwords, TC/TE/DME IRQ', 'DMA2_Stream0->CR', 11286),
+        ('ADC data address', 'DMA2_Stream0->PAR', '&ADC1->DR'),
+        ('SRAM buffer address', 'DMA2_Stream0->M0AR', '&board_adc_buffer[0]'),
+        ('DMA NVIC enabled', '(NVIC->ISER[1] >> 24) & 1', 1),
+        ('DMA vector', '(unsigned int)vectors[72] & ~1U', '(unsigned int)DMA2_Stream0_IRQHandler & ~1U'),
+        ('internal sources without VBAT', 'ADC->CCR', 1 << 23),
+        ('direct DMA mode', 'DMA2_Stream0->FCR & 0x84', 0),
+        ('no init error', 'board_adc_error', 0),
+    ])
 
 
 @case("HW_CI_ADC_DMA", labels=("adc", "dma", "runtime"), contracts=("ci_adc_macros",))
 def adc_dma(t):
     for sequence in (1, 2):
         t.reach("DMA2_Stream0_IRQHandler")
-        t.check("DMA exception", t.value("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 72)
-        t.check("two transfers completed", t.value("DMA2_Stream0->NDTR"), 0)
-        t.check("TC, no transfer error", t.value("DMA2->LISR & (DMA_LISR_TCIF0 | DMA_LISR_TEIF0 | DMA_LISR_DMEIF0 | DMA_LISR_FEIF0)"), 32)
+        _check_values(t, [
+            ('DMA exception', 'SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk', 72),
+            ('two transfers completed', 'DMA2_Stream0->NDTR', 0),
+            ('TC, no transfer error', 'DMA2->LISR & (DMA_LISR_TCIF0 | DMA_LISR_TEIF0 | DMA_LISR_DMEIF0 | DMA_LISR_FEIF0)', 32),
+        ])
         raw = [t.value(f"board_adc_buffer[{i}]") for i in range(2)]
         t.reach("board_delay_ms")
         t.check("published sequence", t.value("board_adc_sequences"), sequence)
         for name, expected in zip(("board_temperature_raw", "board_reference_raw"), raw):
             t.check(name, t.value(name), expected)
             t.check(name + " not saturated", 0 < expected < 4095, True)
-        t.check("DMA stopped", t.value("DMA2_Stream0->CR & DMA_SxCR_EN"), 0)
-        t.check("DMA flags cleared", t.value("DMA2->LISR & 0x3D"), 0)
-        t.check("no acquisition error", t.value("board_adc_error"), 0)
+        _check_values(t, [
+            ('DMA stopped', 'DMA2_Stream0->CR & DMA_SxCR_EN', 0),
+            ('DMA flags cleared', 'DMA2->LISR & 0x3D', 0),
+            ('no acquisition error', 'board_adc_error', 0),
+        ])
 
 
 @case("HW_CI_ADC_UNITS", labels=("adc", "units"), contracts=("ci_adc_units",))

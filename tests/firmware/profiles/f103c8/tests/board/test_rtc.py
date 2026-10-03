@@ -1,21 +1,34 @@
 from stm32_gdbtest import case
 
 
+
+
+def _check_values(target, rows):
+    # TECH-010: evaluate each actual, then its expected expression, then check.
+    for name, expression, expected in rows:
+        actual = target.value(expression)
+        if isinstance(expected, str):
+            expected = target.value(expected)
+        target.check(name, actual, expected)
+
+
 @case("HW_CI_RTC_INIT", labels=("rtc", "init"), contracts=("ci_rtc_macros",))
 def rtc_init(target):
     target.reach("board_led_toggle")
-    target.check("LSI ready", target.value("(RCC->CSR & RCC_CSR_LSIRDY) != 0"), 1)
-    target.check("LSI RTC clock", target.value("RCC->BDCR & (RCC_BDCR_RTCSEL | RCC_BDCR_RTCEN)"), 0x8200)
-    target.check("F1 prescaler", target.value("(RTC->PRLH << 16) | RTC->PRLL"), 39999)
-    target.check("alarm interrupt only", target.value("RTC->CRH"), 2)
-    target.check("initial alarm", target.value("(RTC->ALRH << 16) | RTC->ALRL"), 2)
-    target.check("CNF clear; synchronized; write finished", target.value("RTC->CRL & 0x38"), 0x28)
-    target.check("EXTI17 rising enabled", target.value("EXTI->IMR & EXTI->RTSR & (1 << 17)"), 1 << 17)
-    target.check("EXTI17 falling disabled", target.value("EXTI->FTSR & (1 << 17)"), 0)
-    target.check("global RTC IRQ disabled", target.value("NVIC->ISER[0] & (1 << 3)"), 0)
-    target.check("alarm IRQ enabled", target.value("NVIC->ISER[1] & (1 << 9)"), 1 << 9)
-    target.check("alarm vector", target.value("(unsigned int)vectors[57] & ~1U"), target.value("(unsigned int)RTC_Alarm_IRQHandler & ~1U"))
-    target.check("no RTC error", target.value("board_rtc_error"), 0)
+    _check_values(target, [
+        ('LSI ready', '(RCC->CSR & RCC_CSR_LSIRDY) != 0', 1),
+        ('LSI RTC clock', 'RCC->BDCR & (RCC_BDCR_RTCSEL | RCC_BDCR_RTCEN)', 33280),
+        ('F1 prescaler', '(RTC->PRLH << 16) | RTC->PRLL', 39999),
+        ('alarm interrupt only', 'RTC->CRH', 2),
+        ('initial alarm', '(RTC->ALRH << 16) | RTC->ALRL', 2),
+        ('CNF clear; synchronized; write finished', 'RTC->CRL & 0x38', 40),
+        ('EXTI17 rising enabled', 'EXTI->IMR & EXTI->RTSR & (1 << 17)', 1 << 17),
+        ('EXTI17 falling disabled', 'EXTI->FTSR & (1 << 17)', 0),
+        ('global RTC IRQ disabled', 'NVIC->ISER[0] & (1 << 3)', 0),
+        ('alarm IRQ enabled', 'NVIC->ISER[1] & (1 << 9)', 1 << 9),
+        ('alarm vector', '(unsigned int)vectors[57] & ~1U', '(unsigned int)RTC_Alarm_IRQHandler & ~1U'),
+        ('no RTC error', 'board_rtc_error', 0),
+    ])
 
 
 @case("HW_CI_RTC_ALARM", labels=("rtc", "irq"), contracts=("ci_rtc_macros",))
@@ -27,9 +40,11 @@ def rtc_alarm(target):
     before = target.value("board_rtc_events")
     previous_alarm = None
     for index in range(2):
-        target.check("alarm exception", target.value("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 57)
-        target.check("ALRF pending", target.value("RTC->CRL & RTC_CRL_ALRF"), 2)
-        target.check("EXTI17 pending", target.value("EXTI->PR & (1 << 17)"), 1 << 17)
+        _check_values(target, [
+            ('alarm exception', 'SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk', 57),
+            ('ALRF pending', 'RTC->CRL & RTC_CRL_ALRF', 2),
+            ('EXTI17 pending', 'EXTI->PR & (1 << 17)', 1 << 17),
+        ])
         target.check("one publication per IRQ", target.value("board_rtc_events"), (before + index) & 0xFFFFFFFF)
         alarm = target.value("(RTC->ALRH << 16) | RTC->ALRL")
         if previous_alarm is not None:

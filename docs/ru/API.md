@@ -2,6 +2,8 @@
 
 [Документация](index.md) → API · [English](../en/API.md)
 
+Штатные примеры первого пакета и проверка на пяти MCU: [TECH-010/011](../research/api-extension/ru/scenario-migration.md).
+
 ## Первый пакет: журнал и конфигурация
 
 Разработка `0.2.0.dev0` для целевого 0.2.0; `API_VERSION=1`, api.toml schema=1. Выпуска ещё нет. [ТЗ API 0.2.2](../TECHNICAL_SPECIFICATION_API.md), [приёмка ядра](../research/api-extension/ru/core-integration.md).

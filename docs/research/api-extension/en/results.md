@@ -2,6 +2,8 @@
 
 [Research](index.md) · [Русский](../ru/results.md)
 
+[Production scenario migration](scenario-migration.md): five CMSIS profiles 103/103, HAL F030 22/22, minimal consumer 1/1; recovery and restoration counted separately. Core unchanged, version 0.2.0.dev0. Next: version preparation review; historical evidence follows.
+
 [First-package integration](core-integration.md) authorized and implemented: Target, session.toml, snapshot/package; 7/7 HW on each of three stands. Development 0.2.0.dev0; release separate. Material below preserves earlier stages.
 
 As of 2026-10-03, E1 prototype host checks passed: 22/22.

@@ -2,6 +2,8 @@
 
 [Documentation](../../../en/index.md) · [Русский](../ru/index.md)
 
+[Production scenario migration](scenario-migration.md): five CMSIS profiles 103/103, HAL F030 22/22, minimal consumer 1/1; recovery and restoration counted separately. Core unchanged, version 0.2.0.dev0. Next: version preparation review; historical evidence follows.
+
 [First-package integration](core-integration.md) authorized and implemented: Target, session.toml, snapshot/package; 7/7 HW on each of three stands. Development 0.2.0.dev0; release separate. Material below preserves earlier stages.
 
 [Records bounds](config-bounds.md): implemented in the prototype; Linux 91/91 PASS, Windows 90 PASS/1 skip. Next: discuss first-package integration.

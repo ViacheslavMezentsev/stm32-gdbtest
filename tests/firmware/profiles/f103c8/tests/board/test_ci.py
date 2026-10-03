@@ -1,13 +1,26 @@
 from stm32_gdbtest import case
 
 
+
+
+def _check_values(target, rows):
+    # TECH-010: evaluate each actual, then its expected expression, then check.
+    for name, expression, expected in rows:
+        actual = target.value(expression)
+        if isinstance(expected, str):
+            expected = target.value(expected)
+        target.check(name, actual, expected)
+
+
 @case("HW_CI_BOOT", labels=("boot",), contracts=("ci_app_api",))
 def boot(target):
     # Target.boot has already reached main, before board_init.
-    target.check("initialized interval", target.value("app_delay"), 500)
-    target.check("BSS loop count", target.value("app_state.ticks"), 0)
-    target.check("BSS LED state", target.value("app_state.led"), 0)
-    target.check("BSS milliseconds", target.value("board_ticks_ms"), 0)
+    _check_values(target, [
+        ('initialized interval', 'app_delay', 500),
+        ('BSS loop count', 'app_state.ticks', 0),
+        ('BSS LED state', 'app_state.led', 0),
+        ('BSS milliseconds', 'board_ticks_ms', 0),
+    ])
     target.reach("app_loop")
     before = target.value("app_state.ticks")
     target.reach("app_loop")
@@ -18,9 +31,11 @@ def boot(target):
 def gpio(target):
     # CMSIS macros are visible in board.c, the translation unit that includes the device header.
     target.reach("board_led_toggle")
-    target.check("PB2 clock", target.value("(RCC->APB2ENR & RCC_APB2ENR_IOPBEN) != 0"), 1)
-    target.check("PB2 output", target.value("(GPIOB->CRL & (GPIO_CRL_MODE2 | GPIO_CRL_CNF2)) == GPIO_CRL_MODE2_1"), 1)
-    target.check("initial LED off", target.value("GPIOB->ODR & GPIO_ODR_ODR2"), 0)
+    _check_values(target, [
+        ('PB2 clock', '(RCC->APB2ENR & RCC_APB2ENR_IOPBEN) != 0', 1),
+        ('PB2 output', '(GPIOB->CRL & (GPIO_CRL_MODE2 | GPIO_CRL_CNF2)) == GPIO_CRL_MODE2_1', 1),
+        ('initial LED off', 'GPIOB->ODR & GPIO_ODR_ODR2', 0),
+    ])
 
 
 @case("HW_CI_CLOCK", labels=("clock",), contracts=("ci_clock_macros",))
@@ -51,14 +66,16 @@ def blink(target):
 @case("HW_CI_TIM2_INIT", labels=("timer", "init"), contracts=("ci_timer_macros",))
 def timer_init(target):
     target.reach("board_led_toggle")
-    target.check("TIM2 clock", target.value("(RCC->APB1ENR & RCC_APB1ENR_TIM2EN) != 0"), 1)
-    target.check("TIM2 prescaler", target.value("TIM2->PSC"), 7999)
-    target.check("TIM2 period", target.value("TIM2->ARR"), 99)
-    target.check("TIM2 internal clock", target.value("TIM2->SMCR"), 0)
-    target.check("TIM2 upcounter enabled", target.value("TIM2->CR1"), 1)
-    target.check("update interrupt only", target.value("TIM2->DIER"), 1)
-    target.check("NVIC TIM2 enabled", target.value("(NVIC->ISER[0] >> 28) & 1"), 1)
-    target.check("TIM2 vector", target.value("(unsigned int)vectors[44] & ~1U"), target.value("(unsigned int)TIM2_IRQHandler & ~1U"))
+    _check_values(target, [
+        ('TIM2 clock', '(RCC->APB1ENR & RCC_APB1ENR_TIM2EN) != 0', 1),
+        ('TIM2 prescaler', 'TIM2->PSC', 7999),
+        ('TIM2 period', 'TIM2->ARR', 99),
+        ('TIM2 internal clock', 'TIM2->SMCR', 0),
+        ('TIM2 upcounter enabled', 'TIM2->CR1', 1),
+        ('update interrupt only', 'TIM2->DIER', 1),
+        ('NVIC TIM2 enabled', '(NVIC->ISER[0] >> 28) & 1', 1),
+        ('TIM2 vector', '(unsigned int)vectors[44] & ~1U', '(unsigned int)TIM2_IRQHandler & ~1U'),
+    ])
 
 
 @case("HW_CI_TIM2_IRQ", labels=("timer", "irq"), contracts=("ci_timer_macros",))
