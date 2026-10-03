@@ -3,8 +3,8 @@
 [Study](index.md) · [Русский](../ru/session-migration.md)
 
 2026-10-03. Integration proposal based on 74cc842. File composition and
-config/config_props are approved; CMake options, internal JSON fields and conflict
-rules below remain proposed. No core changes or new hardware runs.
+config/config_props are approved; M1 is approved: explicit SESSION_CONFIG, retained JSON/legacy mode and conflict
+refusal. Remaining implementation details are a proposal. No core changes or new hardware runs.
 
 ## Current behavior
 
@@ -107,3 +107,5 @@ M3/M4 negatives: missing target; absent api versus selected nonexistent api;
 invalid known field alongside valid unknown data; source edits after capture;
 CLI/env conflict; stale manifest; changed cwd; remote host without source tree.
 These are planned checks, not obtained results. Q20 remains open.
+
+[M2/M3: host configuration prototype](config-loader.md) — 12 new tests, Windows 56/56 including E1–E4, initial CRLF test-expectation FAIL retained. Next M4; core unchanged.

@@ -65,6 +65,18 @@
       "result": "portability-f0-f1.json",
       "hardware_runs": 16,
       "restore": "PASS-both-boards"
+    },
+    {
+      "id": "config-loader-host-2026-10-03",
+      "kind": "host",
+      "status": "test-expectation-FAIL-then-PASS",
+      "new_tests": 12,
+      "host_tests": 56,
+      "initial_failure": "Expected LF hash instead of captured CRLF file bytes; corrected test, not hashing implementation",
+      "windows": "PASS",
+      "scope": "M2/M3 local snapshot; no CMake/package/remote or hardware execution",
+      "linux_ci": "PASS",
+      "docs_checks": "4/4 PASS"
     }
   ]
 }
