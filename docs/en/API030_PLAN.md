@@ -62,7 +62,7 @@ runner ERROR/recovery remains separate.
 ## Work stages
 
 - [x] Record 0.3.0 target and names for design.
-- [ ] Consolidate baseline audit, accepted requirements and coverage gaps: arguments,
+- [x] Consolidate baseline audit, accepted requirements and coverage gaps: arguments,
   results, errors, side effects, resources, cleanup and compatibility. Reuse existing
   evidence; repeat only for changes or new assertions.
 - [ ] Classify each table entry as replacement, extension, technique or retained API;
