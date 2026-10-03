@@ -190,15 +190,18 @@ limit = t.config["api"]["journal"]["max_records"]
 Repeated image denotes the selected document and its existing [image] table.
 A more convenient interface can be discussed without changing the file.
 
-Items 1–2 approved by the owner on 2026-10-03; items 3–5 remain proposals:
+Items 1–3 approved by the owner on 2026-10-03; items 4–5 remain proposals:
 
 1. Resolve relative config.* paths against session.toml, not cwd; no implicit
    search for same-named files in neighboring directories.
 2. Load/validate selected files before MCU connection; expose immutable content
    snapshots rather than reopening paths in GDB. Source edits after preparation
    do not change the current run; remote hosts need no original user-host paths.
-3. Distinguish absent optional references from errors in explicitly selected files.
-   Mandatory links, defaults and operation without image remain undecided.
+3. config.target is required. config.api is optional: an absent reference selects
+   documented API defaults. config.image is optional: absence retains ELF load-section
+   verification. An explicitly referenced missing or invalid file gives ERROR before
+   MCU connection; no substitute file or defaults replace an erroneous file.
+   Numeric defaults and omitted fields within api.toml remain under discussion.
 4. Decide where script-specific parameters belong; separate api.toml does not
    automatically place board thresholds/expectations there.
 5. Define source/hash metadata, stand configuration access and reproduction storage.
@@ -210,6 +213,29 @@ public reads and limits. Core and API spec 0.1.0 remain unchanged. Q6/Q19 stay o
 Acceptance covers selected versus adjacent files, absent references versus broken
 paths, edits after capture, remote execution, nested mutation refusal and validation
 before connection.
+
+### Next proposal: api.toml contents
+
+Not approved; numbers come from the research prototype:
+
+```toml
+schema = 1
+
+[journal]
+max_records = 128
+max_nodes = 4096
+max_text_bytes = 65536
+max_depth = 8
+max_integer_bits = 256
+```
+
+Propose requiring schema when the file exists; journal and individual fields may
+be omitted in favor of documented defaults. Unknown fields, unsupported schema
+and invalid values give ERROR before connection. Limits are positive integers,
+excluding bool. Upper bounds require Q6/Q19 evaluation; arbitrary sizes are not
+declared verified. File schema is distinct from API specification revision and
+API_VERSION. Test parameters/thresholds are not included yet: their location is
+an outstanding Q20 decision. Accepting structure does not approve numeric defaults.
 
 ### How session.json is currently produced
 
