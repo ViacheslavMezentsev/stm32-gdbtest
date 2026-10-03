@@ -218,8 +218,8 @@ before connection.
 
 Approved by the owner on 2026-10-03: `[records]` is shared by `record()` /
 `records()`. Section names follow public methods or related method groups, not
-internal implementation names such as Journal. Other structure rules and numbers
-below remain proposed; numbers come from the research prototype:
+internal implementation names such as Journal. Loading rules below are approved;
+numbers remain proposals from the research prototype:
 
 ```toml
 schema = 1
@@ -232,13 +232,27 @@ max_depth = 8
 max_integer_bits = 256
 ```
 
-Propose requiring schema when the file exists; records and individual fields may
-be omitted in favor of documented defaults. Unknown fields, unsupported schema
-and invalid values give ERROR before connection. Limits are positive integers,
-excluding bool. Upper bounds require Q6/Q19 evaluation; arbitrary sizes are not
-declared verified. File schema is distinct from API specification revision and
-API_VERSION. Test parameters/thresholds are not included yet: their location is
-an outstanding Q20 decision. Accepting structure does not approve numeric defaults.
+Approved by the owner on 2026-10-03: schema is required when the file exists;
+records and individual known fields may be omitted in favor of documented defaults.
+Experimentally accept unknown api.toml fields and sections and retain them in the
+scenario-readable snapshot, including unknown fields inside known sections.
+The API neither interprets them nor strips them during validation. Known parameters
+are checked for type/range; invalid values produce ERROR before connection rather
+than replacement with defaults. Invalid TOML is still rejected. This decision does
+not automatically change existing target.toml or full_image.toml schemas.
+
+Proposed constraints: limits are positive integers excluding bool; supported schema
+is integer 1. Upper bounds require Q6/Q19 evaluation; arbitrary sizes are not declared
+verified. File schema is distinct from API specification revision and API_VERSION.
+Scenarios may read consumer data from API-unknown sections; consumers validate their
+application semantics. A dedicated namespace and future API-name collision rules
+remain open in Q20. Full-content transport (including TOML types not directly
+representable in JSON) and raw/defaults access need contracts; silent field loss
+is unacceptable. Accepting structure does not approve numeric defaults.
+
+Acceptance additions: unknown sections/nested keys remain readable; known fields
+with invalid type/range are rejected even alongside unknown keys; missing known
+fields receive defaults. Retained consumer fields follow snapshot immutability.
 
 ### How session.json is currently produced
 
