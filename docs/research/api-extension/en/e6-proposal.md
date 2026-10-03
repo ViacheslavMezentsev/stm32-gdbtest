@@ -62,7 +62,9 @@ now also includes that mechanism.
 
 ## 3. Errors and availability
 
-Propose public `RecordError(ValueError)` with machine-readable `code`:
+Error model approved by the owner on 2026-10-03 (Q18 closed): public
+`RecordError` with machine-readable `code`. Proposed base class remains ValueError,
+as in the research prototype. Approved codes:
 invalid_name, unsupported_type, invalid_text, non_finite, cycle, limit_exceeded.
 The last carries `limit`: records, nodes, depth, text_bytes or integer_bits.
 Message text is not a code. Multiple invalid conditions guarantee rejection without
@@ -71,12 +73,16 @@ tested E1 contract.
 
 Invalid records filters also produce invalid_name. Environmental exceptions,
 including MemoryError, are not disguised as data-validation failures. Unhandled
-exceptions produce system ERROR; check mismatches produce FAIL. Propose exporting
-RecordError from stm32_gdbtest for explicit handling in the future integration.
+exceptions produce system ERROR; check mismatches produce FAIL. Public RecordError import enables explicit handling in future integration; core remains unchanged.
 
 Check both callable operations before the new scenario's first action. Absence
 produces an explicit ERROR requiring the supporting version, with no silent skip
 or fallback. API_VERSION currently does not serve as a method registry.
+
+
+Also approved: rejection consumes no budget and adds no partial entry; system
+errors including MemoryError are not converted to RecordError. Scenarios can
+catch and inspect code/limit without parsing message text.
 
 ## 4. Revisions and versions — proposal
 
@@ -140,7 +146,8 @@ implement and run acceptance.
 
 - Q17 closed 2026-10-03: configurable scenario parameters and readable launch
   configuration approved. The previous fixed-limit recommendation is superseded.
-- Q18: approve RecordError.code/limit and public exception import.
+- Q18 closed 2026-10-03: public RecordError.code/limit model approved.
+  Codes and negative regression still need implementation; old E1 does not prove them.
 - Q19: set acceptable memory/time costs from A5 measurements; logical limits are
   not measured RSS/latency guarantees.
 
