@@ -190,7 +190,7 @@ limit = t.config["api"]["journal"]["max_records"]
 Repeated image denotes the selected document and its existing [image] table.
 A more convenient interface can be discussed without changing the file.
 
-Proposals for the next decision:
+Items 1–2 approved by the owner on 2026-10-03; items 3–5 remain proposals:
 
 1. Resolve relative config.* paths against session.toml, not cwd; no implicit
    search for same-named files in neighboring directories.
@@ -210,3 +210,17 @@ public reads and limits. Core and API spec 0.1.0 remain unchanged. Q6/Q19 stay o
 Acceptance covers selected versus adjacent files, absent references versus broken
 paths, edits after capture, remote execution, nested mutation refusal and validation
 before connection.
+
+### How session.json is currently produced
+
+stm32_gdbtest_attach in STM32GDBTest.cmake uses file(GENERATE) during CMake
+generation to write build/<configuration>/hwtest/session.json. Fields: elf, gdb,
+tests, root, out, stand, profile, build_manifest. These reference artifacts and
+directories, not target.toml contents or test results. stand may be empty and
+selected at launch. ELF and build-manifest are produced by building; the manifest
+is POST_BUILD, not generated together with session.json. CLI reads JSON, selects
+the --test case and invokes runner, which loads configurations and writes a separate
+run.json for the GDB agent. Results are separate. Image policy currently comes from
+--image-policy or the environment, not those eight CMake-generated fields. This is
+an internal format without a stable user-schema promise; generated files are not
+normally edited manually.
