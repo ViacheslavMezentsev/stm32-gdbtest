@@ -1,0 +1,234 @@
+{
+  "status": "PASS",
+  "elf_sha256": "f72026290b244f3c00f3dcda214cea0951f5634894b5f601a1b54e520bfa2571",
+  "manifest_sha256": "668c5b1fb09f41932a6e717ad0dda14c5f8a996bf0e702a99f2a8e5d18346fd0",
+  "restore_elf_sha256": "1ff37ae10a007401de5e0eaf826764f60a2849c8b7821c123f12caa28c2e79c3",
+  "board": "WeAct BlackPill F411CE",
+  "backend": "OpenOCD HLA ST-Link",
+  "speed_khz": 1000,
+  "compiler": "GCC 13.3.1",
+  "optimization": "-Og",
+  "abi": "soft",
+  "stages": [
+    {
+      "label": "prepare_baseline",
+      "status": "PASS",
+      "code": 0,
+      "gdb_version": null,
+      "image_verified": null,
+      "teardown": null
+    },
+    {
+      "label": "prepare_experiment",
+      "status": "PASS",
+      "code": 0,
+      "gdb_version": null,
+      "image_verified": null,
+      "teardown": null
+    },
+    {
+      "label": "prepare_restore_HW_BOOT",
+      "status": "PASS",
+      "code": 0,
+      "gdb_version": null,
+      "image_verified": null,
+      "teardown": null
+    },
+    {
+      "label": "prepare_restore_HW_GPIO",
+      "status": "PASS",
+      "code": 0,
+      "gdb_version": null,
+      "image_verified": null,
+      "teardown": null
+    },
+    {
+      "label": "baseline",
+      "status": "PASS",
+      "code": 0,
+      "gdb_version": "14.2.90.20240526-git",
+      "image_verified": true,
+      "teardown": "reset_run"
+    },
+    {
+      "label": "experiment",
+      "status": "PASS",
+      "code": 0,
+      "gdb_version": "14.2.90.20240526-git",
+      "image_verified": true,
+      "teardown": "reset_run"
+    },
+    {
+      "label": "restore_HW_BOOT",
+      "status": "PASS",
+      "code": 0,
+      "gdb_version": "14.2.90.20240526-git",
+      "image_verified": true,
+      "teardown": "reset_run"
+    },
+    {
+      "label": "restore_HW_GPIO",
+      "status": "PASS",
+      "code": 0,
+      "gdb_version": "14.2.90.20240526-git",
+      "image_verified": true,
+      "teardown": "reset_run"
+    }
+  ],
+  "evidence": {
+    "summary": {
+      "count": 10,
+      "vdda": {
+        "unit": "mV",
+        "mean": 3302.6,
+        "stdev": 0.9660917830792959
+      },
+      "temperature": {
+        "unit": "degC",
+        "mean": 26.9993,
+        "stdev": 0.17598803620953518
+      },
+      "stdev_ddof": 1
+    },
+    "records": [
+      {
+        "sequence": 1,
+        "name": "mcu.measurement",
+        "data": {
+          "sequence": 1,
+          "quality": 2,
+          "vdda_mv": 3304,
+          "temperature_mdeg_c": 27232
+        }
+      },
+      {
+        "sequence": 2,
+        "name": "mcu.measurement",
+        "data": {
+          "sequence": 2,
+          "quality": 2,
+          "vdda_mv": 3302,
+          "temperature_mdeg_c": 27035
+        }
+      },
+      {
+        "sequence": 3,
+        "name": "mcu.measurement",
+        "data": {
+          "sequence": 3,
+          "quality": 2,
+          "vdda_mv": 3302,
+          "temperature_mdeg_c": 26719
+        }
+      },
+      {
+        "sequence": 4,
+        "name": "mcu.measurement",
+        "data": {
+          "sequence": 4,
+          "quality": 2,
+          "vdda_mv": 3302,
+          "temperature_mdeg_c": 27035
+        }
+      },
+      {
+        "sequence": 5,
+        "name": "mcu.measurement",
+        "data": {
+          "sequence": 5,
+          "quality": 2,
+          "vdda_mv": 3302,
+          "temperature_mdeg_c": 27035
+        }
+      },
+      {
+        "sequence": 6,
+        "name": "mcu.measurement",
+        "data": {
+          "sequence": 6,
+          "quality": 2,
+          "vdda_mv": 3302,
+          "temperature_mdeg_c": 27035
+        }
+      },
+      {
+        "sequence": 7,
+        "name": "mcu.measurement",
+        "data": {
+          "sequence": 7,
+          "quality": 2,
+          "vdda_mv": 3304,
+          "temperature_mdeg_c": 27232
+        }
+      },
+      {
+        "sequence": 8,
+        "name": "mcu.measurement",
+        "data": {
+          "sequence": 8,
+          "quality": 2,
+          "vdda_mv": 3302,
+          "temperature_mdeg_c": 26719
+        }
+      },
+      {
+        "sequence": 9,
+        "name": "mcu.measurement",
+        "data": {
+          "sequence": 9,
+          "quality": 2,
+          "vdda_mv": 3304,
+          "temperature_mdeg_c": 26916
+        }
+      },
+      {
+        "sequence": 10,
+        "name": "mcu.measurement",
+        "data": {
+          "sequence": 10,
+          "quality": 2,
+          "vdda_mv": 3302,
+          "temperature_mdeg_c": 27035
+        }
+      },
+      {
+        "sequence": 11,
+        "name": "mcu.summary",
+        "data": {
+          "count": 10,
+          "vdda": {
+            "unit": "mV",
+            "mean": 3302.6,
+            "stdev": 0.9660917830792959
+          },
+          "temperature": {
+            "unit": "degC",
+            "mean": 26.9993,
+            "stdev": 0.17598803620953518
+          },
+          "stdev_ddof": 1
+        }
+      }
+    ]
+  },
+  "source_sha256": {
+    "evidence.py": "84c8bfdc3dffe21383cf7e8545cd4dcd94b6892f0402a57a847c8b4c6e6ae5d9",
+    "measurement_series.py": "a57f460c5e98f1bde33b1e313fc1a79f0afeb7730445ec7ccfadc987158268ae",
+    "run_hw.py": "af05bb5ec7cf9761baaad1efdace632b19c7bd38c1caa9c0fc5cd6fa836534b2",
+    "test_measurement_series.py": "8dcd847445bb2981b034afa1457f05cdf7573d2ce145eb717e06bd3c7ca8cbb1",
+    "test_record.py": "b964602efe0f253cd412a995ea3ad5576eb6705533613075d213f5b20896c994",
+    "board/test_series.py": "fc1cbf555ab705a99ae0727422070ab47d0b81bbaf36edba95b69d769c96c84c"
+  },
+  "preparation_errors": [
+    {
+      "attempt": "20261003T105713.746527Z",
+      "hardware_connected": false,
+      "reason": "output outside selected project root"
+    },
+    {
+      "attempt": "20261003T105739.797716Z",
+      "hardware_connected": false,
+      "reason": "missing experiment contract registry"
+    }
+  ]
+}
