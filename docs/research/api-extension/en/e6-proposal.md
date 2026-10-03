@@ -308,3 +308,23 @@ alone does not prove compatibility of all other versioned contracts.
 
 This part of Q20 is approved; legacy config_props, bounds/name collisions and
 integration details remain. Normative API 0.1.0 and core are unchanged.
+
+### Approved: legacy-mode config/config_props — 2026-10-03
+
+Owner decision: launches without session.toml retain existing selection rules,
+while the new read interface uses the same shape:
+
+| Section | config | config_props |
+| --- | --- | --- |
+| target | Actual profile loaded via session.json | data/sha256/reference of the selected file |
+| api | Default API settings | None: no API file selected |
+| image | Actual CLI/environment-selected policy or None | data/sha256/reference of the selected file or None |
+
+Legacy-package properties describe the packaged file, not an invented original-host
+path. No session.toml is fabricated. Immutability, byte/hash consistency and the
+source/defaults distinction remain identical. Old scenarios need not use new properties.
+
+This is an accepted requirement, not completed integration. Prior legacy regressions
+do not prove these properties exist in production Target. Test the adapter separately
+before new-core acceptance. Q20 remains open for integration details and future name
+collisions; numeric bounds belong to Q6/Q19.
