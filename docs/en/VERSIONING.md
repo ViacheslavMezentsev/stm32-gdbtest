@@ -22,6 +22,8 @@ packaging the tag `v0.1.0-rc.1` maps to Python version `0.1.0rc1` and `v0.1.0` t
 `0.1.0`. `API_VERSION` and the JSON/TOML schema numbers are independent of the release
 version and change only when the corresponding contract changes.
 
+The next agreed design target is **0.3.0**: [API audit and redesign](API030_PLAN.md). This neither changes the current runtime nor authorizes publication.
+
 ## Before a release
 
 1. Host and offline checks: CI is green on the final commit ([checks and CI](testing.md)).
