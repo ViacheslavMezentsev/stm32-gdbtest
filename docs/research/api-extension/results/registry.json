@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "study": "api-extension",
+  "baseline_commit": "b3d19e08de7553f0f9d21c92cf5f8750d836d80d",
+  "compatibility_tag": "v0.1.0-rc.2",
+  "runs": []
+}

@@ -2,6 +2,8 @@
 
 Documentation · [Русский](../ru/index.md)
 
+[API extension research](../research/api-extension/en/index.md) — record/read/frames/context/finish using existing scenarios, plan and results.
+
 [Research 2: adaptive scenario tree](../research/adaptive-test-tree/en/index.md) — simulated engine, JSON oracle and HTML player.
 
 [GDB Python research for rc3](../research/rc3-gdb-python/en/index.md): plan, separate R1–R18 reports and results.
