@@ -1,0 +1,238 @@
+{
+  "status": "PASS",
+  "elf_sha256": "f72026290b244f3c00f3dcda214cea0951f5634894b5f601a1b54e520bfa2571",
+  "manifest_sha256": "668c5b1fb09f41932a6e717ad0dda14c5f8a996bf0e702a99f2a8e5d18346fd0",
+  "restore_elf_sha256": "1ff37ae10a007401de5e0eaf826764f60a2849c8b7821c123f12caa28c2e79c3",
+  "stages": [
+    {
+      "label": "prepare_baseline",
+      "status": "PASS",
+      "code": 0,
+      "gdb_version": null,
+      "image_verified": null,
+      "teardown": null
+    },
+    {
+      "label": "prepare_experiment",
+      "status": "PASS",
+      "code": 0,
+      "gdb_version": null,
+      "image_verified": null,
+      "teardown": null
+    },
+    {
+      "label": "prepare_restore_HW_BOOT",
+      "status": "PASS",
+      "code": 0,
+      "gdb_version": null,
+      "image_verified": null,
+      "teardown": null
+    },
+    {
+      "label": "prepare_restore_HW_GPIO",
+      "status": "PASS",
+      "code": 0,
+      "gdb_version": null,
+      "image_verified": null,
+      "teardown": null
+    },
+    {
+      "label": "baseline",
+      "status": "PASS",
+      "code": 0,
+      "gdb_version": "14.2.90.20240526-git",
+      "image_verified": true,
+      "teardown": "reset_run"
+    },
+    {
+      "label": "experiment",
+      "status": "PASS",
+      "code": 0,
+      "gdb_version": "14.2.90.20240526-git",
+      "image_verified": true,
+      "teardown": "reset_run",
+      "checks": [
+        {
+          "name": "breakpoint reached: main",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "frame: main",
+          "actual": "main",
+          "expected": "main",
+          "passed": true
+        },
+        {
+          "name": "breakpoint reached: board_adc_sample",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "frame: board_adc_sample",
+          "actual": "board_adc_sample",
+          "expected": "board_adc_sample",
+          "passed": true
+        },
+        {
+          "name": "breakpoint reached: board_delay_ms",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "frame: board_delay_ms",
+          "actual": "board_delay_ms",
+          "expected": "board_delay_ms",
+          "passed": true
+        },
+        {
+          "name": "same scalar: vdda_mv",
+          "actual": 3302,
+          "expected": 3302,
+          "passed": true
+        },
+        {
+          "name": "same scalar: temperature_mdeg_c",
+          "actual": 27035,
+          "expected": 27035,
+          "passed": true
+        },
+        {
+          "name": "same scalar: quality",
+          "actual": 2,
+          "expected": 2,
+          "passed": true
+        },
+        {
+          "name": "factory provenance",
+          "actual": 2,
+          "expected": 2,
+          "passed": true
+        },
+        {
+          "name": "plausible VDDA",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "plausible die temperature",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "same buffer",
+          "actual": [
+            941,
+            1512
+          ],
+          "expected": [
+            941,
+            1512
+          ],
+          "passed": true
+        },
+        {
+          "name": "negative read outcomes",
+          "actual": {
+            "board_adc_sample()": "invalid_path",
+            "e2_missing_symbol": "missing_symbol",
+            "board_adc_buffer": "array_bounds"
+          },
+          "expected": {
+            "board_adc_sample()": "invalid_path",
+            "e2_missing_symbol": "missing_symbol",
+            "board_adc_buffer": "array_bounds"
+          },
+          "passed": true
+        },
+        {
+          "name": "breakpoint reached: board_adc_sample",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "frame: board_adc_sample",
+          "actual": "board_adc_sample",
+          "expected": "board_adc_sample",
+          "passed": true
+        },
+        {
+          "name": "snapshot retained after resume",
+          "actual": {
+            "vdda_mv": 3302,
+            "temperature_mdeg_c": 27035,
+            "quality": 2
+          },
+          "expected": {
+            "vdda_mv": 3302,
+            "temperature_mdeg_c": 27035,
+            "quality": 2
+          },
+          "passed": true
+        }
+      ],
+      "evidence": {
+        "values": {
+          "vdda_mv": 3302,
+          "temperature_mdeg_c": 27035,
+          "quality": 2
+        },
+        "raw": [
+          941,
+          1512
+        ],
+        "errors": {
+          "board_adc_sample()": "invalid_path",
+          "e2_missing_symbol": "missing_symbol",
+          "board_adc_buffer": "array_bounds"
+        },
+        "types": {
+          "vdda_mv": "uint32_t",
+          "temperature_mdeg_c": "int32_t",
+          "quality": "uint32_t"
+        }
+      }
+    },
+    {
+      "label": "restore_HW_BOOT",
+      "status": "PASS",
+      "code": 0,
+      "gdb_version": "14.2.90.20240526-git",
+      "image_verified": true,
+      "teardown": "reset_run"
+    },
+    {
+      "label": "restore_HW_GPIO",
+      "status": "PASS",
+      "code": 0,
+      "gdb_version": "14.2.90.20240526-git",
+      "image_verified": true,
+      "teardown": "reset_run"
+    }
+  ],
+  "host_tests": 29,
+  "board": "F411CE",
+  "backend": "OpenOCD HLA ST-Link",
+  "compiler": "13.3.1",
+  "optimization": "-Og",
+  "abi": "soft",
+  "source_sha256": {
+    "tests/api-extension/evidence.py": "84c8bfdc3dffe21383cf7e8545cd4dcd94b6892f0402a57a847c8b4c6e6ae5d9",
+    "tests/api-extension/measurement_series.py": "a57f460c5e98f1bde33b1e313fc1a79f0afeb7730445ec7ccfadc987158268ae",
+    "tests/api-extension/run_hw.py": "f06aea3377c956bd3323cfe14af6acc612701c18f9c87ba56ba66975424d58b7",
+    "tests/api-extension/scenario_variants.py": "fe34046fdfe5a67eaa76d6492fc80b8f22325bbdb32647f3a354c7ae1988a0b1",
+    "tests/api-extension/test_measurement_series.py": "8dcd847445bb2981b034afa1457f05cdf7573d2ce145eb717e06bd3c7ca8cbb1",
+    "tests/api-extension/test_record.py": "b964602efe0f253cd412a995ea3ad5576eb6705533613075d213f5b20896c994",
+    "tests/api-extension/test_scenario_variants.py": "75e6fc70a7cec253826ea184da4fa9952120824498e95a1d78f9d008e939afb1",
+    "tests/api-extension/test_typed_read.py": "b998c5967c5e21e6b24a0ede5ef9e1a0b24d5749e3368d555f61b1d1655f454e",
+    "tests/api-extension/typed_read.py": "bfae01dac850782cc0adb39f93be0b33ca1a90e90008cb44d9ae5895078820a6",
+    "tests/api-extension/board/test_read.py": "448a2327c073181debe98809cc47c95d9b327f35273db7a50d7823ecd54b216b",
+    "tests/api-extension/board/test_series.py": "eda4f1fb78b894c2fab6afe493532b2e29f76272cda34817ad4e2a165f15ffcf"
+  }
+}

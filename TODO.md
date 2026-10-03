@@ -2,6 +2,8 @@
 
 ## Исследование расширения API — 03.10.2026
 
+- E2: ограниченный read глобальных объектов RAM, типизированные неизменяемые снимки; host 29/29, F411 baseline/опыт/restore 4/4 PASS. [Отчёт](docs/research/api-extension/ru/e2.md). Эргономика, provenance/availability и frame остаются вопросами E3/E5; далее frames/context. HAL восстановлен, ядро прежнее.
+
 - В конец плана добавлены E5 (сверка свойств с api-evolution/api-proposal/execution-context) и условный E6 (принятие API, версия, вопросы, ТЗ и миграция сценариев после согласования). Это не утверждение переноса в ядро.
 
 - Текущая ветка: `codex/api-extension-research` от `b3d19e0`; GitHub main сверён через API и совпадает с базой.

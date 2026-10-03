@@ -10,7 +10,7 @@ preparation errors before connection are retained. Documentation checks are sepa
 | Stage | Status | Next deliverable |
 | --- | --- | --- |
 | E1 — record | Complete: host 22/22, both F411 hardware series 4/4 PASS each | [Conclusions and limitations](e1-comparison.md) |
-| E2 — read | Planned | Bounded array and field reads |
+| E2 — read | Bounded prototype: host 29/29, HW F411 4/4 PASS | [Report and open questions](e2.md), next E3 |
 | E3 — frames/context | Planned | Snapshots and interrupted-context recognition technique |
 | E4 — finish | Planned | Natural return and distinguishing stop outcomes |
 | E5 — conventions review | After E1–E4 | Per-method properties checklist, evidence, gaps and questions |
