@@ -2,6 +2,8 @@
 
 [Study](index.md) · [Русский](../ru/session-migration.md)
 
+Current M5 status: scope and versions accepted, Q16/Q20 closed. [API spec 0.2.0](../../../TECHNICAL_SPECIFICATION_API.md) defines requirements; [M5 report](m5-contract.md) separates them from implementation. The proposals and decisions below retain their history; references to unchanged spec 0.1.0 describe earlier stages. Core remains rc.2.
+
 2026-10-03. Integration proposal based on 74cc842. File composition and
 config/config_props are approved; M1 is approved: explicit SESSION_CONFIG, retained JSON/legacy mode and conflict
 refusal. Remaining implementation details are a proposal. No core changes or new hardware runs.

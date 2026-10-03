@@ -124,11 +124,11 @@ approval of conventions/API specification and core integration; no release targe
 
 ## Questions and proposals for review after the stages
 
-This register owns Q1–Q20 statuses; E6 contains proposals, not decisions.
+This register owns Q1–Q20 statuses; E6 distinguishes initial proposals from subsequent accepted decisions.
 Closed requires an explicit owner decision recorded with its date. Closing a
 question does not imply implementation or acceptance. Deferred questions remain
 Open; composite questions retain partial decisions but stay Open until every part
-is resolved. IDs are stable. As of 2026-10-03 Q1, Q2, Q17, Q18 and Q20 are closed for the first package; Q4, Q5 and Q16 are partly resolved.
+is resolved. IDs are stable. As of 2026-10-03 Q1, Q2, Q16, Q17, Q18 and Q20 are closed for the first package; Q4 and Q5 are partly resolved.
 Other questions remain open. Contract decisions do not authorize core integration.
 
 | ID | Source | Question / proposal | Review | Status | Decision / basis |
@@ -148,7 +148,7 @@ Other questions remain open. Contract decisions do not authorize core integratio
 | Q13 | E5 | How to retain primary and all disconnect/cleanup failures in a common result? C.close can mask a primary error; F keeps cleanup errors in its backend. | E6 | Open | Not approved; recommendation in E6. |
 | Q14 | E5 | Approve Mapping with frames/state_revision/stop/meta/availability or explicitly narrow the draft? current must account for selected thread/inferior/image; currently it can falsely report freshness. | E6 | Open | Not approved; recommendation in E6. |
 | Q15 | E5 | Keep caller_is → bool/None or use a named result that cannot implicitly become False? Incomplete stacks need an explicit decision. | E6 | Open | Not approved; recommendation in E6. |
-| Q16 | E5 | Accept record/records first and defer finish? Agree on initial scope, SemVer/release target (current policy: 0.2.0), and API_VERSION format/rules independently of schemas/specifications. | E6 | Open | Partial: on 2026-10-03 the owner approved a separate API spec, X.Y.Z and baseline 0.1.0. Extension scope, increment rules, package version and API_VERSION remain unresolved. |
+| Q16 | E5 | Accept record/records first and defer finish? Agree on initial scope, SemVer/release target (current policy: 0.2.0), and API_VERSION format/rules independently of schemas/specifications. | E6 | Closed | Owner approved 2026-10-03: record/records, RecordError, config/config_props and session.toml; API spec 0.2.0, target module 0.2.0, API_VERSION=1, api.toml schema=1. Prerelease separately; read/context/caller/finish deferred, core integration requires authorization. |
 
 [E1–E4 continuation on F0/F1](portability.md): 8/8 HW per board, limitations and retained prepare ERROR. [API spec 0.1.0](../../../TECHNICAL_SPECIFICATION_API.md) captures current rc.2 without integrating extensions. Next: Q1–Q16 review and E6 approval.
 
@@ -168,3 +168,5 @@ Other questions remain open. Contract decisions do not authorize core integratio
 [M4: transport and CMake](config-transport.md) — Linux 64/64, Windows 63 PASS/1 skip; JSON/config-ZIP, actual old/new/conflict configure, legacy prepare PASS. M4 partial: production package/agent not integrated.
 
 [M4: end-to-end pipeline](config-pipeline.md) — real F030 ELF prepare PASS, production package, GDB-Python 6/6 without MCU; Linux 68/68, Windows 67 PASS/1 skip. Next: remaining contract decisions before M5.
+
+[M5: first-package requirements](m5-contract.md) — Q16 closed, API spec 0.2.0 and system spec 0.60. Next: Q6/Q19, then integration authorization.

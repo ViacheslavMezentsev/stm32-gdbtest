@@ -2,6 +2,7 @@
 
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -27,5 +28,8 @@ class ApiSpecRevisionTests(unittest.TestCase):
 
     def test_patch_revision_requires_history(self):
         text = (ROOT / "docs/TECHNICAL_SPECIFICATION_API.md").read_text(encoding="utf-8")
-        text = text.replace("| **Ревизия** | 0.1.0", "| **Ревизия** | 0.1.1", 1)
+        match = re.search(r"(\| \*\*Ревизия\*\* \| )(\d+)\.(\d+)\.(\d+)", text)
+        self.assertIsNotNone(match)
+        revision = f"{match[2]}.{match[3]}.{int(match[4]) + 1}"
+        text = text[:match.start()] + match[1] + revision + text[match.end():]
         self.assertNotEqual(self.check_document(text), 0)

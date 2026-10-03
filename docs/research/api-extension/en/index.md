@@ -2,6 +2,8 @@
 
 [Documentation](../../../en/index.md) · [Русский](../ru/index.md)
 
+[M5: accepted first-package contract](m5-contract.md) — API spec 0.2.0, system spec 0.60; rc.2 core, separate integration approval.
+
 Started on 2026-10-03 in `codex/api-extension-research`, based on main
 `b3d19e08de7553f0f9d21c92cf5f8750d836d80d`. At branch creation, GitHub main was
 checked through the GitHub API and matched the local base.

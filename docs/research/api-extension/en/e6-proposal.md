@@ -2,6 +2,8 @@
 
 [Study](index.md) · [Русский](../ru/e6-proposal.md)
 
+Current M5 status: scope and versions accepted, Q16/Q20 closed. [API spec 0.2.0](../../../TECHNICAL_SPECIFICATION_API.md) defines requirements; [M5 report](m5-contract.md) separates them from implementation. The proposals and decisions below retain their history; references to unchanged spec 0.1.0 describe earlier stages. Core remains rc.2.
+
 Baseline: commit 1e16415, [API spec 0.1.0](../../../TECHNICAL_SPECIFICATION_API.md),
 [E5](e5.md) and [F0/F1](portability.md). Prepared on 2026-10-03.
 This is a proposal for approval. Contract 0.1.0 and the core remain unchanged;
@@ -354,3 +356,9 @@ Implementation/acceptance remain M5/M6 work; closing a question does not complet
 them. Numeric bounds/costs remain Q6/Q19, versions/final scope Q16. Additional stand
 information is not included automatically. Earlier unresolved-Q20 lists above are
 discussion history; the plan register owns current status.
+
+## Accepted: first-package scope and versions — 03.10.2026
+
+Owner approved 2026-10-03: record/records, RecordError, config/config_props and session.toml; API spec 0.2.0, target module 0.2.0, API_VERSION=1, api.toml schema=1. Prerelease separately; read/context/caller/finish deferred, core integration requires authorization.
+
+[M5 normative documentation](m5-contract.md). Numeric defaults/bounds and costs remain Q6/Q19. General future incompatible-change policy remains API spec question 10.2.2.

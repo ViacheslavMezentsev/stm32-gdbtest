@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Documented the accepted first extension: API spec 0.2.0 and system spec 0.60, record/records, errors and session.toml configuration. Module target 0.2.0, API_VERSION=1; integration not authorized, numeric bounds open. Core behavior unchanged.
+
 - Combined both studies for main: GDB Python/API reports and the simulated adaptive tree with its workflow player. Experimental tools remain isolated; API agreement and hardware technical debt remain open.
 
 - Research2: HTML now uses a fixed workflow layout with rectangular cards and separate availability/result badges, preserving snapshot playback. The plan describes the proposed YAML direction.

@@ -2,7 +2,7 @@
 
 Documentation · [Русский](../ru/index.md)
 
-[API specification 0.1.0](../TECHNICAL_SPECIFICATION_API.md) — current rc.2 contract; separate Russian specification, independent of API_VERSION.
+[API specification 0.2.0](../TECHNICAL_SPECIFICATION_API.md) — rc.2 baseline and accepted first-extension requirements; separate Russian specification. Core remains rc.2: record/records and config/config_props are not integrated. [Status and migration](../research/api-extension/en/m5-contract.md).
 
 [API extension research](../research/api-extension/en/index.md) — record/read/frames/context/finish using existing scenarios, plan and results.
 

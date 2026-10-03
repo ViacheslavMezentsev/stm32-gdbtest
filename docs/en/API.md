@@ -2,7 +2,7 @@
 
 [Documentation](index.md) → API · [Русский](../ru/API.md)
 
-[API specification 0.1.0](../TECHNICAL_SPECIFICATION_API.md) — current rc.2 contract; separate Russian specification, independent of API_VERSION.
+[API specification 0.2.0](../TECHNICAL_SPECIFICATION_API.md) — rc.2 baseline and accepted first-extension requirements; separate Russian specification. Core remains rc.2: record/records and config/config_props are not integrated. [Status and migration](../research/api-extension/en/m5-contract.md).
 
 [R2: navigation, calls and watchpoints](../research/rc3-gdb-python/en/r2.md): 56/56 HLA and 8/8 native DAP; core promotion requires explicit owner approval.
 
