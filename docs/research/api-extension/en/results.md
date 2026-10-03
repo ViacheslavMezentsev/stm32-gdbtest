@@ -13,6 +13,8 @@ preparation errors before connection are retained. Documentation checks are sepa
 | E2 — read | Planned | Bounded array and field reads |
 | E3 — frames/context | Planned | Snapshots and interrupted-context recognition technique |
 | E4 — finish | Planned | Natural return and distinguishing stop outcomes |
+| E5 — conventions review | After E1–E4 | Per-method properties checklist, evidence, gaps and questions |
+| E6 — acceptance and migration | After E5 review and owner approval | Versioning, resolved questions, API acceptance and revised scenarios |
 
 After each stage, update this table, add a separate report and name the next step.
 Do not import hardware outcomes from the first study as new results.

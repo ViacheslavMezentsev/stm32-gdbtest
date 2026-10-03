@@ -19,6 +19,8 @@ they must not replace Target, the runner or the installed package.
 | E2 | Bounded typed `read` | Same scenarios: read arrays and selected fields without repeated value calls; define size and depth limits |
 | E3 | `frames` and minimal `context` | [Sleep/WFI](../../../../tests/firmware/profiles/f411ce/tests/board/test_sleep.py): remove direct GDB frame traversal while preserving interrupted-context recognition |
 | E4 | `finish` | [HAL methods](../../../../tests/hal-f030/profile/tests/board/test_hal_methods.py): check effects immediately after a natural return |
+| E5 | API conventions and properties review | Compare each developed method's contract and evidence with the three source documents; list matches and gaps |
+| E6 | API acceptance and scenario migration | Following a positive E5 decision, agree on versioning and open questions, accept the API and revise current scenarios |
 
 For each stage: describe its experimental contract and negative cases, implement an
 isolated prototype and compare scenarios, then produce a separate report.
@@ -57,7 +59,62 @@ Each stage receives a separate RU/EN `eN.md` report; sanitized JSON goes in
 outcomes instead of replacing them with successful retries. Do not commit raw
 logs, ELF files or local TOML configurations.
 
-## Outside the first package
+## Closing stages
+
+### E5: conformance review before acceptance
+
+Sources: [api-evolution.md](../../rc3-gdb-python/en/api-evolution.md),
+[api-proposal.md](../../rc3-gdb-python/en/api-proposal.md),
+[execution-context.md](../../rc3-gdb-python/en/execution-context.md).
+This stage follows E1–E4; stage IDs E1–E6 are distinct from convention IDs E1–E12
+in api-evolution.md.
+
+For every method and data model, prepare this checklist:
+
+- Simplicity and unambiguous purpose; separation of reading, resuming and intervention.
+- Names, types, units, parameterization, keyword-only policies and limits, defaults.
+- Compatibility with rc.2: existing scenarios, types, errors and behavior;
+  additive/behavioral/breaking classification and missing capability detection.
+- Materialization, typing, provenance and availability; no live GDB objects,
+  immutable snapshots or explicitly agreed copy semantics.
+- Lifetime, run/stop/revision and invalidation after resume, writes, reset/reconnect;
+  snapshot versus frame reference and MCU state consistency boundaries.
+- Distinct invalid inputs, unsupported cases, FAIL and ERROR; incomplete stacks
+  and unavailable values without fabricated success or zero substitution.
+- No hidden resume/call/retry/fallback; GDB main thread and explicit MMIO effects.
+- Resource ownership, memory/breakpoint limits, time budgets, cleanup and primary
+  error preservation; exhaustion and interrupted operations.
+- API/technique/pattern boundaries; support by operation/ABI/MCU/backend/GDB,
+  separate verified/untested/known failure states and supporting reports.
+- Testability, negative cases, migration, documentation and requirements traceability.
+
+For each item in `e5.md`, record the method, a specific source-document reference,
+evidence and status: conforms / partial / differs / untested / not applicable
+(with reason). Intent is not evidence. List gaps, proposed corrections and owner
+questions separately. One known E1 question: whether detached mutable records copies
+are sufficient for a journal when execution contexts require deeply immutable
+snapshots; do not automatically equate these different contracts. Review provenance too.
+
+### E6: acceptance and adoption
+
+Entry requires reviewed E5 results and explicit owner agreement on API scope,
+accepted limitations and remaining debt. This plan does not constitute acceptance.
+
+1. Resolve open questions from the original proposal and E5; agree on final
+   signatures, data models and errors.
+2. Agree on API version format and rules, its relationship to API_VERSION, package
+   version, data schemas and specification revisions; define compatibility and release target.
+3. Record accepted conventions and a separate API specification with cross-references
+   to the system specification, without duplicating requirements; define migration
+   and acceptance criteria.
+4. After core integration approval, implement the accepted scope and revise current
+   scenarios while preserving checks and expected outcomes; update API RU/EN,
+   CHANGELOG and normative documents under project rules.
+5. Run legacy-call regression and revised-scenario acceptance on agreed configurations;
+   preserve comparisons and limitations in `e6.md`. Publication and release remain
+   a separate owner step.
+
+## Deferred tools
 
 Watchpoints, GDB function calls, arbitrary PC writes, universal MMIO rollback,
 RTOS and advanced assembly operations are outside E1–E4. Counter arithmetic,
