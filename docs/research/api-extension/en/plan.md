@@ -2,6 +2,8 @@
 
 [Research](index.md) · [Русский](../ru/plan.md)
 
+[First-package readiness matrix](readiness.md) — current contracts, evidence and remaining decisions; integration not authorized.
+
 ## Baseline and boundaries
 
 The compatibility baseline is v0.1.0-rc.2, commit

@@ -2,6 +2,8 @@
 
 [Documentation](../../../en/index.md) · [Русский](../ru/index.md)
 
+[First-package readiness matrix](readiness.md) — current contracts, evidence and remaining decisions; integration not authorized.
+
 [M5: accepted first-package contract](m5-contract.md) — API spec 0.2.0, system spec 0.60; rc.2 core, separate integration approval.
 
 Started on 2026-10-03 in `codex/api-extension-research`, based on main
