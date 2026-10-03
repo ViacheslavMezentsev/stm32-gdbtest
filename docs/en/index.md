@@ -27,6 +27,8 @@ STM32 — checks of running firmware on a real board through GDB and an SWD debu
 written as scenarios in the project repository. Requirements —
 the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 
+[Practical Docker and L6 workflow](local-docker-testing.md): snapshot, volume, evidence and stand restoration.
+
 ## Getting started
 
 - [DDTT specification](DDTT.md) — the debugger-driven testing on target method: terms, principles, requirements for scenarios, stands and tools.

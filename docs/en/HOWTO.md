@@ -10,6 +10,8 @@ A new solution to a common problem is added here in the same commit (RU and EN).
 Notation: **PS** — PowerShell on Windows, **sh** — a Linux shell (Orange Pi, WSL). Git
 commands are the same in both except for quoting (section "The `git land` alias").
 
+[Practical Docker and L6 workflow](local-docker-testing.md): snapshot, volume, evidence and stand restoration.
+
 ## Git: working without pull requests
 
 ### Local SSH signature verification

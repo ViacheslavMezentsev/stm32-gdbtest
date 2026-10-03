@@ -2,6 +2,8 @@
 
 [Documentation](index.md) → Checks and CI · [Русский](../ru/testing.md)
 
+[Practical Docker and L6 workflow](local-docker-testing.md): snapshot, volume, evidence and stand restoration.
+
 ## Evidence levels
 
 The normative classification is main specification 9.3, not a CI command sequence.
@@ -129,7 +131,7 @@ The script reprograms Flash: use only boards agreed for experiments.
 ## F030 HAL in offline CI
 
 `python -B ci/run_checks.py hal` builds tests/hal-f030 with GCC13.3.1, requires
-exactly19 CTest checks (17 prepare + trace + fixture), and validates17 fresh JSON
+exactly19 CTest checks (22 prepare + trace + fixture), and validates17 fresh JSON
 reports with ELF hashes and no hardware access. Requested contracts must PASS;
 NOT_REQUESTED for cases without contracts is not HAL validation.
 

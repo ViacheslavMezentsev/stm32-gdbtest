@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Specification 0.66 clarifies L0/L6 procedures; adds a practical guide to Docker volumes, snapshots, failure evidence and stand restoration. Runtime/API unchanged.
+
 ## [0.2.0-rc.1] - 2026-10-03
 
 - Local research and prototypes are excluded from the published tree while retained in the developer workspace. Accepted results are documented separately; docs.public checks files and links against .gitignore filters. Main specification 0.65 defines L0–L6; API specification 0.2.3 clarifies public criteria without method changes.

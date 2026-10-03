@@ -2,6 +2,8 @@
 
 [Документация](index.md) → Проверки и CI · [English](../en/testing.md)
 
+[Практический порядок Docker и L6](local-docker-testing.md): снимок, volume, отчёты и восстановление стенда.
+
 ## Уровни доказательств
 
 Нормативная классификация — общее ТЗ 9.3. Это не порядок вызова команд CI.
@@ -127,7 +129,7 @@ python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stand
 ## HAL F030 в offline CI
 
 Уровень `python -B ci/run_checks.py hal` собирает tests/hal-f030 на GCC13.3.1,
-требует ровно19 CTest (17 prepare + trace + fixture), проверяет17 свежих JSON
+требует ровно24 CTest (22 prepare + trace + fixture), проверяет22 свежих JSON
 с хешем ELF, без обращений к оборудованию. Контракты запрошенных сценариев — PASS;
 для сценариев без contracts NOT_REQUESTED не означает проверку HAL.
 
