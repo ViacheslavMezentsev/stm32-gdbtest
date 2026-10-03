@@ -32,6 +32,7 @@ or API field is introduced.
 | Numerical checks | [007 vectors](#tech-007) |
 | Sleep and interrupts | [008 WFI context](#tech-008) |
 | Check organization | [010 tables](#tech-010) |
+| Measurement series | [011 acquisition and calculation](#tech-011) |
 
 The cards derive from executed examples. Another MCU, HAL, GCC or backend needs
 fresh validation. Linked code/protocols do not promise identical results in every environment.
@@ -248,3 +249,37 @@ consider the existing fields operation.
 **Verified:** 82 paired host cases for RTC F030, ADC F411 and TIM2 F103; 47 candidate
 blocks including board variants. No new hardware PASS.
 [Report, variants and boundaries](../research/api-extension/en/table-checks.md).
+
+<a id="tech-011"></a>
+
+## TECH-011 — Accumulate measurements and calculate from records
+
+**Purpose:** stop after MCU publication, read ordinary values, record them and
+calculate statistics after completing the series.
+**Availability:** accepted API package is not integrated; currently uses a research
+facade. This is a consumer technique, not another core operation.
+
+1. Set count/expected quality/units in scenario parameters. Place consumer api.toml
+   settings in [user.measurement] and validate them in the scenario.
+2. Reach publication on each iteration; verify freshness with the MCU counter and
+   its width. Read quality, VDDA and temperature in a consistent published state.
+3. Record original units and acquisition sequence; check quality/range. Do not
+   emit a successful summary after duplicate/missing/invalid samples.
+4. Read records once, verify completeness, calculate mean/stdev and record a separate
+   summary with count, units and ddof. Sample standard deviation requires N≥2.
+
+**Boundaries:** journal sequence does not identify a fresh MCU sample; CPU halt does
+not freeze every peripheral. Publication, DMA, read-to-clear and debugger timing
+are application concerns. Never replace missing data with zeros or hide it by filtering.
+Small deviation does not prove accuracy. Budget for N entries plus summary; repeated
+records calls allocate additional copies.
+
+Python calculations use captured data. For GDB arithmetic, transfer numbers with
+ gdb.Value/convenience variables and use a fixed expression; run on the main GDB
+thread and restore scratch variables. set_value, firmware calls and continuation are
+separate actions with separate restoration requirements.
+
+**Verified:** paired VDDA/temperature variant (5 outcomes), known mean/deviation
+anchors, GDB14/GDB16 with 4 arithmetic sets each without MCU. Historical E1 hardware
+results do not replace acceptance of the new variant.
+[Python/GDB examples, paired scenario and evidence](../research/api-extension/en/measurement-technique.md).

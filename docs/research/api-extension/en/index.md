@@ -52,3 +52,5 @@ remain paused; new hardware runs require separate planning and a confirmed curre
 [Legacy config/config_props](legacy-config.md) — old JSON/packages, image precedence, capture and immutability; GDB14/GDB16 6/6 each. Next: consolidated readiness matrix.
 
 [TECH-010: table-driven checks](table-checks.md) — 47 candidate blocks, 82 paired cases; technique over rc.2, no new API/HW.
+
+[TECH-011: acquisition and calculation](measurement-technique.md) — configured VDDA/temperature pair, Python mean/deviation and GDB arithmetic on captured values; no new HW runs.
