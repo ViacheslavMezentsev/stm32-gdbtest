@@ -13,6 +13,7 @@ GitHub подтверждён через GitHub API и совпадает с л�
 
 - [План и кандидаты](plan.md).
 - [Результаты и очередь](results.md).
+- [E1: runtime-журнал и статистика VDDA/температуры](e1.md).
 - [Машиночитаемый реестр запусков](../results/registry.json).
 - Основа контрактов: [проект API](../../rc3-gdb-python/ru/api-proposal.md) и
   [соглашения об эволюции](../../rc3-gdb-python/ru/api-evolution.md).

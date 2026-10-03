@@ -2,14 +2,13 @@
 
 [Research](index.md) · [Русский](../ru/results.md)
 
-As of 2026-10-03, only the plan is prepared. Prototypes are not implemented and
-no experimental host/GDB/hardware runs have taken place. The empty
-[registry](../results/registry.json) is not evidence of PASS. Documentation checks
-are tracked separately.
+As of 2026-10-03, E1 prototype host checks passed: 19/19.
+[E1 report](e1.md), [registry](../results/registry.json).
+No GDB/hardware runs yet. Documentation checks are tracked separately.
 
 | Stage | Status | Next deliverable |
 | --- | --- | --- |
-| E1 — record | Planned, next | Evidence recording contract, prototype, ADC/HAL comparison |
+| E1 — record | Prototype and host 19/19 PASS | GDB/F411, then ADC/HAL paired comparison |
 | E2 — read | Planned | Bounded array and field reads |
 | E3 — frames/context | Planned | Snapshots and interrupted-context recognition technique |
 | E4 — finish | Planned | Natural return and distinguishing stop outcomes |
