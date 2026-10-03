@@ -49,6 +49,14 @@
       "result": "e3-f411.json",
       "host_tests": 36,
       "restore": "PASS-both-attempts"
+    },
+    {
+      "id": "e4-f411-2026-10-03",
+      "kind": "host-and-hardware",
+      "status": "ERROR-then-corrected-PASS",
+      "result": "e4-f411.json",
+      "host_tests": 44,
+      "restore": "PASS-both-attempts"
     }
   ]
 }

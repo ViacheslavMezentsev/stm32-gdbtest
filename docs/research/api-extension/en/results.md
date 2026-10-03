@@ -12,7 +12,7 @@ preparation errors before connection are retained. Documentation checks are sepa
 | E1 — record | Complete: host 22/22, both F411 hardware series 4/4 PASS each | [Conclusions and limitations](e1-comparison.md) |
 | E2 — read | Bounded prototype: host 29/29, HW F411 4/4 PASS | [Report and open questions](e2.md), next E3 |
 | E3 — frames/context | Host 36/36; HW ERROR → correction → 4/4 PASS, both restores PASS | [Report](e3.md); next E4 |
-| E4 — finish | Planned | Natural return and distinguishing stop outcomes |
+| E4 — finish | Bounded experiment: host 44/44; HW ERROR → correction → 4/4 PASS | [Report and full-acceptance debt](e4.md); next E5 |
 | E5 — conventions review | After E1–E4 | Per-method properties checklist, evidence, gaps and questions |
 | E6 — acceptance and migration | After E5 review and owner approval | Versioning, resolved questions, API acceptance and revised scenarios |
 

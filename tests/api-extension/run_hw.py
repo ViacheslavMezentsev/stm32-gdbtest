@@ -21,7 +21,7 @@ def main():
     parser.add_argument("--restore-session", type=Path, required=True)
     parser.add_argument("--stand", type=Path, required=True)
     parser.add_argument("--execute", action="store_true")
-    parser.add_argument("--case", choices=("HW_E1_MEASUREMENTS", "HW_E1_ADC_PAIR", "HW_E2_READ", "HW_E3_CONTEXT"),
+    parser.add_argument("--case", choices=("HW_E1_MEASUREMENTS", "HW_E1_ADC_PAIR", "HW_E2_READ", "HW_E3_CONTEXT", "HW_E4_FINISH"),
                         default="HW_E1_MEASUREMENTS")
     args = parser.parse_args()
     sessions = [json.loads(p.read_text(encoding="utf-8"))

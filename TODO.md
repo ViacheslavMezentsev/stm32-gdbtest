@@ -2,6 +2,8 @@
 
 ## Исследование расширения API — 03.10.2026
 
+- E4: ограниченный natural finish Cortex-M void/integer, host 44/44; F411 первый ERROR (истёкший объект точки), исправленный опыт 4/4 PASS, оба restore PASS. [Отчёт](docs/research/api-extension/ru/e4.md). Полный контракт/timeout/HW fault остаются долгом Q9–Q12; следующий этап E5, ядро не изменено.
+
 - E3: минимальный context/stack и caller, host 36/36; F411 первый ERROR (константа GDB отсутствует), исправленный опыт и restore 4/4 PASS. Оба восстановления PASS, ERROR сохранён. [Отчёт](docs/research/api-extension/ru/e3.md); вопросы Q1–Q8 в конце плана, далее E4.
 
 - E2: ограниченный read глобальных объектов RAM, типизированные неизменяемые снимки; host 29/29, F411 baseline/опыт/restore 4/4 PASS. [Отчёт](docs/research/api-extension/ru/e2.md). Эргономика, provenance/availability и frame остаются вопросами E3/E5; далее frames/context. HAL восстановлен, ядро прежнее.

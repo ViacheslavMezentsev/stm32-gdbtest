@@ -137,3 +137,7 @@ experimental implementation does not imply approval. IDs are local to this study
 | Q6 | E1/E2 | Is the benefit sufficient without fewer lines? Measure copying memory/time, define limits and convenient access; avoid replacing locals with journals unnecessarily. | E5 |
 | Q7 | E3 | Probe required capabilities of the installed GDB instead of inferring support from version: the tested build lacks FIRST_ERROR. | E5 |
 | Q8 | E3 | Classify older=None + NO_REASON separately as unconfirmed_end? Current unwind_error retains reason but does not imply corruption; agree on tri-state caller and exact signal/inline depth counting. | E5 |
+| Q9 | E4 | Separate timeout_s or only a case budget? General finish requires HW timeout/recovery and distinct fault/exit outcomes; host doubles are insufficient. | E5 |
+| Q10 | E4 | Explicit hardware point plus ABI read, or gdb.FinishBreakpoint? Compare result capture and resources; scalar PASS does not establish wider types. | E5 |
+| Q11 | E4 | How to represent locations, foreign/coincident points and cleanup errors? Currently uses conservative object counts and cleanup_errors list. | E5 |
+| Q12 | E4 | Which configurations and negative HW cases are mandatory before finish acceptance? HAL F030, signed/other ABIs and invalidation integration remain unverified in E4. | E5/E6 |
