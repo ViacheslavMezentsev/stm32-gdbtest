@@ -2,6 +2,8 @@
 
 ## Исследование расширения API — 03.10.2026
 
+- [Q6/Q19: затраты](docs/research/api-extension/ru/records-cost.md): CPython/GDB14/GDB16, по 13 форм и 5 границ PASS. Предложены defaults и максимумы; согласование открыто. Далее решение по пределам и проверка RecordError.code/limit в прототипе. Ядро прежнее.
+
 - [M5: контракт принят](docs/research/api-extension/ru/m5-contract.md): Q16 закрыт, ТЗ API 0.2.0 и общее ТЗ 0.60. record/records + RecordError + config/config_props + session.toml; цель модуля 0.2.0, API_VERSION=1, api.toml schema=1. Далее измерения Q6/Q19 и согласование чисел; перенос в ядро требует отдельного разрешения. Нижеследующие пункты сохраняют историю этапов.
 
 - [M4 сквозной pipeline](docs/research/api-extension/ru/config-pipeline.md): F030 ELF full-image prepare PASS, штатный pack/open, GDB-Python 6/6 через оболочку без MCU; host Linux 68/68, Windows 67 PASS/1 skip. Проверен устаревший manifest. Далее оставшиеся контракты перед M5; production agent/CLI не изменены.

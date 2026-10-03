@@ -42,3 +42,5 @@ remain paused; new hardware runs require separate planning and a confirmed curre
 [M4: transport and CMake](config-transport.md) — Linux 64/64, Windows 63 PASS/1 skip; JSON/config-ZIP, actual old/new/conflict configure, legacy prepare PASS. M4 partial: production package/agent not integrated.
 
 [M4: end-to-end pipeline](config-pipeline.md) — real F030 ELF prepare PASS, production package, GDB-Python 6/6 without MCU; Linux 68/68, Windows 67 PASS/1 skip. Next: remaining contract decisions before M5.
+
+[Q6/Q19: journal time and memory](records-cost.md) — 13 input shapes and 5 boundaries in CPython/GDB14/GDB16; proposed limits await approval.

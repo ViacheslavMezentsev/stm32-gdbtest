@@ -1,0 +1,989 @@
+{
+  "schema": 1,
+  "hardware": false,
+  "python": "3.11.4",
+  "platform": "win32",
+  "pointer_bits": 64,
+  "journal_sha256": "84c8bfdc3dffe21383cf7e8545cd4dcd94b6892f0402a57a847c8b4c6e6ae5d9",
+  "cases": [
+    {
+      "name": "samples_10",
+      "records": 10,
+      "overrides": {},
+      "write_batch": {
+        "median_us": 18.69,
+        "max_batch_mean_us": 20.12,
+        "batch_mean_us": [
+          19.17,
+          18.63,
+          18.71,
+          18.69,
+          18.67,
+          18.65,
+          19.19,
+          18.61,
+          20.12
+        ],
+        "batch": 10
+      },
+      "read_all": {
+        "median_us": 7.22,
+        "max_batch_mean_us": 7.53,
+        "batch_mean_us": [
+          7.22,
+          6.92,
+          7.16,
+          7.45,
+          7.21,
+          6.95,
+          7.31,
+          7.53,
+          7.37
+        ],
+        "batch": 10
+      },
+      "read_missing": {
+        "median_us": 0.45,
+        "max_batch_mean_us": 12.36,
+        "batch_mean_us": [
+          0.56,
+          0.45,
+          0.53,
+          0.45,
+          0.44,
+          0.45,
+          12.36,
+          0.4,
+          0.44
+        ],
+        "batch": 10
+      },
+      "write_memory": {
+        "retained_bytes": 4160,
+        "peak_bytes": 4710
+      },
+      "read_memory": {
+        "retained_bytes": 4368,
+        "peak_bytes": 5056
+      },
+      "ten_reads_memory": {
+        "retained_bytes": 41536,
+        "peak_bytes": 42408
+      },
+      "journal_graph_bytes": 5107,
+      "journal_and_copy_graph_bytes": 9043
+    },
+    {
+      "name": "samples_128",
+      "records": 128,
+      "overrides": {},
+      "write_batch": {
+        "median_us": 245.02,
+        "max_batch_mean_us": 273.87,
+        "batch_mean_us": [
+          239.41,
+          273.87,
+          250.05,
+          259.63,
+          241.85,
+          244.2,
+          238.15,
+          245.02,
+          270.27
+        ],
+        "batch": 10
+      },
+      "read_all": {
+        "median_us": 91.17,
+        "max_batch_mean_us": 94.09,
+        "batch_mean_us": [
+          88.29,
+          90.57,
+          91.17,
+          94.09,
+          91.99,
+          88.53,
+          92.9,
+          93.09,
+          90.75
+        ],
+        "batch": 10
+      },
+      "read_missing": {
+        "median_us": 2.44,
+        "max_batch_mean_us": 2.73,
+        "batch_mean_us": [
+          2.47,
+          2.73,
+          2.36,
+          2.44,
+          2.33,
+          2.36,
+          2.62,
+          2.37,
+          2.5
+        ],
+        "batch": 10
+      },
+      "write_memory": {
+        "retained_bytes": 48544,
+        "peak_bytes": 49158
+      },
+      "read_memory": {
+        "retained_bytes": 48688,
+        "peak_bytes": 49376
+      },
+      "ten_reads_memory": {
+        "retained_bytes": 483344,
+        "peak_bytes": 484216
+      },
+      "journal_graph_bytes": 52703,
+      "journal_and_copy_graph_bytes": 100959
+    },
+    {
+      "name": "nodes_4096",
+      "records": 1,
+      "overrides": {},
+      "write_batch": {
+        "median_us": 818.05,
+        "max_batch_mean_us": 847.86,
+        "batch_mean_us": [
+          847.86,
+          825.14,
+          811.34,
+          804.07,
+          820.41,
+          788.15,
+          818.05,
+          806.26,
+          837.39
+        ],
+        "batch": 10
+      },
+      "read_all": {
+        "median_us": 217.7,
+        "max_batch_mean_us": 229.18,
+        "batch_mean_us": [
+          217.7,
+          214.75,
+          215.41,
+          215.45,
+          229.18,
+          216.95,
+          217.72,
+          221.89,
+          218.07
+        ],
+        "batch": 10
+      },
+      "read_missing": {
+        "median_us": 0.29,
+        "max_batch_mean_us": 0.75,
+        "batch_mean_us": [
+          0.43,
+          0.29,
+          0.28,
+          0.29,
+          0.3,
+          0.75,
+          0.31,
+          0.27,
+          0.27
+        ],
+        "batch": 10
+      },
+      "write_memory": {
+        "retained_bytes": 33720,
+        "peak_bytes": 34416
+      },
+      "read_memory": {
+        "retained_bytes": 33768,
+        "peak_bytes": 34400
+      },
+      "ten_reads_memory": {
+        "retained_bytes": 336040,
+        "peak_bytes": 336856
+      },
+      "journal_graph_bytes": 148661,
+      "journal_and_copy_graph_bytes": 182053
+    },
+    {
+      "name": "text_65536",
+      "records": 1,
+      "overrides": {},
+      "write_batch": {
+        "median_us": 3.15,
+        "max_batch_mean_us": 3.2,
+        "batch_mean_us": [
+          3.0,
+          3.2,
+          3.17,
+          3.15,
+          3.15,
+          3.17,
+          3.19,
+          2.73,
+          2.74
+        ],
+        "batch": 10
+      },
+      "read_all": {
+        "median_us": 0.65,
+        "max_batch_mean_us": 0.71,
+        "batch_mean_us": [
+          0.71,
+          0.71,
+          0.64,
+          0.67,
+          0.63,
+          0.64,
+          0.65,
+          0.64,
+          0.68
+        ],
+        "batch": 10
+      },
+      "read_missing": {
+        "median_us": 0.27,
+        "max_batch_mean_us": 0.31,
+        "batch_mean_us": [
+          0.29,
+          0.28,
+          0.26,
+          0.26,
+          0.25,
+          0.31,
+          0.28,
+          0.26,
+          0.27
+        ],
+        "batch": 10
+      },
+      "write_memory": {
+        "retained_bytes": 544,
+        "peak_bytes": 66380
+      },
+      "read_memory": {
+        "retained_bytes": 672,
+        "peak_bytes": 1104
+      },
+      "ten_reads_memory": {
+        "retained_bytes": 5512,
+        "peak_bytes": 6128
+      },
+      "journal_graph_bytes": 66705,
+      "journal_and_copy_graph_bytes": 67049
+    },
+    {
+      "name": "unicode_near_65536",
+      "records": 1,
+      "overrides": {},
+      "write_batch": {
+        "median_us": 17.82,
+        "max_batch_mean_us": 18.32,
+        "batch_mean_us": [
+          17.91,
+          17.82,
+          18.32,
+          17.84,
+          17.83,
+          17.82,
+          17.72,
+          17.45,
+          17.5
+        ],
+        "batch": 10
+      },
+      "read_all": {
+        "median_us": 0.6,
+        "max_batch_mean_us": 0.65,
+        "batch_mean_us": [
+          0.63,
+          0.62,
+          0.6,
+          0.59,
+          0.59,
+          0.6,
+          0.58,
+          0.59,
+          0.65
+        ],
+        "batch": 10
+      },
+      "read_missing": {
+        "median_us": 0.25,
+        "max_batch_mean_us": 0.32,
+        "batch_mean_us": [
+          0.27,
+          0.25,
+          0.23,
+          0.24,
+          0.25,
+          0.32,
+          0.25,
+          0.27,
+          0.26
+        ],
+        "batch": 10
+      },
+      "write_memory": {
+        "retained_bytes": 544,
+        "peak_bytes": 66377
+      },
+      "read_memory": {
+        "retained_bytes": 672,
+        "peak_bytes": 1104
+      },
+      "ten_reads_memory": {
+        "retained_bytes": 5512,
+        "peak_bytes": 6128
+      },
+      "journal_graph_bytes": 66729,
+      "journal_and_copy_graph_bytes": 67073
+    },
+    {
+      "name": "dict_nodes_4096",
+      "records": 1,
+      "overrides": {},
+      "write_batch": {
+        "median_us": 1053.6,
+        "max_batch_mean_us": 1079.78,
+        "batch_mean_us": [
+          1045.33,
+          1038.32,
+          1053.6,
+          1041.02,
+          1079.78,
+          1006.3,
+          1055.32,
+          1062.06,
+          1058.92
+        ],
+        "batch": 10
+      },
+      "read_all": {
+        "median_us": 160.28,
+        "max_batch_mean_us": 170.71,
+        "batch_mean_us": [
+          170.71,
+          153.48,
+          159.33,
+          160.33,
+          162.62,
+          158.36,
+          156.78,
+          160.28,
+          169.46
+        ],
+        "batch": 10
+      },
+      "read_missing": {
+        "median_us": 0.27,
+        "max_batch_mean_us": 0.33,
+        "batch_mean_us": [
+          0.33,
+          0.29,
+          0.26,
+          0.26,
+          0.26,
+          0.32,
+          0.25,
+          0.27,
+          0.27
+        ],
+        "batch": 10
+      },
+      "write_memory": {
+        "retained_bytes": 52600,
+        "peak_bytes": 79000
+      },
+      "read_memory": {
+        "retained_bytes": 52864,
+        "peak_bytes": 79488
+      },
+      "ten_reads_memory": {
+        "retained_bytes": 525416,
+        "peak_bytes": 552224
+      },
+      "journal_graph_bytes": 217674,
+      "journal_and_copy_graph_bytes": 269986
+    },
+    {
+      "name": "depth_8",
+      "records": 1,
+      "overrides": {},
+      "write_batch": {
+        "median_us": 5.08,
+        "max_batch_mean_us": 5.25,
+        "batch_mean_us": [
+          5.25,
+          5.08,
+          5.09,
+          4.95,
+          5.11,
+          5.15,
+          4.98,
+          4.95,
+          5.05
+        ],
+        "batch": 10
+      },
+      "read_all": {
+        "median_us": 1.83,
+        "max_batch_mean_us": 2.11,
+        "batch_mean_us": [
+          1.9,
+          1.85,
+          1.8,
+          1.83,
+          1.82,
+          1.77,
+          2.11,
+          1.8,
+          2.03
+        ],
+        "batch": 10
+      },
+      "read_missing": {
+        "median_us": 0.26,
+        "max_batch_mean_us": 0.32,
+        "batch_mean_us": [
+          0.29,
+          0.26,
+          0.28,
+          0.25,
+          0.25,
+          0.32,
+          0.25,
+          0.25,
+          0.29
+        ],
+        "batch": 10
+      },
+      "write_memory": {
+        "retained_bytes": 1848,
+        "peak_bytes": 5512
+      },
+      "read_memory": {
+        "retained_bytes": 1760,
+        "peak_bytes": 3568
+      },
+      "ten_reads_memory": {
+        "retained_bytes": 12936,
+        "peak_bytes": 14928
+      },
+      "journal_graph_bytes": 1797,
+      "journal_and_copy_graph_bytes": 2845
+    },
+    {
+      "name": "integer_256",
+      "records": 128,
+      "overrides": {},
+      "write_batch": {
+        "median_us": 85.96,
+        "max_batch_mean_us": 91.48,
+        "batch_mean_us": [
+          85.96,
+          85.46,
+          84.81,
+          87.45,
+          90.97,
+          86.11,
+          91.48,
+          80.63,
+          82.15
+        ],
+        "batch": 10
+      },
+      "read_all": {
+        "median_us": 49.4,
+        "max_batch_mean_us": 50.35,
+        "batch_mean_us": [
+          49.4,
+          48.85,
+          49.02,
+          47.61,
+          49.34,
+          50.3,
+          50.35,
+          49.88,
+          50.2
+        ],
+        "batch": 10
+      },
+      "read_missing": {
+        "median_us": 2.17,
+        "max_batch_mean_us": 4.07,
+        "batch_mean_us": [
+          2.17,
+          2.13,
+          4.07,
+          2.18,
+          2.15,
+          2.18,
+          2.15,
+          2.16,
+          2.17
+        ],
+        "batch": 10
+      },
+      "write_memory": {
+        "retained_bytes": 24872,
+        "peak_bytes": 25144
+      },
+      "read_memory": {
+        "retained_bytes": 25032,
+        "peak_bytes": 25496
+      },
+      "ten_reads_memory": {
+        "retained_bytes": 247960,
+        "peak_bytes": 248608
+      },
+      "journal_graph_bytes": 28985,
+      "journal_and_copy_graph_bytes": 53689
+    },
+    {
+      "name": "samples_1024",
+      "records": 1024,
+      "overrides": {
+        "max_records": 1024,
+        "max_nodes": 32768,
+        "max_text_bytes": 524288
+      },
+      "write_batch": {
+        "median_us": 2218.62,
+        "max_batch_mean_us": 2309.01,
+        "batch_mean_us": [
+          2211.56,
+          2225.24,
+          2260.4,
+          2203.53,
+          2168.05,
+          2220.52,
+          2309.01,
+          2200.27,
+          2218.62
+        ],
+        "batch": 10
+      },
+      "read_all": {
+        "median_us": 731.52,
+        "max_batch_mean_us": 814.55,
+        "batch_mean_us": [
+          771.07,
+          759.78,
+          699.92,
+          814.55,
+          728.14,
+          723.32,
+          779.01,
+          731.52,
+          729.03
+        ],
+        "batch": 10
+      },
+      "read_missing": {
+        "median_us": 17.25,
+        "max_batch_mean_us": 55.42,
+        "batch_mean_us": [
+          16.91,
+          16.99,
+          16.7,
+          16.72,
+          23.75,
+          43.73,
+          55.42,
+          21.52,
+          17.25
+        ],
+        "batch": 10
+      },
+      "write_memory": {
+        "retained_bytes": 410688,
+        "peak_bytes": 411302
+      },
+      "read_memory": {
+        "retained_bytes": 386192,
+        "peak_bytes": 386880
+      },
+      "ten_reads_memory": {
+        "retained_bytes": 3858192,
+        "peak_bytes": 3859064
+      },
+      "journal_graph_bytes": 415295,
+      "journal_and_copy_graph_bytes": 801055
+    },
+    {
+      "name": "nodes_32768",
+      "records": 1,
+      "overrides": {
+        "max_nodes": 32768
+      },
+      "write_batch": {
+        "median_us": 6440.51,
+        "max_batch_mean_us": 6541.31,
+        "batch_mean_us": [
+          6435.81,
+          6398.9,
+          6468.46,
+          6541.31,
+          6520.89,
+          6449.11,
+          6334.96,
+          6251.83,
+          6440.51
+        ],
+        "batch": 10
+      },
+      "read_all": {
+        "median_us": 1686.42,
+        "max_batch_mean_us": 1743.15,
+        "batch_mean_us": [
+          1698.91,
+          1667.76,
+          1686.42,
+          1629.44,
+          1667.34,
+          1729.24,
+          1704.78,
+          1743.15,
+          1657.26
+        ],
+        "batch": 10
+      },
+      "read_missing": {
+        "median_us": 0.28,
+        "max_batch_mean_us": 0.45,
+        "batch_mean_us": [
+          0.45,
+          0.29,
+          0.27,
+          0.27,
+          0.24,
+          0.29,
+          0.28,
+          0.25,
+          0.31
+        ],
+        "batch": 10
+      },
+      "write_memory": {
+        "retained_bytes": 278056,
+        "peak_bytes": 278872
+      },
+      "read_memory": {
+        "retained_bytes": 278056,
+        "peak_bytes": 278688
+      },
+      "ten_reads_memory": {
+        "retained_bytes": 2778920,
+        "peak_bytes": 2779736
+      },
+      "journal_graph_bytes": 1195765,
+      "journal_and_copy_graph_bytes": 1473445
+    },
+    {
+      "name": "text_524288",
+      "records": 1,
+      "overrides": {
+        "max_text_bytes": 524288
+      },
+      "write_batch": {
+        "median_us": 9.16,
+        "max_batch_mean_us": 15.82,
+        "batch_mean_us": [
+          10.15,
+          8.76,
+          8.72,
+          15.82,
+          9.55,
+          9.22,
+          9.16,
+          8.72,
+          8.73
+        ],
+        "batch": 10
+      },
+      "read_all": {
+        "median_us": 0.61,
+        "max_batch_mean_us": 0.67,
+        "batch_mean_us": [
+          0.67,
+          0.61,
+          0.62,
+          0.63,
+          0.58,
+          0.57,
+          0.58,
+          0.58,
+          0.62
+        ],
+        "batch": 10
+      },
+      "read_missing": {
+        "median_us": 0.23,
+        "max_batch_mean_us": 0.3,
+        "batch_mean_us": [
+          0.3,
+          0.23,
+          0.23,
+          0.22,
+          0.24,
+          0.28,
+          0.24,
+          0.23,
+          0.23
+        ],
+        "batch": 10
+      },
+      "write_memory": {
+        "retained_bytes": 592,
+        "peak_bytes": 525300
+      },
+      "read_memory": {
+        "retained_bytes": 672,
+        "peak_bytes": 1104
+      },
+      "ten_reads_memory": {
+        "retained_bytes": 5512,
+        "peak_bytes": 6128
+      },
+      "journal_graph_bytes": 525457,
+      "journal_and_copy_graph_bytes": 525801
+    },
+    {
+      "name": "integer_1024",
+      "records": 128,
+      "overrides": {
+        "max_integer_bits": 1024
+      },
+      "write_batch": {
+        "median_us": 81.43,
+        "max_batch_mean_us": 107.47,
+        "batch_mean_us": [
+          88.4,
+          107.47,
+          86.02,
+          82.68,
+          81.43,
+          79.75,
+          81.35,
+          78.59,
+          79.47
+        ],
+        "batch": 10
+      },
+      "read_all": {
+        "median_us": 49.89,
+        "max_batch_mean_us": 52.35,
+        "batch_mean_us": [
+          49.85,
+          49.72,
+          49.38,
+          52.29,
+          52.34,
+          52.35,
+          49.07,
+          49.89,
+          50.54
+        ],
+        "batch": 10
+      },
+      "read_missing": {
+        "median_us": 2.38,
+        "max_batch_mean_us": 4.48,
+        "batch_mean_us": [
+          2.43,
+          2.39,
+          2.38,
+          2.37,
+          2.37,
+          4.48,
+          2.37,
+          2.37,
+          2.73
+        ],
+        "batch": 10
+      },
+      "write_memory": {
+        "retained_bytes": 24920,
+        "peak_bytes": 25192
+      },
+      "read_memory": {
+        "retained_bytes": 25032,
+        "peak_bytes": 25496
+      },
+      "ten_reads_memory": {
+        "retained_bytes": 247960,
+        "peak_bytes": 248608
+      },
+      "journal_graph_bytes": 29117,
+      "journal_and_copy_graph_bytes": 53821
+    },
+    {
+      "name": "depth_32",
+      "records": 1,
+      "overrides": {
+        "max_depth": 32
+      },
+      "write_batch": {
+        "median_us": 15.79,
+        "max_batch_mean_us": 24.85,
+        "batch_mean_us": [
+          15.84,
+          15.71,
+          15.88,
+          16.0,
+          15.66,
+          15.62,
+          15.75,
+          24.85,
+          15.79
+        ],
+        "batch": 10
+      },
+      "read_all": {
+        "median_us": 4.77,
+        "max_batch_mean_us": 5.32,
+        "batch_mean_us": [
+          4.88,
+          5.32,
+          4.68,
+          4.74,
+          4.75,
+          4.84,
+          4.77,
+          4.85,
+          4.76
+        ],
+        "batch": 10
+      },
+      "read_missing": {
+        "median_us": 0.24,
+        "max_batch_mean_us": 0.3,
+        "batch_mean_us": [
+          0.29,
+          0.25,
+          0.22,
+          0.23,
+          0.23,
+          0.24,
+          0.3,
+          0.24,
+          0.23
+        ],
+        "batch": 10
+      },
+      "write_memory": {
+        "retained_bytes": 5736,
+        "peak_bytes": 19696
+      },
+      "read_memory": {
+        "retained_bytes": 5024,
+        "peak_bytes": 10864
+      },
+      "ten_reads_memory": {
+        "retained_bytes": 35208,
+        "peak_bytes": 41232
+      },
+      "journal_graph_bytes": 3909,
+      "journal_and_copy_graph_bytes": 7069
+    }
+  ],
+  "boundary_checks": [
+    {
+      "limit": "nodes",
+      "status": "PASS",
+      "rejection": {
+        "median_us": 767.47,
+        "max_batch_mean_us": 805.48,
+        "batch_mean_us": [
+          751.55,
+          760.15,
+          767.47,
+          805.48,
+          745.76,
+          796.62,
+          749.67,
+          775.2,
+          775.8
+        ],
+        "batch": 10
+      }
+    },
+    {
+      "limit": "text_bytes",
+      "status": "PASS",
+      "rejection": {
+        "median_us": 1.36,
+        "max_batch_mean_us": 1.39,
+        "batch_mean_us": [
+          1.26,
+          1.36,
+          1.39,
+          1.38,
+          1.32,
+          1.34,
+          1.36,
+          1.37,
+          1.36
+        ],
+        "batch": 10
+      }
+    },
+    {
+      "limit": "integer_bits",
+      "status": "PASS",
+      "rejection": {
+        "median_us": 1.31,
+        "max_batch_mean_us": 1.52,
+        "batch_mean_us": [
+          1.52,
+          1.34,
+          1.31,
+          1.3,
+          1.31,
+          1.31,
+          1.31,
+          1.31,
+          1.33
+        ],
+        "batch": 10
+      }
+    },
+    {
+      "limit": "depth",
+      "status": "PASS",
+      "rejection": {
+        "median_us": 10.71,
+        "max_batch_mean_us": 22.99,
+        "batch_mean_us": [
+          10.94,
+          22.99,
+          10.83,
+          10.62,
+          11.39,
+          10.67,
+          10.64,
+          10.6,
+          10.71
+        ],
+        "batch": 10
+      }
+    },
+    {
+      "limit": "records",
+      "status": "PASS"
+    }
+  ],
+  "method": {
+    "repeats": 9,
+    "batch": 10,
+    "warmup": 1,
+    "gc_enabled": true,
+    "memory": "separate tracemalloc run; input preallocated; graph sizes deduplicate identities",
+    "timing": "perf_counter_ns; batch means include build and result disposal; not worst-case latency"
+  },
+  "gdb": "14.2.90.20240526-git",
+  "status": "PASS"
+}

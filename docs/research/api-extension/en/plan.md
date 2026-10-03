@@ -138,7 +138,7 @@ Other questions remain open. Contract decisions do not authorize core integratio
 | Q3 | E2/E3 | Shared provenance model: actual run/image ID, inferior/thread/core, stop/revision; associate read with context capture time. | E3/E5 | Open | Not approved; recommendation in E6. |
 | Q4 | E2/E3 | Refine availability/errors: missing fields, optimized-out, unreadable and partial stacks; keep distinct from assertion FAIL. | E5 | Open | Partly approved 2026-10-03: record/records diagnostics per Q18. read/context/stack availability and errors remain open. |
 | Q5 | E3 | Which operations automatically invalidate snapshots? Raw monitor/reset/reconnect and thread/core switches need policy; current explicit invalidate is incomplete. | E5 | Open | Partial owner decision 2026-10-03: the journal retains history across continue/reset within a scenario; a new scenario starts empty. Context/read freshness rules remain unresolved. |
-| Q6 | E1/E2 | Is the benefit sufficient without fewer lines? Measure copying memory/time, define limits and convenient access; avoid replacing locals with journals unnecessarily. | E5 | Open | Not approved; recommendation in E6. |
+| Q6 | E1/E2 | Is the benefit sufficient without fewer lines? Measure copying memory/time, define limits and convenient access; avoid replacing locals with journals unnecessarily. | E5 | Open | Measurements completed 2026-10-03; records-cost.md proposes bounds and criteria. Awaiting owner approval. |
 | Q7 | E3 | Probe required capabilities of the installed GDB instead of inferring support from version: the tested build lacks FIRST_ERROR. | E5 | Open | Not approved; recommendation in E6. |
 | Q8 | E3 | Classify older=None + NO_REASON separately as unconfirmed_end? Current unwind_error retains reason but does not imply corruption; agree on tri-state caller and exact signal/inline depth counting. | E5 | Open | Not approved; recommendation in E6. |
 | Q9 | E4 | Separate timeout_s or only a case budget? General finish requires HW timeout/recovery and distinct fault/exit outcomes; host doubles are insufficient. | E5 | Open | Not approved; recommendation in E6. |
@@ -158,7 +158,7 @@ Other questions remain open. Contract decisions do not authorize core integratio
 | --- | --- | --- | --- | --- | --- |
 | Q17 | E6 | Fixed or configurable first-package limits? | E6 | Closed | Owner decision 2026-10-03: limits are scenario parameters with external configuration; the scenario can read its launch configuration. General mechanism contract: Q20. |
 | Q18 | E6 | Approve RecordError.code/limit and public exception import. | E6 | Closed | Owner approved 2026-10-03: public RecordError with code and limit for limit_exceeded. invalid_name/unsupported_type/invalid_text/non_finite/cycle/limit_exceeded. Rejection leaves no partial entry/budget consumption; unhandled error is ERROR, check mismatch is FAIL; system errors not disguised. |
-| Q19 | E6 | Set acceptable memory/time from A5; logical limits do not guarantee RSS/latency. | Acceptance | Open | Not approved; recommendation in E6. |
+| Q19 | E6 | Set acceptable memory/time from A5; logical limits do not guarantee RSS/latency. | Acceptance | Open | Measurements completed 2026-10-03; records-cost.md proposes bounds and criteria. Awaiting owner approval. |
 | Q20 | Q17 decision | General scenario configuration: schema, sources/precedence, validation, read-only access, exposed data boundaries and reproducibility. | Before first-package implementation | Closed | Owner decisions 2026-10-03: session.toml and api/target/image; relative paths; required/optional/defaults; known-value validation with unknown-field retention; config/config_props; TOML+SHA256 transport/defaults compatibility; legacy mode. Known names tied to schema, explicit schema change for new parameters, recommended uninterpreted [user]. First-package contract closed; see E6. Implementation/acceptance M5/M6, numeric bounds Q6/Q19, versions Q16. |
 
 [Q20: session.toml migration plan](session-migration.md) — CMake/CLI, shared snapshots, conflicts, compatibility and M1–M6 checks. Proposal only, not core integration approval.
@@ -170,3 +170,5 @@ Other questions remain open. Contract decisions do not authorize core integratio
 [M4: end-to-end pipeline](config-pipeline.md) — real F030 ELF prepare PASS, production package, GDB-Python 6/6 without MCU; Linux 68/68, Windows 67 PASS/1 skip. Next: remaining contract decisions before M5.
 
 [M5: first-package requirements](m5-contract.md) — Q16 closed, API spec 0.2.0 and system spec 0.60. Next: Q6/Q19, then integration authorization.
+
+[Q6/Q19: journal time and memory](records-cost.md) — 13 input shapes and 5 boundaries in CPython/GDB14/GDB16; proposed limits await approval.
