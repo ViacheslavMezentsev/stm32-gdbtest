@@ -174,3 +174,5 @@ MMIO, RTOS и расширенные ассемблерные операции �
 [Q6/Q19: время и память журнала](records-cost.md) — 13 форм данных и 5 границ в CPython/GDB14/GDB16; пределы предложены, согласование открыто.
 
 [RecordError: структурированные отказы](record-errors.md) — code/limit реализованы в прототипе, GDB14/GDB16 по 18/18 PASS; далее legacy config/config_props.
+
+[Legacy config/config_props](legacy-config.md) — старые JSON/пакеты, приоритет image, захват и неизменяемость; GDB14/GDB16 по 6/6. Далее итоговая матрица готовности.

@@ -46,3 +46,5 @@ remain paused; new hardware runs require separate planning and a confirmed curre
 [Q6/Q19: journal time and memory](records-cost.md) — 13 input shapes and 5 boundaries in CPython/GDB14/GDB16; proposed limits await approval.
 
 [RecordError: structured rejection](record-errors.md) — prototype code/limit implemented, GDB14/GDB16 18/18 PASS each; next legacy config/config_props.
+
+[Legacy config/config_props](legacy-config.md) — old JSON/packages, image precedence, capture and immutability; GDB14/GDB16 6/6 each. Next: consolidated readiness matrix.

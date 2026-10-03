@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "hardware": false,
+  "status": "FAIL",
+  "suite": "Windows research suite before expectation correction",
+  "tests": 79,
+  "failures": 1,
+  "skipped": 1,
+  "test": "LegacyConfigTests.test_defaults_no_discovery_or_fake_source",
+  "cause": "Compared frozen snapshot with raw load_profile output: tuple values differ from mutable lists",
+  "correction": "Compare against freeze(load_profile(profile)); loader unchanged",
+  "evidence_kind": "sanitized summary of observed unittest failure"
+}

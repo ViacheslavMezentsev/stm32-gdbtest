@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "hardware": false,
+  "synthetic_elf": true,
+  "gdb": "14.2.90.20240526-git",
+  "python": "3.11.4",
+  "tests": 6,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "status": "PASS",
+  "loader_sha256": "f062d52a476194d677060db84bd8ff9bf690d8369c2c96447a2ea3a4d10e1595",
+  "log": "test_capture_once_hashes_original_and_views_survive_removal (test_legacy_config.LegacyConfigTests.test_capture_once_hashes_original_and_views_survive_removal) ... ok\ntest_cli_precedes_environment_and_invalid_cli_never_falls_back (test_legacy_config.LegacyConfigTests.test_cli_precedes_environment_and_invalid_cli_never_falls_back) ... ok\ntest_defaults_no_discovery_or_fake_source (test_legacy_config.LegacyConfigTests.test_defaults_no_discovery_or_fake_source) ... ok\ntest_environment_selection_and_no_internal_override (test_legacy_config.LegacyConfigTests.test_environment_selection_and_no_internal_override) ... ok\ntest_invalid_selected_files_and_wrong_mode (test_legacy_config.LegacyConfigTests.test_invalid_selected_files_and_wrong_mode) ... ok\ntest_old_package_uses_actual_extracted_sources (test_legacy_config.LegacyConfigTests.test_old_package_uses_actual_extracted_sources) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.044s\n\nOK\n"
+}

@@ -2,6 +2,8 @@
 
 ## Исследование расширения API — 03.10.2026
 
+- [Legacy config/config_props](docs/research/api-extension/ru/legacy-config.md): фактические источники старого JSON/пакета, приоритет image и неизменяемый снимок; GDB14/GDB16 по 6/6 PASS. Начальный FAIL ожидания сохранён. Далее сводная матрица готовности, ядро прежнее.
+
 - [RecordError](docs/research/api-extension/ru/record-errors.md): code/limit и атомарность отказов проверены в прототипе, GDB14/GDB16 по 18/18. Далее legacy config/config_props; численные пределы Q6/Q19 пока не утверждены, ядро прежнее.
 
 - [Q6/Q19: затраты](docs/research/api-extension/ru/records-cost.md): CPython/GDB14/GDB16, по 13 форм и 5 границ PASS. Предложены defaults и максимумы; согласование открыто. Далее решение по пределам и проверка RecordError.code/limit в прототипе. Ядро прежнее.

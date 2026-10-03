@@ -37,7 +37,7 @@ def freeze(value):
 class Configuration:
     config: object
     config_props: object
-    session_sha256: str
+    session_sha256: str | None
     _source_bytes: object = field(repr=False)
 
 
