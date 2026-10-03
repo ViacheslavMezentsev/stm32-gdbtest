@@ -7,6 +7,16 @@ Baseline: commit 1e16415, [API spec 0.1.0](../../../TECHNICAL_SPECIFICATION_API.
 This is a proposal for approval. Contract 0.1.0 and the core remain unchanged;
 permission to continue research is not permission to integrate the prototypes.
 
+## Accepted decisions — 2026-10-03
+
+The owner approved Q1 and Q2 for the first package: deep copies on write/read,
+mutable detached results, and ordinary values/dicts without direct Snapshot input
+or automatic conversions. These questions are closed. Q5 is partially resolved:
+continue/reset within a scenario preserve journal history; a new scenario starts
+empty. Context/read freshness remains open. Other provisions below are proposals.
+This does not authorize core implementation; specification 0.1.0 continues to
+describe current rc.2.
+
 ## 1. Scope
 
 Accept only `Target.record` and `Target.records` as the first package. Their value
@@ -90,7 +100,8 @@ Recommendations in this document do not close questions by themselves.
 
 ## 5. Q1–Q16 disposition
 
-These are recommendations; the plan's questions remain open.
+The table preserves E6 recommendations; acceptance of Q1/Q2 and part of Q5 is
+recorded above. The plan register owns current statuses and decision scope.
 
 | Question | Proposed decision / route |
 | --- | --- |

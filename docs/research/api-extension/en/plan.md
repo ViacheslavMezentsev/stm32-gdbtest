@@ -128,15 +128,16 @@ This register owns Q1–Q19 statuses; E6 contains proposals, not decisions.
 Closed requires an explicit owner decision recorded with its date. Closing a
 question does not imply implementation or acceptance. Deferred questions remain
 Open; composite questions retain partial decisions but stay Open until every part
-is resolved. IDs are stable. As of 2026-10-03 none are closed; Q16 is partly resolved.
+is resolved. IDs are stable. As of 2026-10-03 Q1 and Q2 are closed for the first package; Q5 and Q16 are partly resolved.
+Other questions remain open. Contract decisions do not authorize core integration.
 
 | ID | Source | Question / proposal | Review | Status | Decision / basis |
 | --- | --- | --- | --- | --- | --- |
-| Q1 | E1 | Keep records as detached mutable copies or unify with deeply immutable snapshots? | E5 | Open | Not approved; recommendation in E6. |
-| Q2 | E1/E2 | How to extract Snapshot data and pass it to record conveniently without losing types? Direct Snapshot recording is currently rejected; automatic export is out of scope. | E5 | Open | Not approved; recommendation in E6. |
+| Q1 | E1 | Keep records as detached mutable copies or unify with deeply immutable snapshots? | E5 | Closed | Owner decision 2026-10-03 for the first package: detached deep copies on write/read; returned copies are mutable and their modification does not change the journal. |
+| Q2 | E1/E2 | How to extract Snapshot data and pass it to record conveniently without losing types? Direct Snapshot recording is currently rejected; automatic export is out of scope. | E5 | Closed | Owner decision 2026-10-03 for the first package: authors explicitly supply ordinary values/dicts; direct Snapshot input and automatic conversions excluded. Future adapters require a separate proposal. |
 | Q3 | E2/E3 | Shared provenance model: actual run/image ID, inferior/thread/core, stop/revision; associate read with context capture time. | E3/E5 | Open | Not approved; recommendation in E6. |
 | Q4 | E2/E3 | Refine availability/errors: missing fields, optimized-out, unreadable and partial stacks; keep distinct from assertion FAIL. | E5 | Open | Not approved; recommendation in E6. |
-| Q5 | E3 | Which operations automatically invalidate snapshots? Raw monitor/reset/reconnect and thread/core switches need policy; current explicit invalidate is incomplete. | E5 | Open | Not approved; recommendation in E6. |
+| Q5 | E3 | Which operations automatically invalidate snapshots? Raw monitor/reset/reconnect and thread/core switches need policy; current explicit invalidate is incomplete. | E5 | Open | Partial owner decision 2026-10-03: the journal retains history across continue/reset within a scenario; a new scenario starts empty. Context/read freshness rules remain unresolved. |
 | Q6 | E1/E2 | Is the benefit sufficient without fewer lines? Measure copying memory/time, define limits and convenient access; avoid replacing locals with journals unnecessarily. | E5 | Open | Not approved; recommendation in E6. |
 | Q7 | E3 | Probe required capabilities of the installed GDB instead of inferring support from version: the tested build lacks FIRST_ERROR. | E5 | Open | Not approved; recommendation in E6. |
 | Q8 | E3 | Classify older=None + NO_REASON separately as unconfirmed_end? Current unwind_error retains reason but does not imply corruption; agree on tri-state caller and exact signal/inline depth counting. | E5 | Open | Not approved; recommendation in E6. |
