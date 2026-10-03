@@ -144,30 +144,56 @@ implement and run acceptance.
 - Q19: set acceptable memory/time costs from A5 measurements; logical limits are
   not measured RSS/latency guarantees.
 
-## Q20: proposed configuration shape
+## Q20: external configuration files and scenario environment
 
-Direction approved; the following is proposed, not implemented API:
+Owner clarification on 2026-10-03: settings originate in external files like
+target.toml/full-image.toml. Scenarios should access those files or their contents
+to know their launch environment. Additional files and their responsibilities
+require discussion. The previous decorator/override precedence was not approved.
+
+Inspected at 470d90c:
+
+- profile.load_profile reads target.toml under strict schema 1; arbitrary keys
+  are rejected. Target already receives profile, but this is an internal mutable
+  dictionary, not an agreed public configuration interface.
+- full_image.load_policy accepts only [image], validates against profile, and
+  returns that table plus the original file SHA256.
+- runner passes profile/full_image_policy via run.json; agent gives Target only
+  profile. There is no general scenario interface to loaded configurations.
+
+Proposal for discussion:
+
+| File | Responsibility | Status |
+| --- | --- | --- |
+| target.toml | MCU and hardware profile constraints | Existing |
+| full-image.toml | Image region, fill and CRC | Existing; applies when selected |
+| scenario.toml | API settings and per-ID scenario parameters | One proposed new file; name/schema undecided |
+
+The new file could use [api.journal] for common limits and
+[scenarios.HW_ADC.parameters] for consumer data. Per-scenario limit overrides,
+file optionality and defaults need explicit decisions. Separate api.toml and
+scenarios.toml are possible if owners differ; no such requirement exists yet,
+so one additional file is proposed initially.
+
+Proposed content access preserving source document structure:
 
 ```python
-limit = t.config["limits"]["journal"]["max_records"]
-threshold = t.config["parameters"]["vdda_min_mv"]
+mcu = t.config["target"]["mcu"]
+image_end = t.config["full_image"]["image"]["end"]
+limit = t.config["scenario"]["api"]["journal"]["max_records"]
+threshold = t.config["scenario"]["scenarios"]["HW_ADC"]["parameters"]["vdda_min_mv"]
 ```
 
-1. t.config is a deeply immutable snapshot of effective parameters for this run,
-   including defaults, rather than the source TOML.
-2. Proposed precedence: API defaults → scenario parameters → external overrides
-   for the selected scenario ID. File/CLI syntax is undecided.
-3. limits contains typed API constraints; parameters contains consumer values such
-   as measurement thresholds. Validation/types need a contract. Unknown API keys
-   and invalid types are rejected before hardware connection.
-4. Configuration is frozen before execution and survives resume/reset unchanged.
-   It is separate from dynamic MCU context and mutable internal profile data.
-5. Do not automatically expose the entire stand/session, environment or connection
-   data. A schema defines public parameters.
-6. The system spec owns loading/merging/transport; the API spec owns read access and
-   limit use. Reproduction metadata and possible report-schema changes require
-   explicit decisions before implementation.
+This is a sketch, not implemented API. If full-image policy is not applied,
+propose t.config["full_image"] is None rather than invented file contents.
+Read validated snapshots of the selected files actually used for this run;
+GDB need not reopen original paths, which may not exist on a remote stand.
+Propose deeply immutable snapshots; keep source identity/hash separate from
+contents, and distinguish inserted defaults/effective settings from source data.
 
-Q6/Q19 remain open: configurable limits strengthen the need for measurements.
-Extend A2/A3/A5 with defaults/overrides, scenario isolation, nested config mutation
-rejection and invalid configuration refusal before connection.
+The system spec owns selection/loading/validation/transport; the API spec owns
+public reading and limit use. Environment file scope (including stand access),
+scenario.toml schema, absence behavior, source metadata and reproduction storage
+remain open in Q20. Q6/Q19 remain open. Acceptance covers selected versus adjacent
+files, absent policy, source modification after capture, remote execution,
+nested mutation refusal and validation before connection.
