@@ -124,11 +124,11 @@ approval of conventions/API specification and core integration; no release targe
 
 ## Questions and proposals for review after the stages
 
-This register owns Q1–Q19 statuses; E6 contains proposals, not decisions.
+This register owns Q1–Q20 statuses; E6 contains proposals, not decisions.
 Closed requires an explicit owner decision recorded with its date. Closing a
 question does not imply implementation or acceptance. Deferred questions remain
 Open; composite questions retain partial decisions but stay Open until every part
-is resolved. IDs are stable. As of 2026-10-03 Q1 and Q2 are closed for the first package; Q5 and Q16 are partly resolved.
+is resolved. IDs are stable. As of 2026-10-03 Q1, Q2 and Q17 are closed for the first package; Q5 and Q16 are partly resolved.
 Other questions remain open. Contract decisions do not authorize core integration.
 
 | ID | Source | Question / proposal | Review | Status | Decision / basis |
@@ -156,6 +156,7 @@ Other questions remain open. Contract decisions do not authorize core integratio
 
 | ID | Source | Question / proposal | Review | Status | Decision / basis |
 | --- | --- | --- | --- | --- | --- |
-| Q17 | E6 | Fixed or configurable first-package limits? Recommend fixed. | E6 | Open | Not approved; recommendation in E6. |
+| Q17 | E6 | Fixed or configurable first-package limits? | E6 | Closed | Owner decision 2026-10-03: limits are scenario parameters with external configuration; the scenario can read its launch configuration. General mechanism contract: Q20. |
 | Q18 | E6 | Approve RecordError.code/limit and public exception import. | E6 | Open | Not approved; recommendation in E6. |
 | Q19 | E6 | Set acceptable memory/time from A5; logical limits do not guarantee RSS/latency. | Acceptance | Open | Not approved; recommendation in E6. |
+| Q20 | Q17 decision | General scenario configuration: schema, sources/precedence, validation, read-only access, exposed data boundaries and reproducibility. | Before first-package implementation | Open | Direction approved 2026-10-03; detailed contract pending. |

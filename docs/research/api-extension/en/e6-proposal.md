@@ -43,21 +43,22 @@ or cleanup issues. RTOS and first-study hardware debt remain paused.
 | J9 | Effects | Python memory only; no GDB calls, MCU reads, continue, file I/O, automatic report export or PASS/FAIL changes |
 | J10 | Provenance | Sequence is author insertion order, not an MCU stop number; no automatic PC/time/image/thread/run IDs or atomic hardware-snapshot guarantee |
 | J11 | Queries | Python filters/slices/any/all/mean/stdev; no query language. all([]) is true, so the scenario checks nonemptiness |
-| J12 | Resources | Fixed published prototype limits for the first package; no Target/decorator limit configuration yet |
+| J12 | Resources | Owner decision 2026-10-03: externally configurable scenario limits; effective launch configuration is readable by the scenario. General contract pending in Q20 |
 
 J7–J9 require integrated tests: the research facade does not prove future Target
 behavior. Export/adapters, the immutable Context model, and a journal-clear operation
 are outside this package.
 
-Per-journal limits: 128 entries, 4096 nodes, 65536 UTF-8 text bytes; data depth at
+Proposed per-journal defaults (numbers not yet approved): 128 entries, 4096 nodes, 65536 UTF-8 text bytes; data depth at
 most 8 (root depth 0), int.bit_length at most 256. Each visited value counts as a
 node, including containers, dict keys and entry name. Text includes names, keys
 and string values. Wrapper metadata is excluded. Shared references are copied
 and counted repeatedly; lone Unicode surrogates are rejected. Logical limits
 are not an exact RSS bound: records() copies consume additional caller-held memory.
 
-Fixed limits deliberately narrow first-package parameterization. Future configuration
-needs a separate contract rather than access to internal Journal objects.
+The owner rejected fixed limits on 2026-10-03. Configuration belongs in the first
+package through a general mechanism (Q20), not internal Journal access. The package
+now also includes that mechanism.
 
 ## 3. Errors and availability
 
@@ -95,7 +96,7 @@ revision describes accepted requirements; implementation/verification status is
 tracked separately. A version increment is neither a release nor hardware acceptance.
 
 
-Q1–Q19 statuses and accepted decisions are maintained in the [plan register](plan.md).
+Q1–Q20 statuses and accepted decisions are maintained in the [plan register](plan.md).
 Recommendations in this document do not close questions by themselves.
 
 ## 5. Q1–Q16 disposition
@@ -137,8 +138,36 @@ implement and run acceptance.
 
 ## 7. Questions appended to the queue
 
-- Q17: fixed first-package limits or configurable? Recommend fixed limits to avoid
-  introducing another configuration interface.
+- Q17 closed 2026-10-03: configurable scenario parameters and readable launch
+  configuration approved. The previous fixed-limit recommendation is superseded.
 - Q18: approve RecordError.code/limit and public exception import.
 - Q19: set acceptable memory/time costs from A5 measurements; logical limits are
   not measured RSS/latency guarantees.
+
+## Q20: proposed configuration shape
+
+Direction approved; the following is proposed, not implemented API:
+
+```python
+limit = t.config["limits"]["journal"]["max_records"]
+threshold = t.config["parameters"]["vdda_min_mv"]
+```
+
+1. t.config is a deeply immutable snapshot of effective parameters for this run,
+   including defaults, rather than the source TOML.
+2. Proposed precedence: API defaults → scenario parameters → external overrides
+   for the selected scenario ID. File/CLI syntax is undecided.
+3. limits contains typed API constraints; parameters contains consumer values such
+   as measurement thresholds. Validation/types need a contract. Unknown API keys
+   and invalid types are rejected before hardware connection.
+4. Configuration is frozen before execution and survives resume/reset unchanged.
+   It is separate from dynamic MCU context and mutable internal profile data.
+5. Do not automatically expose the entire stand/session, environment or connection
+   data. A schema defines public parameters.
+6. The system spec owns loading/merging/transport; the API spec owns read access and
+   limit use. Reproduction metadata and possible report-schema changes require
+   explicit decisions before implementation.
+
+Q6/Q19 remain open: configurable limits strengthen the need for measurements.
+Extend A2/A3/A5 with defaults/overrides, scenario isolation, nested config mutation
+rejection and invalid configuration refusal before connection.
