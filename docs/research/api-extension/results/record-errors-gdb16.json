@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "hardware": false,
+  "gdb": "16.3.90.20250906-git",
+  "python": "3.13.12",
+  "tests": 18,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "status": "PASS",
+  "journal_sha256": "e9cef66bad886d56544bc19f786da8ddb250a8146547e3192c50a159bded0e9e",
+  "log": "test_empty_queries_and_short_slices (test_record.RecordTests.test_empty_queries_and_short_slices) ... ok\ntest_filter_then_take_differs_from_take_then_filter (test_record.RecordTests.test_filter_then_take_differs_from_take_then_filter) ... ok\ntest_invalid_limit_configuration (test_record.RecordTests.test_invalid_limit_configuration) ... ok\ntest_journals_are_per_invocation (test_record.RecordTests.test_journals_are_per_invocation) ... ok\ntest_limits_and_failure_does_not_consume_budget (test_record.RecordTests.test_limits_and_failure_does_not_consume_budget) ... ok\ntest_names_and_filters (test_record.RecordTests.test_names_and_filters) ... ok\ntest_order_and_duplicate_names (test_record.RecordTests.test_order_and_duplicate_names) ... ok\ntest_rejected_values_leave_no_partial_record (test_record.RecordTests.test_rejected_values_leave_no_partial_record) ... ok\ntest_rejects_subclasses_without_calling_user_code (test_record.RecordTests.test_rejects_subclasses_without_calling_user_code) ... ok\ntest_supported_scalars_and_shared_children (test_record.RecordTests.test_supported_scalars_and_shared_children) ... ok\ntest_target_failure_propagates_and_evidence_remains (test_record.RecordTests.test_target_failure_propagates_and_evidence_remains) ... ok\ntest_where_select_take_skip_first_last (test_record.RecordTests.test_where_select_take_skip_first_last) ... ok\ntest_write_and_read_snapshots (test_record.RecordTests.test_write_and_read_snapshots) ... ok\ntest_caught_error_allows_explicit_recovery (test_record_errors.RecordErrorTests.test_caught_error_allows_explicit_recovery) ... ok\ntest_data_codes_preserve_history_and_sequence (test_record_errors.RecordErrorTests.test_data_codes_preserve_history_and_sequence) ... ok\ntest_each_limit_and_atomic_budget (test_record_errors.RecordErrorTests.test_each_limit_and_atomic_budget) ... ok\ntest_names_and_filters_have_machine_code (test_record_errors.RecordErrorTests.test_names_and_filters_have_machine_code) ... ok\ntest_system_error_is_not_disguised (test_record_errors.RecordErrorTests.test_system_error_is_not_disguised) ... ok\n\n----------------------------------------------------------------------\nRan 18 tests in 0.002s\n\nOK\n"
+}

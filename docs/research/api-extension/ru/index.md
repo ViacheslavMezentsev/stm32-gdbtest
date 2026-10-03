@@ -44,3 +44,5 @@ GitHub подтверждён через GitHub API и совпадает с л�
 [M4: сквозной pipeline](config-pipeline.md) — настоящий F030 ELF prepare PASS, штатный пакет, GDB-Python 6/6 без MCU; Linux 68/68, Windows 67 PASS/1 skip. Далее согласование оставшихся контрактов перед M5.
 
 [Q6/Q19: время и память журнала](records-cost.md) — 13 форм данных и 5 границ в CPython/GDB14/GDB16; пределы предложены, согласование открыто.
+
+[RecordError: структурированные отказы](record-errors.md) — code/limit реализованы в прототипе, GDB14/GDB16 по 18/18 PASS; далее legacy config/config_props.

@@ -2,6 +2,8 @@
 
 ## Исследование расширения API — 03.10.2026
 
+- [RecordError](docs/research/api-extension/ru/record-errors.md): code/limit и атомарность отказов проверены в прототипе, GDB14/GDB16 по 18/18. Далее legacy config/config_props; численные пределы Q6/Q19 пока не утверждены, ядро прежнее.
+
 - [Q6/Q19: затраты](docs/research/api-extension/ru/records-cost.md): CPython/GDB14/GDB16, по 13 форм и 5 границ PASS. Предложены defaults и максимумы; согласование открыто. Далее решение по пределам и проверка RecordError.code/limit в прототипе. Ядро прежнее.
 
 - [M5: контракт принят](docs/research/api-extension/ru/m5-contract.md): Q16 закрыт, ТЗ API 0.2.0 и общее ТЗ 0.60. record/records + RecordError + config/config_props + session.toml; цель модуля 0.2.0, API_VERSION=1, api.toml schema=1. Далее измерения Q6/Q19 и согласование чисел; перенос в ядро требует отдельного разрешения. Нижеследующие пункты сохраняют историю этапов.

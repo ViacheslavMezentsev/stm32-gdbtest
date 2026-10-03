@@ -6,6 +6,11 @@ import math
 class RecordError(ValueError):
     """Invalid evidence or an exceeded experimental resource limit."""
 
+    def __init__(self, code, message, *, limit=None):
+        super().__init__(message)
+        self.code = code
+        self.limit = limit
+
 
 class Journal:
     """Append snapshots; return detached copies. No export or shared state."""
@@ -23,35 +28,37 @@ class Journal:
     def _copy(self, value, depth, ancestors, budget):
         _, node_limit, depth_limit, text_limit, integer_bits = self._limits
         budget[0] += 1
-        if budget[0] > node_limit or depth > depth_limit:
-            raise RecordError("node or depth limit exceeded")
+        if budget[0] > node_limit:
+            raise RecordError("limit_exceeded", "node limit exceeded", limit="nodes")
+        if depth > depth_limit:
+            raise RecordError("limit_exceeded", "depth limit exceeded", limit="depth")
         kind = type(value)
         if kind is str:
             # Bound allocation before UTF-8 encoding; reject lone surrogates.
             if len(value) > text_limit - budget[1]:
-                raise RecordError("text limit exceeded")
+                raise RecordError("limit_exceeded", "text limit exceeded", limit="text_bytes")
             try:
                 budget[1] += len(value.encode("utf-8"))
             except UnicodeEncodeError as exc:
-                raise RecordError("invalid Unicode text") from exc
+                raise RecordError("invalid_text", "invalid Unicode text") from exc
             if budget[1] > text_limit:
-                raise RecordError("text limit exceeded")
+                raise RecordError("limit_exceeded", "text limit exceeded", limit="text_bytes")
             return value
         if value is None or kind is bool:
             return value
         if kind is int:
             if value.bit_length() > integer_bits:
-                raise RecordError("integer limit exceeded")
+                raise RecordError("limit_exceeded", "integer limit exceeded", limit="integer_bits")
             return value
         if kind is float:
             if not math.isfinite(value):
-                raise RecordError("non-finite float")
+                raise RecordError("non_finite", "non-finite float")
             return value
         if kind not in (list, dict):
-            raise RecordError("unsupported value type")
+            raise RecordError("unsupported_type", "unsupported value type")
         identity = id(value)
         if identity in ancestors:
-            raise RecordError("cyclic data")
+            raise RecordError("cycle", "cyclic data")
         ancestors.add(identity)
         try:
             if kind is list:
@@ -59,7 +66,7 @@ class Journal:
             result = {}
             for key, item in value.items():
                 if type(key) is not str:
-                    raise RecordError("dictionary keys must be strings")
+                    raise RecordError("unsupported_type", "dictionary keys must be strings")
                 copied_key = self._copy(key, depth + 1, ancestors, budget)
                 result[copied_key] = self._copy(item, depth + 1, ancestors, budget)
             return result
@@ -68,9 +75,9 @@ class Journal:
 
     def record(self, name, data):
         if type(name) is not str or not name:
-            raise RecordError("name must be a non-empty string")
+            raise RecordError("invalid_name", "name must be a non-empty string")
         if len(self._entries) >= self._limits[0]:
-            raise RecordError("record limit exceeded")
+            raise RecordError("limit_exceeded", "record limit exceeded", limit="records")
         budget = [self._nodes, self._text_bytes]
         copied_name = self._copy(name, 0, set(), budget)
         snapshot = self._copy(data, 0, set(), budget)
@@ -81,7 +88,7 @@ class Journal:
 
     def records(self, name=None):
         if name is not None and (type(name) is not str or not name):
-            raise RecordError("filter must be None or a non-empty string")
+            raise RecordError("invalid_name", "filter must be None or a non-empty string")
         # Stored values have already been validated; copying cannot invoke user code.
         def clone(value):
             if type(value) is list:

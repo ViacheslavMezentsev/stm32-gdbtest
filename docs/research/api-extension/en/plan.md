@@ -172,3 +172,5 @@ Other questions remain open. Contract decisions do not authorize core integratio
 [M5: first-package requirements](m5-contract.md) — Q16 closed, API spec 0.2.0 and system spec 0.60. Next: Q6/Q19, then integration authorization.
 
 [Q6/Q19: journal time and memory](records-cost.md) — 13 input shapes and 5 boundaries in CPython/GDB14/GDB16; proposed limits await approval.
+
+[RecordError: structured rejection](record-errors.md) — prototype code/limit implemented, GDB14/GDB16 18/18 PASS each; next legacy config/config_props.
