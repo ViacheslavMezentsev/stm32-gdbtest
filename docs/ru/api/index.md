@@ -2,7 +2,7 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [English](../../en/api/index.md)
 
-Принятые публичные методы, свойства и декоратор. Текущий контракт: [ТЗ API 0.2.7](../../TECHNICAL_SPECIFICATION_API.md).
+Принятые публичные методы, свойства и декоратор. Текущий контракт: [ТЗ API 0.2.8](../../TECHNICAL_SPECIFICATION_API.md).
 
 Версия поддержки означает наличие реализации; ревизия ТЗ — фиксацию контракта.
 `API_VERSION=1` не является номером релиза или ревизии ТЗ. База проверена по тегам
@@ -25,8 +25,8 @@
 | [config_props](config-props.md) | `config_props: Mapping` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
 | [RecordError](record-error.md) | `RecordError(ValueError)` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 / 0.2.1 |
 | [case](case.md) | `case(identifier, *, timeout_s=20, labels=(), contracts=())` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [read](read.md) | `read(path, *, fields=None, start=0, count=None) -> scalar | list | dict` | не выпущено | 0.3.0 (проект) |
-| [write](write.md) | `write(path, value, *, verify=True) -> dict` | не выпущено | 0.3.0 (проект) |
+| [read](read.md) | `read(path, *, fields=None, start=0, count=None) -> scalar | 0.3.0.dev0 (ядро) | 0.2.8 (проект) | не выпущено | 0.3.0 (проект) |
+| [write](write.md) | `write(path, value, *, verify=True) -> dict` | 0.3.0.dev0 (ядро) | 0.2.8 (проект) |
 | [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int | float | bool` | не выпущено | 0.3.0 (проект) |
 | [registers](registers.md) | `registers(*names, frame=None) -> dict` | не выпущено | 0.3.0 (проект) |
 | [frames](frames.md) | `frames(limit=16) -> dict` | не выпущено | 0.3.0 (проект) |

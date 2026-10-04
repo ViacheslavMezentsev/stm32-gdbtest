@@ -6,8 +6,8 @@
 
 | Property | Value |
 | --- | --- |
-| Module support | 0.3.0.dev0 (core, branch `deepseek/api030-core-result`) |
-| API specification contract | not accepted; designed revision 0.2.7 |
+| Module support | 0.3.0.dev0 (core) |
+| API specification contract | not accepted; designed revision 0.2.8 |
 | API_VERSION | 1 (the effective contract does not change) |
 | Basis | the agreed verification firmware `tests/firmware` and its scenarios |
 

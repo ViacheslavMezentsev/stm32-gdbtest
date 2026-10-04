@@ -2,7 +2,7 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [Русский](../../ru/api/index.md)
 
-Accepted public methods, properties and decorator. Current contract: [API specification 0.2.7](../../TECHNICAL_SPECIFICATION_API.md).
+Accepted public methods, properties and decorator. Current contract: [API specification 0.2.8](../../TECHNICAL_SPECIFICATION_API.md).
 
 Support version identifies implementation availability; specification revision identifies
 contract adoption. API_VERSION=1 is neither a release nor a specification revision.
@@ -25,8 +25,8 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [config_props](config-props.md) | `config_props: Mapping` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
 | [RecordError](record-error.md) | `RecordError(ValueError)` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 / 0.2.1 |
 | [case](case.md) | `case(identifier, *, timeout_s=20, labels=(), contracts=())` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [read](read.md) | `read(path, *, fields=None, start=0, count=None) -> scalar | list | dict` | not released | 0.3.0 (design) |
-| [write](write.md) | `write(path, value, *, verify=True) -> dict` | not released | 0.3.0 (design) |
+| [read](read.md) | `read(path, *, fields=None, start=0, count=None) -> scalar | 0.3.0.dev0 (core) | 0.2.8 (design) | not released | 0.3.0 (design) |
+| [write](write.md) | `write(path, value, *, verify=True) -> dict` | 0.3.0.dev0 (core) | 0.2.8 (design) |
 | [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int | float | bool` | not released | 0.3.0 (design) |
 | [registers](registers.md) | `registers(*names, frame=None) -> dict` | not released | 0.3.0 (design) |
 | [frames](frames.md) | `frames(limit=16) -> dict` | not released | 0.3.0 (design) |
