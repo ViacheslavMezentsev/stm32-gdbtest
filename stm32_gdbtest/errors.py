@@ -15,8 +15,9 @@ OPERATIONS = (
 # Where the operation stopped: input validation, the backend command, or observing the result.
 STAGES = ("validation", "command", "observe", "readback")
 
-# Observed effect on the target; `unknown` means the attempt may or may not have changed state.
-EFFECTS = ("none", "unknown", "partial", "applied")
+# Observed effect on the target; `unknown` means the attempt may or may not have changed state, and
+# `completed` means the operation finished while its result is unusable.
+EFFECTS = ("none", "unknown", "partial", "applied", "completed")
 
 
 class ApiError(Exception):

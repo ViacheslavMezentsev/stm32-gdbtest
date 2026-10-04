@@ -33,6 +33,64 @@ def function_name(name):
     return name.strip()
 
 
+class Point:
+    """A set point and its state (ТЗ API 4.4).
+
+    The object owns one native `gdb.Breakpoint`, supports the context manager (`with` removes the
+    point on exit) and keeps the number of stops observed for it.
+    """
+
+    def __init__(self, native, location, owner=None):
+        self._native = native
+        # The number is captured now: GDB refuses attribute access on a deleted breakpoint.
+        self._number = native.number
+        self.location = location
+        self.hit_count = 0
+        self._owner = owner
+
+    @property
+    def id(self):
+        return self._number
+
+    number = id
+
+    @property
+    def addresses(self):
+        """Resolved addresses; a deleted point reports none instead of raising."""
+        try:
+            return list(self._native.locations)
+        except (AttributeError, gdb.error, RuntimeError):
+            return []
+
+    @property
+    def active(self):
+        try:
+            return self._native.is_valid() and self._native.enabled
+        except RuntimeError:
+            return False
+
+    def remove(self):
+        """Delete the point and forget it; a repeated removal is not an error."""
+        try:
+            valid = self._native.is_valid()
+        except RuntimeError:
+            valid = False
+        if valid:
+            self._native.delete()
+        if self._owner is not None:
+            self._owner.owned[:] = [point for point in self._owner.owned if point is not self]
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, kind, value, traceback):
+        self.remove()
+        return False
+
+    def __repr__(self):
+        return f"Point(id={self._native.number}, location={self.location!r}, active={self.active})"
+
+
 class Target:
     def __init__(self, report, profile, configuration=None):
         self.report = report
@@ -63,9 +121,14 @@ class Target:
 
     def on_stop(self, event):
         # Capture primitive values now: temporary breakpoint objects expire after stop.
-        self.stops.append({"type": type(event).__name__,
-                           "breakpoints": [bp.number for bp in getattr(event, "breakpoints", ())],
-                           "signal": getattr(event, "stop_signal", None)})
+        numbers = [bp.number for bp in getattr(event, "breakpoints", ())]
+        self.stops.append({"type": type(event).__name__, "breakpoints": numbers,
+                           "signal": getattr(event, "stop_signal", None),
+                           "native_reason": getattr(event, "details", {}).get("reason")
+                           if isinstance(getattr(event, "details", {}), dict) else None})
+        for point in self.owned:
+            if point.id in numbers:
+                point.hit_count += 1
 
     def check(self, name, actual, expected):
         """Record one comparison and fail the scenario on a mismatch (ТЗ API 4.1)."""
@@ -177,39 +240,197 @@ class Target:
         """Alias of `write` kept for the 0.2.x name (removal planned in 0.4.0)."""
         self.write(expression, value)
 
-    def breakpoint(self, function, temporary=False, when=None):
-        if sum(bp.is_valid() for bp in self.owned) >= self.profile["breakpoint_limit"]:
-            raise RuntimeError("Profile hardware breakpoint budget exhausted")
-        bp = gdb.Breakpoint(function, type=gdb.BP_HARDWARE_BREAKPOINT, temporary=temporary)
-        self.owned.append(bp)
+    def breakpoint(self, location, *, temporary=False, condition=None, ignore_count=0):
+        """Set a point and return it; a repeated target reuses the active point (ТЗ API 4.4)."""
+        if type(location) is not str or not location.strip():
+            self._fail("breakpoint", "validation", "none", "invalid_location",
+                       "location must be a non-empty string", location=location)
+        for point in self.owned:
+            if point.location == location and point.active:
+                return point
+        if sum(point.active for point in self.owned) >= self.profile["breakpoint_limit"]:
+            self._fail("breakpoint", "command", "none", "limit_exceeded",
+                       "profile hardware breakpoint budget exhausted",
+                       limit=self.profile["breakpoint_limit"])
         try:
-            if bp.pending:
-                raise RuntimeError(f"Breakpoint symbol is absent from ELF: {function}")
-            if when is not None:
-                bp.condition = when
+            native = gdb.Breakpoint(location, type=gdb.BP_HARDWARE_BREAKPOINT, temporary=temporary)
+        except gdb.error as cause:
+            self._fail("breakpoint", "command", "none", "command_failed",
+                       f"breakpoint failed for {location}", cause=cause, location=location)
+        point = Point(native, location, self)
+        self.owned.append(point)
+        try:
+            if native.pending:
+                self._fail("breakpoint", "command", "none", "symbol_absent",
+                           f"symbol is absent from the ELF: {location}", location=location)
+            if condition is not None:
+                native.condition = condition
+            if ignore_count:
+                native.ignore_count = ignore_count
         except BaseException:
-            bp.delete()
+            point.remove()
             raise
-        return bp
+        return point
 
-    def reach(self, function, when=None):
-        bp = self.breakpoint(function, temporary=True, when=when)
-        number = bp.number
+    def reach(self, location, *, condition=None):
+        """Run to a location and return the stop result; the point is temporary (ТЗ API 4.5)."""
+        point = self.breakpoint(location, temporary=True, condition=condition)
+        # Resolve the addresses while the point exists: a temporary point is gone after the stop.
+        addresses = list(point.addresses)
         self.stops.clear()
         try:
-            gdb.execute("continue")
-            stop = self.stops[-1] if self.stops else {}
-            self.report.setdefault("stops", []).append(stop)
-            self.check(f"breakpoint reached: {function}", number in stop.get("breakpoints", []), True)
-            frame = gdb.newest_frame().name()
-            stop["frame"] = frame
-            self.check(f"frame: {function}", function_name(frame), function_name(function))
-            if when is not None:
-                # GDB can stop after a condition evaluation error; never accept that silently.
-                self.check(f"condition: {when}", bool(self.value(when)), True)
+            stop = self._advance("reach")
         finally:
-            if bp.is_valid():
-                bp.delete()
+            point.remove()
+        if not addresses and stop.get("pc") is not None:
+            addresses = [stop["pc"]]
+        self.report.setdefault("stops", []).append(stop)
+        self.check(f"breakpoint reached: {location}", point.number in stop.get("breakpoints", []), True)
+        frame = gdb.newest_frame().name()
+        stop["frame"] = frame
+        self.check(f"frame: {location}", function_name(frame), function_name(location))
+        if condition is not None:
+            # Never accept a stop that happened after a condition evaluation error.
+            self.check(f"condition: {condition}", bool(self.value(condition)), True)
+        return dict(operation="reach", outcome="reached", location=location, point=point.number,
+                    addresses=addresses, stop=stop)
+
+    def resume(self):
+        """Continue execution and return the stop result (ТЗ API 4.5)."""
+        self.stops.clear()
+        stop = self._advance("resume")
+        self.report.setdefault("stops", []).append(stop)
+        return dict(operation="resume", outcome="stopped", stop=stop)
+
+    def step(self, count=1, *, unit="source", mode="into"):
+        """Step `count` times by source line or instruction (ТЗ API 4.5)."""
+        if type(count) is not int or count < 1:
+            self._fail("step", "validation", "none", "invalid_count",
+                       "count must be a positive integer", count=count)
+        commands = {("source", "into"): "step", ("source", "over"): "next",
+                    ("instruction", "into"): "stepi", ("instruction", "over"): "nexti"}
+        if (unit, mode) not in commands:
+            self._fail("step", "validation", "none", "invalid_mode",
+                       f"unsupported step mode {unit}/{mode}", unit=unit, mode=mode)
+        completed, outcome, stop = 0, "completed", {}
+        for _ in range(count):
+            stop = self._advance("step", commands[(unit, mode)])
+            if stop.get("kind") in ("breakpoint", "watchpoint"):
+                outcome = "interrupted"
+                break
+            if stop.get("kind") != "step":
+                self._fail("step", "observe", "completed", "completion_unconfirmed",
+                           "step did not stop at a step event", stop=stop, completed=completed,
+                           unit=unit, mode=mode)
+            completed += 1
+        return dict(operation="step", outcome=outcome, requested=count, completed=completed,
+                    unit=unit, mode=mode, stop=stop)
+
+    def until(self, location=None):
+        """Run to a location in the current frame, or leave the current line (ТЗ API 4.5)."""
+        if location is not None and (type(location) is not str or not location.strip()):
+            self._fail("until", "validation", "none", "invalid_location",
+                       "location must be a non-empty string", location=location)
+        command = "until" if location is None else "until " + location
+        stop = self._advance("until", command)
+        outcome = "reached" if location is not None and stop.get("kind") == "location" else "completed"
+        return dict(operation="until", outcome=outcome, location=location, stop=stop)
+
+    def finish(self):
+        """Run the rest of the current function (ТЗ API 4.5)."""
+        stop = self._advance("finish", "finish")
+        frame = gdb.newest_frame()
+        value = getattr(frame, "return_value", None) if frame is not None else None
+        available = value is not None and not getattr(value, "is_optimized_out", False)
+        if available:
+            try:
+                value.fetch_lazy()
+            except gdb.error:
+                available = False
+        return dict(operation="finish", outcome="completed", stop=stop,
+                    function=function_name(frame.name()) if frame is not None else None,
+                    return_value=int(value) if available else None,
+                    return_state="available" if available else "unavailable")
+
+    def _advance(self, operation, command="continue"):
+        """Run one debugger command and describe the stop it produced.
+
+        The stop reason comes from the event queue because a temporary point may already be invalid
+        when the command returns. Some GDB versions report no native reason for `finish`; in that case
+        a changed frame is what proves the function returned.
+        """
+        before = self._frame_identity()
+        self.stops.clear()
+        try:
+            gdb.execute(command, to_string=True)
+        except gdb.error as cause:
+            self._fail(operation, "command", "unknown", "execution_failed",
+                       f"{command} failed", cause=cause, command=command)
+        stop = dict(self.stops[-1]) if self.stops else {"reason": "unknown", "breakpoints": [],
+                                                        "signal": None}
+        stop["kind"] = self._stop_kind(stop)
+        frame = gdb.newest_frame()
+        if frame is not None:
+            stop["pc"] = int(frame.pc())
+            stop["function"] = function_name(frame.name())
+        if stop["kind"] == "unknown" and before is not None and stop.get("function") != before[0]:
+            # `finish` returned into another function while GDB reported no native reason.
+            stop["kind"] = "function_return"
+        if stop["kind"] == "unknown" and before is not None and stop.get("function") == before[0] \
+                and stop.get("pc") != before[1]:
+            # Single stepping moved the program counter inside one function without a native reason.
+            stop["kind"] = "step"
+        if stop["kind"] == "fault":
+            self._fail(operation, "observe", "completed", "fault_stop",
+                       "stopped at a fault guard", stop=stop)
+        if stop["kind"] == "signal":
+            self._fail(operation, "observe", "completed", "signal_stop",
+                       "stopped by a signal", stop=stop)
+        if stop["kind"] == "unknown":
+            self._fail(operation, "observe", "completed", "unknown_stop",
+                       "stop reason is unknown", stop=stop)
+        return stop
+
+    def _frame_identity(self):
+        """Name and program counter of the current frame, or None when unavailable."""
+        frame = gdb.newest_frame()
+        if frame is None:
+            return None
+        try:
+            return (function_name(frame.name()), int(frame.pc()))
+        except gdb.error:
+            return None
+
+    def _stop_kind(self, stop):
+        """Classify one stop event into the vocabulary used by the navigation results.
+
+        A stop is a point only when the reported numbers belong to this Target; an unknown number
+        (a foreign point, or a temporary point that expired) is reported as an unknown reason.
+        """
+        numbers = set(stop.get("breakpoints", ()))
+        owned = {point.id: point for point in self.owned}
+        guards = {point.id for point in self.owned
+                  if point.location in self.profile["fault_handlers"]}
+        if numbers & guards:
+            return "fault"
+        if numbers & set(owned):
+            return "watchpoint" if str(stop.get("native_reason") or "").startswith("watch") \
+                else "breakpoint"
+        if numbers:
+            return "unknown"
+        if stop.get("signal") is not None:
+            return "signal"
+        native = stop.get("native_reason")
+        if native == "end-stepping-range":
+            return "step"
+        if native == "location-reached":
+            return "location"
+        if native == "function-finished":
+            return "function_return"
+        if native is not None:
+            # The target stopped for a reason we do not classify, but the stop itself is usable.
+            return "other"
+        return "unknown"
 
     def boot(self, reset_command):
         self.clear()
@@ -225,9 +446,8 @@ class Target:
             dict(operation="force_return", function=function, value=expression))
 
     def clear(self):
-        for bp in self.owned:
-            if bp.is_valid():
-                bp.delete()
+        for point in self.owned:
+            point.remove()
         self.owned.clear()
 
     def close(self):
