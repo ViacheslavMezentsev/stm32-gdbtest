@@ -92,3 +92,12 @@ identical to a single-member read and to a field-set read. Writing 41 into the `
 mutation in the report, and the application continues from the written value (42 on the next loop
 iteration). The scenario verifies typed reads of scalars and structs and one verified write; it does
 not measure memory access speed, float formatting or writes to peripherals.
+
+## HW_CI_NAVIGATION
+`finish()` completes the producer function and the caller's copy advances by one tick. A hardware point
+set with `breakpoint()` is active, resolves at least one address and counts the observed stop; `resume()`
+stops at that point, reporting `kind=breakpoint` and the function where it stopped, and leaving the
+`with` block removes the point. Two instruction steps report `outcome=completed`, `completed=2` and a
+step stop; `until()` completes the current line without a point stop. `reach()` returns its outcome,
+the point number, the resolved addresses and the reached frame. The scenario verifies the navigation
+surface; it does not claim source-line accuracy of a step or breakpoint counts of foreign points.
