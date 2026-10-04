@@ -1,12 +1,13 @@
 """Target API. Imported only inside GDB's main Python thread."""
 
 import hashlib
+import os
 import re
 
 import gdb
 from stm32_gdbtest.errors import ApiError, CheckFailed, fail  # noqa: F401
 from stm32_gdbtest.records import Journal
-from stm32_gdbtest.configuration import DEFAULTS, EXECUTE_OUTPUT_LIMIT, freeze
+from stm32_gdbtest.configuration import DEFAULTS, EXECUTE_OUTPUT_LIMIT, RESET_COMMAND, freeze
 from stm32_gdbtest import values
 
 _CLONE = re.compile(r"\s*\[clone [^\]]*\]")
@@ -49,6 +50,7 @@ class Point:
         self.location = location
         self.hit_count = 0
         self._owner = owner
+        self._removed = False
 
     @property
     def id(self):
@@ -66,6 +68,8 @@ class Point:
 
     @property
     def active(self):
+        if self._removed:
+            return False
         try:
             return self._native.is_valid() and self._native.enabled
         except RuntimeError:
@@ -73,6 +77,7 @@ class Point:
 
     def remove(self):
         """Delete the point and forget it; a repeated removal is not an error."""
+        self._removed = True
         try:
             valid = self._native.is_valid()
         except RuntimeError:
@@ -525,6 +530,63 @@ class Target:
             except gdb.error:
                 return None
         return None
+
+    def reset(self):
+        """Reset the target, leave it halted and invalidate the debugger caches (ТЗ API 4.10).
+
+        The command comes from `api.toml` when configured, otherwise from the prepared backend, and a
+        session override wins over both. Active points are refused because a reset makes their state
+        meaningless; the invalidation runs after any attempt, including a failed one.
+        """
+        guards = set(self.profile["fault_handlers"])
+        active = [point.id for point in self.owned if point.active and point.location not in guards]
+        if active:
+            self._fail("reset", "validation", "none", "active_points",
+                       "active points must be removed before a reset", points=active)
+        command = self._reset_command()
+        invalidation = []
+        try:
+            gdb.execute(command, to_string=True)
+        except gdb.error as cause:
+            self._invalidate(invalidation)
+            self._fail("reset", "command", "unknown", "command_failed",
+                       "the reset command failed", cause=cause, command=command,
+                       invalidation=invalidation)
+        self._invalidate(invalidation)
+        frame = gdb.newest_frame()
+        registers = {"pc": int(frame.pc()) if frame is not None and frame.is_valid() else None}
+        entry = dict(operation="reset", outcome="halted", command=command, registers=registers,
+                     invalidation=invalidation)
+        self.report.setdefault("resets", []).append(entry)
+        return dict(entry)
+
+    def _reset_command(self):
+        """Reset command in the documented precedence: session, `api.toml`, backend default."""
+        override = os.environ.get("STM32_GDBTEST_RESET_COMMAND")
+        if override:
+            return override
+        try:
+            configured = self._config["api"]["reset"]["command"]
+        except (KeyError, TypeError):
+            configured = None
+        if configured is not None:
+            if type(configured) is not str or not configured.strip():
+                self._fail("reset", "validation", "none", "invalid_command",
+                           "reset.command must be a non-empty string", command=configured)
+            return configured
+        return getattr(self.profile, "get", lambda *_: None)("reset_halt") or RESET_COMMAND
+
+    def _invalidate(self, steps):
+        """Flush the register cache and the cached frames, recording both outcomes."""
+        for name, action in (("flush_register_cache",
+                              lambda: gdb.execute("maintenance flush register-cache", to_string=True)),
+                             ("invalidate_cached_frames", gdb.invalidate_cached_frames)):
+            try:
+                action()
+            except (gdb.error, AttributeError, RuntimeError) as error:
+                steps.append(dict(step=name, status="failed", detail=str(error)))
+            else:
+                steps.append(dict(step=name, status="done"))
 
     def execute(self, command):
         """Run a debugger command and return its text output (ТЗ API 4.9).

@@ -16,6 +16,9 @@ DEFAULTS = MappingProxyType(dict(max_records=128, max_nodes=4096, max_text_bytes
                                 max_depth=8, max_integer_bits=256))
 # Output limit of the `execute` journal (ТЗ API 6.6, Q5).
 EXECUTE_OUTPUT_LIMIT = 2048
+# Default reset command when neither `api.toml` nor the backend names one
+# (ТЗ API 6.6, Q2); OpenOCD profiles keep their own `reset_halt` value.
+RESET_COMMAND = "monitor reset"
 MAXIMUMS = MappingProxyType(dict(max_records=1024, max_nodes=32768,
                                 max_text_bytes=524288, max_depth=32,
                                 max_integer_bits=1024))
