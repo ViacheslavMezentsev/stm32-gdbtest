@@ -9,6 +9,7 @@ from stm32_gdbtest.configuration import DEFAULTS, freeze
 from stm32_gdbtest import values
 
 _CLONE = re.compile(r"\s*\[clone [^\]]*\]")
+_FUNCTION_NAME = re.compile(r"[A-Za-z_]\w*")
 
 
 def function_name(name):
@@ -516,6 +517,72 @@ class Target:
         kind = getattr(symbol, "type", None)
         if kind is None:
             return None
+        target = getattr(kind, "target", None)
+        if callable(target):
+            try:
+                return target()
+            except gdb.error:
+                return None
+        return None
+
+    def call(self, function, *args):
+        """Call a function of the debugged program on the halted core (ТЗ API 4.8).
+
+        Arguments are passed by value; the function runs, so its side effects are kept and the halt
+        state is whatever the call produced. The scenario timeout is the only bound on the call.
+        """
+        if type(function) is not str or not _FUNCTION_NAME.fullmatch(function):
+            self._fail("call", "validation", "none", "invalid_function",
+                       "a plain function name is required", function=function)
+        literals = []
+        for argument in args:
+            literal = values.argument_literal(argument)
+            if literal is None:
+                self._fail("call", "validation", "none", "unsupported_argument",
+                           "arguments must be finite numbers", function=function,
+                           arguments=list(args))
+            literals.append(literal)
+        expression = f"{function}({', '.join(literals)})"
+        kind = self._function_return_type(function)
+        try:
+            value = gdb.parse_and_eval(expression)
+        except gdb.error as cause:
+            self._fail("call", "command", "unknown", "command_failed",
+                       f"{expression} failed", cause=cause, function=function,
+                       arguments=list(args))
+        if getattr(value, "is_optimized_out", False):
+            self._fail("call", "observe", "completed", "optimized_out",
+                       f"the result of {function} is optimized out", function=function)
+        _type_name, _signed, width = values.return_type_shape(kind)
+        if not width:
+            # A void call has no result to convert; the call itself still happened.
+            result = dict(operation="call", function=function, arguments=list(args),
+                          expression=expression, outcome="returned", return_value=None,
+                          return_state="void")
+            self.report.setdefault("mutations", []).append(
+                dict(operation="call", function=function, expression=expression, value=None))
+            return result
+        try:
+            value.fetch_lazy()
+            plain = values.value_to_plain(value, expression, gdb)
+        except gdb.error as cause:
+            self._fail("call", "observe", "completed", "conversion_failed",
+                       f"the result of {function} is unavailable", cause=cause, function=function)
+        state = "available"
+        result = dict(operation="call", function=function, arguments=list(args),
+                      expression=expression, outcome="returned", return_value=plain,
+                      return_state=state)
+        self.report.setdefault("mutations", []).append(
+            dict(operation="call", function=function, expression=expression, value=plain))
+        return result
+
+    def _function_return_type(self, function):
+        """Declared return type of a named function, or None when the symbol is unknown."""
+        try:
+            symbol = gdb.parse_and_eval(function)
+        except gdb.error:
+            return None
+        kind = getattr(symbol, "type", None)
         target = getattr(kind, "target", None)
         if callable(target):
             try:

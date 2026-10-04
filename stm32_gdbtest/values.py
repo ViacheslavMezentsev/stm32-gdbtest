@@ -4,6 +4,8 @@ RU: Преобразование `gdb.Value` в простые типы Python �
 EN: Conversion of `gdb.Value` into plain Python types and verification of a written value.
 """
 
+import re
+
 from stm32_gdbtest.errors import fail
 
 # Fallback type codes for host checks, where GDB is not importable; a live GDB module wins.
@@ -157,7 +159,8 @@ def return_type_shape(kind):
     code = type_code_of(kind)
     size = getattr(kind, "sizeof", None)
     name = getattr(kind, "name", None)
-    if code is None or not size:
+    # Some GDB builds report sizeof==1 for void, so the type code decides first.
+    if code is None or code == type_constant("TYPE_CODE_VOID") or not size:
         return (name, False, 0)
     label = name or ""
     logical = code in (type_constant("TYPE_CODE_BOOL"), type_constant("TYPE_CODE_CHAR"))
@@ -185,3 +188,27 @@ def type_code_of(kind):
         if candidate is not None:
             kind = candidate
     return getattr(kind, "code", None)
+
+
+def argument_literal(value):
+    """GDB literal of one scalar argument; a non-finite float cannot be expressed in C.
+
+    Returns None when the value cannot be passed by value.
+    """
+    if type(value) is bool:
+        return "1" if value else "0"
+    if type(value) is int:
+        return str(value)
+    if type(value) is float:
+        if value != value or value in (float("inf"), float("-inf")):
+            return None
+        return repr(value)
+    if type(value) is str:
+        # A plain GDB expression is passed through: identifiers, member paths, casts and `&object`.
+        stripped = value.strip()
+        if not stripped or len(stripped) > 120:
+            return None
+        if re.fullmatch(r"[A-Za-z_&][\w.&\->()\[\] ]*", stripped) is None:
+            return None
+        return stripped
+    return None
