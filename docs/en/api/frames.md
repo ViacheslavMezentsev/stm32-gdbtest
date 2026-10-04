@@ -20,6 +20,8 @@ counters.
 
 It returns the frame list and a termination flag.
 
+The `limit` default is 16 with a maximum of 64; a profile may raise it while a call may only lower it.
+
 Limitations: `limit` bounds the walk; without debug information names may be missing and the walk
 may end early; inlined functions may be absent as separate frames.
 

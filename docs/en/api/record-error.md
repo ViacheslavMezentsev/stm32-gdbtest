@@ -9,6 +9,7 @@
 | Module support | 0.2.0.dev0 → 0.2.0rc1 |
 | Contract in API specification | 0.2.0; public import clarified in 0.2.1; §5.6 |
 | API_VERSION | 1 |
+| Former-name alias | RecordError -> a subclass of ApiError (the alias works without warnings until 1.0; removal in 0.4.0) |
 
 Implemented extension; `0.2.0rc1` is a local candidate, not a published stable release.
 

@@ -22,6 +22,8 @@ Before the reset the scenario's active points are removed; after the command the
 caches are invalidated, including after a failed attempt; the result describes the state and the
 invalidation steps.
 
+Command source: the `reset.command` key in `api.toml`; it defaults to the backend value (OpenOCD uses the profile's `reset_halt`, J-Link uses `monitor reset`) and a session may override it. After a failed attempt the caches are invalidated, there is no automatic retry, and frames and registers stay invalid until a new `reach`.
+
 Limitations: the reset command comes from the stand configuration (`monitor reset halt` for OpenOCD,
 `monitor reset` for J-Link); a stop before the program's first instruction is not guaranteed; RAM
 content before the program starts is not preserved; a reset is refused while a watchpoint is active.

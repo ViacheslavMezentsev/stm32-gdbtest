@@ -19,6 +19,8 @@ Runs a debugger command and returns its text output to the scenario.
 
 The output is returned as a string; a debugger error is neither hidden nor repeated automatically.
 
+The output limit defaults to 2048 characters with a maximum of 16384; on truncation the journal carries `truncated` and `output_sha256` of the full output.
+
 Limitations: one string is one command, an embedded newline does not split commands and the rest of
 the string is literal text; the shape and limit of the diagnostic journal are still being agreed;
 commands that change debugger state remain the scenario's responsibility.

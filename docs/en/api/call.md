@@ -19,6 +19,8 @@ Calls a debugged program's function on the halted core and returns the call resu
 
 Arguments are passed by value; the result describes the returned value and its availability.
 
+The defaults are `depth = 1` (maximum 2) and `args_max = 4` (maximum 8); a profile may raise them while a call may only lower them.
+
 Limitations: the call runs on the halted core and changes its state — the function's side effects
 are kept; a long call is bounded by the scenario timeout; pointers, floating-point numbers and
 variadic arguments are outside the verified scope.
