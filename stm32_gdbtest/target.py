@@ -634,9 +634,12 @@ class Target:
                 stop["native_reason"] = "watchpoint-trigger"
                 stop["inferred"] = True
                 stop["watch"] = [point.id for point in fired]
-        if stop["kind"] == "unknown" and before is not None and stop.get("function") == before[0] \
-                and stop.get("pc") != before[1]:
-            stop["kind"] = "step"
+        if stop["kind"] == "unknown" and before is not None and stop.get("pc") != before[1]:
+            # No point and no native reason was reported, but the program counter moved. That is a
+            # step, a reached location or a return into another function, and the checks below only
+            # care that the stop is explained at all. A plain continue cannot be told apart here,
+            # which is why a watch point is proven by its object instead (see above).
+            stop["kind"] = "step" if stop.get("function") == before[0] else "function_return"
         if stop["kind"] == "fault":
             self._fail(operation, "observe", "completed", "fault_stop",
                        "stopped at a fault guard", stop=stop)
