@@ -120,6 +120,16 @@ class Target:
     def config_props(self):
         return self._config_props
 
+    @property
+    def settings(self):
+        """Effective run settings, read-only (ТЗ API 4.11)."""
+        return self._config
+
+    @property
+    def sources(self):
+        """Sources of the run configuration, read-only (ТЗ API 4.12)."""
+        return self._config_props
+
     def record(self, name, data):
         return self._journal.record(name, data)
 
