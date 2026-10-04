@@ -7,6 +7,8 @@
 [rc.2 plan](RC2_READINESS.md): tag `v0.1.0-rc.2`, Python `0.1.0rc2`; published at a0d6547.
 
 The format is MAJOR.MINOR.PATCH per [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html);
+[Preparation v0.3.0-rc.1](../releases/v0.3.0-rc.1.md): Python version 0.3.0; the extended API is implemented and verified on five stands; the owner publishes the tag.
+
 Git tags have the `v` prefix. The current candidate is **v0.2.0-rc.1**, Python **0.2.0rc1**;
 it is not published yet. The previous published candidate is `v0.1.0-rc.2`.
 The initial export from the stand project is not a release.

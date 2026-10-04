@@ -10,6 +10,32 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 - Specification 0.66 clarifies L0/L6 procedures; adds a practical guide to Docker volumes, snapshots, failure evidence and stand restoration. Runtime/API unchanged.
 
+## [0.3.0-rc.1] - 2026-10-05
+
+Extended scenario API; the release is being prepared and the tag is published by the owner.
+
+### Added
+
+- Navigation and observation: `reach` with a condition, `resume`, `step`, `until`, `finish`, `Point` with `with` and `remove()`, and `watch` on writes to an addressable object.
+- Invocation and control: `ret` with a typed value, `call` of firmware functions, `reset` with a command from `api.toml`, and `execute` of debugger commands with a journal.
+- Reading and evaluation: `read`/`write` of objects, `evaluate` of expressions with a type conversion, `registers` of a frame, and `frames` with a walk limit.
+- Run views: `settings` and `sources` as the immutable mappings behind the existing `config` and `config_props`.
+- The `@test` decorator as an alias of `@case`; the static collector accepts both names.
+- `api.toml` keys: `frames.limit`, `call.depth`, `call.args_max`, `execute.output_limit_chars`, `reset.command`.
+
+### Changed
+
+- The module version is raised to `0.3.0`; `API_VERSION=1` and the JSON/TOML schemas are unchanged.
+- The API reference is grouped into methods, properties, decorators, classes and errors; the `read` and `evaluate` rows render correctly again.
+- A stop is classified by the kind of the reported point, not only by the debugger reason.
+
+### Limitations
+
+- Pointers, objects wider than eight bytes and floating-point values cannot be watched.
+- Some combinations deliver no stop event for a watch point: the stop is marked `inferred` and confirmed by the changed object.
+- `finish()` does not publish the staged stack copy; `return_value` arrives as `unavailable` on the stands of the project.
+- Hardware verification covered five stands; native DAP stands were not used.
+
 ## [0.2.0-rc.1] - 2026-10-03
 
 - Local research and prototypes are excluded from the published tree while retained in the developer workspace. Accepted results are documented separately; docs.public checks files and links against .gitignore filters. Main specification 0.65 defines L0–L6; API specification 0.2.3 clarifies public criteria without method changes.

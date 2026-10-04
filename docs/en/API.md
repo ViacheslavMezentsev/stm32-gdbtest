@@ -8,11 +8,12 @@ Production first-package examples and five-MCU verification: [accepted results](
 
 [Methods and properties reference](api/index.md) — individual cards, examples and support versions.
 
-## Designed 0.3.0 package: numbers and migration
+## 0.3.0 package: numbers, migration and aliases
 
-Public cards of the designed methods are in the [reference](api/index.md); the contract is not
-accepted and there is no core implementation. The numbers agreed on 2026-10-04 and the transition from
-the former names are recorded below.
+Public method cards live in the [reference](api/index.md), grouped into methods, properties,
+decorators, classes and errors. The contract is fixed by API specification 0.3.0-rc.1; the module
+implements every listed method and is verified on five stands. The numbers agreed on 2026-10-04 and
+the transition from the former names are recorded below.
 
 | `api.toml` parameter | Default | Maximum | Where it applies |
 | --- | ---: | ---: | --- |
@@ -42,7 +43,7 @@ Transition from the former names (aliases work without warnings until 1.0; remov
 
 ## First package: records and configuration
 
-Candidate `0.2.0rc1` targets 0.2.0; `API_VERSION=1`, api.toml schema=1. Not released. [API spec 0.3.7](../TECHNICAL_SPECIFICATION_API.md), [accepted results](API_ACCEPTANCE.md).
+Candidate `0.2.0rc1` targets 0.2.0; `API_VERSION=1`, api.toml schema=1. Not released. [API spec 0.3.0](../TECHNICAL_SPECIFICATION_API.md), [accepted results](API_ACCEPTANCE.md).
 
 `record(name, data)` appends a deep copy and returns None. `records(name=None)` returns detached mutable copies: `{'sequence': 1, 'name': 'adc', 'data': ...}`. Names may repeat. The filter is an exact nonempty str; None selects all. Insertion order and sequence starting at 1 survive filtering.
 
@@ -104,7 +105,7 @@ CLI --session accepts the existing generated ELF/GDB/tests JSON with an added se
 
 New pack captures TOML in an internal capsule (base64/SHA256/defaults fingerprint); runner/GDB validate it without original files. New packages require tools supporting the extension; do not use older tools. Old packages use legacy mode. Prepare a new package to change its captured configuration. This is not a record/records export format.
 
-Status: development toward **0.2.0** (Python `0.2.0rc1`), not released, `API_VERSION = 1`. This numbers the
+Status: release preparation of **0.3.0** (Python `0.3.0`), the owner publishes the tag, `API_VERSION = 1`. This numbers the
 described API surface; it is not a 1.0 stability promise and not a GDB version. The
 module is delivered as a Git submodule; pip installation is not supported yet, and
 the name still has to be checked for uniqueness before publishing. Requirements:

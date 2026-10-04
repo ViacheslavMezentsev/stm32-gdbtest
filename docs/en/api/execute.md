@@ -7,7 +7,7 @@
 | Property | Value |
 | --- | --- |
 | Module support | 0.3.0.dev0 (core) |
-| API specification contract | not accepted; designed revision 0.3.2 |
+| API specification contract | not accepted; designed revision 0.3.0 |
 | API_VERSION | 1 (the effective contract does not change) |
 | Basis | the agreed verification firmware `tests/firmware` and its scenarios (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
 

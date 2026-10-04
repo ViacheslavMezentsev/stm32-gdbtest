@@ -7,7 +7,7 @@
 | Свойство | Значение |
 | --- | --- |
 | Поддержка в модуле | 0.3.0.dev0 (ядро) |
-| Контракт принят в ТЗ API | не принят; проектируемая ревизия 0.3.7 |
+| Контракт принят в ТЗ API | не принят; проектируемая ревизия 0.3.0 |
 | API_VERSION | 1 (действующий контракт не изменяется) |
 | Основание | согласованная проверочная прошивка `tests/firmware` и её сценарии (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
 
@@ -37,4 +37,4 @@ with target.watch("app_state.ticks"):
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.7.
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.0.

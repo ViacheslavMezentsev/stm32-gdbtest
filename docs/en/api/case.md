@@ -9,7 +9,8 @@
 | Module support | 0.1.0rc1 / v0.1.0-rc.1 |
 | Contract in API specification | 0.1.0; §5.1 |
 | API_VERSION | 1 |
-| Former-name alias | case(...) -> test(...) (the alias works without warnings until 1.0; removal in 0.4.0) |
+| Alias of the new name | `test`; the alias works without warnings until 1.0, removal in 0.4.0 |
+| Former-name alias | `test(...)`; the alias works without warnings until 1.0, removal in 0.4.0 |
 
 ## Contract
 
