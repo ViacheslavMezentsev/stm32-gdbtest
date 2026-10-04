@@ -118,3 +118,12 @@ function runs without arguments and reports `return_state=void`. An unsupported 
 refused with `unsupported_argument` and an invalid function name with `invalid_function`, both before
 the call and without recording a mutation. The scenario does not cover pointer, floating-point or
 variadic parameter lists.
+
+## HW_CI_EXECUTE
+`execute("info registers pc sp")` returns the debugger text and journals the command, the stage, the
+result, the output length, the truncation flag and the configured limit. An embedded newline stays in
+the text instead of splitting commands. An output above the limit is reported as truncated and the
+journal carries the SHA-256 of the full text. An empty command, a blank command and a command with a
+newline are refused with `invalid_command` before the debugger is touched and leave no journal entry;
+an unknown command is reported as `command_failed` with its cause. The scenario does not cover
+non-ASCII output framing or commands that change debugger state.
