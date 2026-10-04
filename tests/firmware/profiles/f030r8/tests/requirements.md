@@ -166,3 +166,14 @@ journal carries the SHA-256 of the full text. An empty command, a blank command 
 newline are refused with `invalid_command` before the debugger is touched and leave no journal entry;
 an unknown command is reported as `command_failed` with its cause. The scenario does not cover
 non-ASCII output framing or commands that change debugger state.
+
+## HW_CI_RESET
+`reset()` with an active point is refused with `active_points` and `effect=none` before the command
+runs, and the point stays active. After the point is removed the configured command `monitor reset halt`
+halts the core, both invalidation steps report `done`, the reset is journalled and the halted pc is
+reported. A fresh `reach("app_loop")` after the reset proves the invalidated caches are usable and the
+application starts from the beginning. The scenario does not cover a failing backend command, which is
+exercised by the host checks and by the earlier command-failure experiment.
+
+## HW_DEV_RESET_PROBE
+Development probe: reset after removing an active point.
