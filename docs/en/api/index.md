@@ -2,7 +2,7 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [Русский](../../ru/api/index.md)
 
-Accepted public methods, properties and decorator. Current contract: [API specification 0.3.6](../../TECHNICAL_SPECIFICATION_API.md).
+Accepted public methods, properties and decorator. Current contract: [API specification 0.3.7](../../TECHNICAL_SPECIFICATION_API.md).
 
 Support version identifies implementation availability; specification revision identifies
 contract adoption. API_VERSION=1 is neither a release nor a specification revision.
@@ -32,7 +32,7 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [registers](registers.md) | `registers(*names, frame=None) -> dict` | 0.3.0.dev0 (core) | 0.3.5 (design) |
 | [frames](frames.md) | `frames(limit=16) -> dict` | 0.3.0.dev0 (core) | 0.3.6 (design) |
 | [point](point.md) | `Point: id, location, addresses, active, hit_count; remove(); with` | 0.3.0.dev0 (core) | 0.2.9 (design) |
-| [watch](watch.md) | `watch(path) -> Point` | not released | 0.3.0 (design) |
+| [watch](watch.md) | `watch(path) -> Point` | 0.3.0.dev0 (core) | 0.3.7 (design) |
 | [resume](resume.md) | `resume() -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
 | [step](step.md) | `step(count=1, *, unit="source", mode="into") -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
 | [until](until.md) | `until(location=None) -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |

@@ -42,7 +42,7 @@ Transition from the former names (aliases work without warnings until 1.0; remov
 
 ## First package: records and configuration
 
-Candidate `0.2.0rc1` targets 0.2.0; `API_VERSION=1`, api.toml schema=1. Not released. [API spec 0.3.6](../TECHNICAL_SPECIFICATION_API.md), [accepted results](API_ACCEPTANCE.md).
+Candidate `0.2.0rc1` targets 0.2.0; `API_VERSION=1`, api.toml schema=1. Not released. [API spec 0.3.7](../TECHNICAL_SPECIFICATION_API.md), [accepted results](API_ACCEPTANCE.md).
 
 `record(name, data)` appends a deep copy and returns None. `records(name=None)` returns detached mutable copies: `{'sequence': 1, 'name': 'adc', 'data': ...}`. Names may repeat. The filter is an exact nonempty str; None selects all. Insertion order and sequence starting at 1 survive filtering.
 

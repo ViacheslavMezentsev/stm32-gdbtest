@@ -6,8 +6,8 @@
 
 | Property | Value |
 | --- | --- |
-| Module support | not released: 0.3.0 package design |
-| API specification contract | not accepted; designed revision 0.2.5 |
+| Module support | 0.3.0.dev0 (core) |
+| API specification contract | not accepted; designed revision 0.3.7 |
 | API_VERSION | 1 (the effective contract does not change) |
 | Basis | the agreed verification firmware `tests/firmware` and its scenarios (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
 
@@ -19,9 +19,11 @@ Sets a watchpoint on an object in order to stop when it changes.
 
 It returns a point object; the stop is classified as a watch event and is available to the scenario.
 
-Limitations: watchpoint support depends on the backend and the interface: an HLA server does not
-watch memory, and the verified configuration is native DAP; only an addressable object is watched; a
-reset is refused while a watchpoint is active.
+Limitations: only addressable objects up to eight bytes with natural alignment can be watched; the stop
+reason depends on the backend (OpenOCD names `watchpoint-trigger`, J-Link reports no reason) and some
+combinations deliver no event at all, in which case the stop is confirmed by the changed watched object
+and marked `inferred`; a reset is refused while a watchpoint is active. Write watch points are verified
+on the OpenOCD and J-Link stands of the project.
 
 ## Example
 
@@ -35,4 +37,4 @@ of stops.
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.3.7.
