@@ -1,11 +1,12 @@
 """Target API. Imported only inside GDB's main Python thread."""
 
+import hashlib
 import re
 
 import gdb
 from stm32_gdbtest.errors import ApiError, CheckFailed, fail  # noqa: F401
 from stm32_gdbtest.records import Journal
-from stm32_gdbtest.configuration import DEFAULTS, freeze
+from stm32_gdbtest.configuration import DEFAULTS, EXECUTE_OUTPUT_LIMIT, freeze
 from stm32_gdbtest import values
 
 _CLONE = re.compile(r"\s*\[clone [^\]]*\]")
@@ -524,6 +525,50 @@ class Target:
             except gdb.error:
                 return None
         return None
+
+    def execute(self, command):
+        """Run a debugger command and return its text output (ТЗ API 4.9).
+
+        The journal keeps the command, the stage, the result, the output length and the truncation
+        flag; on truncation it also keeps the SHA-256 of the full output. A debugger error is
+        propagated as a failure and the command is never repeated.
+        """
+        if type(command) is not str or not command.strip():
+            self._fail("execute", "validation", "none", "invalid_command",
+                       "command must be a non-empty string", command=command)
+        if any(character in command for character in ("\r", "\n")):
+            self._fail("execute", "validation", "none", "invalid_command",
+                       "the command must be a single line", command=command)
+        try:
+            text = gdb.execute(command, to_string=True)
+        except gdb.error as cause:
+            self.report.setdefault("executions", []).append(
+                dict(operation="execute", command=command, stage="dispatch", result="failed",
+                     output_length=0, truncated=False))
+            self._fail("execute", "command", "unknown", "command_failed",
+                       "the debugger command failed", cause=cause, command=command)
+        if type(text) is not str:
+            self._fail("execute", "observe", "completed", "invalid_result",
+                       "the debugger returned a non-string result", command=command)
+        limit = self._execute_limit()
+        truncated = len(text) > limit
+        entry = dict(operation="execute", command=command, stage="capture", result="ok",
+                     output_length=len(text), truncated=truncated, limit=limit)
+        if truncated:
+            entry["output_sha256"] = hashlib.sha256(text.encode("utf-8")).hexdigest()
+        self.report.setdefault("executions", []).append(entry)
+        return text
+
+    def _execute_limit(self):
+        """Configured output limit of `execute`, falling back to the agreed default."""
+        try:
+            limit = self._config["api"]["execute"]["output_limit_chars"]
+        except (KeyError, TypeError):
+            return EXECUTE_OUTPUT_LIMIT
+        if type(limit) is not int or limit < 1:
+            self._fail("execute", "validation", "none", "invalid_limit",
+                       "output_limit_chars must be a positive integer", limit=limit)
+        return limit
 
     def call(self, function, *args):
         """Call a function of the debugged program on the halted core (ТЗ API 4.8).
