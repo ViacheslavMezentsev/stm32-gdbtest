@@ -14,6 +14,12 @@ _CLONE = re.compile(r"\s*\[clone [^\]]*\]")
 _FUNCTION_NAME = re.compile(r"[A-Za-z_]\w*")
 
 
+
+# Converting a GDB value can fail with a plain Python error as well; the tuple is built per call so
+# that importing this module does not depend on a loaded GDB.
+def conversion_errors(module):
+    return (module.error, TypeError, ValueError, OverflowError)
+
 def function_name(name):
     """Plain function name of a frame (ТЗ 5.10.7).
 
@@ -169,6 +175,99 @@ class Target:
             wanted = self.value(reference) if isinstance(reference, str) else reference
             self.check(f"{expression}.{field}", actual, wanted)
 
+    def evaluate(self, expression, *, as_type=None):
+        """Evaluate an expression in the halted program and convert the result (ТЗ API 4.3).
+
+        `as_type` may be `int`, `float`, `bool` (or their names); without it the declared type of the
+        value decides. The conversion happens after the expression executed, so a wrong type is
+        reported as a failure of the result, not of the expression.
+        """
+        if type(expression) is not str or not expression.strip():
+            self._fail("eval", "validation", "none", "invalid_expression",
+                       "expression must be a non-empty string", expression=expression)
+        requested = self._as_type(as_type)
+        try:
+            value = gdb.parse_and_eval(expression)
+        except gdb.error as cause:
+            self._fail("eval", "command", "unknown", "command_failed",
+                       f"{expression} failed", cause=cause, expression=expression)
+        if getattr(value, "is_optimized_out", False):
+            self._fail("eval", "observe", "none", "optimized_out",
+                       f"value is optimized out: {expression}", expression=expression)
+        try:
+            value.fetch_lazy()
+            plain = values.value_to_plain(value, expression, gdb)
+        except conversion_errors(gdb) as cause:
+            self._fail("eval", "readback", "none", "conversion_failed",
+                       f"conversion failed for {expression}", cause=cause, expression=expression)
+        kind = plain.__class__.__name__ if plain is not None else None
+        if requested is None:
+            return plain
+        try:
+            converted = requested(plain)
+        except (TypeError, ValueError) as cause:
+            self._fail("eval", "readback", "none", "unsupported_type",
+                       f"cannot convert the result of {expression} to {requested.__name__}",
+                       cause=cause, expression=expression, value=plain)
+        self.report.setdefault("evaluations", []).append(
+            dict(operation="eval", expression=expression, value=converted,
+                 value_type=requested.__name__, declared=kind))
+        return converted
+
+    def _as_type(self, as_type):
+        """Normalize the requested result type; None keeps the declared type."""
+        if as_type is None:
+            return None
+        mapping = {int: int, float: float, bool: bool, "int": int, "float": float, "bool": bool}
+        if isinstance(as_type, str) and as_type in mapping:
+            return mapping[as_type]
+        if as_type in mapping:
+            return mapping[as_type]
+        self._fail("eval", "validation", "none", "unsupported_type",
+                   "as_type must be int, float or bool", as_type=as_type)
+
+    def registers(self, *names, frame=None):
+        """Read named registers of a frame as one dictionary (ТЗ API 4.4).
+
+        `pc` prefers the frame accessor because a forced return can leave the register stale; other
+        names are read by name and masked by the declared width of the register.
+        """
+        if not names:
+            self._fail("registers", "validation", "none", "invalid_names",
+                       "at least one register name is required")
+        for name in names:
+            if type(name) is not str or not name:
+                self._fail("registers", "validation", "none", "invalid_names",
+                           "register names must be non-empty strings", name=name)
+        target_frame = frame if frame is not None else gdb.newest_frame()
+        if target_frame is None or not target_frame.is_valid():
+            self._fail("registers", "validation", "none", "no_frame",
+                       "a valid frame is required", names=list(names))
+        result = {}
+        for name in names:
+            result[name] = self._read_register(target_frame, name)
+        return result
+
+    def _read_register(self, frame, name):
+        """Value of one register, masked by its declared width."""
+        if name == "pc":
+            try:
+                return int(frame.pc())
+            except conversion_errors(gdb) + (RuntimeError,) as cause:
+                self._fail("registers", "observe", "none", "read_failed",
+                           "pc is not available in this frame", cause=cause, register=name)
+        try:
+            value = frame.read_register(name)
+        except conversion_errors(gdb) + (RuntimeError,) as cause:
+            self._fail("registers", "observe", "none", "read_failed",
+                       f"register {name} is not available", cause=cause, register=name)
+        kind = values.unqualified_type(value.type)
+        size = getattr(kind, "sizeof", None)
+        number = int(value)
+        if size:
+            number &= (1 << (int(size) * 8)) - 1
+        return number
+
     def read(self, path, *, fields=None, start=0, count=None):
         """Read a scalar, string, array slice, struct or single fields (ТЗ API 4.2).
 
@@ -220,7 +319,7 @@ class Target:
         try:
             value.fetch_lazy()
             return values.value_to_plain(value, path, gdb)
-        except gdb.error as cause:
+        except conversion_errors(gdb) as cause:
             values.conversion_failed(path, expression, cause)
 
     def _fail(self, operation, stage, effect, code, message, **details):
@@ -682,7 +781,7 @@ class Target:
         try:
             value.fetch_lazy()
             plain = values.value_to_plain(value, expression, gdb)
-        except gdb.error as cause:
+        except conversion_errors(gdb) as cause:
             self._fail("call", "observe", "completed", "conversion_failed",
                        f"the result of {function} is unavailable", cause=cause, function=function)
         state = "available"
