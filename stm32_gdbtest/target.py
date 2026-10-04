@@ -7,7 +7,8 @@ import re
 import gdb
 from stm32_gdbtest.errors import ApiError, CheckFailed, fail  # noqa: F401
 from stm32_gdbtest.records import Journal
-from stm32_gdbtest.configuration import DEFAULTS, EXECUTE_OUTPUT_LIMIT, RESET_COMMAND, freeze
+from stm32_gdbtest.configuration import (DEFAULTS, EXECUTE_OUTPUT_LIMIT, FRAMES_LIMIT,
+                                           RESET_COMMAND, freeze)
 from stm32_gdbtest import values
 
 _CLONE = re.compile(r"\s*\[clone [^\]]*\]")
@@ -174,6 +175,70 @@ class Target:
             actual = self.value(f"({expression}).{field}")
             wanted = self.value(reference) if isinstance(reference, str) else reference
             self.check(f"{expression}.{field}", actual, wanted)
+
+    def frames(self, limit=None):
+        """Frame chain from the innermost frame outwards (ТЗ API 4.5).
+
+        Each entry carries its depth, function name, program counter and method; without an explicit
+        `limit` the value from `api.toml` is used, then the agreed default.
+        """
+        if limit is None:
+            limit = self._frames_limit()
+        if type(limit) is not int or limit < 1:
+            self._fail("frames", "validation", "none", "invalid_limit",
+                       "limit must be a positive integer", limit=limit)
+        frame = gdb.newest_frame()
+        if frame is None or not frame.is_valid():
+            self._fail("frames", "validation", "none", "no_frame",
+                       "a valid frame is required", limit=limit)
+        chain = []
+        while frame is not None and len(chain) < limit:
+            try:
+                valid = frame.is_valid()
+            except RuntimeError:
+                valid = False
+            if not valid:
+                break
+            chain.append(self._frame_entry(frame, len(chain)))
+            frame = frame.older()
+        return dict(operation="frames", frames=chain, count=len(chain), limit=limit,
+                    complete=len(chain) < limit)
+
+    def _frames_limit(self):
+        """Configured frame limit, falling back to the agreed default."""
+        try:
+            limit = self._config["api"]["frames"]["limit"]
+        except (KeyError, TypeError):
+            return FRAMES_LIMIT
+        if type(limit) is not int or limit < 1:
+            self._fail("frames", "validation", "none", "invalid_limit",
+                       "frames.limit must be a positive integer", limit=limit)
+        return limit
+
+    def _frame_entry(self, frame, depth):
+        """One frame as a plain dictionary; a broken accessor does not hide the chain."""
+        try:
+            name = function_name(frame.name())
+        except conversion_errors(gdb) + (RuntimeError,):
+            name = None
+        try:
+            pc = int(frame.pc())
+        except conversion_errors(gdb) + (RuntimeError,):
+            pc = None
+        kind = getattr(frame, "type", None)
+        try:
+            code = kind() if callable(kind) else None
+        except conversion_errors(gdb) + (RuntimeError,):
+            code = None
+        if code is None:
+            method = "unknown"
+        elif code == getattr(gdb, "NORMAL_FRAME", object()):
+            method = "normal"
+        elif code == getattr(gdb, "SIGTRAMP_FRAME", object()):
+            method = "signal"
+        else:
+            method = "other"
+        return dict(depth=depth, name=name, pc=pc, method=method)
 
     def evaluate(self, expression, *, as_type=None):
         """Evaluate an expression in the halted program and convert the result (ТЗ API 4.3).

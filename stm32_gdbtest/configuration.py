@@ -19,6 +19,8 @@ EXECUTE_OUTPUT_LIMIT = 2048
 # Default reset command when neither `api.toml` nor the backend names one
 # (ТЗ API 6.6, Q2); OpenOCD profiles keep their own `reset_halt` value.
 RESET_COMMAND = "monitor reset"
+# Default frame limit of `frames` (ТЗ API 6.6, Q1); `api.toml` may lower or raise it.
+FRAMES_LIMIT = 16
 MAXIMUMS = MappingProxyType(dict(max_records=1024, max_nodes=32768,
                                 max_text_bytes=524288, max_depth=32,
                                 max_integer_bits=1024))
