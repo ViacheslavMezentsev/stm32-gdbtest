@@ -218,3 +218,9 @@ and a non-object expression are refused with `invalid_path` at the validation st
 is touched and without leaving a point behind. The scenario verifies a write
 watch point on a naturally aligned object; read watch points, larger objects and backends without
 hardware watch points are not covered.
+
+## HW_CI_TEST_ALIAS
+A scenario declared with `@test(...)` runs exactly like one declared with `@case(...)`: the harness
+collects it by that name, the identifier, labels, contracts and timeout are read from the decorator, and
+the function receives the usual `Target`. The alias returns the decorated function unchanged. The
+scenario proves that both names are interchangeable; it does not check the metadata of other scenarios.
