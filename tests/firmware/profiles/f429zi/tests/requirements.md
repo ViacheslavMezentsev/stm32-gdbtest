@@ -160,3 +160,11 @@ and is double-word aligned; the profile carries the flash region, so the SRAM wi
 "r2", "r3")` returns every requested general-purpose register inside 32 bits. An unknown register name is
 reported as `read_failed` with its cause, and an empty request as `invalid_names`. The scenario reads
 registers of the innermost frame; it does not walk older frames.
+
+## HW_CI_FRAMES
+`frames()` returns the chain from the innermost frame outwards: the first entry is the function the core
+stopped in, its depth is zero, its method is `normal` and its program counter is an integer. The caller
+`main` is on the chain and depths grow outwards without gaps. `frames(limit=1)` returns only the
+innermost frame and reports `complete=false`, while a wide limit completes the walk. An unusable limit is
+refused with `invalid_limit` before the chain is walked. The scenario checks the innermost and its
+caller; it does not verify the whole boot chain.
