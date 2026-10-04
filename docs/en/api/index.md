@@ -2,7 +2,7 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [Русский](../../ru/api/index.md)
 
-Accepted public methods, properties and decorator. Current contract: [API specification 0.2.9](../../TECHNICAL_SPECIFICATION_API.md).
+Accepted public methods, properties and decorator. Current contract: [API specification 0.3.0](../../TECHNICAL_SPECIFICATION_API.md).
 
 Support version identifies implementation availability; specification revision identifies
 contract adoption. API_VERSION=1 is neither a release nor a specification revision.
@@ -25,9 +25,10 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [config_props](config-props.md) | `config_props: Mapping` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
 | [RecordError](record-error.md) | `RecordError(ValueError)` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 / 0.2.1 |
 | [case](case.md) | `case(identifier, *, timeout_s=20, labels=(), contracts=())` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [read](read.md) | `read(path, *, fields=None, start=0, count=None) -> scalar | 0.3.0.dev0 (core) | 0.2.8 (design) | not released | 0.3.0 (design) |
+| [ret](ret.md) | `ret(value=None) -> dict` | 0.3.0.dev0 (core) | 0.3.0 (design) |
+| [read](read.md) | `read(path, *, fields=None, start=0, count=None) -> scalar \| list \| dict` | 0.3.0.dev0 (core) | 0.2.8 (design) |
 | [write](write.md) | `write(path, value, *, verify=True) -> dict` | 0.3.0.dev0 (core) | 0.2.8 (design) |
-| [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int | float | bool` | not released | 0.3.0 (design) |
+| [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int \| float \| bool` | not released | 0.3.0 (design) |
 | [registers](registers.md) | `registers(*names, frame=None) -> dict` | not released | 0.3.0 (design) |
 | [frames](frames.md) | `frames(limit=16) -> dict` | not released | 0.3.0 (design) |
 | [point](point.md) | `Point: id, location, addresses, active, hit_count; remove(); with` | 0.3.0.dev0 (core) | 0.2.9 (design) |
@@ -36,7 +37,6 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [step](step.md) | `step(count=1, *, unit="source", mode="into") -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
 | [until](until.md) | `until(location=None) -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
 | [finish](finish.md) | `finish() -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
-| [ret](ret.md) | `ret(value=None) -> dict` | not released | 0.3.0 (design) |
 | [call](call.md) | `call(function, *args) -> dict` | not released | 0.3.0 (design) |
 | [reset](reset.md) | `reset() -> dict` | not released | 0.3.0 (design) |
 | [execute](execute.md) | `execute(command) -> str` | not released | 0.3.0 (design) |

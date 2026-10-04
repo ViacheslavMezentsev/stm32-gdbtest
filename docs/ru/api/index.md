@@ -2,7 +2,7 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [English](../../en/api/index.md)
 
-Принятые публичные методы, свойства и декоратор. Текущий контракт: [ТЗ API 0.2.9](../../TECHNICAL_SPECIFICATION_API.md).
+Принятые публичные методы, свойства и декоратор. Текущий контракт: [ТЗ API 0.3.0](../../TECHNICAL_SPECIFICATION_API.md).
 
 Версия поддержки означает наличие реализации; ревизия ТЗ — фиксацию контракта.
 `API_VERSION=1` не является номером релиза или ревизии ТЗ. База проверена по тегам
@@ -25,9 +25,10 @@
 | [config_props](config-props.md) | `config_props: Mapping` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
 | [RecordError](record-error.md) | `RecordError(ValueError)` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 / 0.2.1 |
 | [case](case.md) | `case(identifier, *, timeout_s=20, labels=(), contracts=())` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [read](read.md) | `read(path, *, fields=None, start=0, count=None) -> scalar | 0.3.0.dev0 (ядро) | 0.2.8 (проект) | не выпущено | 0.3.0 (проект) |
+| [ret](ret.md) | `ret(value=None) -> dict` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
+| [read](read.md) | `read(path, *, fields=None, start=0, count=None) -> scalar \| list \| dict` | 0.3.0.dev0 (ядро) | 0.2.8 (проект) |
 | [write](write.md) | `write(path, value, *, verify=True) -> dict` | 0.3.0.dev0 (ядро) | 0.2.8 (проект) |
-| [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int | float | bool` | не выпущено | 0.3.0 (проект) |
+| [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int \| float \| bool` | не выпущено | 0.3.0 (проект) |
 | [registers](registers.md) | `registers(*names, frame=None) -> dict` | не выпущено | 0.3.0 (проект) |
 | [frames](frames.md) | `frames(limit=16) -> dict` | не выпущено | 0.3.0 (проект) |
 | [point](point.md) | `Point: id, location, addresses, active, hit_count; remove(); with` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
@@ -36,7 +37,6 @@
 | [step](step.md) | `step(count=1, *, unit="source", mode="into") -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
 | [until](until.md) | `until(location=None) -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
 | [finish](finish.md) | `finish() -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
-| [ret](ret.md) | `ret(value=None) -> dict` | не выпущено | 0.3.0 (проект) |
 | [call](call.md) | `call(function, *args) -> dict` | не выпущено | 0.3.0 (проект) |
 | [reset](reset.md) | `reset() -> dict` | не выпущено | 0.3.0 (проект) |
 | [execute](execute.md) | `execute(command) -> str` | не выпущено | 0.3.0 (проект) |

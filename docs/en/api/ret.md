@@ -6,36 +6,37 @@
 
 | Property | Value |
 | --- | --- |
-| Module support | not released: 0.3.0 package design |
-| API specification contract | not accepted; designed revision 0.2.5 |
+| Module support | 0.3.0.dev0 (core) |
+| API specification contract | not accepted; designed revision 0.3.0 |
 | API_VERSION | 1 (the effective contract does not change) |
-| Basis | the agreed verification firmware `tests/firmware` and its scenarios (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+| Basis | the agreed verification firmware `tests/firmware` and its scenarios |
 
 ## Purpose
 
-Returns control early from the current function, substituting a value when given, and describes the
-result.
+Returns control early from the current function, substituting a value of the declared return type, and
+describes the result.
 
 ## Contract and limitations
 
-The value is encoded by the function's return type and checked before it is applied; the result
-reports that the value was applied, and the receiver is the calling code.
+The value is encoded by the declared return type: the command is built as `return (<type>)0x<value>`,
+and the result reports `operation`, `function`, `caller`, `supplied`, `applied`, `command` and
+`type_name`. A value outside the declared width is refused with `out_of_range` before the command runs,
+carrying `low`, `high` and `width`; a logical type is bounded to 0 and 1. An empty call issues the plain
+`return`; a string is passed through as a GDB expression.
 
-Limitations: the value must fit the return type, otherwise it fails with `out_of_range`; the rest of
-the function is skipped and completed effects are not rolled back; the caller's use of the value
-depends on the caller's code — verifying it needs a calling function that stores the value.
+Limitations: the rest of the function is skipped and completed effects are not rolled back; width and
+signedness come from the declared type (a typedef without the word `unsigned` is classified by its type
+name); the caller decides how the value is used; pointer, floating-point and struct return values are
+outside the verified scope.
 
 ## Example
 
 ```python
 target.reach("app_step")
-target.ret(42)
-target.reach("app_step")
-target.check("the caller stored it", target.value("app_received.produced"), 42)
+result = target.ret(42)
+target.check("the caller received the value", target.read("app_received.produced"), result["applied"])
 ```
-
-A forced return is not `finish` and does not run the rest of the function.
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.3.0.

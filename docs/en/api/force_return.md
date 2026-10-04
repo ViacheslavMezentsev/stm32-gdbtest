@@ -2,14 +2,14 @@
 
 [API](index.md) · [Русский](../../ru/api/force_return.md)
 
-`force_return(expression) -> None`
+`force_return(expression) -> dict`
 
 | Property | Value |
 | --- | --- |
 | Module support | 0.1.0rc1 / v0.1.0-rc.1 |
 | Contract in API specification | 0.1.0; §4.7 |
 | API_VERSION | 1 |
-| Former-name alias | force_return(expression) -> ret(value=None) (the alias works without warnings until 1.0; removal in 0.4.0) |
+| Former-name alias | `ret(value=None)`; the alias works without warnings until 1.0, removal in 0.4.0; added by revision 0.3.0 |
 
 ## Contract
 
