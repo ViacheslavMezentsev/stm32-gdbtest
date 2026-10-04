@@ -2,7 +2,7 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [Русский](../../ru/api/index.md)
 
-Accepted public methods, properties and decorator. Current contract: [API specification 0.2.6](../../TECHNICAL_SPECIFICATION_API.md).
+Accepted public methods, properties and decorator. Current contract: [API specification 0.2.7](../../TECHNICAL_SPECIFICATION_API.md).
 
 Support version identifies implementation availability; specification revision identifies
 contract adoption. API_VERSION=1 is neither a release nor a specification revision.
@@ -43,8 +43,8 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [settings](settings.md) | `settings: Mapping` | not released | 0.3.0 (design) |
 | [sources](sources.md) | `sources: Mapping` | not released | 0.3.0 (design) |
 | [test](test.md) | `test(identifier, *, timeout_s=20, labels=(), contracts=())` | not released | 0.3.0 (design) |
-| [api-error](api-error.md) | `ApiError; error.details; error.__cause__` | not released | 0.3.0 (design) |
-| [check-failed](check-failed.md) | `CheckFailed(name)` | not released | 0.3.0 (design) |
+| [api-error](api-error.md) | `ApiError; error.details; error.__cause__` | 0.3.0.dev0 (core) | 0.2.7 (design) |
+| [check-failed](check-failed.md) | `CheckFailed(name)` | 0.3.0.dev0 (core) | 0.2.7 (design) |
 
 Designed 0.3.0 package (not released): methods that passed reference validation. The rows above are
 not an accepted contract: it is fixed by an API specification revision when the package moves into

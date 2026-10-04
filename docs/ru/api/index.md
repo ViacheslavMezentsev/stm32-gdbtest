@@ -2,7 +2,7 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [English](../../en/api/index.md)
 
-Принятые публичные методы, свойства и декоратор. Текущий контракт: [ТЗ API 0.2.6](../../TECHNICAL_SPECIFICATION_API.md).
+Принятые публичные методы, свойства и декоратор. Текущий контракт: [ТЗ API 0.2.7](../../TECHNICAL_SPECIFICATION_API.md).
 
 Версия поддержки означает наличие реализации; ревизия ТЗ — фиксацию контракта.
 `API_VERSION=1` не является номером релиза или ревизии ТЗ. База проверена по тегам
@@ -43,8 +43,8 @@
 | [settings](settings.md) | `settings: Mapping` | не выпущено | 0.3.0 (проект) |
 | [sources](sources.md) | `sources: Mapping` | не выпущено | 0.3.0 (проект) |
 | [test](test.md) | `test(identifier, *, timeout_s=20, labels=(), contracts=())` | не выпущено | 0.3.0 (проект) |
-| [api-error](api-error.md) | `ApiError; error.details; error.__cause__` | не выпущено | 0.3.0 (проект) |
-| [check-failed](check-failed.md) | `CheckFailed(name)` | не выпущено | 0.3.0 (проект) |
+| [api-error](api-error.md) | `ApiError; error.details; error.__cause__` | 0.3.0.dev0 (ядро) | 0.2.7 (проект) |
+| [check-failed](check-failed.md) | `CheckFailed(name)` | 0.3.0.dev0 (ядро) | 0.2.7 (проект) |
 
 Проектируемый пакет 0.3.0 (не выпущено): методы, прошедшие ссылочную верификацию. Строки выше не
 являются принятым контрактом: контракт закрепляется ревизией ТЗ API при переносе в ядро.

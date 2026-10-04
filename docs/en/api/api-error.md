@@ -1,37 +1,41 @@
-# api-error
+# ApiError
 
 [API](index.md) · [Русский](../../ru/api/api-error.md)
 
-`ApiError(Exception): error.details; error.__cause__`
+`ApiError(Exception): error.details; error.code; error.__cause__`
 
 | Property | Value |
 | --- | --- |
-| Module support | not released: 0.3.0 package design |
-| API specification contract | not accepted; designed revision 0.2.5 |
+| Module support | 0.3.0.dev0 (core, branch `deepseek/api030-core-result`) |
+| API specification contract | not accepted; designed revision 0.2.7 |
 | API_VERSION | 1 (the effective contract does not change) |
-| Basis | the agreed verification firmware `tests/firmware` and its scenarios (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+| Basis | the agreed verification firmware `tests/firmware` and its scenarios |
 
 ## Purpose
 
-Describes an API operation failure separately: what was done, at which stage, with which effect and
-why.
+Describes an API operation failure separately: what was attempted (`operation`), at which stage
+(`stage`), with which observed effect (`effect`) and why (`code`). The original debugger error is kept
+as the cause.
 
 ## Contract and limitations
 
-The `operation`, `stage`, `effect`, `code` fields and details are available through `details`; the
-original debugger error is kept as the cause.
+`details` always carries `operation`, `stage`, `effect` and `code`; extra operation fields are merged
+into the same dictionary. `code` is also available as a property.
 
-Limitations: the full code and wording set is still being agreed; `effect` reports only the observed
-effect (`none`, `unknown`, `partial`, `applied`); a failure does not roll back effects that already
-happened.
+Limitations: the operation vocabulary is closed (`read`, `write`, `eval`, `registers`, `frames`,
+`breakpoint`, `watch`, `resume`, `reach`, `step`, `until`, `finish`, `ret`, `call`, `reset`, `execute`,
+`record`, `records`, `config`); stages are `validation`, `command`, `observe`, `readback`; effects are
+`none`, `unknown`, `partial`, `applied`. `effect` reports only the observed effect and a failure does
+not roll back what already happened. The full code set is formed as the methods are implemented.
 
 ## Example
 
 ```python
 try:
-    target.write("app_state.ticks", 1 << 40)
+    target.ret(1 << 40)
 except ApiError as error:
-    target.check("operation", error.details["operation"], "write")
+    target.check("operation", error.details["operation"], "ret")
+    target.check("effect is known or unknown", error.details["effect"] in ("none", "unknown"), True)
 ```
 
 An operation failure differs from a check mismatch: the former is `ApiError`, the latter is
@@ -39,4 +43,4 @@ An operation failure differs from a check mismatch: the former is `ApiError`, th
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.7.
