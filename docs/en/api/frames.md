@@ -6,8 +6,8 @@
 
 | Property | Value |
 | --- | --- |
-| Module support | not released: 0.3.0 package design |
-| API specification contract | not accepted; designed revision 0.2.5 |
+| Module support | 0.3.0.dev0 (core) |
+| API specification contract | not accepted; designed revision 0.3.6 |
 | API_VERSION | 1 (the effective contract does not change) |
 | Basis | the agreed verification firmware `tests/firmware` and its scenarios (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
 
@@ -18,7 +18,9 @@ counters.
 
 ## Contract and limitations
 
-It returns the frame list and a termination flag.
+It returns the frame list, its count, the walk limit and a completion flag. Each frame carries its
+depth, function name, program counter and method (`normal`, `signal`, `other` or `unknown`). A
+missing program counter does not stop the walk: the value arrives as `null`.
 
 The `limit` default is 16 with a maximum of 64; a profile may raise it while a call may only lower it.
 

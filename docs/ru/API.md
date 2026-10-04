@@ -41,7 +41,7 @@ J-Link — `monitor reset`; сессия может переопределить
 
 ## Первый пакет: журнал и конфигурация
 
-Кандидат `0.2.0rc1` для целевого 0.2.0; `API_VERSION=1`, api.toml schema=1. Выпуска ещё нет. [ТЗ API 0.3.5](../TECHNICAL_SPECIFICATION_API.md), [принятые результаты](API_ACCEPTANCE.md).
+Кандидат `0.2.0rc1` для целевого 0.2.0; `API_VERSION=1`, api.toml schema=1. Выпуска ещё нет. [ТЗ API 0.3.6](../TECHNICAL_SPECIFICATION_API.md), [принятые результаты](API_ACCEPTANCE.md).
 
 `record(name, data)` добавляет глубокую копию и возвращает None. `records(name=None)` возвращает независимые изменяемые копии: `{'sequence': 1, 'name': 'adc', 'data': ...}`. Имена могут повторяться. Фильтр — точный непустой str; None выбирает всё. Порядок добавления и sequence от 1 сохраняются при фильтрации.
 

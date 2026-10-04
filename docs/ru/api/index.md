@@ -2,7 +2,7 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [English](../../en/api/index.md)
 
-Принятые публичные методы, свойства и декоратор. Текущий контракт: [ТЗ API 0.3.5](../../TECHNICAL_SPECIFICATION_API.md).
+Принятые публичные методы, свойства и декоратор. Текущий контракт: [ТЗ API 0.3.6](../../TECHNICAL_SPECIFICATION_API.md).
 
 Версия поддержки означает наличие реализации; ревизия ТЗ — фиксацию контракта.
 `API_VERSION=1` не является номером релиза или ревизии ТЗ. База проверена по тегам
@@ -30,7 +30,7 @@
 | [write](write.md) | `write(path, value, *, verify=True) -> dict` | 0.3.0.dev0 (ядро) | 0.2.8 (проект) |
 | [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int \| 0.3.0.dev0 (ядро) | 0.3.5 (проект) | не выпущено | 0.3.0 (проект) |
 | [registers](registers.md) | `registers(*names, frame=None) -> dict` | 0.3.0.dev0 (ядро) | 0.3.5 (проект) |
-| [frames](frames.md) | `frames(limit=16) -> dict` | не выпущено | 0.3.0 (проект) |
+| [frames](frames.md) | `frames(limit=16) -> dict` | 0.3.0.dev0 (ядро) | 0.3.6 (проект) |
 | [point](point.md) | `Point: id, location, addresses, active, hit_count; remove(); with` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
 | [watch](watch.md) | `watch(path) -> Point` | не выпущено | 0.3.0 (проект) |
 | [resume](resume.md) | `resume() -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
