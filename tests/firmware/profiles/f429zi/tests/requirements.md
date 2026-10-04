@@ -85,3 +85,11 @@ Five publications are taken with execution continuing between samples, so the se
 board_adc_sequences increases without gaps and the values stay inside the plausible -40000..125000
 mdegC domain with more than one distinct value. Records keep every sample. This checks the measurement
 protocol on varying data, not sensor calibration, sample rate or accuracy.
+
+## HW_CI_READ_WRITE
+Reading `app_state` returns a mapping with the declared fields `led` and `ticks` as plain integers,
+identical to a single-member read and to a field-set read. Writing 41 into the `uint32_t`
+`app_state.ticks` reports the previous value, the applied value and a verified read-back, records the
+mutation in the report, and the application continues from the written value (42 on the next loop
+iteration). The scenario verifies typed reads of scalars and structs and one verified write; it does
+not measure memory access speed, float formatting or writes to peripherals.
