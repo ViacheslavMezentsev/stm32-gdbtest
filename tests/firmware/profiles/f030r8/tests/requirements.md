@@ -174,6 +174,3 @@ halts the core, both invalidation steps report `done`, the reset is journalled a
 reported. A fresh `reach("app_loop")` after the reset proves the invalidated caches are usable and the
 application starts from the beginning. The scenario does not cover a failing backend command, which is
 exercised by the host checks and by the earlier command-failure experiment.
-
-## HW_DEV_RESET_PROBE
-Development probe: reset after removing an active point.
