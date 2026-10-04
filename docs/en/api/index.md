@@ -2,7 +2,7 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [Русский](../../ru/api/index.md)
 
-Accepted public methods, properties and decorator. Current contract: [API specification 0.3.7](../../TECHNICAL_SPECIFICATION_API.md).
+Accepted public methods, properties and decorator. Current contract: [API specification 0.3.0](../../TECHNICAL_SPECIFICATION_API.md).
 
 Support version identifies implementation availability; specification revision identifies
 contract adoption. API_VERSION=1 is neither a release nor a specification revision.
@@ -11,6 +11,7 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 
 | Entry | Signature | Support | Initial specification |
 | --- | --- | --- | --- |
+| **Methods** — scenario operations | | | |
 | [check](check.md) | `check(name, actual, expected) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [value](value.md) | `value(expression) -> int` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [fields](fields.md) | `fields(expression, expected) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
@@ -21,28 +22,31 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [clear](clear.md) | `clear() -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [record](record.md) | `record(name, data) -> None` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
 | [records](records.md) | `records(name=None) -> list[dict]` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
-| [config](config.md) | `config: Mapping` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
-| [config_props](config-props.md) | `config_props: Mapping` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
-| [RecordError](record-error.md) | `RecordError(ValueError)` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 / 0.2.1 |
-| [case](case.md) | `case(identifier, *, timeout_s=20, labels=(), contracts=())` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [ret](ret.md) | `ret(value=None) -> dict` | 0.3.0.dev0 (core) | 0.3.0 (design) |
 | [read](read.md) | `read(path, *, fields=None, start=0, count=None) -> scalar \| list \| dict` | 0.3.0.dev0 (core) | 0.2.8 (design) |
 | [write](write.md) | `write(path, value, *, verify=True) -> dict` | 0.3.0.dev0 (core) | 0.2.8 (design) |
-| [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int \| 0.3.0.dev0 (core) | 0.3.5 (design) | not released | 0.3.0 (design) |
-| [registers](registers.md) | `registers(*names, frame=None) -> dict` | 0.3.0.dev0 (core) | 0.3.5 (design) |
-| [frames](frames.md) | `frames(limit=16) -> dict` | 0.3.0.dev0 (core) | 0.3.6 (design) |
-| [point](point.md) | `Point: id, location, addresses, active, hit_count; remove(); with` | 0.3.0.dev0 (core) | 0.2.9 (design) |
-| [watch](watch.md) | `watch(path) -> Point` | 0.3.0.dev0 (core) | 0.3.7 (design) |
+| [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int \| float \| bool` | 0.3.0.dev0 (core) | 0.3.0 (design) |
+| [registers](registers.md) | `registers(*names, frame=None) -> dict` | 0.3.0.dev0 (core) | 0.3.0 (design) |
+| [frames](frames.md) | `frames(limit=16) -> dict` | 0.3.0.dev0 (core) | 0.3.0 (design) |
+| [watch](watch.md) | `watch(path) -> Point` | 0.3.0.dev0 (core) | 0.3.0 (design) |
 | [resume](resume.md) | `resume() -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
 | [step](step.md) | `step(count=1, *, unit="source", mode="into") -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
 | [until](until.md) | `until(location=None) -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
 | [finish](finish.md) | `finish() -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
-| [call](call.md) | `call(function, *args) -> dict` | 0.3.0.dev0 (core) | 0.3.1 (design) |
-| [reset](reset.md) | `reset() -> dict` | 0.3.0.dev0 (core) | 0.3.3 (design) |
-| [execute](execute.md) | `execute(command) -> str` | 0.3.0.dev0 (core) | 0.3.2 (design) |
-| [settings](settings.md) | `settings: Mapping` | 0.3.0.dev0 (core) | 0.3.4 (design) |
-| [sources](sources.md) | `sources: Mapping` | 0.3.0.dev0 (core) | 0.3.4 (design) |
-| [test](test.md) | `test(identifier, *, timeout_s=20, labels=(), contracts=())` | not released | 0.3.0 (design) |
+| [call](call.md) | `call(function, *args) -> dict` | 0.3.0.dev0 (core) | 0.3.0 (design) |
+| [reset](reset.md) | `reset() -> dict` | 0.3.0.dev0 (core) | 0.3.0 (design) |
+| [execute](execute.md) | `execute(command) -> str` | 0.3.0.dev0 (core) | 0.3.0 (design) |
+| **Properties** — run state mappings | | | |
+| [config](config.md) | `config: Mapping` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
+| [config_props](config-props.md) | `config_props: Mapping` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
+| [settings](settings.md) | `settings: Mapping` | 0.3.0.dev0 (core) | 0.3.0 (design) |
+| [sources](sources.md) | `sources: Mapping` | 0.3.0.dev0 (core) | 0.3.0 (design) |
+| **Decorators** — scenario declaration | | | |
+| [case](case.md) | `case(identifier, *, timeout_s=20, labels=(), contracts=())` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
+| [test](test.md) | `test(identifier, *, timeout_s=20, labels=(), contracts=())` | 0.3.0 (core) | 0.3.0-rc.1 (design) |
+| **Classes and errors** — objects the API returns and raises | | | |
+| [RecordError](record-error.md) | `RecordError(ValueError)` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 / 0.2.1 |
+| [point](point.md) | `Point: id, location, addresses, active, hit_count; remove(); with` | 0.3.0.dev0 (core) | 0.2.9 (design) |
 | [api-error](api-error.md) | `ApiError; error.details; error.__cause__` | 0.3.0.dev0 (core) | 0.2.7 (design) |
 | [check-failed](check-failed.md) | `CheckFailed(name)` | 0.3.0.dev0 (core) | 0.2.7 (design) |
 
