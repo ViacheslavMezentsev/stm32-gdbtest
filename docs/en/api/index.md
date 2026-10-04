@@ -2,7 +2,7 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [Русский](../../ru/api/index.md)
 
-Accepted public methods, properties and decorator. Current contract: [API specification 0.3.3](../../TECHNICAL_SPECIFICATION_API.md).
+Accepted public methods, properties and decorator. Current contract: [API specification 0.3.4](../../TECHNICAL_SPECIFICATION_API.md).
 
 Support version identifies implementation availability; specification revision identifies
 contract adoption. API_VERSION=1 is neither a release nor a specification revision.
@@ -40,8 +40,8 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [call](call.md) | `call(function, *args) -> dict` | 0.3.0.dev0 (core) | 0.3.1 (design) |
 | [reset](reset.md) | `reset() -> dict` | 0.3.0.dev0 (core) | 0.3.3 (design) |
 | [execute](execute.md) | `execute(command) -> str` | 0.3.0.dev0 (core) | 0.3.2 (design) |
-| [settings](settings.md) | `settings: Mapping` | not released | 0.3.0 (design) |
-| [sources](sources.md) | `sources: Mapping` | not released | 0.3.0 (design) |
+| [settings](settings.md) | `settings: Mapping` | 0.3.0.dev0 (core) | 0.3.4 (design) |
+| [sources](sources.md) | `sources: Mapping` | 0.3.0.dev0 (core) | 0.3.4 (design) |
 | [test](test.md) | `test(identifier, *, timeout_s=20, labels=(), contracts=())` | not released | 0.3.0 (design) |
 | [api-error](api-error.md) | `ApiError; error.details; error.__cause__` | 0.3.0.dev0 (core) | 0.2.7 (design) |
 | [check-failed](check-failed.md) | `CheckFailed(name)` | 0.3.0.dev0 (core) | 0.2.7 (design) |

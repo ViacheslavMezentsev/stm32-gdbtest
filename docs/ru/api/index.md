@@ -2,7 +2,7 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [English](../../en/api/index.md)
 
-Принятые публичные методы, свойства и декоратор. Текущий контракт: [ТЗ API 0.3.3](../../TECHNICAL_SPECIFICATION_API.md).
+Принятые публичные методы, свойства и декоратор. Текущий контракт: [ТЗ API 0.3.4](../../TECHNICAL_SPECIFICATION_API.md).
 
 Версия поддержки означает наличие реализации; ревизия ТЗ — фиксацию контракта.
 `API_VERSION=1` не является номером релиза или ревизии ТЗ. База проверена по тегам
@@ -40,8 +40,8 @@
 | [call](call.md) | `call(function, *args) -> dict` | 0.3.0.dev0 (ядро) | 0.3.1 (проект) |
 | [reset](reset.md) | `reset() -> dict` | 0.3.0.dev0 (ядро) | 0.3.3 (проект) |
 | [execute](execute.md) | `execute(command) -> str` | 0.3.0.dev0 (ядро) | 0.3.2 (проект) |
-| [settings](settings.md) | `settings: Mapping` | не выпущено | 0.3.0 (проект) |
-| [sources](sources.md) | `sources: Mapping` | не выпущено | 0.3.0 (проект) |
+| [settings](settings.md) | `settings: Mapping` | 0.3.0.dev0 (ядро) | 0.3.4 (проект) |
+| [sources](sources.md) | `sources: Mapping` | 0.3.0.dev0 (ядро) | 0.3.4 (проект) |
 | [test](test.md) | `test(identifier, *, timeout_s=20, labels=(), contracts=())` | не выпущено | 0.3.0 (проект) |
 | [api-error](api-error.md) | `ApiError; error.details; error.__cause__` | 0.3.0.dev0 (ядро) | 0.2.7 (проект) |
 | [check-failed](check-failed.md) | `CheckFailed(name)` | 0.3.0.dev0 (ядро) | 0.2.7 (проект) |
