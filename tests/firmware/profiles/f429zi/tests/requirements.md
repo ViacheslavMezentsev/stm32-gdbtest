@@ -136,3 +136,11 @@ halts the core, both invalidation steps report `done`, the reset is journalled a
 reported. A fresh `reach("app_loop")` after the reset proves the invalidated caches are usable and the
 application starts from the beginning. The scenario does not cover a failing backend command, which is
 exercised by the host checks and by the earlier command-failure experiment.
+
+## HW_CI_SETTINGS
+`settings` is the effective run configuration and is the same frozen object as the 0.2.x `config`; it
+exposes the api schema, the records limits, the execute output limit and the reset command, and both it
+and its nested mappings refuse assignment with `TypeError`. `sources` is the same frozen object as
+`config_props`: it names the `api.toml` reference, carries its SHA-256 digest and the captured data, and
+refuses assignment. The scenario checks the read-only contract; it does not cover configuration
+loading or schema validation, which the host checks exercise.
