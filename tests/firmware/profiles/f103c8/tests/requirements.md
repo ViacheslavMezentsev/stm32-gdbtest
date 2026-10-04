@@ -143,3 +143,19 @@ and its nested mappings refuse assignment with `TypeError`. `sources` is the sam
 `config_props`: it names the `api.toml` reference, carries its SHA-256 digest and the captured data, and
 refuses assignment. The scenario checks the read-only contract; it does not cover configuration
 loading or schema validation, which the host checks exercise.
+
+## HW_CI_EVALUATE
+`evaluate("1 + 1")` returns 2 and keeps the declared integer type. `as_type` applies the requested
+conversion: `float` gives 5.0 for `2 + 3`, `bool` gives true for a nonzero value and false for zero, and
+`int` truncates towards zero for `(float)7 / 2`. A type name such as `"float"` is accepted as well. An
+unknown symbol is reported as `command_failed` with its cause, an empty expression as
+`invalid_expression`, and an unsupported `as_type` as `unsupported_type`. The scenario covers scalar
+conversions; it does not cover structures, arrays or strings.
+
+## HW_CI_REGISTERS
+`registers("pc", "sp")` returns both values as integers: the program counter points inside Flash and
+carries no Thumb bit, because GDB reports the instruction address, and the stack pointer lies inside the Cortex-M SRAM window
+and is double-word aligned; the profile carries the flash region, so the SRAM window is checked as a range. `registers("r0", "r1",
+"r2", "r3")` returns every requested general-purpose register inside 32 bits. An unknown register name is
+reported as `read_failed` with its cause, and an empty request as `invalid_names`. The scenario reads
+registers of the innermost frame; it does not walk older frames.
