@@ -101,3 +101,11 @@ stops at that point, reporting `kind=breakpoint` and the function where it stopp
 step stop; `until()` completes the current line without a point stop. `reach()` returns its outcome,
 the point number, the resolved addresses and the reached frame. The scenario verifies the navigation
 surface; it does not claim source-line accuracy of a step or breakpoint counts of foreign points.
+
+## HW_CI_RET_VALUE
+`ret(42)` reports the operation, the producer, the caller, the supplied and applied values and the
+encoded command `return (uint32_t)0x2a`, and records the mutation. The receiver consumes the forced
+value, so the published `app_state.ticks` becomes 42 instead of the producer's own result. A value
+outside the declared 32-bit width is refused with `out_of_range` before any command is executed and
+leaves no mutation; a bare `ret()` issues the plain `return` without a value; `force_return` keeps the
+0.2.x expression form. The scenario does not cover pointer or floating-point return types.
