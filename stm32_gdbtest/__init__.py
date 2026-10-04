@@ -1,13 +1,13 @@
 """STM32 runtime testing through GDB-Python; host-safe public metadata API."""
 import sys
 
-from stm32_gdbtest.records import RecordError
+from stm32_gdbtest.errors import ApiError, CheckFailed, RecordError
 
 # Source checkouts may be read-only, including GDB imports and the -m entry point.
 sys.dont_write_bytecode = True
 __version__ = "0.2.0rc1"
 API_VERSION = 1
-__all__ = ["case", "API_VERSION", "__version__", "RecordError"]
+__all__ = ["case", "API_VERSION", "__version__", "ApiError", "CheckFailed", "RecordError"]
 
 
 def case(identifier, *, timeout_s=20, labels=(), contracts=()):

@@ -2,14 +2,9 @@
 
 import math
 
+from stm32_gdbtest.errors import RecordError
 
-class RecordError(ValueError):
-    """Invalid evidence or an exceeded resource limit."""
-
-    def __init__(self, code, message, *, limit=None):
-        super().__init__(message)
-        self.code = code
-        self.limit = limit
+__all__ = ["Journal", "RecordError"]
 
 
 class Journal:

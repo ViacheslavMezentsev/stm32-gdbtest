@@ -3,6 +3,7 @@
 import re
 
 import gdb
+from stm32_gdbtest.errors import ApiError, CheckFailed, OPERATIONS, STAGES, EFFECTS  # noqa: F401
 from stm32_gdbtest.records import Journal
 from stm32_gdbtest.configuration import DEFAULTS, freeze
 
@@ -29,10 +30,6 @@ def function_name(name):
                 name = name[:index]
                 break
     return name.strip()
-
-
-class CheckFailed(AssertionError):
-    pass
 
 
 class Target:
@@ -70,11 +67,12 @@ class Target:
                            "signal": getattr(event, "stop_signal", None)})
 
     def check(self, name, actual, expected):
+        """Record one comparison and fail the scenario on a mismatch (ТЗ API 4.1)."""
         passed = actual == expected
         self.report["checks"].append(dict(name=name, actual=actual, expected=expected, passed=passed))
         print(f"{'PASS' if passed else 'FAIL'} {name}: {actual!r}, expected {expected!r}")
         if not passed:
-            raise CheckFailed(name)
+            raise CheckFailed(name, actual=actual, expected=expected)
 
     def value(self, expression):
         value = gdb.parse_and_eval(expression)
