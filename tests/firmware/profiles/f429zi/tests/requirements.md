@@ -110,3 +110,12 @@ value, so the published `app_state.ticks` becomes 42 instead of the producer's o
 outside the declared 32-bit width is refused with `out_of_range` before any command is executed and
 leaves no mutation; a bare `ret()` issues the plain `return` without a value; `force_return` keeps the
 0.2.x expression form. The scenario does not cover pointer or floating-point return types.
+
+## HW_CI_CALL
+`call("app_step", "&app_state", 1)` runs the real firmware function on the halted core: it reports the
+operation, the function, the arguments, the built expression and an available return value equal to the
+incremented tick count, and the application state itself changes. The mutation is recorded. A void
+function runs without arguments and reports `return_state=void`. An unsupported argument value is
+refused with `unsupported_argument` and an invalid function name with `invalid_function`, both before
+the call and without recording a mutation. The scenario does not cover pointer, floating-point or
+variadic parameter lists.
