@@ -2,7 +2,7 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [Русский](../../ru/api/index.md)
 
-Accepted public methods, properties and decorator. Current contract: [API specification 0.3.0](../../TECHNICAL_SPECIFICATION_API.md).
+Accepted public methods, properties and decorator. Current contract: [API specification 0.3.1](../../TECHNICAL_SPECIFICATION_API.md).
 
 Support version identifies implementation availability; specification revision identifies
 contract adoption. API_VERSION=1 is neither a release nor a specification revision.
@@ -37,7 +37,7 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [step](step.md) | `step(count=1, *, unit="source", mode="into") -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
 | [until](until.md) | `until(location=None) -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
 | [finish](finish.md) | `finish() -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
-| [call](call.md) | `call(function, *args) -> dict` | not released | 0.3.0 (design) |
+| [call](call.md) | `call(function, *args) -> dict` | 0.3.0.dev0 (core) | 0.3.1 (design) |
 | [reset](reset.md) | `reset() -> dict` | not released | 0.3.0 (design) |
 | [execute](execute.md) | `execute(command) -> str` | not released | 0.3.0 (design) |
 | [settings](settings.md) | `settings: Mapping` | not released | 0.3.0 (design) |

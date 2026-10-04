@@ -2,7 +2,7 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [English](../../en/api/index.md)
 
-Принятые публичные методы, свойства и декоратор. Текущий контракт: [ТЗ API 0.3.0](../../TECHNICAL_SPECIFICATION_API.md).
+Принятые публичные методы, свойства и декоратор. Текущий контракт: [ТЗ API 0.3.1](../../TECHNICAL_SPECIFICATION_API.md).
 
 Версия поддержки означает наличие реализации; ревизия ТЗ — фиксацию контракта.
 `API_VERSION=1` не является номером релиза или ревизии ТЗ. База проверена по тегам
@@ -37,7 +37,7 @@
 | [step](step.md) | `step(count=1, *, unit="source", mode="into") -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
 | [until](until.md) | `until(location=None) -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
 | [finish](finish.md) | `finish() -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
-| [call](call.md) | `call(function, *args) -> dict` | не выпущено | 0.3.0 (проект) |
+| [call](call.md) | `call(function, *args) -> dict` | 0.3.0.dev0 (ядро) | 0.3.1 (проект) |
 | [reset](reset.md) | `reset() -> dict` | не выпущено | 0.3.0 (проект) |
 | [execute](execute.md) | `execute(command) -> str` | не выпущено | 0.3.0 (проект) |
 | [settings](settings.md) | `settings: Mapping` | не выпущено | 0.3.0 (проект) |
