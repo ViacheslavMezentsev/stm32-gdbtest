@@ -72,3 +72,16 @@ Only IRQ28 enabled, SysTick stopped: exception44 interrupts WFI without tick adv
 Capture configured 2..20 contiguous published ADC samples; validate quality and ranges,
 then retain raw measurements and mean/sample standard deviation (ddof=1) using runtime records.
 A missing, stale or invalid sample prevents a successful summary. Not sensor calibration.
+
+## HW_CI_RET_RECEIVER
+The firmware calls app_step through app_receiver_step, so a forced return reaches a caller that
+consumes it: app_received.produced holds the forced 42 and then the forced 0, while the caller's own
+app_state copy (ticks 7 and 9) never appears. The call counter advances per accepted value. A refused
+out-of-range value is not covered here; value encoding is checked by the V14 prototype. The scenario
+depends on the caller storing the value, not on the debugger alone.
+
+## HW_CI_MEASUREMENT_SERIES
+Five publications are taken with execution continuing between samples, so the series varies in time:
+board_adc_sequences increases without gaps and the values stay inside the plausible -40000..125000
+mdegC domain with more than one distinct value. Records keep every sample. This checks the measurement
+protocol on varying data, not sensor calibration, sample rate or accuracy.

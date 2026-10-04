@@ -186,7 +186,7 @@ def firmware_pair(gcc, profile):
     sources = {unit["source"] for unit in manifest["units"]}
     inputs = {item["file"] for item in manifest["inputs"]}
     expected_ld = f"profiles/{profile}/firmware_FLASH.ld"
-    expected_sources = {"src/startup.c", "src/app.c", "src/board.c"}
+    expected_sources = {"src/startup.c", "src/app.c", "src/app_receiver.c", "src/board.c"}
     if profile == "f030r8":
         expected_sources.update(("src/adc_f030.c", "src/adc_units.c", "src/rtc_f030.c"))
     if profile == "f103c8":
