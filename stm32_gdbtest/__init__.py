@@ -5,9 +5,9 @@ from stm32_gdbtest.errors import ApiError, CheckFailed, RecordError
 
 # Source checkouts may be read-only, including GDB imports and the -m entry point.
 sys.dont_write_bytecode = True
-__version__ = "0.2.0rc1"
+__version__ = "0.3.0"
 API_VERSION = 1
-__all__ = ["case", "API_VERSION", "__version__", "ApiError", "CheckFailed", "RecordError"]
+__all__ = ["case", "test", "API_VERSION", "__version__", "ApiError", "CheckFailed", "RecordError"]
 
 
 def case(identifier, *, timeout_s=20, labels=(), contracts=()):
@@ -15,3 +15,8 @@ def case(identifier, *, timeout_s=20, labels=(), contracts=()):
     def decorate(function):
         return function
     return decorate
+
+
+def test(identifier, *, timeout_s=20, labels=(), contracts=()):
+    """Alias of `case` under the name used by the 0.3.0 package (ТЗ API 4.2)."""
+    return case(identifier, timeout_s=timeout_s, labels=labels, contracts=contracts)

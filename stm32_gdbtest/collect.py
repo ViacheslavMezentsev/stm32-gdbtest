@@ -15,10 +15,10 @@ def collect(directory):
                 continue
             for decorator in node.decorator_list:
                 if not (isinstance(decorator, ast.Call) and isinstance(decorator.func, ast.Name)
-                        and decorator.func.id == "case"):
+                        and decorator.func.id in ("case", "test")):
                     continue
                 if len(decorator.args) != 1:
-                    raise ValueError(f"{path}: case requires one literal ID")
+                    raise ValueError(f"{path}: {decorator.func.id} requires one literal ID")
                 identifier = ast.literal_eval(decorator.args[0])
                 if not isinstance(identifier, str) or not re.fullmatch(r"HW_[A-Z0-9_]+", identifier):
                     raise ValueError(f"Invalid case ID: {identifier!r}")
