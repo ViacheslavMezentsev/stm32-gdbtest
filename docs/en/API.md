@@ -8,9 +8,41 @@ Production first-package examples and five-MCU verification: [accepted results](
 
 [Methods and properties reference](api/index.md) — individual cards, examples and support versions.
 
+## Designed 0.3.0 package: numbers and migration
+
+Public cards of the designed methods are in the [reference](api/index.md); the contract is not
+accepted and there is no core implementation. The numbers agreed on 2026-10-04 and the transition from
+the former names are recorded below.
+
+| `api.toml` parameter | Default | Maximum | Where it applies |
+| --- | ---: | ---: | --- |
+| `frames.limit` | 16 | 64 | the frame walk of `frames()` |
+| `call.depth` | 1 | 2 | the call depth of `call()` |
+| `call.args_max` | 4 | 8 | the argument count of `call()` |
+| `execute.output_limit_chars` | 2048 | 16384 | the journal output length of `execute()` |
+| `measurements.series_length` | 5 | 20 | the series length of a measurement scenario |
+| `reset.command` | from the backend | — | the `reset()` command |
+
+The values are read from `api.toml`; a method call may lower `limit` and a profile may raise it up to
+the maximum. `reset.command` defaults to the backend value: OpenOCD uses the profile's `reset_halt`
+and J-Link uses `monitor reset`; a session may override it. The journal limits, `breakpoint_limit=4`
+and `timeout_s=20` stay as in the effective tables.
+
+Transition from the former names (aliases work without warnings until 1.0; removal is planned in 0.4.0):
+
+| Former name | New name | Note |
+| --- | --- | --- |
+| `value(expression)` | `read(path)` | object read with type conversion |
+| `fields(expression, expected)` | `read(path, fields=…)` | field comparison stays a scenario check |
+| `set_value(expression, value)` | `write(path, value)` | the applied value gains verification |
+| `force_return(expression)` | `ret(value=None)` | the return becomes an operation with a result |
+| `config` / `config_props` | `settings` / `sources` | read-only with immutable nesting |
+| `case(...)` | `test(...)` | the same defaults: `timeout_s=20`, `labels=()`, `contracts=()` |
+| `RecordError` | an `ApiError` subclass | the public import is preserved |
+
 ## First package: records and configuration
 
-Candidate `0.2.0rc1` targets 0.2.0; `API_VERSION=1`, api.toml schema=1. Not released. [API spec 0.2.4](../TECHNICAL_SPECIFICATION_API.md), [accepted results](API_ACCEPTANCE.md).
+Candidate `0.2.0rc1` targets 0.2.0; `API_VERSION=1`, api.toml schema=1. Not released. [API spec 0.2.6](../TECHNICAL_SPECIFICATION_API.md), [accepted results](API_ACCEPTANCE.md).
 
 `record(name, data)` appends a deep copy and returns None. `records(name=None)` returns detached mutable copies: `{'sequence': 1, 'name': 'adc', 'data': ...}`. Names may repeat. The filter is an exact nonempty str; None selects all. Insertion order and sequence starting at 1 survive filtering.
 
