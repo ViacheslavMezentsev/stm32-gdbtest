@@ -2,7 +2,7 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [English](../../en/api/index.md)
 
-Принятые публичные методы, свойства и декоратор. Текущий контракт: [ТЗ API 0.2.8](../../TECHNICAL_SPECIFICATION_API.md).
+Принятые публичные методы, свойства и декоратор. Текущий контракт: [ТЗ API 0.2.9](../../TECHNICAL_SPECIFICATION_API.md).
 
 Версия поддержки означает наличие реализации; ревизия ТЗ — фиксацию контракта.
 `API_VERSION=1` не является номером релиза или ревизии ТЗ. База проверена по тегам
@@ -15,7 +15,7 @@
 | [value](value.md) | `value(expression) -> int` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [fields](fields.md) | `fields(expression, expected) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [breakpoint](breakpoint.md) | `breakpoint(function, temporary=False, when=None) -> gdb.Breakpoint` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [reach](reach.md) | `reach(function, when=None) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
+| [reach](reach.md) | `reach(location, *, condition=None) -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
 | [set_value](set_value.md) | `set_value(expression, value) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [force_return](force_return.md) | `force_return(expression) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [clear](clear.md) | `clear() -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
@@ -30,12 +30,12 @@
 | [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int | float | bool` | не выпущено | 0.3.0 (проект) |
 | [registers](registers.md) | `registers(*names, frame=None) -> dict` | не выпущено | 0.3.0 (проект) |
 | [frames](frames.md) | `frames(limit=16) -> dict` | не выпущено | 0.3.0 (проект) |
-| [point](point.md) | `Point: id, location, addresses, active, hit_count; remove(); with` | не выпущено | 0.3.0 (проект) |
+| [point](point.md) | `Point: id, location, addresses, active, hit_count; remove(); with` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
 | [watch](watch.md) | `watch(path) -> Point` | не выпущено | 0.3.0 (проект) |
-| [resume](resume.md) | `resume() -> dict` | не выпущено | 0.3.0 (проект) |
-| [step](step.md) | `step(count=1, *, unit="source", mode="into") -> dict` | не выпущено | 0.3.0 (проект) |
-| [until](until.md) | `until(location=None) -> dict` | не выпущено | 0.3.0 (проект) |
-| [finish](finish.md) | `finish() -> dict` | не выпущено | 0.3.0 (проект) |
+| [resume](resume.md) | `resume() -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
+| [step](step.md) | `step(count=1, *, unit="source", mode="into") -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
+| [until](until.md) | `until(location=None) -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
+| [finish](finish.md) | `finish() -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
 | [ret](ret.md) | `ret(value=None) -> dict` | не выпущено | 0.3.0 (проект) |
 | [call](call.md) | `call(function, *args) -> dict` | не выпущено | 0.3.0 (проект) |
 | [reset](reset.md) | `reset() -> dict` | не выпущено | 0.3.0 (проект) |

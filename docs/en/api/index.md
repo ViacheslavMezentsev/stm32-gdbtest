@@ -2,7 +2,7 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [Русский](../../ru/api/index.md)
 
-Accepted public methods, properties and decorator. Current contract: [API specification 0.2.8](../../TECHNICAL_SPECIFICATION_API.md).
+Accepted public methods, properties and decorator. Current contract: [API specification 0.2.9](../../TECHNICAL_SPECIFICATION_API.md).
 
 Support version identifies implementation availability; specification revision identifies
 contract adoption. API_VERSION=1 is neither a release nor a specification revision.
@@ -15,7 +15,7 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [value](value.md) | `value(expression) -> int` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [fields](fields.md) | `fields(expression, expected) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [breakpoint](breakpoint.md) | `breakpoint(function, temporary=False, when=None) -> gdb.Breakpoint` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [reach](reach.md) | `reach(function, when=None) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
+| [reach](reach.md) | `reach(location, *, condition=None) -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
 | [set_value](set_value.md) | `set_value(expression, value) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [force_return](force_return.md) | `force_return(expression) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [clear](clear.md) | `clear() -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
@@ -30,12 +30,12 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int | float | bool` | not released | 0.3.0 (design) |
 | [registers](registers.md) | `registers(*names, frame=None) -> dict` | not released | 0.3.0 (design) |
 | [frames](frames.md) | `frames(limit=16) -> dict` | not released | 0.3.0 (design) |
-| [point](point.md) | `Point: id, location, addresses, active, hit_count; remove(); with` | not released | 0.3.0 (design) |
+| [point](point.md) | `Point: id, location, addresses, active, hit_count; remove(); with` | 0.3.0.dev0 (core) | 0.2.9 (design) |
 | [watch](watch.md) | `watch(path) -> Point` | not released | 0.3.0 (design) |
-| [resume](resume.md) | `resume() -> dict` | not released | 0.3.0 (design) |
-| [step](step.md) | `step(count=1, *, unit="source", mode="into") -> dict` | not released | 0.3.0 (design) |
-| [until](until.md) | `until(location=None) -> dict` | not released | 0.3.0 (design) |
-| [finish](finish.md) | `finish() -> dict` | not released | 0.3.0 (design) |
+| [resume](resume.md) | `resume() -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
+| [step](step.md) | `step(count=1, *, unit="source", mode="into") -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
+| [until](until.md) | `until(location=None) -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
+| [finish](finish.md) | `finish() -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
 | [ret](ret.md) | `ret(value=None) -> dict` | not released | 0.3.0 (design) |
 | [call](call.md) | `call(function, *args) -> dict` | not released | 0.3.0 (design) |
 | [reset](reset.md) | `reset() -> dict` | not released | 0.3.0 (design) |

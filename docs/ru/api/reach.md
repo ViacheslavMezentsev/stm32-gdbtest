@@ -2,12 +2,12 @@
 
 [API](index.md) · [English](../../en/api/reach.md)
 
-`reach(function, when=None) -> None`
+`reach(location, *, condition=None) -> dict`
 
 | Свойство | Значение |
 | --- | --- |
 | Поддержка в модуле | 0.1.0rc1 / v0.1.0-rc.1 |
-| Контракт принят в ТЗ API | 0.1.0; §4.5 |
+| Контракт принят в ТЗ API | 0.1.0; §4.5; результат добавлен проектируемой ревизией 0.2.9 |
 | API_VERSION | 1 |
 
 ## Контракт
