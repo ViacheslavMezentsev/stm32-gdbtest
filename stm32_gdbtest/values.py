@@ -144,3 +144,44 @@ def verification_failed(path, written, read_back):
     return fail("write", "readback", "partial", "verification_failed",
                 f"written value {written!r} read back as {read_back!r}",
                 path=path, written=written, read_back=read_back)
+
+
+def return_type_shape(kind):
+    """Name, signedness and width in bits of a declared return type.
+
+    A width of zero means the type cannot carry an integer value; the caller reports it. Signedness
+    comes from the type name first, because GDB reports `unsigned int` and `int` with the same code.
+    """
+    if kind is None:
+        return (None, False, 0)
+    code = type_code_of(kind)
+    size = getattr(kind, "sizeof", None)
+    name = getattr(kind, "name", None)
+    if code is None or not size:
+        return (name, False, 0)
+    label = name or ""
+    logical = code in (type_constant("TYPE_CODE_BOOL"), type_constant("TYPE_CODE_CHAR"))
+    # Signedness is not exposed by the GDB type API, so the name is the evidence: `unsigned`,
+    # `uint32_t`, `u8`, `uintptr_t` and friends are unsigned, everything else is treated as signed.
+    unsigned = logical or "unsigned" in label or label.startswith(("uint", "u8", "u16", "u32", "u64"))
+    return (name or str(code), not unsigned, int(size) * 8)
+
+
+def type_code_of(kind):
+    """Type code of a declared type object, without qualifiers or typedefs."""
+    if kind is None:
+        return None
+    unqualified = getattr(kind, "unqualified", None)
+    if callable(unqualified):
+        try:
+            candidate = unqualified()
+        except Exception:
+            candidate = None
+        if candidate is not None:
+            kind = candidate
+    strip = getattr(kind, "strip_typedefs", None)
+    if callable(strip):
+        candidate = strip()
+        if candidate is not None:
+            kind = candidate
+    return getattr(kind, "code", None)

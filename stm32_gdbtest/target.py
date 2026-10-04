@@ -439,11 +439,94 @@ class Target:
             self.breakpoint(name)
         self.reach("main")
 
-    def force_return(self, expression):
-        function = gdb.newest_frame().name()
-        gdb.execute("return " + expression)
+    def ret(self, value=None):
+        """Return early from the current function, substituting a typed value (ТЗ API 4.7).
+
+        The value is encoded by the declared return type of the frame: the width and signedness come
+        from the type, and a value outside the declared range is refused before anything is executed.
+        """
+        frame = gdb.newest_frame()
+        if frame is None or not frame.is_valid():
+            self._fail("ret", "validation", "none", "no_frame",
+                       "a valid current frame is required", value=value)
+        function = function_name(frame.name())
+        caller = frame.older()
+        caller_name = function_name(caller.name()) if caller is not None else None
+        kind = self._return_type(frame)
+        if value is None:
+            command, applied, type_name = "return", None, None
+        elif type(value) is str:
+            # A GDB expression is passed through unchanged, as the 0.2.x `force_return` did.
+            command, applied, type_name = "return " + value, None, None
+        else:
+            type_name, signed, width = values.return_type_shape(kind)
+            if width == 0:
+                self._fail("ret", "validation", "none", "unsupported_type",
+                           f"unsupported return type for {function}", type_name=type_name,
+                           function=function)
+            if type(value) is not int or isinstance(value, bool):
+                self._fail("ret", "validation", "none", "unsupported_type",
+                           "the returned value must be an integer", value=value,
+                           function=function)
+            low, high = (-(1 << (width - 1)), (1 << (width - 1)) - 1) if signed \
+                else (0, (1 << width) - 1)
+            if values.type_code_of(kind) == values.type_constant("TYPE_CODE_BOOL"):
+                # A boolean return carries a logical value, not the whole byte.
+                high = 1
+            if not low <= value <= high:
+                self._fail("ret", "validation", "none", "out_of_range",
+                           "value outside the declared return width", value=value,
+                           low=low, high=high, width=width, function=function)
+            applied = value
+            literal = hex(value) if value >= 0 else "-" + hex(-value)
+            command = f"return ({type_name}){literal}"
+        try:
+            output = gdb.execute(command, to_string=True)
+        except gdb.error as cause:
+            self._fail("ret", "command", "unknown", "command_failed",
+                       f"{command} failed", cause=cause, command=command, function=function)
+        result = dict(operation="ret", function=function, caller=caller_name, supplied=value,
+                      outcome="forced", command=command, applied=applied, type_name=type_name,
+                      output=output or "")
         self.report.setdefault("mutations", []).append(
-            dict(operation="force_return", function=function, value=expression))
+            dict(operation="ret", function=function, value=value, command=command))
+        return result
+
+    def _return_type(self, frame):
+        """Declared return type of a frame.
+
+        `Frame.return_type()` exists only in newer GDB builds, so the function symbol is the fallback:
+        its type target is the declared return type.
+        """
+        reader = getattr(frame, "return_type", None)
+        if callable(reader):
+            try:
+                kind = reader()
+            except gdb.error:
+                kind = None
+            if kind is not None:
+                return kind
+        name = function_name(frame.name())
+        if not name:
+            return None
+        try:
+            symbol = gdb.parse_and_eval(name)
+        except gdb.error:
+            return None
+        kind = getattr(symbol, "type", None)
+        if kind is None:
+            return None
+        target = getattr(kind, "target", None)
+        if callable(target):
+            try:
+                return target()
+            except gdb.error:
+                return None
+        return None
+
+    def force_return(self, expression):
+        """Alias of `ret` kept for the 0.2.x name (removal planned in 0.4.0)."""
+        return self.ret(expression)
 
     def clear(self):
         for point in self.owned:
