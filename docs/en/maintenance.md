@@ -125,6 +125,26 @@ the separate docs.public check reads local-development filters from .gitignore a
 rejects tracked private files and links into them, even if the target exists locally.
 This governs the current tree; prior Git history is not automatically purged.
 
+Before starting or continuing research, read the [dedicated agent rules](../../AGENTS.md#проведение-исследований)
+and the local `docs/research/README.en.md`, if present, followed by the study plan, summary and latest
+report. The local conventions define the `ru/en/results` structure and input/output filenames.
+Result history is in local `docs/research/HISTORY.md` and `HISTORY.en.md`: date, brief change and
+output links, newest first, without code versions. New studies use `plan.md`, `verification.md`, `results.md`, `questions.md` and
+`technical-debt.md` in both languages; stages use `<stage>-plan.md` and `<stage>-results.md`.
+Keep historical filenames and list them in the document map. Use lowercase-kebab-case directory names.
+Record expected outcomes and conditions before runs; retain actual results, versions, prototype/input
+hashes, logs and limitations afterwards. Never overwrite original FAIL/ERROR evidence after a fix.
+Host PASS does not replace HW PASS; follow project hardware and restoration rules.
+After each stage, update both report localizations, the summary, matrix, questions and local history;
+tell the owner the result and next step. Distinguish observations, proposals and accepted decisions.
+Report missing local materials explicitly rather than treating prior outcomes as verified.
+Experimental API integration into the core requires separate agreement. Local paths here specify
+storage conventions, not links to shipped documents; the publication checks above remain mandatory.
+
+Section 2.1 of the local README defines the `tests/dev-*` sandbox: explicit run commands,
+code-to-report links and preservation of tested source snapshots before editing.
+Do not automatically include the sandbox in production tests, CI or the shipped package.
+
 ## Checks
 
 1. Offline checks in the CI Docker image: `python3 ci/run_checks.py` — the docs, format, host
