@@ -16,7 +16,17 @@ typedef struct
     uint8_t led;
 } app_state_t;
 
+/* Observed result of the producer call made by the receiver module. */
+typedef struct
+{
+    uint32_t produced;
+    uint32_t calls;
+    uint32_t took_zero_branch;
+} app_receiver_state_t;
+
 extern volatile app_state_t app_state;
+extern volatile app_receiver_state_t app_received;
+extern volatile uint32_t app_delay;
 
 void board_init( void );
 void board_led_toggle( void );
@@ -28,6 +38,8 @@ void board_rtc_init( void );
 void board_rtc_service( void );
 #endif
 uint32_t app_step( app_state_t* state, app_mode_t mode );
+/* Call the producer and record its return value for the observing scenario. */
+void app_receiver_step( void );
 void app_loop( void );
 
 #endif

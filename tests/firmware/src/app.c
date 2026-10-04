@@ -16,9 +16,8 @@ uint32_t app_step( app_state_t* state, app_mode_t mode )
 
 void app_loop( void )
 {
-    app_state_t next = app_state;
-    ( void ) app_step( &next, APP_MODE_BLINK );
-    app_state = next;
+    /* The receiver consumes the producer's return value; app_state is published inside it. */
+    app_receiver_step();
     board_led_toggle();
 #if defined( STM32F103xB )
     board_rtc_service();

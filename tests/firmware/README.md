@@ -33,6 +33,14 @@ Use the explicit hardware suite described in the [rc.2 plan](../../docs/en/RC2_R
 for candidate acceptance. The [status](../../docs/en/STATUS.md) distinguishes
 historical results from checks of the current candidate.
 
+Two application scenarios exist on every profile and check the scenario API itself:
+`HW_CI_RET_RECEIVER` (a forced return from `app_step` reaches the calling
+`app_receiver_step`, which stores it in `app_received`) and `HW_CI_MEASUREMENT_SERIES`
+(five ADC publications with execution continuing between samples, real spread and an
+advancing publication counter). They use only the public scenario API and are meant to
+be repeated after a package transfer; `src/app_receiver.c` is an ordinary application
+module, not a test hook.
+
 F103 RTC uses a counter/alarm and thread-mode rearming, unlike the F030 calendar.
 See [RTC/Sleep evidence and limits](../../docs/en/F103_CMSIS_RTC_SLEEP.md).
 

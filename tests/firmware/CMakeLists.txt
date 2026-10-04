@@ -52,7 +52,7 @@ if(NOT EXISTS "${cube_root}/Drivers/CMSIS/Device/ST/${family}/Include")
     message(FATAL_ERROR "CMSIS for ${family} not found in ${cube_root}")
 endif()
 
-add_executable(ci_firmware src/startup.c src/app.c src/board.c)
+add_executable(ci_firmware src/startup.c src/app.c src/app_receiver.c src/board.c)
 if(CI_PROFILE STREQUAL "f030r8")
     target_sources(ci_firmware PRIVATE src/adc_f030.c src/adc_units.c src/rtc_f030.c)
     # Cortex-M0 needs compiler runtime helpers for 32/64-bit integer division.
