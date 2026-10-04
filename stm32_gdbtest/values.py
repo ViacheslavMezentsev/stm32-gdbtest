@@ -212,3 +212,25 @@ def argument_literal(value):
             return None
         return stripped
     return None
+
+
+# Names of the declared kinds that cannot be a watched object.
+_NON_WATCHABLE = ("*", "(", "[", "void")
+
+
+def non_watchable(kind):
+    """Reason why a declared kind cannot be watched, or None when it can.
+
+    The kind name is used because type-code constants are unavailable when GDB is not loaded and a
+    wrong lookup would silently accept a pointer as a watchable object.
+    """
+    name = (getattr(kind, "name", None) or "").strip()
+    if not name:
+        return None
+    if name.endswith("*") or "(*" in name:
+        return "pointer"
+    if "(" in name and name.endswith(")"):
+        return "function"
+    if name == "void":
+        return "void"
+    return None

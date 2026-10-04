@@ -55,6 +55,10 @@ class Point:
         # The number is captured now: GDB refuses attribute access on a deleted breakpoint.
         self._number = native.number
         self.location = location
+        # A watchpoint created by address reports its expression instead of a location.
+        self.watch = False
+        self.watched = None
+        self.snapshot = None
         self.hit_count = 0
         self._owner = owner
         self._removed = False
@@ -453,6 +457,65 @@ class Target:
             raise
         return point
 
+
+    def watch(self, path):
+        """Watch a writable object for changes (ТЗ API 4.6).
+
+        Only addressable objects inside the mapped image are accepted. A backend without hardware
+        watchpoints fails here, and the failure names the operation instead of leaving the scenario
+        without stops. The returned point is a regular Point with `with` support.
+        """
+        if type(path) is not str or not path.strip():
+            self._fail("watch", "validation", "none", "invalid_path",
+                       "a non-empty object path is required", path=path)
+        try:
+            value = gdb.parse_and_eval(path)
+        except gdb.error as cause:
+            self._fail("watch", "validation", "none", "invalid_path",
+                       f"{path} is not a valid object path", cause=cause, path=path)
+        kind = values.unqualified_type(value.type)
+        size = getattr(kind, "sizeof", None)
+        address = getattr(value, "address", None)
+        if address is None:
+            self._fail("watch", "validation", "none", "not_addressable",
+                       f"{path} has no address", path=path)
+        reason = values.non_watchable(kind) if kind is not None else "unknown"
+        if kind is None or reason is not None:
+            self._fail("watch", "validation", "none", "unsupported_object",
+                       f"{path} is not a watchable object", path=path, kind=reason)
+        if type(size) is not int or size not in (1, 2, 4, 8):
+            self._fail("watch", "validation", "none", "unsupported_width",
+                       f"{path} has an unsupported width", path=path, size=size)
+        location = "*" + hex(int(address))
+        if int(address) % size:
+            self._fail("watch", "validation", "none", "unsupported_width",
+                       f"{path} is not naturally aligned", path=path, address=location)
+        if sum(point.active for point in self.owned) >= self.profile["breakpoint_limit"]:
+            self._fail("watch", "validation", "none", "limit_exceeded",
+                       "the watchpoint budget is exhausted", path=path,
+                       limit=self.profile["breakpoint_limit"])
+        try:
+            native = gdb.Breakpoint(location, gdb.BP_WATCHPOINT, gdb.WP_WRITE)
+        except (gdb.error, RuntimeError) as cause:
+            self._fail("watch", "command", "none", "command_failed",
+                       "this backend cannot watch memory", cause=cause, path=path,
+                       address=location)
+        point = Point(native, path, self)
+        point.watch = True
+        point.watched = path
+        point.snapshot = self._watch_value(path)
+        self.owned.append(point)
+        return point
+
+    def _watch_value(self, path):
+        """Current plain value of a watched object, or None when it cannot be read."""
+        try:
+            value = gdb.parse_and_eval(path)
+            value.fetch_lazy()
+            return values.value_to_plain(value, path, gdb)
+        except conversion_errors(gdb):
+            return None
+
     def reach(self, location, *, condition=None):
         """Run to a location and return the stop result; the point is temporary (ТЗ API 4.5)."""
         point = self.breakpoint(location, temporary=True, condition=condition)
@@ -554,12 +617,25 @@ class Target:
         if frame is not None:
             stop["pc"] = int(frame.pc())
             stop["function"] = function_name(frame.name())
-        if stop["kind"] == "unknown" and before is not None and stop.get("function") != before[0]:
-            # `finish` returned into another function while GDB reported no native reason.
+        # Some GDB builds omit the native reason, so a changed frame or program counter is the
+        # fallback. It only means anything for the commands that produce exactly such a stop: a
+        # plain continue may stop anywhere, for a watch point or a debugger interrupt included.
+        if stop["kind"] == "unknown" and before is not None and operation == "finish" \
+                and stop.get("function") != before[0]:
             stop["kind"] = "function_return"
+        if stop["kind"] == "unknown" and operation in ("resume", "reach"):
+            # Some backends do not report the watch point stop at all, so the changed object is the
+            # evidence: a write watch point can only be seen through the value it protects.
+            fired = [point for point in self.owned
+                     if point.active and point.watch and point.snapshot is not None
+                     and self._watch_value(point.watched) != point.snapshot]
+            if fired:
+                stop["kind"] = "watchpoint"
+                stop["native_reason"] = "watchpoint-trigger"
+                stop["inferred"] = True
+                stop["watch"] = [point.id for point in fired]
         if stop["kind"] == "unknown" and before is not None and stop.get("function") == before[0] \
                 and stop.get("pc") != before[1]:
-            # Single stepping moved the program counter inside one function without a native reason.
             stop["kind"] = "step"
         if stop["kind"] == "fault":
             self._fail(operation, "observe", "completed", "fault_stop",
@@ -595,6 +671,11 @@ class Target:
         if numbers & guards:
             return "fault"
         if numbers & set(owned):
+            # J-Link reports a watch point as an ordinary breakpoint event without a reason, so the
+            # kind of the reported point decides; the native reason is only a corroborating hint.
+            reported = [owned[number] for number in numbers if number in owned]
+            if any(point.watch for point in reported):
+                return "watchpoint"
             return "watchpoint" if str(stop.get("native_reason") or "").startswith("watch") \
                 else "breakpoint"
         if numbers:
