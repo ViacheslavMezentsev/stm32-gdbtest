@@ -25,10 +25,33 @@
 | [config_props](config-props.md) | `config_props: Mapping` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
 | [RecordError](record-error.md) | `RecordError(ValueError)` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 / 0.2.1 |
 | [case](case.md) | `case(identifier, *, timeout_s=20, labels=(), contracts=())` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
+| [read](read.md) | `read(path, *, fields=None, start=0, count=None) -> scalar | list | dict` | не выпущено | 0.3.0 (проект) |
+| [write](write.md) | `write(path, value, *, verify=True) -> dict` | не выпущено | 0.3.0 (проект) |
+| [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int | float | bool` | не выпущено | 0.3.0 (проект) |
+| [registers](registers.md) | `registers(*names, frame=None) -> dict` | не выпущено | 0.3.0 (проект) |
+| [frames](frames.md) | `frames(limit=16) -> dict` | не выпущено | 0.3.0 (проект) |
+| [point](point.md) | `Point: id, location, addresses, active, hit_count; remove(); with` | не выпущено | 0.3.0 (проект) |
+| [watch](watch.md) | `watch(path) -> Point` | не выпущено | 0.3.0 (проект) |
+| [resume](resume.md) | `resume() -> dict` | не выпущено | 0.3.0 (проект) |
+| [step](step.md) | `step(count=1, *, unit="source", mode="into") -> dict` | не выпущено | 0.3.0 (проект) |
+| [until](until.md) | `until(location=None) -> dict` | не выпущено | 0.3.0 (проект) |
+| [finish](finish.md) | `finish() -> dict` | не выпущено | 0.3.0 (проект) |
+| [ret](ret.md) | `ret(value=None) -> dict` | не выпущено | 0.3.0 (проект) |
+| [call](call.md) | `call(function, *args) -> dict` | не выпущено | 0.3.0 (проект) |
+| [reset](reset.md) | `reset() -> dict` | не выпущено | 0.3.0 (проект) |
+| [execute](execute.md) | `execute(command) -> str` | не выпущено | 0.3.0 (проект) |
+| [settings](settings.md) | `settings: Mapping` | не выпущено | 0.3.0 (проект) |
+| [sources](sources.md) | `sources: Mapping` | не выпущено | 0.3.0 (проект) |
+| [test](test.md) | `test(identifier, *, timeout_s=20, labels=(), contracts=())` | не выпущено | 0.3.0 (проект) |
+| [api-error](api-error.md) | `ApiError; error.details; error.__cause__` | не выпущено | 0.3.0 (проект) |
+| [check-failed](check-failed.md) | `CheckFailed(name)` | не выпущено | 0.3.0 (проект) |
+
+Проектируемый пакет 0.3.0 (не выпущено): методы, прошедшие ссылочную верификацию. Строки выше не
+являются принятым контрактом: контракт закрепляется ревизией ТЗ API при переносе в ядро.
 
 Target передаётся агентом; создавать его самостоятельно не нужно. GDB-вызовы выполняются
 только в основном потоке GDB. boot/close/on_stop/report/owned/stops — внутренние детали.
-read/context/caller/finish не входят в принятый пакет. Примеры требуют указанной
+Проектируемый пакет не вводит context/caller. Примеры требуют указанной
 прошивки и места остановки; они не универсальны для всех плат.
 
 [Techniques](../TESTING_TECHNIQUES.md) · [Configuration and migration](../API.md) · [Acceptance](../API_ACCEPTANCE.md).

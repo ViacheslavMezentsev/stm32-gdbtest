@@ -1,0 +1,36 @@
+# until
+
+[API](index.md) · [Русский](../../ru/api/until.md)
+
+`until(location=None) -> dict`
+
+| Property | Value |
+| --- | --- |
+| Module support | not released: 0.3.0 package design |
+| API specification contract | not accepted; designed revision 0.2.5 |
+| API_VERSION | 1 (the effective contract does not change) |
+| Basis | the agreed verification firmware `tests/firmware` and its scenarios (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+
+## Purpose
+
+Runs the program to the given location in the current frame without stopping at intermediate lines.
+
+## Contract and limitations
+
+Without an argument it acts as leaving the current line.
+
+Limitations: the location must be inside the current frame; passing through a call depends on the
+debugger; an unreachable location ends with the scenario timeout.
+
+## Example
+
+```python
+target.until("app_loop")
+target.check("line reached", target.frames()["frames"][0]["function"], "app_loop")
+```
+
+Leaving the frame bounds is reported as a failure, not as a silent continuation.
+
+## References
+
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5.

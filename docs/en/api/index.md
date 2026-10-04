@@ -25,9 +25,33 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [config_props](config-props.md) | `config_props: Mapping` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
 | [RecordError](record-error.md) | `RecordError(ValueError)` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 / 0.2.1 |
 | [case](case.md) | `case(identifier, *, timeout_s=20, labels=(), contracts=())` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
+| [read](read.md) | `read(path, *, fields=None, start=0, count=None) -> scalar | list | dict` | not released | 0.3.0 (design) |
+| [write](write.md) | `write(path, value, *, verify=True) -> dict` | not released | 0.3.0 (design) |
+| [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int | float | bool` | not released | 0.3.0 (design) |
+| [registers](registers.md) | `registers(*names, frame=None) -> dict` | not released | 0.3.0 (design) |
+| [frames](frames.md) | `frames(limit=16) -> dict` | not released | 0.3.0 (design) |
+| [point](point.md) | `Point: id, location, addresses, active, hit_count; remove(); with` | not released | 0.3.0 (design) |
+| [watch](watch.md) | `watch(path) -> Point` | not released | 0.3.0 (design) |
+| [resume](resume.md) | `resume() -> dict` | not released | 0.3.0 (design) |
+| [step](step.md) | `step(count=1, *, unit="source", mode="into") -> dict` | not released | 0.3.0 (design) |
+| [until](until.md) | `until(location=None) -> dict` | not released | 0.3.0 (design) |
+| [finish](finish.md) | `finish() -> dict` | not released | 0.3.0 (design) |
+| [ret](ret.md) | `ret(value=None) -> dict` | not released | 0.3.0 (design) |
+| [call](call.md) | `call(function, *args) -> dict` | not released | 0.3.0 (design) |
+| [reset](reset.md) | `reset() -> dict` | not released | 0.3.0 (design) |
+| [execute](execute.md) | `execute(command) -> str` | not released | 0.3.0 (design) |
+| [settings](settings.md) | `settings: Mapping` | not released | 0.3.0 (design) |
+| [sources](sources.md) | `sources: Mapping` | not released | 0.3.0 (design) |
+| [test](test.md) | `test(identifier, *, timeout_s=20, labels=(), contracts=())` | not released | 0.3.0 (design) |
+| [api-error](api-error.md) | `ApiError; error.details; error.__cause__` | not released | 0.3.0 (design) |
+| [check-failed](check-failed.md) | `CheckFailed(name)` | not released | 0.3.0 (design) |
+
+Designed 0.3.0 package (not released): methods that passed reference validation. The rows above are
+not an accepted contract: it is fixed by an API specification revision when the package moves into
+the core.
 
 The agent supplies Target; do not construct it. GDB calls run only on the main GDB
-thread. boot/close/on_stop/report/owned/stops are internal. read/context/caller/finish
+thread. boot/close/on_stop/report/owned/stops are internal. The designed package introduces no context/caller.
 are outside the accepted package. Examples require matching firmware and stop context;
 they are not universal across boards.
 
