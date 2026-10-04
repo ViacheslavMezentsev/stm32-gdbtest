@@ -168,3 +168,15 @@ stopped in, its depth is zero, its method is `normal` and its program counter is
 innermost frame and reports `complete=false`, while a wide limit completes the walk. An unusable limit is
 refused with `invalid_limit` before the chain is walked. The scenario checks the innermost and its
 caller; it does not verify the whole boot chain.
+
+## HW_CI_WATCH
+`watch("app_state.ticks")` returns a point and `resume()` stops the running firmware on the next write:
+the stop is classified as `watchpoint` because the reported point is a watch point, while the
+watched object really changed. The native reason stays a hint: OpenOCD names `watchpoint-trigger`,
+J-Link reports no reason at all. The point is removed when the context manager exits, so no watch point stays active
+(the stand keeps its own fault guard).
+A whole eight byte structure (`app_state`) is a valid target exactly like its field. An unknown path
+and a non-object expression are refused with `invalid_path` at the validation stage, before the debugger
+is touched and without leaving a point behind. The scenario verifies a write
+watch point on a naturally aligned object; read watch points, larger objects and backends without
+hardware watch points are not covered.
