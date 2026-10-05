@@ -37,6 +37,45 @@ structure of every row is validated before the first evaluation; the first misma
 A mismatch raises `CheckFailed`. An argument error (empty name, invalid matcher bounds, empty table)
 raises `ApiError` of operation `check` without a report entry. Values must be JSON-compatible.
 
+## Where a string is a GDB expression and where it is a Python value
+
+There is one rule: **GDB evaluates a string only where the data comes from the target.** These are the
+parameters named `expression` and `path` (`read`, `evaluate`, `write`, `reach`, `until`…) and the cells of
+the `check(rows)` table, which exists to verify the target state. The arguments of a single
+`check(name, actual, expected)` are Python values, like the result of any other API operation.
+
+| Form | The string `"SET"` as the expectation | Why |
+| :--- | :--- | :--- |
+| `check(name, actual, expected)` | compared as text | it receives operation results: frame names, error codes, stop kinds, values from `profile`; these are Python text, and so it has been since the first published tag |
+| `check(rows)` | evaluated by GDB (the `SET` enum or macro → `1`) | the table replaced the "name, expression, expectation" helper: it reads registers and variables, and expectations are firmware identifiers |
+
+So the same string behaves differently on purpose. If a single `check` evaluated strings as well,
+comparisons such as `check("stop", stop["kind"], "breakpoint")` or
+`check("code", error.details["code"], "unsupported_argument")` would go to GDB as symbols and fail, and
+Python text would need a separate literal wrapper.
+
+A one-line check of a pin with firmware macros has two equivalent spellings:
+
+```python
+# A one-row table: GDB evaluates both strings.
+t.check([("PA5 high", "(GPIOA->ODR & GPIO_ODR_5) != 0", "SET")])
+
+# A single check: the expressions are evaluated explicitly through evaluate.
+t.check("PA5 high", t.evaluate("(GPIOA->ODR & GPIO_ODR_5) != 0"), t.evaluate("SET"))
+```
+
+The bit is normalized with `!= 0`: `GPIOA->ODR & GPIO_ODR_5` gives `0x20`, while `SET` is 1. `SET`/`RESET`
+may be enums (`FlagStatus` in CMSIS, `GPIO_PinState` in HAL) or `-g3` macros — GDB evaluates both kinds if
+the symbol is in the debug information of the ELF (an enum gets there when the firmware uses the type).
+
+Common mistakes:
+
+| Spelling | What happens | Instead |
+| :--- | :--- | :--- |
+| `check("PA5", t.read("(GPIOA->ODR & GPIO_ODR_5) != 0"), "SET")` | `1 == "SET"` — a mismatch | `t.evaluate("SET")` or a table |
+| `check([("case id", t.profile.case["id"], "HW_CI_PROFILE")])` | GDB looks up the symbol `HW_CI_PROFILE` — a cell error | `check("case id", t.profile.case["id"], "HW_CI_PROFILE")` |
+| `check([("PA5", "GPIOA->ODR & GPIO_ODR_5", "SET")])` | `0x20 == 1` — a mismatch | `"... != 0"` or a two-cell row without `expected` |
+
 ## Rules of the `check(rows)` table
 
 1. A table row is `(name, actual, expected)` or `(name, actual)`.
