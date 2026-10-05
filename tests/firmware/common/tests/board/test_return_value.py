@@ -4,8 +4,6 @@ EN: Return value: finish, register r0 and the value published by the receiver ag
 """
 from stm32_gdbtest import case, within
 
-# The receiver stores the produced value on the line before this one.
-RECEIVER_COUNT = "app_receiver.c:22"
 SRAM = (0x20000000, 0x200FFFFF)
 
 
@@ -24,11 +22,7 @@ def return_value(t):
     t.check("the producer returned the incremented count", finished["return_value"], ticks + 1)
     t.check("r0 holds the same value", t.registers("r0")["r0"], finished["return_value"])
 
-    t.until(RECEIVER_COUNT)
-    t.check("the receiver published the value", t.read("app_received.produced"),
-                 finished["return_value"])
-    local = t.locals()
-    if "produced" in local["values"]:
-        t.check("the receiver's local holds the value", local["values"]["produced"], finished["return_value"])
-    else:
-        t.record("produced_unavailable", local["unavailable"])
+    # Let the receiver finish: it stores the value and publishes the incremented count.
+    t.check("the receiver returned to the loop", t.finish()["function"], "app_loop")
+    t.check("the receiver stored the value", t.read("app_received.produced"), finished["return_value"])
+    t.check("the receiver published the count", t.read("app_state.ticks"), finished["return_value"])

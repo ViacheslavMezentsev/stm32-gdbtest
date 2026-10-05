@@ -1,5 +1,6 @@
-"""The showcase scenarios rely on fixture source lines and on the shared scenario directory."""
+"""The showcase scenarios: the one source-line location and the shared scenario directory."""
 from pathlib import Path
+import re
 import unittest
 
 from stm32_gdbtest.collect import collect, trace
@@ -16,11 +17,16 @@ class ShowcaseTests(unittest.TestCase):
         lines = (ROOT / "tests/firmware/src/app_receiver.c").read_text(encoding="utf-8").splitlines()
         self.assertIn("app_received.calls++;", lines[22 - 1])
         self.assertIn("app_state                     = next;", lines[24 - 1])
-        for name in ("test_inject_zero.py", "test_until_target.py", "test_return_value.py"):
-            source = (COMMON / "board" / name).read_text(encoding="utf-8")
-            for line in ("app_receiver.c:22", "app_receiver.c:24"):
-                if line in source:
-                    self.assertIn(f'= "{line}"', source)
+        source = (COMMON / "board" / "test_until_target.py").read_text(encoding="utf-8")
+        for line in ("app_receiver.c:22", "app_receiver.c:24"):
+            self.assertIn(f'= "{line}"', source)
+
+    def test_only_the_until_scenario_names_source_lines(self):
+        location = re.compile(r'"[\w./-]+\.[ch]:\d+"')
+        named = sorted(path.name for path in ROOT.glob("tests/**/test_*.py")
+                       if "build" not in path.parts and "dev-" not in str(path.parent)
+                       and path.parent.name == "board" and location.search(path.read_text(encoding="utf-8")))
+        self.assertEqual(named, ["test_until_target.py"])
 
     def test_showcase_is_collected_and_traced_once(self):
         tests = collect(COMMON / "board")

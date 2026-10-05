@@ -4,7 +4,9 @@ EN: until(location): a target in the current frame is reached; from a nested fun
 """
 from stm32_gdbtest import case
 
-# Lines of the fixture receiver (tests/firmware/src/app_receiver.c).
+# Source lines of the fixture receiver (tests/firmware/src/app_receiver.c). A file:line location breaks
+# with any edit of the source; it is used here only because until(file:line) is what this scenario checks.
+# Other scenarios name functions and use finish() instead. A host check guards the two lines.
 RECEIVER_COUNT = "app_receiver.c:22"
 RECEIVER_PUBLISH = "app_receiver.c:24"
 

@@ -129,10 +129,9 @@ the function receives the usual `Target`. The alias returns the decorated functi
 scenario proves that both names are interchangeable; it does not check the metadata of other scenarios.
 
 ## HW_CI_INJECT_ZERO
-At the entry of `app_step` a forced return of 0 skips the producer body. Running `until` the receiver's
-publishing line shows that the receiver stored 0, took its zero branch and counted the call, while its
-local copy `next` kept the old tick count. The next iteration publishes the unchanged count, and a
-normal call clears the zero branch again. The scenario shows fault injection through a return value; it
+At the entry of `app_step` a forced return of 0 skips the producer body. After `finish` leaves the
+receiver, it has stored 0, taken its zero branch and counted the call, and it has published its untouched
+copy, so the tick count stays the same. A normal call clears the zero branch again. The scenario shows fault injection through a return value; it
 does not claim that the producer itself can return 0.
 
 ## HW_CI_WHO_WRITES
@@ -146,10 +145,9 @@ chain unwinds, and not in the epilogue, which carries no unwind information.
 
 ## HW_CI_RETURN_VALUE
 At the entry of `app_step` the arguments carry the blink mode and a state pointer into SRAM. `finish`
-returns into the receiver with the incremented count; `r0` holds the same value and the receiver
-publishes it on the next line. When `-Og` keeps the receiver's local `produced`, it holds the value too;
-otherwise the unavailable names are recorded. The scenario shows that three views of one return value
-agree on the AAPCS register convention.
+returns into the receiver with the incremented count and `r0` holds the same value; after a second
+`finish` leaves the receiver, it has stored the value and published it as the new count. The scenario
+shows that three views of one return value agree on the AAPCS register convention.
 
 ## HW_CI_CONDITIONAL_STOP
 A point at `app_step` with `ignore_count=2` stops at the third call, counted by the tick the call sees.
@@ -167,7 +165,8 @@ claim a fixed number of steps per line.
 `until("app_receiver.c:22")` from the receiver reaches the line: the stop address is one of the resolved
 targets and the produced value is stored. From inside `app_step` a target in the caller is not reached:
 the producer frame exits first and the stop is back in the receiver. The line numbers belong to the
-fixture source and are guarded by a host check.
+fixture source and are guarded by a host check; this is the only scenario that names a source line,
+because a line location is what it checks.
 
 ## HW_CI_POINT_BUDGET
 The fault guards set at boot hold slots of the profile `breakpoint_limit`; points at distinct functions

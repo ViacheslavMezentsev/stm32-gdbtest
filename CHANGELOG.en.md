@@ -72,6 +72,9 @@ Extended scenario API; the release is being prepared and the tag is published by
 - The refusal scenarios of the shared directory use `refused`; the ADC and sleep scenarios of every profile write a
   register read-modify-write as an expression and save and restore NVIC/SysTick with a table of writes.
   The remaining F103 literals `| 1` and `& ~1` are replaced by the identifiers `DMA_CCR_EN` and `ADC_CR2_ADON`.
+- `HW_CI_INJECT_ZERO` and `HW_CI_RETURN_VALUE` no longer stop at a source line number: the receiver's result is
+  checked after `finish`. A line number stays only in `HW_CI_UNTIL_TARGET`, which checks the `until(file:line)`
+  location itself; a host test keeps source lines out of the other scenarios.
 
 ### Fixed
 
