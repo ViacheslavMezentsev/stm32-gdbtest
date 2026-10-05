@@ -32,6 +32,7 @@ def navigation(target):
     target.check("finish completed", finished["outcome"], "completed")
     target.check("finish left the receiver", finished["function"], "app_loop")
     target.check("finish stop is a function return", finished["stop"]["kind"], "function_return")
+    target.check("the receiver returns nothing", finished["return_state"], "void")
     # finish() forces the rest of the frame, so the staged copy on the stack is not published; the
     # application state stays readable and is what the next iteration starts from.
     target.check("the application state stays readable",
@@ -46,6 +47,15 @@ def navigation(target):
         target.check("resume stopped where expected", stopped["stop"]["function"], "board_led_toggle")
         target.check("the point counted the stop", point.hit_count, 1)
     target.check("point is inactive after the block", point.active, False)
+
+    # finish() reports the value the producer returned: GDB keeps it in the value history.
+    target.reach("app_step")
+    ticks = target.read("state->ticks")
+    produced = target.finish()
+    target.check("finish left the producer", produced["returned_from"], "app_step")
+    target.check("finish returned into the receiver", produced["function"], "app_receiver_step")
+    target.check("the returned value is available", produced["return_state"], "available")
+    target.check("finish returned the incremented count", produced["return_value"], ticks + 1)
 
     # reach() creates and removes only its own point: a scenario point at the same place stays, and
     # a condition passed to reach() is applied even though a point already exists there.
