@@ -37,13 +37,12 @@ def run_profile(t):
     t.check("reset vector in the profile flash", reset & ~1, flash)
     t.check("reset vector is Thumb code", reset & 1)
 
-    # The case section is the scenario that is running now.
-    t.check([
-        ("case id", profile.case["id"], "HW_CI_PROFILE"),
-        ("case function", profile.case["function"], "run_profile"),
-        ("case timeout", profile.case["timeout_s"], 45),
-        ("case contracts", list(profile.case["contracts"]), ["ci_app_api"]),
-    ])
+    # The case section is the scenario that is running now. These are Python values, not GDB
+    # expressions, so they are separate checks: a string cell of check(rows) is evaluated by GDB.
+    t.check("case id", profile.case["id"], "HW_CI_PROFILE")
+    t.check("case function", profile.case["function"], "run_profile")
+    t.check("case timeout", profile.case["timeout_s"], 45)
+    t.check("case contracts", list(profile.case["contracts"]), ["ci_app_api"])
 
     # The stand section names a supported backend and server placement.
     stand = profile.stand
