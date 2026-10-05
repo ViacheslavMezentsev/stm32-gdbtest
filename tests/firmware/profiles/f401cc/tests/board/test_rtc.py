@@ -5,26 +5,13 @@ EN: RTC configuration, repeated alarm interrupts and deadline checks.
 from stm32_gdbtest import case
 
 
-# Evaluate table rows in order and stop at the first failed read or check.
-def _check_values(target, rows):
-    # TECH-010: evaluate each actual, then its expected expression, then check.
-    for name, expression, expected in rows:
-        actual = target.evaluate(expression, as_type=int)
-        if isinstance(expected, str):
-            # An expected cell may be a C expression, an address or an enum, so it is evaluated too.
-            expected = target.evaluate(expected, as_type=int)
-
-        # Compare the current row after both expressions have been evaluated.
-        target.check(name, actual, expected)
-
-
 # Verify RTC clock, calendar masks, alarm configuration and interrupt routing.
 @case("HW_CI_RTC_INIT", labels=("rtc", "init"), contracts=("ci_rtc_macros",))
 def rtc_init(target):
     target.reach("board_led_toggle")
 
     # Check register and application state against the expected values.
-    _check_values(target, [
+    target.check_table([
         ('LSI ready', '(RCC->CSR & RCC_CSR_LSIRDY) != 0', 1),
         ('LSI RTC clock enabled', 'RCC->BDCR & (RCC_BDCR_RTCSEL | RCC_BDCR_RTCEN)', 33280),
         ('RTC prescalers', 'RTC->PRER', 127 << 16 | 249),
@@ -55,7 +42,7 @@ def rtc_alarm(target):
     # Observe repeated alarm delivery and confirm one event per interrupt.
     for index in range(2):
         # Check register and application state against the expected values.
-        _check_values(target, [
+        target.check_table([
             ('RTC exception', 'SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk', 57),
             ('Alarm A pending', '(RTC->ISR & RTC_ISR_ALRAF) != 0', 1),
             ('EXTI17 pending', 'EXTI->PR & (1 << 17)', 1 << 17)

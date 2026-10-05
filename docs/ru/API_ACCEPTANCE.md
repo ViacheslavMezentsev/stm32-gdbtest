@@ -25,7 +25,7 @@ Flash 64 КиБ, обнаружено 128 КиБ, образ помещаетс�
 
 44 табличных блока (282 проверки) имеют парную host-регрессию порядка вызовов и
 остановки при ошибке: tests/host/test_scenario_tables.py. В пяти штатных
-[test_measurements.py](../../tests/firmware/profiles/f411ce/tests/board/test_measurements.py)
+[test_measurements.py](../../tests/firmware/common/tests/board/test_measurements.py)
 сценариях используются config, record/records, mean и выборочное stdev.
 Численные якоря и отказные случаи — tests/host/test_measurement_scenarios.py.
 Воспроизведение HW-набора — [run_suite.py](../../tests/firmware/run_suite.py):

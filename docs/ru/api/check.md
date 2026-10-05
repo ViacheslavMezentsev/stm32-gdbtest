@@ -31,5 +31,5 @@ target.check("initial count", target.value("board_adc_sequences"), 0)
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), §4.1.
 - [Реализация](../../../stm32_gdbtest/target.py).
-- [Сценарий или проверка реализации](../../../tests/firmware/profiles/f411ce/tests/board/test_measurements.py).
+- [Сценарий или проверка реализации](../../../tests/firmware/common/tests/board/test_measurements.py).
 - [value](value.md), [fields](fields.md).

@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "contracts": {
+    "ci_app_api": {
+      "type_context": "app_step",
+      "functions": {
+        "app_step": {
+          "returns": "uint32_t",
+          "arguments": [
+            {
+              "name": "state",
+              "type": "app_state_t *"
+            },
+            {
+              "name": "mode",
+              "type": "app_mode_t"
+            }
+          ]
+        },
+        "app_loop": {
+          "returns": "void",
+          "arguments": []
+        }
+      },
+      "fields": {
+        "app_state_t": {
+          "ticks": "uint32_t",
+          "led": "uint8_t"
+        }
+      },
+      "enums": {
+        "app_mode_t": {
+          "APP_MODE_IDLE": 0,
+          "APP_MODE_BLINK": 1
+        }
+      }
+    }
+  }
+}

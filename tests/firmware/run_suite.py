@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from stm32_gdbtest.backends import load_stand
 from stm32_gdbtest.build_manifest import digest, load_verified
-from stm32_gdbtest.collect import collect
+from stm32_gdbtest.collect import collect, scenario_dirs
 from stm32_gdbtest.profile import load_profile
 from stm32_gdbtest.runner import run
 
@@ -31,8 +31,8 @@ def main():
         raise ValueError('restore MCU differs')
     if load_stand(args.stand)['flash'] != 'if-different':
         raise ValueError('restoration requires if-different')
-    cases = collect(session['tests'])
-    restores = {c['id']: c for c in collect(restore['tests'])}
+    cases = collect(scenario_dirs(session))
+    restores = {c['id']: c for c in collect(scenario_dirs(restore))}
     restore_ids = ('HW_CI_BOOT', 'HW_CI_GPIO') if 'HW_CI_BOOT' in restores else (
         ('HW_BOOT', 'HW_GPIO') if 'HW_GPIO' in restores else ('HW_BOOT', 'HW_BLINK'))
     out = ROOT/'build/scenario-migration'/datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S.%fZ')

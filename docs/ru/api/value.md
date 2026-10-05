@@ -33,5 +33,5 @@ target.check("nonnegative sequence", sequence >= 0, True)
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), §4.2.
 - [Реализация](../../../stm32_gdbtest/target.py).
-- [Сценарий или проверка реализации](../../../tests/firmware/profiles/f411ce/tests/board/test_measurements.py).
+- [Сценарий или проверка реализации](../../../tests/firmware/common/tests/board/test_measurements.py).
 - [check](check.md), [fields](fields.md), [record](record.md).

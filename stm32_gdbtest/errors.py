@@ -9,7 +9,8 @@ EN: Operation failures are separated from check mismatches: `ApiError` describes
 # Canonical operation names; the aliases of Q4 map onto them.
 OPERATIONS = (
     "read", "write", "eval", "registers", "frames", "breakpoint", "watch", "resume", "reach",
-    "step", "until", "finish", "ret", "call", "reset", "execute", "record", "records", "config"
+    "step", "until", "finish", "ret", "call", "reset", "execute", "record", "records", "config",
+    "check", "symbol", "memory", "locals", "arguments", "point"
 )
 
 # Where the operation stopped: input validation, the backend command, or observing the result.

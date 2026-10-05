@@ -29,13 +29,21 @@ class CMakeSessionTests(unittest.TestCase):
                 'def fixture(t):\n    pass\n', encoding="utf-8")
             (profile / "target.toml").write_text(TARGET, encoding="utf-8")
             (profile / "session.toml").write_text('[config]\ntarget="target.toml"', encoding="utf-8")
+            common = root / "common"
+            (common / "board").mkdir(parents=True)
+            (common / "board" / "test_common.py").write_text(
+                'from stm32_gdbtest import case\n@case("HW_COMMON_FIXTURE")\n'
+                'def common(t):\n    pass\n', encoding="utf-8")
+            (common / "requirements.md").write_text("## HW_COMMON_FIXTURE\nShared.\n", encoding="utf-8")
             (root / "main.c").write_text('int main(void) { return 0; }', encoding="utf-8")
             env = dict(os.environ)
             env.pop("STM32_GDBTEST_IMAGE_POLICY", None)
-            for mode in ("old", "new", "conflict"):
+            for mode in ("old", "new", "conflict", "extra"):
                 arguments = '' if mode == 'old' else 'SESSION_CONFIG "${CMAKE_SOURCE_DIR}/profile/session.toml"'
                 if mode == 'conflict':
                     arguments += ' PROFILE "${CMAKE_SOURCE_DIR}/profile/target.toml"'
+                if mode == 'extra':
+                    arguments = 'TEST_DIRS "${CMAKE_SOURCE_DIR}/common"'
                 cmake = '\n'.join([
                     'cmake_minimum_required(VERSION 3.25)', 'project(config_fixture C)',
                     'enable_testing()', 'add_executable(firmware main.c)',
@@ -56,8 +64,14 @@ class CMakeSessionTests(unittest.TestCase):
                     continue
                 self.assertEqual(result.returncode, 0, result.stdout+result.stderr)
                 standard = json.loads((build/'hwtest/session.json').read_text())
-                expected = {'elf','gdb','tests','root','out','stand','profile','build_manifest'}
+                expected = {'elf','gdb','tests','root','out','stand','profile','build_manifest','test_dirs'}
                 self.assertEqual(set(standard), expected | ({'session_config'} if mode == 'new' else set()))
+                # ТЗ 5.13.2: extra scenario directories follow the profile one in the session and in CTest.
+                extra = [(common / "board").as_posix()] if mode == 'extra' else []
+                self.assertEqual(standard['test_dirs'], extra)
+                registered = (build / 'hwtest/tests.cmake').read_text()
+                self.assertIn('HW_CONFIG_FIXTURE', registered)
+                self.assertEqual('HW_COMMON_FIXTURE' in registered, mode == 'extra')
                 self.assertEqual(capture(standard, environ={}).config['target']['mcu'], 'STM32F411CEU6')
 
 

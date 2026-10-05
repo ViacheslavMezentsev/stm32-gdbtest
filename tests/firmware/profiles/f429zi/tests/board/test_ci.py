@@ -9,24 +9,11 @@ from stm32_gdbtest import case
 EXPECTED_DELAY = 500
 
 
-# Evaluate table rows in order and stop at the first failed read or check.
-def _check_values(target, rows):
-    # TECH-010: evaluate each actual, then its expected expression, then check.
-    for name, expression, expected in rows:
-        actual = target.evaluate(expression, as_type=int)
-        if isinstance(expected, str):
-            # An expected cell may be a C expression, an address or an enum, so it is evaluated too.
-            expected = target.evaluate(expected, as_type=int)
-
-        # Compare the current row after both expressions have been evaluated.
-        target.check(name, actual, expected)
-
-
 # Verify initialized state and progress into the application loop.
 @case("HW_CI_BOOT", labels=("boot",), contracts=("ci_app_api",))
 def boot(target):
     # Target.boot has already reached main, before board_init.
-    _check_values(target, [
+    target.check_table([
         ('initialized interval', 'app_delay', EXPECTED_DELAY),
         ('BSS loop count', 'app_state.ticks', 0),
         ('BSS LED state', 'app_state.led', 0),
@@ -48,7 +35,7 @@ def gpio(target):
     target.reach("board_led_toggle")
 
     # Check register and application state against the expected values.
-    _check_values(target, [
+    target.check_table([
         ('PG13 clock', '(RCC->AHB1ENR & RCC_AHB1ENR_GPIOGEN) != 0', 1),
         ('PG13 output', 'GPIOG->MODER & GPIO_MODER_MODER13', 1 << 26),
         ('push-pull', 'GPIOG->OTYPER & GPIO_OTYPER_OT13', 0),
@@ -117,7 +104,7 @@ def timer_init(target):
     target.reach("board_led_toggle")
 
     # Check register and application state against the expected values.
-    _check_values(target, [
+    target.check_table([
         ('TIM2 clock', '(RCC->APB1ENR & RCC_APB1ENR_TIM2EN) != 0', 1),
         ('TIM2 prescaler', 'TIM2->PSC', 15999),
         ('TIM2 period', 'TIM2->ARR', 99),

@@ -5,19 +5,6 @@ EN: ADC DMA acquisition, measurement conversion and controlled faults.
 from stm32_gdbtest import case
 
 
-# Evaluate table rows in order and stop at the first failed read or check.
-def _check_values(target, rows):
-    # TECH-010: evaluate each actual, then its expected expression, then check.
-    for name, expression, expected in rows:
-        actual = target.evaluate(expression, as_type=int)
-        if isinstance(expected, str):
-            # An expected cell may be a C expression, an address or an enum, so it is evaluated too.
-            expected = target.evaluate(expected, as_type=int)
-
-        # Compare the current row after both expressions have been evaluated.
-        target.check(name, actual, expected)
-
-
 # Verify ADC channels, sampling configuration, DMA and interrupt routing.
 @case("HW_CI_ADC_INIT", labels=("adc", "dma", "init"), contracts=("ci_adc_macros",))
 def adc_init(t):
@@ -25,7 +12,7 @@ def adc_init(t):
     t.reach("board_adc_sample")
 
     # Check register and application state against the expected values.
-    _check_values(t, [
+    t.check_table([
         ('ADC1 clock', '(RCC->APB2ENR & RCC_APB2ENR_ADC1EN) != 0', 1),
         ('DMA2 clock', '(RCC->AHB1ENR & RCC_AHB1ENR_DMA2EN) != 0', 1),
         ('ADC clock PCLK2/2 (8 MHz)', 'ADC->CCR & ADC_CCR_ADCPRE', 0),
@@ -44,7 +31,7 @@ def adc_init(t):
     # Verify DMA buffer wholly in SRAM, not CCM.
     t.check("DMA buffer wholly in SRAM, not CCM", 0x20000000 <= buffer and buffer + 4 <= 0x20030000, True)
 
-    _check_values(t, [
+    t.check_table([
         ('DMA NVIC enabled', '(NVIC->ISER[1] >> 24) & 1', 1),
         ('DMA vector', '(unsigned int)vectors[72] & ~1U', '(unsigned int)DMA2_Stream0_IRQHandler & ~1U'),
         ('internal sources without VBAT', 'ADC->CCR', 1 << 23),
@@ -61,7 +48,7 @@ def adc_dma(t):
         t.reach("DMA2_Stream0_IRQHandler")
 
         # Check register and application state against the expected values.
-        _check_values(t, [
+        t.check_table([
             ('DMA exception', 'SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk', 72),
             ('two transfers completed', 'DMA2_Stream0->NDTR', 0),
             (
@@ -84,7 +71,7 @@ def adc_dma(t):
             t.check(name + " not saturated", 0 < expected < 4095, True)
 
         # Check register and application state against the expected values.
-        _check_values(t, [
+        t.check_table([
             ('DMA stopped', 'DMA2_Stream0->CR & DMA_SxCR_EN', 0),
             ('DMA flags cleared', 'DMA2->LISR & 0x3D', 0),
             ('no acquisition error', 'board_adc_error', 0)

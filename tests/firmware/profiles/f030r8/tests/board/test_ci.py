@@ -9,24 +9,11 @@ from stm32_gdbtest import case
 EXPECTED_DELAY = 500
 
 
-# Evaluate table rows in order and stop at the first failed read or check.
-def _check_values(target, rows):
-    # TECH-010: evaluate each actual, then its expected expression, then check.
-    for name, expression, expected in rows:
-        actual = target.evaluate(expression, as_type=int)
-        if isinstance(expected, str):
-            # An expected cell may be a C expression, an address or an enum, so it is evaluated too.
-            expected = target.evaluate(expected, as_type=int)
-
-        # Compare the current row after both expressions have been evaluated.
-        target.check(name, actual, expected)
-
-
 # Verify initialized state and progress into the application loop.
 @case("HW_CI_BOOT", labels=("boot",), contracts=("ci_app_api",))
 def boot(target):
     # Target.boot has already reached main, before board_init.
-    _check_values(target, [
+    target.check_table([
         ('initialized interval', 'app_delay', EXPECTED_DELAY),
         ('BSS loop count', 'app_state.ticks', 0),
         ('BSS LED state', 'app_state.led', 0),
@@ -48,7 +35,7 @@ def gpio(target):
     target.reach("board_led_toggle")
 
     # Check register and application state against the expected values.
-    _check_values(target, [
+    target.check_table([
         ('PA5 clock', '(RCC->AHBENR & RCC_AHBENR_GPIOAEN) != 0', 1),
         ('PA5 output', '(GPIOA->MODER & GPIO_MODER_MODER5) == GPIO_MODER_MODER5_0', 1),
         ('push-pull', 'GPIOA->OTYPER & GPIO_OTYPER_OT_5', 0),
@@ -117,7 +104,7 @@ def timer_init(target):
     target.reach("board_led_toggle")
 
     # Check register and application state against the expected values.
-    _check_values(target, [
+    target.check_table([
         ('TIM3 clock', '(RCC->APB1ENR & RCC_APB1ENR_TIM3EN) != 0', 1),
         ('TIM3 prescaler', 'TIM3->PSC', 7999),
         ('TIM3 period', 'TIM3->ARR', 99),
@@ -160,7 +147,7 @@ def adc_init(target):
     target.reach("board_adc_sample")
 
     # Check register and application state against the expected values.
-    _check_values(target, [
+    target.check_table([
         ('HSI14 ready', '(RCC->CR2 & RCC_CR2_HSI14RDY) != 0', 1),
         ('ADC clock', '(RCC->APB2ENR & RCC_APB2ENR_ADC1EN) != 0', 1),
         ('DMA clock', '(RCC->AHBENR & RCC_AHBENR_DMA1EN) != 0', 1),
@@ -187,7 +174,7 @@ def adc_dma(target):
         target.reach("DMA1_Channel1_IRQHandler")
 
         # Check register and application state against the expected values.
-        _check_values(target, [
+        target.check_table([
             ('DMA exception', 'SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk', 25),
             ('DMA exhausted', 'DMA1_Channel1->CNDTR', 0),
             ('transfer complete, no error', 'DMA1->ISR & (DMA_ISR_TCIF1 | DMA_ISR_TEIF1)', 2)
@@ -219,7 +206,7 @@ def adc_timeout(target):
     target.reach("board_adc_fault")
 
     # Check register and application state against the expected values.
-    _check_values(target, [
+    target.check_table([
         ('completion deadline', 'board_adc_error', 4),
         ('no stale publication', 'board_adc_sequences', 0),
         ('DMA finished despite missing IRQ', 'DMA1_Channel1->CNDTR', 0)

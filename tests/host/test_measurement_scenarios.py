@@ -11,7 +11,8 @@ ROOT = Path(__file__).resolve().parents[2]
 class Target(Journal):
     def __init__(self, count=3, bad=None):
         super().__init__()
-        self.config = {'api': {'user': {'measurement': dict(count=count, expected_quality=2)}}}
+        # Only the user section of the run profile is read by the measurement scenario.
+        self.profile = type('Profile', (), {'user': {'measurement': dict(count=count, expected_quality=2)}})()
         self.index = -1
         self.bad = bad
 
@@ -19,16 +20,12 @@ class Target(Journal):
         if name == 'board_adc_sample':
             self.index += 1
 
-    # The 0.3.0 names; the scenarios migrated from value() while config stays an alias.
+    # The 0.3.0 names; the scenarios migrated from value().
     def read(self, path, **options):
         return self.value(path)
 
     def evaluate(self, expression, **options):
         return self.value(expression)
-
-    @property
-    def settings(self):
-        return self.config
 
     def value(self, expression):
         if expression == 'board_adc_sequences':
@@ -48,7 +45,7 @@ class Target(Journal):
 
 class MeasurementScenariosTests(unittest.TestCase):
     def scenarios(self):
-        for path in sorted((ROOT/'tests/firmware/profiles').glob('*/tests/board/test_measurements.py')):
+        for path in sorted((ROOT/'tests/firmware').glob('common/tests/board/test_measurements.py')):
             spec = importlib.util.spec_from_file_location('measurements', path)
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
@@ -56,7 +53,7 @@ class MeasurementScenariosTests(unittest.TestCase):
 
     def test_known_means_and_sample_deviations(self):
         scenarios = list(self.scenarios())
-        self.assertEqual(len(scenarios), 5)
+        self.assertEqual(len(scenarios), 1)
         for path, scenario in scenarios:
             with self.subTest(path=path):
                 target = Target()

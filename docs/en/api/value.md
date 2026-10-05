@@ -33,5 +33,5 @@ Scenario-body fragment (case shows a complete declaration). Symbols/macros must 
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), §4.2.
 - [Implementation](../../../stm32_gdbtest/target.py).
-- [Scenario or implementation check](../../../tests/firmware/profiles/f411ce/tests/board/test_measurements.py).
+- [Scenario or implementation check](../../../tests/firmware/common/tests/board/test_measurements.py).
 - [check](check.md), [fields](fields.md), [record](record.md).

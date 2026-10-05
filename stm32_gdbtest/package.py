@@ -14,7 +14,7 @@ import tempfile
 import zipfile
 
 from stm32_gdbtest import __version__
-from stm32_gdbtest.collect import collect
+from stm32_gdbtest.collect import collect, scenario_dirs
 from stm32_gdbtest.toolchain import find_gdb
 from stm32_gdbtest.configuration import capture
 from stm32_gdbtest.config_transport import dumps, loads
@@ -42,6 +42,15 @@ def _files(session, include):
     for path in sorted(tests_root.rglob("*")):
         if path.is_file() and "__pycache__" not in path.parts:
             files["profile/tests/" + path.relative_to(tests_root).as_posix()] = path
+    # Extra scenario directories keep their own root (requirements, contracts) as profile/tests-<n>.
+    extra_dirs = []
+    for index, extra in enumerate(session.get("test_dirs", []), start=1):
+        extra_dir = Path(extra).resolve()
+        prefix = f"profile/tests-{index}/"
+        for path in sorted(extra_dir.parent.rglob("*")):
+            if path.is_file() and "__pycache__" not in path.parts:
+                files[prefix + path.relative_to(extra_dir.parent).as_posix()] = path
+        extra_dirs.append(prefix + extra_dir.name)
     for item in include:
         source = (root / item).resolve()
         if not source.is_relative_to(root) or source == root:
@@ -52,13 +61,13 @@ def _files(session, include):
             if name.split("/")[0] in RESERVED or "__pycache__" in path.parts:
                 continue
             files[name] = path
-    return files, "profile/tests/" + tests_dir.name
+    return files, "profile/tests/" + tests_dir.name, extra_dirs
 
 
 def pack(session, output, test_ids=None, include=(), prepare=None):
     """Write the package; `prepare(test)` runs the preflight of each packaged scenario."""
     configuration = capture(session) if ('session_config' in session or '_config_capsule' in session) else None
-    tests = collect(session["tests"])
+    tests = collect(scenario_dirs(session))
     if test_ids:
         unknown = sorted(set(test_ids) - {t["id"] for t in tests})
         if unknown:
@@ -71,7 +80,7 @@ def pack(session, output, test_ids=None, include=(), prepare=None):
         failed = sorted(k for k, v in prepared.items() if v != "PASS")
         if failed:
             raise RuntimeError("Preparation failed, package not written: " + ", ".join(failed))
-    files, tests_dir = _files(session, include)
+    files, tests_dir, extra_dirs = _files(session, include)
     # Freeze payloads before hashing/writing; selected TOML bytes come from capture.
     captured_paths = {}
     if configuration and session.get('session_config'):
@@ -92,6 +101,7 @@ def pack(session, output, test_ids=None, include=(), prepare=None):
     manifest = dict(schema=SCHEMA, format="ddtt-package", tool="stm32-gdbtest", tool_version=__version__,
                     created_utc=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                     elf_sha256=hashlib.sha256(payloads['firmware.elf']).hexdigest(), tests_dir=tests_dir,
+                    test_dirs=extra_dirs,
                     tests=[dict(id=t["id"], file=Path(t["path"]).name, function=t["function"],
                                 timeout_s=t["timeout_s"], labels=t["labels"], contracts=t["contracts"])
                            for t in tests],
@@ -145,6 +155,7 @@ def open_package(path, workdir, gdb=None):
         raise FileNotFoundError("GDB with Python not found: pass --gdb or set STM32_GDBTEST_GDB")
     session = dict(root=str(target), out=str(target / "runs"), elf=str(target / "firmware.elf"),
                    profile=str(target / "profile/target.toml"), tests=str(target / manifest["tests_dir"]),
+                   test_dirs=[str(target / item) for item in manifest.get("test_dirs", [])],
                    gdb=gdb, stand="",
                    package=dict(sha256=_sha(path), name=path.name, created_utc=manifest["created_utc"],
                                 tool_version=manifest["tool_version"], prepared=manifest.get("prepared", {})))

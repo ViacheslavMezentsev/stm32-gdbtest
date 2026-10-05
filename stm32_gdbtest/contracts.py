@@ -48,6 +48,35 @@ def select_contracts(path, names, manifest):
     return dict(schema=1, registry_sha256=hashlib.sha256(raw).hexdigest(), contracts=selected)
 
 
+def select_contracts_from(paths, names, manifest):
+    """Select contracts from several registries: the first registry that defines a name wins (ТЗ API 5.8).
+
+    The scenario's own directory may carry general contracts while the profile directory overrides one with
+    a device-specific variant; the search order is given by the caller.
+    """
+    if not names:
+        return {"schema": 1, "contracts": {}}
+    registries = [Path(path) for path in paths if Path(path).is_file()]
+    if not registries:
+        raise FileNotFoundError("No contract registry for: " + ", ".join(names))
+    loaded = [(path, json.loads(path.read_bytes())) for path in registries]
+    groups = {}
+    for name in names:
+        owner = next((path for path, registry in loaded if name in registry.get("contracts", {})), None)
+        if owner is None:
+            raise KeyError(name)
+        groups.setdefault(owner, []).append(name)
+    contracts, digests = {}, {}
+    for path, group in groups.items():
+        part = select_contracts(path, group, manifest)
+        contracts.update(part["contracts"])
+        digests[str(path)] = part["registry_sha256"]
+    result = dict(schema=1, contracts={name: contracts[name] for name in names}, registries=digests)
+    if len(digests) == 1:
+        result["registry_sha256"] = next(iter(digests.values()))
+    return result
+
+
 # ТЗ 5.6.11: GDB errors meaning that the debug info lacks a symbol or type used by the expansion.
 MISSING_DEBUG_INFO = re.compile(r"No symbol|No struct type|No union type|No enum type|There is no member|"
                                 r"incomplete type|No type named")

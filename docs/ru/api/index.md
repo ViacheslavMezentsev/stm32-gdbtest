@@ -36,17 +36,19 @@
 | [call](call.md) | `call(function, *args) -> dict` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
 | [reset](reset.md) | `reset() -> dict` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
 | [execute](execute.md) | `execute(command) -> str` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
+| [check_range](check-range.md) | `check_range(name, actual, low, high)`, `check_near(…, expected, tolerance)`, `check_in(…, options)` -> None | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
+| [check_table](check-table.md) | `check_table(rows) -> int` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
+| [symbol](symbol.md) | `symbol(name) -> dict` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
+| [memory](memory.md) | `memory(address, size) -> bytes`, `write_memory(address, data, *, verify=True) -> dict` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
+| [locals](locals.md) | `locals(frame=None) -> dict`, `arguments(frame=None) -> dict` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
 | **Свойства** — отображения состояния прогона | | | |
-| [config](config.md) | `config: Mapping` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
-| [config_props](config-props.md) | `config_props: Mapping` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
-| [settings](settings.md) | `settings: Mapping` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
-| [sources](sources.md) | `sources: Mapping` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
+| [profile](profile.md) | `profile: Profile` | 0.1.0rc1; разделы 0.3.0.dev0 (ядро) | 0.1.0; 0.3.0 (проект) |
 | **Декораторы** — объявление сценария | | | |
 | [case](case.md) | `case(identifier, *, timeout_s=20, labels=(), contracts=())` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [test](test.md) | `test(identifier, *, timeout_s=20, labels=(), contracts=())` | 0.3.0 (ядро) | 0.3.0-rc.1 (проект) |
 | **Классы и ошибки** — объекты, которые возвращает и поднимает API | | | |
 | [RecordError](record-error.md) | `RecordError(ValueError)` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 / 0.2.1 |
-| [point](point.md) | `Point: id, location, addresses, active, hit_count; remove(); with` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
+| [point](point.md) | `Point: id, location, addresses, active, hit_count, condition; enable(); disable(); remove(); with` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
 | [api-error](api-error.md) | `ApiError; error.details; error.__cause__` | 0.3.0.dev0 (ядро) | 0.2.7 (проект) |
 | [check-failed](check-failed.md) | `CheckFailed(name)` | 0.3.0.dev0 (ядро) | 0.2.7 (проект) |
 

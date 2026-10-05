@@ -13,7 +13,7 @@ if sys.version_info < (3, 11):
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from stm32_gdbtest import __version__
-from stm32_gdbtest.collect import collect, trace
+from stm32_gdbtest.collect import collect, scenario_dirs, trace
 
 
 def main():
@@ -21,12 +21,13 @@ def main():
     parser.add_argument("--version", action="version", version="%(prog)s " + __version__)
     subs = parser.add_subparsers(dest="command", required=True)
     gather = subs.add_parser("collect")
-    gather.add_argument("--tests", type=Path, required=True)
+    gather.add_argument("--tests", type=Path, action="append", required=True,
+                        help="scenario directory; repeat for extra search directories")
     gather.add_argument("--cmake", type=Path)
     gather.add_argument("--workspace", type=Path, default=ROOT)
     check = subs.add_parser("trace")
-    check.add_argument("--tests", type=Path, required=True)
-    check.add_argument("--requirements", type=Path, required=True)
+    check.add_argument("--tests", type=Path, action="append", required=True)
+    check.add_argument("--requirements", type=Path, action="append", required=True)
     run_parser = subs.add_parser("run")
     source = run_parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--session", type=Path)
@@ -91,7 +92,7 @@ def main():
         session = open_package(args.package, args.workdir, args.gdb and str(args.gdb))
     else:
         session = json.loads(args.session.read_text(encoding="utf-8"))
-    tests = {t["id"]: t for t in collect(session["tests"])}
+    tests = {t["id"]: t for t in collect(scenario_dirs(session))}
     return run(session, tests[args.test], args.stand, args.timeout, args.identity_policy, args.image_policy,
                args.prepare_only)
 

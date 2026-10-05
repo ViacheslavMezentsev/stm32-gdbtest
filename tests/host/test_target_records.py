@@ -43,11 +43,8 @@ class TargetRecordsTests(unittest.TestCase):
         self.assertEqual(caught.exception.limit, 'records')
         self.assertEqual(len(first.records()), 2)
 
-    def test_config_properties_are_read_only(self):
+    def test_profile_is_read_only(self):
         target = self.module.Target({'checks': []}, {}, self.config)
-        for name in ('config', 'config_props'):
-            with self.assertRaises(AttributeError):
-                setattr(target, name, {})
         with self.assertRaises(TypeError):
-            target.config['api']['records']['max_records'] = 4
-        self.assertEqual(target.config['api']['records']['custom'], 999)
+            target.profile.api['records']['max_records'] = 4
+        self.assertEqual(target.profile.get('api.records.custom'), 999)

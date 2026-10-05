@@ -302,5 +302,5 @@ separate actions with separate restoration requirements.
 
 **Verified:** production VDDA/temperature series on five CMSIS profiles;
 numerical mean/stdev anchors and negative cases: tests/host/test_measurement_scenarios.py.
-[Scenario example](../../tests/firmware/profiles/f411ce/tests/board/test_measurements.py),
+[Scenario example](../../tests/firmware/common/tests/board/test_measurements.py),
 [accepted results](API_ACCEPTANCE.md).

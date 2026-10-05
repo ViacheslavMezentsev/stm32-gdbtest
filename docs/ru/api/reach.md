@@ -32,5 +32,5 @@ target.reach("board_delay_ms")
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), §4.5.
 - [Реализация](../../../stm32_gdbtest/target.py).
-- [Сценарий или проверка реализации](../../../tests/firmware/profiles/f411ce/tests/board/test_measurements.py).
+- [Сценарий или проверка реализации](../../../tests/firmware/common/tests/board/test_measurements.py).
 - [breakpoint](breakpoint.md), [case](case.md).

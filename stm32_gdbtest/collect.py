@@ -5,10 +5,23 @@ from pathlib import Path
 import re
 
 
-def collect(directory):
+def scenario_dirs(session):
+    """Scenario directories of a session: the default one, then the extra search directories (ТЗ API 5.7)."""
+    return [session["tests"], *session.get("test_dirs", [])]
+
+
+def _directories(directories):
+    if isinstance(directories, (str, Path)):
+        return [Path(directories)]
+    return [Path(item) for item in directories]
+
+
+def collect(directories):
+    """Scenarios of one directory or of several, in order; an ID may appear only once in all of them."""
     tests = []
     identifiers = set()
-    for path in sorted(Path(directory).glob("test_*.py")):
+    paths = [path for directory in _directories(directories) for path in sorted(directory.glob("test_*.py"))]
+    for path in paths:
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
         for node in tree.body:
             if not isinstance(node, ast.FunctionDef):
@@ -49,7 +62,10 @@ def collect(directory):
 
 
 def trace(tests, requirements):
-    ids = re.findall(r"^## (HW_[A-Z0-9_]+)\b", Path(requirements).read_text(encoding="utf-8"), re.M)
+    """Requirements of one file or of several (one per scenario directory) must match the scenarios."""
+    files = [requirements] if isinstance(requirements, (str, Path)) else list(requirements)
+    ids = [identifier for item in files
+           for identifier in re.findall(r"^## (HW_[A-Z0-9_]+)\b", Path(item).read_text(encoding="utf-8"), re.M)]
     if len(ids) != len(set(ids)):
         raise ValueError("Duplicate requirement IDs")
     actual = {test["id"] for test in tests}

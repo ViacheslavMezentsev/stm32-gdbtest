@@ -5,19 +5,6 @@ EN: ADC start rejection under a controlled busy condition.
 from stm32_gdbtest import case
 
 
-# Evaluate table rows in order and stop at the first failed read or check.
-def _check_values(target, rows):
-    # TECH-010: evaluate each actual, then its expected expression, then check.
-    for name, expression, expected in rows:
-        actual = target.evaluate(expression, as_type=int)
-        if isinstance(expected, str):
-            # An expected cell may be a C expression, an address or an enum, so it is evaluated too.
-            expected = target.evaluate(expected, as_type=int)
-
-        # Compare the current row after both expressions have been evaluated.
-        target.check(name, actual, expected)
-
-
 # Inject a busy acquisition state and verify that the next start is rejected.
 @case("HW_CI_ADC_BUSY", labels=("adc", "negative"), contracts=("ci_adc_macros",))
 def adc_busy(target):
@@ -37,7 +24,7 @@ def adc_busy(target):
     target.reach("board_adc_fault")
 
     # Check register and application state against the expected values.
-    _check_values(target, [
+    target.check_table([
         ('busy start rejected', 'board_adc_error', 6),
         ('no sequence published', 'board_adc_sequences', 0),
         ('no valid measurement published', 'board_adc_reading.quality', 0)

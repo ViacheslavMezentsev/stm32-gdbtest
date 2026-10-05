@@ -8,11 +8,20 @@ import gdb
 from stm32_gdbtest.errors import ApiError, CheckFailed, fail  # noqa: F401
 from stm32_gdbtest.records import Journal
 from stm32_gdbtest.configuration import (DEFAULTS, EXECUTE_OUTPUT_LIMIT, FRAMES_LIMIT,
-                                           RESET_COMMAND, freeze)
+                                           MEMORY_LIMIT, RESET_COMMAND, freeze)
 from stm32_gdbtest import values
+from stm32_gdbtest.run_profile import Profile
 
 _CLONE = re.compile(r"\s*\[clone [^\]]*\]")
 _FUNCTION_NAME = re.compile(r"[A-Za-z_]\w*")
+_SECTION = re.compile(r" in section (\S+)")
+# Writable SRAM window shared by `write` verification and `write_memory` (ТЗ API 4.6, 4.16).
+SRAM_WINDOW = (0x20000000, 0x20100000)
+
+
+def _number(value):
+    """A real number that is not a bool."""
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
 
 
 
@@ -57,7 +66,7 @@ class Point:
         self.location = location
         # The creation parameters decide whether a later request may share this point (ТЗ API 4.4.2).
         self.temporary = temporary
-        self.condition = condition
+        self._condition = condition
         self.ignore_count = ignore_count
         # A watchpoint created by address reports its expression instead of a location.
         self.watch = False
@@ -89,6 +98,58 @@ class Point:
             return self._native.is_valid() and self._native.enabled
         except RuntimeError:
             return False
+
+    @property
+    def enabled(self):
+        """The point exists and is not disabled; a disabled point keeps its counter."""
+        return self.active
+
+    @property
+    def condition(self):
+        return self._condition
+
+    @condition.setter
+    def condition(self, condition):
+        """Replace the stop condition of the live point; None removes it (ТЗ API 4.4.3)."""
+        if condition is not None and (type(condition) is not str or not condition.strip()):
+            fail("point", "validation", "none", "invalid_condition",
+                 "condition must be a non-empty string or None", point=self._number, condition=condition)
+        self._require_valid("condition")
+        try:
+            self._native.condition = condition
+        except (gdb.error, RuntimeError) as cause:
+            fail("point", "command", "none", "command_failed", f"condition rejected: {condition}",
+                 cause=cause, point=self._number, condition=condition)
+        self._condition = condition
+
+    def enable(self):
+        """Activate a disabled point; the hardware budget counts only active points (ТЗ API 4.4.3)."""
+        self._require_valid("enable")
+        if self.active:
+            return self
+        owner = self._owner
+        if owner is not None:
+            limit = owner.profile["breakpoint_limit"]
+            if sum(point.active for point in owner.owned) >= limit:
+                fail("point", "validation", "none", "limit_exceeded",
+                     "profile hardware breakpoint budget exhausted", point=self._number, limit=limit)
+        self._native.enabled = True
+        return self
+
+    def disable(self):
+        """Keep the point and its counter but stop it from halting the target (ТЗ API 4.4.3)."""
+        self._require_valid("disable")
+        self._native.enabled = False
+        return self
+
+    def _require_valid(self, action):
+        try:
+            valid = not self._removed and self._native.is_valid()
+        except RuntimeError:
+            valid = False
+        if not valid:
+            fail("point", "validation", "none", "point_removed", f"{action} on a removed point",
+                 point=self._number)
 
     def remove(self):
         """Delete the point and forget it; a repeated removal is not an error."""
@@ -122,36 +183,27 @@ class Point:
 
 
 class Target:
-    def __init__(self, report, profile, configuration=None):
+    def __init__(self, report, profile, configuration=None, context=None):
         self.report = report
-        self.profile = profile
+        context = dict(context or {})
+        self.profile = Profile(profile, configuration, case=context.get("case"), stand=context.get("stand"),
+                               gdb=self._gdb_facts())
         self._config = configuration.config if configuration else freeze(dict(
             target=profile, api=dict(schema=1, records=dict(DEFAULTS)), image=None))
-        self._config_props = configuration.config_props if configuration else freeze(
-            dict(target=None, api=None, image=None))
         limits = self._config['api']['records']
         self._journal = Journal(**{key: limits[key] for key in DEFAULTS})
         self.owned = []
         self.stops = []
         gdb.events.stop.connect(self.on_stop)
 
-    @property
-    def config(self):
-        return self._config
-
-    @property
-    def config_props(self):
-        return self._config_props
-
-    @property
-    def settings(self):
-        """Effective run settings, read-only (ТЗ API 4.11)."""
-        return self._config
-
-    @property
-    def sources(self):
-        """Sources of the run configuration, read-only (ТЗ API 4.12)."""
-        return self._config_props
+    @staticmethod
+    def _gdb_facts():
+        """What this GDB offers, known before the first stop (ТЗ API 4.14.2)."""
+        kind = getattr(gdb, "Type", None)
+        return dict(version=getattr(gdb, "VERSION", None),
+                    stop_details=None,
+                    value_history=callable(getattr(gdb, "history_count", None)),
+                    type_is_signed=kind is not None and hasattr(kind, "is_signed"))
 
     def record(self, name, data):
         return self._journal.record(name, data)
@@ -162,6 +214,8 @@ class Target:
     def on_stop(self, event):
         # Capture primitive values now: temporary breakpoint objects expire after stop.
         numbers = [bp.number for bp in getattr(event, "breakpoints", ())]
+        if self.profile.gdb.get("stop_details") is None:
+            self.profile._observe_gdb(stop_details=isinstance(getattr(event, "details", None), dict))
         self.stops.append({"type": type(event).__name__, "breakpoints": numbers,
                            "signal": getattr(event, "stop_signal", None),
                            # GDB 14 events carry no `details`; recording it shows which evidence a
@@ -175,11 +229,71 @@ class Target:
 
     def check(self, name, actual, expected):
         """Record one comparison and fail the scenario on a mismatch (ТЗ API 4.1)."""
-        passed = actual == expected
-        self.report["checks"].append(dict(name=name, actual=actual, expected=expected, passed=passed))
-        print(f"{'PASS' if passed else 'FAIL'} {name}: {actual!r}, expected {expected!r}")
+        self._verdict(name, actual, expected, actual == expected, f"expected {expected!r}")
+
+    def _verdict(self, name, actual, expected, passed, wanted, kind=None):
+        entry = dict(name=name, actual=actual, expected=expected, passed=passed)
+        if kind is not None:
+            entry["kind"] = kind
+        self.report["checks"].append(entry)
+        print(f"{'PASS' if passed else 'FAIL'} {name}: {actual!r}, {wanted}")
         if not passed:
             raise CheckFailed(name, actual=actual, expected=expected)
+
+    def _check_name(self, name):
+        if type(name) is not str or not name:
+            self._fail("check", "validation", "none", "invalid_name",
+                       "check name must be a non-empty string", name=name)
+
+    def check_range(self, name, actual, low, high):
+        """Pass when low <= actual <= high; the report keeps the value and both bounds (ТЗ API 4.1.2)."""
+        self._check_name(name)
+        if not (_number(low) and _number(high)) or low > high:
+            self._fail("check", "validation", "none", "invalid_bounds",
+                       "bounds must be numbers with low <= high", name=name, low=low, high=high)
+        passed = _number(actual) and low <= actual <= high
+        self._verdict(name, actual, dict(low=low, high=high), passed, f"expected {low!r}..{high!r}", "range")
+
+    def check_near(self, name, actual, expected, tolerance):
+        """Pass when |actual - expected| <= tolerance (ТЗ API 4.1.2)."""
+        self._check_name(name)
+        if not _number(expected) or not _number(tolerance) or tolerance < 0:
+            self._fail("check", "validation", "none", "invalid_tolerance",
+                       "expected must be a number and tolerance a non-negative number",
+                       name=name, expected=expected, tolerance=tolerance)
+        passed = _number(actual) and abs(actual - expected) <= tolerance
+        self._verdict(name, actual, dict(value=expected, tolerance=tolerance), passed,
+                      f"expected {expected!r} ± {tolerance!r}", "near")
+
+    def check_in(self, name, actual, options):
+        """Pass when actual equals one of the options (ТЗ API 4.1.2)."""
+        self._check_name(name)
+        if not isinstance(options, (list, tuple, set, frozenset)) or not options:
+            self._fail("check", "validation", "none", "invalid_options",
+                       "options must be a non-empty list, tuple or set", name=name)
+        choices = list(options)
+        self._verdict(name, actual, {"in": choices}, actual in choices, f"expected one of {choices!r}", "in")
+
+    def check_table(self, rows):
+        """Check rows of (name, actual, expected); string cells are GDB expressions (ТЗ API 4.1.3).
+
+        Each row is evaluated and checked in order, so the first mismatch stops the scenario like
+        `check`. Returns the number of checked rows.
+        """
+        if not isinstance(rows, (list, tuple)) or not rows:
+            self._fail("check", "validation", "none", "invalid_rows", "rows must be a non-empty list")
+        for row in rows:
+            if not isinstance(row, (list, tuple)) or len(row) != 3:
+                self._fail("check", "validation", "none", "invalid_rows",
+                           "each row must be (name, actual, expected)", row=row)
+            self._check_name(row[0])
+        for name, actual, expected in rows:
+            if isinstance(actual, str):
+                actual = self.evaluate(actual)
+            if isinstance(expected, str):
+                expected = self.evaluate(expected)
+            self.check(name, actual, expected)
+        return len(rows)
 
     def value(self, expression):
         value = gdb.parse_and_eval(expression)
@@ -352,6 +466,169 @@ class Target:
             number &= (1 << (int(size) * 8)) - 1
         return number
 
+    def symbol(self, name):
+        """Address, size, type and section of a global or static symbol (ТЗ API 4.15)."""
+        if type(name) is not str or not name.strip():
+            self._fail("symbol", "validation", "none", "invalid_name",
+                       "symbol name must be a non-empty string", name=name)
+        found = None
+        for lookup in ("lookup_global_symbol", "lookup_static_symbol"):
+            finder = getattr(gdb, lookup, None)
+            if finder is None:
+                continue
+            try:
+                found = finder(name)
+            except gdb.error:
+                found = None
+            if found is not None:
+                break
+        if found is None:
+            self._fail("symbol", "observe", "none", "symbol_absent",
+                       f"no global or static symbol {name}", name=name)
+        try:
+            value = found.value()
+            function = bool(getattr(found, "is_function", False))
+            address = int(value.address) if value.address is not None else int(value)
+        except conversion_errors(gdb) + (RuntimeError,) as cause:
+            self._fail("symbol", "observe", "none", "no_address", f"{name} has no address",
+                       cause=cause, name=name)
+        size = self._function_size(found, address) if function else getattr(found.type, "sizeof", None)
+        try:
+            where = gdb.execute(f"info symbol {address:#x}", to_string=True)
+        except gdb.error:
+            where = ""
+        section = _SECTION.search(where)
+        return dict(operation="symbol", name=name, kind="function" if function else "variable",
+                    address=address, size=int(size) if size is not None else None,
+                    type=str(found.type), section=section.group(1) if section else None)
+
+    @staticmethod
+    def _function_size(symbol, address):
+        """Code size of a function from its lexical block, or None when GDB has no block."""
+        try:
+            block = gdb.block_for_pc(address)
+        except (gdb.error, RuntimeError):
+            return None
+        while block is not None and block.function is None:
+            block = block.superblock
+        if block is None:
+            return None
+        return int(block.end) - int(block.start)
+
+    def _memory_window(self, address, size, writable):
+        """Raise unless [address, address+size) lies inside SRAM, or flash for reads."""
+        windows = [SRAM_WINDOW]
+        if not writable:
+            start = self.profile.get("flash_start")
+            if _number(start) and _number(self.profile.get("flash_size")):
+                windows.append((start, start + self.profile["flash_size"]))
+        if not any(low <= address and address + size <= high for low, high in windows):
+            self._fail("memory", "validation", "none", "outside_window",
+                       "the block must lie in SRAM" + ("" if writable else " or the profile flash"),
+                       address=address, size=size)
+
+    def memory(self, address, size):
+        """Raw bytes of a memory block in SRAM or the profile flash (ТЗ API 4.16).
+
+        Peripheral addresses are refused: a read there may change the device state.
+        """
+        if type(address) is not int or address < 0 or type(size) is not int or not 1 <= size <= MEMORY_LIMIT:
+            self._fail("memory", "validation", "none", "invalid_block",
+                       f"address must be a non-negative integer and size 1..{MEMORY_LIMIT}",
+                       address=address, size=size)
+        self._memory_window(address, size, writable=False)
+        try:
+            return bytes(gdb.selected_inferior().read_memory(address, size))
+        except (gdb.error, getattr(gdb, "MemoryError", gdb.error), RuntimeError) as cause:
+            self._fail("memory", "command", "none", "read_failed", f"cannot read {size} bytes at {address:#x}",
+                       cause=cause, address=address, size=size)
+
+    def write_memory(self, address, data, *, verify=True):
+        """Write raw bytes into SRAM and verify the read-back (ТЗ API 4.16)."""
+        if type(address) is not int or address < 0 or not isinstance(data, (bytes, bytearray)) \
+                or not 1 <= len(data) <= MEMORY_LIMIT:
+            self._fail("memory", "validation", "none", "invalid_block",
+                       f"address must be a non-negative integer and data 1..{MEMORY_LIMIT} bytes",
+                       address=address, size=len(data) if isinstance(data, (bytes, bytearray)) else None)
+        if type(verify) is not bool:
+            self._fail("memory", "validation", "none", "invalid_verify", "verify must be a bool")
+        data = bytes(data)
+        self._memory_window(address, len(data), writable=True)
+        inferior = gdb.selected_inferior()
+        try:
+            before = bytes(inferior.read_memory(address, len(data)))
+            inferior.write_memory(address, data)
+        except (gdb.error, getattr(gdb, "MemoryError", gdb.error), RuntimeError) as cause:
+            self._fail("memory", "command", "unknown", "write_failed",
+                       f"cannot write {len(data)} bytes at {address:#x}", cause=cause, address=address)
+        after = bytes(inferior.read_memory(address, len(data))) if verify else None
+        self.report.setdefault("mutations", []).append(
+            dict(expression=f"memory[{address:#x}:{address + len(data):#x}]", value=data.hex(),
+                 before=before.hex(), after=after.hex() if after is not None else None))
+        if verify and after != data:
+            self._fail("memory", "readback", "applied", "verification_failed",
+                       f"read-back differs at {address:#x}", address=address,
+                       expected=data.hex(), actual=after.hex())
+        return dict(operation="write_memory", address=address, size=len(data), verified=verify)
+
+    def locals(self, frame=None):
+        """Local variables of a frame: inner blocks shadow outer ones (ТЗ API 4.17)."""
+        return self._frame_symbols("locals", frame, arguments=False)
+
+    def arguments(self, frame=None):
+        """Arguments of the function of a frame (ТЗ API 4.17)."""
+        return self._frame_symbols("arguments", frame, arguments=True)
+
+    def _select_frame(self, operation, frame):
+        """None is the newest frame, an int is a depth counted from it, a gdb.Frame is used as is."""
+        if frame is None or type(frame) is int:
+            depth = frame or 0
+            if depth < 0:
+                self._fail(operation, "validation", "none", "invalid_frame", "depth must be >= 0", frame=frame)
+            current = gdb.newest_frame()
+            for _ in range(depth):
+                current = current.older() if current is not None else None
+        else:
+            current = frame
+        try:
+            valid = current is not None and current.is_valid()
+        except RuntimeError:
+            valid = False
+        if not valid:
+            self._fail(operation, "validation", "none", "no_frame", "a valid frame is required", frame=frame)
+        return current
+
+    def _frame_symbols(self, operation, frame, *, arguments):
+        current = self._select_frame(operation, frame)
+        try:
+            block = current.block()
+        except (gdb.error, RuntimeError) as cause:
+            self._fail(operation, "observe", "none", "no_debug_info",
+                       "the frame has no debug information", cause=cause)
+        result, missing = {}, []
+        while block is not None:
+            for symbol in block:
+                wanted = symbol.is_argument if arguments else (symbol.is_variable and not symbol.is_argument)
+                if not wanted or symbol.name in result or symbol.name in missing:
+                    continue
+                try:
+                    value = symbol.value(current)
+                    if getattr(value, "is_optimized_out", False):
+                        missing.append(symbol.name)
+                        continue
+                    value.fetch_lazy()
+                    result[symbol.name] = values.value_to_plain(value, symbol.name, gdb)
+                except conversion_errors(gdb) + (RuntimeError,):
+                    missing.append(symbol.name)
+            if block.function is not None:
+                break
+            block = block.superblock
+        try:
+            name = function_name(current.name())
+        except conversion_errors(gdb) + (RuntimeError,):
+            name = None
+        return dict(operation=operation, function=name, values=result, unavailable=missing)
+
     def read(self, path, *, fields=None, start=0, count=None):
         """Read a scalar, string, array slice, struct or single fields (ТЗ API 4.2).
 
@@ -452,7 +729,7 @@ class Target:
         if address is None:
             return False, None
         address = int(address)
-        return 0x20000000 <= address < 0x20100000, address
+        return SRAM_WINDOW[0] <= address < SRAM_WINDOW[1], address
 
     def _write_expression(self, path, literal):
         """Apply one write through GDB; the caller decides about verification."""

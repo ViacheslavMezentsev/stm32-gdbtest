@@ -20,7 +20,7 @@ from stm32_gdbtest import remote as remote_host
 from stm32_gdbtest.reports import CODES, write_reports
 from stm32_gdbtest.compatibility import runtime_manifest
 from stm32_gdbtest.build_manifest import load_verified
-from stm32_gdbtest.contracts import select_contracts
+from stm32_gdbtest.contracts import select_contracts, select_contracts_from
 from stm32_gdbtest.image import parse_sections, validate_regions
 from stm32_gdbtest.full_image import load_policy, canonical_image
 
@@ -144,10 +144,16 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
             (out / "build-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
         names = test.get("contracts", [])
         report["contracts"] = dict(schema=1, requested=names, status="ERROR" if names else "NOT_REQUESTED")
-        # ТЗ 3.5: the registry sits in Tests/ next to the scenarios, not next to target.toml.
+        # ТЗ 3.5: the registry sits in tests/ next to the scenarios, not next to target.toml. With extra
+        # scenario directories the profile's registry is searched first, then the scenario's own one, then
+        # the remaining directories, so a device-specific contract overrides a general one (ТЗ API 5.8).
         tests_root = Path(session["tests"]).parent if session.get("tests") else Path(session["profile"]).parent / "Tests"
-        selected = select_contracts(tests_root / "contracts.json",
-                                    names, report.get("build_manifest"))
+        roots = [tests_root]
+        if test.get("path"):
+            roots.append(Path(test["path"]).parent.parent)
+        roots += [Path(item).parent for item in session.get("test_dirs", [])]
+        registries = list(dict.fromkeys((root / "contracts.json").resolve() for root in roots))
+        selected = select_contracts_from(registries, names, report.get("build_manifest"))
         if names:
             report["contracts"].update(status="ERROR", selected=selected)
             request = out / "contract-request.json"
@@ -238,7 +244,10 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                         full_image_policy=full_policy, program_elf=str(program_elf) if program_elf else None,
                         program_elf_sha256=program_sha, expected_bin_sha256=report["bin_sha256"],
                         reset_halt=backend["reset_halt"], finish=backend["finish"],
-                        setup=backend.get("setup", []))
+                        setup=backend.get("setup", []),
+                        # ТЗ API 4.14.2: the stand as the scenario sees it, without serials or addresses.
+                        stand_info=dict(backend=stand["backend"], server="remote" if remote else "local",
+                                        speed_khz=stand.get("speed_khz"), flash=stand["flash"]))
         run_file = out / "run.json"
         run_file.write_text(json.dumps(run_data), encoding="utf-8")
         env["STM32_GDBTEST_RUN"] = str(run_file)

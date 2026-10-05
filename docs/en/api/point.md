@@ -2,7 +2,7 @@
 
 [API](index.md) · [Русский](../../ru/api/point.md)
 
-`Point: id, location, addresses, active, hit_count; remove(); with`
+`Point: id, location, addresses, active, hit_count, condition; enable(); disable(); remove(); with`
 
 | Property | Value |
 | --- | --- |
@@ -20,6 +20,11 @@ hits.
 
 The object supports the context manager: leaving the block removes the point.
 
+`disable()` keeps the point and its counter but it no longer halts the target; `enable()` turns it on
+again. The `breakpoint_limit` budget counts active points only, so `enable()` on an exhausted budget
+raises `ApiError` (`limit_exceeded`). `condition` is writable: a string replaces the stop condition of
+the live point, `None` removes it. Actions on a removed point raise `point_removed`.
+
 Limitations: the hit counter depends on the backend; addresses apply to software points; repeated
 removal is not an error, while accessing a removed point produces diagnostics.
 
@@ -36,4 +41,4 @@ After removal, accessing point properties reports a failure instead of stale dat
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5; `enable`, `disable`, writable `condition`: revision 0.3.3, item 4.4.3.

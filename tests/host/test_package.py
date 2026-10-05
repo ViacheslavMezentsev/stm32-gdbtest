@@ -64,6 +64,21 @@ class PackageTests(unittest.TestCase):
         only = pack(self.session, self.output, test_ids=["HW_TWO"])
         self.assertEqual([t["id"] for t in only["tests"]], ["HW_TWO"])
 
+    def test_extra_scenario_directory_travels_with_the_package(self):
+        common = self.root / "common/tests/board"
+        common.mkdir(parents=True)
+        (common / "test_shared.py").write_text('@test("HW_SHARED")\ndef shared(t):\n    pass\n')
+        (common.parent / "requirements.md").write_text("## HW_SHARED\n")
+        manifest = pack(dict(self.session, test_dirs=[str(common)]), self.output)
+        self.assertEqual(manifest["test_dirs"], ["profile/tests-1/board"])
+        self.assertEqual([t["id"] for t in manifest["tests"]], ["HW_ONE", "HW_TWO", "HW_SHARED"])
+        with zipfile.ZipFile(self.output) as bundle:
+            names = bundle.namelist()
+        self.assertIn("profile/tests-1/board/test_shared.py", names)
+        self.assertIn("profile/tests-1/requirements.md", names)
+        session = open_package(self.output, Path(self.temp.name) / "work-extra", str(self.gdb))
+        self.assertEqual(session["test_dirs"], [str(Path(session["root"]) / "profile/tests-1/board")])
+
     def test_reopen_preserves_reports_and_uses_clean_sources(self):
         # TC-133: ТЗ 5.19.5 — successful and failed opens preserve earlier evidence.
         pack(self.session, self.output)

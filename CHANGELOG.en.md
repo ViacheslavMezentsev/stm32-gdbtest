@@ -19,7 +19,19 @@ Extended scenario API; the release is being prepared and the tag is published by
 - Navigation and observation: `reach` with a condition, `resume`, `step`, `until`, `finish`, `Point` with `with` and `remove()`, and `watch` on writes to an addressable object.
 - Invocation and control: `ret` with a typed value, `call` of firmware functions, `reset` with a command from `api.toml`, and `execute` of debugger commands with a journal.
 - Reading and evaluation: `read`/`write` of objects, `evaluate` of expressions with a type conversion, `registers` of a frame, and `frames` with a walk limit.
-- Run views: `settings` and `sources` as the immutable mappings behind the existing `config` and `config_props`.
+- Run profile: `profile` reads `target.toml` as before and provides the sections `target`, `api`, `user`, `image`,
+  `files`, `case`, `stand`, `gdb`, plus `get("a.b")`, `origin(path)` and `to_dict()`. API specification 0.3.3.
+- Checks with bounds: `check_range`, `check_near`, `check_in` keep the value and the bounds in the report;
+  `check_table(rows)` replaces local table-check helpers in scenarios.
+- Symbols and memory: `symbol(name)` gives the address, size, type and section; `memory`/`write_memory` read SRAM or
+  the profile flash and write SRAM with verification, peripheral addresses are refused.
+- Frame variables: `locals()` and `arguments()` as one dictionary, optimized-out values listed separately.
+- Point control: `Point.enable()`/`disable()` keep the counter, `condition` is writable; the `breakpoint_limit` budget
+  counts active points only.
+- Shared scenario directory: `tests/firmware/common/tests` for every profile; a user project adds search directories
+  with `TEST_DIRS` in CMake or a repeated `--tests` in the CLI, and the package carries them along.
+- Nine showcase scenarios: `HW_CI_INJECT_ZERO`, `HW_CI_WHO_WRITES`, `HW_CI_RETURN_VALUE`, `HW_CI_CONDITIONAL_STOP`,
+  `HW_CI_STEP_SOURCE`, `HW_CI_UNTIL_TARGET`, `HW_CI_POINT_BUDGET`, `HW_CI_PROFILE`, `HW_CI_CALL_PREDICATE`.
 - The fixture scenarios keep the original `@case` name: a test case reads clearer that way
   inside a script. The `@test` alias remains and is covered by `HW_CI_TEST_ALIAS`.
 - The `@test` decorator as an alias of `@case`; the static collector accepts both names.
@@ -31,6 +43,10 @@ Extended scenario API; the release is being prepared and the tag is published by
 - The module version is raised to `0.3.0`; `API_VERSION=1` and the JSON/TOML schemas are unchanged.
 - The API reference is grouped into methods, properties, decorators, classes and errors; the `read` and `evaluate` rows render correctly again.
 - A stop is classified by the kind of the reported point, not only by the debugger reason.
+- The `config`, `config_props`, `settings` and `sources` properties are removed without aliases: `profile` replaces
+  them (`target.config['api']['user']` → `target.profile.user`). They were not part of any published tag.
+- Scenarios shared by the profiles moved from the profile directories into the shared directory; `HW_CI_SETTINGS` is
+  replaced by `HW_CI_PROFILE`.
 
 ### Fixed
 
@@ -52,6 +68,8 @@ Extended scenario API; the release is being prepared and the tag is published by
 - Some combinations deliver no stop event for a watch point: the stop is marked `inferred` and confirmed by the changed object.
 - `finish()` does not publish the staged stack copy.
 - Hardware verification covered five stands; native DAP stands were not used.
+- New methods and showcase scenarios are covered by host tests; the run on the five stands is still pending.
+- The fault-handler points the agent sets at boot take slots of `breakpoint_limit`.
 
 ## [0.2.0-rc.1] - 2026-10-03
 

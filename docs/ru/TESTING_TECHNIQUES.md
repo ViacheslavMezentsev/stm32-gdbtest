@@ -305,5 +305,5 @@ Python-расчёт работает по сохранённым данным. �
 
 **Проверено:** штатные серии VDDA/температуры на пяти CMSIS-профилях;
 численные якоря mean/СКО и отрицательные случаи — tests/host/test_measurement_scenarios.py.
-[Пример сценария](../../tests/firmware/profiles/f411ce/tests/board/test_measurements.py),
+[Пример сценария](../../tests/firmware/common/tests/board/test_measurements.py),
 [принятые результаты](API_ACCEPTANCE.md).

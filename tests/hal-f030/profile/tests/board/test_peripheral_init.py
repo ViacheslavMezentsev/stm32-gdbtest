@@ -5,19 +5,6 @@ EN: HAL initialization checks for ADC, DMA, TIM3 and RTC.
 from stm32_gdbtest import case
 
 
-# Evaluate table rows in order and stop at the first failed read or check.
-def _check_values(target, rows):
-    # TECH-010: evaluate each actual, then its expected expression, then check.
-    for name, expression, expected in rows:
-        actual = target.evaluate(expression, as_type=int)
-        if isinstance(expected, str):
-            # An expected cell may be a C expression or an address, so it is evaluated too.
-            expected = target.evaluate(expected, as_type=int)
-
-        # Compare the current row after both expressions have been evaluated.
-        target.check(name, actual, expected)
-
-
 # Verify the HAL ADC and DMA initialization parameters.
 @case("HW_ADC_DMA_INIT", labels=("adc", "dma", "init"), contracts=("adc_init_macros",))
 def adc_dma_init(t):
@@ -29,7 +16,7 @@ def adc_dma_init(t):
         "Init.DMAContinuousRequests": 0, "Init.ClockPrescaler": "ADC_CLOCK_ASYNC_DIV1",
         "Init.ExternalTrigConv": "ADC_SOFTWARE_START", "Init.ExternalTrigConvEdge": "ADC_EXTERNALTRIGCONVEDGE_NONE"})
 
-    _check_values(t, [
+    t.check_table([
         ('only channels 16/17', 'ADC1->CHSELR', 1 << 16 | 1 << 17),
         ('forward scan', 'ADC1->CFGR1 & ADC_CFGR1_SCANDIR', 0),
         ('239.5 cycles', 'ADC1->SMPR & ADC_SMPR_SMP', 7)
@@ -47,7 +34,7 @@ def tim3_init(t):
     t.reach("platform_adc_prepare")
 
     # Check register and application state against the expected values.
-    _check_values(t, [
+    t.check_table([
         ('TIM3 prescaler', 'TIM3->PSC', 7999),
         ('TIM3 period', '__HAL_TIM_GET_AUTORELOAD(&htim3)', 99),
         ('TIM3 not started', 'TIM3->CR1 & TIM_CR1_CEN', 0)

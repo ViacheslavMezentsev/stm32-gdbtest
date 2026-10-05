@@ -33,6 +33,16 @@ class Trace:
     def check(self, *args):
         self.call('check', *args)
 
+    def check_table(self, rows):
+        """Same order as Target.check_table: actual, then expected, then the check of each row."""
+        for name, actual, expected in rows:
+            if isinstance(actual, str):
+                actual = self.evaluate(actual)
+            if isinstance(expected, str):
+                expected = self.evaluate(expected)
+            self.check(name, actual, expected)
+        return len(rows)
+
 
 class Literals(dict):
     """Simple NAME = <literal> assignments of a module, for the executed blocks."""
@@ -57,11 +67,8 @@ class ScenarioTablesTests(unittest.TestCase):
             actual_nodes = [ast.dump(node) for node in ast.walk(ast.parse(source))]
             for statement in ast.parse(textwrap.dedent(block['replacement'])).body:
                 self.assertIn(ast.dump(statement), actual_nodes)
-            helper = next(n for n in ast.parse(source).body
-                          if isinstance(n, ast.FunctionDef) and n.name == '_check_values')
             # Constants such as the expected interval are module level in the source.
             namespace = dict(Literals(source))
-            exec(compile(ast.Module(body=[helper], type_ignores=[]), block['file'], 'exec'), namespace)
             def execute(code, fail_at=None):
                 trace = Trace(fail_at)
                 try:

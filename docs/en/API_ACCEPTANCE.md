@@ -25,7 +25,7 @@ or verification of every later SHA.
 
 44 table blocks (282 checks) have paired host regression for call order and first
 failure: tests/host/test_scenario_tables.py. Five production
-[test_measurements.py](../../tests/firmware/profiles/f411ce/tests/board/test_measurements.py)
+[test_measurements.py](../../tests/firmware/common/tests/board/test_measurements.py)
 scenarios use config, record/records, mean and sample stdev. Numerical anchors and
 negative cases: tests/host/test_measurement_scenarios.py.
 Reproduce HW suites with [run_suite.py](../../tests/firmware/run_suite.py): explicit

@@ -2,7 +2,7 @@
 
 [API](index.md) · [English](../../en/api/point.md)
 
-`Point: id, location, addresses, active, hit_count; remove(); with`
+`Point: id, location, addresses, active, hit_count, condition; enable(); disable(); remove(); with`
 
 | Свойство | Значение |
 | --- | --- |
@@ -20,6 +20,11 @@
 
 Объект поддерживает контекстный менеджер: выход из блока удаляет точку.
 
+`disable()` оставляет точку и её счётчик, но она больше не останавливает цель; `enable()` включает её
+снова. Бюджет `breakpoint_limit` считает только активные точки, поэтому `enable()` при исчерпанном
+бюджете даёт `ApiError` (`limit_exceeded`). `condition` доступно для записи: строка заменяет условие
+остановки живой точки, `None` снимает его. Действия над удалённой точкой — `point_removed`.
+
 Ограничения: счётчик срабатываний зависит от backend-а; адреса даются для программных точек;
 повторное удаление не является ошибкой, обращение к удалённой точке даёт диагностику.
 
@@ -36,4 +41,4 @@ point.remove()
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.2.5.
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.2.5; `enable`, `disable`, запись `condition`: ревизия 0.3.3, п. 4.4.3.

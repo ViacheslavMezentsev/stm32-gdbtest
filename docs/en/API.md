@@ -39,7 +39,7 @@ Transition from the former names (aliases work without warnings until 1.0; remov
 | `fields(expression, expected)` | `read(path, fields=…)` | field comparison stays a scenario check |
 | `set_value(expression, value)` | `write(path, value)` | the applied value gains verification |
 | `force_return(expression)` | `ret(value=None)` | the return becomes an operation with a result |
-| `config` / `config_props` | `settings` / `sources` | read-only with immutable nesting |
+| `config` / `config_props` | `profile` (sections, `get`, `origin`) | removed in 0.3.0 without an alias; [profile](api/profile.md) |
 | `case(...)` | `test(...)` | the same defaults: `timeout_s=20`, `labels=()`, `contracts=()` |
 | `RecordError` | an `ApiError` subclass | the public import is preserved |
 
@@ -99,7 +99,7 @@ max_records = 256
 count = 10
 ```
 
-`target.config['api']['user']['measurement']['count']` reads a scenario parameter. config contains api/target/image with defaults; absent image is None, selected image retains `['image']['image']` nesting. config_props has the same roles: data without defaults, source-byte sha256 and reference for a file, None for an absent file. Properties and nested containers are immutable; arrays become tuples. TOML dates/times and unknown fields survive. reference does not guarantee source-path availability on another host.
+`target.profile.get('user.measurement.count')` reads a scenario parameter. `profile` sections: target/api/user/image with core defaults; an absent image is None, a selected one is the policy itself. `profile.files` holds the source-byte sha256 and reference of captured files, `profile.origin(path)` the source of a value (file, default, environment override or the run). Sections and nested containers are immutable; arrays become tuples. TOML dates/times and unknown fields survive. reference does not guarantee source-path availability on another host.
 
 SESSION_CONFIG conflicts with PROFILE, --image-policy and STM32_GDBTEST_IMAGE_POLICY. PROFILE_DIR still selects scenarios. target is required; omitted api selects defaults, image selects ELF sections. An explicitly selected missing/invalid file produces ERROR before MCU access. Unknown api fields survive; target/image schemas stay strict.
 

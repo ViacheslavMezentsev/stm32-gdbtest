@@ -31,7 +31,7 @@ LOCK = json.loads((ROOT / "ci/dependencies.lock.json").read_text(encoding="utf-8
 FIRMWARE = ROOT / "tests/firmware"
 OUT = ROOT / "build/ci"
 sys.path.insert(0, str(ROOT))
-from stm32_gdbtest.contracts import select_contracts  # noqa: E402
+from stm32_gdbtest.contracts import select_contracts_from  # noqa: E402
 from stm32_gdbtest.image import parse_sections  # noqa: E402
 from ci.public_docs import check as check_public, files as public_files, is_private, private_patterns  # noqa: E402
 
@@ -277,8 +277,8 @@ def firmware_pair(gcc, profile):
         raise CheckError(f"Empty RAM section stretched the BIN: {bins[-1].stat().st_size} bytes")
 
     # Negative ELF contracts: each mutation must stop the offline preflight with ERROR.
-    registry = FIRMWARE / f"profiles/{profile}/tests/contracts.json"
-    base = select_contracts(registry, ["ci_gpio_macros", "ci_app_api"], manifest)
+    registries = [FIRMWARE / f"profiles/{profile}/tests/contracts.json", FIRMWARE / "common/tests/contracts.json"]
+    base = select_contracts_from(registries, ["ci_gpio_macros", "ci_app_api"], manifest)
     negatives = build / "negative"
     negatives.mkdir()
     for name, mutate in NEGATIVE_CONTRACTS.items():

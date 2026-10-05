@@ -84,5 +84,7 @@ target_link_options(ci_firmware PRIVATE ${arch_flags} -nostdlib "-T${linker}" -W
 include("${STM32_GDBTEST_SOURCE_DIR}/stm32_gdbtest/cmake/STM32GDBTest.cmake")
 stm32_gdbtest_attach(ci_firmware PROFILE_DIR "${profile_dir}"
     SESSION_CONFIG "${profile_dir}/session.toml"
+    # Scenarios shared by every profile; the profile directory keeps only what differs.
+    TEST_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/common/tests"
     MANIFEST_INPUTS "${linker}" "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt"
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/arm-gcc.cmake")

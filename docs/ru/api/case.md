@@ -39,5 +39,5 @@ def example(target):
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), §5.1.
 - [Реализация](../../../stm32_gdbtest/__init__.py).
-- [Сценарий или проверка реализации](../../../tests/firmware/profiles/f411ce/tests/board/test_measurements.py).
+- [Сценарий или проверка реализации](../../../tests/firmware/common/tests/board/test_measurements.py).
 - [check](check.md), [reach](reach.md).

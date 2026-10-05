@@ -48,5 +48,5 @@ target.record("adc.sample", {"vdda_mv": target.value("board_adc_reading.vdda_mv"
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), §4.9.
 - [Реализация](../../../stm32_gdbtest/target.py).
-- [Сценарий или проверка реализации](../../../tests/firmware/profiles/f411ce/tests/board/test_measurements.py).
-- [records](records.md), [record_error](record-error.md), [config](config.md).
+- [Сценарий или проверка реализации](../../../tests/firmware/common/tests/board/test_measurements.py).
+- [records](records.md), [record_error](record-error.md), [profile](profile.md).

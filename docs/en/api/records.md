@@ -40,5 +40,5 @@ Requires at least two previously collected adc.sample records; stdev uses N−1.
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), §4.10.
 - [Implementation](../../../stm32_gdbtest/target.py).
-- [Scenario or implementation check](../../../tests/firmware/profiles/f411ce/tests/board/test_measurements.py).
+- [Scenario or implementation check](../../../tests/firmware/common/tests/board/test_measurements.py).
 - [record](record.md), [record_error](record-error.md).
