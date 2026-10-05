@@ -7,12 +7,15 @@
 | Property | Value |
 | --- | --- |
 | Module support | 0.1.0rc1 / v0.1.0-rc.1 |
-| Contract in API specification | 0.1.0; §4.1 |
+| API specification contract | 0.1.0; §4.1 |
 | API_VERSION | 1 |
+| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 
-## Contract
+## Purpose
 
 Compares actual and expected with ==, records and prints the result. name identifies the check.
+
+## Contract and limitations
 
 A mismatch raises CheckFailed and ends the scenario with FAIL. Use JSON-report-compatible values. Does not return bool.
 

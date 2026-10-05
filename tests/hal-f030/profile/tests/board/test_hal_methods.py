@@ -9,30 +9,35 @@ from stm32_gdbtest import case
 @case("HW_GPIO_ARGUMENTS", contracts=("gpio_arguments",), labels=("gpio", "contract"))
 def gpio_arguments(t):
     # TECH-001/003: docs/ru/TESTING_TECHNIQUES.md (EN: docs/en/TESTING_TECHNIQUES.md).
-    t.reach("HAL_GPIO_Init", when="GPIOx == GPIOA")
+    # The published call is the one for GPIOA, so the point carries that condition.
+    t.reach("HAL_GPIO_Init", condition="GPIOx == GPIOA")
 
     # Check the published fields against the expected values.
-    t.fields("*GPIO_Init", {"Pin": 1 << 5, "Mode": "GPIO_MODE_OUTPUT_PP",
-                           "Pull": "GPIO_NOPULL", "Speed": "GPIO_SPEED_FREQ_LOW"})
+    published = t.read("*GPIO_Init", fields=("Pin", "Mode", "Pull", "Speed"))
+    t.check("pin mask", published["Pin"], 1 << 5)
+    t.check("output mode", published["Mode"], "GPIO_MODE_OUTPUT_PP")
+    t.check("no pull", published["Pull"], "GPIO_NOPULL")
+    t.check("low speed", published["Speed"], "GPIO_SPEED_FREQ_LOW")
 
     t.reach("platform_adc_start")
 
     # Verify PA5 output applied.
-    t.check("PA5 output applied", t.value("(GPIOA->MODER >> 10) & 3"), 1)
+    t.check("PA5 output applied", t.read("(GPIOA->MODER >> 10) & 3"), 1)
 
 
 # Select a GPIO toggle by its arguments and verify the output transition.
 @case("HW_GPIO_FILTERED_CALL", contracts=("gpio_filtered_call",), labels=("gpio", "contract"))
 def gpio_filtered_call(t):
-    t.reach("HAL_GPIO_TogglePin", when="GPIOx == GPIOA && GPIO_Pin == 32 && ((GPIOA->ODR >> 5) & 1) == 1")
+    t.reach("HAL_GPIO_TogglePin",
+            condition="GPIOx == GPIOA && GPIO_Pin == 32 && ((GPIOA->ODR >> 5) & 1) == 1")
 
     # Verify selected toggle starts High.
-    t.check("selected toggle starts High", t.value("(GPIOA->ODR >> 5) & 1"), 1)
+    t.check("selected toggle starts High", t.read("(GPIOA->ODR >> 5) & 1"), 1)
 
     t.reach("platform_adc_start")
 
     # Verify selected toggle ends Low.
-    t.check("selected toggle ends Low", t.value("(GPIOA->ODR >> 5) & 1"), 0)
+    t.check("selected toggle ends Low", t.read("(GPIOA->ODR >> 5) & 1"), 0)
 
 
 # Force an RCC failure return and verify entry into the application error handler.
@@ -40,7 +45,7 @@ def gpio_filtered_call(t):
 def rcc_error(t):
     # TECH-004: synthetic return code, not an oscillator fault.
     t.reach("HAL_RCC_OscConfig")
-    t.force_return("(HAL_StatusTypeDef)1")
+    t.ret("(HAL_StatusTypeDef)1")
     t.reach("Error_Handler")
 
 
@@ -49,10 +54,10 @@ def rcc_error(t):
 def rcc_osc_null(t):
     # TECH-005: source-reviewed NULL guard, not arbitrary pointer corruption.
     t.reach("HAL_RCC_OscConfig")
-    t.set_value("RCC_OscInitStruct", "0")
+    t.write("RCC_OscInitStruct", "0")
 
     # Verify NULL injected.
-    t.check("NULL injected", t.value("RCC_OscInitStruct"), 0)
+    t.check("NULL injected", t.read("RCC_OscInitStruct"), 0)
 
     t.reach("Error_Handler")
 
@@ -62,9 +67,9 @@ def rcc_osc_null(t):
 def rcc_clock_null(t):
     # TECH-005: source-reviewed NULL guard, not a physical clock failure.
     t.reach("HAL_RCC_ClockConfig")
-    t.set_value("RCC_ClkInitStruct", "0")
+    t.write("RCC_ClkInitStruct", "0")
 
     # Verify NULL injected.
-    t.check("NULL injected", t.value("RCC_ClkInitStruct"), 0)
+    t.check("NULL injected", t.read("RCC_ClkInitStruct"), 0)
 
     t.reach("Error_Handler")

@@ -20,8 +20,11 @@ Extended scenario API; the release is being prepared and the tag is published by
 - Invocation and control: `ret` with a typed value, `call` of firmware functions, `reset` with a command from `api.toml`, and `execute` of debugger commands with a journal.
 - Reading and evaluation: `read`/`write` of objects, `evaluate` of expressions with a type conversion, `registers` of a frame, and `frames` with a walk limit.
 - Run views: `settings` and `sources` as the immutable mappings behind the existing `config` and `config_props`.
+- The fixture scenarios keep the original `@case` name: a test case reads clearer that way
+  inside a script. The `@test` alias remains and is covered by `HW_CI_TEST_ALIAS`.
 - The `@test` decorator as an alias of `@case`; the static collector accepts both names.
-- `api.toml` keys: `frames.limit`, `call.depth`, `call.args_max`, `execute.output_limit_chars`, `reset.command`.
+- `api.toml` keys: `frames.limit`, `call.depth`, `call.args_max`, `execute.output_limit_chars`,
+  `reset.command`, `app.delay_ms`.
 
 ### Changed
 

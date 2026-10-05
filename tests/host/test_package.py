@@ -9,15 +9,15 @@ import zipfile
 
 from stm32_gdbtest.package import MANIFEST, open_package, pack
 
-SCENARIO = '''from stm32_gdbtest import case
+SCENARIO = '''from stm32_gdbtest import test
 
 
-@case("HW_ONE", timeout_s=5, labels=("gpio",))
+@test("HW_ONE", timeout_s=5, labels=("gpio",))
 def one(t):
     t.reach("main")
 
 
-@case("HW_TWO")
+@test("HW_TWO")
 def two(t):
     t.reach("main")
 '''

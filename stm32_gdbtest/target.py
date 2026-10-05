@@ -404,14 +404,33 @@ class Target:
             self._fail("write", "validation", "none", "invalid_verify",
                        "verify must be a bool", path=path, verify=verify)
         before = self._read_value(path, path)
+        scoped, address = self._verify_scope(path)
         self._write_expression(path, value)
-        after = self._read_value(path, path) if verify else None
-        self.report.setdefault("mutations", []).append(
-            dict(expression=path, value=value, before=before, after=after))
-        if verify and after != value:
+        after = self._read_value(path, path) if (verify and scoped) else None
+        entry = dict(expression=path, value=value, before=before, after=after)
+        if verify and not scoped:
+            # A peripheral register keeps its own meaning on read, so the write is recorded without
+            # claiming a verification that this address cannot support.
+            entry["verified"] = False
+            entry["verify_scope"] = "outside"
+            entry["address"] = address
+        self.report.setdefault("mutations", []).append(entry)
+        if verify and scoped and after != value:
             values.verification_failed(path, value, after)
         return dict(operation="write", path=path, value=value, before=before, after=after,
-                    verified=bool(verify))
+                    verified=bool(verify and scoped), verify_scope="declared" if scoped else "outside")
+
+    def _verify_scope(self, path):
+        """Whether a read-compare is meaningful here: an addressable object in the SRAM window."""
+        try:
+            value = gdb.parse_and_eval(path)
+        except gdb.error:
+            return False, None
+        address = getattr(value, "address", None)
+        if address is None:
+            return False, None
+        address = int(address)
+        return 0x20000000 <= address < 0x20100000, address
 
     def _write_expression(self, path, value):
         """Apply one write through GDB; the caller decides about verification."""

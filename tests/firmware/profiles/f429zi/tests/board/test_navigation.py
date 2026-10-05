@@ -17,7 +17,7 @@ def navigation(target):
     baseline = target.read("app_state.ticks")
 
     # A forced return leaves the producer immediately after the call in the receiver.
-    target.force_return("42")
+    target.ret("42")
 
     # The receiver consumes the forced value in its next instructions.
     consumed = target.step(CALL_CONSUMED_INSTRUCTIONS, unit="instruction", mode="into")

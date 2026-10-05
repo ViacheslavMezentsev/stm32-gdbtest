@@ -7,13 +7,16 @@
 | Property | Value |
 | --- | --- |
 | Module support | 0.1.0rc1 / v0.1.0-rc.1 |
-| Contract in API specification | 0.1.0; §4.2 |
+| API specification contract | 0.1.0; §4.2 |
 | API_VERSION | 1 |
+| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 | Former-name alias | value(expression) -> read(path) (the alias works without warnings until 1.0; removal in 0.4.0) |
 
-## Contract
+## Purpose
 
 expression is a GDB/C expression string in the current context. Evaluates it, fetches a lazy value and converts it to int.
+
+## Contract and limitations
 
 Stop the MCU for consistent reads. Optimized-out or missing symbols fail rather than return zero. This is not typed float/structure reading; expressions may have side effects.
 

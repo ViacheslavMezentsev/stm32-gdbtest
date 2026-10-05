@@ -7,14 +7,17 @@
 | Property | Value |
 | --- | --- |
 | Module support | 0.2.0.dev0 → 0.2.0rc1 |
-| Contract in API specification | 0.2.0; §4.10 |
+| API specification contract | 0.2.0; §4.10 |
 | API_VERSION | 1 |
+| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 
 Implemented extension; `0.2.0rc1` is a local candidate, not a published stable release.
 
-## Contract
+## Purpose
 
 Returns independent mutable copies with sequence/name/data keys. None selects all; a nonempty str filters by exact name; no matches returns [].
+
+## Contract and limitations
 
 Insertion order and sequence starting at 1 survive filtering. Mutating copies does not change the journal. clear/reset/continue do not clear it within an invocation. Invalid filters raise RecordError. Each call copies its selection.
 

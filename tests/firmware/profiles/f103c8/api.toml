@@ -18,3 +18,7 @@ command = "monitor reset halt"
 # Frame limit of `frames()` (ТЗ API 6.6, Q1): default 16, maximum 64.
 [frames]
 limit = 16
+
+# Application interval of the CI firmware (ТЗ API 6.6): the waits between checks shrink with it.
+[app]
+delay_ms = 500

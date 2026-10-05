@@ -9,9 +9,10 @@ from stm32_gdbtest import case
 def _check_values(target, rows):
     # TECH-010: evaluate each actual, then its expected expression, then check.
     for name, expression, expected in rows:
-        actual = target.value(expression)
+        actual = target.evaluate(expression, as_type=int)
         if isinstance(expected, str):
-            expected = target.value(expected)
+            # An expected cell may be a C expression, an address or an enum, so it is evaluated too.
+            expected = target.evaluate(expected, as_type=int)
 
         # Compare the current row after both expressions have been evaluated.
         target.check(name, actual, expected)
@@ -56,16 +57,16 @@ def adc_dma(t):
             ('TC, no transfer error', 'DMA1->ISR & (DMA_ISR_TCIF1 | DMA_ISR_TEIF1)', 2)
         ])
 
-        raw = [t.value(f"board_adc_buffer[{i}]") for i in range(2)]
+        raw = [t.read(f"board_adc_buffer[{i}]") for i in range(2)]
         t.reach("board_delay_ms")
 
         # Check the publication counter before comparing measurement contents.
-        t.check("published sequence", t.value("board_adc_sequences"), sequence)
+        t.check("published sequence", t.read("board_adc_sequences"), sequence)
 
         # Compare each published channel with its captured DMA value and reject saturation.
         for name, expected in zip(("board_temperature_raw", "board_reference_raw"), raw):
             # Verify the current sample against its expected value and validity bounds.
-            t.check(name, t.value(name), expected)
+            t.check(name, t.read(name), expected)
             t.check(name + " not saturated", 0 < expected < 4095, True)
 
         # Check register and application state against the expected values.
@@ -83,11 +84,11 @@ def adc_units(t):
     t.reach("board_delay_ms")
 
     # Check measurement provenance and plausible physical ranges.
-    t.check("typical provenance", t.value("board_adc_reading.quality"), 1)
-    t.check("plausible VDDA", 2800 <= t.value("board_adc_reading.vdda_mv") <= 3600, True)
-    t.check("plausible die temperature", -40000 <= t.value("board_adc_reading.temperature_mdeg_c") <= 125000, True)
+    t.check("typical provenance", t.read("board_adc_reading.quality"), 1)
+    t.check("plausible VDDA", 2800 <= t.read("board_adc_reading.vdda_mv") <= 3600, True)
+    t.check("plausible die temperature", -40000 <= t.read("board_adc_reading.temperature_mdeg_c") <= 125000, True)
 
-    t.report["measurement"] = {name: t.value("board_adc_reading." + name)
+    t.report["measurement"] = {name: t.read("board_adc_reading." + name)
                                for name in ("vdda_mv", "temperature_mdeg_c", "quality")}
 
 
@@ -97,7 +98,7 @@ def convert(t, values, expected):
 
     # Replace each conversion argument with the corresponding test input.
     for name, value in zip(("temperature", "reference"), values):
-        t.set_value(name, value)
+        t.write(name, value)
 
     t.reach("board_delay_ms")
 
@@ -137,7 +138,7 @@ def adc_invalid(t):
     t.reach("board_delay_ms")
 
     # Check that valid acquisition resumes after the injected failures.
-    t.check("normal acquisition recovers", t.value("board_adc_reading.quality"), 1)
+    t.check("normal acquisition recovers", t.read("board_adc_reading.quality"), 1)
 
 
 # Verify that the ADC fault path publishes neither a sequence nor a valid reading.
@@ -145,9 +146,9 @@ def no_publication(t, error):
     t.reach("board_adc_fault")
 
     # Check the failure code and absence of a published measurement.
-    t.check("error code", t.value("board_adc_error"), error)
-    t.check("no sequence published", t.value("board_adc_sequences"), 0)
-    t.check("no valid reading published", t.value("board_adc_reading.quality"), 0)
+    t.check("error code", t.read("board_adc_error"), error)
+    t.check("no sequence published", t.read("board_adc_sequences"), 0)
+    t.check("no valid reading published", t.read("board_adc_reading.quality"), 0)
 
 
 # Suppress completion notification and verify the ADC deadline and fault state.
@@ -155,13 +156,13 @@ def no_publication(t, error):
 def adc_timeout(t):
     # TECH-006: IRQ masking removes notification, not the physical conversion.
     t.reach("board_adc_sample")
-    start = t.value("board_ticks_ms")
-    t.set_value("NVIC->ICER[0]", 1 << 11)
+    start = t.read("board_ticks_ms")
+    t.write("NVIC->ICER[0]", 1 << 11)
     no_publication(t, 4)
 
     # Check the elapsed deadline and DMA completion without notification.
-    t.check("completion deadline", ((t.value("board_ticks_ms") - start) & 0xFFFFFFFF) >= 20, True)
-    t.check("DMA completed without notification", t.value("DMA1_Channel1->CNDTR"), 0)
+    t.check("completion deadline", ((t.read("board_ticks_ms") - start) & 0xFFFFFFFF) >= 20, True)
+    t.check("DMA completed without notification", t.read("DMA1_Channel1->CNDTR"), 0)
 
 
 # Inject a busy acquisition state and verify that the next start is rejected.
@@ -169,11 +170,11 @@ def adc_timeout(t):
 def adc_busy(t):
     # TECH-006: enforce a DMA ownership guard, not a claim of F0 ADSTART semantics.
     t.reach("board_adc_sample")
-    t.set_value("DMA1_Channel1->CNDTR", 2)
-    t.set_value("DMA1_Channel1->CCR", t.value("DMA1_Channel1->CCR") | 1)
+    t.write("DMA1_Channel1->CNDTR", 2)
+    t.write("DMA1_Channel1->CCR", t.read("DMA1_Channel1->CCR") | 1)
 
     # Verify DMA enabled before application start.
-    t.check("DMA enabled before application start", t.value("DMA1_Channel1->CCR & DMA_CCR_EN"), 1)
+    t.check("DMA enabled before application start", t.read("DMA1_Channel1->CCR & DMA_CCR_EN"), 1)
 
     no_publication(t, 6)
     t.report["injection_scope"] = "DMA enable before sample; no claim of active ADC conversion"
@@ -184,9 +185,9 @@ def adc_busy(t):
 def adc_disabled(t):
     # TECH-006: real ADC disable, not a forced HAL status return.
     t.reach("board_adc_sample")
-    t.set_value("ADC1->CR2", t.value("ADC1->CR2") & ~1)
+    t.write("ADC1->CR2", t.read("ADC1->CR2") & ~1)
 
     # Verify ADC powered off.
-    t.check("ADC powered off", t.value("ADC1->CR2 & ADC_CR2_ADON"), 0)
+    t.check("ADC powered off", t.read("ADC1->CR2 & ADC_CR2_ADON"), 0)
 
     no_publication(t, 3)

@@ -25,7 +25,7 @@ class CMakeSessionTests(unittest.TestCase):
             profile = root / "profile"
             (profile / "tests" / "board").mkdir(parents=True)
             (profile / "tests" / "board" / "test_fixture.py").write_text(
-                'from stm32_gdbtest import case\n@case("HW_CONFIG_FIXTURE")\n'
+                'from stm32_gdbtest import test\n@test("HW_CONFIG_FIXTURE")\n'
                 'def fixture(t):\n    pass\n', encoding="utf-8")
             (profile / "target.toml").write_text(TARGET, encoding="utf-8")
             (profile / "session.toml").write_text('[config]\ntarget="target.toml"', encoding="utf-8")

@@ -19,6 +19,17 @@ class Target(Journal):
         if name == 'board_adc_sample':
             self.index += 1
 
+    # The 0.3.0 names; the scenarios migrated from value() while config stays an alias.
+    def read(self, path, **options):
+        return self.value(path)
+
+    def evaluate(self, expression, **options):
+        return self.value(expression)
+
+    @property
+    def settings(self):
+        return self.config
+
     def value(self, expression):
         if expression == 'board_adc_sequences':
             return 1 if self.bad == 'stale' else self.index + 1

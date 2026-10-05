@@ -2,7 +2,7 @@
 RU: Точка наблюдения: адресуемый объект, остановка на записи и отказы.
 EN: A watch point: an addressable object, the write stop and refusals.
 """
-from stm32_gdbtest import ApiError, case
+from stm32_gdbtest import case, ApiError, case
 
 
 # A watch point stops the core when the firmware writes the watched object.

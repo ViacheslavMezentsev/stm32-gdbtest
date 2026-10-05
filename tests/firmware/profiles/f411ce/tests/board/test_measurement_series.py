@@ -17,8 +17,8 @@ def measurement_series(target):
     for index in range(SAMPLES):
         target.reach("board_adc_sample")
         target.reach("board_delay_ms")
-        value = target.value("board_adc_reading.temperature_mdeg_c")
-        sequence = target.value("board_adc_sequences")
+        value = target.read("board_adc_reading.temperature_mdeg_c")
+        sequence = target.read("board_adc_sequences")
         values.append(value)
         sequences.append(sequence)
         target.record("measurement.sample", {"value": value, "sequence": sequence, "index": index})

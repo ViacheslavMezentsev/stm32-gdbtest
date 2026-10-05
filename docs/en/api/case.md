@@ -7,14 +7,17 @@
 | Property | Value |
 | --- | --- |
 | Module support | 0.1.0rc1 / v0.1.0-rc.1 |
-| Contract in API specification | 0.1.0; §5.1 |
+| API specification contract | 0.1.0; §5.1 |
 | API_VERSION | 1 |
+| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 | Alias of the new name | `test`; the alias works without warnings until 1.0, removal in 0.4.0 |
 | Former-name alias | `test(...)`; the alias works without warnings until 1.0, removal in 0.4.0 |
 
-## Contract
+## Purpose
 
 Decorator declares scenario metadata. A top-level function accepts one Target and is invoked after reset and stopping at main.
+
+## Contract and limitations
 
 Collection reads AST without executing scenarios: arguments must be literals and case must not be aliased. ID: HW_[A-Z0-9_]+; timeout_s: integer 1..300 seconds; labels: [a-z0-9_-]+; contracts: [a-z][a-z0-9_]+. Import needs no GDB. Returns the function unchanged; the collector rejects invalid metadata.
 

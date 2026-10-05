@@ -4,7 +4,7 @@ EN: Debugger commands through execute: output, journal, truncation and refusals.
 """
 from hashlib import sha256
 
-from stm32_gdbtest import ApiError, case
+from stm32_gdbtest import case, ApiError, case
 
 LONG_OUTPUT = "X" * 3000
 

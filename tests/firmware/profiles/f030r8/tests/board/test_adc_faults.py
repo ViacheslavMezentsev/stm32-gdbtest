@@ -9,9 +9,10 @@ from stm32_gdbtest import case
 def _check_values(target, rows):
     # TECH-010: evaluate each actual, then its expected expression, then check.
     for name, expression, expected in rows:
-        actual = target.value(expression)
+        actual = target.evaluate(expression, as_type=int)
         if isinstance(expected, str):
-            expected = target.value(expected)
+            # An expected cell may be a C expression, an address or an enum, so it is evaluated too.
+            expected = target.evaluate(expected, as_type=int)
 
         # Compare the current row after both expressions have been evaluated.
         target.check(name, actual, expected)
@@ -24,14 +25,14 @@ def adc_busy(target):
     target.reach("board_adc_sample")
 
     # Verify initial ADC idle.
-    target.check("initial ADC idle", target.value("ADC1->CR & ADC_CR_ADSTART"), 0)
+    target.check("initial ADC idle", target.read("ADC1->CR & ADC_CR_ADSTART"), 0)
 
     # Start continuous conversions while the core is halted: ADSTART stays asserted.
-    target.set_value("ADC1->CFGR1", target.value("ADC1->CFGR1") | (1 << 13))
-    target.set_value("ADC1->CR", target.value("ADC1->CR") | (1 << 2))
+    target.write("ADC1->CFGR1", target.read("ADC1->CFGR1") | (1 << 13))
+    target.write("ADC1->CR", target.read("ADC1->CR") | (1 << 2))
 
     # Verify conversion is active.
-    target.check("conversion is active", target.value("ADC1->CR & ADC_CR_ADSTART"), 1 << 2)
+    target.check("conversion is active", target.read("ADC1->CR & ADC_CR_ADSTART"), 1 << 2)
 
     target.reach("board_adc_fault")
 

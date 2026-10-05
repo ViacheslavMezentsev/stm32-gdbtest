@@ -4,14 +4,19 @@ EN: Board startup, GPIO, clock and peripheral checks.
 """
 from stm32_gdbtest import case
 
+# Application interval of the CI firmware.
+# Application interval of the fixture profile (`[app] delay_ms` in api.toml).
+EXPECTED_DELAY = 500
+
 
 # Evaluate table rows in order and stop at the first failed read or check.
 def _check_values(target, rows):
     # TECH-010: evaluate each actual, then its expected expression, then check.
     for name, expression, expected in rows:
-        actual = target.value(expression)
+        actual = target.evaluate(expression, as_type=int)
         if isinstance(expected, str):
-            expected = target.value(expected)
+            # An expected cell may be a C expression, an address or an enum, so it is evaluated too.
+            expected = target.evaluate(expected, as_type=int)
 
         # Compare the current row after both expressions have been evaluated.
         target.check(name, actual, expected)
@@ -22,18 +27,18 @@ def _check_values(target, rows):
 def boot(target):
     # Target.boot has already reached main, before board_init.
     _check_values(target, [
-        ('initialized interval', 'app_delay', 500),
+        ('initialized interval', 'app_delay', EXPECTED_DELAY),
         ('BSS loop count', 'app_state.ticks', 0),
         ('BSS LED state', 'app_state.led', 0),
         ('BSS milliseconds', 'board_ticks_ms', 0)
     ])
 
     target.reach("app_loop")
-    before = target.value("app_state.ticks")
+    before = target.read("app_state.ticks")
     target.reach("app_loop")
 
     # Check that execution advances through the application loop.
-    target.check("app_state.ticks advanced", target.value("app_state.ticks") - before, 1)
+    target.check("app_state.ticks advanced", target.read("app_state.ticks") - before, 1)
 
 
 # Verify the board LED pin configuration and initial output state.
@@ -62,21 +67,21 @@ def clock(target):
     # Check the clock source, bus dividers and nominal SysTick period.
     target.check(
         "HSI enabled and ready",
-        target.value("(RCC->CR & (RCC_CR_HSION | RCC_CR_HSIRDY)) == (RCC_CR_HSION | RCC_CR_HSIRDY)"),
+        target.read("(RCC->CR & (RCC_CR_HSION | RCC_CR_HSIRDY)) == (RCC_CR_HSION | RCC_CR_HSIRDY)"),
         1
     )
     target.check(
         "SYSCLK HSI, AHB/APB divide by one",
-        target.value("RCC->CFGR & (RCC_CFGR_SW | RCC_CFGR_SWS | RCC_CFGR_HPRE | RCC_CFGR_PPRE1 | RCC_CFGR_PPRE2)"),
+        target.read("RCC->CFGR & (RCC_CFGR_SW | RCC_CFGR_SWS | RCC_CFGR_HPRE | RCC_CFGR_PPRE1 | RCC_CFGR_PPRE2)"),
         0
     )
-    target.check("nominal core frequency", target.value("SystemCoreClock"), 16000000)
-    target.check("1 ms reload at nominal 16 MHz", target.value("SysTick->LOAD"), 15999)
+    target.check("nominal core frequency", target.read("SystemCoreClock"), 16000000)
+    target.check("1 ms reload at nominal 16 MHz", target.read("SysTick->LOAD"), 15999)
 
     # Reading CTRL clears COUNTFLAG; the application uses the IRQ counter, not that flag.
     target.check(
         "SysTick enabled, interrupt, core clock",
-        target.value(
+        target.read(
             "SysTick->CTRL & (SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_CLKSOURCE_Msk)"
         ),
         7
@@ -89,18 +94,19 @@ def blink(target):
     target.reach("board_led_toggle")
 
     # Verify initial High.
-    target.check("initial High", target.value("(GPIOC->ODR & GPIO_ODR_OD13) != 0"), 1)
+    target.check("initial High", target.read("(GPIOC->ODR & GPIO_ODR_OD13) != 0"), 1)
 
-    before = target.value("board_ticks_ms")
+    before = target.read("board_ticks_ms")
 
     # Observe alternating output levels and check the elapsed firmware ticks.
     for level in (0, 1):
         target.reach("board_led_toggle")
-        now = target.value("board_ticks_ms")
+        now = target.read("board_ticks_ms")
 
         # Check alternating output levels and the minimum firmware interval.
-        target.check("alternating PC13", target.value("(GPIOC->ODR & GPIO_ODR_OD13) != 0"), level)
-        target.check("at least 500 firmware milliseconds", ((now - before) & 0xFFFFFFFF) >= 500, True)
+        target.check("alternating PC13", target.read("(GPIOC->ODR & GPIO_ODR_OD13) != 0"), level)
+        target.check("at least the configured interval", ((now - before) & 0xFFFFFFFF)
+                 >= EXPECTED_DELAY, True)
 
         before = now
 
@@ -132,20 +138,20 @@ def timer_irq(target):
     # Observe consecutive timer interrupts and the event counter between them.
     for _ in range(2):
         # Check the active timer exception and pending update flag.
-        target.check("TIM2 exception number", target.value("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 44)
-        target.check("update pending", target.value("TIM2->SR & TIM_SR_UIF"), 1)
+        target.check("TIM2 exception number", target.read("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 44)
+        target.check("update pending", target.read("TIM2->SR & TIM_SR_UIF"), 1)
 
-        before = target.value("board_timer_events")
+        before = target.read("board_timer_events")
         target.reach("TIM2_IRQHandler")
 
         # Verify one event published.
-        target.check("one event published", target.value("board_timer_events"), (before + 1) & 0xFFFFFFFF)
+        target.check("one event published", target.read("board_timer_events"), (before + 1) & 0xFFFFFFFF)
 
     # A permanently asserted update IRQ would starve thread mode.
     target.reach("board_delay_ms")
 
     # Verify thread mode resumes.
-    target.check("thread mode resumes", target.value("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 0)
+    target.check("thread mode resumes", target.read("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 0)
 
 
 # Observe a natural SysTick interrupt and verify tick publication.
@@ -157,18 +163,18 @@ def systick_irq(target):
     # Check interrupt routing and the active SysTick exception.
     target.check(
         "SysTick vector",
-        target.value("(unsigned int)vectors[15] & ~1U"),
-        target.value("(unsigned int)SysTick_Handler & ~1U")
+        target.read("(unsigned int)vectors[15] & ~1U"),
+        target.read("(unsigned int)SysTick_Handler & ~1U")
     )
-    target.check("SysTick exception", target.value("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 15)
+    target.check("SysTick exception", target.read("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 15)
 
-    before = target.value("board_ticks_ms")
+    before = target.read("board_ticks_ms")
     target.reach("SysTick_Handler")
 
     # Verify one millisecond published.
-    target.check("one millisecond published", target.value("board_ticks_ms"), (before + 1) & 0xFFFFFFFF)
+    target.check("one millisecond published", target.read("board_ticks_ms"), (before + 1) & 0xFFFFFFFF)
 
     target.reach("board_delay_ms")
 
     # Verify thread resumes.
-    target.check("thread resumes", target.value("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 0)
+    target.check("thread resumes", target.read("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 0)

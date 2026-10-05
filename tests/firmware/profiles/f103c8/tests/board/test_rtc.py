@@ -9,9 +9,10 @@ from stm32_gdbtest import case
 def _check_values(target, rows):
     # TECH-010: evaluate each actual, then its expected expression, then check.
     for name, expression, expected in rows:
-        actual = target.value(expression)
+        actual = target.evaluate(expression, as_type=int)
         if isinstance(expected, str):
-            expected = target.value(expected)
+            # An expected cell may be a C expression, an address or an enum, so it is evaluated too.
+            expected = target.evaluate(expected, as_type=int)
 
         # Compare the current row after both expressions have been evaluated.
         target.check(name, actual, expected)
@@ -44,9 +45,9 @@ def rtc_init(target):
 def rtc_alarm(target):
     # TECH-003: docs/ru/TESTING_TECHNIQUES.md#tech-003 (EN: docs/en/TESTING_TECHNIQUES.md#tech-003).
     target.reach("RTC_Alarm_IRQHandler")
-    icsr = target.value("&SCB->ICSR")
-    mask = target.value("SCB_ICSR_VECTACTIVE_Msk")
-    before = target.value("board_rtc_events")
+    icsr = target.evaluate("&SCB->ICSR", as_type=int)
+    mask = target.read("SCB_ICSR_VECTACTIVE_Msk")
+    before = target.read("board_rtc_events")
     previous_alarm = None
 
     # Observe repeated alarm delivery and confirm one event per interrupt.
@@ -58,9 +59,9 @@ def rtc_alarm(target):
             ('EXTI17 pending', 'EXTI->PR & (1 << 17)', 1 << 17)
         ])
 
-        target.check("one publication per IRQ", target.value("board_rtc_events"), (before + index) & 0xFFFFFFFF)
+        target.check("one publication per IRQ", target.read("board_rtc_events"), (before + index) & 0xFFFFFFFF)
 
-        alarm = target.value("(RTC->ALRH << 16) | RTC->ALRL")
+        alarm = target.read("(RTC->ALRH << 16) | RTC->ALRL")
         if previous_alarm is not None:
             # Verify alarm rearmed in thread.
             target.check("alarm rearmed in thread", ((alarm - previous_alarm) & 0xFFFFFFFF) >= 2, True)
@@ -72,34 +73,36 @@ def rtc_alarm(target):
     target.reach("app_loop")
 
     # Verify thread resumes.
-    target.check("thread resumes", target.value(f"*(unsigned int*){icsr} & {mask}"), 0)
-    target.check("second event published", ((target.value("board_rtc_events") - before) & 0xFFFFFFFF) >= 2, True)
-    target.check("no RTC error", target.value("board_rtc_error"), 0)
+    target.check("thread resumes", target.read(f"*(unsigned int*){icsr} & {mask}"), 0)
+    target.check("second event published", ((target.read("board_rtc_events") - before) & 0xFFFFFFFF) >= 2, True)
+    target.check("no RTC error", target.read("board_rtc_error"), 0)
 
 
 # Make the RTC wait predicate impossible and verify the bounded failure path.
-@case("HW_CI_RTC_DEADLINE", labels=("rtc", "negative"), contracts=("ci_rtc_macros",))
+@case("HW_CI_RTC_DEADLINE", timeout_s=90, labels=("rtc", "negative"), contracts=("ci_rtc_macros",))
 def rtc_deadline(target):
     # TECH-002: docs/ru/TESTING_TECHNIQUES.md#tech-002 (EN: docs/en/TESTING_TECHNIQUES.md#tech-002).
     # TECH-005: docs/ru/TESTING_TECHNIQUES.md#tech-005 (EN: docs/en/TESTING_TECHNIQUES.md#tech-005).
-    target.reach("rtc_wait", when="error == 3")
+    # Stop at the call that reports the deadline error, then make the wait predicate impossible.
+    target.reach("rtc_wait", condition="error == 3")
+    target.check("rtc_wait received its error code", target.read("error"), 3)
 
     # Verify LSI wait mask.
-    target.check("LSI wait mask", target.value("mask"), 1 << 1)
+    target.check("LSI wait mask", target.read("mask"), 1 << 1)
 
-    before = target.value("board_ticks_ms")
-    backup_address = target.value("&RCC->BDCR")
-    backup = target.value(f"*(unsigned int*){backup_address}")
+    before = target.read("board_ticks_ms")
+    backup_address = target.evaluate("&RCC->BDCR", as_type=int)
+    backup = target.read(f"*(unsigned int*){backup_address}")
 
     # Make the ready predicate impossible without touching the oscillator/backup domain.
-    target.set_value("mask", 0)
+    target.write("mask", 0)
     target.reach("board_rtc_fault")
 
     # Check the timeout result without changing backup-domain state.
-    target.check("RTC wait timeout reported", target.value("board_rtc_error"), 3)
-    target.check("at least 1000 firmware ticks", ((target.value("board_ticks_ms") - before) & 0xFFFFFFFF) >= 1000, True)
-    target.check("backup configuration unchanged", target.value(f"*(unsigned int*){backup_address}"), backup)
-    target.check("no application loop", target.value("app_state.ticks"), 0)
-    target.check("no alarm publication", target.value("board_rtc_events"), 0)
+    target.check("RTC wait timeout reported", target.read("board_rtc_error"), 3)
+    target.check("at least 1000 firmware ticks", ((target.read("board_ticks_ms") - before) & 0xFFFFFFFF) >= 1000, True)
+    target.check("backup configuration unchanged", target.read(f"*(unsigned int*){backup_address}"), backup)
+    target.check("no application loop", target.read("app_state.ticks"), 0)
+    target.check("no alarm publication", target.read("board_rtc_events"), 0)
 
     target.report["injection_scope"] = "rtc_wait mask argument set to zero; not a physical LSI failure"

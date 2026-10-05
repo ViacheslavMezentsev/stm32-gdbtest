@@ -53,7 +53,7 @@ class HostTests(unittest.TestCase):
 
     def test_collection_does_not_execute_code(self):
         (self.directory / "test_one.py").write_text(
-            'raise RuntimeError("must not import")\n@case("HW_ONE", labels=("gpio",))\ndef one(t): pass\n')
+            'raise RuntimeError("must not import")\n@test("HW_ONE", labels=("gpio",))\ndef one(t): pass\n')
         cases = collect(self.directory)
         self.assertEqual(cases[0]["id"], "HW_ONE")
 
@@ -192,8 +192,8 @@ class HostTests(unittest.TestCase):
 
     def test_duplicate_and_dynamic_metadata_rejected(self):
         p = self.directory / "test_bad.py"
-        for source in ('@case(make_id())\ndef one(t): pass\n',
-                       '@case("HW_ONE")\ndef one(t): pass\n@case("HW_ONE")\ndef two(t): pass\n'):
+        for source in ('@test(make_id())\ndef one(t): pass\n',
+                       '@test("HW_ONE")\ndef one(t): pass\n@test("HW_ONE")\ndef two(t): pass\n'):
             p.write_text(source)
             with self.assertRaises(ValueError):
                 collect(self.directory)

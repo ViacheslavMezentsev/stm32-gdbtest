@@ -23,6 +23,8 @@ the transition from the former names are recorded below.
 | `execute.output_limit_chars` | 2048 | 16384 | the journal output length of `execute()` |
 | `measurements.series_length` | 5 | 20 | the series length of a measurement scenario |
 | `reset.command` | from the backend | — | the `reset()` command |
+| `app.delay_ms` | from the firmware | — | the application interval of the fixture firmware: the
+  waits between checks follow it |
 
 The values are read from `api.toml`; a method call may lower `limit` and a profile may raise it up to
 the maximum. `reset.command` defaults to the backend value: OpenOCD uses the profile's `reset_halt`

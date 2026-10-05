@@ -36,7 +36,7 @@
 
 | 0.2.9 | 04.10.2026 | Реализованы `Point`, `resume`, `step`, `until` и `finish`; `breakpoint` возвращает объект точки, `reach` возвращает результат и принимает `condition`. Проверено на пяти стендах сценарием `HW_CI_NAVIGATION`. `API_VERSION=1` не изменён. |
 
-| 0.3.0 | 05.10.2026 | Выпуск расширенного API: реализованы `ret`, `call`, `execute`, `reset`, `evaluate`, `registers`, `frames`, `watch`, `settings`/`sources` и ключи `api.toml`; справочник разбит по группам, добавлен алиас `@test`, версия модуля поднята до `0.3.0`. Проверено на пяти стендах сценариями `HW_CI_RET_VALUE`, `HW_CI_CALL`, `HW_CI_EXECUTE`, `HW_CI_RESET`, `HW_CI_SETTINGS`, `HW_CI_EVALUATE`, `HW_CI_REGISTERS`, `HW_CI_FRAMES`, `HW_CI_WATCH`, `HW_CI_TEST_ALIAS`. `API_VERSION=1` не изменён. |
+| 0.3.0 | 05.10.2026 | Выпуск расширенного API: реализованы `ret`, `call`, `execute`, `reset`, `evaluate`, `registers`, `frames`, `watch`, `settings`/`sources` и ключи `api.toml`; справочник разбит по группам, алиас `@test` добавлен при сохранении `@case` основным именем штатных сценариев, версия модуля поднята до `0.3.0`. Проверено на пяти стендах сценариями `HW_CI_RET_VALUE`, `HW_CI_CALL`, `HW_CI_EXECUTE`, `HW_CI_RESET`, `HW_CI_SETTINGS`, `HW_CI_EVALUATE`, `HW_CI_REGISTERS`, `HW_CI_FRAMES`, `HW_CI_WATCH`, `HW_CI_TEST_ALIAS`. `API_VERSION=1` не изменён. |
 
 
 ### Изменения ревизии 0.3.0

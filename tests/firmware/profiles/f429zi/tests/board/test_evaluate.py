@@ -2,7 +2,7 @@
 RU: Вычисление выражений: приведение типов и отказы.
 EN: Expression evaluation: type conversion and refusals.
 """
-from stm32_gdbtest import ApiError, case
+from stm32_gdbtest import case, ApiError, case
 
 
 # Arithmetic runs in the debugger and the requested type is applied to the result.

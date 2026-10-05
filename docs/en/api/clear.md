@@ -7,12 +7,15 @@
 | Property | Value |
 | --- | --- |
 | Module support | 0.1.0rc1 / v0.1.0-rc.1 |
-| Contract in API specification | 0.1.0; §4.8 |
+| API specification contract | 0.1.0; §4.8 |
 | API_VERSION | 1 |
+| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 
-## Contract
+## Purpose
 
 Deletes all still-valid Target-owned breakpoints and clears ownership.
+
+## Contract and limitations
 
 Also removes fault guards installed by the agent. Leaves unrelated GDB points alone. Does not reset the MCU or clear records. Use for an intentional change of stop strategy.
 

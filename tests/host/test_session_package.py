@@ -23,8 +23,8 @@ class SessionPackageTests(unittest.TestCase):
         self.source = self.root / 'source'
         board = self.source / 'tests' / 'board'
         board.mkdir(parents=True)
-        (board / 'test_sample.py').write_text('from stm32_gdbtest import case\n'
-            '@case("HW_SAMPLE")\ndef sample(t):\n    pass\n', encoding='utf-8')
+        (board / 'test_sample.py').write_text('from stm32_gdbtest import test\n'
+            '@test("HW_SAMPLE")\ndef sample(t):\n    pass\n', encoding='utf-8')
         for name, text in {'target.toml': TARGET, 'image.toml': IMAGE,
             'api.toml': 'schema=1\n[records]\nmax_records=3\n[custom]\ndate=2026-10-03\n',
             'session.toml': '[config]\ntarget="target.toml"\napi="api.toml"\nimage="image.toml"'}.items():

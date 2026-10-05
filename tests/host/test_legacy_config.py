@@ -21,8 +21,8 @@ class LegacyConfigTests(unittest.TestCase):
         self.source = self.root / 'source'
         board = self.source / 'tests/board'
         board.mkdir(parents=True)
-        (board/'test_one.py').write_text('from stm32_gdbtest import case\n'
-            '@case("HW_LEGACY")\ndef one(t):\n    pass\n', encoding='utf-8')
+        (board/'test_one.py').write_text('from stm32_gdbtest import test\n'
+            '@test("HW_LEGACY")\ndef one(t):\n    pass\n', encoding='utf-8')
         self.profile = self.source/'target.toml'
         self.profile.write_bytes(TARGET.encode())
         self.image = self.source/'policy.toml'

@@ -37,12 +37,14 @@ class FakeType:
 
 class FakeValue:
     def __init__(self, plain, code=TYPE_CODE_INT, fields=None, children=None, bounds=None,
-                 optimized=False, fail_lazy=False):
+                 optimized=False, fail_lazy=False, address=0x20000008):
         self._plain = plain
         self.type = FakeType(code, fields, bounds)
         self._children = children or {}
         self.is_optimized_out = optimized
         self._fail_lazy = fail_lazy
+        # A plain RAM object by default; a peripheral register passes its own address.
+        self.address = address
 
     def fetch_lazy(self):
         if self._fail_lazy:
@@ -219,6 +221,20 @@ class ReadWriteTests(unittest.TestCase):
         result = target.write("app_state.ticks", 42, verify=False)
         self.assertIsNone(result["after"])
         self.assertFalse(result["verified"])
+
+    def test_write_outside_the_scope_is_not_read_back(self):
+        target = self.target()
+        # A peripheral register does not read back what was written, so no verification is claimed.
+        self.integer.address = 0xE000E180
+        self.memory["app_state.ticks"] = self.integer
+        result = target.write("app_state.ticks", 42)
+        self.assertIsNone(result["after"])
+        self.assertFalse(result["verified"])
+        self.assertEqual(result["verify_scope"], "outside")
+        entry = target.report["mutations"][0]
+        self.assertFalse(entry["verified"])
+        self.assertEqual(entry["verify_scope"], "outside")
+        self.assertEqual(entry["address"], 0xE000E180)
 
     def test_write_validates_its_arguments(self):
         target = self.target()

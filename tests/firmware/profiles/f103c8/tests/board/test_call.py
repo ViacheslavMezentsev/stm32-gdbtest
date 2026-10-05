@@ -2,7 +2,7 @@
 RU: Вызов функции прошивки на остановленном ядре: аргументы, результат и отказы.
 EN: Calling a firmware function on the halted core: arguments, result and refusals.
 """
-from stm32_gdbtest import ApiError, case
+from stm32_gdbtest import case, ApiError, case
 
 
 # The call runs the real function, so its effect is visible in the application state.

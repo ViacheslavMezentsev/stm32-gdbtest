@@ -9,9 +9,10 @@ from stm32_gdbtest import case
 def _check_values(target, rows):
     # TECH-010: evaluate each actual, then its expected expression, then check.
     for name, expression, expected in rows:
-        actual = target.value(expression)
+        actual = target.evaluate(expression, as_type=int)
         if isinstance(expected, str):
-            expected = target.value(expected)
+            # An expected cell may be a C expression or an address, so it is evaluated too.
+            expected = target.evaluate(expected, as_type=int)
 
         # Compare the current row after both expressions have been evaluated.
         target.check(name, actual, expected)
@@ -59,9 +60,9 @@ def rtc_init(t):
     t.reach("platform_adc_prepare")
 
     # Check the RTC source and alarm setup after initialization.
-    t.check("RTC source LSI", (t.value("RCC->BDCR") >> 8) & 3, 2)
-    t.check("RTC enabled", (t.value("RCC->BDCR") >> 15) & 1, 1)
-    t.check("LSI ready", (t.value("RCC->CSR") >> 1) & 1, 1)
-    t.check("asynchronous divider", (t.value("RTC->PRER") >> 16) & 127, 127)
-    t.check("synchronous divider", t.value("RTC->PRER") & 32767, 311)
-    t.check("RTC output disabled", (t.value("RTC->CR") >> 21) & 3, 0)
+    t.check("RTC source LSI", (t.read("RCC->BDCR") >> 8) & 3, 2)
+    t.check("RTC enabled", (t.read("RCC->BDCR") >> 15) & 1, 1)
+    t.check("LSI ready", (t.read("RCC->CSR") >> 1) & 1, 1)
+    t.check("asynchronous divider", (t.read("RTC->PRER") >> 16) & 127, 127)
+    t.check("synchronous divider", t.read("RTC->PRER") & 32767, 311)
+    t.check("RTC output disabled", (t.read("RTC->CR") >> 21) & 3, 0)

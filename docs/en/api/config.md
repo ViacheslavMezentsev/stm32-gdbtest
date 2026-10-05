@@ -7,15 +7,18 @@
 | Property | Value |
 | --- | --- |
 | Module support | 0.2.0.dev0 → 0.2.0rc1 |
-| Contract in API specification | 0.2.0; §4.11 |
+| API specification contract | 0.2.0; §4.11 |
 | API_VERSION | 1 |
+| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 | Former-name alias | config -> settings (the alias works without warnings until 1.0; removal in 0.4.0) |
 
 Implemented extension; `0.2.0rc1` is a local candidate, not a published stable release.
 
-## Contract
+## Purpose
 
 Deeply immutable mapping of api/target/image for the captured run, with defaults applied. A property, not a method.
+
+## Contract and limitations
 
 An omitted api uses defaults; omitted image is None. Unknown api fields survive; lists become tuples and TOML types survive. Missing keys raise KeyError; mutation is forbidden. SESSION_CONFIG selects sources; access does not reload files.
 

@@ -7,15 +7,18 @@
 | Property | Value |
 | --- | --- |
 | Module support | 0.2.0.dev0 → 0.2.0rc1 |
-| Contract in API specification | 0.2.0; public import clarified in 0.2.1; §5.6 |
+| API specification contract | 0.2.0; public import clarified in 0.2.1; §5.6 |
 | API_VERSION | 1 |
+| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 | Former-name alias | RecordError -> a subclass of ApiError (the alias works without warnings until 1.0; removal in 0.4.0) |
 
 Implemented extension; `0.2.0rc1` is a local candidate, not a published stable release.
 
-## Contract
+## Purpose
 
 Public record/records validation exception; importable from stm32_gdbtest without GDB. code and limit describe the failure category.
+
+## Contract and limitations
 
 code: invalid_name, unsupported_type, invalid_text, non_finite, cycle, limit_exceeded. For limit_exceeded, limit is records/nodes/depth/text_bytes/integer_bits; otherwise None. Message and error precedence are not fixed. Unhandled exceptions produce ERROR; MemoryError is not replaced.
 

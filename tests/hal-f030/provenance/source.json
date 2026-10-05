@@ -210,7 +210,7 @@
       "source": "profiles/f030r8/tests/board/test_peripheral_init.py",
       "destination": "profile/tests/board/test_peripheral_init.py",
       "sha256": "45705bfabd56bc2cbbba233f3adb30b90076d765888367e30617bbb1d63cdbae",
-      "migrated_sha256": "d3517ae8cc9d5af9bec951b2fe22bfb9969b62f3c0993bfa11d4abf4caf142ec",
+      "migrated_sha256": "88de2cb6a719cd2121dae5b585a050a80e59dfb583a132e5bd2977554ef45256",
       "original_migrated_sha256": "45705bfabd56bc2cbbba233f3adb30b90076d765888367e30617bbb1d63cdbae",
       "adaptation": "Table-driven checks; evaluation order and early failure verified by tests/host/test_scenario_tables.py.",
       "pre_style_sha256": "09e57208ce8d0a63421d2168d3103b27cf8a8e2927d1049355f07bd398bd29fb",

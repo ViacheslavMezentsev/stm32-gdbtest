@@ -2,7 +2,7 @@
 RU: Цепочка кадров: глубины, имена, счётчики команд и предел обхода.
 EN: Frame chain: depths, names, program counters and the walk limit.
 """
-from stm32_gdbtest import ApiError, case
+from stm32_gdbtest import case, ApiError, case
 
 
 # The chain starts at the innermost frame and stops at the limit.

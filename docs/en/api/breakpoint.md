@@ -7,12 +7,15 @@
 | Property | Value |
 | --- | --- |
 | Module support | 0.1.0rc1 / v0.1.0-rc.1 |
-| Contract in API specification | 0.1.0; §4.4 |
+| API specification contract | 0.1.0; §4.4 |
 | API_VERSION | 1 |
+| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 
-## Contract
+## Purpose
 
 Creates a hardware breakpoint at function. temporary makes it one-shot; when is a GDB condition or None. Returns a GDB object.
+
+## Contract and limitations
 
 Does not resume execution. Pending symbols and exhausted breakpoint_limit fail. The budget counts Target-owned points, not all GDB points; physical resources depend on MCU/backend. This is not a watchpoint.
 

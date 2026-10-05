@@ -4,7 +4,7 @@ EN: Target reset: the halt, the cache invalidation and the refusal with an activ
 """
 import os
 
-from stm32_gdbtest import ApiError, case
+from stm32_gdbtest import case, ApiError, case
 
 
 # A reset leaves the core halted at the reset vector and invalidates both caches.

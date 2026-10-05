@@ -7,13 +7,16 @@
 | Property | Value |
 | --- | --- |
 | Module support | 0.1.0rc1 / v0.1.0-rc.1 |
-| Contract in API specification | 0.1.0; §4.7 |
+| API specification contract | 0.1.0; §4.7 |
 | API_VERSION | 1 |
+| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 | Former-name alias | `ret(value=None)`; the alias works without warnings until 1.0, removal in 0.4.0; added by revision 0.3.0 |
 
-## Contract
+## Purpose
 
 Executes GDB return with expression and records the operation, function name and expression in mutations. Use an empty string for void.
+
+## Contract and limitations
 
 Return affects the selected frame; the log takes the newest_frame name. Keep the frame selection unchanged for consistent naming. Skips remaining code without undoing prior effects. GDB must support the type/ABI; this is not finish.
 

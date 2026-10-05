@@ -27,7 +27,7 @@ def adc_series(target):
     for index in range(count):
         target.reach("board_adc_sample")
         target.reach("board_delay_ms")
-        sequence = target.value("board_adc_sequences")
+        sequence = target.read("board_adc_sequences")
 
         # Compare publication counters with unsigned 32-bit wraparound.
         if previous is not None:
@@ -35,7 +35,7 @@ def adc_series(target):
 
         # Snapshot the published values while the MCU is stopped.
         sample = {
-            name: target.value("board_adc_reading." + name)
+            name: target.read("board_adc_reading." + name)
             for name in ("vdda_mv", "temperature_mdeg_c", "quality")
         }
 

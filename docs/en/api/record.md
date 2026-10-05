@@ -7,14 +7,17 @@
 | Property | Value |
 | --- | --- |
 | Module support | 0.2.0.dev0 → 0.2.0rc1 |
-| Contract in API specification | 0.2.0; §4.9 |
+| API specification contract | 0.2.0; §4.9 |
 | API_VERSION | 1 |
+| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 
 Implemented extension; `0.2.0rc1` is a local candidate, not a published stable release.
 
-## Contract
+## Purpose
 
 Appends a deep copy of data to the current scenario invocation journal. name is an exact nonempty str; names may repeat.
+
+## Contract and limitations
 
 Accepts exact None/bool/int, finite float, Unicode str, list and dict with string keys. Rejects tuple, bytes, subclasses, GDB objects, cycles and NaN/Inf. RecordError consumes no sequence/budget. No MCU reads, export or test-outcome changes.
 

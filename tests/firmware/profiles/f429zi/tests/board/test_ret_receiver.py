@@ -7,8 +7,8 @@ from stm32_gdbtest import case
 
 # Read the receiver's observed state; the application publishes it, not the test.
 def _receiver(target):
-    return {"produced": target.value("app_received.produced"),
-            "calls": target.value("app_received.calls")}
+    return {"produced": target.read("app_received.produced"),
+            "calls": target.read("app_received.calls")}
 
 
 # The firmware calls the producer through app_receiver_step; the caller consumes the returned value.
@@ -19,8 +19,8 @@ def ret_receiver(target):
 
     # The caller copies the application state before the call; a forced value must replace that copy
     # in the receiver's own object once its body completes.
-    target.set_value("app_state.ticks", 7)
-    target.force_return("42")
+    target.write("app_state.ticks", 7)
+    target.ret("42")
     target.reach("app_step")
     after_value = _receiver(target)
     target.check("forced value reached the receiver", after_value["produced"], 42)
@@ -28,8 +28,8 @@ def ret_receiver(target):
     target.check("receiver counted the call", after_value["calls"] > initial["calls"], True)
 
     # A forced zero must reach the receiver as well.
-    target.set_value("app_state.ticks", 9)
-    target.force_return("0")
+    target.write("app_state.ticks", 9)
+    target.ret("0")
     target.reach("app_step")
     after_zero = _receiver(target)
     target.check("forced zero reached the receiver", after_zero["produced"], 0)

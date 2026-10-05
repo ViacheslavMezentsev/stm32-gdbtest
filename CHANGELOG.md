@@ -20,8 +20,11 @@
 - Вызовы и управление: `ret` с типизированным значением, `call` функций прошивки, `reset` с командой из `api.toml`, `execute` команд отладчика с журналом.
 - Чтение и вычисление: `read`/`write` объектов, `evaluate` выражений с приведением типа, `registers` кадра, `frames` с пределом обхода.
 - Представления прогона: `settings` и `sources` как неизменяемые отображения действующих `config` и `config_props`.
+- Штатные сценарии используют прежнее имя `@case`: тестовый случай читается так понятнее внутри
+  скрипта. Алиас `@test` остаётся и проверяется сценарием `HW_CI_TEST_ALIAS`.
 - Декоратор `@test` как алиас `@case`; статический сборщик принимает оба имени.
-- Ключи `api.toml`: `frames.limit`, `call.depth`, `call.args_max`, `execute.output_limit_chars`, `reset.command`.
+- Ключи `api.toml`: `frames.limit`, `call.depth`, `call.args_max`, `execute.output_limit_chars`,
+  `reset.command`, `app.delay_ms`.
 
 ### Изменено
 

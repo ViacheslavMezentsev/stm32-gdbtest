@@ -10,6 +10,10 @@
 - Keep lines of up to 120 characters intact. Split longer constructs at meaningful boundaries.
 - Omit optional trailing commas in calls, lists, dictionaries and tables.
   A singleton tuple requires its comma: `labels=("adc",)`.
+- Three or more simple `target.check()` calls in a row become a `_check_values(target, rows)` table
+  with at least one blank line above and below. The table fits when the expected value stays within
+  120 characters; a long expectation, a read of a scenario object (`sample["quality"]`) or a row
+  longer than the line remains an explicit `target.check()`.
 
 Applied to 35 production CMSIS/HAL scenario and minimal-consumer helper files.
 Executable ASTs were compared with `ebf1bf8`: no differences (module docstrings excluded).

@@ -7,15 +7,18 @@
 | Property | Value |
 | --- | --- |
 | Module support | 0.2.0.dev0 → 0.2.0rc1 |
-| Contract in API specification | 0.2.0; §4.12 |
+| API specification contract | 0.2.0; §4.12 |
 | API_VERSION | 1 |
+| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 | Former-name alias | config_props -> sources (the alias works without warnings until 1.0; removal in 0.4.0) |
 
 Implemented extension; `0.2.0rc1` is a local candidate, not a published stable release.
 
-## Contract
+## Purpose
 
 Deeply immutable mapping of the same api/target/image roles. A file has data without defaults, original-byte sha256 and reference; absent files yield None.
+
+## Contract and limitations
 
 Describes the same snapshot as config. data excludes TOML comments. reference does not guarantee a usable path on another host; do not reopen it to obtain the actual run configuration.
 

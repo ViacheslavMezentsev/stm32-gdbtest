@@ -20,7 +20,9 @@ Writes a value into an addressable program object and returns the result with ef
 With verification (`verify=True`) a read-back confirms the applied value.
 
 Limitations: addressable objects in RAM of a declared scalar type; integer widths are in the
-verified scope, 64-bit and `float` are not. A write failure is never hidden and is reported as an
+verified scope, 64-bit and `float` are not. The read-back comparison runs only for objects in the
+SRAM window: a peripheral register reads by its own rules, so the write still happens while the
+reading and the `verify_scope=outside` marker are reported without claiming confirmation. A write failure is never hidden and is reported as an
 operation failure; an already applied effect is not rolled back.
 
 ## Example

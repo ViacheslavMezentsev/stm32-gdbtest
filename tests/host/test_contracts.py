@@ -20,10 +20,10 @@ class ContractTests(unittest.TestCase):
 
     def test_literal_selection_does_not_import_tests(self):
         p = self.directory / "test_one.py"
-        p.write_text('raise RuntimeError("no import")\n@case("HW_ONE", contracts=("rcc_error",))\ndef one(t): pass\n')
+        p.write_text('raise RuntimeError("no import")\n@test("HW_ONE", contracts=("rcc_error",))\ndef one(t): pass\n')
         self.assertEqual(collect(self.directory)[0]["contracts"], ["rcc_error"])
         for expression in ('("unknown", "unknown")', 'get_contracts()', '"rcc_error"'):
-            p.write_text('@case("HW_ONE", contracts=' + expression + ')\ndef one(t): pass\n')
+            p.write_text('@test("HW_ONE", contracts=' + expression + ')\ndef one(t): pass\n')
             with self.assertRaises(ValueError):
                 collect(self.directory)
 

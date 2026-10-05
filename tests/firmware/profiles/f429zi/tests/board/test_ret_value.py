@@ -2,7 +2,7 @@
 RU: Принудительный возврат со значением: перенос значения и отказы до команды.
 EN: Forced return with a value: the transfer of the value and refusals before the command.
 """
-from stm32_gdbtest import ApiError, case
+from stm32_gdbtest import case, ApiError, case
 
 
 # The receiver publishes the value the producer returned, so app_state proves the transfer.
@@ -48,6 +48,6 @@ def ret_value(target):
 
     # The 0.2.x alias still accepts a GDB expression.
     target.reach("app_step")
-    alias = target.force_return("0")
+    alias = target.ret("0")
     target.check("the alias returns a result", alias["operation"], "ret")
     target.check("the alias passes the expression through", alias["command"], "return 0")

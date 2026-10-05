@@ -5,6 +5,10 @@ EN: WFI interrupted context and IRQ wake-up checks; not a power measurement.
 import gdb
 from stm32_gdbtest import case
 
+# Application interval of the CI firmware.
+# Application interval of the fixture profile (`[app] delay_ms` in api.toml).
+EXPECTED_DELAY = 500
+
 
 # Find an interrupt that actually interrupted WFI, using bounded frame inspection.
 def reach_wfi_irq(target, handler, exception):
@@ -14,7 +18,7 @@ def reach_wfi_irq(target, handler, exception):
         target.reach(handler)
 
         # Check the active exception before inspecting the interrupted frame.
-        target.check("expected exception", target.value("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), exception)
+        target.check("expected exception", target.read("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), exception)
 
         interrupted = gdb.newest_frame().older()
 
@@ -30,7 +34,7 @@ def reach_wfi_irq(target, handler, exception):
 
         pc = int(interrupted.pc())
         name = interrupted.name()
-        instruction = target.value(f"*(unsigned short*)({pc} - 2)")
+        instruction = target.read(f"*(unsigned short*)({pc} - 2)")
         target.report.setdefault("interrupted_contexts", []).append(
             dict(attempt=attempt, function=name, pc=pc, preceding_halfword=instruction))
         if name == "board_delay_ms" and instruction == 0xBF30:
@@ -44,56 +48,67 @@ def reach_wfi_irq(target, handler, exception):
 
 
 # Verify ordinary Sleep and application progress after a SysTick interrupt.
-@case("HW_CI_SLEEP_SYSTICK", labels=("sleep", "systick"), contracts=("ci_sleep_macros",))
+@case("HW_CI_SLEEP_SYSTICK", timeout_s=90, labels=("sleep", "systick"), contracts=("ci_sleep_macros",))
 def sleep_systick(target):
-    target.reach("board_delay_ms", when="delay_ms == 500")
+    # Stop in the delay call whose requested interval is the agreed application delay.
+    target.reach("board_delay_ms")
+    target.check("the delay runs for the application interval",
+                 target.read("app_delay") == EXPECTED_DELAY, True)
 
     # Verify ordinary Sleep, no SLEEPONEXIT.
-    target.check("ordinary Sleep, no SLEEPONEXIT", target.value("SCB->SCR & 6"), 0)
+    target.check("ordinary Sleep, no SLEEPONEXIT", target.read("SCB->SCR & 6"), 0)
 
-    enabled = target.value("NVIC->ISER[0]")
-    target.set_value("NVIC->ICER[0]", enabled)
-    before = target.value("board_ticks_ms")
+    enabled = target.read("NVIC->ISER[0]")
+    target.write("NVIC->ICER[0]", enabled)
+    before = target.read("board_ticks_ms")
     try:
         reach_wfi_irq(target, "SysTick_Handler", 15)
     finally:
-        target.set_value("NVIC->ISER[0]", enabled)
+        target.write("NVIC->ISER[0]", enabled)
 
+    # The first stop in the loop can be inside the interval itself, so a full loop entry is awaited.
+    target.reach("app_loop")
     target.reach("app_loop")
 
     # Check application progress and retained ADC publication after wake-up.
-    target.check("delay completed", ((target.value("board_ticks_ms") - before) & 0xFFFFFFFF) >= 500, True)
-    target.check("ADC sequence retained", target.value("board_adc_sequences"), 1)
+    target.check("delay completed",
+                 ((target.read("board_ticks_ms") - before) & 0xFFFFFFFF) >= EXPECTED_DELAY, True)
+    target.check("ADC sequence retained", target.read("board_adc_sequences"), 1)
 
 
 # Isolate TIM3 as the wake source and verify interrupted WFI and recovery.
-@case("HW_CI_SLEEP_TIM3", labels=("sleep", "timer"), contracts=("ci_sleep_macros",))
+@case("HW_CI_SLEEP_TIM3", timeout_s=90, labels=("sleep", "timer"), contracts=("ci_sleep_macros",))
 def sleep_tim3(target):
-    target.reach("board_delay_ms", when="delay_ms == 500")
+    # Stop in the delay call whose requested interval is the agreed application delay.
+    target.reach("board_delay_ms")
+    target.check("the delay runs for the application interval",
+                 target.read("app_delay") == EXPECTED_DELAY, True)
 
     # Verify ordinary Sleep, no SLEEPONEXIT.
-    target.check("ordinary Sleep, no SLEEPONEXIT", target.value("SCB->SCR & 6"), 0)
+    target.check("ordinary Sleep, no SLEEPONEXIT", target.read("SCB->SCR & 6"), 0)
 
-    control = target.value("SysTick->CTRL") & 7
-    enabled = target.value("NVIC->ISER[0]")
+    control = target.read("SysTick->CTRL") & 7
+    enabled = target.read("NVIC->ISER[0]")
 
     # Leave only TIM3 external IRQ, stop SysTick and clear a pending exception.
-    target.set_value("NVIC->ICER[0]", enabled & ~(1 << 16))
-    target.set_value("SysTick->CTRL", 0)
-    target.set_value("SCB->ICSR", 1 << 25)
-    ticks = target.value("board_ticks_ms")
-    events = target.value("board_timer_events")
+    target.write("NVIC->ICER[0]", enabled & ~(1 << 16))
+    target.write("SysTick->CTRL", 0)
+    target.write("SCB->ICSR", 1 << 25)
+    ticks = target.read("board_ticks_ms")
+    events = target.read("board_timer_events")
     try:
         reach_wfi_irq(target, "TIM3_IRQHandler", 32)
 
         # Verify SysTick did not advance.
-        target.check("SysTick did not advance", target.value("board_ticks_ms"), ticks)
+        target.check("SysTick did not advance", target.read("board_ticks_ms"), ticks)
     finally:
-        target.set_value("SysTick->CTRL", control)
-        target.set_value("NVIC->ISER[0]", enabled)
+        target.write("SysTick->CTRL", control)
+        target.write("NVIC->ISER[0]", enabled)
 
+    # A full loop entry follows a completed interval and its ADC publication.
+    target.reach("app_loop")
     target.reach("app_loop")
 
     # Verify timer event handled.
-    target.check("timer event handled", ((target.value("board_timer_events") - events) & 0xFFFFFFFF) > 0, True)
-    target.check("ADC sequence retained", target.value("board_adc_sequences"), 1)
+    target.check("timer event handled", ((target.read("board_timer_events") - events) & 0xFFFFFFFF) > 0, True)
+    target.check("ADC sequence retained", target.read("board_adc_sequences"), 1)

@@ -7,12 +7,15 @@
 | Property | Value |
 | --- | --- |
 | Module support | 0.1.0rc1 / v0.1.0-rc.1 |
-| Contract in API specification | 0.1.0; §4.5; the result was added by designed revision 0.2.9 |
+| API specification contract | 0.1.0; §4.5; the result was added by designed revision 0.2.9 |
 | API_VERSION | 1 |
+| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 
-## Contract
+## Purpose
 
 Sets a temporary hardware breakpoint, continues once, then checks its number, frame name and optional when condition.
+
+## Contract and limitations
 
 An unrelated stop is not automatically skipped. Frame comparison strips clone suffixes, parameters and const/volatile. The point is removed on exit. No per-call timeout argument: the scenario deadline applies.
 

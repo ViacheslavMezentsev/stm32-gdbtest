@@ -2,7 +2,7 @@
 RU: Чтение регистров кадра: счётчик команд, указатель стека и регистры общего назначения.
 EN: Frame register reads: the program counter, the stack pointer and general-purpose registers.
 """
-from stm32_gdbtest import ApiError, case
+from stm32_gdbtest import case, ApiError, case
 
 
 # Registers are read by name; the program counter prefers the frame accessor.

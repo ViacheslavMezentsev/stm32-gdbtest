@@ -15,6 +15,7 @@ FALLBACK_CODES = {
     "TYPE_CODE_BOOL": 11,
     "TYPE_CODE_CHAR": 9,
     "TYPE_CODE_FLT": 12,
+    "TYPE_CODE_PTR": 1,
     "TYPE_CODE_STRING": 15,
     "TYPE_CODE_ARRAY": 16,
     "TYPE_CODE_STRUCT": 13,
@@ -87,6 +88,23 @@ def value_to_plain(value, path, gdb=None):
         plain = unqualified_type(value.type)
         return {field.name: value_to_plain(value[field.name], f"{path}.{field.name}", gdb)
                 for field in plain.fields()}
+    if code is not None and code == type_constant("TYPE_CODE_PTR", gdb):
+        # An address expression produced a pointer; its value is the address the scenario compares.
+        # A symbol-backed pointer carries `address`, while an address constant does not, so a cast to an
+        # integer type is the conversion that covers both.
+        address = getattr(value, "address", None)
+        if address is not None:
+            return int(address)
+        cast = getattr(value, "cast", None)
+        if callable(cast) and gdb is not None:
+            try:
+                return int(cast(gdb.lookup_type("unsigned long")))
+            except (TypeError, ValueError, RuntimeError, AttributeError):
+                pass
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            pass
     fail("read", "observe", "none", "unsupported_type", f"unsupported type for {path}",
          path=path, type_code=code)
 

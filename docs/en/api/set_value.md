@@ -7,13 +7,16 @@
 | Property | Value |
 | --- | --- |
 | Module support | 0.1.0rc1 / v0.1.0-rc.1 |
-| Contract in API specification | 0.1.0; §4.6 |
+| API specification contract | 0.1.0; §4.6 |
 | API_VERSION | 1 |
+| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 | Former-name alias | set_value(expression, value) -> write(path, value) (the alias works without warnings until 1.0; removal in 0.4.0) |
 
-## Contract
+## Purpose
 
 Reads expression before the write, executes GDB set variable using value, then reads it again. Records expression/value/before/after in mutations.
+
+## Contract and limitations
 
 value is interpolated into a GDB command: use a number or valid C expression. No automatic equality assertion or rollback. The author checks MMIO validity and HAL preconditions; reads can also affect registers.
 

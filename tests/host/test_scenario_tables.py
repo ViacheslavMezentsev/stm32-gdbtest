@@ -22,12 +22,30 @@ class Trace:
         if len(self.calls) == self.fail_at:
             raise Stop()
 
-    def value(self, expression):
-        self.call('value', expression)
+    def evaluate(self, expression, **options):
+        self.call('evaluate', expression)
+        return len(self.calls)
+
+    def read(self, path, **options):
+        self.call('read', path)
         return len(self.calls)
 
     def check(self, *args):
         self.call('check', *args)
+
+
+class Literals(dict):
+    """Simple NAME = <literal> assignments of a module, for the executed blocks."""
+
+    def __init__(self, source):
+        super().__init__()
+        for node in ast.parse(source).body:
+            if isinstance(node, ast.Assign) and len(node.targets) == 1 \
+                    and isinstance(node.targets[0], ast.Name):
+                try:
+                    self[node.targets[0].id] = ast.literal_eval(node.value)
+                except ValueError:
+                    continue
 
 
 class ScenarioTablesTests(unittest.TestCase):
@@ -41,7 +59,8 @@ class ScenarioTablesTests(unittest.TestCase):
                 self.assertIn(ast.dump(statement), actual_nodes)
             helper = next(n for n in ast.parse(source).body
                           if isinstance(n, ast.FunctionDef) and n.name == '_check_values')
-            namespace = {}
+            # Constants such as the expected interval are module level in the source.
+            namespace = dict(Literals(source))
             exec(compile(ast.Module(body=[helper], type_ignores=[]), block['file'], 'exec'), namespace)
             def execute(code, fail_at=None):
                 trace = Trace(fail_at)
