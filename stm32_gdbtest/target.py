@@ -641,29 +641,85 @@ class Target:
             self._fail("until", "validation", "none", "invalid_location",
                        "location must be a non-empty string", location=location)
         command = "until" if location is None else "until " + location
-        stop = self._advance("until", command)
+        before = self._frame_identity()
+        targets = self._line_addresses(location) if location is not None else []
+        stop = self._advance("until", command, targets=targets)
         self.report.setdefault("stops", []).append(stop)
-        outcome = "reached" if location is not None and stop.get("kind") == "location" else "completed"
-        return dict(operation="until", outcome=outcome, location=location, stop=stop)
+        if location is None:
+            outcome = "completed"
+        elif stop.get("pc") in targets or (not targets and stop.get("kind") == "location"):
+            outcome = "reached"
+        elif before is not None and stop.get("function") != before[0]:
+            # GDB stops `until` when the current frame returns, before the target is reached; GDB 16
+            # calls that `location-reached` too, so only the address proves the target.
+            outcome = "frame_exited"
+        else:
+            outcome = "completed"
+        return dict(operation="until", outcome=outcome, location=location, targets=targets, stop=stop)
+
+    def _line_addresses(self, location):
+        """Addresses a location resolves to, or an empty list when GDB cannot tell (ТЗ API 4.5)."""
+        decode = getattr(gdb, "decode_line", None)
+        if not callable(decode):
+            return []
+        try:
+            _rest, sals = decode(location)
+        except (gdb.error, RuntimeError, TypeError, ValueError):
+            return []
+        addresses = []
+        for sal in sals or ():
+            pc = getattr(sal, "pc", None)
+            if pc:
+                addresses.append(int(pc))
+        return addresses
 
     def finish(self):
-        """Run the rest of the current function (ТЗ API 4.5)."""
+        """Run the rest of the current function and report the returned value (ТЗ API 4.5).
+
+        GDB stores the value of a finished function in its value history ("Value returned is $N"),
+        which every supported GDB has; `gdb.Frame` carries no return value. A void function is told
+        apart by the declared type, so `None` never stands for both.
+        """
+        origin = gdb.newest_frame()
+        returned_from = function_name(origin.name()) if origin is not None else None
+        kind = self._return_type(origin) if origin is not None else None
+        history = self._history_count()
         stop = self._advance("finish", "finish")
         self.report.setdefault("stops", []).append(stop)
         frame = gdb.newest_frame()
-        value = getattr(frame, "return_value", None) if frame is not None else None
-        available = value is not None and not getattr(value, "is_optimized_out", False)
-        if available:
-            try:
-                value.fetch_lazy()
-            except gdb.error:
-                available = False
-        return dict(operation="finish", outcome="completed", stop=stop,
+        value, state = self._finish_value(kind, history)
+        return dict(operation="finish", outcome="completed", stop=stop, returned_from=returned_from,
                     function=function_name(frame.name()) if frame is not None else None,
-                    return_value=int(value) if available else None,
-                    return_state="available" if available else "unavailable")
+                    return_value=value, return_state=state)
 
-    def _advance(self, operation, command="continue"):
+    def _history_count(self):
+        """Length of the GDB value history, or None when this GDB cannot report it."""
+        count = getattr(gdb, "history_count", None)
+        if not callable(count):
+            return None
+        try:
+            return int(count())
+        except (gdb.error, RuntimeError, TypeError, ValueError):
+            return None
+
+    def _finish_value(self, kind, history_before):
+        """Returned value and its state after `finish`: available, void or unavailable."""
+        _name, _signed, width = values.return_type_shape(kind)
+        if kind is not None and not width and values.type_code_of(kind) == values.type_constant("TYPE_CODE_VOID"):
+            return None, "void"
+        after = self._history_count()
+        if history_before is None or after is None or after <= history_before:
+            return None, "unavailable"
+        try:
+            value = gdb.history(0)
+            if getattr(value, "is_optimized_out", False):
+                return None, "unavailable"
+            value.fetch_lazy()
+            return values.value_to_plain(value, "finish", gdb), "available"
+        except conversion_errors(gdb) + (RuntimeError, AttributeError):
+            return None, "unavailable"
+
+    def _advance(self, operation, command="continue", targets=()):
         """Run one debugger command and describe the stop it produced.
 
         The stop reason comes from the event queue because a temporary point may already be invalid
@@ -684,12 +740,21 @@ class Target:
         if frame is not None:
             stop["pc"] = int(frame.pc())
             stop["function"] = function_name(frame.name())
-        # Some GDB builds omit the native reason, so a changed frame or program counter is the
-        # fallback. It only means anything for the commands that produce exactly such a stop: a
-        # plain continue may stop anywhere, for a watch point or a debugger interrupt included.
-        if stop["kind"] == "unknown" and before is not None and operation == "finish" \
-                and stop.get("function") != before[0]:
-            stop["kind"] = "function_return"
+        # GDB 14 attaches no `details` to a stop event, so the native reason is missing for step, until
+        # and finish (GDB 15+ report it). The fallback is chosen per command and is never presented as
+        # native: the stop carries `inferred` and the report a one-time warning (ТЗ API 4.5).
+        moved = before is not None and stop.get("pc") is not None and stop.get("pc") != before[1]
+        if stop["kind"] == "unknown" and before is not None:
+            if operation == "finish" and stop.get("function") != before[0]:
+                stop["kind"] = "function_return"
+            elif operation == "step" and moved:
+                stop["kind"] = "step"
+            elif operation == "until" and moved:
+                # GDB 15+ call leaving the line `end-stepping-range` even when it returns into the
+                # caller (five-stand matrix), so only a reached target address is a location.
+                stop["kind"] = "location" if stop.get("pc") in targets else "step"
+            if stop["kind"] != "unknown":
+                self._infer(stop, operation)
         if stop["kind"] == "unknown" and operation in ("resume", "reach"):
             # Some backends do not report the watch point stop at all, so the changed object is the
             # evidence: a write watch point can only be seen through the value it protects.
@@ -698,15 +763,9 @@ class Target:
                      and self._watch_value(point.watched) != point.snapshot]
             if fired:
                 stop["kind"] = "watchpoint"
-                stop["native_reason"] = "watchpoint-trigger"
-                stop["inferred"] = True
                 stop["watch"] = [point.id for point in fired]
-        if stop["kind"] == "unknown" and before is not None and stop.get("pc") != before[1]:
-            # No point and no native reason was reported, but the program counter moved. That is a
-            # step, a reached location or a return into another function, and the checks below only
-            # care that the stop is explained at all. A plain continue cannot be told apart here,
-            # which is why a watch point is proven by its object instead (see above).
-            stop["kind"] = "step" if stop.get("function") == before[0] else "function_return"
+                self._infer(stop, operation)
+        stop.setdefault("evidence", "native" if stop["kind"] != "unknown" else "none")
         if stop["kind"] == "fault":
             self._fail(operation, "observe", "completed", "fault_stop",
                        "stopped at a fault guard", stop=stop)
@@ -717,6 +776,17 @@ class Target:
             self._fail(operation, "observe", "completed", "unknown_stop",
                        "stop reason is unknown", stop=stop)
         return stop
+
+    def _infer(self, stop, operation):
+        """Mark a stop as inferred and warn once per run that this GDB gives no native reason."""
+        stop["inferred"] = True
+        stop["evidence"] = "inferred"
+        if not getattr(self, "_inference_warned", False):
+            self._inference_warned = True
+            self.report.setdefault("warnings", []).append(dict(
+                code="inferred_stop", operation=operation, gdb=getattr(gdb, "VERSION", None),
+                message="the debugger reported no stop reason; the kind is inferred from the frame, "
+                        "the program counter or a watched object"))
 
     def _frame_identity(self):
         """Name and program counter of the current frame, or None when unavailable."""

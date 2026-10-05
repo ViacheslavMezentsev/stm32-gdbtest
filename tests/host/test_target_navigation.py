@@ -341,24 +341,139 @@ class NavigationTests(unittest.TestCase):
             target.until("  ")
         self.assertEqual(caught.exception.code, "invalid_location")
 
-    def test_finish_reports_the_returned_value(self):
+    @staticmethod
+    def returned(plain):
+        """A returned scalar as GDB stores it in the history: an int-typed value."""
+        value = FakeValue(plain)
+        value.type = types.SimpleNamespace(code=8)
+        return value
+
+    def history(self, *values):
+        """GDB value history: `finish` appends the returned value, as "Value returned is $N"."""
+        stored = []
+        self.gdb.history_count = lambda: len(stored)
+        self.gdb.history = lambda index: stored[-1 - index]
+        original = self.gdb.execute
+
+        def execute(command, **options):
+            result = original(command, **options)
+            if command == "finish" and values:
+                stored.append(values[0])
+            return result
+
+        self.gdb.execute = execute
+        return stored
+
+    def test_finish_reports_the_returned_value_from_the_history(self):
         target = self.target()
-        self.frame = FakeFrame(name="app_step", return_value=FakeValue(42))
+        self.history(self.returned(42))
+        self.frame = FakeFrame(name="app_step")
         self.stop(reason="function-finished")
         result = target.finish()
         self.assertEqual(result["outcome"], "completed")
-        self.assertEqual(result["function"], "app_step")
+        self.assertEqual(result["returned_from"], "app_step")
         self.assertEqual(result["return_value"], 42)
         self.assertEqual(result["return_state"], "available")
+        self.assertEqual(result["stop"]["evidence"], "native")
         self.assertEqual(self.executed[-1], "finish")
 
-    def test_finish_marks_an_unavailable_value(self):
+    def test_finish_without_a_history_entry_is_unavailable(self):
         target = self.target()
-        self.frame = FakeFrame(name="app_step", return_value=None)
+        self.history()
         self.stop(reason="function-finished")
         result = target.finish()
         self.assertIsNone(result["return_value"])
         self.assertEqual(result["return_state"], "unavailable")
+
+    def test_finish_of_a_void_function_is_void_not_unavailable(self):
+        target = self.target()
+        self.history()
+        void = types.SimpleNamespace(code=10, sizeof=1, name="void")
+        self.integer.type = types.SimpleNamespace(target=lambda: void)
+        self.stop(reason="function-finished")
+        result = target.finish()
+        self.assertIsNone(result["return_value"])
+        self.assertEqual(result["return_state"], "void")
+
+    def test_finish_on_gdb14_is_inferred_and_warned_once(self):
+        # GDB 14 attaches no details: the changed frame proves the return, the stop says so.
+        target = self.target()
+        self.history(self.returned(7))
+        self.frame = FakeFrame(name="app_step", pc=0x8000100)
+        caller = FakeFrame(name="app_receiver_step", pc=0x8000200)
+        original = self.gdb.execute
+
+        def execute(command, **options):
+            result = original(command, **options)
+            self.frame = caller
+            return result
+
+        self.gdb.execute = execute
+        self.raw_events = [FakeBreakpointEvent([], None)]
+        result = target.finish()
+        self.assertEqual(result["stop"]["kind"], "function_return")
+        self.assertTrue(result["stop"]["inferred"])
+        self.assertEqual(result["stop"]["evidence"], "inferred")
+        self.assertEqual(result["function"], "app_receiver_step")
+        self.assertEqual(result["return_value"], 7)
+        self.assertEqual([w["code"] for w in target.report["warnings"]], ["inferred_stop"])
+
+    def test_step_on_gdb14_counts_a_moved_pc_as_a_step(self):
+        target = self.target()
+        frames = iter([FakeFrame(name="app_receiver_step", pc=0x8000300)] * 4)
+        original = self.gdb.execute
+
+        def execute(command, **options):
+            result = original(command, **options)
+            self.frame = next(frames)
+            return result
+
+        self.gdb.execute = execute
+        self.raw_events = [FakeBreakpointEvent([], None)]
+        result = target.step(1, unit="source", mode="into")
+        self.assertEqual(result["completed"], 1)
+        self.assertEqual(result["stop"]["kind"], "step")
+        self.assertTrue(result["stop"]["inferred"])
+
+    def test_until_on_gdb14_leaving_the_line_is_a_step_even_in_the_caller(self):
+        # GDB 15+ report end-stepping-range when until leaves the function; GDB 14 must agree.
+        target = self.target()
+        self.frame = FakeFrame(name="board_led_toggle", pc=0x8000100)
+        original = self.gdb.execute
+
+        def execute(command, **options):
+            result = original(command, **options)
+            self.frame = FakeFrame(name="app_loop", pc=0x8000600)
+            return result
+
+        self.gdb.execute = execute
+        self.raw_events = [FakeBreakpointEvent([], None)]
+        result = target.until()
+        self.assertEqual(result["outcome"], "completed")
+        self.assertEqual(result["stop"]["kind"], "step")
+        self.assertTrue(result["stop"]["inferred"])
+
+    def test_until_reports_reached_only_at_the_target_address(self):
+        target = self.target()
+        self.gdb.decode_line = lambda location: ("", [types.SimpleNamespace(pc=0x8000400)])
+        frames = {"next": FakeFrame(name="app_loop", pc=0x8000400)}
+        original = self.gdb.execute
+
+        def execute(command, **options):
+            result = original(command, **options)
+            self.frame = frames["next"]
+            return result
+
+        self.gdb.execute = execute
+        self.stop(reason="location-reached")
+        reached = target.until("app.c:20")
+        self.assertEqual((reached["outcome"], reached["targets"]), ("reached", [0x8000400]))
+        # GDB 16 says location-reached also when the frame returned first: the address decides.
+        self.frame = FakeFrame(name="app_step", pc=0x8000100)
+        frames["next"] = FakeFrame(name="app_loop", pc=0x8000500)
+        self.stop(reason="location-reached")
+        exited = target.until("app.c:20")
+        self.assertEqual(exited["outcome"], "frame_exited")
 
     def test_unknown_stop_reason_is_an_error(self):
         target = self.target()

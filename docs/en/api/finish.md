@@ -17,7 +17,11 @@ Runs the rest of the current function and returns control to the caller with a r
 
 ## Contract and limitations
 
-The result describes the reached frame and the returned value when it is available.
+The result describes the reached frame (`function`), the function that returned (`returned_from`) and the
+returned value. The value comes from the GDB value history ("Value returned is $N"), present in every supported
+version; `return_state` is `available`, `void` (by the declared type) or `unavailable`. On GDB 14 the stop event
+carries no reason: the return is proven by the changed frame, the stop is marked `inferred` and the report gets
+one `inferred_stop` warning. The reference version is GDB 15.2 (xPack 14.2.1).
 
 Limitations: the value may be unavailable (optimization, missing debug information) — then it is
 marked unavailable instead of being replaced by zero; a function that does not return ends with the

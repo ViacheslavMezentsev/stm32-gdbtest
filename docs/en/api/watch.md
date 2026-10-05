@@ -19,10 +19,10 @@ Sets a watchpoint on an object in order to stop when it changes.
 
 It returns a point object; the stop is classified as a watch event and is available to the scenario.
 
-Limitations: only addressable objects up to eight bytes with natural alignment can be watched; the stop
-reason depends on the backend (OpenOCD names `watchpoint-trigger`, J-Link reports no reason) and some
-combinations deliver no event at all, in which case the stop is confirmed by the changed watched object
-and marked `inferred`; a reset is refused while a watchpoint is active. Write watch points are verified
+Limitations: only addressable objects up to eight bytes with natural alignment can be watched; J-Link
+reports the watch point as an ordinary point with its number; OpenOCD (HLA) delivers an event without a point
+number, in which case the stop is confirmed by the changed watched object and marked `inferred`, while
+`native_reason` keeps only what GDB reported; a reset is refused while a watchpoint is active. Write watch points are verified
 on the OpenOCD and J-Link stands of the project.
 
 ## Example

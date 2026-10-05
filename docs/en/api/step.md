@@ -17,7 +17,7 @@ Performs the given number of steps by source line or by instruction.
 
 ## Contract and limitations
 
-The result describes the reached location and the frame-completion flag.
+The result describes the reached location and the frame-completion flag. On GDB 15+ a step is confirmed by the `end-stepping-range` reason; GDB 14 gives none, so a step is counted by the changed program counter and marked `inferred`.
 
 Limitations: source stepping requires debug information; with `mode="over"` a call runs to
 completion; instruction stepping does not preserve flag state between stops on some cores, so flag-

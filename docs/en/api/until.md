@@ -17,7 +17,10 @@ Runs the program to the given location in the current frame without stopping at 
 
 ## Contract and limitations
 
-Without an argument it acts as leaving the current line.
+Without an argument it acts as leaving the current line. With a location, `reached` is reported only when
+the stop is at an address of that location (`targets`); when the current frame returns first the outcome is
+`frame_exited` (GDB 16 calls such a stop `location-reached` too, so the address decides). GDB 14 passes no stop
+reason: the kind is derived from the address and the frame and marked `inferred`.
 
 Limitations: the location must be inside the current frame; passing through a call depends on the
 debugger; an unreachable location ends with the scenario timeout.

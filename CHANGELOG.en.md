@@ -34,6 +34,11 @@ Extended scenario API; the release is being prepared and the tag is published by
 
 ### Fixed
 
+- Navigation follows the GDB version: the reference is GDB 15.2 (xPack 14.2.1). On GDB 14 a stop event has no
+  reason, so the kind is derived from the command, the address and the frame, marked `inferred` and warned once
+  (`inferred_stop`); an inserted watch reason is no longer presented as native. API specification 0.3.2.
+- `finish` returns the value from the GDB value history (it was always `unavailable`), `returned_from` and a `void`
+  state; `until(location)` reports `reached` only at the target address, otherwise `frame_exited`.
 - `breakpoint`/`reach` accept `when=` again as the former name of `condition`, `temporary` of `breakpoint` is positional again,
   `Point` keeps `is_valid()`/`delete()`: 0.1/0.2 scenarios run unchanged. API specification 0.3.1.
 - A repeated point with another condition, or a temporary one, is no longer replaced by the existing point, and `reach` no
@@ -45,7 +50,7 @@ Extended scenario API; the release is being prepared and the tag is published by
 
 - Pointers, objects wider than eight bytes and floating-point values cannot be watched.
 - Some combinations deliver no stop event for a watch point: the stop is marked `inferred` and confirmed by the changed object.
-- `finish()` does not publish the staged stack copy; `return_value` arrives as `unavailable` on the stands of the project.
+- `finish()` does not publish the staged stack copy.
 - Hardware verification covered five stands; native DAP stands were not used.
 
 ## [0.2.0-rc.1] - 2026-10-03
