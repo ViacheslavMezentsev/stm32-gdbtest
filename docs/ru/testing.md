@@ -140,7 +140,8 @@ python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stand
 
 Docker использует HAL F0 gitlink из прежнего закреплённого CubeF0 1.11.6;
 F1/F4 остаются CMSIS-only. Workflow запускает `format host firmware hal` и сохраняет
-каталог tests/hal-f030/build/ci-gcc13 (логи, ELF, manifest, JSON/JUnit).
+каталог tests/hal-f030/build/ci-gcc13-linux (логи, ELF, manifest, JSON/JUnit); на Windows
+runner пишет в ci-gcc13-windows.
 Без аргументов runner также включает hal; --gcc/--profile ограничивают только
 CMSIS-матрицу. Для HAL используйте ARM_TOOLCHAIN_ROOT GCC13, STM32CUBE_REPOSITORY;
 без переменной берётся установленный GCC13 по умолчанию Windows/Linux.

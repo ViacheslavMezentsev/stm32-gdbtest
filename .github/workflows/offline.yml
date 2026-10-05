@@ -57,7 +57,7 @@ jobs:
           path: |
             build/ci/
             build/ci-image.log
-            tests/hal-f030/build/ci-gcc13/
+            tests/hal-f030/build/ci-gcc13-linux/
             tests/firmware/build/*/ci.log
             tests/firmware/build/*/hwtest/build-manifest.json
             tests/firmware/build/*/hwtest/runs/*/result.json

@@ -267,8 +267,9 @@ Do not reuse one build alternately from Windows and a Linux container: CMakeCach
 stores absolute paths. “Current CMakeCache.txt directory is different” occurs before
 firmware validation and does not establish a firmware defect. Preserve the failed
 report and old build under another name inside the workspace, then create a clean
-build for the current OS. tests/hal-f030 CI uses build/ci-gcc13; preserve that exact
-directory, not the Git checkout or the whole hardware evidence directory.
+build for the current OS. For tests/hal-f030 the runner separates the builds by OS:
+build/ci-gcc13-windows and build/ci-gcc13-linux (Docker); preserve the directory of
+your OS, not the Git checkout or the whole hardware evidence directory.
 If the HAL rerun succeeds, report two runs rather than a single 15/15 PASS.
 
 ## Do not mix prepare and hardware reports from one session

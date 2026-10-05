@@ -3,6 +3,7 @@ import copy
 import json
 import os
 from pathlib import Path
+import platform
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -20,8 +21,12 @@ EXPECTED = {"HW_BOOT", "HW_CLOCK", "HW_GPIO", "HW_BLINK", "HW_ADC_DMA_INIT",
             "HW_GPIO_FILTERED_CALL", "HW_RCC_ERROR", "HW_RCC_OSC_NULL", "HW_RCC_CLOCK_NULL"}
 
 
+# CMakeCache stores absolute paths: Windows and the Linux container each keep their own build.
+BUILD = FIXTURE / "build" / f"ci-gcc13-{platform.system().lower()}"
+
+
 def check(run):
-    build = FIXTURE / "build/ci-gcc13"
+    build = BUILD
     build.mkdir(parents=True, exist_ok=True)
     log = build / "ci.log"
     log.write_text("", encoding="utf-8")

@@ -142,7 +142,8 @@ contract. No server starts and no MCU firmware executes.
 
 Docker installs the HAL F0 gitlink from the existing pinned CubeF0 1.11.6;
 F1/F4 remain CMSIS-only. Workflow runs `format host firmware hal` and retains
-tests/hal-f030/build/ci-gcc13 (logs, ELF, manifest, JSON/JUnit).
+tests/hal-f030/build/ci-gcc13-linux (logs, ELF, manifest, JSON/JUnit); on Windows the
+runner writes to ci-gcc13-windows.
 The default runner also includes hal; --gcc/--profile only restrict the CMSIS
 matrix. For HAL use ARM_TOOLCHAIN_ROOT pointing to GCC13 and STM32CUBE_REPOSITORY;
 otherwise the Windows/Linux GCC13 default is used. HAL GCC14/15 and hardware
