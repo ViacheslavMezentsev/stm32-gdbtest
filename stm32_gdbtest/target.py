@@ -84,11 +84,24 @@ class Point:
 
     @property
     def addresses(self):
-        """Resolved addresses; a deleted point reports none instead of raising."""
+        """Resolved addresses as integers; a deleted point reports none instead of raising.
+
+        GDB lists `gdb.BreakpointLocation` objects; their `address` is what a scenario compares and records.
+        """
+        if self._removed:
+            return []
         try:
-            return list(self._native.locations)
+            locations = list(self._native.locations)
         except (AttributeError, gdb.error, RuntimeError):
             return []
+        addresses = []
+        for location in locations:
+            address = getattr(location, "address", location)
+            try:
+                addresses.append(int(address))
+            except (TypeError, ValueError):
+                continue
+        return addresses
 
     @property
     def active(self):

@@ -130,8 +130,9 @@ def main():
                 report["teardown"] = "reset_run"
         except BaseException:
             report.update(status="ERROR", teardown_error=traceback.format_exc())
-        Path(session["result"]).write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-        print(json.dumps(report))
+        # A value a scenario put into its checks must not cost the whole report: it is kept as its repr.
+        Path(session["result"]).write_text(json.dumps(report, indent=2, default=repr) + "\n", encoding="utf-8")
+        print(json.dumps(report, default=repr))
     gdb.execute("quit " + str({"PASS": 0, "FAIL": 1, "ERROR": 2}[report["status"]]))
 
 

@@ -23,7 +23,7 @@ class FakeBreakpoint:
         self.pending = False
         self.condition = None
         self.ignore_count = 0
-        self.locations = [0x8000100]
+        self.locations = [types.SimpleNamespace(address=0x8000100, enabled=True)]
         self._valid = True
 
     def is_valid(self):
@@ -300,6 +300,14 @@ class ExtrasTests(unittest.TestCase):
         with self.assertRaises(ApiError) as caught:
             second.enable()
         self.assertEqual(caught.exception.details["code"], "point_removed")
+
+    def test_addresses_are_integers_of_the_gdb_locations(self):
+        target = self.target()
+        point = target.breakpoint("app_step")
+        self.assertEqual(point.addresses, [0x8000100])
+        self.assertIs(type(point.addresses[0]), int)
+        point.remove()
+        self.assertEqual(point.addresses, [])
 
     def test_condition_is_writable(self):
         target = self.target()

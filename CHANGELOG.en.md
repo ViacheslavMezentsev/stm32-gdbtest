@@ -50,6 +50,8 @@ Extended scenario API; the release is being prepared and the tag is published by
 
 ### Fixed
 
+- `Point.addresses` returns integer addresses instead of `gdb.BreakpointLocation` objects; a value that cannot be
+  written as JSON no longer costs the run its report: the agent keeps it as its `repr`.
 - Navigation follows the GDB version: the reference is GDB 15.2 (xPack 14.2.1). On GDB 14 a stop event has no
   reason, so the kind is derived from the command, the address and the frame, marked `inferred` and warned once
   (`inferred_stop`); an inserted watch reason is no longer presented as native. API specification 0.3.2.
