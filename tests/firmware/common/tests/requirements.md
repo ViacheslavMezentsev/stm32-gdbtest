@@ -140,6 +140,9 @@ A write watch point on `app_state.ticks` stops the core after the write; the fra
 `app_receiver_step` called from `app_loop` as the writer, the stop address lies inside the writer's code
 from `symbol`, `app_state` is in `.bss`, and the count advanced by one. The frame chain is recorded.
 The scenario shows locating a writer; it does not cover writes by DMA or other bus masters.
+On Cortex-M0 the watch point halts the core one or two instructions after the store; the receiver counts
+`app_received.publications` after publishing so that the stop stays in the function body, where the frame
+chain unwinds, and not in the epilogue, which carries no unwind information.
 
 ## HW_CI_RETURN_VALUE
 At the entry of `app_step` the arguments carry the blink mode and a state pointer into SRAM. `finish`

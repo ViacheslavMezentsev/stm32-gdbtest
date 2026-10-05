@@ -75,6 +75,10 @@ Extended scenario API; the release is being prepared and the tag is published by
 
 ### Fixed
 
+- `HW_CI_WHO_WRITES` on F030 (Cortex-M0) depended on where the core halted: the watch point halts it one or
+  two instructions after the store and could land in the epilogue of `app_receiver_step`, where GDB loses the
+  `app_loop` frame. The fixture firmware counts `app_received.publications` after publishing, so the stop stays
+  in the function body.
 - `read` and `evaluate` of a pointer return the address it holds, not the address of the pointer itself: HAL checks
   such as `hadc.Instance == ADC1` compare the right values again.
 - `Point.addresses` returns integer addresses instead of `gdb.BreakpointLocation` objects; a value that cannot be

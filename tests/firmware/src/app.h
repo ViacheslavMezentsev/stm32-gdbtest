@@ -22,6 +22,7 @@ typedef struct
     uint32_t produced;
     uint32_t calls;
     uint32_t took_zero_branch;
+    uint32_t publications;
 } app_receiver_state_t;
 
 /* Identification strings of the firmware; the scenarios read them as C strings. */

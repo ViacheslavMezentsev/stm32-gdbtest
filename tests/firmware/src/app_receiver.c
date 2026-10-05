@@ -22,4 +22,7 @@ void app_receiver_step( void )
     app_received.calls++;
     app_received.took_zero_branch = ( produced == 0U ) ? 1U : 0U;
     app_state                     = next;
+    /* Counted after the publication: on Cortex-M0 a watch point on app_state halts the core one or two
+     * instructions after the store, and that stop must stay in the body, where the frame chain unwinds. */
+    app_received.publications++;
 }
