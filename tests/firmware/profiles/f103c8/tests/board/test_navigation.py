@@ -47,6 +47,14 @@ def navigation(target):
         target.check("the point counted the stop", point.hit_count, 1)
     target.check("point is inactive after the block", point.active, False)
 
+    # reach() creates and removes only its own point: a scenario point at the same place stays, and
+    # a condition passed to reach() is applied even though a point already exists there.
+    with target.breakpoint("board_led_toggle") as kept:
+        target.reach("board_led_toggle", condition="1")
+        target.check("reach kept the scenario point", kept.active, True)
+        target.check("only the scenario point remains", [item.id for item in target.owned
+                                                         if item.location == "board_led_toggle"], [kept.id])
+
     # An instruction step keeps the same point set and reports a step stop.
     target.reach("board_led_toggle")
     stepped = target.step(2, unit="instruction", mode="over")
