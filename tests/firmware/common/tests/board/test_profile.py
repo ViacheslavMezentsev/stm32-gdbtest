@@ -8,10 +8,10 @@ from stm32_gdbtest import case, one_of, within
 SRAM = within(0x20000000, 0x200FFFFF)
 
 
-def refuses(t, name, mutate):
-    """A read-only section raises TypeError on assignment."""
+def refuses(t, name, mapping, key, value):
+    """A read-only section raises TypeError on item assignment."""
     try:
-        mutate()
+        mapping[key] = value
     except TypeError:
         t.check(name, True)
     else:
@@ -78,6 +78,6 @@ def run_profile(t):
     t.record("profile", profile)
 
     # Every section is read-only.
-    refuses(t, "profile refuses assignment", lambda: profile.case.__setitem__("id", "X"))
-    refuses(t, "nested api refuses assignment", lambda: profile.api["records"].__setitem__("max_records", 1))
-    refuses(t, "data refuses assignment", lambda: board.__setitem__("led", "PA0"))
+    refuses(t, "profile refuses assignment", profile.case, "id", "X")
+    refuses(t, "nested api refuses assignment", profile.api["records"], "max_records", 1)
+    refuses(t, "data refuses assignment", board, "led", "PA0")
