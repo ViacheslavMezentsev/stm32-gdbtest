@@ -253,6 +253,44 @@ class ReadWriteTests(unittest.TestCase):
         self.assertEqual(caught.exception.code, "command_failed")
         self.assertEqual(caught.exception.details["effect"], "none")
 
+    def test_write_passes_a_gdb_literal_and_not_a_python_repr(self):
+        # A bool must reach GDB as 1/0: Python's `True` is not a C expression.
+        target = self.target()
+        commands = []
+
+        def execute(command, **options):
+            commands.append(command)
+            self.integer._plain = 1
+            return ""
+
+        self.gdb.execute = execute
+        result = target.write("app_state.ticks", True)
+        self.assertEqual(commands[-1], "set variable app_state.ticks = 1")
+        self.assertTrue(result["verified"])
+
+    def test_write_compares_an_expression_value_by_its_result(self):
+        # A 0.2.x set_value with an enum constant keeps working under the verified write.
+        target = self.target()
+        self.memory["(APP_MODE_BLINK)"] = FakeValue(3)
+
+        def execute(command, **options):
+            self.integer._plain = 3
+            return ""
+
+        self.gdb.execute = execute
+        result = target.write("app_state.ticks", "APP_MODE_BLINK")
+        self.assertTrue(result["verified"])
+        self.assertEqual(result["after"], 3)
+
+    def test_write_refuses_a_value_without_a_gdb_literal(self):
+        target = self.target()
+        for value in (object(), float("nan"), None):
+            with self.subTest(value=value):
+                with self.assertRaises(ApiError) as caught:
+                    target.write("app_state.ticks", value)
+                self.assertEqual(caught.exception.code, "unsupported_value")
+                self.assertEqual(caught.exception.details["effect"], "none")
+
     def test_set_value_is_the_022_alias(self):
         target = self.target()
         self.integer._plain = 5

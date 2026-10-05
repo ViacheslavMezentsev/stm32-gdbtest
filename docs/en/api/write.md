@@ -13,7 +13,7 @@
 
 ## Purpose
 
-Writes a value into an addressable program object and returns the result with effect diagnostics.
+Writes a value into an addressable program object and returns the result with effect diagnostics. The value is an integer, a finite `float`, a `bool` (passed as 1/0) or a GDB expression (an enum constant, a macro); an expression is verified by what it evaluates to. Other values are refused before the write (`unsupported_value`).
 
 ## Contract and limitations
 

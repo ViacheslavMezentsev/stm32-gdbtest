@@ -142,6 +142,61 @@ class NavigationTests(unittest.TestCase):
                                      for number in numbers], reason)
         event.stop_signal = signal
         self.raw_events = [event]
+    def test_clear_removes_every_point(self):
+        # remove() rewrites the ownership list; clear() must not skip every second point.
+        target = self.target({"breakpoint_limit": 6})
+        points = [target.breakpoint(name) for name in ("a", "b", "c", "d")]
+        target.clear()
+        self.assertEqual([p.location for p in points if p._native.is_valid()], [])
+        self.assertEqual(target.owned, [])
+
+    def test_reach_keeps_a_point_set_by_the_scenario(self):
+        target = self.target()
+        persistent = target.breakpoint("app_loop")
+        self.stop(persistent.id, 999)
+
+        def execute(command, **options):
+            self.executed.append(command)
+            temporary = [p for p in target.owned if p.temporary][0]
+            event = FakeBreakpointEvent([types.SimpleNamespace(number=n, type=1)
+                                         for n in (persistent.id, temporary.id)], "breakpoint")
+            for listener in list(self.listeners):
+                listener(event)
+            return ""
+
+        self.gdb.execute = execute
+        target.reach("app_loop")
+        self.assertTrue(persistent.active)
+        self.assertEqual([p.id for p in target.owned], [persistent.id])
+
+    def test_a_new_condition_is_never_dropped_by_reuse(self):
+        target = self.target()
+        plain = target.breakpoint("app_loop")
+        conditioned = target.breakpoint("app_loop", condition="x == 3")
+        self.assertIsNot(plain, conditioned)
+        self.assertEqual(conditioned._native.condition, "x == 3")
+        self.assertIs(target.breakpoint("app_loop", condition="x == 3"), conditioned)
+        temporary = target.breakpoint("app_loop", temporary=True)
+        self.assertIsNot(temporary, plain)
+
+    def test_when_is_the_02x_name_of_condition(self):
+        target = self.target()
+        point = target.breakpoint("app_loop", True, when="x == 3")
+        self.assertTrue(point.temporary)
+        self.assertEqual(point._native.condition, "x == 3")
+        with self.assertRaises(ApiError) as caught:
+            target.breakpoint("app_step", condition="a", when="b")
+        self.assertEqual(caught.exception.code, "conflicting_condition")
+        self.assertEqual(caught.exception.details["stage"], "validation")
+
+    def test_point_keeps_the_gdb_breakpoint_spelling(self):
+        target = self.target()
+        point = target.breakpoint("app_loop")
+        self.assertTrue(point.is_valid())
+        point.delete()
+        self.assertFalse(point.is_valid())
+        self.assertEqual(target.owned, [])
+
     def test_breakpoint_returns_a_reusable_point(self):
         target = self.target()
         first = target.breakpoint("app_loop")

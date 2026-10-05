@@ -2,7 +2,7 @@
 
 [API](index.md) · [English](../../en/api/breakpoint.md)
 
-`breakpoint(function, temporary=False, when=None) -> gdb.Breakpoint`
+`breakpoint(location, temporary=False, *, condition=None, ignore_count=0) -> Point`
 
 | Свойство | Значение |
 | --- | --- |
@@ -13,11 +13,11 @@
 
 ## Назначение
 
-Создаёт аппаратную точку по строке function. temporary задаёт однократность; when — условие GDB или None. Возвращает объект GDB.
+Создаёт аппаратную точку по строке location. temporary задаёт однократность; condition — условие GDB или None (when — прежнее имя). Возвращает `Point`; методы `is_valid()` и `delete()` сохранены для сценариев 0.1/0.2.
 
 ## Контракт и ограничения
 
-Не продолжает исполнение. Pending-символ и исчерпанный breakpoint_limit дают ошибку. Бюджет учитывает точки Target, не все точки GDB; реальные ресурсы зависят от MCU/backend. Это не watchpoint.
+Не продолжает исполнение. Повторный запрос с теми же параметрами возвращает уже действующую постоянную точку; временная точка или другое условие создают новую, условие не теряется. Pending-символ и исчерпанный breakpoint_limit дают ошибку. Бюджет учитывает точки Target, не все точки GDB; реальные ресурсы зависят от MCU/backend. Это не watchpoint.
 
 ## Пример
 

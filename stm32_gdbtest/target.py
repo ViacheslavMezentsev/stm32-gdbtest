@@ -50,11 +50,15 @@ class Point:
     point on exit) and keeps the number of stops observed for it.
     """
 
-    def __init__(self, native, location, owner=None):
+    def __init__(self, native, location, owner=None, temporary=False, condition=None, ignore_count=0):
         self._native = native
         # The number is captured now: GDB refuses attribute access on a deleted breakpoint.
         self._number = native.number
         self.location = location
+        # The creation parameters decide whether a later request may share this point (ТЗ API 4.4.2).
+        self.temporary = temporary
+        self.condition = condition
+        self.ignore_count = ignore_count
         # A watchpoint created by address reports its expression instead of a location.
         self.watch = False
         self.watched = None
@@ -97,6 +101,14 @@ class Point:
             self._native.delete()
         if self._owner is not None:
             self._owner.owned[:] = [point for point in self._owner.owned if point is not self]
+
+    def is_valid(self):
+        """0.1/0.2 `gdb.Breakpoint` spelling of `active` (ТЗ API 4.4.1)."""
+        return self.active
+
+    def delete(self):
+        """0.1/0.2 `gdb.Breakpoint` spelling of `remove()` (ТЗ API 4.4.1)."""
+        self.remove()
 
     def __enter__(self):
         return self
@@ -152,6 +164,9 @@ class Target:
         numbers = [bp.number for bp in getattr(event, "breakpoints", ())]
         self.stops.append({"type": type(event).__name__, "breakpoints": numbers,
                            "signal": getattr(event, "stop_signal", None),
+                           # GDB 14 events carry no `details`; recording it shows which evidence a
+                           # classification below rests on (ТЗ API 4.5).
+                           "details_available": isinstance(getattr(event, "details", None), dict),
                            "native_reason": getattr(event, "details", {}).get("reason")
                            if isinstance(getattr(event, "details", {}), dict) else None})
         for point in self.owned:
@@ -403,10 +418,17 @@ class Target:
         if type(verify) is not bool:
             self._fail("write", "validation", "none", "invalid_verify",
                        "verify must be a bool", path=path, verify=verify)
+        literal = values.argument_literal(value)
+        if literal is None:
+            self._fail("write", "validation", "none", "unsupported_value",
+                       "value must be a finite number, a bool or a GDB expression", path=path, value=value)
         before = self._read_value(path, path)
         scoped, address = self._verify_scope(path)
-        self._write_expression(path, value)
+        self._write_expression(path, literal)
         after = self._read_value(path, path) if (verify and scoped) else None
+        # An expression value (an enum constant, a macro) is compared by what it evaluates to.
+        expected = self._read_value(f"({literal})", literal) if (verify and scoped and type(value) is str) \
+            else value
         entry = dict(expression=path, value=value, before=before, after=after)
         if verify and not scoped:
             # A peripheral register keeps its own meaning on read, so the write is recorded without
@@ -415,7 +437,7 @@ class Target:
             entry["verify_scope"] = "outside"
             entry["address"] = address
         self.report.setdefault("mutations", []).append(entry)
-        if verify and scoped and after != value:
+        if verify and scoped and after != expected:
             values.verification_failed(path, value, after)
         return dict(operation="write", path=path, value=value, before=before, after=after,
                     verified=bool(verify and scoped), verify_scope="declared" if scoped else "outside")
@@ -432,26 +454,35 @@ class Target:
         address = int(address)
         return 0x20000000 <= address < 0x20100000, address
 
-    def _write_expression(self, path, value):
+    def _write_expression(self, path, literal):
         """Apply one write through GDB; the caller decides about verification."""
         try:
-            gdb.execute(f"set variable {path} = {value!r}", to_string=True)
+            gdb.execute(f"set variable {path} = {literal}", to_string=True)
         except gdb.error as cause:
             self._fail("write", "command", "none", "command_failed",
-                       f"write failed for {path}", cause=cause, path=path, value=value)
+                       f"write failed for {path}", cause=cause, path=path, value=literal)
 
     def set_value(self, expression, value):
         """Alias of `write` kept for the 0.2.x name (removal planned in 0.4.0)."""
         self.write(expression, value)
 
-    def breakpoint(self, location, *, temporary=False, condition=None, ignore_count=0):
-        """Set a point and return it; a repeated target reuses the active point (ТЗ API 4.4)."""
+    def breakpoint(self, location, temporary=False, *, condition=None, ignore_count=0, when=None):
+        """Set a point and return it (ТЗ API 4.4).
+
+        A repeated request with the same parameters reuses the active persistent point; a temporary
+        point or different parameters always create a new one, so a condition is never dropped.
+        `when` is the 0.1/0.2 name of `condition`.
+        """
         if type(location) is not str or not location.strip():
             self._fail("breakpoint", "validation", "none", "invalid_location",
                        "location must be a non-empty string", location=location)
-        for point in self.owned:
-            if point.location == location and point.active:
-                return point
+        condition = self._condition("breakpoint", condition, when)
+        if not temporary:
+            for point in self.owned:
+                if (point.location == location and point.active and not point.temporary
+                        and not point.watch and point.condition == condition
+                        and point.ignore_count == ignore_count):
+                    return point
         if sum(point.active for point in self.owned) >= self.profile["breakpoint_limit"]:
             self._fail("breakpoint", "command", "none", "limit_exceeded",
                        "profile hardware breakpoint budget exhausted",
@@ -461,7 +492,8 @@ class Target:
         except gdb.error as cause:
             self._fail("breakpoint", "command", "none", "command_failed",
                        f"breakpoint failed for {location}", cause=cause, location=location)
-        point = Point(native, location, self)
+        point = Point(native, location, self, temporary=temporary, condition=condition,
+                      ignore_count=ignore_count)
         self.owned.append(point)
         try:
             if native.pending:
@@ -535,8 +567,20 @@ class Target:
         except conversion_errors(gdb):
             return None
 
-    def reach(self, location, *, condition=None):
-        """Run to a location and return the stop result; the point is temporary (ТЗ API 4.5)."""
+    def _condition(self, operation, condition, when):
+        """Single condition from the 0.3.0 `condition` and the 0.1/0.2 `when` (ТЗ API 4.4.1)."""
+        if when is not None and condition is not None and when != condition:
+            self._fail(operation, "validation", "none", "conflicting_condition",
+                       "condition and when differ", condition=condition, when=when)
+        return condition if condition is not None else when
+
+    def reach(self, location, condition=None, *, when=None):
+        """Run to a location and return the stop result; the point is temporary (ТЗ API 4.5).
+
+        The point is always created by this call and only that point is removed afterwards; a point
+        the scenario set at the same location stays. `when` is the 0.1/0.2 name of `condition`.
+        """
+        condition = self._condition("reach", condition, when)
         point = self.breakpoint(location, temporary=True, condition=condition)
         # Resolve the addresses while the point exists: a temporary point is gone after the stop.
         addresses = list(point.addresses)
@@ -586,6 +630,8 @@ class Target:
                            "step did not stop at a step event", stop=stop, completed=completed,
                            unit=unit, mode=mode)
             completed += 1
+        if stop:
+            self.report.setdefault("stops", []).append(stop)
         return dict(operation="step", outcome=outcome, requested=count, completed=completed,
                     unit=unit, mode=mode, stop=stop)
 
@@ -596,12 +642,14 @@ class Target:
                        "location must be a non-empty string", location=location)
         command = "until" if location is None else "until " + location
         stop = self._advance("until", command)
+        self.report.setdefault("stops", []).append(stop)
         outcome = "reached" if location is not None and stop.get("kind") == "location" else "completed"
         return dict(operation="until", outcome=outcome, location=location, stop=stop)
 
     def finish(self):
         """Run the rest of the current function (ТЗ API 4.5)."""
         stop = self._advance("finish", "finish")
+        self.report.setdefault("stops", []).append(stop)
         frame = gdb.newest_frame()
         value = getattr(frame, "return_value", None) if frame is not None else None
         available = value is not None and not getattr(value, "is_optimized_out", False)
@@ -980,7 +1028,8 @@ class Target:
         return self.ret(expression)
 
     def clear(self):
-        for point in self.owned:
+        # remove() rewrites self.owned, so iterate over a snapshot (ТЗ API 4.8).
+        for point in list(self.owned):
             point.remove()
         self.owned.clear()
 

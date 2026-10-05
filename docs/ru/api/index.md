@@ -15,8 +15,8 @@
 | [check](check.md) | `check(name, actual, expected) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [value](value.md) | `value(expression) -> int` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [fields](fields.md) | `fields(expression, expected) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [breakpoint](breakpoint.md) | `breakpoint(function, temporary=False, when=None) -> gdb.Breakpoint` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [reach](reach.md) | `reach(location, *, condition=None) -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
+| [breakpoint](breakpoint.md) | `breakpoint(location, temporary=False, *, condition=None) -> Point` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
+| [reach](reach.md) | `reach(location, condition=None) -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
 | [set_value](set_value.md) | `set_value(expression, value) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [force_return](force_return.md) | `force_return(expression) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [clear](clear.md) | `clear() -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |

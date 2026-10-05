@@ -2,7 +2,7 @@
 
 [API](index.md) · [Русский](../../ru/api/reach.md)
 
-`reach(location, *, condition=None) -> dict`
+`reach(location, condition=None) -> dict`
 
 | Property | Value |
 | --- | --- |
@@ -13,11 +13,11 @@
 
 ## Purpose
 
-Sets a temporary hardware breakpoint, continues once, then checks its number, frame name and optional when condition.
+Sets a temporary hardware breakpoint, continues once, then checks its number, frame name and optional condition (formerly when).
 
 ## Contract and limitations
 
-An unrelated stop is not automatically skipped. Frame comparison strips clone suffixes, parameters and const/volatile. The point is removed on exit. No per-call timeout argument: the scenario deadline applies.
+An unrelated stop is not automatically skipped. Frame comparison strips clone suffixes, parameters and const/volatile. Only the point created by the call is removed on exit: a scenario point at the same place stays. No per-call timeout argument: the scenario deadline applies.
 
 ## Example
 

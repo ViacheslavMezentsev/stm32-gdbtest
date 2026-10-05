@@ -187,8 +187,8 @@ imported only inside GDB):
 | [`check(name, actual, expected)`](api/check.md) | Records the result; a mismatch raises `CheckFailed` → FAIL |
 | [`value(expression)`](api/value.md) | `gdb.parse_and_eval`, refuses optimized-out values, returns `int` |
 | [`fields(expression, expected)`](api/fields.md) | Per-field comparison of scalar fields with an `int` or a C expression |
-| [`reach(function, when=None)`](api/reach.md) | Temporary hardware breakpoint, `continue`, checks stop reason, frame and condition; the frame name is compared without `[clone …]` and parameters (LTO clones) |
-| [`breakpoint(function, temporary=False, when=None)`](api/breakpoint.md) | Hardware breakpoint with pending and profile budget checks |
+| [`reach(location, condition=None)`](api/reach.md) | Temporary hardware breakpoint, `continue`, checks stop reason, frame and condition (`when=` is the former name of `condition`); the frame name is compared without `[clone …]` and parameters (LTO clones) |
+| [`breakpoint(location, temporary=False, *, condition=None)`](api/breakpoint.md) | Hardware breakpoint (`Point`) with pending and profile budget checks; `when=` is the former name of `condition` |
 | [`set_value(expression, value)`](api/set_value.md) | Explicit write with a before/after log; the author checks that an MMIO write is safe |
 | [`force_return(expression)`](api/force_return.md) | Forced return from the current frame with a log; the function body is skipped |
 | [`clear()`](api/clear.md) | Deletes the Target's breakpoints, including those on fault handlers |

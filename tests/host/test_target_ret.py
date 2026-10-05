@@ -132,6 +132,20 @@ class RetTests(unittest.TestCase):
             target.ret(2)
         self.assertEqual(caught.exception.code, "out_of_range")
 
+    def test_ret_takes_signedness_from_the_declared_type(self):
+        # `size_t` carries no `uint` prefix; `Type.is_signed` (GDB 12+) decides, not the name.
+        target = self.target()
+        kind = FakeType(name="size_t", size=4)
+        kind.is_signed = False
+        self.frame = FakeFrame(kind=kind)
+        self.assertEqual(target.ret(0xFFFFFFFF)["command"], "return (size_t)0xffffffff")
+        signed = FakeType(name="my_count_t", size=2)
+        signed.is_signed = True
+        self.frame = FakeFrame(kind=signed)
+        with self.assertRaises(ApiError) as caught:
+            target.ret(0x8000)
+        self.assertEqual(caught.exception.details["high"], 0x7FFF)
+
     def test_ret_rejects_an_unsupported_return_type(self):
         target = self.target()
         self.frame = FakeFrame(kind=FakeType(name="void", code=TYPE_CODE_VOID, size=0))

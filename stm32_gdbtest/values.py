@@ -182,10 +182,34 @@ def return_type_shape(kind):
         return (name, False, 0)
     label = name or ""
     logical = code in (type_constant("TYPE_CODE_BOOL"), type_constant("TYPE_CODE_CHAR"))
-    # Signedness is not exposed by the GDB type API, so the name is the evidence: `unsigned`,
-    # `uint32_t`, `u8`, `uintptr_t` and friends are unsigned, everything else is treated as signed.
-    unsigned = logical or "unsigned" in label or label.startswith(("uint", "u8", "u16", "u32", "u64"))
+    # `Type.is_signed` (GDB 12+, present in every supported toolchain) is the evidence. The type
+    # name stays the fallback for a GDB without it: `unsigned`, `uint32_t`, `u8`, `uintptr_t` and
+    # friends are unsigned, everything else is treated as signed.
+    declared = _is_signed(kind)
+    if declared is not None and not logical:
+        unsigned = not declared
+    else:
+        unsigned = logical or "unsigned" in label or label.startswith(("uint", "u8", "u16", "u32", "u64"))
     return (name or str(code), not unsigned, int(size) * 8)
+
+
+def _is_signed(kind):
+    """`Type.is_signed` of the type without typedefs and qualifiers, or None when unavailable."""
+    plain = kind
+    for name in ("unqualified", "strip_typedefs"):
+        method = getattr(plain, name, None)
+        if callable(method):
+            try:
+                candidate = method()
+            except Exception:
+                candidate = None
+            if candidate is not None:
+                plain = candidate
+    try:
+        value = getattr(plain, "is_signed")
+    except (AttributeError, ValueError, RuntimeError):
+        return None
+    return value if type(value) is bool else None
 
 
 def type_code_of(kind):

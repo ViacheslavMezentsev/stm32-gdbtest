@@ -185,8 +185,8 @@ def gpio(t):
 | [`check(name, actual, expected)`](api/check.md) | Запись результата; несовпадение вызывает `CheckFailed` → FAIL |
 | [`value(expression)`](api/value.md) | `gdb.parse_and_eval`, отказ для optimized-out, возвращает `int` |
 | [`fields(expression, expected)`](api/fields.md) | Поэлементное сравнение скалярных полей с `int` или C-выражением |
-| [`reach(function, when=None)`](api/reach.md) | Временная аппаратная точка, `continue`, проверка причины остановки, кадра и условия; имя кадра сравнивается без `[clone …]` и параметров (клоны LTO) |
-| [`breakpoint(function, temporary=False, when=None)`](api/breakpoint.md) | Аппаратная точка с проверкой pending и бюджета профиля |
+| [`reach(location, condition=None)`](api/reach.md) | Временная аппаратная точка, `continue`, проверка причины остановки, кадра и условия (`when=` — прежнее имя `condition`); имя кадра сравнивается без `[clone …]` и параметров (клоны LTO) |
+| [`breakpoint(location, temporary=False, *, condition=None)`](api/breakpoint.md) | Аппаратная точка (`Point`) с проверкой pending и бюджета профиля; `when=` — прежнее имя `condition` |
 | [`set_value(expression, value)`](api/set_value.md) | Явная запись с журналом before/after; допустимость записи в MMIO проверяет автор |
 | [`force_return(expression)`](api/force_return.md) | Принудительный return из текущего кадра с журналом; тело функции не выполняется |
 | [`clear()`](api/clear.md) | Удалить точки останова Target, включая точки на fault handlers |

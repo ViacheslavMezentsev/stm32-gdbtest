@@ -32,6 +32,15 @@ Extended scenario API; the release is being prepared and the tag is published by
 - The API reference is grouped into methods, properties, decorators, classes and errors; the `read` and `evaluate` rows render correctly again.
 - A stop is classified by the kind of the reported point, not only by the debugger reason.
 
+### Fixed
+
+- `breakpoint`/`reach` accept `when=` again as the former name of `condition`, `temporary` of `breakpoint` is positional again,
+  `Point` keeps `is_valid()`/`delete()`: 0.1/0.2 scenarios run unchanged. API specification 0.3.1.
+- A repeated point with another condition, or a temporary one, is no longer replaced by the existing point, and `reach` no
+  longer deletes a scenario point at the same place; `clear()` removes every point, not every second one.
+- `write` passes a `bool` as 1/0, refuses values without a GDB literal (`unsupported_value`) and verifies an expression
+  (an enum constant) by its result; `ret` takes signedness from `Type.is_signed` (for example `size_t`).
+
 ### Limitations
 
 - Pointers, objects wider than eight bytes and floating-point values cannot be watched.
