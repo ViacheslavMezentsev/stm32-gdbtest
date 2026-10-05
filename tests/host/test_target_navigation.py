@@ -416,7 +416,10 @@ class NavigationTests(unittest.TestCase):
         self.assertEqual(result["stop"]["evidence"], "inferred")
         self.assertEqual(result["function"], "app_receiver_step")
         self.assertEqual(result["return_value"], 7)
-        self.assertEqual([w["code"] for w in target.report["warnings"]], ["inferred_stop"])
+        warnings = target.report["warnings"]
+        # The runner prints each warning with string concatenation, so they must be strings.
+        self.assertTrue(all(type(item) is str for item in warnings))
+        self.assertEqual([item.split(":")[0] for item in warnings], ["inferred_stop"])
 
     def test_step_on_gdb14_counts_a_moved_pc_as_a_step(self):
         target = self.target()

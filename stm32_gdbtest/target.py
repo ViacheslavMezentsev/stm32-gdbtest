@@ -783,10 +783,10 @@ class Target:
         stop["evidence"] = "inferred"
         if not getattr(self, "_inference_warned", False):
             self._inference_warned = True
-            self.report.setdefault("warnings", []).append(dict(
-                code="inferred_stop", operation=operation, gdb=getattr(gdb, "VERSION", None),
-                message="the debugger reported no stop reason; the kind is inferred from the frame, "
-                        "the program counter or a watched object"))
+            # report["warnings"] is a list of strings printed by the runner (as the identity warnings).
+            self.report.setdefault("warnings", []).append(
+                f"inferred_stop: GDB {getattr(gdb, 'VERSION', 'unknown')} reported no stop reason for "
+                f"{operation}; the kind is inferred from the frame, the program counter or a watched object")
 
     def _frame_identity(self):
         """Name and program counter of the current frame, or None when unavailable."""
