@@ -85,7 +85,11 @@ def summary(manifest):
         libraries[library] = version
     defines = sorted({flag[2:] for unit in manifest.get("units", []) for flag in unit.get("flags", [])
                       if flag.startswith("-D")})
-    return dict(compilers=[dict(name=item.get("name"), version=item.get("version"))
+    # The executable suffix belongs to the host (arm-none-eabi-gcc.exe on Windows), not to the build.
+    def tool(name):
+        return name[:-4] if isinstance(name, str) and name.lower().endswith(".exe") else name
+
+    return dict(compilers=[dict(name=tool(item.get("name")), version=item.get("version"))
                            for item in manifest.get("compilers", [])],
                 cube_packages=list(manifest.get("cube_packages", [])), libraries=libraries, defines=defines,
                 sources=sorted({unit["source"] for unit in manifest.get("units", []) if "source" in unit}))

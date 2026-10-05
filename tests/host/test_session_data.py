@@ -49,7 +49,7 @@ class SessionDataTests(unittest.TestCase):
 
     def test_build_summary_keeps_versions_and_defines_only(self):
         manifest = dict(
-            compilers=[dict(name="arm-none-eabi-gcc", sha256="x" * 64, version="13.3.1")],
+            compilers=[dict(name="arm-none-eabi-gcc.exe", sha256="x" * 64, version="13.3.1")],
             cube_packages=["STM32Cube_FW_F4_V1.28.0"],
             units=[dict(source="Core/Src/main.c", flags=["-DUSE_HAL_DRIVER", "-DSTM32F411xE", "-O2"]),
                    dict(source="Drivers/x.c", flags=["-DUSE_HAL_DRIVER"])],
