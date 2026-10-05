@@ -4,6 +4,15 @@ EN: Board startup, GPIO, clock and peripheral checks.
 """
 from stm32_gdbtest import case
 
+# HSI is the system clock of the fixture (RM: 8 MHz nominal).
+HSI_HZ = 8_000_000
+# TIM2 counts at 1 kHz and overflows every 100 ms.
+TIMER_TICK_HZ = 1_000
+TIMER_PERIOD_TICKS = 100
+
+# Firmware counters are uint32_t and wrap around.
+U32_MASK = 0xFFFFFFFF
+
 # Application interval of the CI firmware.
 # Application interval of the fixture profile (`[app] delay_ms` in api.toml).
 EXPECTED_DELAY = 500
@@ -11,32 +20,32 @@ EXPECTED_DELAY = 500
 
 # Verify initialized state and progress into the application loop.
 @case("HW_CI_BOOT", labels=("boot",), contracts=("ci_app_api",))
-def boot(target):
+def boot(t):
     # Target.boot has already reached main, before board_init.
-    target.check_table([
+    t.check([
         ('initialized interval', 'app_delay', EXPECTED_DELAY),
         ('BSS loop count', 'app_state.ticks', 0),
         ('BSS LED state', 'app_state.led', 0),
         ('BSS milliseconds', 'board_ticks_ms', 0)
     ])
 
-    target.reach("app_loop")
-    before = target.read("app_state.ticks")
-    target.reach("app_loop")
+    t.reach("app_loop")
+    before = t.read("app_state.ticks")
+    t.reach("app_loop")
 
     # Check that execution advances through the application loop.
-    target.check("app_state.ticks advanced", target.read("app_state.ticks") - before, 1)
+    t.check("app_state.ticks advanced", t.read("app_state.ticks") - before, 1)
 
 
 # Verify the board LED pin configuration and initial output state.
 @case("HW_CI_GPIO", labels=("gpio",), contracts=("ci_gpio_macros",))
-def gpio(target):
+def gpio(t):
     # CMSIS macros are visible in board.c, the translation unit that includes the device header.
-    target.reach("board_led_toggle")
+    t.reach("board_led_toggle")
 
     # Check register and application state against the expected values.
-    target.check_table([
-        ('PB2 clock', '(RCC->APB2ENR & RCC_APB2ENR_IOPBEN) != 0', 1),
+    t.check([
+        ('PB2 clock', 'RCC->APB2ENR & RCC_APB2ENR_IOPBEN'),
         ('PB2 output', '(GPIOB->CRL & (GPIO_CRL_MODE2 | GPIO_CRL_CNF2)) == GPIO_CRL_MODE2_1', 1),
         ('initial LED off', 'GPIOB->ODR & GPIO_ODR_ODR2', 0)
     ])
@@ -44,28 +53,28 @@ def gpio(target):
 
 # Verify clock selection, bus dividers and the system tick configuration.
 @case("HW_CI_CLOCK", labels=("clock",), contracts=("ci_clock_macros",))
-def clock(target):
+def clock(t):
     # TECH-001: docs/ru/TESTING_TECHNIQUES.md#tech-001 (EN: docs/en/TESTING_TECHNIQUES.md#tech-001).
-    target.reach("board_led_toggle")
+    t.reach("board_led_toggle")
 
     # Check the clock source, bus dividers and nominal SysTick period.
-    target.check(
+    t.check(
         "HSI enabled and ready",
-        target.read("(RCC->CR & (RCC_CR_HSION | RCC_CR_HSIRDY)) == (RCC_CR_HSION | RCC_CR_HSIRDY)"),
+        t.read("(RCC->CR & (RCC_CR_HSION | RCC_CR_HSIRDY)) == (RCC_CR_HSION | RCC_CR_HSIRDY)"),
         1
     )
-    target.check(
+    t.check(
         "SYSCLK HSI, AHB/APB divide by one",
-        target.read("RCC->CFGR & (RCC_CFGR_SW | RCC_CFGR_SWS | RCC_CFGR_HPRE | RCC_CFGR_PPRE1 | RCC_CFGR_PPRE2)"),
+        t.read("RCC->CFGR & (RCC_CFGR_SW | RCC_CFGR_SWS | RCC_CFGR_HPRE | RCC_CFGR_PPRE1 | RCC_CFGR_PPRE2)"),
         0
     )
-    target.check("nominal core frequency", target.read("SystemCoreClock"), 8000000)
-    target.check("1 ms reload at nominal 8 MHz", target.read("SysTick->LOAD"), 7999)
+    t.check("nominal core frequency", t.read("SystemCoreClock"), HSI_HZ)
+    t.check("1 ms reload at nominal 8 MHz", t.read("SysTick->LOAD"), HSI_HZ // 1000 - 1)
 
     # Reading CTRL clears COUNTFLAG; the application uses the IRQ counter, not that flag.
-    target.check(
+    t.check(
         "SysTick enabled, interrupt, core clock",
-        target.read(
+        t.read(
             "SysTick->CTRL & (SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_CLKSOURCE_Msk)"
         ),
         7
@@ -74,91 +83,91 @@ def clock(target):
 
 # Observe consecutive LED transitions and their firmware timing.
 @case("HW_CI_BLINK", labels=("gpio", "timing"), contracts=("ci_gpio_macros",))
-def blink(target):
-    target.reach("board_led_toggle")
+def blink(t):
+    t.reach("board_led_toggle")
 
     # Verify initial Low.
-    target.check("initial Low", target.read("(GPIOB->ODR & GPIO_ODR_ODR2) != 0"), 0)
+    t.check("initial Low", t.read("(GPIOB->ODR & GPIO_ODR_ODR2) != 0"), 0)
 
-    before = target.read("board_ticks_ms")
+    before = t.read("board_ticks_ms")
 
     # Observe alternating output levels and check the elapsed firmware ticks.
     for level in (1, 0):
-        target.reach("board_led_toggle")
-        now = target.read("board_ticks_ms")
+        t.reach("board_led_toggle")
+        now = t.read("board_ticks_ms")
 
         # Check alternating output levels and the minimum firmware interval.
-        target.check("alternating PB2", target.read("(GPIOB->ODR & GPIO_ODR_ODR2) != 0"), level)
-        target.check("at least the configured interval", ((now - before) & 0xFFFFFFFF)
-                 >= EXPECTED_DELAY, True)
+        t.check("alternating PB2", t.read("(GPIOB->ODR & GPIO_ODR_ODR2) != 0"), level)
+        t.check("at least the configured interval", ((now - before) & U32_MASK)
+                 >= EXPECTED_DELAY)
 
         before = now
 
 
 # Verify timer clock, counter configuration and interrupt routing.
 @case("HW_CI_TIM2_INIT", labels=("timer", "init"), contracts=("ci_timer_macros",))
-def timer_init(target):
-    target.reach("board_led_toggle")
+def timer_init(t):
+    t.reach("board_led_toggle")
 
     # Check register and application state against the expected values.
-    target.check_table([
-        ('TIM2 clock', '(RCC->APB1ENR & RCC_APB1ENR_TIM2EN) != 0', 1),
-        ('TIM2 prescaler', 'TIM2->PSC', 7999),
-        ('TIM2 period', 'TIM2->ARR', 99),
+    t.check([
+        ('TIM2 clock', 'RCC->APB1ENR & RCC_APB1ENR_TIM2EN'),
+        ('TIM2 prescaler', 'TIM2->PSC', HSI_HZ // TIMER_TICK_HZ - 1),
+        ('TIM2 period', 'TIM2->ARR', TIMER_PERIOD_TICKS - 1),
         ('TIM2 internal clock', 'TIM2->SMCR', 0),
-        ('TIM2 upcounter enabled', 'TIM2->CR1', 1),
-        ('update interrupt only', 'TIM2->DIER', 1),
-        ('NVIC TIM2 enabled', '(NVIC->ISER[0] >> 28) & 1', 1),
-        ('TIM2 vector', '(unsigned int)vectors[44] & ~1U', '(unsigned int)TIM2_IRQHandler & ~1U')
+        ('TIM2 upcounter enabled', 'TIM2->CR1', 'TIM_CR1_CEN'),
+        ('update interrupt only', 'TIM2->DIER', 'TIM_DIER_UIE'),
+        ('NVIC TIM2 enabled', 'NVIC->ISER[TIM2_IRQn >> 5] & (1UL << (TIM2_IRQn & 31))'),
+        ('TIM2 vector', '(unsigned int)vectors[TIM2_IRQn + 16] & ~1U', '(unsigned int)TIM2_IRQHandler & ~1U')
     ])
 
 
 # Observe timer interrupt handling and advancement of the event counter.
 @case("HW_CI_TIM2_IRQ", labels=("timer", "irq"), contracts=("ci_timer_macros",))
-def timer_irq(target):
+def timer_irq(t):
     # Run to actual exception entries, without EGR/NVIC/software injection.
-    target.reach("TIM2_IRQHandler")
+    t.reach("TIM2_IRQHandler")
 
     # Observe consecutive timer interrupts and the event counter between them.
     for _ in range(2):
         # Check the active timer exception and pending update flag.
-        target.check("TIM2 exception number", target.read("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 44)
-        target.check("update pending", target.read("TIM2->SR & TIM_SR_UIF"), 1)
+        t.check("TIM2 exception number", t.read("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), t.evaluate("TIM2_IRQn + 16"))
+        t.check("update pending", t.read("TIM2->SR & TIM_SR_UIF"), t.evaluate("TIM_SR_UIF"))
 
-        before = target.read("board_timer_events")
-        target.reach("TIM2_IRQHandler")
+        before = t.read("board_timer_events")
+        t.reach("TIM2_IRQHandler")
 
         # Verify one event published.
-        target.check("one event published", target.read("board_timer_events"), (before + 1) & 0xFFFFFFFF)
+        t.check("one event published", t.read("board_timer_events"), (before + 1) & U32_MASK)
 
     # A permanently asserted update IRQ would starve thread mode.
-    target.reach("board_delay_ms")
+    t.reach("board_delay_ms")
 
     # Verify thread mode resumes.
-    target.check("thread mode resumes", target.read("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 0)
+    t.check("thread mode resumes", t.read("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 0)
 
 
 # Observe a natural SysTick interrupt and verify tick publication.
 @case("HW_CI_SYSTICK_IRQ", labels=("clock", "irq"), contracts=("ci_clock_macros",))
-def systick_irq(target):
+def systick_irq(t):
     # TECH-001/002: observe CMSIS state in board.c; natural IRQ, no pending injection.
-    target.reach("SysTick_Handler")
+    t.reach("SysTick_Handler")
 
     # Check interrupt routing and the active SysTick exception.
-    target.check(
+    t.check(
         "SysTick vector",
-        target.read("(unsigned int)vectors[15] & ~1U"),
-        target.read("(unsigned int)SysTick_Handler & ~1U")
+        t.read("(unsigned int)vectors[SysTick_IRQn + 16] & ~1U"),
+        t.read("(unsigned int)SysTick_Handler & ~1U")
     )
-    target.check("SysTick exception", target.read("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 15)
+    t.check("SysTick exception", t.read("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), t.evaluate("SysTick_IRQn + 16"))
 
-    before = target.read("board_ticks_ms")
-    target.reach("SysTick_Handler")
+    before = t.read("board_ticks_ms")
+    t.reach("SysTick_Handler")
 
     # Verify one millisecond published.
-    target.check("one millisecond published", target.read("board_ticks_ms"), (before + 1) & 0xFFFFFFFF)
+    t.check("one millisecond published", t.read("board_ticks_ms"), (before + 1) & U32_MASK)
 
-    target.reach("board_delay_ms")
+    t.reach("board_delay_ms")
 
     # Verify thread resumes.
-    target.check("thread resumes", target.read("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 0)
+    t.check("thread resumes", t.read("SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk"), 0)

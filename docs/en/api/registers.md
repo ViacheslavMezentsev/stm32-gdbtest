@@ -28,8 +28,8 @@ core architecture.
 ## Example
 
 ```python
-pc, sp = target.registers("pc", "sp").values()
-r0 = target.registers("r0")["r0"]
+pc, sp = t.registers("pc", "sp").values()
+r0 = t.registers("r0")["r0"]
 ```
 
 Registers that do not exist on the given core produce diagnostics, not an empty value.

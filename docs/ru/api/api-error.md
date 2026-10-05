@@ -31,10 +31,10 @@
 
 ```python
 try:
-    target.ret(1 << 40)
+    t.ret(1 << 40)
 except ApiError as error:
-    target.check("operation", error.details["operation"], "ret")
-    target.check("effect is known or unknown", error.details["effect"] in ("none", "unknown"), True)
+    t.check("operation", error.details["operation"], "ret")
+    t.check("effect is known or unknown", error.details["effect"] in ("none", "unknown"), True)
 ```
 
 Ошибка операции отличается от несовпадения проверки: первая — `ApiError`, второе — `CheckFailed`.

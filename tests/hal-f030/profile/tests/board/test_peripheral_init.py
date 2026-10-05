@@ -11,21 +11,23 @@ def adc_dma_init(t):
     t.reach("platform_adc_prepare")
 
     # Check the published fields against the expected values.
-    t.fields("hadc", {"Instance": "ADC1", "Init.Resolution": "ADC_RESOLUTION_12B",
-        "Init.ScanConvMode": "ADC_SCAN_DIRECTION_FORWARD", "Init.ContinuousConvMode": 0,
-        "Init.DMAContinuousRequests": 0, "Init.ClockPrescaler": "ADC_CLOCK_ASYNC_DIV1",
-        "Init.ExternalTrigConv": "ADC_SOFTWARE_START", "Init.ExternalTrigConvEdge": "ADC_EXTERNALTRIGCONVEDGE_NONE"})
+    t.check([(f"hadc.{field}", f"hadc.{field}", expected) for field, expected in (
+        ("Instance", "ADC1"), ("Init.Resolution", "ADC_RESOLUTION_12B"),
+        ("Init.ScanConvMode", "ADC_SCAN_DIRECTION_FORWARD"), ("Init.ContinuousConvMode", "DISABLE"),
+        ("Init.DMAContinuousRequests", "DISABLE"), ("Init.ClockPrescaler", "ADC_CLOCK_ASYNC_DIV1"),
+        ("Init.ExternalTrigConv", "ADC_SOFTWARE_START"),
+        ("Init.ExternalTrigConvEdge", "ADC_EXTERNALTRIGCONVEDGE_NONE"))])
 
-    t.check_table([
+    t.check([
         ('only channels 16/17', 'ADC1->CHSELR', 1 << 16 | 1 << 17),
         ('forward scan', 'ADC1->CFGR1 & ADC_CFGR1_SCANDIR', 0),
         ('239.5 cycles', 'ADC1->SMPR & ADC_SMPR_SMP', 7)
     ])
 
-    t.fields("hdma_adc", {"Instance": "DMA1_Channel1", "Init.Direction": "DMA_PERIPH_TO_MEMORY",
-        "Init.Mode": "DMA_NORMAL", "Init.MemInc": "DMA_MINC_ENABLE",
-        "Init.PeriphDataAlignment": "DMA_PDATAALIGN_HALFWORD",
-        "Init.MemDataAlignment": "DMA_MDATAALIGN_HALFWORD"})
+    t.check([(f"hdma_adc.{field}", f"hdma_adc.{field}", expected) for field, expected in (
+        ("Instance", "DMA1_Channel1"), ("Init.Direction", "DMA_PERIPH_TO_MEMORY"), ("Init.Mode", "DMA_NORMAL"),
+        ("Init.MemInc", "DMA_MINC_ENABLE"), ("Init.PeriphDataAlignment", "DMA_PDATAALIGN_HALFWORD"),
+        ("Init.MemDataAlignment", "DMA_MDATAALIGN_HALFWORD"))])
 
 
 # Verify HAL TIM3 initialization parameters and applied register state.
@@ -34,9 +36,11 @@ def tim3_init(t):
     t.reach("platform_adc_prepare")
 
     # Check register and application state against the expected values.
-    t.check_table([
-        ('TIM3 prescaler', 'TIM3->PSC', 7999),
-        ('TIM3 period', '__HAL_TIM_GET_AUTORELOAD(&htim3)', 99),
+    # HSI 8 MHz system clock; TIM3 counts at 1 kHz and overflows every 100 ms (independent of CubeMX).
+    hsi_hz, tick_hz, period_ticks = 8_000_000, 1_000, 100
+    t.check([
+        ('TIM3 prescaler', 'TIM3->PSC', hsi_hz // tick_hz - 1),
+        ('TIM3 period', '__HAL_TIM_GET_AUTORELOAD(&htim3)', period_ticks - 1),
         ('TIM3 not started', 'TIM3->CR1 & TIM_CR1_CEN', 0)
     ])
 
@@ -47,9 +51,13 @@ def rtc_init(t):
     t.reach("platform_adc_prepare")
 
     # Check the RTC source and alarm setup after initialization.
-    t.check("RTC source LSI", (t.read("RCC->BDCR") >> 8) & 3, 2)
-    t.check("RTC enabled", (t.read("RCC->BDCR") >> 15) & 1, 1)
-    t.check("LSI ready", (t.read("RCC->CSR") >> 1) & 1, 1)
-    t.check("asynchronous divider", (t.read("RTC->PRER") >> 16) & 127, 127)
-    t.check("synchronous divider", t.read("RTC->PRER") & 32767, 311)
-    t.check("RTC output disabled", (t.read("RTC->CR") >> 21) & 3, 0)
+    # LSI 40 kHz nominal: 1 Hz = LSI / 128 / 312 (RM, independent of CubeMX).
+    lsi_hz, prediv_a = 40_000, 128
+    t.check([
+        ("RTC source LSI", "RCC->BDCR & RCC_BDCR_RTCSEL", "RCC_RTCCLKSOURCE_LSI"),
+        ("RTC enabled", "RCC->BDCR & RCC_BDCR_RTCEN"),
+        ("LSI ready", "RCC->CSR & RCC_CSR_LSIRDY"),
+        ("asynchronous divider", "(RTC->PRER & RTC_PRER_PREDIV_A) >> RTC_PRER_PREDIV_A_Pos", prediv_a - 1),
+        ("synchronous divider", "RTC->PRER & RTC_PRER_PREDIV_S", lsi_hz // prediv_a - 1),
+        ("RTC output disabled", "RTC->CR & RTC_CR_OSEL", 0),
+    ])

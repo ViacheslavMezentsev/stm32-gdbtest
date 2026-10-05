@@ -13,31 +13,32 @@ def gpio_arguments(t):
     t.reach("HAL_GPIO_Init", condition="GPIOx == GPIOA")
 
     # Check the published fields against the expected values.
-    published = t.read("*GPIO_Init", fields=("Pin", "Mode", "Pull", "Speed"))
-    t.check("pin mask", published["Pin"], 1 << 5)
-    t.check("output mode", published["Mode"], "GPIO_MODE_OUTPUT_PP")
-    t.check("no pull", published["Pull"], "GPIO_NOPULL")
-    t.check("low speed", published["Speed"], "GPIO_SPEED_FREQ_LOW")
+    t.check([
+        ("pin mask", "GPIO_Init->Pin", "GPIO_PIN_5"),
+        ("output mode", "GPIO_Init->Mode", "GPIO_MODE_OUTPUT_PP"),
+        ("no pull", "GPIO_Init->Pull", "GPIO_NOPULL"),
+        ("low speed", "GPIO_Init->Speed", "GPIO_SPEED_FREQ_LOW"),
+    ])
 
     t.reach("platform_adc_start")
 
     # Verify PA5 output applied.
-    t.check("PA5 output applied", t.read("(GPIOA->MODER >> 10) & 3"), 1)
+    t.check("PA5 output applied", t.read("GPIOA->MODER & GPIO_MODER_MODER5"), t.evaluate("GPIO_MODER_MODER5_0"))
 
 
 # Select a GPIO toggle by its arguments and verify the output transition.
 @case("HW_GPIO_FILTERED_CALL", contracts=("gpio_filtered_call",), labels=("gpio", "contract"))
 def gpio_filtered_call(t):
     t.reach("HAL_GPIO_TogglePin",
-            condition="GPIOx == GPIOA && GPIO_Pin == 32 && ((GPIOA->ODR >> 5) & 1) == 1")
+            condition="GPIOx == GPIOA && GPIO_Pin == GPIO_PIN_5 && (GPIOA->ODR & GPIO_ODR_5) != 0")
 
     # Verify selected toggle starts High.
-    t.check("selected toggle starts High", t.read("(GPIOA->ODR >> 5) & 1"), 1)
+    t.check("selected toggle starts High", t.read("GPIOA->ODR & GPIO_ODR_5"))
 
     t.reach("platform_adc_start")
 
     # Verify selected toggle ends Low.
-    t.check("selected toggle ends Low", t.read("(GPIOA->ODR >> 5) & 1"), 0)
+    t.check("selected toggle ends Low", t.read("GPIOA->ODR & GPIO_ODR_5"), 0)
 
 
 # Force an RCC failure return and verify entry into the application error handler.
@@ -45,7 +46,7 @@ def gpio_filtered_call(t):
 def rcc_error(t):
     # TECH-004: synthetic return code, not an oscillator fault.
     t.reach("HAL_RCC_OscConfig")
-    t.ret("(HAL_StatusTypeDef)1")
+    t.ret("HAL_ERROR")
     t.reach("Error_Handler")
 
 

@@ -26,8 +26,8 @@ with several active points the stop reason is the first event.
 ## Example
 
 ```python
-target.resume()
-target.check("stopped by a breakpoint", target.stops()[0]["kind"], "breakpoint")
+t.resume()
+t.check("stopped by a breakpoint", t.stops()[0]["kind"], "breakpoint")
 ```
 
 Exceeding the scenario timeout ends the run instead of hanging in a wait.

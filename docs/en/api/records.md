@@ -26,8 +26,8 @@ Insertion order and sequence starting at 1 survive filtering. Mutating copies do
 ```python
 from statistics import mean, stdev
 
-samples = [row["data"]["vdda_mv"] for row in target.records("adc.sample")]
-target.check("enough samples", len(samples) >= 2, True)
+samples = [row["data"]["vdda_mv"] for row in t.records("adc.sample")]
+t.check("enough samples", len(samples) >= 2, True)
 summary = {"mean": mean(samples), "stdev": stdev(samples)}
 last_two = samples[-2:]
 ```

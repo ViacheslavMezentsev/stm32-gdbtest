@@ -30,9 +30,9 @@ RAM до запуска программы не сохраняется; при �
 ## Пример
 
 ```python
-result = target.reset()
-target.check("halted after reset", result["outcome"], "halted")
-target.reach("main")
+result = t.reset()
+t.check("halted after reset", result["outcome"], "halted")
+t.reach("main")
 ```
 
 Ошибка команды backend-а возвращается как отказ операции с сохранением причины и шагов инвалидации;

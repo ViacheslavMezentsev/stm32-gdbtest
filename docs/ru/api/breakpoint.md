@@ -24,7 +24,7 @@
 ```python
 import gdb
 
-bp = target.breakpoint("board_adc_sample", temporary=True)
+bp = t.breakpoint("board_adc_sample", temporary=True)
 try:
     gdb.execute("continue")
 finally:

@@ -11,11 +11,15 @@ from stm32_gdbtest.configuration import (DEFAULTS, EXECUTE_OUTPUT_LIMIT, FRAMES_
                                            MEMORY_LIMIT, RESET_COMMAND, freeze)
 from stm32_gdbtest import values
 from stm32_gdbtest.run_profile import Profile
+from stm32_gdbtest.matchers import Matcher
+
+# Marks an argument the scenario did not pass: `check(name, actual)` and `check(rows)`.
+_OMITTED = object()
 
 _CLONE = re.compile(r"\s*\[clone [^\]]*\]")
 _FUNCTION_NAME = re.compile(r"[A-Za-z_]\w*")
 _SECTION = re.compile(r" in section (\S+)")
-# Writable SRAM window shared by `write` verification and `write_memory` (ТЗ API 4.6, 4.16).
+# Writable SRAM window shared by `write` verification and `memory` writes (ТЗ API 4.6, 4.16).
 SRAM_WINDOW = (0x20000000, 0x20100000)
 
 
@@ -200,13 +204,14 @@ class Target:
         self.report = report
         context = dict(context or {})
         self.profile = Profile(profile, configuration, case=context.get("case"), stand=context.get("stand"),
-                               gdb=self._gdb_facts())
+                               gdb=self._gdb_facts(), build=context.get("build"))
         self._config = configuration.config if configuration else freeze(dict(
             target=profile, api=dict(schema=1, records=dict(DEFAULTS)), image=None))
         limits = self._config['api']['records']
         self._journal = Journal(**{key: limits[key] for key in DEFAULTS})
         self.owned = []
         self.stops = []
+        self._warned = set()
         gdb.events.stop.connect(self.on_stop)
 
     @staticmethod
@@ -219,6 +224,9 @@ class Target:
                     type_is_signed=kind is not None and hasattr(kind, "is_signed"))
 
     def record(self, name, data):
+        """Keep evidence in the run journal; the run profile is recorded as its snapshot (ТЗ API 4.9)."""
+        if isinstance(data, Profile):
+            data = data.snapshot()
         return self._journal.record(name, data)
 
     def records(self, name=None):
@@ -240,9 +248,31 @@ class Target:
             if point.id in numbers:
                 point.hit_count += 1
 
-    def check(self, name, actual, expected):
-        """Record one comparison and fail the scenario on a mismatch (ТЗ API 4.1)."""
-        self._verdict(name, actual, expected, actual == expected, f"expected {expected!r}")
+    def check(self, name, actual=_OMITTED, expected=_OMITTED):
+        """Record one check and fail the scenario on a mismatch (ТЗ API 4.1).
+
+        - `check(name, actual, expected)` compares by equality, or by a matcher (`within`, `near`,
+          `one_of`) passed as `expected`;
+        - `check(name, actual)` passes when `actual` is true;
+        - `check(rows)` checks a table of `(name, actual, expected)` or `(name, actual)` rows in order;
+          string cells are GDB expressions. Returns the number of checked rows.
+        """
+        if isinstance(name, (list, tuple)):
+            if actual is not _OMITTED or expected is not _OMITTED:
+                self._fail("check", "validation", "none", "invalid_rows",
+                           "a table is the only argument of check(rows)")
+            return self._check_table(name)
+        self._check_name(name)
+        if actual is _OMITTED:
+            self._fail("check", "validation", "none", "invalid_arguments", "check(name) needs a value", name=name)
+        if expected is _OMITTED:
+            passed = bool(actual)
+            self._verdict(name, actual, True, passed, "expected a true value", "truth")
+        elif isinstance(expected, Matcher):
+            self._verdict(name, actual, expected.expected, expected.matches(actual), f"expected {expected}",
+                          expected.kind)
+        else:
+            self._verdict(name, actual, expected, actual == expected, f"expected {expected!r}")
 
     def _verdict(self, name, actual, expected, passed, wanted, kind=None):
         entry = dict(name=name, actual=actual, expected=expected, passed=passed)
@@ -258,49 +288,18 @@ class Target:
             self._fail("check", "validation", "none", "invalid_name",
                        "check name must be a non-empty string", name=name)
 
-    def check_range(self, name, actual, low, high):
-        """Pass when low <= actual <= high; the report keeps the value and both bounds (ТЗ API 4.1.2)."""
-        self._check_name(name)
-        if not (_number(low) and _number(high)) or low > high:
-            self._fail("check", "validation", "none", "invalid_bounds",
-                       "bounds must be numbers with low <= high", name=name, low=low, high=high)
-        passed = _number(actual) and low <= actual <= high
-        self._verdict(name, actual, dict(low=low, high=high), passed, f"expected {low!r}..{high!r}", "range")
-
-    def check_near(self, name, actual, expected, tolerance):
-        """Pass when |actual - expected| <= tolerance (ТЗ API 4.1.2)."""
-        self._check_name(name)
-        if not _number(expected) or not _number(tolerance) or tolerance < 0:
-            self._fail("check", "validation", "none", "invalid_tolerance",
-                       "expected must be a number and tolerance a non-negative number",
-                       name=name, expected=expected, tolerance=tolerance)
-        passed = _number(actual) and abs(actual - expected) <= tolerance
-        self._verdict(name, actual, dict(value=expected, tolerance=tolerance), passed,
-                      f"expected {expected!r} ± {tolerance!r}", "near")
-
-    def check_in(self, name, actual, options):
-        """Pass when actual equals one of the options (ТЗ API 4.1.2)."""
-        self._check_name(name)
-        if not isinstance(options, (list, tuple, set, frozenset)) or not options:
-            self._fail("check", "validation", "none", "invalid_options",
-                       "options must be a non-empty list, tuple or set", name=name)
-        choices = list(options)
-        self._verdict(name, actual, {"in": choices}, actual in choices, f"expected one of {choices!r}", "in")
-
-    def check_table(self, rows):
-        """Check rows of (name, actual, expected); string cells are GDB expressions (ТЗ API 4.1.3).
-
-        Each row is evaluated and checked in order, so the first mismatch stops the scenario like
-        `check`. Returns the number of checked rows.
-        """
-        if not isinstance(rows, (list, tuple)) or not rows:
+    def _check_table(self, rows):
+        """Rows are validated first, then evaluated and checked in order; the first mismatch stops (ТЗ API 4.1.3)."""
+        if not rows:
             self._fail("check", "validation", "none", "invalid_rows", "rows must be a non-empty list")
         for row in rows:
-            if not isinstance(row, (list, tuple)) or len(row) != 3:
+            if not isinstance(row, (list, tuple)) or len(row) not in (2, 3):
                 self._fail("check", "validation", "none", "invalid_rows",
-                           "each row must be (name, actual, expected)", row=row)
+                           "each row must be (name, actual) or (name, actual, expected)", row=row)
             self._check_name(row[0])
-        for name, actual, expected in rows:
+        for row in rows:
+            name, actual = row[0], row[1]
+            expected = row[2] if len(row) == 3 else _OMITTED
             if isinstance(actual, str):
                 actual = self.evaluate(actual)
             if isinstance(expected, str):
@@ -308,7 +307,20 @@ class Target:
             self.check(name, actual, expected)
         return len(rows)
 
+    def _deprecated(self, name, replacement):
+        """Warn once per run about a former name; removal is planned in 0.4.0 (ТЗ API 6.7)."""
+        if name in self._warned:
+            return
+        self._warned.add(name)
+        self.report.setdefault("warnings", []).append(
+            f"deprecated: {name} is replaced by {replacement} and is removed in 0.4.0")
+
     def value(self, expression):
+        """Deprecated 0.1 read of an integer expression; use `read` or `evaluate` (ТЗ API 6.7)."""
+        self._deprecated("value()", "read() or evaluate()")
+        return self._integer(expression)
+
+    def _integer(self, expression):
         value = gdb.parse_and_eval(expression)
         if value.is_optimized_out:
             raise RuntimeError(f"Value optimized out: {expression}")
@@ -316,10 +328,11 @@ class Target:
         return int(value)
 
     def fields(self, expression, expected):
-        """Compare scalar fields separately; expected values are C expressions or integers."""
+        """Deprecated: compare scalar fields; use a `check([(name, path, expected), ...])` table (ТЗ API 6.7)."""
+        self._deprecated("fields()", "check([(name, path, expected), ...])")
         for field, reference in expected.items():
-            actual = self.value(f"({expression}).{field}")
-            wanted = self.value(reference) if isinstance(reference, str) else reference
+            actual = self._integer(f"({expression}).{field}")
+            wanted = self._integer(reference) if isinstance(reference, str) else reference
             self.check(f"{expression}.{field}", actual, wanted)
 
     def frames(self, limit=None):
@@ -540,14 +553,34 @@ class Target:
                        "the block must lie in SRAM" + ("" if writable else " or the profile flash"),
                        address=address, size=size)
 
-    def memory(self, address, size):
-        """Raw bytes of a memory block in SRAM or the profile flash (ТЗ API 4.16).
+    def memory(self, address, size_or_data, *, verify=None):
+        """Read or write raw bytes; the type of the second argument decides (ТЗ API 4.16).
 
-        Peripheral addresses are refused: a read there may change the device state.
+        - an `int` size (1..MEMORY_LIMIT) reads that many bytes from SRAM or the profile flash and returns
+          `bytes`; peripheral addresses are refused, a read there may change the device state;
+        - `bytes`, `bytearray` or `memoryview` data is written into SRAM, read back unless `verify=False`,
+          logged in mutations, and a result dict is returned.
+        Anything else is refused before the memory is touched.
         """
-        if type(address) is not int or address < 0 or type(size) is not int or not 1 <= size <= MEMORY_LIMIT:
-            self._fail("memory", "validation", "none", "invalid_block",
-                       f"address must be a non-negative integer and size 1..{MEMORY_LIMIT}",
+        if type(address) is not int or address < 0:
+            self._fail("memory", "validation", "none", "invalid_block", "address must be a non-negative integer",
+                       address=address)
+        if type(size_or_data) is int:
+            if verify is not None:
+                self._fail("memory", "validation", "none", "invalid_verify",
+                           "verify applies to a write; a size reads", address=address)
+            return self._read_memory(address, size_or_data)
+        if isinstance(size_or_data, (bytes, bytearray, memoryview)):
+            if verify is not None and type(verify) is not bool:
+                self._fail("memory", "validation", "none", "invalid_verify", "verify must be a bool")
+            return self._write_memory(address, bytes(size_or_data), verify is not False)
+        self._fail("memory", "validation", "none", "invalid_block",
+                   "the second argument is an int size to read or bytes to write", address=address,
+                   kind=type(size_or_data).__name__)
+
+    def _read_memory(self, address, size):
+        if not 1 <= size <= MEMORY_LIMIT:
+            self._fail("memory", "validation", "none", "invalid_block", f"size must be 1..{MEMORY_LIMIT}",
                        address=address, size=size)
         self._memory_window(address, size, writable=False)
         try:
@@ -556,16 +589,10 @@ class Target:
             self._fail("memory", "command", "none", "read_failed", f"cannot read {size} bytes at {address:#x}",
                        cause=cause, address=address, size=size)
 
-    def write_memory(self, address, data, *, verify=True):
-        """Write raw bytes into SRAM and verify the read-back (ТЗ API 4.16)."""
-        if type(address) is not int or address < 0 or not isinstance(data, (bytes, bytearray)) \
-                or not 1 <= len(data) <= MEMORY_LIMIT:
-            self._fail("memory", "validation", "none", "invalid_block",
-                       f"address must be a non-negative integer and data 1..{MEMORY_LIMIT} bytes",
-                       address=address, size=len(data) if isinstance(data, (bytes, bytearray)) else None)
-        if type(verify) is not bool:
-            self._fail("memory", "validation", "none", "invalid_verify", "verify must be a bool")
-        data = bytes(data)
+    def _write_memory(self, address, data, verify):
+        if not 1 <= len(data) <= MEMORY_LIMIT:
+            self._fail("memory", "validation", "none", "invalid_block", f"data must be 1..{MEMORY_LIMIT} bytes",
+                       address=address, size=len(data))
         self._memory_window(address, len(data), writable=True)
         inferior = gdb.selected_inferior()
         try:
@@ -582,7 +609,7 @@ class Target:
             self._fail("memory", "readback", "applied", "verification_failed",
                        f"read-back differs at {address:#x}", address=address,
                        expected=data.hex(), actual=after.hex())
-        return dict(operation="write_memory", address=address, size=len(data), verified=verify)
+        return dict(operation="memory", address=address, size=len(data), verified=verify)
 
     def locals(self, frame=None):
         """Local variables of a frame: inner blocks shadow outer ones (ТЗ API 4.17)."""
@@ -670,10 +697,12 @@ class Target:
         return self._read_value(path, path)
 
     def _read_fields(self, path, members):
-        """Read named members of a compound object; members are names or {name: type} hints."""
+        """Read named members of a compound object; members are a list of names or {name: hint}."""
+        if isinstance(members, (list, tuple)):
+            members = dict.fromkeys(members)
         if type(members) is not dict or not members:
             self._fail("read", "validation", "none", "invalid_fields",
-                       "fields must be a non-empty mapping", path=path, fields=members)
+                       "fields must be a non-empty list of names or mapping", path=path, fields=members)
         result = {}
         for field in members:
             if type(field) is not str or not field:
@@ -753,7 +782,8 @@ class Target:
                        f"write failed for {path}", cause=cause, path=path, value=literal)
 
     def set_value(self, expression, value):
-        """Alias of `write` kept for the 0.2.x name (removal planned in 0.4.0)."""
+        """Deprecated alias of `write` kept for the 0.2.x name; removed in 0.4.0 (ТЗ API 6.7)."""
+        self._deprecated("set_value()", "write()")
         self.write(expression, value)
 
     def breakpoint(self, location, temporary=False, *, condition=None, ignore_count=0, when=None):
@@ -888,7 +918,7 @@ class Target:
         self.check(f"frame: {location}", function_name(frame), function_name(location))
         if condition is not None:
             # Never accept a stop that happened after a condition evaluation error.
-            self.check(f"condition: {condition}", bool(self.value(condition)), True)
+            self.check(f"condition: {condition}", bool(self._integer(condition)), True)
         return dict(operation="reach", outcome="reached", location=location, point=point.number,
                     addresses=addresses, stop=stop)
 
@@ -1384,7 +1414,8 @@ class Target:
         return None
 
     def force_return(self, expression):
-        """Alias of `ret` kept for the 0.2.x name (removal planned in 0.4.0)."""
+        """Deprecated alias of `ret` kept for the 0.2.x name; removed in 0.4.0 (ТЗ API 6.7)."""
+        self._deprecated("force_return()", "ret()")
         return self.ret(expression)
 
     def clear(self):

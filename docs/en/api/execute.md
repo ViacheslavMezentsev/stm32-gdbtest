@@ -28,8 +28,8 @@ commands that change debugger state remain the scenario's responsibility.
 ## Example
 
 ```python
-registers = target.execute("info registers pc sp")
-target.check("pc reported", "pc" in registers, True)
+registers = t.execute("info registers pc sp")
+t.check("pc reported", "pc" in registers, True)
 ```
 
 A command that changes debugger state is executed as given; no rollback is performed.

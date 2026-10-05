@@ -26,8 +26,8 @@
 ## Пример
 
 ```python
-target.step(3)
-target.check("stepped frames", len(target.frames()["frames"]) > 0, True)
+t.step(3)
+t.check("stepped frames", len(t.frames()["frames"]) > 0, True)
 ```
 
 Недоступный режим шага даёт отказ операции с указанием запрошенного режима.

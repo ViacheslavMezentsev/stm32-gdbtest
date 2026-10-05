@@ -32,9 +32,9 @@
 ## Пример
 
 ```python
-target.reach("app_step")
-result = target.ret(42)
-target.check("the caller received the value", target.read("app_received.produced"), result["applied"])
+t.reach("app_step")
+result = t.ret(42)
+t.check("the caller received the value", t.read("app_received.produced"), result["applied"])
 ```
 
 ## Ссылки

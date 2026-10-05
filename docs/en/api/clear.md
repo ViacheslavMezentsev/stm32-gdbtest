@@ -23,8 +23,8 @@ Also removes fault guards installed by the agent. Leaves unrelated GDB points al
 
 ```python
 # Deliberately remove all Target stops, including fault guards.
-target.clear()
-target.reach("board_adc_sample")
+t.clear()
+t.reach("board_adc_sample")
 ```
 
 Scenario-body fragment (case shows a complete declaration). Symbols/macros must exist in the ELF and the MCU must be stopped in the appropriate context.

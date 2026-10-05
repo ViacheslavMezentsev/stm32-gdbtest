@@ -27,8 +27,8 @@
 ## Пример
 
 ```python
-target.evaluate("app_state.ticks", as_type=int)
-target.evaluate("app_state.led == 1", as_type=bool)
+t.evaluate("app_state.ticks", as_type=int)
+t.evaluate("app_state.led == 1", as_type=bool)
 ```
 
 Ошибка GDB при разборе или вычислении выражения сохраняется как причина отказа.

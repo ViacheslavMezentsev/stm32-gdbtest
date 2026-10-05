@@ -32,10 +32,10 @@ not roll back what already happened. The full code set is formed as the methods 
 
 ```python
 try:
-    target.ret(1 << 40)
+    t.ret(1 << 40)
 except ApiError as error:
-    target.check("operation", error.details["operation"], "ret")
-    target.check("effect is known or unknown", error.details["effect"] in ("none", "unknown"), True)
+    t.check("operation", error.details["operation"], "ret")
+    t.check("effect is known or unknown", error.details["effect"] in ("none", "unknown"), True)
 ```
 
 An operation failure differs from a check mismatch: the former is `ApiError`, the latter is

@@ -3,6 +3,7 @@
 from dataclasses import dataclass, field
 import hashlib
 import os
+import re
 from pathlib import Path
 import tomllib
 from types import MappingProxyType
@@ -84,8 +85,8 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
         return cache[source]
 
     session_raw, session, session_sha = capture(path)
-    if set(session) != {"config"} or type(session["config"]) is not dict:
-        raise ConfigError("session", "expected [config]")
+    if "config" not in session or set(session) - {"config", "data"} or type(session["config"]) is not dict:
+        raise ConfigError("session", "expected [config] and an optional [data]")
     links = session["config"]
     if "target" not in links or set(links) - {"target", "api", "image"}:
         raise ConfigError("session", "target required; known file links only")
@@ -101,6 +102,21 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
         documents[name] = data
         raw_documents[name] = raw
         props[name] = dict(data=data, sha256=sha, reference=reference)
+
+    # ТЗ API 4.14.7: project data files (board.toml) are captured once, like the configuration itself.
+    data_links = session.get("data", {})
+    if type(data_links) is not dict:
+        raise ConfigError("session", "[data] must be a table of file references")
+    data = {}
+    for name, reference in data_links.items():
+        if not re.fullmatch(r"[a-z][a-z0-9_]*", name):
+            raise ConfigError("data", f"invalid data name {name!r}")
+        if type(reference) is not str or not reference.strip():
+            raise ConfigError("reference", "data." + name)
+        raw, parsed, sha = capture(path.parent / reference)
+        data[name] = parsed
+        raw_documents["data." + name] = raw
+        props["data." + name] = dict(data=parsed, sha256=sha, reference=reference)
 
     try:
         target = _target_from_snapshot(raw_documents["target"])
@@ -128,7 +144,7 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
                                 not 1 <= records[name] <= MAXIMUMS[name]):
             raise ConfigError("api_parameter", f"records.{name}: expected integer 1..{MAXIMUMS[name]}")
     effective_api = dict(api, records={**DEFAULTS, **records})
-    effective = dict(target=target, api=effective_api, image=image)
+    effective = dict(target=target, api=effective_api, image=image, data=data)
     return Configuration(freeze(effective), freeze(props), session_sha,
                          MappingProxyType(dict(raw_documents, session=session_raw)))
 

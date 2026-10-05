@@ -9,6 +9,7 @@
 | Поддержка в модуле | 0.1.0rc1 / v0.1.0-rc.1 |
 | Контракт принят в ТЗ API | 0.1.0; §4.3 |
 | API_VERSION | 1 |
+| Устарел | с 0.3.0: одно предупреждение `deprecated` за прогон в `report["warnings"]`; замена — `check([(name, path, expected), …])`; удаление в 0.4.0 (ТЗ API 6.7) |
 | Основание | действующий контракт 0.1.0/0.2.0 и сценарии проверочной прошивки `tests/firmware` |
 | Синоним прежнего имени | fields(expression, expected) -> read(path, fields=…) (алиас действует без предупреждений до 1.0, удаление в 0.4.0) |
 
@@ -23,8 +24,8 @@ expected — отображение пути поля в int или строко
 ## Пример
 
 ```python
-target.reach("HAL_GPIO_Init")
-target.fields("*GPIO_Init", {"Pin": 1 << 5, "Mode": "GPIO_MODE_OUTPUT_PP"})
+t.reach("HAL_GPIO_Init")
+t.fields("*GPIO_Init", {"Pin": 1 << 5, "Mode": "GPIO_MODE_OUTPUT_PP"})
 ```
 
 Фрагмент для тела сценария (для case — целое объявление). Символы и макросы должны присутствовать в ELF; MCU остановлен в подходящем контексте.

@@ -31,16 +31,17 @@
 J-Link — `monitor reset`; сессия может переопределить значение. Лимиты журнала, `breakpoint_limit=4`
 и `timeout_s=20` остаются из действующих таблиц.
 
-Переход со прежних имён (алиасы действуют без предупреждений до 1.0, удаление запланировано в 0.4.0):
+Переход со прежних имён (с 0.3.0 прежнее имя даёт одно предупреждение `deprecated` за прогон, удаление в 0.4.0):
 
 | Прежнее имя | Новое имя | Примечание |
 | --- | --- | --- |
 | `value(expression)` | `read(path)` | чтение объекта с приведением типа |
-| `fields(expression, expected)` | `read(path, fields=…)` | сравнение полей остаётся проверкой сценария |
+| `fields(expression, expected)` | `check([(name, path, expected), …])` | таблица вычисляет строковые ожидания |
 | `set_value(expression, value)` | `write(path, value)` | появляется проверка применённого значения |
 | `force_return(expression)` | `ret(value=None)` | возврат становится операцией с результатом |
 | `config` / `config_props` | `profile` (разделы, `get`, `origin`) | удалены в 0.3.0 без алиаса; [profile](api/profile.md) |
-| `case(...)` | `test(...)` | дефолты те же: `timeout_s=20`, `labels=()`, `contracts=()` |
+| `check_range`, `check_near`, `check_in`, `check_table`, `write_memory`, `to_dict` | `check` с `within`/`near`/`one_of`, `check(rows)`, `memory(address, data)`, `snapshot()` | имена кандидата 0.3.0 заменены до выпуска |
+| `case(...)` | `test(...)` | без предупреждения: `@case` остаётся основным именем, `@test` — алиас |
 | `RecordError` | подкласс `ApiError` | публичный импорт сохраняется |
 
 ## Первый пакет: журнал и конфигурация
@@ -56,9 +57,9 @@ from statistics import mean, stdev
 from stm32_gdbtest import RecordError
 
 # После каждого согласованного места остановки:
-target.record('adc', {'vdda_mv': target.value('board_measurement.vdda_mv')})
+t.record('adc', {'vdda_mv': t.value('board_measurement.vdda_mv')})
 # После серии из минимум двух измерений:
-values = [r['data']['vdda_mv'] for r in target.records('adc')]
+values = [r['data']['vdda_mv'] for r in t.records('adc')]
 result = {'mean_mv': mean(values), 'sample_stdev_mv': stdev(values)}
 ```
 
@@ -99,7 +100,7 @@ max_records = 256
 count = 10
 ```
 
-`target.profile.get('user.measurement.count')` читает параметр сценария. Разделы `profile`: target/api/user/image с defaults ядра; невыбранный image — None, выбранный — сама политика. `profile.files` содержит sha256 исходных байтов и reference захваченных файлов, `profile.origin(path)` — источник значения (файл, default, переопределение окружением или прогон). Разделы и вложенные контейнеры неизменяемы; массивы становятся tuple. Даты/время и неизвестные поля TOML сохраняются. reference не обещает доступность исходного пути на другом хосте.
+`t.profile.get('user.measurement.count')` читает параметр сценария. Разделы `profile`: target/api/user/image с defaults ядра; невыбранный image — None, выбранный — сама политика. `profile.files` содержит sha256 исходных байтов и reference захваченных файлов, `profile.origin(path)` — источник значения (файл, default, переопределение окружением или прогон). Разделы и вложенные контейнеры неизменяемы; массивы становятся tuple. Даты/время и неизвестные поля TOML сохраняются. reference не обещает доступность исходного пути на другом хосте.
 
 SESSION_CONFIG несовместим с PROFILE, --image-policy и STM32_GDBTEST_IMAGE_POLICY. PROFILE_DIR по-прежнему выбирает сценарии. target обязателен; неуказанный api даёт defaults, image — режим секций ELF. Выбранный неверный/отсутствующий файл даёт ERROR до MCU. Неизвестные api-поля доступны сценарию; строгие схемы target/image прежние.
 

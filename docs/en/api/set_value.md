@@ -9,6 +9,7 @@
 | Module support | 0.1.0rc1 / v0.1.0-rc.1 |
 | API specification contract | 0.1.0; §4.6 |
 | API_VERSION | 1 |
+| Deprecated | since 0.3.0: one `deprecated` warning per run in `report["warnings"]`; replacement: `write(path, value)`; removal in 0.4.0 (API specification 6.7) |
 | Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 | Former-name alias | set_value(expression, value) -> write(path, value) (the alias works without warnings until 1.0; removal in 0.4.0) |
 
@@ -23,12 +24,12 @@ value is interpolated into a GDB command: use a number or valid C expression. No
 ## Example
 
 ```python
-saved = target.value("board_adc_sequences")
+saved = t.value("board_adc_sequences")
 try:
-    target.set_value("board_adc_sequences", 0)
-    target.check("counter injected", target.value("board_adc_sequences"), 0)
+    t.set_value("board_adc_sequences", 0)
+    t.check("counter injected", t.value("board_adc_sequences"), 0)
 finally:
-    target.set_value("board_adc_sequences", saved)
+    t.set_value("board_adc_sequences", saved)
 ```
 
 Scenario-body fragment (case shows a complete declaration). Symbols/macros must exist in the ELF and the MCU must be stopped in the appropriate context.

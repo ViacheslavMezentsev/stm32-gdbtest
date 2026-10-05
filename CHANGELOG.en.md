@@ -20,11 +20,16 @@ Extended scenario API; the release is being prepared and the tag is published by
 - Invocation and control: `ret` with a typed value, `call` of firmware functions, `reset` with a command from `api.toml`, and `execute` of debugger commands with a journal.
 - Reading and evaluation: `read`/`write` of objects, `evaluate` of expressions with a type conversion, `registers` of a frame, and `frames` with a walk limit.
 - Run profile: `profile` reads `target.toml` as before and provides the sections `target`, `api`, `user`, `image`,
-  `files`, `case`, `stand`, `gdb`, plus `get("a.b")`, `origin(path)` and `to_dict()`. API specification 0.3.3.
-- Checks with bounds: `check_range`, `check_near`, `check_in` keep the value and the bounds in the report;
-  `check_table(rows)` replaces local table-check helpers in scenarios.
-- Symbols and memory: `symbol(name)` gives the address, size, type and section; `memory`/`write_memory` read SRAM or
-  the profile flash and write SRAM with verification, peripheral addresses are refused.
+  `data`, `files`, `build`, `case`, `stand`, `gdb`, plus `get("a.b")`, `origin(path)` and `snapshot()`;
+  `t.record(name, t.profile)` records a snapshot. API specification 0.3.4.
+- Project data files: a `[data]` table in `session.toml` (`board = "board.toml"`) gives `t.profile.data["board"]`; the
+  file is captured with the configuration and carried in packages. The fixture profiles gained a `board.toml`.
+- Build facts: `t.profile.build` lists the compiler, Cube packages, CMSIS/HAL versions from macros and the `-D` keys;
+  they show whether the firmware uses HAL (`USE_HAL_DRIVER`) or LL.
+- One `check` for every check: the matchers `within`, `near`, `one_of` keep the value and the bounds in the report,
+  `check(name, actual)` tests truth, `check(rows)` checks a table of rows with GDB expressions.
+- Symbols and memory: `symbol(name)` gives the address, size, type and section; `memory(address, size)` reads SRAM or
+  the profile flash, `memory(address, data)` writes bytes into SRAM with verification; peripheral addresses are refused.
 - Frame variables: `locals()` and `arguments()` as one dictionary, optimized-out values listed separately.
 - Point control: `Point.enable()`/`disable()` keep the counter, `condition` is writable; the `breakpoint_limit` budget
   counts active points only.
@@ -47,9 +52,17 @@ Extended scenario API; the release is being prepared and the tag is published by
   them (`target.config['api']['user']` → `target.profile.user`). They were not part of any published tag.
 - Scenarios shared by the profiles moved from the profile directories into the shared directory; `HW_CI_SETTINGS` is
   replaced by `HW_CI_PROFILE`.
+- `value`, `fields`, `set_value` and `force_return` are deprecated: the first call in a run adds a `deprecated` warning
+  with the replacement to the report; removal in 0.4.0. `@case` stays the primary name without a warning.
+- Scenarios and examples follow the 0.3.0 conventions: the Target object is `t` everywhere, expectations that follow
+  from the device are firmware identifiers (`'DMA_CCR_MINC | DMA_CCR_PSIZE_0 | …'` instead of `1418`, `TIM2_IRQn + 16`
+  instead of `44`), physical quantities are named constants; the replacements were compared with the numbers on the ELF.
+- The order-preservation test of the former `_check_values` helper is removed together with the helper.
 
 ### Fixed
 
+- `read` and `evaluate` of a pointer return the address it holds, not the address of the pointer itself: HAL checks
+  such as `hadc.Instance == ADC1` compare the right values again.
 - `Point.addresses` returns integer addresses instead of `gdb.BreakpointLocation` objects; a value that cannot be
   written as JSON no longer costs the run its report: the agent keeps it as its `repr`.
 - Navigation follows the GDB version: the reference is GDB 15.2 (xPack 14.2.1). On GDB 14 a stop event has no

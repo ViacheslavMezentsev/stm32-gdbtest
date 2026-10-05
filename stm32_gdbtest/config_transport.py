@@ -36,7 +36,8 @@ def loads(text):
                 or data["schema"] != 1 or data["defaults"] != fingerprint()):
             raise ValueError("incompatible capsule or defaults")
         files = data["files"]
-        if not {"target"} <= set(files) or set(files) - {"session", "target", "api", "image"}:
+        if not {"target"} <= set(files) or {name for name in set(files) - {"session", "target", "api", "image"}
+                                             if not name.startswith("data.")}:
             raise ValueError("invalid capsule file set")
         raw = {}
         for name, item in files.items():
@@ -49,8 +50,11 @@ def loads(text):
         import tomllib
         links = data["references"]
         is_new = "session" in raw
-        if is_new and tomllib.loads(raw["session"].decode("utf-8"))["config"] != links:
-            raise ValueError("source references differ from session")
+        if is_new:
+            declared = tomllib.loads(raw["session"].decode("utf-8"))
+            expected = dict(declared["config"], **{"data." + k: v for k, v in declared.get("data", {}).items()})
+            if expected != links:
+                raise ValueError("source references differ from session")
         if not is_new and set(links) - {"target", "image"}:
             raise ValueError("invalid legacy sources")
         if set(raw) != ({"session", *links} if is_new else set(links)):

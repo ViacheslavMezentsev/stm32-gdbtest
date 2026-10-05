@@ -28,8 +28,8 @@
 ## Пример
 
 ```python
-result = target.call("app_step")
-target.check("call returned a value", result["return_state"], "available")
+result = t.call("app_step")
+t.check("call returned a value", result["return_state"], "available")
 ```
 
 Ошибка внутри вызванной функции возвращается как отказ операции, а не как исключение отладчика.

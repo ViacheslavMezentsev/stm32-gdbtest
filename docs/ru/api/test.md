@@ -29,8 +29,8 @@
 
 ```python
 @test("HW_APP_STEP", timeout_s=60, labels=("app",), contracts=("ci_app_api",))
-def app_step_scenario(target):
-    target.reach("app_step")
+def app_step_scenario(t):
+    t.reach("app_step")
 ```
 
 Сценарий без объявления в набор не попадает.

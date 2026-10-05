@@ -28,8 +28,8 @@
 ## Пример
 
 ```python
-target.until("app_loop")
-target.check("line reached", target.frames()["frames"][0]["function"], "app_loop")
+t.until("app_loop")
+t.check("line reached", t.frames()["frames"][0]["function"], "app_loop")
 ```
 
 Выход за пределы кадра сообщается отказом, а не молчаливым продолжением.

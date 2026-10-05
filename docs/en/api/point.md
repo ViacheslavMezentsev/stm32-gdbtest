@@ -31,9 +31,9 @@ removal is not an error, while accessing a removed point produces diagnostics.
 ## Example
 
 ```python
-point = target.breakpoint("board_led_toggle")
-target.reach("app_loop")
-target.check("stopped at the point", point.active, True)
+point = t.breakpoint("board_led_toggle")
+t.reach("app_loop")
+t.check("stopped at the point", point.active, True)
 point.remove()
 ```
 

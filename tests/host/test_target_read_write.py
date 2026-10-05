@@ -300,3 +300,16 @@ class ReadWriteTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PointerValueTests(unittest.TestCase):
+    """A pointer reads as the address it holds, not as the address of the pointer object."""
+
+    def test_pointer_member_reads_its_target_address(self):
+        from stm32_gdbtest import values
+        code = values.type_constant("TYPE_CODE_PTR", None)
+        member = FakeValue(0x40012400, code, address=0x20000040)  # hadc.Instance holds ADC1
+        member.cast = lambda kind: FakeValue(0x40012400)
+        self.assertEqual(values.value_to_plain(member, "hadc.Instance"), 0x40012400)
+        constant = FakeValue(0x40012400, code, address=None)
+        self.assertEqual(values.value_to_plain(constant, "ADC1"), 0x40012400)

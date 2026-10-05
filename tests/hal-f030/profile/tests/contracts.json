@@ -75,7 +75,9 @@
         "context": "platform_adc_start",
         "expressions": [
           "GPIOA",
-          "__HAL_RCC_GPIOA_IS_CLK_ENABLED()"
+          "__HAL_RCC_GPIOA_IS_CLK_ENABLED()",
+          "GPIO_MODER_MODER5",
+          "GPIO_MODER_MODER5_0"
         ]
       }
     },
@@ -125,7 +127,15 @@
         "context": "platform_adc_prepare",
         "expressions": [
           "RCC",
-          "RTC"
+          "RTC",
+          "RCC_BDCR_RTCSEL",
+          "RCC_RTCCLKSOURCE_LSI",
+          "RCC_BDCR_RTCEN",
+          "RCC_CSR_LSIRDY",
+          "RTC_PRER_PREDIV_A",
+          "RTC_PRER_PREDIV_A_Pos",
+          "RTC_PRER_PREDIV_S",
+          "RTC_CR_OSEL"
         ]
       }
     },
@@ -174,7 +184,16 @@
           "Speed": "uint32_t"
         }
       },
-      "type_context": "HAL_GPIO_Init"
+      "type_context": "HAL_GPIO_Init",
+      "macros": {
+        "context": "HAL_GPIO_Init",
+        "expressions": [
+          "GPIO_PIN_5",
+          "GPIO_MODE_OUTPUT_PP",
+          "GPIO_NOPULL",
+          "GPIO_SPEED_FREQ_LOW"
+        ]
+      }
     },
     "gpio_filtered_call": {
       "functions": {
@@ -192,7 +211,15 @@
           ]
         }
       },
-      "type_context": "HAL_GPIO_TogglePin"
+      "type_context": "HAL_GPIO_TogglePin",
+      "macros": {
+        "context": "HAL_GPIO_TogglePin",
+        "expressions": [
+          "GPIOA",
+          "GPIO_PIN_5",
+          "GPIO_ODR_5"
+        ]
+      }
     },
     "rcc_error": {
       "functions": {

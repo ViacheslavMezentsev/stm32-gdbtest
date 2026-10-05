@@ -25,11 +25,14 @@ Python.
 применение к регистрам и периферии профиля стенда; срезы, `const`/`volatile` и C++ в проверенный
 объём не входят.
 
+`fields` — список имён (`fields=("ticks", "led")`) или отображение `{имя: подсказка}`; результат —
+словарь значений по именам.
+
 ## Пример
 
 ```python
-value = target.read("app_state.ticks")
-temperature = target.read("board_adc_reading.temperature_mdeg_c")
+value = t.read("app_state.ticks")
+temperature = t.read("board_adc_reading.temperature_mdeg_c")
 ```
 
 Ошибка доступа к памяти или преобразования возвращается как отказ операции; частично прочитанные

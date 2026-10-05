@@ -31,9 +31,9 @@ content before the program starts is not preserved; a reset is refused while a w
 ## Example
 
 ```python
-result = target.reset()
-target.check("halted after reset", result["outcome"], "halted")
-target.reach("main")
+result = t.reset()
+t.check("halted after reset", result["outcome"], "halted")
+t.reach("main")
 ```
 
 A backend command failure is reported as an operation failure that keeps the cause and the

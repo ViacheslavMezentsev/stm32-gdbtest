@@ -12,13 +12,14 @@
 | Элемент | Сигнатура | Поддержка | ТЗ при введении |
 | --- | --- | --- | --- |
 | **Методы** — операции сценария | | | |
-| [check](check.md) | `check(name, actual, expected) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [value](value.md) | `value(expression) -> int` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [fields](fields.md) | `fields(expression, expected) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
+| [check](check.md) | `check(name, actual, expected=True)`, `check(rows) -> int` | 0.1.0rc1; сопоставители, истинность и таблица 0.3.0.dev0 (ядро) | 0.1.0; 0.3.4 |
+| [within, near, one_of](matchers.md) | `within(low, high)`, `near(value, tolerance)`, `one_of(*options)` | 0.3.0.dev0 (ядро) | 0.3.4 |
+| [value](value.md) (устарел) | `value(expression) -> int` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
+| [fields](fields.md) (устарел) | `fields(expression, expected) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [breakpoint](breakpoint.md) | `breakpoint(location, temporary=False, *, condition=None) -> Point` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [reach](reach.md) | `reach(location, condition=None) -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
-| [set_value](set_value.md) | `set_value(expression, value) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [force_return](force_return.md) | `force_return(expression) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
+| [set_value](set_value.md) (устарел) | `set_value(expression, value) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
+| [force_return](force_return.md) (устарел) | `force_return(expression) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [clear](clear.md) | `clear() -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [record](record.md) | `record(name, data) -> None` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
 | [records](records.md) | `records(name=None) -> list[dict]` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
@@ -36,10 +37,8 @@
 | [call](call.md) | `call(function, *args) -> dict` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
 | [reset](reset.md) | `reset() -> dict` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
 | [execute](execute.md) | `execute(command) -> str` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
-| [check_range](check-range.md) | `check_range(name, actual, low, high)`, `check_near(…, expected, tolerance)`, `check_in(…, options)` -> None | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
-| [check_table](check-table.md) | `check_table(rows) -> int` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
 | [symbol](symbol.md) | `symbol(name) -> dict` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
-| [memory](memory.md) | `memory(address, size) -> bytes`, `write_memory(address, data, *, verify=True) -> dict` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
+| [memory](memory.md) | `memory(address, size \| data, *, verify=None) -> bytes \| dict` | 0.3.0.dev0 (ядро) | 0.3.4 |
 | [locals](locals.md) | `locals(frame=None) -> dict`, `arguments(frame=None) -> dict` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
 | **Свойства** — отображения состояния прогона | | | |
 | [profile](profile.md) | `profile: Profile` | 0.1.0rc1; разделы 0.3.0.dev0 (ядро) | 0.1.0; 0.3.0 (проект) |

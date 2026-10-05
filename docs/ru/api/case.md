@@ -29,8 +29,8 @@ from stm32_gdbtest import case
 
 # Check the initial publication count at main.
 @case("HW_EXAMPLE", timeout_s=20, labels=("adc",))
-def example(target):
-    target.check("initial count", target.value("board_adc_sequences"), 0)
+def example(t):
+    t.check("initial count", t.value("board_adc_sequences"), 0)
 ```
 
 Фрагмент для тела сценария (для case — целое объявление). Символы и макросы должны присутствовать в ELF; MCU остановлен в подходящем контексте.

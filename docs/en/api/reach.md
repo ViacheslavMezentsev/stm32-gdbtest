@@ -22,8 +22,8 @@ An unrelated stop is not automatically skipped. Frame comparison strips clone su
 ## Example
 
 ```python
-target.reach("board_adc_sample")
-target.reach("board_delay_ms")
+t.reach("board_adc_sample")
+t.reach("board_delay_ms")
 ```
 
 Scenario-body fragment (case shows a complete declaration). Symbols/macros must exist in the ELF and the MCU must be stopped in the appropriate context.

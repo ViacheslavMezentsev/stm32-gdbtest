@@ -28,8 +28,8 @@ on the OpenOCD and J-Link stands of the project.
 ## Example
 
 ```python
-with target.watch("app_state.ticks"):
-    target.resume()
+with t.watch("app_state.ticks"):
+    t.resume()
 ```
 
 An interface refusal is reported as an operation failure naming the backend, not as a silent absence

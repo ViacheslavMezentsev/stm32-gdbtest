@@ -9,6 +9,7 @@
 | Module support | 0.1.0rc1 / v0.1.0-rc.1 |
 | API specification contract | 0.1.0; §4.3 |
 | API_VERSION | 1 |
+| Deprecated | since 0.3.0: one `deprecated` warning per run in `report["warnings"]`; replacement: `check([(name, path, expected), …])`; removal in 0.4.0 (API specification 6.7) |
 | Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 | Former-name alias | fields(expression, expected) -> read(path, fields=…) (the alias works without warnings until 1.0; removal in 0.4.0) |
 
@@ -23,8 +24,8 @@ String expectations are evaluated through value, not compared as text. The first
 ## Example
 
 ```python
-target.reach("HAL_GPIO_Init")
-target.fields("*GPIO_Init", {"Pin": 1 << 5, "Mode": "GPIO_MODE_OUTPUT_PP"})
+t.reach("HAL_GPIO_Init")
+t.fields("*GPIO_Init", {"Pin": 1 << 5, "Mode": "GPIO_MODE_OUTPUT_PP"})
 ```
 
 Scenario-body fragment (case shows a complete declaration). Symbols/macros must exist in the ELF and the MCU must be stopped in the appropriate context.

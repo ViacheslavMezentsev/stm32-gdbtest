@@ -28,8 +28,8 @@ operation failure; an already applied effect is not rolled back.
 ## Example
 
 ```python
-target.write("app_state.ticks", 41)
-target.write("app_delay", 100)
+t.write("app_state.ticks", 41)
+t.write("app_delay", 100)
 ```
 
 A write into an immutable area (Flash, read-only registers) ends with diagnostics, not with a silent

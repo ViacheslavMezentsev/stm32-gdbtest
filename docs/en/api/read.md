@@ -23,11 +23,14 @@ list or a dict for arrays, structs and strings.
 Limitations: addressable objects in RAM; the symbols and types must exist in the ELF; the profile's
 registers and peripherals apply; slices, `const`/`volatile` and C++ are outside the verified scope.
 
+`fields` is a list of names (`fields=("ticks", "led")`) or a `{name: hint}` mapping; the result is a
+dictionary of values by name.
+
 ## Example
 
 ```python
-value = target.read("app_state.ticks")
-temperature = target.read("board_adc_reading.temperature_mdeg_c")
+value = t.read("app_state.ticks")
+temperature = t.read("board_adc_reading.temperature_mdeg_c")
 ```
 
 A memory or conversion failure is reported as an operation failure; partially read data is never

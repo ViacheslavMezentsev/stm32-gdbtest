@@ -3,6 +3,7 @@ import importlib.util
 from pathlib import Path
 import unittest
 
+from stm32_gdbtest.matchers import Matcher
 from stm32_gdbtest.records import Journal
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -38,8 +39,15 @@ class Target(Journal):
             return 30000 + 1000 * self.index
         raise AssertionError(expression)
 
-    def check(self, name, actual, expected):
-        if actual != expected:
+    def check(self, name, actual, expected=True):
+        # The same three forms as Target.check: equality, a matcher, or truth without an expectation.
+        if isinstance(expected, Matcher):
+            passed = expected.matches(actual)
+        elif expected is True:
+            passed = bool(actual)
+        else:
+            passed = actual == expected
+        if not passed:
             raise AssertionError(name)
 
 

@@ -28,7 +28,7 @@
 ## Пример
 
 ```python
-target.check("ticks advanced", target.value("app_state.ticks") > 0, True)
+t.check("ticks advanced", t.value("app_state.ticks") > 0, True)
 ```
 
 ## Ссылки

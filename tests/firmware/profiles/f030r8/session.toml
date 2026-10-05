@@ -1,3 +1,7 @@
 [config]
 target = "target.toml"
 api = "api.toml"
+
+# Project data files available to scenarios as t.profile.data[<name>].
+[data]
+board = "board.toml"

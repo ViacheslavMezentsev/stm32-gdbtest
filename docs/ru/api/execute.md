@@ -28,8 +28,8 @@
 ## Пример
 
 ```python
-registers = target.execute("info registers pc sp")
-target.check("pc reported", "pc" in registers, True)
+registers = t.execute("info registers pc sp")
+t.check("pc reported", "pc" in registers, True)
 ```
 
 Команда, меняющая состояние отладчика, выполняется как есть; откат не выполняется.

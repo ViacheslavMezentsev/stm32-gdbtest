@@ -26,8 +26,8 @@
 ## Пример
 
 ```python
-target.resume()
-target.check("stopped by a breakpoint", target.stops()[0]["kind"], "breakpoint")
+t.resume()
+t.check("stopped by a breakpoint", t.stops()[0]["kind"], "breakpoint")
 ```
 
 Превышение таймаута сценария завершает прогон, а не подвисает в ожидании.

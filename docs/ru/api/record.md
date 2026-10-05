@@ -36,10 +36,12 @@ integer_bits — int.bit_length. Узлы включают имена, ключ�
 байты — имена, ключи и строки. Служебная обёртка не учитывается. Это не лимит RSS
 или количества копий, удерживаемых сценарием.
 
+`t.record(name, t.profile)` записывает снимок профиля прогона (`profile.snapshot()`).
+
 ## Пример
 
 ```python
-target.record("adc.sample", {"vdda_mv": target.value("board_adc_reading.vdda_mv")})
+t.record("adc.sample", {"vdda_mv": t.value("board_adc_reading.vdda_mv")})
 ```
 
 Фрагмент для тела сценария (для case — целое объявление). Символы и макросы должны присутствовать в ELF; MCU остановлен в подходящем контексте.

@@ -22,8 +22,8 @@
 ## Пример
 
 ```python
-target.reach("board_adc_sample")
-target.reach("board_delay_ms")
+t.reach("board_adc_sample")
+t.reach("board_delay_ms")
 ```
 
 Фрагмент для тела сценария (для case — целое объявление). Символы и макросы должны присутствовать в ELF; MCU остановлен в подходящем контексте.

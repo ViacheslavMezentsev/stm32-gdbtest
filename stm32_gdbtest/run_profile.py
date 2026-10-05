@@ -2,8 +2,9 @@
 
 `Target.profile` keeps the published 0.1 behaviour: indexing returns the keys of `target.toml`
 (`profile["flash_start"]`). The sections describe the rest of the run: the effective `api.toml`,
-its `[user]` parameters, the image policy, the captured files, the current case, the stand and
-the GDB in use. Every section is read-only; values are plain Python types.
+its `[user]` parameters, the image policy, the project data files, the captured files, the build,
+the current case, the stand and the GDB in use. Every section is read-only; values are plain
+Python types.
 """
 
 from collections.abc import Mapping
@@ -12,7 +13,7 @@ from types import MappingProxyType
 
 from stm32_gdbtest.configuration import DEFAULTS, EXECUTE_OUTPUT_LIMIT, FRAMES_LIMIT, freeze
 
-SECTIONS = ("target", "api", "user", "image", "files", "case", "stand", "gdb")
+SECTIONS = ("target", "api", "user", "image", "data", "files", "build", "case", "stand", "gdb")
 
 # Effective defaults of `api.toml` keys that the core applies when the file omits them (ТЗ API 6.6).
 API_DEFAULTS = MappingProxyType({
@@ -44,7 +45,7 @@ def _plain(value):
 class Profile(Mapping):
     """Profile of the current run; indexing reads `target.toml` as in 0.1/0.2."""
 
-    def __init__(self, target, configuration=None, *, case=None, stand=None, gdb=None):
+    def __init__(self, target, configuration=None, *, case=None, stand=None, gdb=None, build=None):
         self._target = freeze(dict(target)) if not isinstance(target, MappingProxyType) else target
         config = configuration.config if configuration else None
         props = configuration.config_props if configuration else None
@@ -55,14 +56,17 @@ class Profile(Mapping):
         self._api_file = props["api"]["data"] if props and props.get("api") else None
         image = config.get("image") if config else None
         self._image = image["image"] if isinstance(image, Mapping) and "image" in image else image
+        self._data = config.get("data") if config and config.get("data") is not None else MappingProxyType({})
         files = {}
-        for role in ("target", "api", "image"):
+        for role in ("target", "api", "image", *sorted(name for name in (props or {}) if name.startswith("data."))):
             entry = props.get(role) if props else None
             if entry is not None:
                 files[role] = {"reference": entry["reference"], "sha256": entry["sha256"]}
         if configuration is not None and configuration.session_sha256:
             files["session"] = {"reference": "session.toml", "sha256": configuration.session_sha256}
         self._files = freeze(files)
+        # Without a build manifest the section is None: nothing is known about the build.
+        self._build = freeze(dict(build)) if build is not None else None
         self._case = freeze(dict(case or {}))
         self._stand = freeze(dict(stand or {}))
         # The GDB section is a live read-only view: the stop details become known at the first stop.
@@ -97,6 +101,16 @@ class Profile(Mapping):
     @property
     def image(self):
         return self._image
+
+    @property
+    def data(self):
+        """Project data files declared in `[data]` of session.toml, by name (`data["board"]`)."""
+        return self._data
+
+    @property
+    def build(self):
+        """Summary of the build manifest: compilers, Cube packages, library versions, defines; or None."""
+        return self._build
 
     @property
     def files(self):
@@ -139,8 +153,13 @@ class Profile(Mapping):
             section, keys = "api", ["user", *keys]
         if self.get(".".join([section, *keys]) if keys else section, _ABSENT) is _ABSENT:
             raise KeyError(path)
-        if section in ("case", "stand", "gdb"):
+        if section in ("case", "stand", "gdb", "build"):
             return MappingProxyType({"state": "run", "section": section})
+        if section == "data":
+            if not keys:
+                return MappingProxyType({"state": "run", "section": section})
+            entry = self._files["data." + keys[0]]
+            return MappingProxyType({"state": "file", "file": entry["reference"], "sha256": entry["sha256"]})
         if section == "api" and keys[:2] == ["reset", "command"] and os.environ.get("STM32_GDBTEST_RESET_COMMAND"):
             return MappingProxyType({"state": "override", "variable": "STM32_GDBTEST_RESET_COMMAND"})
         if section == "api" and (self._api_file is None or _lookup(self._api_file, keys) is _ABSENT):
@@ -150,8 +169,8 @@ class Profile(Mapping):
             return MappingProxyType({"state": "default"})
         return MappingProxyType({"state": "file", "file": entry["reference"], "sha256": entry["sha256"]})
 
-    def to_dict(self):
-        """Plain JSON-compatible copy for `record` and reports."""
+    def snapshot(self):
+        """Plain JSON-compatible copy of every section for `record` and reports (ТЗ API 4.14.5)."""
         return {name: _plain(self._section(name)) for name in SECTIONS if name != "user"}
 
     # Internal: Target refines what the GDB in use reports.

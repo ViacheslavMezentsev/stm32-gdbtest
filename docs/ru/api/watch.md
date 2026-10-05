@@ -28,8 +28,8 @@ J-Link сообщает точку наблюдения как обычную т
 ## Пример
 
 ```python
-with target.watch("app_state.ticks"):
-    target.resume()
+with t.watch("app_state.ticks"):
+    t.resume()
 ```
 
 Отказ интерфейса возвращается как отказ операции с указанием backend-а, а не как молчаливое

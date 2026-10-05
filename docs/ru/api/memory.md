@@ -2,36 +2,50 @@
 
 [API](index.md) · [English](../../en/api/memory.md)
 
-`memory(address, size) -> bytes; write_memory(address, data, *, verify=True) -> dict`
+`memory(address, size | data, *, verify=None) -> bytes | dict`
 
 | Свойство | Значение |
 | --- | --- |
 | Поддержка в модуле | 0.3.0.dev0 (ядро) |
-| Контракт принят в ТЗ API | ревизия 0.3.3 |
+| Контракт принят в ТЗ API | ревизия 0.3.4, п. 4.16.1–4.16.4, 6.8 |
 | API_VERSION | 1 (действующий контракт не изменяется) |
-| Основание | проверочная прошивка `tests/firmware`, сценарии HW_CI_PROFILE |
+| Основание | проверочная прошивка `tests/firmware`, сценарии `HW_CI_PROFILE`, `HW_CI_CALL_PREDICATE` |
 
 ## Назначение
 
-Сырые байты буферов и образа: снимки, CRC, сигнатуры.
+Сырые байты буферов и образа: снимки, CRC, сигнатуры, восстановление сохранённого состояния.
 
 ## Контракт и ограничения
 
-`memory` читает от 1 до 4096 байт в окне SRAM (`0x20000000..0x20100000`) или Flash профиля
-(`flash_start`, `flash_size`). `write_memory` пишет только в SRAM, читает обратно и записывает изменение
-в `report["mutations"]` (байты в hex). Адреса периферии отвергаются (`outside_window`): чтение
-регистра может изменить состояние устройства. Неверный блок — `invalid_block`, отказ GDB —
-`read_failed`/`write_failed`, расхождение после записи — `verification_failed`.
+Операцию определяет тип второго аргумента:
+
+| Второй аргумент | Операция | Результат |
+| :--- | :--- | :--- |
+| `int` (не `bool`), 1..4096 | чтение стольких байт из окна SRAM или Flash профиля | `bytes` |
+| `bytes`, `bytearray`, `memoryview` | запись байт в SRAM; чтение обратно, если не `verify=False`; запись в `report["mutations"]` | `{"operation": "memory", "address", "size", "verified"}` |
+| всё остальное (`str`, `list`, `bool`, `float`) | отказ до обращения к памяти (`invalid_block`) | — |
+
+Список чисел не принимается: ширина элемента была бы догадкой. Байты собираются явно:
+`value.to_bytes(4, "little")`, `struct.pack("<HI", a, b)`, `bytes(8)`. `verify` относится только к
+записи; вместе с размером он даёт отказ (`invalid_verify`).
+
+Окно SRAM — `0x20000000..0x200FFFFF`; окно Flash берётся из `flash_start` и `flash_size` профиля и
+доступно только для чтения. Адреса периферии отвергаются (`outside_window`): чтение регистра может
+изменить состояние устройства. Отказ GDB — `read_failed`/`write_failed`, расхождение после записи —
+`verification_failed` с `effect="applied"`.
 
 ## Пример
 
 ```python
-vectors = target.memory(target.profile["flash_start"], 8)
-target.check("initial SP in SRAM", 0x20000000 <= int.from_bytes(vectors[:4], "little") < 0x20100000, True)
-address = target.symbol("app_state")["address"]
-target.write_memory(address, bytes(4))
+state = t.symbol("app_state")
+snapshot = t.memory(state["address"], state["size"])      # чтение: bytes
+t.call("app_step", "&app_state", "APP_MODE_BLINK")
+t.memory(state["address"], snapshot)                     # запись: восстановить сохранённые байты
+vectors = t.memory(t.profile["flash_start"], 8)
+t.check("initial SP in SRAM", int.from_bytes(vectors[:4], "little"), within(0x20000000, 0x200FFFFF))
 ```
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.3, п. 4.16.1–4.16.3, 6.8.
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.4, п. 4.16.1–4.16.4, 6.8.
+- [symbol](symbol.md), [write](write.md).

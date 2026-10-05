@@ -29,8 +29,8 @@
 ## Пример
 
 ```python
-target.write("app_state.ticks", 41)
-target.write("app_delay", 100)
+t.write("app_state.ticks", 41)
+t.write("app_delay", 100)
 ```
 
 Запись в неизменяемую область (Flash, регистры только для чтения) завершается диагностикой, а не

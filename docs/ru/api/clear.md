@@ -23,8 +23,8 @@
 
 ```python
 # Deliberately remove all Target stops, including fault guards.
-target.clear()
-target.reach("board_adc_sample")
+t.clear()
+t.reach("board_adc_sample")
 ```
 
 Фрагмент для тела сценария (для case — целое объявление). Символы и макросы должны присутствовать в ELF; MCU остановлен в подходящем контексте.

@@ -24,7 +24,7 @@ Does not resume execution. A repeated request with the same parameters returns t
 ```python
 import gdb
 
-bp = target.breakpoint("board_adc_sample", temporary=True)
+bp = t.breakpoint("board_adc_sample", temporary=True)
 try:
     gdb.execute("continue")
 finally:

@@ -74,13 +74,16 @@ exercised by the host checks and by the earlier command-failure experiment.
 ## HW_CI_PROFILE
 The scenario checks the environment it runs in through the read-only `profile`. The identity register
 masked by `target.toml` equals the declared value and the flash size register covers the declared
-`flash_size`. The case section names this scenario, its function, timeout and contracts; the stand
-section names a supported backend (`openocd` or `jlink`), a local or remote server and an unset or
-positive speed. The captured `target.toml` carries a SHA-256 digest and is the origin of `mcu`; the
-effective records limit and reset command are readable by dotted path. The GDB version is known before
-the first stop and the stop details capability is known after it. The vector table read with `memory` puts the
-initial stack pointer into SRAM and the Thumb reset vector into the profile flash. The whole profile is recorded, and the
-sections refuse assignment. Configuration loading and schema validation are covered by the host checks.
+`flash_size`; the vector table read with `memory` puts the initial stack pointer into SRAM and the Thumb
+reset vector into the profile flash. The case section names this scenario, its function, timeout and
+contracts; the stand section names a supported backend (`openocd` or `jlink`), a local or remote server
+and an unset or positive speed. The captured `target.toml` carries a SHA-256 digest and is the origin of
+`mcu`; the records limit and the reset command are readable by dotted path. The data file `board.toml`
+declared in `session.toml [data]` gives a board name and an LED pin and is the origin of that value. The
+build section names GCC, declares CMSIS headers and shows a CMSIS-only build without `USE_HAL_DRIVER`. The
+GDB version is known before the first stop and the stop details capability after it. The whole profile is
+recorded, and the sections refuse assignment. Configuration loading and schema validation are covered by
+the host checks.
 
 ## HW_CI_EVALUATE
 `evaluate("1 + 1")` returns 2 and keeps the declared integer type. `as_type` applies the requested

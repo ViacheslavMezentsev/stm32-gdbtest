@@ -30,9 +30,9 @@ scenario timeout.
 ## Example
 
 ```python
-target.reach("app_step")
-target.finish()
-target.check("returned to the caller", target.frames()["frames"][0]["function"],
+t.reach("app_step")
+t.finish()
+t.check("returned to the caller", t.frames()["frames"][0]["function"],
              "app_receiver_step")
 ```
 

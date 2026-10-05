@@ -64,6 +64,33 @@ def version_macros(text):
         r"[ \t]+\(?[ \t]*(0x[0-9A-Fa-f]+|[0-9]+)[uUlL]*[ \t]*\)?[ \t]*(?:/\*[^\n]*|//[^\n]*)?$", text.replace("\r\n", "\n"), re.M)}
 
 
+def summary(manifest):
+    """What a scenario may know about the build (ТЗ API 4.14.8): no paths, hashes or command lines.
+
+    Library versions are joined from the declared version macros: `__STM32F4xx_HAL_VERSION_MAIN/SUB1/SUB2`
+    become `{"STM32F4xx_HAL": "1.8.3"}`. They are source declarations, not API compatibility checks.
+    """
+    parts = {}
+    for entry in manifest.get("library_versions", []):
+        for name, value in entry.get("macros", {}).items():
+            match = re.fullmatch(r"__(\w+?)_VERSION_(MAIN|SUB1|SUB2|SUB|RC)", name)
+            if match:
+                parts.setdefault(match.group(1), {})[match.group(2)] = value
+    order = ("MAIN", "SUB1", "SUB", "SUB2")
+    libraries = {}
+    for library, fields in sorted(parts.items()):
+        version = ".".join(str(fields[key]) for key in order if key in fields)
+        if fields.get("RC"):
+            version += f"-rc{fields['RC']}"
+        libraries[library] = version
+    defines = sorted({flag[2:] for unit in manifest.get("units", []) for flag in unit.get("flags", [])
+                      if flag.startswith("-D")})
+    return dict(compilers=[dict(name=item.get("name"), version=item.get("version"))
+                           for item in manifest.get("compilers", [])],
+                cube_packages=list(manifest.get("cube_packages", [])), libraries=libraries, defines=defines,
+                sources=sorted({unit["source"] for unit in manifest.get("units", []) if "source" in unit}))
+
+
 def object_output(row, args):
     """ТЗ 5.14.7: object file of a compile_commands.json entry.
 

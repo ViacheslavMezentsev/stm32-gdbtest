@@ -28,8 +28,8 @@ debugger; an unreachable location ends with the scenario timeout.
 ## Example
 
 ```python
-target.until("app_loop")
-target.check("line reached", target.frames()["frames"][0]["function"], "app_loop")
+t.until("app_loop")
+t.check("line reached", t.frames()["frames"][0]["function"], "app_loop")
 ```
 
 Leaving the frame bounds is reported as a failure, not as a silent continuation.

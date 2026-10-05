@@ -31,16 +31,17 @@ the maximum. `reset.command` defaults to the backend value: OpenOCD uses the pro
 and J-Link uses `monitor reset`; a session may override it. The journal limits, `breakpoint_limit=4`
 and `timeout_s=20` stay as in the effective tables.
 
-Transition from the former names (aliases work without warnings until 1.0; removal is planned in 0.4.0):
+Transition from the former names (since 0.3.0 a former name warns once per run with `deprecated`; removal in 0.4.0):
 
 | Former name | New name | Note |
 | --- | --- | --- |
 | `value(expression)` | `read(path)` | object read with type conversion |
-| `fields(expression, expected)` | `read(path, fields=…)` | field comparison stays a scenario check |
+| `fields(expression, expected)` | `check([(name, path, expected), …])` | the table evaluates string expectations |
 | `set_value(expression, value)` | `write(path, value)` | the applied value gains verification |
 | `force_return(expression)` | `ret(value=None)` | the return becomes an operation with a result |
 | `config` / `config_props` | `profile` (sections, `get`, `origin`) | removed in 0.3.0 without an alias; [profile](api/profile.md) |
-| `case(...)` | `test(...)` | the same defaults: `timeout_s=20`, `labels=()`, `contracts=()` |
+| `check_range`, `check_near`, `check_in`, `check_table`, `write_memory`, `to_dict` | `check` with `within`/`near`/`one_of`, `check(rows)`, `memory(address, data)`, `snapshot()` | candidate 0.3.0 names replaced before the release |
+| `case(...)` | `test(...)` | no warning: `@case` stays the primary name, `@test` is an alias |
 | `RecordError` | an `ApiError` subclass | the public import is preserved |
 
 ## First package: records and configuration
@@ -56,9 +57,9 @@ from statistics import mean, stdev
 from stm32_gdbtest import RecordError
 
 # At each agreed stop:
-target.record('adc', {'vdda_mv': target.value('board_measurement.vdda_mv')})
+t.record('adc', {'vdda_mv': t.value('board_measurement.vdda_mv')})
 # After at least two measurements:
-values = [r['data']['vdda_mv'] for r in target.records('adc')]
+values = [r['data']['vdda_mv'] for r in t.records('adc')]
 result = {'mean_mv': mean(values), 'sample_stdev_mv': stdev(values)}
 ```
 
@@ -99,7 +100,7 @@ max_records = 256
 count = 10
 ```
 
-`target.profile.get('user.measurement.count')` reads a scenario parameter. `profile` sections: target/api/user/image with core defaults; an absent image is None, a selected one is the policy itself. `profile.files` holds the source-byte sha256 and reference of captured files, `profile.origin(path)` the source of a value (file, default, environment override or the run). Sections and nested containers are immutable; arrays become tuples. TOML dates/times and unknown fields survive. reference does not guarantee source-path availability on another host.
+`t.profile.get('user.measurement.count')` reads a scenario parameter. `profile` sections: target/api/user/image with core defaults; an absent image is None, a selected one is the policy itself. `profile.files` holds the source-byte sha256 and reference of captured files, `profile.origin(path)` the source of a value (file, default, environment override or the run). Sections and nested containers are immutable; arrays become tuples. TOML dates/times and unknown fields survive. reference does not guarantee source-path availability on another host.
 
 SESSION_CONFIG conflicts with PROFILE, --image-policy and STM32_GDBTEST_IMAGE_POLICY. PROFILE_DIR still selects scenarios. target is required; omitted api selects defaults, image selects ELF sections. An explicitly selected missing/invalid file produces ERROR before MCU access. Unknown api fields survive; target/image schemas stay strict.
 

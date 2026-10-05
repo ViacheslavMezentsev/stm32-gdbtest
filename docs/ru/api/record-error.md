@@ -28,11 +28,11 @@ code: invalid_name, unsupported_type, invalid_text, non_finite, cycle, limit_exc
 from stm32_gdbtest import RecordError
 
 try:
-    target.record("", 1)
+    t.record("", 1)
 except RecordError as error:
-    target.check("invalid name rejected", error.code, "invalid_name")
+    t.check("invalid name rejected", error.code, "invalid_name")
 else:
-    target.check("invalid name accepted", True, False)
+    t.check("invalid name accepted", True, False)
 ```
 
 Фрагмент для тела сценария (для case — целое объявление). Символы и макросы должны присутствовать в ELF; MCU остановлен в подходящем контексте.

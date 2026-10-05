@@ -26,9 +26,9 @@
 ## Пример
 
 ```python
-state = target.symbol("app_state")
-target.check("app_state in .bss", state["section"], ".bss")
-target.check("app_state size", state["size"], target.evaluate("sizeof(app_state)"))
+state = t.symbol("app_state")
+t.check("app_state in .bss", state["section"], ".bss")
+t.check("app_state size", state["size"], t.evaluate("sizeof(app_state)"))
 ```
 
 ## Ссылки

@@ -28,8 +28,8 @@
 ## Пример
 
 ```python
-pc, sp = target.registers("pc", "sp").values()
-r0 = target.registers("r0")["r0"]
+pc, sp = t.registers("pc", "sp").values()
+r0 = t.registers("r0")["r0"]
 ```
 
 Регистры, отсутствующие на данном ядре, дают диагностику, а не пустое значение.

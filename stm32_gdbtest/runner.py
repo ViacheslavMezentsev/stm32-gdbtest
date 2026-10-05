@@ -19,7 +19,7 @@ from stm32_gdbtest.processes import FLAGS, probe_identity, probe_lock, spawn_opt
 from stm32_gdbtest import remote as remote_host
 from stm32_gdbtest.reports import CODES, write_reports
 from stm32_gdbtest.compatibility import runtime_manifest
-from stm32_gdbtest.build_manifest import load_verified
+from stm32_gdbtest.build_manifest import load_verified, summary as build_summary
 from stm32_gdbtest.contracts import select_contracts, select_contracts_from
 from stm32_gdbtest.image import parse_sections, validate_regions
 from stm32_gdbtest.full_image import load_policy, canonical_image
@@ -247,7 +247,9 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                         setup=backend.get("setup", []),
                         # ТЗ API 4.14.2: the stand as the scenario sees it, without serials or addresses.
                         stand_info=dict(backend=stand["backend"], server="remote" if remote else "local",
-                                        speed_khz=stand.get("speed_khz"), flash=stand["flash"]))
+                                        speed_khz=stand.get("speed_khz"), flash=stand["flash"]),
+                        # ТЗ API 4.14.8: the build as the scenario sees it; None without a build manifest.
+                        build_info=build_summary(report["build_manifest"]) if report.get("build_manifest") else None)
         run_file = out / "run.json"
         run_file.write_text(json.dumps(run_data), encoding="utf-8")
         env["STM32_GDBTEST_RUN"] = str(run_file)

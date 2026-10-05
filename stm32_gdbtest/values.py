@@ -89,12 +89,9 @@ def value_to_plain(value, path, gdb=None):
         return {field.name: value_to_plain(value[field.name], f"{path}.{field.name}", gdb)
                 for field in plain.fields()}
     if code is not None and code == type_constant("TYPE_CODE_PTR", gdb):
-        # An address expression produced a pointer; its value is the address the scenario compares.
-        # A symbol-backed pointer carries `address`, while an address constant does not, so a cast to an
-        # integer type is the conversion that covers both.
-        address = getattr(value, "address", None)
-        if address is not None:
-            return int(address)
+        # A pointer reads as the address it holds: `&x`, a pointer variable and a HAL handle member such as
+        # `hadc.Instance` all compare with a peripheral macro like `ADC1`. The address of the pointer object
+        # itself (`value.address`) is a different value and is never returned.
         cast = getattr(value, "cast", None)
         if callable(cast) and gdb is not None:
             try:

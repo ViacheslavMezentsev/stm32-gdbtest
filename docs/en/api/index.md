@@ -12,13 +12,14 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | Entry | Signature | Support | Initial specification |
 | --- | --- | --- | --- |
 | **Methods** — scenario operations | | | |
-| [check](check.md) | `check(name, actual, expected) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [value](value.md) | `value(expression) -> int` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [fields](fields.md) | `fields(expression, expected) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
+| [check](check.md) | `check(name, actual, expected=True)`, `check(rows) -> int` | 0.1.0rc1; matchers, truth and table 0.3.0.dev0 (core) | 0.1.0; 0.3.4 |
+| [within, near, one_of](matchers.md) | `within(low, high)`, `near(value, tolerance)`, `one_of(*options)` | 0.3.0.dev0 (core) | 0.3.4 |
+| [value](value.md) (deprecated) | `value(expression) -> int` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
+| [fields](fields.md) (deprecated) | `fields(expression, expected) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [breakpoint](breakpoint.md) | `breakpoint(location, temporary=False, *, condition=None) -> Point` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [reach](reach.md) | `reach(location, condition=None) -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
-| [set_value](set_value.md) | `set_value(expression, value) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [force_return](force_return.md) | `force_return(expression) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
+| [set_value](set_value.md) (deprecated) | `set_value(expression, value) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
+| [force_return](force_return.md) (deprecated) | `force_return(expression) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [clear](clear.md) | `clear() -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [record](record.md) | `record(name, data) -> None` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
 | [records](records.md) | `records(name=None) -> list[dict]` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
@@ -36,10 +37,8 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [call](call.md) | `call(function, *args) -> dict` | 0.3.0.dev0 (core) | 0.3.0 (design) |
 | [reset](reset.md) | `reset() -> dict` | 0.3.0.dev0 (core) | 0.3.0 (design) |
 | [execute](execute.md) | `execute(command) -> str` | 0.3.0.dev0 (core) | 0.3.0 (design) |
-| [check_range](check-range.md) | `check_range(name, actual, low, high)`, `check_near(…, expected, tolerance)`, `check_in(…, options)` -> None | 0.3.0.dev0 (core) | 0.3.0 (design) |
-| [check_table](check-table.md) | `check_table(rows) -> int` | 0.3.0.dev0 (core) | 0.3.0 (design) |
 | [symbol](symbol.md) | `symbol(name) -> dict` | 0.3.0.dev0 (core) | 0.3.0 (design) |
-| [memory](memory.md) | `memory(address, size) -> bytes`, `write_memory(address, data, *, verify=True) -> dict` | 0.3.0.dev0 (core) | 0.3.0 (design) |
+| [memory](memory.md) | `memory(address, size \| data, *, verify=None) -> bytes \| dict` | 0.3.0.dev0 (core) | 0.3.4 |
 | [locals](locals.md) | `locals(frame=None) -> dict`, `arguments(frame=None) -> dict` | 0.3.0.dev0 (core) | 0.3.0 (design) |
 | **Properties** — run state mappings | | | |
 | [profile](profile.md) | `profile: Profile` | 0.1.0rc1; sections 0.3.0.dev0 (core) | 0.1.0; 0.3.0 (design) |

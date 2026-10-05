@@ -4,30 +4,35 @@ EN: ADC start rejection under a controlled busy condition.
 """
 from stm32_gdbtest import case
 
+# board_adc_error code of a rejected start (adc_f030.c).
+ADC_ERROR_BUSY = 6
+# Quality of an absent reading (adc_units.c).
+QUALITY_INVALID = 0
+
 
 # Inject a busy acquisition state and verify that the next start is rejected.
 @case("HW_CI_ADC_BUSY", labels=("adc", "negative"), contracts=("ci_adc_macros",))
-def adc_busy(target):
+def adc_busy(t):
     # TECH-006: docs/ru/TESTING_TECHNIQUES.md#tech-006 (EN: docs/en/TESTING_TECHNIQUES.md#tech-006).
-    target.reach("board_adc_sample")
+    t.reach("board_adc_sample")
 
     # Verify initial ADC idle.
-    target.check("initial ADC idle", target.read("ADC1->CR & ADC_CR_ADSTART"), 0)
+    t.check("initial ADC idle", t.read("ADC1->CR & ADC_CR_ADSTART"), 0)
 
     # Start continuous conversions while the core is halted: ADSTART stays asserted.
-    target.write("ADC1->CFGR1", target.read("ADC1->CFGR1") | (1 << 13))
-    target.write("ADC1->CR", target.read("ADC1->CR") | (1 << 2))
+    t.write("ADC1->CFGR1", t.read("ADC1->CFGR1") | t.evaluate("ADC_CFGR1_CONT"))
+    t.write("ADC1->CR", t.read("ADC1->CR") | t.evaluate("ADC_CR_ADSTART"))
 
     # Verify conversion is active.
-    target.check("conversion is active", target.read("ADC1->CR & ADC_CR_ADSTART"), 1 << 2)
+    t.check("conversion is active", t.read("ADC1->CR & ADC_CR_ADSTART"))
 
-    target.reach("board_adc_fault")
+    t.reach("board_adc_fault")
 
     # Check register and application state against the expected values.
-    target.check_table([
-        ('busy start rejected', 'board_adc_error', 6),
+    t.check([
+        ('busy start rejected', 'board_adc_error', ADC_ERROR_BUSY),
         ('no sequence published', 'board_adc_sequences', 0),
-        ('no valid measurement published', 'board_adc_reading.quality', 0)
+        ('no valid measurement published', 'board_adc_reading.quality', QUALITY_INVALID)
     ])
 
-    target.report["injection_scope"] = "ADC continuous conversion before application start; teardown reset_run"
+    t.report["injection_scope"] = "ADC continuous conversion before application start; teardown reset_run"

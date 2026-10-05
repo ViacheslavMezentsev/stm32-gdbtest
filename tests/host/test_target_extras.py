@@ -1,11 +1,11 @@
-"""Checks with bounds, check tables, symbols, raw memory, frame variables and point control."""
+"""check with matchers, tables and truth; symbols, raw memory, frame variables and point control."""
 import importlib
 import sys
 import types
 import unittest
 from unittest.mock import Mock, patch
 
-from stm32_gdbtest import ApiError, CheckFailed
+from stm32_gdbtest import ApiError, CheckFailed, near, one_of, within
 from stm32_gdbtest.configuration import DEFAULTS, MEMORY_LIMIT, Configuration, freeze
 
 
@@ -168,35 +168,48 @@ class ExtrasTests(unittest.TestCase):
         self.addCleanup(patcher.stop)
         return target
 
-    # Checks with bounds.
-    def test_range_near_and_in_report_value_and_bounds(self):
+    # check: matchers, truth and tables.
+    def test_matchers_report_value_and_bounds(self):
         target = self.target()
-        target.check_range("vdda", 3300, 2900, 3600)
-        target.check_near("temperature", 24.6, 25, 0.5)
-        target.check_in("mode", 1, (0, 1))
+        target.check("vdda", 3300, within(2900, 3600))
+        target.check("temperature", 24.6, near(25, 0.5))
+        target.check("mode", 1, one_of(0, 1))
         checks = target.report["checks"]
         self.assertEqual(checks[0], dict(name="vdda", actual=3300, expected=dict(low=2900, high=3600),
                                          passed=True, kind="range"))
         self.assertEqual(checks[1]["expected"], dict(value=25, tolerance=0.5))
         self.assertEqual(checks[2]["expected"], {"in": [0, 1]})
         with self.assertRaises(CheckFailed) as caught:
-            target.check_range("vdda", 3700, 2900, 3600)
+            target.check("vdda", 3700, within(2900, 3600))
         self.assertEqual(caught.exception.details["expected"], dict(low=2900, high=3600))
-        with self.assertRaises(CheckFailed):
-            target.check_range("not a number", None, 0, 1)
-        with self.assertRaises(CheckFailed):
-            target.check_near("far", 26, 25, 0.5)
-        with self.assertRaises(CheckFailed):
-            target.check_in("other", 3, [0, 1])
+        for actual, matcher in ((None, within(0, 1)), (26, near(25, 0.5)), (3, one_of(0, 1))):
+            with self.subTest(matcher=matcher), self.assertRaises(CheckFailed):
+                target.check("mismatch", actual, matcher)
 
-    def test_invalid_bounds_are_operation_errors(self):
+    def test_equality_stays_equality_for_lists(self):
         target = self.target()
-        for call, code in ((lambda: target.check_range("x", 1, 2, 1), "invalid_bounds"),
-                           (lambda: target.check_range("x", 1, True, 2), "invalid_bounds"),
-                           (lambda: target.check_near("x", 1, 1, -1), "invalid_tolerance"),
-                           (lambda: target.check_in("x", 1, []), "invalid_options"),
-                           (lambda: target.check_in("x", 1, "ab"), "invalid_options"),
-                           (lambda: target.check_range("", 1, 0, 2), "invalid_name")):
+        target.check("array", [1, 2], [1, 2])
+        with self.assertRaises(CheckFailed):
+            target.check("array", [1], [1, 2])
+
+    def test_check_without_expected_tests_truth(self):
+        target = self.target()
+        target.check("clock enabled", 0x20)
+        target.check("flag", True)
+        self.assertEqual(target.report["checks"][0], dict(name="clock enabled", actual=0x20, expected=True,
+                                                          passed=True, kind="truth"))
+        with self.assertRaises(CheckFailed):
+            target.check("disabled", 0)
+
+    def test_invalid_matchers_and_arguments_are_operation_errors(self):
+        target = self.target()
+        for call, code in ((lambda: within(2, 1), "invalid_bounds"),
+                           (lambda: within(True, 2), "invalid_bounds"),
+                           (lambda: near(1, -1), "invalid_tolerance"),
+                           (lambda: one_of(), "invalid_options"),
+                           (lambda: target.check("", 1, 1), "invalid_name"),
+                           (lambda: target.check("x"), "invalid_arguments"),
+                           (lambda: target.check([("a", 1)], 1), "invalid_rows")):
             with self.subTest(code=code), self.assertRaises(ApiError) as caught:
                 call()
             self.assertNotIsInstance(caught.exception, CheckFailed)
@@ -205,15 +218,34 @@ class ExtrasTests(unittest.TestCase):
 
     def test_table_evaluates_string_cells_and_stops_at_first_mismatch(self):
         target = self.target()
-        target.evaluate = Mock(side_effect=lambda expression: {"app_delay": 500, "DELAY": 500,
+        target.evaluate = Mock(side_effect=lambda expression: {"app_delay": 500, "DELAY": 500, "ready": 1,
                                                                "app_state.led": 1}[expression])
-        self.assertEqual(target.check_table([("delay", "app_delay", "DELAY"), ("literal", 3, 3)]), 2)
+        rows = [("delay", "app_delay", "DELAY"), ("literal", 3, 3), ("ready", "ready"), ("range", 5, within(1, 9))]
+        self.assertEqual(target.check(rows), 4)
         with self.assertRaises(CheckFailed):
-            target.check_table([("led", "app_state.led", 0), ("never", 1, 1)])
-        self.assertEqual([check["name"] for check in target.report["checks"]], ["delay", "literal", "led"])
-        for rows in ([], [("only two", 1)], "rows"):
+            target.check([("led", "app_state.led", 0), ("never", 1, 1)])
+        self.assertEqual([check["name"] for check in target.report["checks"]],
+                         ["delay", "literal", "ready", "range", "led"])
+        for rows in ([], [("only one",)], [("four", 1, 2, 3)]):
             with self.subTest(rows=rows), self.assertRaises(ApiError):
-                target.check_table(rows)
+                target.check(rows)
+
+    def test_read_accepts_a_list_of_field_names(self):
+        target = self.target()
+        target._read_value = Mock(side_effect=lambda expression, path: path)
+        self.assertEqual(target.read("app_state", fields=("ticks", "led")),
+                         {"ticks": "app_state.ticks", "led": "app_state.led"})
+
+    def test_former_names_warn_once(self):
+        target = self.target()
+        target.ret = Mock(return_value={})
+        target.write = Mock(return_value={})
+        target.force_return("0")
+        target.force_return("1")
+        target.set_value("x", 1)
+        self.assertEqual(target.report["warnings"], [
+            "deprecated: force_return() is replaced by ret() and is removed in 0.4.0",
+            "deprecated: set_value() is replaced by write() and is removed in 0.4.0"])
 
     # Symbols.
     def test_symbol_reports_address_size_type_and_section(self):
@@ -231,24 +263,30 @@ class ExtrasTests(unittest.TestCase):
             target.symbol("missing")
         self.assertEqual(caught.exception.details["code"], "symbol_absent")
 
-    # Raw memory.
-    def test_memory_reads_and_writes_inside_the_windows(self):
+    # Raw memory: the type of the second argument decides.
+    def test_memory_reads_with_a_size_and_writes_bytes(self):
         target = self.target()
         self.inferior.memory[0:4] = b"\x01\x02\x03\x04"
         self.assertEqual(target.memory(0x20000100, 4), b"\x01\x02\x03\x04")
-        result = target.write_memory(0x20000104, b"\xAA\xBB")
-        self.assertEqual(result, dict(operation="write_memory", address=0x20000104, size=2, verified=True))
+        result = target.memory(0x20000104, b"\xAA\xBB")
+        self.assertEqual(result, dict(operation="memory", address=0x20000104, size=2, verified=True))
         self.assertEqual(bytes(self.inferior.memory[4:6]), b"\xAA\xBB")
         mutation = target.report["mutations"][0]
         self.assertEqual((mutation["before"], mutation["after"]), ("0000", "aabb"))
+        self.assertEqual(target.memory(0x20000108, bytearray(b"\x05"), verify=False)["verified"], False)
+        self.assertEqual(target.memory(0x2000010A, memoryview(b"\x06"))["size"], 1)
 
-    def test_memory_refuses_peripherals_and_bad_blocks(self):
+    def test_memory_refuses_peripherals_and_bad_arguments(self):
         target = self.target()
         cases = ((lambda: target.memory(0x40021000, 4), "outside_window"),
                  (lambda: target.memory(0x08000000, 0), "invalid_block"),
                  (lambda: target.memory(0x20000100, MEMORY_LIMIT + 1), "invalid_block"),
-                 (lambda: target.write_memory(0x08000000, b"\x00"), "outside_window"),
-                 (lambda: target.write_memory(0x20000100, "text"), "invalid_block"),
+                 (lambda: target.memory(0x08000000, b"\x00"), "outside_window"),
+                 (lambda: target.memory(0x20000100, "text"), "invalid_block"),
+                 (lambda: target.memory(0x20000100, [1, 2]), "invalid_block"),
+                 (lambda: target.memory(0x20000100, True), "invalid_block"),
+                 (lambda: target.memory(-1, 4), "invalid_block"),
+                 (lambda: target.memory(0x20000100, 4, verify=False), "invalid_verify"),
                  (lambda: target.memory(0x20000000, 4), "read_failed"))
         for call, code in cases:
             with self.subTest(code=code), self.assertRaises(ApiError) as caught:

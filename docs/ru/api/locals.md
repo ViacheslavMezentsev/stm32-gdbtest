@@ -26,9 +26,9 @@
 ## Пример
 
 ```python
-target.reach("app_step")
-arguments = target.arguments()["values"]
-target.check("mode argument", arguments["mode"], target.evaluate("APP_MODE_BLINK"))
+t.reach("app_step")
+arguments = t.arguments()["values"]
+t.check("mode argument", arguments["mode"], t.evaluate("APP_MODE_BLINK"))
 ```
 
 ## Ссылки

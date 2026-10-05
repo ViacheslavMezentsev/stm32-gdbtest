@@ -28,8 +28,8 @@ variadic arguments are outside the verified scope.
 ## Example
 
 ```python
-result = target.call("app_step")
-target.check("call returned a value", result["return_state"], "available")
+result = t.call("app_step")
+t.check("call returned a value", result["return_state"], "available")
 ```
 
 An error inside the called function is reported as an operation failure, not as a debugger

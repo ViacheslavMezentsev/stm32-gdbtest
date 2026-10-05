@@ -26,8 +26,8 @@ derived values are unsuitable as assertions.
 ## Example
 
 ```python
-target.step(3)
-target.check("stepped frames", len(target.frames()["frames"]) > 0, True)
+t.step(3)
+t.check("stepped frames", len(t.frames()["frames"]) > 0, True)
 ```
 
 An unavailable step mode fails with the requested mode named.

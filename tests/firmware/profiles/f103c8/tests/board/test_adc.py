@@ -2,7 +2,33 @@
 RU: Проверки ADC: DMA, пересчёт измерений и управляемые отказы.
 EN: ADC DMA acquisition, measurement conversion and controlled faults.
 """
-from stm32_gdbtest import case
+from stm32_gdbtest import case, within
+
+# Full scale of the 12-bit ADC: 0 and 4095 are saturated readings.
+ADC_FULL_SCALE = 4095
+# One DMA sequence carries the temperature and VREFINT samples.
+SAMPLES_PER_SEQUENCE = 2
+
+# Plausibility windows of a reading; not a calibration or accuracy claim.
+PLAUSIBLE_VDDA_MV = within(2800, 3600)
+PLAUSIBLE_DIE_MDEG_C = within(-40_000, 125_000)
+
+# ADC channels of the internal sensors (RM, independent of the firmware): temperature
+# sensor and VREFINT.
+TEMPERATURE_CHANNEL = 16
+VREFINT_CHANNEL = 17
+# Provenance of a published reading (adc_units.c): 0 invalid, 1 typical datasheet values,
+# 2 factory two-point calibration, 3 factory one-point calibration.
+QUALITY_INVALID = 0
+QUALITY_TYPICAL = 1
+# board_adc_error codes of the fixture firmware (adc_*.c).
+ADC_ERROR_NONE = 0
+ADC_ERROR_INIT = 3
+ADC_ERROR_DEADLINE = 4
+ADC_ERROR_BUSY = 6
+
+# Firmware counters are uint32_t and wrap around.
+U32_MASK = 0xFFFFFFFF
 
 
 # Verify ADC channels, sampling configuration, DMA and interrupt routing.
@@ -12,21 +38,23 @@ def adc_init(t):
     t.reach("board_adc_sample")
 
     # Check register and application state against the expected values.
-    t.check_table([
-        ('ADC1 clock', '(RCC->APB2ENR & RCC_APB2ENR_ADC1EN) != 0', 1),
-        ('DMA1 clock', '(RCC->AHBENR & RCC_AHBENR_DMA1EN) != 0', 1),
+    t.check([
+        ('ADC1 clock', 'RCC->APB2ENR & RCC_APB2ENR_ADC1EN'),
+        ('DMA1 clock', 'RCC->AHBENR & RCC_AHBENR_DMA1EN'),
         ('ADC clock PCLK2/2 (4 MHz)', 'RCC->CFGR & RCC_CFGR_ADCPRE', 0),
-        ('scan only, independent ADC', 'ADC1->CR1', 256),
-        ('ADC enabled, internal sources, DMA, software trigger', 'ADC1->CR2', 10354945),
-        ('sample CH16/17 at 239.5 cycles', 'ADC1->SMPR1', 16515072),
-        ('two regular ranks', 'ADC1->SQR1', 1 << 20),
-        ('CH16 then CH17', 'ADC1->SQR3', 16 | 17 << 5),
-        ('normal DMA halfwords, TC/TE IRQ', 'DMA1_Channel1->CCR', 1418),
+        ('scan only, independent ADC', 'ADC1->CR1', 'ADC_CR1_SCAN'),
+        ('ADC enabled, internal sources, DMA, software trigger', 'ADC1->CR2',
+         'ADC_CR2_ADON | ADC_CR2_TSVREFE | ADC_CR2_EXTSEL | ADC_CR2_EXTTRIG | ADC_CR2_DMA'),
+        ('sample CH16/17 at 239.5 cycles', 'ADC1->SMPR1', 'ADC_SMPR1_SMP16 | ADC_SMPR1_SMP17'),
+        ('two regular ranks', 'ADC1->SQR1', 'ADC_SQR1_L_0'),
+        ('CH16 then CH17', 'ADC1->SQR3', TEMPERATURE_CHANNEL | VREFINT_CHANNEL << 5),
+        ('normal DMA halfwords, TC/TE IRQ', 'DMA1_Channel1->CCR',
+         'DMA_CCR_MINC | DMA_CCR_PSIZE_0 | DMA_CCR_MSIZE_0 | DMA_CCR_TCIE | DMA_CCR_TEIE'),
         ('ADC data address', 'DMA1_Channel1->CPAR', '&ADC1->DR'),
         ('SRAM buffer address', 'DMA1_Channel1->CMAR', '&board_adc_buffer[0]'),
-        ('DMA NVIC enabled', '(NVIC->ISER[0] >> 11) & 1', 1),
-        ('DMA vector', '(unsigned int)vectors[27] & ~1U', '(unsigned int)DMA1_Channel1_IRQHandler & ~1U'),
-        ('no init error', 'board_adc_error', 0)
+        ('DMA NVIC enabled', 'NVIC->ISER[DMA1_Channel1_IRQn >> 5] & (1UL << (DMA1_Channel1_IRQn & 31))'),
+        ('DMA vector', '(unsigned int)vectors[DMA1_Channel1_IRQn + 16] & ~1U', '(unsigned int)DMA1_Channel1_IRQHandler & ~1U'),
+        ('no init error', 'board_adc_error', ADC_ERROR_NONE)
     ])
 
 
@@ -38,8 +66,8 @@ def adc_dma(t):
         t.reach("DMA1_Channel1_IRQHandler")
 
         # Check register and application state against the expected values.
-        t.check_table([
-            ('DMA exception', 'SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk', 27),
+        t.check([
+            ('DMA exception', 'SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk', 'DMA1_Channel1_IRQn + 16'),
             ('two transfers completed', 'DMA1_Channel1->CNDTR', 0),
             ('TC, no transfer error', 'DMA1->ISR & (DMA_ISR_TCIF1 | DMA_ISR_TEIF1)', 2)
         ])
@@ -54,10 +82,10 @@ def adc_dma(t):
         for name, expected in zip(("board_temperature_raw", "board_reference_raw"), raw):
             # Verify the current sample against its expected value and validity bounds.
             t.check(name, t.read(name), expected)
-            t.check(name + " not saturated", 0 < expected < 4095, True)
+            t.check(name + " not saturated", 0 < expected < ADC_FULL_SCALE)
 
         # Check register and application state against the expected values.
-        t.check_table([
+        t.check([
             ('DMA stopped', 'DMA1_Channel1->CCR & DMA_CCR_EN', 0),
             ('DMA flags cleared', 'DMA1->ISR & 15', 0),
             ('no acquisition error', 'board_adc_error', 0)
@@ -71,9 +99,10 @@ def adc_units(t):
     t.reach("board_delay_ms")
 
     # Check measurement provenance and plausible physical ranges.
-    t.check("typical provenance", t.read("board_adc_reading.quality"), 1)
-    t.check("plausible VDDA", 2800 <= t.read("board_adc_reading.vdda_mv") <= 3600, True)
-    t.check("plausible die temperature", -40000 <= t.read("board_adc_reading.temperature_mdeg_c") <= 125000, True)
+    t.check("typical provenance", t.read("board_adc_reading.quality"), QUALITY_TYPICAL)
+    t.check("plausible VDDA", t.read("board_adc_reading.vdda_mv"), PLAUSIBLE_VDDA_MV)
+    t.check("plausible die temperature", t.read("board_adc_reading.temperature_mdeg_c"),
+            PLAUSIBLE_DIE_MDEG_C)
 
     t.report["measurement"] = {name: t.read("board_adc_reading." + name)
                                for name in ("vdda_mv", "temperature_mdeg_c", "quality")}
@@ -90,7 +119,8 @@ def convert(t, values, expected):
     t.reach("board_delay_ms")
 
     # Check the published fields against the expected values.
-    t.fields("board_adc_reading", dict(zip(("vdda_mv", "temperature_mdeg_c", "quality"), expected)))
+    t.check([(f"board_adc_reading.{field}", f"board_adc_reading.{field}", value)
+             for field, value in zip(("vdda_mv", "temperature_mdeg_c", "quality"), expected)])
 
 
 # Check conversion arithmetic against independent numerical reference vectors.
@@ -98,10 +128,10 @@ def convert(t, values, expected):
 def adc_vectors(t):
     # TECH-007: fixed analytic anchors, not expectations calculated by firmware.
     for inputs, expected in (
-        ((1716, 1440), (3412, 25000, 1)),
-        ((2145, 1800), (2730, 25000, 1)),
+        ((1716, 1440), (3412, 25000, QUALITY_TYPICAL)),
+        ((2145, 1800), (2730, 25000, QUALITY_TYPICAL)),
         ((1974, 1440), (3412, -25000, 1)),
-        ((1329, 1440), (3412, 100000, 1))
+        ((1329, 1440), (3412, 100000, QUALITY_TYPICAL))
     ):
         convert(t, inputs, expected)
 
@@ -125,7 +155,7 @@ def adc_invalid(t):
     t.reach("board_delay_ms")
 
     # Check that valid acquisition resumes after the injected failures.
-    t.check("normal acquisition recovers", t.read("board_adc_reading.quality"), 1)
+    t.check("normal acquisition recovers", t.read("board_adc_reading.quality"), QUALITY_TYPICAL)
 
 
 # Verify that the ADC fault path publishes neither a sequence nor a valid reading.
@@ -135,7 +165,7 @@ def no_publication(t, error):
     # Check the failure code and absence of a published measurement.
     t.check("error code", t.read("board_adc_error"), error)
     t.check("no sequence published", t.read("board_adc_sequences"), 0)
-    t.check("no valid reading published", t.read("board_adc_reading.quality"), 0)
+    t.check("no valid reading published", t.read("board_adc_reading.quality"), QUALITY_INVALID)
 
 
 # Suppress completion notification and verify the ADC deadline and fault state.
@@ -144,11 +174,12 @@ def adc_timeout(t):
     # TECH-006: IRQ masking removes notification, not the physical conversion.
     t.reach("board_adc_sample")
     start = t.read("board_ticks_ms")
-    t.write("NVIC->ICER[0]", 1 << 11)
-    no_publication(t, 4)
+    irq = t.evaluate("DMA1_Channel1_IRQn")
+    t.write(f"NVIC->ICER[{irq >> 5}]", 1 << (irq & 31))
+    no_publication(t, ADC_ERROR_DEADLINE)
 
     # Check the elapsed deadline and DMA completion without notification.
-    t.check("completion deadline", ((t.read("board_ticks_ms") - start) & 0xFFFFFFFF) >= 20, True)
+    t.check("completion deadline", ((t.read("board_ticks_ms") - start) & U32_MASK) >= 20)
     t.check("DMA completed without notification", t.read("DMA1_Channel1->CNDTR"), 0)
 
 
@@ -157,13 +188,13 @@ def adc_timeout(t):
 def adc_busy(t):
     # TECH-006: enforce a DMA ownership guard, not a claim of F0 ADSTART semantics.
     t.reach("board_adc_sample")
-    t.write("DMA1_Channel1->CNDTR", 2)
+    t.write("DMA1_Channel1->CNDTR", SAMPLES_PER_SEQUENCE)
     t.write("DMA1_Channel1->CCR", t.read("DMA1_Channel1->CCR") | 1)
 
     # Verify DMA enabled before application start.
     t.check("DMA enabled before application start", t.read("DMA1_Channel1->CCR & DMA_CCR_EN"), 1)
 
-    no_publication(t, 6)
+    no_publication(t, ADC_ERROR_BUSY)
     t.report["injection_scope"] = "DMA enable before sample; no claim of active ADC conversion"
 
 
@@ -177,4 +208,4 @@ def adc_disabled(t):
     # Verify ADC powered off.
     t.check("ADC powered off", t.read("ADC1->CR2 & ADC_CR2_ADON"), 0)
 
-    no_publication(t, 3)
+    no_publication(t, ADC_ERROR_INIT)

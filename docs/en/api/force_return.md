@@ -9,6 +9,7 @@
 | Module support | 0.1.0rc1 / v0.1.0-rc.1 |
 | API specification contract | 0.1.0; §4.7 |
 | API_VERSION | 1 |
+| Deprecated | since 0.3.0: one `deprecated` warning per run in `report["warnings"]`; replacement: `ret(value)`; removal in 0.4.0 (API specification 6.7) |
 | Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 | Former-name alias | `ret(value=None)`; the alias works without warnings until 1.0, removal in 0.4.0; added by revision 0.3.0 |
 
@@ -23,8 +24,8 @@ Return affects the selected frame; the log takes the newest_frame name. Keep the
 ## Example
 
 ```python
-target.reach("HAL_ADC_Start_DMA")
-target.force_return("(HAL_StatusTypeDef)1")
+t.reach("HAL_ADC_Start_DMA")
+t.force_return("(HAL_StatusTypeDef)1")
 ```
 
 Scenario-body fragment (case shows a complete declaration). Symbols/macros must exist in the ELF and the MCU must be stopped in the appropriate context.

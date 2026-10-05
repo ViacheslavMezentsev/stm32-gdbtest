@@ -7,32 +7,32 @@ from stm32_gdbtest import case
 MAX_STEPS = 6
 
 
-def innermost(target):
-    return target.frames(2)["frames"]
+def innermost(t):
+    return t.frames(2)["frames"]
 
 
 @case("HW_CI_STEP_SOURCE", timeout_s=90, labels=("api", "showcase", "step"), contracts=("ci_app_api",))
-def step_source(target):
+def step_source(t):
     # Stepping into: the receiver's call line leads into the producer.
-    target.reach("app_receiver_step")
+    t.reach("app_receiver_step")
     for _ in range(MAX_STEPS):
-        target.step(1, unit="source", mode="into")
-        if innermost(target)[0]["name"] == "app_step":
+        t.step(1, unit="source", mode="into")
+        if innermost(t)[0]["name"] == "app_step":
             break
-    chain = innermost(target)
-    target.check("stepped into the producer", chain[0]["name"], "app_step")
-    target.check("the producer was called by the receiver", chain[1]["name"], "app_receiver_step")
-    target.check("the producer sees the blink mode", target.arguments()["values"]["mode"], 1)
-    target.finish()
+    chain = innermost(t)
+    t.check("stepped into the producer", chain[0]["name"], "app_step")
+    t.check("the producer was called by the receiver", chain[1]["name"], "app_receiver_step")
+    t.check("the producer sees the blink mode", t.arguments()["values"]["mode"], 1)
+    t.finish()
 
     # Stepping over: every stop stays in the receiver until the call count advances.
-    target.reach("app_receiver_step")
-    calls = target.read("app_received.calls")
+    t.reach("app_receiver_step")
+    calls = t.read("app_received.calls")
     frames = []
     for _ in range(MAX_STEPS):
-        target.step(1, unit="source", mode="over")
-        frames.append(innermost(target)[0]["name"])
-        if target.read("app_received.calls") == calls + 1:
+        t.step(1, unit="source", mode="over")
+        frames.append(innermost(t)[0]["name"])
+        if t.read("app_received.calls") == calls + 1:
             break
-    target.check("stepping over stayed in the receiver", set(frames), {"app_receiver_step"})
-    target.check("the call line completed", target.read("app_received.calls"), calls + 1)
+    t.check("stepping over stayed in the receiver", set(frames), {"app_receiver_step"})
+    t.check("the call line completed", t.read("app_received.calls"), calls + 1)

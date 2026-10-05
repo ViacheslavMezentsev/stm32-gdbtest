@@ -27,8 +27,8 @@ not rolled back; function calls inside an expression are outside the verified sc
 ## Example
 
 ```python
-target.evaluate("app_state.ticks", as_type=int)
-target.evaluate("app_state.led == 1", as_type=bool)
+t.evaluate("app_state.ticks", as_type=int)
+t.evaluate("app_state.led == 1", as_type=bool)
 ```
 
 A GDB error while parsing or evaluating the expression is kept as the failure cause.

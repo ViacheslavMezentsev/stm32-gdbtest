@@ -12,7 +12,12 @@ TARGET = dict(mcu="STM32F030R8", flash_start=0x08000000, breakpoint_limit=4, fau
 VIRTUAL = dict(target=TARGET, image=dict(image=dict(mode="flash")),
                api=dict(schema=1, records={**DEFAULTS, 'custom': 999}, user=dict(count=3),
                         reset=dict(command="monitor reset halt")))
+BOARD = dict(board=dict(name="NUCLEO-F030R8", led="PA5"))
+VIRTUAL["data"] = dict(board=BOARD)
+BUILD = dict(compilers=[dict(name="arm-none-eabi-gcc", version="13.3.1")], cube_packages=[],
+             libraries={"CM0_CMSIS": "5.6"}, defines=["STM32F030x8"], sources=["src/app.c"])
 PROPS = dict(target=dict(sha256="t" * 64, reference="target.toml", data=TARGET),
+             **{"data.board": dict(sha256="b" * 64, reference="board.toml", data=BOARD)},
              api=dict(sha256="a" * 64, reference="api.toml",
                       data=dict(schema=1, user=dict(count=3), reset=dict(command="monitor reset halt"))),
              image=None)
@@ -29,6 +34,7 @@ class ProfileTests(unittest.TestCase):
         options.setdefault("case", CASE)
         options.setdefault("stand", STAND)
         options.setdefault("gdb", dict(version="15.2", stop_details=None))
+        options.setdefault("build", BUILD)
         return Profile(TARGET, options.pop("configuration", configuration()), **options)
 
     def test_indexing_reads_target_toml_as_before(self):
@@ -82,13 +88,28 @@ class ProfileTests(unittest.TestCase):
         with self.assertRaises(KeyError):
             profile.origin("")
 
-    def test_gdb_section_is_live_and_to_dict_is_plain(self):
+    def test_data_files_and_build(self):
+        profile = self.profile()
+        self.assertEqual(profile.data["board"]["board"]["led"], "PA5")
+        self.assertEqual(profile.get("data.board.board.name"), "NUCLEO-F030R8")
+        self.assertEqual(dict(profile.origin("data.board.board.led")),
+                         dict(state="file", file="board.toml", sha256="b" * 64))
+        self.assertEqual(profile.files["data.board"]["reference"], "board.toml")
+        self.assertEqual(profile.build["libraries"]["CM0_CMSIS"], "5.6")
+        self.assertEqual(profile.get("build.defines"), ("STM32F030x8",))
+        self.assertEqual(dict(profile.origin("build.defines")), dict(state="run", section="build"))
+        with self.assertRaises(TypeError):
+            profile.data["board"]["board"]["led"] = "PA6"
+        bare = self.profile(build=None, configuration=configuration(props=dict(PROPS, **{"data.board": None})))
+        self.assertIsNone(bare.build)
+
+    def test_gdb_section_is_live_and_snapshot_is_plain(self):
         profile = self.profile()
         view = profile.gdb
         profile._observe_gdb(stop_details=True)
         self.assertTrue(view["stop_details"])
-        plain = profile.to_dict()
-        self.assertEqual(set(plain), {"target", "api", "image", "files", "case", "stand", "gdb"})
+        plain = profile.snapshot()
+        self.assertEqual(set(plain), {"target", "api", "image", "data", "files", "build", "case", "stand", "gdb"})
         self.assertEqual(plain["case"]["labels"], ["api"])
         self.assertIsInstance(plain["api"]["records"], dict)
 
@@ -97,6 +118,8 @@ class ProfileTests(unittest.TestCase):
         self.assertEqual(profile.api["schema"], 1)
         self.assertEqual(profile.api["records"]["max_records"], DEFAULTS["max_records"])
         self.assertEqual(dict(profile.files), {})
+        self.assertEqual(dict(profile.data), {})
+        self.assertIsNone(profile.build)
         self.assertEqual(dict(profile.origin("api.schema")), dict(state="default"))
 
 
@@ -121,6 +144,14 @@ class TargetProfileTests(unittest.TestCase):
         self.assertEqual(target.profile.gdb["version"], "15.2")
         self.assertTrue(target.profile.gdb["value_history"])
         self.assertIsNone(target.profile.gdb["stop_details"])
+
+    def test_record_accepts_the_profile(self):
+        target = self.module.Target({"checks": []}, TARGET, configuration(),
+                                    context=dict(case=CASE, stand=STAND, build=BUILD))
+        target.record("run", target.profile)
+        data = target.records("run")[0]["data"]
+        self.assertEqual(data["case"]["id"], "HW_CI_PROFILE")
+        self.assertEqual(data["build"]["defines"], ["STM32F030x8"])
 
     def test_removed_views_are_gone(self):
         target = self.module.Target({"checks": []}, TARGET, configuration())

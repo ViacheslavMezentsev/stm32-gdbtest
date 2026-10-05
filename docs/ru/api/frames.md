@@ -30,8 +30,8 @@
 ## Пример
 
 ```python
-chain = target.frames(limit=8)
-target.check("top frame", chain["frames"][0]["function"], "app_step")
+chain = t.frames(limit=8)
+t.check("top frame", chain["frames"][0]["function"], "app_step")
 ```
 
 Незавершённый обход сообщается признаком завершения, а не ошибкой.
