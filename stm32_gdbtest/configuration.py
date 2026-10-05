@@ -23,8 +23,11 @@ RESET_COMMAND = "monitor reset"
 # Default frame limit of `frames` (ТЗ API 6.6, Q1); `api.toml` may lower or raise it.
 FRAMES_LIMIT = 16
 
-# Largest block that `memory`/`write_memory` move in one call (ТЗ API 6.8).
+# Largest block that `memory` moves in one call (ТЗ API 6.8).
 MEMORY_LIMIT = 4096
+
+# Longest C string that `evaluate(..., as_type=str)` reads, in bytes (ТЗ API 6.8).
+STRING_LIMIT = 256
 MAXIMUMS = MappingProxyType(dict(max_records=1024, max_nodes=32768,
                                 max_text_bytes=524288, max_depth=32,
                                 max_integer_bits=1024))

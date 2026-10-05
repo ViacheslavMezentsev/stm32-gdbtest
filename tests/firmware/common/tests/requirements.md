@@ -15,10 +15,11 @@ out-of-range value is not covered here; value encoding is checked by the V14 pro
 depends on the caller storing the value, not on the debugger alone.
 
 ## HW_CI_MEASUREMENT_SERIES
-Five publications are taken with execution continuing between samples, so the series varies in time:
-board_adc_sequences increases without gaps and the values stay inside the plausible -40000..125000
-mdegC domain with more than one distinct value. Records keep every sample. This checks the measurement
-protocol on varying data, not sensor calibration, sample rate or accuracy.
+Five publications are taken with execution continuing between samples: board_adc_sequences increases
+without gaps and repeats, every value is real data and stays inside the plausible -40000..125000 mdegC
+domain. The die temperature may keep one value for the whole series, so equal samples are accepted.
+Records keep every sample. This checks the measurement protocol, not sensor calibration, sample rate or
+accuracy.
 
 ## HW_CI_READ_WRITE
 Reading `app_state` returns a mapping with the declared fields `led` and `ticks` as plain integers,
@@ -179,3 +180,13 @@ and the blink mode: the producer returns the incremented count, toggles the LED 
 and `write_memory` restores the saved bytes after each call. The application continues from the saved
 count. The scenario shows a firmware function used as a check without lasting side effects; it does not
 cover functions with peripheral effects.
+
+## HW_CI_STRINGS
+The fixture firmware keeps `app_info` in Flash with a version field `char version[16]` ("v1.2.0-ci") and
+a board pointer ("stm32-gdbtest-ci"), and copies the version into `app_version_ram` before the loop. At
+`app_loop` the GDB string functions inside a `check(rows)` table confirm both strings (`$_streq`), the
+version length (`$_strlen`), the equality of the RAM copy and the Flash bytes (`$_memeq`) and the version
+prefix (`$_regex`). The same facts are then checked in Python: `evaluate(..., as_type=str)` reads the
+field, the pointer and the RAM copy as text, `matches` checks the version pattern, and `memory` reads both
+blocks with equal bytes. The scenario covers ASCII identification strings, not text encodings or strings
+longer than the read limit.

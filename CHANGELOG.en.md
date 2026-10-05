@@ -28,6 +28,10 @@ Extended scenario API; the release is being prepared and the tag is published by
   they show whether the firmware uses HAL (`USE_HAL_DRIVER`) or LL.
 - One `check` for every check: the matchers `within`, `near`, `one_of` keep the value and the bounds in the report,
   `check(name, actual)` tests truth, `check(rows)` checks a table of rows with GDB expressions.
+- Firmware strings: `evaluate(path, as_type=str)` reads a C string from a `char` array or a `char *` pointer, the matcher
+  `matches(pattern)` checks it with a Python regular expression. The GDB functions `$_streq`, `$_strlen`, `$_memeq`,
+  `$_regex` work right in a `check(rows)` table; the table rules are described on the `check` card. The `HW_CI_STRINGS`
+  scenario and the `app_info` strings of the fixture firmware. API specification 0.3.5.
 - Symbols and memory: `symbol(name)` gives the address, size, type and section; `memory(address, size)` reads SRAM or
   the profile flash, `memory(address, data)` writes bytes into SRAM with verification; peripheral addresses are refused.
 - Frame variables: `locals()` and `arguments()` as one dictionary, optimized-out values listed separately.
@@ -58,6 +62,8 @@ Extended scenario API; the release is being prepared and the tag is published by
   from the device are firmware identifiers (`'DMA_CCR_MINC | DMA_CCR_PSIZE_0 | …'` instead of `1418`, `TIM2_IRQn + 16`
   instead of `44`), physical quantities are named constants; the replacements were compared with the numbers on the ELF.
 - The order-preservation test of the former `_check_values` helper is removed together with the helper.
+- `HW_CI_MEASUREMENT_SERIES` no longer requires distinct temperature values: the temperature may stay put for the series.
+- An evaluation error of a string cell of `check(rows)` names the row, the cell and the rule: a table string is a GDB expression.
 
 ### Fixed
 

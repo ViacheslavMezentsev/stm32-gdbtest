@@ -6,6 +6,8 @@ EN: Matchers are passed as the third argument of `check`: `t.check("VDDA", vdda,
     The report keeps the actual value and the bounds instead of `True`.
 """
 
+import re
+
 from stm32_gdbtest.errors import fail
 
 
@@ -92,3 +94,28 @@ class one_of(Matcher):
 
     def __str__(self):
         return f"one of {self.options!r}"
+
+
+class matches(Matcher):
+    """A Python regular expression found in a text value (`re.search`); anchor it with `^`/`$`."""
+
+    kind = "matches"
+
+    def __init__(self, pattern):
+        if type(pattern) is not str:
+            fail("check", "validation", "none", "invalid_pattern", "pattern must be a string", pattern=pattern)
+        try:
+            self._compiled = re.compile(pattern)
+        except re.error as cause:
+            fail("check", "validation", "none", "invalid_pattern", f"invalid pattern: {cause}", pattern=pattern)
+        self.pattern = pattern
+
+    def matches(self, actual):
+        return type(actual) is str and self._compiled.search(actual) is not None
+
+    @property
+    def expected(self):
+        return {"matches": self.pattern}
+
+    def __str__(self):
+        return f"text matching {self.pattern!r}"

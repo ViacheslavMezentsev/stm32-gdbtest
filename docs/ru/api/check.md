@@ -25,6 +25,7 @@
 | `check(name, actual, within(low, high))` | `low <= actual <= high` | `{"low", "high"}`, `kind="range"` |
 | `check(name, actual, near(value, tolerance))` | `abs(actual - value) <= tolerance` | `{"value", "tolerance"}`, `kind="near"` |
 | `check(name, actual, one_of(a, b, …))` | `actual` равно одному из вариантов | `{"in": [...]}`, `kind="in"` |
+| `check(name, actual, matches(pattern))` | в тексте `actual` найдено регулярное выражение Python | `{"matches": pattern}`, `kind="matches"` |
 | `check(name, actual)` | `actual` истинно | `True`, `kind="truth"` |
 | `check(rows)` | все строки таблицы проходят по порядку | запись на каждую строку |
 
@@ -36,6 +37,34 @@
 Несовпадение — `CheckFailed`. Ошибка в аргументах (пустое имя, неверные границы сопоставителя,
 пустая таблица) — `ApiError` операции `check` без записи в отчёт. Значения должны быть пригодны для
 JSON-отчёта.
+
+## Правила таблицы `check(rows)`
+
+1. Строка таблицы — `(name, actual, expected)` или `(name, actual)`.
+2. **Строковая ячейка — выражение GDB.** Строки в `actual` и `expected` вычисляются в контексте
+   остановленной программы через `evaluate`: переменные, поля, регистры, макросы `-g3`, enum,
+   арифметика C. Python-строку в таблице сравнить нельзя: `"HW_CI_PROFILE"` GDB ищет как символ. Такие
+   значения проверяются обычным `check(name, actual, expected)`.
+3. Нестроковые ячейки (числа, `bool`, списки, кортежи) и сопоставители используются как есть.
+4. Строка из двух ячеек проходит, если выражение истинно; так удобно записывать функции GDB,
+   возвращающие 1 или 0.
+5. Структура всех строк проверяется до первой оценки, строки выполняются по порядку, первое
+   несовпадение останавливает таблицу. Ошибка вычисления называет строку и ячейку.
+
+Строки прошивки сравниваются функциями GDB прямо в таблице:
+
+```python
+t.check([
+    ("version", '$_streq(app_info.version, "v1.2.0-ci")'),          # C-строки равны
+    ("board", '$_streq(app_info.board, "stm32-gdbtest-ci")'),        # указатель char *
+    ("version length", "$_strlen(app_info.version)", 9),
+    ("RAM copy", "$_memeq(app_version_ram, app_info.version, 16)"),  # равны 16 байт
+    ("version prefix", r'$_regex(app_info.version, "^v1\\.")'),      # регулярное выражение GDB
+])
+```
+
+Чтобы получить саму строку в Python (и увидеть её в отчёте), используйте
+`evaluate(path, as_type=str)` и сопоставитель `matches`.
 
 ## Пример
 
@@ -60,5 +89,5 @@ t.check([
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.4, п. 4.1.1–4.1.4.
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.5, п. 4.1.1–4.1.4.
 - [Сопоставители](matchers.md), [read](read.md), [evaluate](evaluate.md).

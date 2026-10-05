@@ -13,7 +13,7 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | --- | --- | --- | --- |
 | **Methods** — scenario operations | | | |
 | [check](check.md) | `check(name, actual, expected=True)`, `check(rows) -> int` | 0.1.0rc1; matchers, truth and table 0.3.0.dev0 (core) | 0.1.0; 0.3.4 |
-| [within, near, one_of](matchers.md) | `within(low, high)`, `near(value, tolerance)`, `one_of(*options)` | 0.3.0.dev0 (core) | 0.3.4 |
+| [within, near, one_of, matches](matchers.md) | `within(low, high)`, `near(value, tolerance)`, `one_of(*options)`, `matches(pattern)` | 0.3.0.dev0 (core) | 0.3.4 |
 | [value](value.md) (deprecated) | `value(expression) -> int` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [fields](fields.md) (deprecated) | `fields(expression, expected) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [breakpoint](breakpoint.md) | `breakpoint(location, temporary=False, *, condition=None) -> Point` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
@@ -26,7 +26,7 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [ret](ret.md) | `ret(value=None) -> dict` | 0.3.0.dev0 (core) | 0.3.0 (design) |
 | [read](read.md) | `read(path, *, fields=None, start=0, count=None) -> scalar \| list \| dict` | 0.3.0.dev0 (core) | 0.2.8 (design) |
 | [write](write.md) | `write(path, value, *, verify=True) -> dict` | 0.3.0.dev0 (core) | 0.2.8 (design) |
-| [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int \| float \| bool` | 0.3.0.dev0 (core) | 0.3.0 (design) |
+| [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int \| float \| bool \| str` | 0.3.0.dev0 (core) | 0.3.0 (design) |
 | [registers](registers.md) | `registers(*names, frame=None) -> dict` | 0.3.0.dev0 (core) | 0.3.0 (design) |
 | [frames](frames.md) | `frames(limit=16) -> dict` | 0.3.0.dev0 (core) | 0.3.0 (design) |
 | [watch](watch.md) | `watch(path) -> Point` | 0.3.0.dev0 (core) | 0.3.0 (design) |

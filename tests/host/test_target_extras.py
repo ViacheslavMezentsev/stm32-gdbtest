@@ -5,7 +5,8 @@ import types
 import unittest
 from unittest.mock import Mock, patch
 
-from stm32_gdbtest import ApiError, CheckFailed, near, one_of, within
+from stm32_gdbtest import ApiError, CheckFailed, matches, near, one_of, within
+from stm32_gdbtest.values import type_constant
 from stm32_gdbtest.configuration import DEFAULTS, MEMORY_LIMIT, Configuration, freeze
 
 
@@ -105,6 +106,35 @@ class Frame:
 
     def older(self):
         return self._older
+
+
+class CharType:
+    def __init__(self, code, size, element_size=1):
+        self.code, self.sizeof, self._element = code, size, element_size
+
+    def strip_typedefs(self):
+        return self
+
+    def target(self):
+        return types.SimpleNamespace(sizeof=self._element, strip_typedefs=lambda: types.SimpleNamespace(
+            sizeof=self._element))
+
+
+class TextValue:
+    """A char array in target memory, a literal of the expression, or a char pointer."""
+
+    def __init__(self, kind, address=None, items=b"", pointer=0):
+        self.type, self.address, self._items, self._pointer = kind, address, items, pointer
+        self.is_optimized_out = False
+
+    def __getitem__(self, index):
+        return self._items[index]
+
+    def cast(self, kind):
+        return self._pointer
+
+    def __int__(self):
+        return self._pointer
 
 
 class ExtrasTests(unittest.TestCase):
@@ -262,6 +292,73 @@ class ExtrasTests(unittest.TestCase):
         with self.assertRaises(ApiError) as caught:
             target.symbol("missing")
         self.assertEqual(caught.exception.details["code"], "symbol_absent")
+
+    # C strings: evaluate(..., as_type=str).
+    def text_target(self, value):
+        target = self.target()
+        self.gdb.parse_and_eval = lambda expression: value
+        self.gdb.lookup_type = lambda name: name
+        return target
+
+    def test_char_array_reads_up_to_the_first_zero(self):
+        array = type_constant("TYPE_CODE_ARRAY", None)
+        self.inferior.memory[0:16] = b"v1.2.0-ci\0garbage"[:16]
+        target = self.text_target(TextValue(CharType(array, 16), address=0x20000100))
+        self.assertEqual(target.evaluate("app_info.version", as_type=str), "v1.2.0-ci")
+        self.assertEqual(target.evaluate("app_info.version", as_type="str"), "v1.2.0-ci")
+        self.assertEqual(target.report["evaluations"][-1]["value_type"], "str")
+        self.assertNotIn("truncated", target.report["evaluations"][-1])
+
+    def test_literal_and_pointer_strings(self):
+        array, pointer = type_constant("TYPE_CODE_ARRAY", None), type_constant("TYPE_CODE_PTR", None)
+        target = self.text_target(TextValue(CharType(array, 5), items=b"v1.2\0"))
+        self.assertEqual(target.evaluate('"v1.2"', as_type=str), "v1.2")
+        self.inferior.memory[0:20] = b"stm32-gdbtest-ci\0\0\0\0"
+        target = self.text_target(TextValue(CharType(pointer, 4), pointer=0x20000100))
+        self.assertEqual(target.evaluate("app_info.board", as_type=str), "stm32-gdbtest-ci")
+
+    def test_string_refusals_and_truncation(self):
+        array, pointer = type_constant("TYPE_CODE_ARRAY", None), type_constant("TYPE_CODE_PTR", None)
+        target = self.text_target(TextValue(CharType(pointer, 4), pointer=0))
+        with self.assertRaises(ApiError) as caught:
+            target.evaluate("app_info.board", as_type=str)
+        self.assertEqual(caught.exception.details["code"], "null_pointer")
+        target = self.text_target(TextValue(CharType(array, 8, element_size=4), address=0x20000100))
+        with self.assertRaises(ApiError) as caught:
+            target.evaluate("words", as_type=str)
+        self.assertEqual(caught.exception.details["code"], "unsupported_type")
+        # A pointer string without a zero before the end of readable memory is returned truncated.
+        self.inferior.memory[:] = b"x" * len(self.inferior.memory)
+        target = self.text_target(TextValue(CharType(pointer, 4), pointer=0x20000100))
+        self.assertEqual(target.evaluate("p", as_type=str), "x" * 64)
+        self.assertTrue(target.report["evaluations"][-1]["truncated"])
+        self.inferior.memory[0:3] = b"\xff\xfeA"
+        self.inferior.memory[3] = 0
+        self.assertEqual(target.evaluate("p", as_type=str), "\ufffd\ufffdA")
+
+    def test_matches_searches_a_python_pattern(self):
+        target = self.target()
+        target.check("version", "v1.2.0-ci", matches(r"^v1\."))
+        self.assertEqual(target.report["checks"][-1]["expected"], {"matches": r"^v1\."})
+        self.assertEqual(target.report["checks"][-1]["kind"], "matches")
+        with self.assertRaises(CheckFailed):
+            target.check("version", "v2.0", matches(r"^v1\."))
+        with self.assertRaises(CheckFailed):
+            target.check("not text", 12, matches("1"))
+        for pattern in ("(", 5):
+            with self.subTest(pattern=pattern), self.assertRaises(ApiError) as caught:
+                matches(pattern)
+            self.assertEqual(caught.exception.details["code"], "invalid_pattern")
+
+    def test_table_names_the_row_when_a_string_cell_is_not_an_expression(self):
+        target = self.target()
+        def refuse(expression):
+            raise FakeError(f'No symbol "{expression}" in current context.')
+        self.gdb.parse_and_eval = refuse
+        with self.assertRaises(ApiError) as caught:
+            target.check([("case id", "HW_CI_PROFILE", "HW_CI_PROFILE")])
+        self.assertEqual((caught.exception.details["row"], caught.exception.details["cell"]), ("case id", "actual"))
+        self.assertIn("compare Python values with check(name, actual, expected)", str(caught.exception))
 
     # Raw memory: the type of the second argument decides.
     def test_memory_reads_with_a_size_and_writes_bytes(self):

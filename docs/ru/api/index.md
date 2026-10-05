@@ -13,7 +13,7 @@
 | --- | --- | --- | --- |
 | **Методы** — операции сценария | | | |
 | [check](check.md) | `check(name, actual, expected=True)`, `check(rows) -> int` | 0.1.0rc1; сопоставители, истинность и таблица 0.3.0.dev0 (ядро) | 0.1.0; 0.3.4 |
-| [within, near, one_of](matchers.md) | `within(low, high)`, `near(value, tolerance)`, `one_of(*options)` | 0.3.0.dev0 (ядро) | 0.3.4 |
+| [within, near, one_of, matches](matchers.md) | `within(low, high)`, `near(value, tolerance)`, `one_of(*options)`, `matches(pattern)` | 0.3.0.dev0 (ядро) | 0.3.4 |
 | [value](value.md) (устарел) | `value(expression) -> int` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [fields](fields.md) (устарел) | `fields(expression, expected) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [breakpoint](breakpoint.md) | `breakpoint(location, temporary=False, *, condition=None) -> Point` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
@@ -26,7 +26,7 @@
 | [ret](ret.md) | `ret(value=None) -> dict` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
 | [read](read.md) | `read(path, *, fields=None, start=0, count=None) -> scalar \| list \| dict` | 0.3.0.dev0 (ядро) | 0.2.8 (проект) |
 | [write](write.md) | `write(path, value, *, verify=True) -> dict` | 0.3.0.dev0 (ядро) | 0.2.8 (проект) |
-| [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int \| float \| bool` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
+| [evaluate](evaluate.md) | `evaluate(expression, *, as_type=None) -> int \| float \| bool \| str` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
 | [registers](registers.md) | `registers(*names, frame=None) -> dict` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
 | [frames](frames.md) | `frames(limit=16) -> dict` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
 | [watch](watch.md) | `watch(path) -> Point` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |

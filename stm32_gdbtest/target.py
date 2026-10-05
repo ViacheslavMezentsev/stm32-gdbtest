@@ -8,7 +8,7 @@ import gdb
 from stm32_gdbtest.errors import ApiError, CheckFailed, fail  # noqa: F401
 from stm32_gdbtest.records import Journal
 from stm32_gdbtest.configuration import (DEFAULTS, EXECUTE_OUTPUT_LIMIT, FRAMES_LIMIT,
-                                           MEMORY_LIMIT, RESET_COMMAND, freeze)
+                                           MEMORY_LIMIT, RESET_COMMAND, STRING_LIMIT, freeze)
 from stm32_gdbtest import values
 from stm32_gdbtest.run_profile import Profile
 from stm32_gdbtest.matchers import Matcher
@@ -301,11 +301,23 @@ class Target:
             name, actual = row[0], row[1]
             expected = row[2] if len(row) == 3 else _OMITTED
             if isinstance(actual, str):
-                actual = self.evaluate(actual)
+                actual = self._table_cell(name, "actual", actual)
             if isinstance(expected, str):
-                expected = self.evaluate(expected)
+                expected = self._table_cell(name, "expected", expected)
             self.check(name, actual, expected)
         return len(rows)
+
+    def _table_cell(self, name, cell, expression):
+        """Evaluate a string cell; a refusal names the row and the rule that strings are expressions."""
+        try:
+            return self.evaluate(expression)
+        except ApiError as error:
+            if error.details.get("code") != "command_failed":
+                raise
+            self._fail("check", "command", "unknown", "command_failed",
+                       f"row {name!r}: {cell} {expression!r} is not a valid GDB expression; a string cell of "
+                       "check(rows) is evaluated by GDB, compare Python values with check(name, actual, expected)",
+                       cause=error, row=name, cell=cell, expression=expression)
 
     def _deprecated(self, name, replacement):
         """Warn once per run about a former name; removal is planned in 0.4.0 (ТЗ API 6.7)."""
@@ -402,9 +414,10 @@ class Target:
     def evaluate(self, expression, *, as_type=None):
         """Evaluate an expression in the halted program and convert the result (ТЗ API 4.3).
 
-        `as_type` may be `int`, `float`, `bool` (or their names); without it the declared type of the
-        value decides. The conversion happens after the expression executed, so a wrong type is
-        reported as a failure of the result, not of the expression.
+        `as_type` may be `int`, `float`, `bool`, `str` (or their names); without it the declared type of
+        the value decides. `str` reads a C string from a `char` array or a `char *` (ТЗ API 4.18.1). The
+        conversion happens after the expression executed, so a wrong type is reported as a failure of
+        the result, not of the expression.
         """
         if type(expression) is not str or not expression.strip():
             self._fail("eval", "validation", "none", "invalid_expression",
@@ -418,6 +431,13 @@ class Target:
         if getattr(value, "is_optimized_out", False):
             self._fail("eval", "observe", "none", "optimized_out",
                        f"value is optimized out: {expression}", expression=expression)
+        if requested is str:
+            text, truncated = self._c_string(value, expression)
+            entry = dict(operation="eval", expression=expression, value=text, value_type="str")
+            if truncated:
+                entry["truncated"] = True
+            self.report.setdefault("evaluations", []).append(entry)
+            return text
         try:
             value.fetch_lazy()
             plain = values.value_to_plain(value, expression, gdb)
@@ -442,13 +462,66 @@ class Target:
         """Normalize the requested result type; None keeps the declared type."""
         if as_type is None:
             return None
-        mapping = {int: int, float: float, bool: bool, "int": int, "float": float, "bool": bool}
+        mapping = {int: int, float: float, bool: bool, str: str,
+                   "int": int, "float": float, "bool": bool, "str": str}
         if isinstance(as_type, str) and as_type in mapping:
             return mapping[as_type]
         if as_type in mapping:
             return mapping[as_type]
         self._fail("eval", "validation", "none", "unsupported_type",
-                   "as_type must be int, float or bool", as_type=as_type)
+                   "as_type must be int, float, bool or str", as_type=as_type)
+
+    def _c_string(self, value, expression):
+        """A C string of a `char` array (up to the first zero) or a `char *`, as text (ТЗ API 4.18.1).
+
+        At most STRING_LIMIT bytes are read; bytes that are not UTF-8 are replaced. A string without a
+        terminating zero inside the limit is returned truncated and marked so.
+        """
+        kind = values.unqualified_type(value.type)
+        strip = getattr(kind, "strip_typedefs", None)
+        kind = strip() if callable(strip) else kind
+        code = getattr(kind, "code", None)
+        array = code == values.type_constant("TYPE_CODE_ARRAY", gdb)
+        pointer = code == values.type_constant("TYPE_CODE_PTR", gdb)
+        element = kind.target() if (array or pointer) else None
+        if element is None or getattr(element.strip_typedefs() if hasattr(element, "strip_typedefs") else element,
+                                      "sizeof", None) != 1:
+            self._fail("eval", "readback", "none", "unsupported_type",
+                       f"{expression} is not a char array or a char pointer", expression=expression)
+        errors = (gdb.error, getattr(gdb, "MemoryError", gdb.error), RuntimeError)
+        if array:
+            size = min(int(kind.sizeof), STRING_LIMIT)
+            address = getattr(value, "address", None)
+            try:
+                if address is not None:
+                    raw = bytes(gdb.selected_inferior().read_memory(int(address), size))
+                else:
+                    # A string literal of the expression lives only in GDB, not in the target.
+                    raw = bytes(int(value[index]) & 0xFF for index in range(size))
+            except errors as cause:
+                self._fail("eval", "readback", "none", "read_failed", f"cannot read {expression}",
+                           cause=cause, expression=expression)
+            terminated = b"\0" in raw or int(kind.sizeof) <= STRING_LIMIT
+        else:
+            address = int(value.cast(gdb.lookup_type("unsigned long"))) if hasattr(value, "cast") else int(value)
+            if address == 0:
+                self._fail("eval", "readback", "none", "null_pointer", f"{expression} is a null pointer",
+                           expression=expression)
+            raw = b""
+            inferior = gdb.selected_inferior()
+            # Read in small chunks: a string near the end of a memory region must not fail the read.
+            while len(raw) < STRING_LIMIT and b"\0" not in raw:
+                chunk = min(32, STRING_LIMIT - len(raw))
+                try:
+                    raw += bytes(inferior.read_memory(address + len(raw), chunk))
+                except errors as cause:
+                    if not raw:
+                        self._fail("eval", "readback", "none", "read_failed", f"cannot read {expression}",
+                                   cause=cause, expression=expression)
+                    break
+            terminated = b"\0" in raw
+        text = raw.split(b"\0", 1)[0].decode("utf-8", errors="replace")
+        return text, not terminated
 
     def registers(self, *names, frame=None):
         """Read named registers of a frame as one dictionary (ТЗ API 4.4).

@@ -25,6 +25,7 @@ The arguments decide the kind of check:
 | `check(name, actual, within(low, high))` | `low <= actual <= high` | `{"low", "high"}`, `kind="range"` |
 | `check(name, actual, near(value, tolerance))` | `abs(actual - value) <= tolerance` | `{"value", "tolerance"}`, `kind="near"` |
 | `check(name, actual, one_of(a, b, …))` | `actual` equals one of the options | `{"in": [...]}`, `kind="in"` |
+| `check(name, actual, matches(pattern))` | a Python regular expression is found in the text `actual` | `{"matches": pattern}`, `kind="matches"` |
 | `check(name, actual)` | `actual` is true | `True`, `kind="truth"` |
 | `check(rows)` | every row of the table passes, in order | one entry per row |
 
@@ -35,6 +36,33 @@ structure of every row is validated before the first evaluation; the first misma
 
 A mismatch raises `CheckFailed`. An argument error (empty name, invalid matcher bounds, empty table)
 raises `ApiError` of operation `check` without a report entry. Values must be JSON-compatible.
+
+## Rules of the `check(rows)` table
+
+1. A table row is `(name, actual, expected)` or `(name, actual)`.
+2. **A string cell is a GDB expression.** Strings in `actual` and `expected` are evaluated in the
+   halted program through `evaluate`: variables, fields, registers, `-g3` macros, enums, C arithmetic.
+   A Python string cannot be compared in a table: GDB looks up `"HW_CI_PROFILE"` as a symbol. Such
+   values are checked with a plain `check(name, actual, expected)`.
+3. Non-string cells (numbers, `bool`, lists, tuples) and matchers are used as they are.
+4. A two-cell row passes when the expression is true; this suits GDB functions that return 1 or 0.
+5. The structure of every row is validated before the first evaluation, rows run in order, the first
+   mismatch stops the table. An evaluation error names the row and the cell.
+
+Firmware strings are compared by GDB functions right in the table:
+
+```python
+t.check([
+    ("version", '$_streq(app_info.version, "v1.2.0-ci")'),          # equal C strings
+    ("board", '$_streq(app_info.board, "stm32-gdbtest-ci")'),        # a char * pointer
+    ("version length", "$_strlen(app_info.version)", 9),
+    ("RAM copy", "$_memeq(app_version_ram, app_info.version, 16)"),  # 16 equal bytes
+    ("version prefix", r'$_regex(app_info.version, "^v1\\.")'),      # a GDB regular expression
+])
+```
+
+To get the string itself in Python (and see it in the report), use `evaluate(path, as_type=str)` and
+the `matches` matcher.
 
 ## Example
 
@@ -59,5 +87,5 @@ scenario independently (TECH-001).
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.3.4, items 4.1.1–4.1.4.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.3.5, items 4.1.1–4.1.4.
 - [Matchers](matchers.md), [read](read.md), [evaluate](evaluate.md).

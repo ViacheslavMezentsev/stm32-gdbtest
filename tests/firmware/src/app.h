@@ -24,7 +24,18 @@ typedef struct
     uint32_t took_zero_branch;
 } app_receiver_state_t;
 
+/* Identification strings of the firmware; the scenarios read them as C strings. */
+#define APP_VERSION_SIZE 16U
+
+typedef struct
+{
+    char version[APP_VERSION_SIZE];
+    const char* board;
+} app_info_t;
+
 extern volatile app_state_t app_state;
+extern const app_info_t app_info;
+extern volatile char app_version_ram[APP_VERSION_SIZE];
 extern volatile app_receiver_state_t app_received;
 extern volatile uint32_t app_delay;
 

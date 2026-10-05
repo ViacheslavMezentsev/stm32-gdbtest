@@ -2,13 +2,13 @@
 import sys
 
 from stm32_gdbtest.errors import ApiError, CheckFailed, RecordError
-from stm32_gdbtest.matchers import near, one_of, within
+from stm32_gdbtest.matchers import matches, near, one_of, within
 
 # Source checkouts may be read-only, including GDB imports and the -m entry point.
 sys.dont_write_bytecode = True
 __version__ = "0.3.0"
 API_VERSION = 1
-__all__ = ["case", "test", "within", "near", "one_of", "API_VERSION", "__version__", "ApiError", "CheckFailed",
+__all__ = ["case", "test", "within", "near", "one_of", "matches", "API_VERSION", "__version__", "ApiError", "CheckFailed",
            "RecordError"]
 
 
