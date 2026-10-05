@@ -65,6 +65,8 @@
 - Сценарии общего каталога с `try/except ApiError` переведены на `refused`; чтение-изменение-запись регистров в
   сценариях ADC и сна записано выражениями и таблицами записей, литералы `| 1` и `& ~1` в F103 заменены
   идентификаторами `DMA_CCR_EN` и `ADC_CR2_ADON`.
+- Прослеживаемость TC-15 больше не ссылается на удалённый `test_scenario_tables.py`: таблицы проверяет
+  `test_target_extras.py`.
 - Изменённые пункты помечены `(р.0.3.6)`. (р.0.3.6)
 
 ### Изменения ревизии 0.3.5
@@ -1024,7 +1026,7 @@ __version__=0.2.0.dev0; номер выпускного prerelease опреде�
 | 4.5, 6.6 (предел кадров) | `stm32_gdbtest/target.py`, `configuration.py` (р.0.3.0) | `tests/host/test_target_frames.py` (T); `HW_CI_FRAMES` на пяти стендах (H) (р.0.3.0) |
 | 4.6, 4.5а | `stm32_gdbtest/target.py`, `values.py` (р.0.3.0) | `tests/host/test_target_watch.py` (T); `HW_CI_WATCH` на пяти стендах (H) (р.0.3.0) |
 | 3.3, 3.4, 4.14.1–4.14.8, 6.7, 7.6 | `stm32_gdbtest/run_profile.py`, `target.py`, `agent.py`, `runner.py` (р.0.3.3) | TC-14 (T/D): `test_target_profile.py`, `HW_CI_PROFILE` (р.0.3.3) |
-| 4.1.2–4.1.4 | `stm32_gdbtest/target.py`, `matchers.py` (р.0.3.4) | TC-15 (T): `test_target_extras.py`, `test_scenario_tables.py` (р.0.3.3) |
+| 4.1.2–4.1.4 | `stm32_gdbtest/target.py`, `matchers.py` (р.0.3.4) | TC-15 (T): `test_target_extras.py` (р.0.3.6) |
 | 4.15.1, 4.16.1–4.16.4, 6.8 | `stm32_gdbtest/target.py`, `configuration.py` (р.0.3.3) | TC-16 (T): `test_target_extras.py` (р.0.3.3) |
 | 4.17.1, 4.17.2 | `stm32_gdbtest/target.py` (р.0.3.3) | TC-17 (T): `test_target_extras.py` (р.0.3.3) |
 | 4.4.3, 4.4.4 | `stm32_gdbtest/target.py` (р.0.3.4) | TC-18 (T): `test_target_extras.py`; TC-20 (D) (р.0.3.3) |

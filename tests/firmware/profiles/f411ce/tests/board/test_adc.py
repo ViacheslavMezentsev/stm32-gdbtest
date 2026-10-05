@@ -4,6 +4,7 @@ EN: ADC DMA acquisition, measurement conversion and controlled faults.
 """
 from stm32_gdbtest import case, within
 
+
 # Full scale of the 12-bit ADC: 0 and 4095 are saturated readings.
 ADC_FULL_SCALE = 4095
 # One DMA sequence carries the temperature and VREFINT samples.
@@ -47,13 +48,14 @@ def adc_init(t):
          'ADC_CR2_ADON | ADC_CR2_DMA | ADC_CR2_DDS'),
         ('sample CH18/17 at 480 cycles', 'ADC1->SMPR1', 'ADC_SMPR1_SMP18 | ADC_SMPR1_SMP17'),
         ('two regular ranks', 'ADC1->SQR1', 'ADC_SQR1_L_0'),
-        ('CH18 then CH17', 'ADC1->SQR3', TEMPERATURE_CHANNEL | VREFINT_CHANNEL << 5),
+        ('CH18 then CH17', 'ADC1->SQR3', f'{TEMPERATURE_CHANNEL} | ({VREFINT_CHANNEL} << ADC_SQR3_SQ2_Pos)'),
         ('normal DMA halfwords, TC/TE/DME IRQ', 'DMA2_Stream0->CR',
          'DMA_SxCR_MINC | DMA_SxCR_PSIZE_0 | DMA_SxCR_MSIZE_0 | DMA_SxCR_TCIE | DMA_SxCR_TEIE | DMA_SxCR_DMEIE'),
         ('ADC data address', 'DMA2_Stream0->PAR', '&ADC1->DR'),
         ('SRAM buffer address', 'DMA2_Stream0->M0AR', '&board_adc_buffer[0]'),
         ('DMA NVIC enabled', 'NVIC->ISER[DMA2_Stream0_IRQn >> 5] & (1UL << (DMA2_Stream0_IRQn & 31))'),
-        ('DMA vector', '(unsigned int)vectors[DMA2_Stream0_IRQn + 16] & ~1U', '(unsigned int)DMA2_Stream0_IRQHandler & ~1U'),
+        ('DMA vector', '(unsigned int)vectors[DMA2_Stream0_IRQn + 16] & ~1U',
+         '(unsigned int)DMA2_Stream0_IRQHandler & ~1U'),
         ('internal sources without VBAT', 'ADC->CCR', 'ADC_CCR_TSVREFE'),
         ('direct DMA mode', 'DMA2_Stream0->FCR & (DMA_SxFCR_FEIE | DMA_SxFCR_DMDIS)', 0),
         ('no init error', 'board_adc_error', ADC_ERROR_NONE)
@@ -78,7 +80,7 @@ def adc_dma(t):
             )
         ])
 
-        raw = [t.read(f"board_adc_buffer[{i}]") for i in range(2)]
+        raw = [t.read(f"board_adc_buffer[{i}]") for i in range(SAMPLES_PER_SEQUENCE)]
         t.reach("board_delay_ms")
 
         # Check the publication counter before comparing measurement contents.
@@ -106,10 +108,11 @@ def adc_units(t):
     t.reach("board_delay_ms")
 
     # Check measurement provenance and plausible physical ranges.
-    t.check("factory provenance", t.read("board_adc_reading.quality"), QUALITY_TWO_POINT)
-    t.check("plausible VDDA", t.read("board_adc_reading.vdda_mv"), PLAUSIBLE_VDDA_MV)
-    t.check("plausible die temperature", t.read("board_adc_reading.temperature_mdeg_c"),
-            PLAUSIBLE_DIE_MDEG_C)
+    t.check([
+        ("factory provenance", "board_adc_reading.quality", QUALITY_TWO_POINT),
+        ("plausible VDDA", "board_adc_reading.vdda_mv", PLAUSIBLE_VDDA_MV),
+        ("plausible die temperature", "board_adc_reading.temperature_mdeg_c", PLAUSIBLE_DIE_MDEG_C)
+    ])
 
     t.report["measurement"] = {name: t.read("board_adc_reading." + name)
                                for name in ("vdda_mv", "temperature_mdeg_c", "quality")}
@@ -177,9 +180,11 @@ def no_publication(t, error):
     t.reach("board_adc_fault")
 
     # Check the failure code and absence of a published measurement.
-    t.check("error code", t.read("board_adc_error"), error)
-    t.check("no sequence published", t.read("board_adc_sequences"), 0)
-    t.check("no valid reading published", t.read("board_adc_reading.quality"), QUALITY_INVALID)
+    t.check([
+        ("error code", "board_adc_error", error),
+        ("no sequence published", "board_adc_sequences", 0),
+        ("no valid reading published", "board_adc_reading.quality", QUALITY_INVALID)
+    ])
 
 
 # Suppress completion notification and verify the ADC deadline and fault state.
@@ -202,9 +207,11 @@ def adc_timeout(t):
 def adc_busy(t):
     # TECH-006: enforce a DMA ownership guard, not a claim of F0 ADSTART semantics.
     t.reach("board_adc_sample")
+
+    # Arm a transfer of one sequence and enable DMA before the application starts its own.
     t.write([
         ("DMA2_Stream0->NDTR", SAMPLES_PER_SEQUENCE),
-        ("DMA2_Stream0->CR", "DMA2_Stream0->CR | DMA_SxCR_EN"),
+        ("DMA2_Stream0->CR", "DMA2_Stream0->CR | DMA_SxCR_EN")
     ])
 
     # Verify DMA enabled before application start.

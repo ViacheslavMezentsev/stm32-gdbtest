@@ -4,6 +4,7 @@ EN: ADC start rejection under a controlled busy condition.
 """
 from stm32_gdbtest import case
 
+
 # board_adc_error code of a rejected start (adc_f030.c).
 ADC_ERROR_BUSY = 6
 # Quality of an absent reading (adc_units.c).
@@ -22,7 +23,7 @@ def adc_busy(t):
     # Start continuous conversions while the core is halted: ADSTART stays asserted.
     t.write([
         ("ADC1->CFGR1", "ADC1->CFGR1 | ADC_CFGR1_CONT"),
-        ("ADC1->CR", "ADC1->CR | ADC_CR_ADSTART"),
+        ("ADC1->CR", "ADC1->CR | ADC_CR_ADSTART")
     ])
 
     # Verify conversion is active.

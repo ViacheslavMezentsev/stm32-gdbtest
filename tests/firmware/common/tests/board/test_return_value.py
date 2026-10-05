@@ -4,16 +4,19 @@ EN: Return value: finish, register r0 and the value published by the receiver ag
 """
 from stm32_gdbtest import case, within
 
-SRAM = (0x20000000, 0x200FFFFF)
+
+# SRAM window of the STM32 Cortex-M parts used by the CI profiles.
+SRAM = within(0x20000000, 0x200FFFFF)
 
 
+# Compare three views of one return value: finish, register r0 and what the receiver published.
 @case("HW_CI_RETURN_VALUE", timeout_s=60, labels=("api", "showcase", "finish"), contracts=("ci_app_api",))
 def return_value(t):
     t.reach("app_step")
     arguments = t.arguments()
     t.check("the frame is the producer", arguments["function"], "app_step")
     t.check("the receiver asks for blinking", arguments["values"]["mode"], t.evaluate("APP_MODE_BLINK"))
-    t.check("the state copy lives on the stack", arguments["values"]["state"], within(*SRAM))
+    t.check("the state copy lives on the stack", arguments["values"]["state"], SRAM)
     ticks = t.read("state->ticks")
 
     finished = t.finish()

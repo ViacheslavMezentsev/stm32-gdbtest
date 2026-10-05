@@ -4,15 +4,19 @@ EN: The profile point budget: refusal over the limit, a disabled point holds no 
 """
 from stm32_gdbtest import case, within
 
+
+# Distinct functions of the fixture firmware, more of them than any profile budget leaves free.
 LOCATIONS = ("app_step", "app_receiver_step", "board_led_toggle", "board_adc_sample", "board_delay_ms",
              "app_loop", "main", "board_init")
 
 
+# Fill the profile point budget, refuse one point over it and free the slots again.
 @case("HW_CI_POINT_BUDGET", timeout_s=45, labels=("api", "showcase", "breakpoint"), contracts=("ci_app_api",))
 def point_budget(t):
     t.reach("app_loop")
     limit = t.profile["breakpoint_limit"]
     guards = t.profile["fault_handlers"]
+
     # The fault guards set by the agent at boot already hold slots of the same budget.
     busy = sum(point.active for point in t.owned)
     t.check("the fault guards hold their slots", busy, len(guards))
@@ -20,6 +24,8 @@ def point_budget(t):
     t.check("the free budget fits the locations", free, within(1, len(LOCATIONS) - 1))
 
     points = []
+
+    # One point per location while the budget lasts; each lies inside its function.
     for location in LOCATIONS[:free]:
         point = t.breakpoint(location)
         symbol = t.symbol(location)
@@ -39,8 +45,7 @@ def point_budget(t):
         points[0].enable()
 
     t.clear()
-    t.check("clear removed every point, guards included",
-                 [point.id for point in t.owned if point.active], [])
+    t.check("clear removed every point, guards included", [point.id for point in t.owned if point.active], [])
 
     # The scenario re-arms the fault guards from the profile; the rest of the budget is free again.
     for name in guards:

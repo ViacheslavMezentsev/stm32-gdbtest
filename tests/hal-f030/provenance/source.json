@@ -212,13 +212,15 @@
       "source": "profiles/f030r8/tests/board/test_peripheral_init.py",
       "destination": "profile/tests/board/test_peripheral_init.py",
       "sha256": "45705bfabd56bc2cbbba233f3adb30b90076d765888367e30617bbb1d63cdbae",
-      "migrated_sha256": "3a21ebdfc4e1207e136b15fc1646c449a6485c494677f7ef7a4e7da14a7a3d02",
+      "migrated_sha256": "5cb9336d58a895666ca7a4b2f50db29eaa511cc798793916fd63ae60bcec061e",
       "original_migrated_sha256": "45705bfabd56bc2cbbba233f3adb30b90076d765888367e30617bbb1d63cdbae",
       "adaptation": "Table-driven checks; evaluation order and early failure verified by tests/host/test_scenario_tables.py.",
       "pre_style_sha256": "09e57208ce8d0a63421d2168d3103b27cf8a8e2927d1049355f07bd398bd29fb",
       "style_note": "Comments and formatting only; executable AST compared with ebf1bf8.",
       "pre_api030_sha256": "88de2cb6a719cd2121dae5b585a050a80e59dfb583a132e5bd2977554ef45256",
-      "api030_note": "API 0.3.0 conventions: Target object t, check tables and matchers, firmware identifiers instead of numbers, ret(\"HAL_ERROR\")."
+      "api030_note": "API 0.3.0 conventions: Target object t, check tables and matchers, firmware identifiers instead of numbers, ret(\"HAL_ERROR\").",
+      "pre_style_v2_sha256": "3a21ebdfc4e1207e136b15fc1646c449a6485c494677f7ef7a4e7da14a7a3d02",
+      "style_v2_note": "Scenario style of TESTING_TECHNIQUES (tests/host/test_scenario_style.py): comments, layout, firmware identifiers instead of numbers."
     },
     {
       "source": "tests/scenarios/board.py",
@@ -234,31 +236,37 @@
       "source": "tests/scenarios/peripheral_runtime.py",
       "destination": "hal_scenarios/peripheral_runtime.py",
       "sha256": "5f1b19c54e8ef68998815fe3e1f5005280c9eec8f2c06bb3589ad6b6f2a53fe5",
-      "migrated_sha256": "85e48d6258516e698ce20973ef06315353587c81a0322830c844931841da416c",
+      "migrated_sha256": "2f60e9aceafb38d560edff34bd878da2181792d7e4be2648c1bf5f543ccd2200",
       "pre_style_sha256": "4a69779fccd1e720997b711fd794e73eacf3518665aeb6595d597e2152685dfd",
       "style_note": "Comments and formatting only; executable AST compared with ebf1bf8.",
       "pre_api030_sha256": "a32d4f9756849c26990148b401a0f8c41bc3bd18ae1438bd9a4ae83b01af4455",
-      "api030_note": "API 0.3.0 conventions: Target object t, check tables and matchers, firmware identifiers instead of numbers, ret(\"HAL_ERROR\")."
+      "api030_note": "API 0.3.0 conventions: Target object t, check tables and matchers, firmware identifiers instead of numbers, ret(\"HAL_ERROR\").",
+      "pre_style_v2_sha256": "85e48d6258516e698ce20973ef06315353587c81a0322830c844931841da416c",
+      "style_v2_note": "Scenario style of TESTING_TECHNIQUES (tests/host/test_scenario_style.py): comments, layout, firmware identifiers instead of numbers."
     },
     {
       "source": "tests/scenarios/power.py",
       "destination": "hal_scenarios/power.py",
       "sha256": "a71d9f16ded535dbe8a6e09114fc8e385d07c837298fb132cad5db8deff0d1f8",
-      "migrated_sha256": "0b608b221050c64e156a6cafdb89c03308a85c30f8576929af94757e54cfaefc",
+      "migrated_sha256": "8f33aff3794d6a4b89a3830cf1f48ad5fc458fae688b57707251fcb13e6968f3",
       "pre_style_sha256": "a71d9f16ded535dbe8a6e09114fc8e385d07c837298fb132cad5db8deff0d1f8",
       "style_note": "Comments and formatting only; executable AST compared with ebf1bf8.",
       "pre_api030_sha256": "eaf72d03e705464b703a106221a7f7b9c530a32e42a1877561a1d9f2e5a5f253",
-      "api030_note": "API 0.3.0 conventions: Target object t, check tables and matchers, firmware identifiers instead of numbers, ret(\"HAL_ERROR\")."
+      "api030_note": "API 0.3.0 conventions: Target object t, check tables and matchers, firmware identifiers instead of numbers, ret(\"HAL_ERROR\").",
+      "pre_style_v2_sha256": "0b608b221050c64e156a6cafdb89c03308a85c30f8576929af94757e54cfaefc",
+      "style_v2_note": "Scenario style of TESTING_TECHNIQUES (tests/host/test_scenario_style.py): comments, layout, firmware identifiers instead of numbers."
     },
     {
       "source": "profiles/f030r8/tests/expectations.py",
       "destination": "hal_scenarios/expectations.py",
       "sha256": "e8402c8df31228637babf790bb50066c9dd437d14da4088e6fae78593deb3ba6",
-      "migrated_sha256": "6a34fd22c1e69054db17e7804d90df1127286d85838ecaee98ef3ee52215c7c1",
+      "migrated_sha256": "bb8308ee3f2e17894cebd37f3e86ff0fe3b989afbae1b22655123dcec858b5a1",
       "pre_style_sha256": "e8402c8df31228637babf790bb50066c9dd437d14da4088e6fae78593deb3ba6",
       "style_note": "Comments and formatting only; executable AST compared with ebf1bf8.",
       "pre_api030_sha256": "7de9e0c142ff99395abef2f6767262244a0bbeba719159f7b4eeeebda2c6c361",
-      "api030_note": "API 0.3.0 conventions: Target object t, check tables and matchers, firmware identifiers instead of numbers, ret(\"HAL_ERROR\")."
+      "api030_note": "API 0.3.0 conventions: Target object t, check tables and matchers, firmware identifiers instead of numbers, ret(\"HAL_ERROR\").",
+      "pre_style_v2_sha256": "6a34fd22c1e69054db17e7804d90df1127286d85838ecaee98ef3ee52215c7c1",
+      "style_v2_note": "Scenario style of TESTING_TECHNIQUES (tests/host/test_scenario_style.py): comments, layout, firmware identifiers instead of numbers."
     }
   ],
   "hash_normalization": "CRLF to LF"

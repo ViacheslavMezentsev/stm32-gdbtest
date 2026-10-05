@@ -7,8 +7,7 @@ from stm32_gdbtest import case
 
 # Read the receiver's observed state; the application publishes it, not the test.
 def _receiver(t):
-    return {"produced": t.read("app_received.produced"),
-            "calls": t.read("app_received.calls")}
+    return {"produced": t.read("app_received.produced"), "calls": t.read("app_received.calls")}
 
 
 # The firmware calls the producer through app_receiver_step; the caller consumes the returned value.

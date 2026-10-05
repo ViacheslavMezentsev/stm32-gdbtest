@@ -4,6 +4,7 @@ EN: ADC DMA acquisition, measurement conversion and controlled faults.
 """
 from stm32_gdbtest import case, within
 
+
 # Full scale of the 12-bit ADC: 0 and 4095 are saturated readings.
 ADC_FULL_SCALE = 4095
 # One DMA sequence carries the temperature and VREFINT samples.
@@ -47,13 +48,14 @@ def adc_init(t):
          'ADC_CR2_ADON | ADC_CR2_TSVREFE | ADC_CR2_EXTSEL | ADC_CR2_EXTTRIG | ADC_CR2_DMA'),
         ('sample CH16/17 at 239.5 cycles', 'ADC1->SMPR1', 'ADC_SMPR1_SMP16 | ADC_SMPR1_SMP17'),
         ('two regular ranks', 'ADC1->SQR1', 'ADC_SQR1_L_0'),
-        ('CH16 then CH17', 'ADC1->SQR3', TEMPERATURE_CHANNEL | VREFINT_CHANNEL << 5),
+        ('CH16 then CH17', 'ADC1->SQR3', f'{TEMPERATURE_CHANNEL} | ({VREFINT_CHANNEL} << ADC_SQR3_SQ2_Pos)'),
         ('normal DMA halfwords, TC/TE IRQ', 'DMA1_Channel1->CCR',
          'DMA_CCR_MINC | DMA_CCR_PSIZE_0 | DMA_CCR_MSIZE_0 | DMA_CCR_TCIE | DMA_CCR_TEIE'),
         ('ADC data address', 'DMA1_Channel1->CPAR', '&ADC1->DR'),
         ('SRAM buffer address', 'DMA1_Channel1->CMAR', '&board_adc_buffer[0]'),
         ('DMA NVIC enabled', 'NVIC->ISER[DMA1_Channel1_IRQn >> 5] & (1UL << (DMA1_Channel1_IRQn & 31))'),
-        ('DMA vector', '(unsigned int)vectors[DMA1_Channel1_IRQn + 16] & ~1U', '(unsigned int)DMA1_Channel1_IRQHandler & ~1U'),
+        ('DMA vector', '(unsigned int)vectors[DMA1_Channel1_IRQn + 16] & ~1U',
+         '(unsigned int)DMA1_Channel1_IRQHandler & ~1U'),
         ('no init error', 'board_adc_error', ADC_ERROR_NONE)
     ])
 
@@ -72,7 +74,7 @@ def adc_dma(t):
             ('TC, no transfer error', 'DMA1->ISR & (DMA_ISR_TCIF1 | DMA_ISR_TEIF1)', 2)
         ])
 
-        raw = [t.read(f"board_adc_buffer[{i}]") for i in range(2)]
+        raw = [t.read(f"board_adc_buffer[{i}]") for i in range(SAMPLES_PER_SEQUENCE)]
         t.reach("board_delay_ms")
 
         # Check the publication counter before comparing measurement contents.
@@ -99,10 +101,11 @@ def adc_units(t):
     t.reach("board_delay_ms")
 
     # Check measurement provenance and plausible physical ranges.
-    t.check("typical provenance", t.read("board_adc_reading.quality"), QUALITY_TYPICAL)
-    t.check("plausible VDDA", t.read("board_adc_reading.vdda_mv"), PLAUSIBLE_VDDA_MV)
-    t.check("plausible die temperature", t.read("board_adc_reading.temperature_mdeg_c"),
-            PLAUSIBLE_DIE_MDEG_C)
+    t.check([
+        ("typical provenance", "board_adc_reading.quality", QUALITY_TYPICAL),
+        ("plausible VDDA", "board_adc_reading.vdda_mv", PLAUSIBLE_VDDA_MV),
+        ("plausible die temperature", "board_adc_reading.temperature_mdeg_c", PLAUSIBLE_DIE_MDEG_C)
+    ])
 
     t.report["measurement"] = {name: t.read("board_adc_reading." + name)
                                for name in ("vdda_mv", "temperature_mdeg_c", "quality")}
@@ -163,9 +166,11 @@ def no_publication(t, error):
     t.reach("board_adc_fault")
 
     # Check the failure code and absence of a published measurement.
-    t.check("error code", t.read("board_adc_error"), error)
-    t.check("no sequence published", t.read("board_adc_sequences"), 0)
-    t.check("no valid reading published", t.read("board_adc_reading.quality"), QUALITY_INVALID)
+    t.check([
+        ("error code", "board_adc_error", error),
+        ("no sequence published", "board_adc_sequences", 0),
+        ("no valid reading published", "board_adc_reading.quality", QUALITY_INVALID)
+    ])
 
 
 # Suppress completion notification and verify the ADC deadline and fault state.
@@ -188,9 +193,11 @@ def adc_timeout(t):
 def adc_busy(t):
     # TECH-006: enforce a DMA ownership guard, not a claim of F0 ADSTART semantics.
     t.reach("board_adc_sample")
+
+    # Arm a transfer of one sequence and enable DMA before the application starts its own.
     t.write([
         ("DMA1_Channel1->CNDTR", SAMPLES_PER_SEQUENCE),
-        ("DMA1_Channel1->CCR", "DMA1_Channel1->CCR | DMA_CCR_EN"),
+        ("DMA1_Channel1->CCR", "DMA1_Channel1->CCR | DMA_CCR_EN")
     ])
 
     # Verify DMA enabled before application start.

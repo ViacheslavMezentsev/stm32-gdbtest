@@ -5,6 +5,7 @@ EN: Collect MCU VDDA and temperature samples, then calculate mean and standard d
 from statistics import mean, stdev
 from stm32_gdbtest import case, one_of, within
 
+
 # Accepted series lengths and provenance codes (adc_units.c: 1 typical, 2 two-point, 3 one-point).
 SERIES_LENGTH = within(2, 20)
 KNOWN_QUALITY = one_of(1, 2, 3)
@@ -44,10 +45,7 @@ def adc_series(t):
             t.check("fresh contiguous publication", (sequence - previous) & U32_MASK, 1)
 
         # Snapshot the published values while the MCU is stopped.
-        sample = {
-            name: t.read("board_adc_reading." + name)
-            for name in ("vdda_mv", "temperature_mdeg_c", "quality")
-        }
+        sample = {name: t.read("board_adc_reading." + name) for name in ("vdda_mv", "temperature_mdeg_c", "quality")}
 
         # Retain the sample before validation so rejected readings remain in the runtime journal.
         t.record("adc.sample", dict(sample, sequence=sequence, index=index))

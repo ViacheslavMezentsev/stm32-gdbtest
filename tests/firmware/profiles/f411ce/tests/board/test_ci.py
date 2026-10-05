@@ -4,6 +4,7 @@ EN: Board startup, GPIO, clock and peripheral checks.
 """
 from stm32_gdbtest import case
 
+
 # HSI is the system clock of the fixture (RM: 16 MHz nominal).
 HSI_HZ = 16_000_000
 # TIM2 counts at 1 kHz and overflows every 100 ms.
@@ -13,7 +14,6 @@ TIMER_PERIOD_TICKS = 100
 # Firmware counters are uint32_t and wrap around.
 U32_MASK = 0xFFFFFFFF
 
-# Application interval of the CI firmware.
 # Application interval of the fixture profile (`[app] delay_ms` in api.toml).
 EXPECTED_DELAY = 500
 
@@ -60,28 +60,18 @@ def clock(t):
     # TECH-001: docs/ru/TESTING_TECHNIQUES.md#tech-001 (EN: docs/en/TESTING_TECHNIQUES.md#tech-001).
     t.reach("board_led_toggle")
 
-    # Check the clock source, bus dividers and nominal SysTick period.
-    t.check(
-        "HSI enabled and ready",
-        t.read("(RCC->CR & (RCC_CR_HSION | RCC_CR_HSIRDY)) == (RCC_CR_HSION | RCC_CR_HSIRDY)"),
-        1
-    )
-    t.check(
-        "SYSCLK HSI, AHB/APB divide by one",
-        t.read("RCC->CFGR & (RCC_CFGR_SW | RCC_CFGR_SWS | RCC_CFGR_HPRE | RCC_CFGR_PPRE1 | RCC_CFGR_PPRE2)"),
-        0
-    )
-    t.check("nominal core frequency", t.read("SystemCoreClock"), HSI_HZ)
-    t.check("1 ms reload at nominal 16 MHz", t.read("SysTick->LOAD"), HSI_HZ // 1000 - 1)
+    # Reading SysTick->CTRL clears COUNTFLAG; the application uses the IRQ counter, not that flag.
+    systick_running = "SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_CLKSOURCE_Msk"
 
-    # Reading CTRL clears COUNTFLAG; the application uses the IRQ counter, not that flag.
-    t.check(
-        "SysTick enabled, interrupt, core clock",
-        t.read(
-            "SysTick->CTRL & (SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_CLKSOURCE_Msk)"
-        ),
-        7
-    )
+    # Check the clock source, bus dividers and nominal SysTick period.
+    t.check([
+        ("HSI enabled and ready", "RCC->CR & (RCC_CR_HSION | RCC_CR_HSIRDY)", "RCC_CR_HSION | RCC_CR_HSIRDY"),
+        ("SYSCLK HSI, AHB/APB divide by one",
+         "RCC->CFGR & (RCC_CFGR_SW | RCC_CFGR_SWS | RCC_CFGR_HPRE | RCC_CFGR_PPRE1 | RCC_CFGR_PPRE2)", 0),
+        ("nominal core frequency", "SystemCoreClock", HSI_HZ),
+        ("1 ms reload at nominal 16 MHz", "SysTick->LOAD", HSI_HZ // 1000 - 1),
+        ("SysTick enabled, interrupt, core clock", f"SysTick->CTRL & ({systick_running})", systick_running)
+    ])
 
 
 # Observe consecutive LED transitions and their firmware timing.
@@ -101,8 +91,7 @@ def blink(t):
 
         # Check alternating output levels and the minimum firmware interval.
         t.check("alternating PC13", t.read("(GPIOC->ODR & GPIO_ODR_OD13) != 0"), level)
-        t.check("at least the configured interval", ((now - before) & U32_MASK)
-                 >= EXPECTED_DELAY)
+        t.check("at least the configured interval", ((now - before) & U32_MASK) >= EXPECTED_DELAY)
 
         before = now
 

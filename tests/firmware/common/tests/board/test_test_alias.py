@@ -14,12 +14,10 @@ def test_alias(t):
     t.check("the alias declared a runnable scenario", callable(test), True)
     t.check("the scenario has its own id", t.report["id"], "HW_CI_TEST_ALIAS")
     t.check("the scenario sees the target", type(t).__name__, "Target")
-    t.check("the target is halted where the scenario stopped",
-                 t.frames(limit=1)["frames"][0]["name"], "app_loop")
+    t.check("the target is halted where the scenario stopped", t.frames(limit=1)["frames"][0]["name"], "app_loop")
 
     # The alias and the original name are interchangeable: both return the function unchanged.
     def scenario(candidate):
         return candidate
 
-    t.check("the alias returns the function unchanged",
-                 test("HW_CI_TEST_ALIAS")(scenario) is scenario)
+    t.check("the alias returns the function unchanged", test("HW_CI_TEST_ALIAS")(scenario) is scenario)

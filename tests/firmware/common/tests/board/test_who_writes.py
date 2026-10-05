@@ -5,6 +5,7 @@ EN: Who writes app_state.ticks: a watch point and the writer's frame chain.
 from stm32_gdbtest import case, within
 
 
+# Find the writer of app_state.ticks with a watch point and its frame chain.
 @case("HW_CI_WHO_WRITES", timeout_s=60, labels=("api", "showcase", "watch"), contracts=("ci_app_api",))
 def who_writes(t):
     t.reach("app_loop")

@@ -20,8 +20,7 @@ def call_function(t):
     t.check("call reports a returned value", result["outcome"], "returned")
     t.check("call reports the value as available", result["return_state"], "available")
     t.check("call returned the incremented count", result["return_value"], before + 1)
-    t.check("the function changed the application state",
-                 t.read("app_state.ticks"), before + 1)
+    t.check("the function changed the application state", t.read("app_state.ticks"), before + 1)
     t.check("call recorded the mutation", t.report["mutations"][-1]["operation"], "call")
 
     # A void function runs as well and reports that it has no value.

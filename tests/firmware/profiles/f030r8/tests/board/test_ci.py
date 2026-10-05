@@ -4,6 +4,7 @@ EN: Board startup, GPIO, clock and peripheral checks.
 """
 from stm32_gdbtest import case, within
 
+
 # Full scale of the 12-bit ADC: 0 and 4095 are saturated readings.
 ADC_FULL_SCALE = 4095
 
@@ -28,7 +29,6 @@ TIMER_PERIOD_TICKS = 100
 # Firmware counters are uint32_t and wrap around.
 U32_MASK = 0xFFFFFFFF
 
-# Application interval of the CI firmware.
 # Application interval of the fixture profile (`[app] delay_ms` in api.toml).
 EXPECTED_DELAY = 500
 
@@ -75,28 +75,18 @@ def clock(t):
     # TECH-001: docs/ru/TESTING_TECHNIQUES.md#tech-001 (EN: docs/en/TESTING_TECHNIQUES.md#tech-001).
     t.reach("board_led_toggle")
 
-    # Check the clock source, bus dividers and nominal SysTick period.
-    t.check(
-        "HSI enabled and ready",
-        t.read("(RCC->CR & (RCC_CR_HSION | RCC_CR_HSIRDY)) == (RCC_CR_HSION | RCC_CR_HSIRDY)"),
-        1
-    )
-    t.check(
-        "SYSCLK HSI, AHB/APB divide by one",
-        t.read("RCC->CFGR & (RCC_CFGR_SW | RCC_CFGR_SWS | RCC_CFGR_HPRE | RCC_CFGR_PPRE)"),
-        0
-    )
-    t.check("nominal core frequency", t.read("SystemCoreClock"), HSI_HZ)
-    t.check("1 ms reload at nominal 8 MHz", t.read("SysTick->LOAD"), HSI_HZ // 1000 - 1)
+    # Reading SysTick->CTRL clears COUNTFLAG; the application uses the IRQ counter, not that flag.
+    systick_running = "SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_CLKSOURCE_Msk"
 
-    # Reading CTRL clears COUNTFLAG; the application uses the IRQ counter, not that flag.
-    t.check(
-        "SysTick enabled, interrupt, core clock",
-        t.read(
-            "SysTick->CTRL & (SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_CLKSOURCE_Msk)"
-        ),
-        7
-    )
+    # Check the clock source, bus dividers and nominal SysTick period.
+    t.check([
+        ("HSI enabled and ready", "RCC->CR & (RCC_CR_HSION | RCC_CR_HSIRDY)", "RCC_CR_HSION | RCC_CR_HSIRDY"),
+        ("SYSCLK HSI, AHB/APB divide by one",
+         "RCC->CFGR & (RCC_CFGR_SW | RCC_CFGR_SWS | RCC_CFGR_HPRE | RCC_CFGR_PPRE)", 0),
+        ("nominal core frequency", "SystemCoreClock", HSI_HZ),
+        ("1 ms reload at nominal 8 MHz", "SysTick->LOAD", HSI_HZ // 1000 - 1),
+        ("SysTick enabled, interrupt, core clock", f"SysTick->CTRL & ({systick_running})", systick_running)
+    ])
 
 
 # Observe consecutive LED transitions and their firmware timing.
@@ -116,8 +106,7 @@ def blink(t):
 
         # Check alternating output levels and the minimum firmware interval.
         t.check("alternating PA5", t.read("(GPIOA->ODR & GPIO_ODR_5) != 0"), level)
-        t.check("at least the configured interval", ((now - before) & U32_MASK)
-                 >= EXPECTED_DELAY)
+        t.check("at least the configured interval", ((now - before) & U32_MASK) >= EXPECTED_DELAY)
 
         before = now
 
@@ -186,7 +175,8 @@ def adc_init(t):
         ('DMA peripheral address', 'DMA1_Channel1->CPAR', '&ADC1->DR'),
         ('DMA SRAM buffer', 'DMA1_Channel1->CMAR', '&board_adc_buffer[0]'),
         ('DMA NVIC enabled', 'NVIC->ISER[DMA1_Channel1_IRQn >> 5] & (1UL << (DMA1_Channel1_IRQn & 31))'),
-        ('DMA vector', '(unsigned int)vectors[DMA1_Channel1_IRQn + 16] & ~1U', '(unsigned int)DMA1_Channel1_IRQHandler & ~1U'),
+        ('DMA vector', '(unsigned int)vectors[DMA1_Channel1_IRQn + 16] & ~1U',
+         '(unsigned int)DMA1_Channel1_IRQHandler & ~1U'),
         ('no init error', 'board_adc_error', ADC_ERROR_NONE)
     ])
 
@@ -246,13 +236,14 @@ def adc_units(t):
     t.reach("board_delay_ms")
 
     # Check measurement provenance and plausible physical ranges.
-    t.check("single-point provenance", t.read("board_adc_reading.quality"), QUALITY_ONE_POINT)
-    t.check("plausible VDDA", t.read("board_adc_reading.vdda_mv"), PLAUSIBLE_VDDA_MV)
-    t.check("plausible die temperature", t.read("board_adc_reading.temperature_mdeg_c"),
-            PLAUSIBLE_DIE_MDEG_C)
+    t.check([
+        ("single-point provenance", "board_adc_reading.quality", QUALITY_ONE_POINT),
+        ("plausible VDDA", "board_adc_reading.vdda_mv", PLAUSIBLE_VDDA_MV),
+        ("plausible die temperature", "board_adc_reading.temperature_mdeg_c", PLAUSIBLE_DIE_MDEG_C)
+    ])
 
     t.report["measurement"] = {field: t.read("board_adc_reading." + field)
-                                    for field in ("vdda_mv", "temperature_mdeg_c", "quality")}
+                               for field in ("vdda_mv", "temperature_mdeg_c", "quality")}
 
 
 # Inject conversion inputs and compare the published reading with fixed expectations.

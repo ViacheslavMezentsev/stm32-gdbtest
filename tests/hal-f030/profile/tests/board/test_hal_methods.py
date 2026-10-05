@@ -17,7 +17,7 @@ def gpio_arguments(t):
         ("pin mask", "GPIO_Init->Pin", "GPIO_PIN_5"),
         ("output mode", "GPIO_Init->Mode", "GPIO_MODE_OUTPUT_PP"),
         ("no pull", "GPIO_Init->Pull", "GPIO_NOPULL"),
-        ("low speed", "GPIO_Init->Speed", "GPIO_SPEED_FREQ_LOW"),
+        ("low speed", "GPIO_Init->Speed", "GPIO_SPEED_FREQ_LOW")
     ])
 
     t.reach("platform_adc_start")

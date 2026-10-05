@@ -23,12 +23,12 @@ def ret_value(t):
 
     # The receiver consumes the forced value in its own body, which publishes it there.
     t.step(4, unit="instruction", mode="into")
-    t.check("the receiver copied the forced value",
-                 t.read("app_received.produced"), 42)
+    t.check("the receiver copied the forced value", t.read("app_received.produced"), 42)
 
     # Refusals happen in the function frame and before anything is executed.
     t.reach("app_step")
     mutations = len(t.report["mutations"])
+
     # app_step returns uint32_t: 2**40 does not fit its 32 bits.
     with t.refused("out_of_range", effect="none", width=32, high=0xFFFFFFFF,
                    name="an out-of-range value is refused"):

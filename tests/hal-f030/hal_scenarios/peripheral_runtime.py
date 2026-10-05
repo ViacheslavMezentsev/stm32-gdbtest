@@ -4,6 +4,7 @@ EN: Shared HAL peripheral runtime, measurement and controlled fault checks.
 """
 from stm32_gdbtest import within
 
+
 # Full scale of the 12-bit ADC: 0 and 4095 are saturated readings.
 ADC_FULL_SCALE = 4095
 # Plausibility windows of a reading; not a calibration or accuracy claim.

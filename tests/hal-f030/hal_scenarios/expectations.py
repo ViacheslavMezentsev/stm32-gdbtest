@@ -2,6 +2,7 @@
 RU: Ожидаемые параметры платы и независимые векторы измерений.
 EN: Board expectations and independent measurement reference vectors.
 """
+# Expectations of the HAL fixture by group: check(rows) tables, register expressions and handles.
 EXPECTED = {
     "clock": [
         ("HSI", "(RCC->CFGR & RCC_CFGR_SWS_Msk) >> RCC_CFGR_SWS_Pos", 0),
@@ -23,6 +24,7 @@ EXPECTED = {
     "timer_handle": "htim3",
     "timer_enabled": "TIM3->CR1 & TIM_CR1_CEN",
     "dma_remaining": "DMA1_Channel1->CNDTR",
+
     # 3: factory one-point calibration (adc_units provenance code).
     "measurement_quality": 3,
 

@@ -4,12 +4,13 @@ EN: Run profile: an environment check of the run the scenario executes in.
 """
 from stm32_gdbtest import case, one_of, within
 
+
 # SRAM window of the STM32 Cortex-M parts used by the CI profiles.
 SRAM = within(0x20000000, 0x200FFFFF)
 
 
+# A read-only section raises TypeError on item assignment.
 def refuses(t, name, mapping, key, value):
-    """A read-only section raises TypeError on item assignment."""
     try:
         mapping[key] = value
     except TypeError:
@@ -18,6 +19,7 @@ def refuses(t, name, mapping, key, value):
         t.check(name, False)
 
 
+# Check the run environment through the profile: chip, image, case, stand, files, data, build and GDB.
 @case("HW_CI_PROFILE", timeout_s=45, labels=("api", "profile"), contracts=("ci_app_api",))
 def run_profile(t):
     profile = t.profile

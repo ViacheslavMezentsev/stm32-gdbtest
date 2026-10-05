@@ -6,6 +6,8 @@ from hashlib import sha256
 
 from stm32_gdbtest import case
 
+
+# Longer than the default output limit of api.toml (execute.output_limit_chars = 2048).
 LONG_OUTPUT = "X" * 3000
 
 
@@ -27,6 +29,8 @@ def execute_commands(t):
 
     # Refusals happen before the debugger is touched and leave no journal entry behind.
     entries = len(t.report["executions"])
+
+    # Empty and multi-line commands.
     for command in ("", "   ", "info\nregisters"):
         with t.refused("invalid_command", stage="validation", name=f"invalid command {command!r} is refused"):
             t.execute(command)
@@ -40,7 +44,7 @@ def execute_commands(t):
     t.check("a long result is truncated", long_entry["truncated"])
     t.check("the journal keeps the full length", long_entry["output_length"], len(long_text))
     t.check("the journal hashes the full text", long_entry["output_sha256"],
-                 sha256(long_text.encode("utf-8")).hexdigest())
+            sha256(long_text.encode("utf-8")).hexdigest())
 
     # A failing debugger command is reported with its cause and is not repeated.
     print("API030_V34_CHECKPOINT=failing_command", flush=True)

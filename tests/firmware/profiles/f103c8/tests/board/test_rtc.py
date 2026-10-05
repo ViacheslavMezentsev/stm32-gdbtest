@@ -4,6 +4,7 @@ EN: RTC configuration, repeated alarm interrupts and deadline checks.
 """
 from stm32_gdbtest import case
 
+
 # LSI clocks the RTC (RM: 40 kHz nominal, not a precision reference).
 LSI_HZ = 40_000
 # The firmware arms the first alarm at 2 s and re-arms it every 2 s.
@@ -39,7 +40,8 @@ def rtc_init(t):
         ('EXTI17 falling disabled', f'EXTI->FTSR & (1UL << {RTC_ALARM_EXTI_LINE})', 0),
         ('global RTC IRQ disabled', 'NVIC->ISER[RTC_IRQn >> 5] & (1UL << (RTC_IRQn & 31))', 0),
         ('alarm IRQ enabled', 'NVIC->ISER[RTC_Alarm_IRQn >> 5] & (1UL << (RTC_Alarm_IRQn & 31))'),
-        ('alarm vector', '(unsigned int)vectors[RTC_Alarm_IRQn + 16] & ~1U', '(unsigned int)RTC_Alarm_IRQHandler & ~1U'),
+        ('alarm vector', '(unsigned int)vectors[RTC_Alarm_IRQn + 16] & ~1U',
+         '(unsigned int)RTC_Alarm_IRQHandler & ~1U'),
         ('no RTC error', 'board_rtc_error', RTC_ERROR_NONE)
     ])
 

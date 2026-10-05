@@ -4,6 +4,7 @@ EN: RTC configuration, repeated alarm interrupts and deadline checks.
 """
 from stm32_gdbtest import case
 
+
 # LSI clocks the RTC (RM: 32 kHz nominal): 1 Hz = LSI / 128 / 250.
 LSI_HZ = 32_000
 RTC_PREDIV_A = 128 - 1
@@ -30,8 +31,9 @@ def rtc_init(t):
     # Check register and application state against the expected values.
     t.check([
         ('LSI ready', 'RCC->CSR & RCC_CSR_LSIRDY'),
-        ('LSI RTC clock enabled', 'RCC->BDCR & (RCC_BDCR_RTCSEL | RCC_BDCR_RTCEN)', 'RCC_BDCR_RTCEN | RCC_BDCR_RTCSEL_1'),
-        ('RTC prescalers', 'RTC->PRER', RTC_PREDIV_A << 16 | RTC_PREDIV_S),
+        ('LSI RTC clock enabled', 'RCC->BDCR & (RCC_BDCR_RTCSEL | RCC_BDCR_RTCEN)',
+         'RCC_BDCR_RTCEN | RCC_BDCR_RTCSEL_1'),
+        ('RTC prescalers', 'RTC->PRER', f'({RTC_PREDIV_A} << RTC_PRER_PREDIV_A_Pos) | {RTC_PREDIV_S}'),
         ('24-hour Alarm A enabled with IRQ', 'RTC->CR', 'RTC_CR_ALRAE | RTC_CR_ALRAIE'),
         ('all calendar fields masked', 'RTC->ALRMAR',
          'RTC_ALRMAR_MSK4 | RTC_ALRMAR_MSK3 | RTC_ALRMAR_MSK2 | RTC_ALRMAR_MSK1'),
@@ -58,7 +60,7 @@ def rtc_alarm(t):
     before = t.read("board_rtc_events")
 
     # Observe repeated alarm delivery and confirm one event per interrupt.
-    for index in range(2):
+    for index in range(ALARM_EVENTS):
         # Check register and application state against the expected values.
         t.check([
             ('RTC exception', 'SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk', 'RTC_Alarm_IRQn + 16'),

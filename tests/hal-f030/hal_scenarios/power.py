@@ -35,7 +35,10 @@ def sleep_systick(t, expected):
 # Exclude SysTick temporarily and verify timer-driven progress through Sleep.
 def sleep_timer(t, expected):
     t.reach("HAL_PWR_EnterSLEEPMode")
-    control = t.read("SysTick->CTRL & (SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_CLKSOURCE_Msk)")
+
+    # Only the bits the application sets are saved: counter, interrupt and core clock source.
+    running = "SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_CLKSOURCE_Msk"
+    control = t.read(f"SysTick->CTRL & ({running})")
 
     # Temporarily exclude SysTick as a wake source. Teardown reset also restores it.
     t.write("SysTick->CTRL", control & ~t.evaluate("SysTick_CTRL_TICKINT_Msk"))

@@ -54,6 +54,17 @@ Extended scenario API; the release is being prepared and the tag is published by
 
 ### Changed
 
+- The testing techniques catalogue is rewritten for API 0.3.0 and the current scenarios: TECH-001…011 describe
+  `check(rows)`, `write(rows)`, `ret`, `frames`, `memory`; TECH-012…018 are added (expected refusal, who writes,
+  call as a predicate, choosing the stop, stop location without line numbers, profile, strings). The scenario
+  style section is updated: a `t.check(rows)` table for target values replaces `_check_values(target, rows)`,
+  with rules for `t`, identifiers, `refused`, `write(rows)` and stop locations.
+- The host test `tests/host/test_scenario_style.py` checks the style of the bundled scenarios, and the scenarios
+  follow it: function, table and loop comments, blank lines, continuation alignment, statements of up to 120
+  characters on one line, no trailing commas. Remaining numbers became identifiers (`RTC_PRER_PREDIV_A_Pos`,
+  `ADC_SQR3_SQ2_Pos`, SysTick and HSI masks, HAL channels and sampling time) and named SRAM windows; the
+  replacements were compared on the ELF. The WFI helper of the sleep scenarios uses `t.frames()` and
+  `t.memory()` instead of `gdb` directly.
 - The module version is raised to `0.3.0`; `API_VERSION=1` and the JSON/TOML schemas are unchanged.
 - The API reference is grouped into methods, properties, decorators, classes and errors; the `read` and `evaluate` rows render correctly again.
 - A stop is classified by the kind of the reported point, not only by the debugger reason.

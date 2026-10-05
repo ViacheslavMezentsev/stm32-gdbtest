@@ -22,8 +22,7 @@ def navigation(t):
     # The receiver consumes the forced value in its next instructions.
     consumed = t.step(CALL_CONSUMED_INSTRUCTIONS, unit="instruction", mode="into")
     t.check("the receiver consumed the forced frame", consumed["outcome"], "completed")
-    t.check("the receiver ran every instruction", consumed["completed"],
-                 CALL_CONSUMED_INSTRUCTIONS)
+    t.check("the receiver ran every instruction", consumed["completed"], CALL_CONSUMED_INSTRUCTIONS)
     forced_copy = t.read("app_received.produced")
     t.check("the receiver copied the forced value", forced_copy, 42)
 
@@ -33,10 +32,10 @@ def navigation(t):
     t.check("finish left the receiver", finished["function"], "app_loop")
     t.check("finish stop is a function return", finished["stop"]["kind"], "function_return")
     t.check("the receiver returns nothing", finished["return_state"], "void")
+
     # finish() forces the rest of the frame, so the staged copy on the stack is not published; the
     # application state stays readable and is what the next iteration starts from.
-    t.check("the application state stays readable",
-                 type(t.read("app_state.ticks")) is int)
+    t.check("the application state stays readable", type(t.read("app_state.ticks")) is int)
 
     # A hardware point reports its state and counts the stops observed for it.
     with t.breakpoint("board_led_toggle") as point:
@@ -63,7 +62,7 @@ def navigation(t):
         t.reach("board_led_toggle", condition="1")
         t.check("reach kept the scenario point", kept.active, True)
         t.check("only the scenario point remains", [item.id for item in t.owned
-                                                         if item.location == "board_led_toggle"], [kept.id])
+                                                    if item.location == "board_led_toggle"], [kept.id])
 
     # An instruction step keeps the same point set and reports a step stop.
     t.reach("board_led_toggle")

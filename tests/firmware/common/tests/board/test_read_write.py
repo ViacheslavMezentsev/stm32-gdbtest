@@ -14,12 +14,10 @@ def read_write(t):
     state = t.read("app_state")
     t.check("struct read returns a mapping", type(state) is dict)
     t.check("struct read keeps the declared fields", sorted(state), ["led", "ticks"])
-    t.check("struct fields are plain integers",
-                 all(type(value) is int for value in state.values()))
+    t.check("struct fields are plain integers", all(type(value) is int for value in state.values()))
 
     # A single member read and a field set agree with the struct read.
-    t.check("member read agrees with the struct", t.read("app_state.ticks"),
-                 state["ticks"])
+    t.check("member read agrees with the struct", t.read("app_state.ticks"), state["ticks"])
     fields = t.read("app_state", fields={"ticks": None})
     t.check("field set returns the requested member", sorted(fields), ["ticks"])
     t.check("field set agrees with the struct", fields["ticks"], state["ticks"])
@@ -33,8 +31,7 @@ def read_write(t):
     t.check("the object holds the written value", t.read("app_state.ticks"), 41)
 
     # The journal kept both the read-back effect and the mutation record.
-    t.check("mutation recorded", t.report["mutations"][-1]["expression"],
-                 "app_state.ticks")
+    t.check("mutation recorded", t.report["mutations"][-1]["expression"], "app_state.ticks")
     t.check("mutation recorded the new value", t.report["mutations"][-1]["after"], 41)
 
     # The application resumes from the written value on the next iteration.

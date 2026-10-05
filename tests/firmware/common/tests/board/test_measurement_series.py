@@ -2,11 +2,13 @@
 RU: Вариативная серия измерений: несколько публикаций ADC с продолжением между выборками.
 EN: Varying measurement series: several ADC publications with continuation between samples.
 """
-from stm32_gdbtest import case
+from stm32_gdbtest import case, within
 
+
+# Length of the series: enough publications to show that every sample is new.
 SAMPLES = 5
-PLAUSIBLE_LOW = -40000
-PLAUSIBLE_HIGH = 125000
+# Plausibility window of the die temperature in mdegC; not a calibration or accuracy claim.
+PLAUSIBLE_DIE_MDEG_C = within(-40_000, 125_000)
 
 
 # One publication per iteration: board_adc_sample fills the buffer, board_delay_ms closes it.
@@ -14,6 +16,8 @@ PLAUSIBLE_HIGH = 125000
 def measurement_series(t):
     values = []
     sequences = []
+
+    # One sample per published measurement; the sequence counter proves that each one is new.
     for index in range(SAMPLES):
         t.reach("board_adc_sample")
         t.reach("board_delay_ms")
@@ -31,5 +35,5 @@ def measurement_series(t):
     t.check("records kept every sample", len(t.records("measurement.sample")), SAMPLES)
 
     # The die temperature may stay on one value for the whole series, so equal samples are accepted.
-    t.check("series inside the plausible domain",
-            all(PLAUSIBLE_LOW <= value <= PLAUSIBLE_HIGH for value in values))
+    t.check("series minimum is plausible", min(values), PLAUSIBLE_DIE_MDEG_C)
+    t.check("series maximum is plausible", max(values), PLAUSIBLE_DIE_MDEG_C)

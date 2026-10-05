@@ -4,11 +4,13 @@ EN: Firmware strings: GDB functions in a check(rows) table and evaluate(..., as_
 """
 from stm32_gdbtest import case, matches
 
+
 # The identification strings of the fixture firmware (src/app.c), stated independently here.
 VERSION = "v1.2.0-ci"
 BOARD = "stm32-gdbtest-ci"
 
 
+# Compare the firmware strings with GDB functions in a table and with Python text.
 @case("HW_CI_STRINGS", timeout_s=45, labels=("api", "strings"), contracts=("ci_app_api",))
 def strings(t):
     # main() has copied the version into RAM before the application loop starts.
@@ -21,7 +23,7 @@ def strings(t):
         ("board pointer equals", f'$_streq(app_info.board, "{BOARD}")'),
         ("version length", "$_strlen(app_info.version)", len(VERSION)),
         ("RAM copy equals the Flash bytes", "$_memeq(app_version_ram, app_info.version, sizeof(app_info.version))"),
-        ("version starts with v1.", r'$_regex(app_info.version, "^v1\\.")'),
+        ("version starts with v1.", r'$_regex(app_info.version, "^v1\\.")')
     ])
 
     # The same checks in Python: evaluate(..., as_type=str) reads the C string, check compares text.

@@ -16,14 +16,13 @@ def watch_object(t):
         result = t.resume()
         stop = result["stop"]
         t.check("the stop is a watch point", stop["kind"], "watchpoint")
+
         # The native reason is a hint: OpenOCD names the trigger, J-Link reports none at all.
-        t.check("the stop names the watch point",
-                     stop["native_reason"] in (None, "", "watchpoint-trigger"))
+        t.check("the stop names the watch point", stop["native_reason"] in (None, "", "watchpoint-trigger"))
         t.check("the watched object changed", t.read("app_state.ticks") > before)
 
     # The point is gone after the context manager; the stand keeps its own fault guard.
-    t.check("no watch point stays active",
-                 [item.id for item in t.owned if item.watch and item.active], [])
+    t.check("no watch point stays active", [item.id for item in t.owned if item.watch and item.active], [])
     t.check("the watch point became inactive", point.active, False)
 
     # A whole structure of eight bytes is a valid watch target, exactly like its field.
@@ -36,5 +35,4 @@ def watch_object(t):
                        ("app_state.ticks + 1", "not_addressable")):
         with t.refused(code, stage="validation", name=f"watch of {path!r} is refused"):
             t.watch(path)
-    t.check("refusals leave no watch point behind",
-                 [item.id for item in t.owned if item.watch], [])
+    t.check("refusals leave no watch point behind", [item.id for item in t.owned if item.watch], [])

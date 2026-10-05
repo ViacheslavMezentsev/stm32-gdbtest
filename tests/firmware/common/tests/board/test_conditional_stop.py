@@ -5,6 +5,7 @@ EN: Stopping at the N-th call: ignore_count, a condition, disabling and enabling
 from stm32_gdbtest import case
 
 
+# Choose the N-th stop with ignore_count and a condition, then disable and enable the point.
 @case("HW_CI_CONDITIONAL_STOP", timeout_s=90, labels=("api", "showcase", "breakpoint"), contracts=("ci_app_api",))
 def conditional_stop(t):
     t.reach("app_loop")

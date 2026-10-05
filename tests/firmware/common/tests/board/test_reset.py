@@ -28,13 +28,11 @@ def reset_target(t):
     t.check("reset invalidated both caches",
                  [step["step"] for step in result["invalidation"]],
                  ["flush_register_cache", "invalidate_cached_frames"])
-    t.check("every invalidation step succeeded",
-                 all(step["status"] == "done" for step in result["invalidation"]))
+    t.check("every invalidation step succeeded", all(step["status"] == "done" for step in result["invalidation"]))
     entry = t.report["resets"][-1]
     t.check("reset is journalled", entry["command"], configured)
     t.check("reset reports the halted pc", type(result["registers"]["pc"]) is int)
 
     # The debugger accepts a fresh navigation after the reset, which proves the caches were flushed.
     t.check("navigation after the reset", t.reach("app_loop")["outcome"], "reached")
-    t.check("the application runs from the beginning",
-                 t.read("app_state.ticks") < 3)
+    t.check("the application runs from the beginning", t.read("app_state.ticks") < 3)
