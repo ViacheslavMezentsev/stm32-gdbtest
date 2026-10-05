@@ -1,4 +1,4 @@
-"""Remote GDB server over SSH without an SSH server or a debugger (TC-99…TC-102, TC-110, TC-117)."""
+"""Remote GDB server over SSH without an SSH server or a debugger (TC-99…TC-102, TC-110, TC-117, TC-158)."""
 import base64
 import json
 import os
@@ -110,6 +110,24 @@ class RemoteSettingsTests(unittest.TestCase):
             path.write_text('[probe]\nbackend="openocd"\nserial="066C"\n')
             with self.assertRaisesRegex(FileNotFoundError, "OpenOCD"):
                 load_stand(path)
+
+
+class RemotePortTests(unittest.TestCase):
+    def test_port_lies_above_the_linux_ephemeral_range_and_skips_refused_ones(self):
+        from stm32_gdbtest import runner
+        low, high = runner.REMOTE_PORTS
+        self.assertGreater(low, 60999)
+        self.assertLessEqual(high, 65535)
+        self.assertGreaterEqual(runner.REMOTE_PORT_ATTEMPTS, 2)
+        tried = list(range(low, high))
+        self.assertEqual(runner.remote_port(tried), high)
+        self.assertTrue(all(low <= runner.remote_port() <= high for _ in range(200)))
+
+    def test_only_a_busy_port_is_retried(self):
+        from stm32_gdbtest import runner
+        self.assertTrue(runner.port_refusal("port Remote port 61234 is busy"))
+        for error in ("busy debugger owned by another runner", "abandoned record", "server openocd not found"):
+            self.assertFalse(runner.port_refusal(error))
 
 
 @unittest.skipIf(os.name == "nt", "the stand host is Linux")

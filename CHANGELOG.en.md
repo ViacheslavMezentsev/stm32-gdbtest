@@ -78,6 +78,10 @@ Extended scenario API; the release is being prepared and the tag is published by
 
 ### Fixed
 
+- Remote stand: the server port on the stand host comes from 61000–64999 instead of 40000–59999, above the Linux
+  ephemeral range, and on a "port busy" refusal the runner itself retries with another port (up to three
+  attempts). Before, a remote run right after a local one on the same Orange Pi could fail on its first scenario.
+  Specification 0.68.
 - `HW_CI_WHO_WRITES` on F030 (Cortex-M0) depended on where the core halted: the watch point halts it one or
   two instructions after the store and could land in the epilogue of `app_receiver_step`, where GDB loses the
   `app_loop` frame. The fixture firmware counts `app_received.publications` after publishing, so the stop stays

@@ -155,7 +155,8 @@ identity_file = "~/.ssh/id_ed25519_stand"       # or %USERPROFILE%/.ssh/…
 
 Keys with passwords (`password`, `passphrase`, `secret`, `token`) are rejected. The stand
 host needs only `python3` ≥ 3.8 (the Ubuntu 20.04 system Python fits). The server port on
-the stand host is picked at random from 40000–59999; readiness is awaited for
+the stand host is picked at random from 61000–64999, above the Linux ephemeral ports; the
+runner replaces a busy port with another one up to three times. Readiness is awaited for
 `startup_timeout_s` + 10 s for SSH. `STM32_GDBTEST_LOCK_DIR` on the stand host applies only
 if `env_script` or `env.sh` exports it: the helper script runs non-interactively.
 

@@ -208,7 +208,7 @@ ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -i <�
 | `Stand host refused the run: abandoned …` | Прежний запуск на хосте стенда завершился аварийно: на Orange Pi `pgrep -a openocd; pgrep -a JLink`, остановить остатки, повторить |
 | `Stand host refused the run: executable …` | Сервер не найден на хосте стенда: проверить путь `executable`, для OpenOCD — наличие `~/.local/stm32-gdbtest/env.sh` или `env_script` |
 | `GDB server exited before ready; see server.log and tunnel.log (env_script …)` | Код 97: указанный `env_script` не удалось подключить; код 255: ошибка SSH (ключ, хост, сеть) |
-| `Stand host refused the run: port …` | Случайно выбранный порт сервера на хосте стенда занят: повторить запуск |
+| `Stand host refused the run: port …` | Порт сервера на хосте стенда оказался занят три раза подряд (runner сам повторяет запуск с другим портом): проверить на Orange Pi `ss -ltn` — диапазон 61000–64999 занят другим сервисом |
 | `GDB server startup timed out after N s` для удалённого стенда | Предел — `startup_timeout_s` + 10 с на SSH; посмотреть `server.log` и `tunnel.log` |
 | `Passwords are not supported in [remote]` | Пароли в стенде не допускаются: настроить вход по ключу |
 

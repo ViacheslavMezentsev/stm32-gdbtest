@@ -207,7 +207,7 @@ ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -i <k
 | `Stand host refused the run: abandoned …` | A previous run on the stand host crashed: on the Orange Pi `pgrep -a openocd; pgrep -a JLink`, stop leftovers, retry |
 | `Stand host refused the run: executable …` | The server is not found on the stand host: check the `executable` path, for OpenOCD that `~/.local/stm32-gdbtest/env.sh` exists or set `env_script` |
 | `GDB server exited before ready; see server.log and tunnel.log (env_script …)` | Code 97: the given `env_script` could not be sourced; code 255: an SSH error (key, host, network) |
-| `Stand host refused the run: port …` | The randomly picked server port on the stand host is busy: run again |
+| `Stand host refused the run: port …` | The server port on the stand host was busy three times in a row (the runner itself retries with another port): check `ss -ltn` on the Orange Pi — another service holds the 61000–64999 range |
 | `GDB server startup timed out after N s` for a remote stand | The limit is `startup_timeout_s` + 10 s for SSH; check `server.log` and `tunnel.log` |
 | `Passwords are not supported in [remote]` | Passwords are not allowed in the stand: set up key login |
 

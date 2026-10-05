@@ -26,6 +26,24 @@ from stm32_gdbtest.full_image import load_policy, canonical_image
 
 
 ROOT = Path(__file__).resolve().parents[1]
+# ТЗ 5.18.2: the server port on the stand host lies above the default Linux ephemeral range
+# (32768-60999), so client sockets of earlier runs in TIME_WAIT do not hold it; a refused port is
+# replaced by another one up to REMOTE_PORT_ATTEMPTS times.
+REMOTE_PORTS = (61000, 64999)
+REMOTE_PORT_ATTEMPTS = 3
+
+
+def remote_port(tried=()):
+    """A random server port of the stand host that has not been refused in this run."""
+    while True:
+        port = random.randint(*REMOTE_PORTS)
+        if port not in tried:
+            return port
+
+
+def port_refusal(error):
+    """True for the helper's refusal of a busy server port, which another port can fix."""
+    return error.startswith("port ")
 
 
 def local_directory(path, root=ROOT):
@@ -230,9 +248,8 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
         remote = stand.get("remote")
         if remote:
             # ТЗ 5.18.2: the helper substitutes the stand host's port and run directory.
-            remote_port = random.randint(40000, 59999)
             backend = server_spec(stand, "{port}", profile, PurePosixPath("{dir}"))
-            backend["ready"] = backend["ready"].replace("{port}", str(remote_port))
+            ready_template = backend["ready"]
         else:
             backend = server_spec(stand, port, profile, out)
         report["backend_commands"] = dict(reset_halt=backend["reset_halt"], finish=backend["finish"],
@@ -256,33 +273,58 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
         with (out / "server.log").open("wb") as server_log, (out / "gdb.log").open("wb") as gdb_log, \
                 (out / "tunnel.log").open("wb") if remote else open(os.devnull, "wb") as tunnel_log:
             limit = stand.get("startup_timeout_s", 10)
-            if remote:
-                config = remote_host.serve_config(probe_identity(stand["serial"], stand["backend"]),
-                                                  remote_port, backend["command"])
-                command = remote_host.ssh_command(remote, "-v", "-o", "ExitOnForwardFailure=yes", "-L",
-                                                  f"127.0.0.1:{port}:127.0.0.1:{remote_port}")
-                server = subprocess.Popen(command + [remote_host.remote_script(remote, config)], env=env,
-                                          cwd=out, stdin=subprocess.PIPE, stdout=server_log, stderr=tunnel_log,
-                                          **spawn_options())
-                heartbeat = remote_host.Heartbeat(server.stdin)
-                limit += 10  # SSH connection and authentication
-            else:
-                server = subprocess.Popen(backend["command"], env=env, cwd=out,
-                                          stdout=server_log, stderr=subprocess.STDOUT, **spawn_options())
-            deadline = time.monotonic() + limit
-            while time.monotonic() < deadline:
-                text = (out / "server.log").read_text(errors="replace")
-                if remote and remote_host.parse_marker(text, "error"):
-                    raise RuntimeError("Stand host refused the run: " + remote_host.parse_marker(text, "error"))
-                if server.poll() is not None:
-                    hint = remote_host.environment_hint(server.returncode) if remote else ""
-                    raise RuntimeError("GDB server exited before ready; see server.log"
-                                       + (" and tunnel.log" + (f" ({hint})" if hint else "") if remote else ""))
-                if backend["ready"] in text and (not remote or remote_host.forwarding_ready(
-                        (out / "tunnel.log").read_text(errors="replace"))):
-                    ready = True
+            tried = []
+            for attempt in range(REMOTE_PORT_ATTEMPTS if remote else 1):
+                # Each attempt reads only what the logs gained after the previous one.
+                server_from = (out / "server.log").stat().st_size
+                tunnel_from = (out / "tunnel.log").stat().st_size if remote else 0
+                if remote:
+                    port_on_stand = remote_port(tried)
+                    tried.append(port_on_stand)
+                    backend["ready"] = ready_template.replace("{port}", str(port_on_stand))
+                    config = remote_host.serve_config(probe_identity(stand["serial"], stand["backend"]),
+                                                      port_on_stand, backend["command"])
+                    command = remote_host.ssh_command(remote, "-v", "-o", "ExitOnForwardFailure=yes", "-L",
+                                                      f"127.0.0.1:{port}:127.0.0.1:{port_on_stand}")
+                    server = subprocess.Popen(command + [remote_host.remote_script(remote, config)], env=env,
+                                              cwd=out, stdin=subprocess.PIPE, stdout=server_log,
+                                              stderr=tunnel_log, **spawn_options())
+                    heartbeat = remote_host.Heartbeat(server.stdin)
+                else:
+                    server = subprocess.Popen(backend["command"], env=env, cwd=out,
+                                              stdout=server_log, stderr=subprocess.STDOUT, **spawn_options())
+                deadline = time.monotonic() + limit + (10 if remote else 0)  # SSH connection and authentication
+                retry = False
+                while time.monotonic() < deadline:
+                    # Sampled before the log: a refusal written before the exit is then always seen.
+                    exited = server.poll() is not None
+                    text = (out / "server.log").read_bytes()[server_from:].decode(errors="replace")
+                    error = remote_host.parse_marker(text, "error") if remote else None
+                    if error and port_refusal(error) and attempt + 1 < REMOTE_PORT_ATTEMPTS:
+                        report.setdefault("warnings", []).append(f"Stand host refused port {port_on_stand}; "
+                                                                 "retrying with another port")
+                        heartbeat.stop()
+                        try:
+                            server.stdin.close()
+                        except OSError:
+                            pass  # the helper has already closed the session
+                        server.wait(timeout=12)
+                        retry = True
+                        break
+                    if error:
+                        raise RuntimeError("Stand host refused the run: " + error)
+                    if exited:
+                        hint = remote_host.environment_hint(server.returncode) if remote else ""
+                        raise RuntimeError("GDB server exited before ready; see server.log"
+                                           + (" and tunnel.log" + (f" ({hint})" if hint else "") if remote else ""))
+                    tunnel = (out / "tunnel.log").read_bytes()[tunnel_from:].decode(errors="replace") if remote else ""
+                    if backend["ready"] in text and (not remote or remote_host.forwarding_ready(tunnel)):
+                        ready = True
+                        break
+                    time.sleep(0.1)
+                if not retry:
                     break
-                time.sleep(0.1)
+            limit += 10 if remote else 0
             if not ready:
                 raise TimeoutError(f"GDB server startup timed out after {limit} s; see server.log "
                                    "(a slow probe connection may need startup_timeout_s in the stand)")
