@@ -54,6 +54,8 @@ Extended scenario API; the release is being prepared and the tag is published by
 
 ### Changed
 
+- Accepted results of the 0.3.0 package in `API_ACCEPTANCE`: five boards, local on Windows with three GDBs, local
+  on the Orange Pi 5, remote server from Windows and from WSL2, prepared-run package.
 - The testing techniques catalogue is rewritten for API 0.3.0 and the current scenarios: TECH-001…011 describe
   `check(rows)`, `write(rows)`, `ret`, `frames`, `memory`; TECH-012…018 are added (expected refusal, who writes,
   call as a predicate, choosing the stop, stop location without line numbers, profile, strings). The scenario

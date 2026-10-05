@@ -5,7 +5,34 @@
 This is a public summary of accepted behavior and acceptance, not a development diary.
 Contract: [API specification](../TECHNICAL_SPECIFICATION_API.md); guide: [API](API.md).
 
-## Accepted package
+## 0.3.0 package
+
+API specification 0.3.6, general specification 0.68. `profile` (project data, build facts, case, stand, GDB)
+replaces `config`/`config_props`; one `check` with matchers and a table, `refused`, `write(rows)` with an
+expression as the value, `symbol`, `memory`, `locals`/`arguments`, C strings, navigation (`reach`, `finish`,
+`step`, `until`, `watch`, `Point`), `ret`, `call`, `reset`, `execute`. A shared scenario directory with nine
+showcase scenarios; the techniques are described in the [techniques catalogue](TESTING_TECHNIQUES.md).
+
+Campaigns of 2026-10-05, five boards (F030R8 and F401CC/F411CE/F429ZI — ST-Link/OpenOCD, F103C8 — J-Link),
+full suite: F030R8 48 scenarios, the others 50 each.
+
+| Scheme | Runner and GDB → server | Outcome |
+| --- | --- | --- |
+| Local on Windows | Windows, GDB 14.2.90/15.2.90/16.3.90 (xPack 13.3.1/14.2.1/15.2.1) | 15 of 15 suites PASS |
+| Local on a Linux stand | Orange Pi 5, Ubuntu 20.04 aarch64 | 5 of 5 PASS |
+| Remote server | Windows → Orange Pi 5 over SSH | 5 of 5 PASS |
+| Remote server | WSL2 → Orange Pi 5 over SSH | 5 of 5 PASS |
+| Prepared-run package | built in WSL2, run on the Orange Pi 5 | 5 of 5 lifecycles at 10/10 |
+
+In every suite the only non-PASS is the intended `timeout` check with its expected ERROR. The Linux-stand runs
+found and closed two problems: a Cortex-M0 watch point stopping in a function epilogue (`HW_CI_WHO_WRITES`)
+and a busy server port on the stand host (general specification 0.68). The F030 HAL fixture check without a
+board, `python ci/run_checks.py hal`, passes. The GitHub hardware CI was not run for the 0.3.0 package.
+
+## First package: record/records and config
+
+Historical 0.2.0 acceptance; in 0.3.0 `profile` replaces `config`/`config_props`.
+
 
 record/records and RecordError provide a per-invocation journal of copied ordinary
 Python values with atomic limit failures. config/config_props expose immutable
@@ -13,7 +40,7 @@ selected configuration and its provenance. session.toml links external files;
 SESSION_CONFIG is explicit. Legacy operation remains supported.
 Journal export, additional frame/context operations and adaptive scheduling are excluded.
 
-## Verified scenarios
+## Verified scenarios of the first package
 
 Campaign dated 2026-10-03, working tree based on 7ed6d0a: CMSIS F030R8 19/19;
 F103C8/F401CC/F411CE/F429ZI each 21/21, total 103. HAL F030 22/22,
