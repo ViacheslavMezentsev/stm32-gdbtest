@@ -2,7 +2,7 @@
 RU: Принудительный возврат со значением: перенос значения и отказы до команды.
 EN: Forced return with a value: the transfer of the value and refusals before the command.
 """
-from stm32_gdbtest import case, ApiError, case
+from stm32_gdbtest import case
 
 
 # The receiver publishes the value the producer returned, so app_state proves the transfer.
@@ -29,15 +29,10 @@ def ret_value(t):
     # Refusals happen in the function frame and before anything is executed.
     t.reach("app_step")
     mutations = len(t.report["mutations"])
-    try:
+    # app_step returns uint32_t: 2**40 does not fit its 32 bits.
+    with t.refused("out_of_range", effect="none", width=32, high=0xFFFFFFFF,
+                   name="an out-of-range value is refused"):
         t.ret(1 << 40)
-    except ApiError as error:
-        t.check("out-of-range code", error.details["code"], "out_of_range")
-        t.check("out-of-range effect", error.details["effect"], "none")
-        t.check("out-of-range reports the width", error.details["width"], 32)
-        t.check("out-of-range reports the high bound", error.details["high"], 0xFFFFFFFF)
-    else:
-        t.check("an out-of-range value must be refused", False, True)
     t.check("a refused value is not recorded", len(t.report["mutations"]), mutations)
 
     # A bare return completes the frame without a value.

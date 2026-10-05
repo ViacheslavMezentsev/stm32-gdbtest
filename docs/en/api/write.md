@@ -2,7 +2,7 @@
 
 [API](index.md) · [Русский](../../ru/api/write.md)
 
-`write(path, value, *, verify=True) -> dict`
+`write(path, value, *, verify=True) -> dict`; `write(rows, *, verify=True) -> list[dict]`
 
 | Property | Value |
 | --- | --- |
@@ -25,6 +25,27 @@ SRAM window: a peripheral register reads by its own rules, so the write still ha
 reading and the `verify_scope=outside` marker are reported without claiming confirmation. A write failure is never hidden and is reported as an
 operation failure; an already applied effect is not rolled back.
 
+### An expression as the value and a table of writes
+
+A string value is a C expression that GDB evaluates **before** the write: it may use operators (`|`,
+`&`, `~`, `<<`, `>>`, `+`, `-`, comparisons) and firmware macros, so a read-modify-write of a register
+is one line. A line break, `;` and assignments (`=`, `|=`, `<<=`, `++`, `--`) are refused: one write
+changes exactly one object and appears in `mutations` (`unsupported_value`).
+
+`write(rows)` with a single list argument performs the `(path, value)` writes in order and returns the
+list of results. The structure of every row is validated before the first write; a refused row stops
+the rest, and writes already done are not undone. `verify` applies to every row.
+
+```python
+# Start continuous conversions while the core is halted: the order of the rows matters.
+t.write([
+    ("ADC1->CFGR1", "ADC1->CFGR1 | ADC_CFGR1_CONT"),
+    ("ADC1->CR", "ADC1->CR | ADC_CR_ADSTART"),
+])
+t.write("ADC1->CR2", "ADC1->CR2 & ~ADC_CR2_ADON")        # clear a bit with an expression
+t.write([("SysTick->CTRL", control), ("NVIC->ISER[0]", enabled)])   # restore saved values
+```
+
 ## Example
 
 ```python
@@ -37,4 +58,4 @@ success.
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5; expressions and the table of writes: revision 0.3.6, items 4.6.2, 4.6.3.

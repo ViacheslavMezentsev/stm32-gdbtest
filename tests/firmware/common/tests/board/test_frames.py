@@ -2,7 +2,7 @@
 RU: Цепочка кадров: глубины, имена, счётчики команд и предел обхода.
 EN: Frame chain: depths, names, program counters and the walk limit.
 """
-from stm32_gdbtest import case, ApiError, case
+from stm32_gdbtest import case
 
 
 # The chain starts at the innermost frame and stops at the limit.
@@ -38,10 +38,5 @@ def walk_frames(t):
 
     # An unusable limit is refused before the chain is walked.
     for limit in (0, -1, "16"):
-        try:
+        with t.refused("invalid_limit", stage="validation", name=f"invalid limit {limit!r} is refused"):
             t.frames(limit=limit)
-        except ApiError as error:
-            t.check("refused limit code", error.details["code"], "invalid_limit")
-            t.check("refused limit stage", error.details["stage"], "validation")
-        else:
-            t.check("an invalid limit must be refused", False, True)

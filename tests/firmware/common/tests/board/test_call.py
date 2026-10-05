@@ -2,7 +2,7 @@
 RU: Вызов функции прошивки на остановленном ядре: аргументы, результат и отказы.
 EN: Calling a firmware function on the halted core: arguments, result and refusals.
 """
-from stm32_gdbtest import case, ApiError, case
+from stm32_gdbtest import case
 
 
 # The call runs the real function, so its effect is visible in the application state.
@@ -31,17 +31,8 @@ def call_function(t):
 
     # Refusals happen before the call and leave no mutation behind.
     mutations = len(t.report["mutations"])
-    try:
+    with t.refused("unsupported_argument", effect="none", name="an unsupported argument is refused"):
         t.call("app_step", object())
-    except ApiError as error:
-        t.check("unsupported argument code", error.details["code"], "unsupported_argument")
-        t.check("unsupported argument effect", error.details["effect"], "none")
-    else:
-        t.check("an unsupported argument must be refused", False, True)
-    try:
+    with t.refused("invalid_function", name="an invalid name is refused"):
         t.call("no such function")
-    except ApiError as error:
-        t.check("invalid name code", error.details["code"], "invalid_function")
-    else:
-        t.check("an invalid name must be refused", False, True)
     t.check("refusals are not recorded", len(t.report["mutations"]), mutations)

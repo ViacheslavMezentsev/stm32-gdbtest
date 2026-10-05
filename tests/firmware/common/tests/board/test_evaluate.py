@@ -2,7 +2,7 @@
 RU: Вычисление выражений: приведение типов и отказы.
 EN: Expression evaluation: type conversion and refusals.
 """
-from stm32_gdbtest import case, ApiError, case
+from stm32_gdbtest import case
 
 
 # Arithmetic runs in the debugger and the requested type is applied to the result.
@@ -29,24 +29,13 @@ def evaluate_expressions(t):
     t.check("a type name is accepted", t.evaluate("2 + 3", as_type="float"), 5.0)
 
     # The debugger reports its own failures and the API keeps them structured.
-    try:
+    with t.refused("command_failed", name="an unknown symbol fails") as failure:
         t.evaluate("api030_no_such_symbol")
-    except ApiError as error:
-        t.check("failed expression code", error.details["code"], "command_failed")
-        t.check("failed expression keeps the cause", error.__cause__ is not None)
-    else:
-        t.check("an unknown symbol must fail", False, True)
+    t.check("failed expression keeps the cause", failure.error.__cause__ is not None)
     for expression in ("", "   ", "1 +"):
-        try:
+        with t.refused("invalid_expression" if not expression.strip() else "command_failed",
+                       name=f"invalid expression {expression!r} is refused"):
             t.evaluate(expression)
-        except ApiError as error:
-            t.check("refused expression code", error.details["code"],
-                         "invalid_expression" if not expression.strip() else "command_failed")
-        else:
-            t.check("an invalid expression must be refused", False, True)
-    try:
+    # An integer is not a C string: as_type=str needs a char array or a char pointer.
+    with t.refused("unsupported_type", name="an integer is not a string"):
         t.evaluate("1 + 1", as_type=str)
-    except ApiError as error:
-        t.check("unsupported as_type code", error.details["code"], "unsupported_type")
-    else:
-        t.check("an unsupported as_type must be refused", False, True)

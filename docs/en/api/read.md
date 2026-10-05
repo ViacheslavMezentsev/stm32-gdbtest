@@ -26,6 +26,9 @@ registers and peripherals apply; slices, `const`/`volatile` and C++ are outside 
 `fields` is a list of names (`fields=("ticks", "led")`) or a `{name: hint}` mapping; the result is a
 dictionary of values by name.
 
+Several independent objects at one stop are read with Python itself:
+`dict(zip(paths, map(t.read, paths)))`; there is no separate list form of `read`.
+
 ## Example
 
 ```python

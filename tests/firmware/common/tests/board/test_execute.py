@@ -4,7 +4,7 @@ EN: Debugger commands through execute: output, journal, truncation and refusals.
 """
 from hashlib import sha256
 
-from stm32_gdbtest import case, ApiError, case
+from stm32_gdbtest import case
 
 LONG_OUTPUT = "X" * 3000
 
@@ -28,13 +28,8 @@ def execute_commands(t):
     # Refusals happen before the debugger is touched and leave no journal entry behind.
     entries = len(t.report["executions"])
     for command in ("", "   ", "info\nregisters"):
-        try:
+        with t.refused("invalid_command", stage="validation", name=f"invalid command {command!r} is refused"):
             t.execute(command)
-        except ApiError as error:
-            t.check("refused command code", error.details["code"], "invalid_command")
-            t.check("refused command stage", error.details["stage"], "validation")
-        else:
-            t.check("an invalid command must be refused", False, True)
     t.check("refusals are not journalled", len(t.report["executions"]), entries)
 
     # An output above the limit is reported as truncated with the hash of the full text.
@@ -49,12 +44,7 @@ def execute_commands(t):
 
     # A failing debugger command is reported with its cause and is not repeated.
     print("API030_V34_CHECKPOINT=failing_command", flush=True)
-    try:
+    with t.refused("command_failed", name="an unknown command fails") as failure:
         t.execute("api030-no-such-command")
-    except ApiError as error:
-        t.check("failed command code", error.details["code"], "command_failed")
-        t.check("failed command keeps the cause", error.__cause__ is not None)
-        t.check("failed command is journalled", t.report["executions"][-1]["result"],
-                     "failed")
-    else:
-        t.check("an unknown command must fail", False, True)
+    t.check("failed command keeps the cause", failure.error.__cause__ is not None)
+    t.check("failed command is journalled", t.report["executions"][-1]["result"], "failed")

@@ -32,6 +32,11 @@ Extended scenario API; the release is being prepared and the tag is published by
   `matches(pattern)` checks it with a Python regular expression. The GDB functions `$_streq`, `$_strlen`, `$_memeq`,
   `$_regex` work right in a `check(rows)` table; the table rules are described on the `check` card. The `HW_CI_STRINGS`
   scenario and the `app_info` strings of the fixture firmware. API specification 0.3.5.
+- Expected refusal: `with t.refused("point_removed"):` checks that an operation refused with the given code and
+  details and records the verdict in `checks` instead of a hand-written `try/except ApiError`. API specification 0.3.6.
+- A table of writes: `t.write([(path, value), ...])` writes in order after validating every row; a write value may be
+  a C expression (`"ADC1->CR2 & ~ADC_CR2_ADON"`) that GDB evaluates before the write. A series of reads gets no table
+  form: `map()` is enough (`dict(zip(paths, map(t.read, paths)))`).
 - Symbols and memory: `symbol(name)` gives the address, size, type and section; `memory(address, size)` reads SRAM or
   the profile flash, `memory(address, data)` writes bytes into SRAM with verification; peripheral addresses are refused.
 - Frame variables: `locals()` and `arguments()` as one dictionary, optimized-out values listed separately.
@@ -64,6 +69,9 @@ Extended scenario API; the release is being prepared and the tag is published by
 - The order-preservation test of the former `_check_values` helper is removed together with the helper.
 - `HW_CI_MEASUREMENT_SERIES` no longer requires distinct temperature values: the temperature may stay put for the series.
 - An evaluation error of a string cell of `check(rows)` names the row, the cell and the rule: a table string is a GDB expression.
+- The refusal scenarios of the shared directory use `refused`; the ADC and sleep scenarios of every profile write a
+  register read-modify-write as an expression and save and restore NVIC/SysTick with a table of writes.
+  The remaining F103 literals `| 1` and `& ~1` are replaced by the identifiers `DMA_CCR_EN` and `ADC_CR2_ADON`.
 
 ### Fixed
 

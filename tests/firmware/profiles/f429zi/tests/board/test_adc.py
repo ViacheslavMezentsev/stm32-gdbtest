@@ -210,11 +210,13 @@ def adc_timeout(t):
 def adc_busy(t):
     # TECH-006: enforce a DMA ownership guard, not a claim of F0 ADSTART semantics.
     t.reach("board_adc_sample")
-    t.write("DMA2_Stream0->NDTR", SAMPLES_PER_SEQUENCE)
-    t.write("DMA2_Stream0->CR", t.read("DMA2_Stream0->CR") | 1)
+    t.write([
+        ("DMA2_Stream0->NDTR", SAMPLES_PER_SEQUENCE),
+        ("DMA2_Stream0->CR", "DMA2_Stream0->CR | DMA_SxCR_EN"),
+    ])
 
     # Verify DMA enabled before application start.
-    t.check("DMA enabled before application start", t.read("DMA2_Stream0->CR & DMA_SxCR_EN"), 1)
+    t.check("DMA enabled before application start", t.read("DMA2_Stream0->CR & DMA_SxCR_EN"))
 
     no_publication(t, ADC_ERROR_BUSY)
     t.report["injection_scope"] = "DMA enable before sample; no claim of active ADC conversion"
@@ -225,7 +227,7 @@ def adc_busy(t):
 def adc_disabled(t):
     # TECH-006: real ADC disable, not a forced HAL status return.
     t.reach("board_adc_sample")
-    t.write("ADC1->CR2", t.read("ADC1->CR2") & ~1)
+    t.write("ADC1->CR2", "ADC1->CR2 & ~ADC_CR2_ADON")
 
     # Verify ADC powered off.
     t.check("ADC powered off", t.read("ADC1->CR2 & ADC_CR2_ADON"), 0)

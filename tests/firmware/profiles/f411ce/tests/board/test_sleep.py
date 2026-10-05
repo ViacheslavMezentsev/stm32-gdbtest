@@ -66,14 +66,12 @@ def sleep_systick(t):
 
     enabled = t.read("NVIC->ISER[0]")
     enabled1 = t.read("NVIC->ISER[1]")
-    t.write("NVIC->ICER[1]", enabled1)
-    t.write("NVIC->ICER[0]", enabled)
+    t.write([("NVIC->ICER[1]", enabled1), ("NVIC->ICER[0]", enabled)])
     before = t.read("board_ticks_ms")
     try:
         reach_wfi_irq(t, "SysTick_Handler", "SysTick_IRQn + 16")
     finally:
-        t.write("NVIC->ISER[0]", enabled)
-        t.write("NVIC->ISER[1]", enabled1)
+        t.write([("NVIC->ISER[0]", enabled), ("NVIC->ISER[1]", enabled1)])
 
     # The first stop in the loop can be inside the interval itself, so a full loop entry is awaited.
     t.reach("app_loop")
@@ -96,15 +94,17 @@ def sleep_tim2(t):
     # Verify ordinary Sleep, no SLEEPONEXIT.
     t.check("ordinary Sleep, no SLEEPONEXIT", t.read("SCB->SCR & (SCB_SCR_SLEEPONEXIT_Msk | SCB_SCR_SLEEPDEEP_Msk)"), 0)
 
-    control = t.read("SysTick->CTRL") & 7
+    control = t.read("SysTick->CTRL & (SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_CLKSOURCE_Msk)")
     enabled = t.read("NVIC->ISER[0]")
     enabled1 = t.read("NVIC->ISER[1]")
     t.write("NVIC->ICER[1]", enabled1)
 
     # Leave only TIM2 external IRQ, stop SysTick and clear a pending exception.
-    t.write("NVIC->ICER[0]", enabled & ~(1 << t.evaluate("TIM2_IRQn")))
-    t.write("SysTick->CTRL", 0)
-    t.write("SCB->ICSR", "SCB_ICSR_PENDSTCLR_Msk")
+    t.write([
+        ("NVIC->ICER[0]", enabled & ~(1 << t.evaluate("TIM2_IRQn"))),
+        ("SysTick->CTRL", 0),
+        ("SCB->ICSR", "SCB_ICSR_PENDSTCLR_Msk"),
+    ])
     ticks = t.read("board_ticks_ms")
     events = t.read("board_timer_events")
     try:
@@ -114,8 +114,7 @@ def sleep_tim2(t):
         t.check("SysTick did not advance", t.read("board_ticks_ms"), ticks)
     finally:
         t.write("SysTick->CTRL", control)
-        t.write("NVIC->ISER[0]", enabled)
-        t.write("NVIC->ISER[1]", enabled1)
+        t.write([("NVIC->ISER[0]", enabled), ("NVIC->ISER[1]", enabled1)])
 
     # A full loop entry follows a completed interval and its ADC publication.
     t.reach("app_loop")

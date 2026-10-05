@@ -20,8 +20,10 @@ def adc_busy(t):
     t.check("initial ADC idle", t.read("ADC1->CR & ADC_CR_ADSTART"), 0)
 
     # Start continuous conversions while the core is halted: ADSTART stays asserted.
-    t.write("ADC1->CFGR1", t.read("ADC1->CFGR1") | t.evaluate("ADC_CFGR1_CONT"))
-    t.write("ADC1->CR", t.read("ADC1->CR") | t.evaluate("ADC_CR_ADSTART"))
+    t.write([
+        ("ADC1->CFGR1", "ADC1->CFGR1 | ADC_CFGR1_CONT"),
+        ("ADC1->CR", "ADC1->CR | ADC_CR_ADSTART"),
+    ])
 
     # Verify conversion is active.
     t.check("conversion is active", t.read("ADC1->CR & ADC_CR_ADSTART"))

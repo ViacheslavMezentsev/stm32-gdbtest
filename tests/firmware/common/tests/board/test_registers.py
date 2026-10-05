@@ -2,7 +2,7 @@
 RU: Чтение регистров кадра: счётчик команд, указатель стека и регистры общего назначения.
 EN: Frame register reads: the program counter, the stack pointer and general-purpose registers.
 """
-from stm32_gdbtest import case, ApiError, case
+from stm32_gdbtest import case
 
 
 # Registers are read by name; the program counter prefers the frame accessor.
@@ -35,16 +35,8 @@ def read_registers(t):
     t.check("the pc read is stable", t.registers("pc")["pc"], core["pc"])
 
     # Unknown names and empty requests are refused.
-    try:
+    with t.refused("read_failed", name="an unknown register is refused") as failure:
         t.registers("api030_no_such_register")
-    except ApiError as error:
-        t.check("unknown register code", error.details["code"], "read_failed")
-        t.check("unknown register keeps the cause", error.__cause__ is not None)
-    else:
-        t.check("an unknown register must be refused", False, True)
-    try:
+    t.check("unknown register keeps the cause", failure.error.__cause__ is not None)
+    with t.refused("invalid_names", name="an empty request is refused"):
         t.registers()
-    except ApiError as error:
-        t.check("empty request code", error.details["code"], "invalid_names")
-    else:
-        t.check("an empty request must be refused", False, True)

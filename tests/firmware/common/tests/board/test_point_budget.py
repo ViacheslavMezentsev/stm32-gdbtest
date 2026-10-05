@@ -2,19 +2,10 @@
 RU: Бюджет точек по профилю: отказ сверх лимита, выключенная точка не занимает слот, clear() освобождает все.
 EN: The profile point budget: refusal over the limit, a disabled point holds no slot, clear() frees all.
 """
-from stm32_gdbtest import ApiError, case, within
+from stm32_gdbtest import case, within
 
 LOCATIONS = ("app_step", "app_receiver_step", "board_led_toggle", "board_adc_sample", "board_delay_ms",
              "app_loop", "main", "board_init")
-
-
-def refused(t, name, action):
-    try:
-        action()
-    except ApiError as error:
-        t.check(name, error.details["code"], "limit_exceeded")
-    else:
-        t.check(name, "accepted", "limit_exceeded")
 
 
 @case("HW_CI_POINT_BUDGET", timeout_s=45, labels=("api", "showcase", "breakpoint"), contracts=("ci_app_api",))
@@ -37,13 +28,15 @@ def point_budget(t):
                     within(symbol["address"], symbol["address"] + symbol["size"] - 1))
         points.append(point)
     spare = LOCATIONS[free]
-    refused(t, "one point over the budget is refused", lambda: t.breakpoint(spare))
+    with t.refused("limit_exceeded", name="one point over the budget is refused"):
+        t.breakpoint(spare)
 
     # A disabled point frees its slot; enabling it again would exceed the budget.
     points[0].disable()
     extra = t.breakpoint(spare)
     t.check("the freed slot was used", extra.active, True)
-    refused(t, "enabling over the budget is refused", points[0].enable)
+    with t.refused("limit_exceeded", name="enabling over the budget is refused"):
+        points[0].enable()
 
     t.clear()
     t.check("clear removed every point, guards included",

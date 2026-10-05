@@ -199,6 +199,32 @@ class Point:
         return f"Point(id={self._native.number}, location={self.location!r}, active={self.active})"
 
 
+class _Refusal:
+    """Context manager of `Target.refused`: one check that the block raised the expected ApiError."""
+
+    def __init__(self, target, code, name, details):
+        self._target, self.code, self.name, self._details = target, code, name, details
+        self.error = None
+
+    @property
+    def details(self):
+        return self.error.details if self.error is not None else {}
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, kind, error, traceback):
+        expected = dict(code=self.code, **self._details)
+        if error is None:
+            self._target._verdict(self.name, None, expected, False, f"expected a refusal {expected!r}", "refused")
+        if not isinstance(error, ApiError) or isinstance(error, CheckFailed):
+            return False
+        self.error = error
+        actual = {key: error.details.get(key) for key in expected}
+        self._target._verdict(self.name, actual, expected, actual == expected, f"expected {expected!r}", "refused")
+        return True
+
+
 class Target:
     def __init__(self, report, profile, configuration=None, context=None):
         self.report = report
@@ -802,25 +828,39 @@ class Target:
         """Raise ApiError through the shared validator, keeping the vocabulary in one place."""
         fail(operation, stage, effect, code, message, **details)
 
-    def write(self, path, value, *, verify=True):
-        """Write a plain value into a scalar object and verify it (ТЗ API 4.6)."""
+    def write(self, path, value=_OMITTED, *, verify=True):
+        """Write a value into a scalar object and verify it (ТЗ API 4.6).
+
+        `write(path, value)` writes one object; `write(rows)` writes a list of `(path, value)` rows in
+        order and returns their results. A string value is a GDB expression evaluated before the write,
+        so `("ADC1->CR", "ADC1->CR | ADC_CR_ADSTART")` is a read-modify-write.
+        """
+        if isinstance(path, (list, tuple)):
+            if value is not _OMITTED:
+                self._fail("write", "validation", "none", "invalid_rows",
+                           "a list of rows is the only positional argument of write(rows)")
+            return self._write_rows(path, verify)
+        if value is _OMITTED:
+            self._fail("write", "validation", "none", "unsupported_value", "write(path) needs a value", path=path)
         if type(path) is not str or not path:
             self._fail("write", "validation", "none", "invalid_path",
                        "path must be a non-empty string", path=path)
         if type(verify) is not bool:
             self._fail("write", "validation", "none", "invalid_verify",
                        "verify must be a bool", path=path, verify=verify)
-        literal = values.argument_literal(value)
+        literal = values.expression_literal(value)
         if literal is None:
             self._fail("write", "validation", "none", "unsupported_value",
-                       "value must be a finite number, a bool or a GDB expression", path=path, value=value)
+                       "value must be a finite number, a bool or a GDB expression without an assignment",
+                       path=path, value=value)
         before = self._read_value(path, path)
         scoped, address = self._verify_scope(path)
-        self._write_expression(path, literal)
-        after = self._read_value(path, path) if (verify and scoped) else None
-        # An expression value (an enum constant, a macro) is compared by what it evaluates to.
+        # An expression value (an enum constant, a macro, a read-modify-write) is compared by what it
+        # evaluates to before the write: `x + 1` evaluated afterwards would already include the write.
         expected = self._read_value(f"({literal})", literal) if (verify and scoped and type(value) is str) \
             else value
+        self._write_expression(path, literal)
+        after = self._read_value(path, path) if (verify and scoped) else None
         entry = dict(expression=path, value=value, before=before, after=after)
         if verify and not scoped:
             # A peripheral register keeps its own meaning on read, so the write is recorded without
@@ -833,6 +873,27 @@ class Target:
             values.verification_failed(path, value, after)
         return dict(operation="write", path=path, value=value, before=before, after=after,
                     verified=bool(verify and scoped), verify_scope="declared" if scoped else "outside")
+
+    def _write_rows(self, rows, verify):
+        """Rows are validated first, then written in order; the first refusal stops the rest (ТЗ API 4.6.3)."""
+        if not rows:
+            self._fail("write", "validation", "none", "invalid_rows", "rows must be a non-empty list")
+        for row in rows:
+            if not isinstance(row, (list, tuple)) or len(row) != 2 or type(row[0]) is not str or not row[0]:
+                self._fail("write", "validation", "none", "invalid_rows", "each row must be (path, value)", row=row)
+        return [self.write(path, value, verify=verify) for path, value in rows]
+
+    def refused(self, code, *, name=None, **details):
+        """Expect the body of a `with` block to be refused with an ApiError of `code` (ТЗ API 4.19).
+
+        Extra keyword arguments (`effect="none"`, `stage="validation"`) are compared with the error
+        details as well. The result is recorded as one check; a matching refusal is suppressed and kept
+        in `.error`. A CheckFailed or any other exception of the body passes through unchanged.
+        """
+        if type(code) is not str or not code:
+            self._fail("check", "validation", "none", "invalid_arguments", "refused() needs an error code",
+                       expected_code=code)
+        return _Refusal(self, code, name or f"refused: {code}", details)
 
     def _verify_scope(self, path):
         """Whether a read-compare is meaningful here: an addressable object in the SRAM window."""

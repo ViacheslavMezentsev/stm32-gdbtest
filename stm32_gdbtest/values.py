@@ -253,6 +253,27 @@ def argument_literal(value):
     return None
 
 
+# An assignment inside a written expression would change a second object without a mutation entry.
+_ASSIGNMENT = re.compile(r"(?<![=!<>])=(?!=)|<<=|>>=|\+\+|--")
+
+
+def expression_literal(value):
+    """GDB text of a value for `write`: a number, a bool or a C expression (ТЗ API 4.6.2).
+
+    An expression may use operators (`ADC1->CR | ADC_CR_ADSTART`, `1UL << 5`, `~MASK`); it may not
+    contain a line break, a `;` or an assignment, so one write changes one object. Returns None when
+    the value cannot be written.
+    """
+    if type(value) is not str:
+        return argument_literal(value)
+    stripped = value.strip()
+    if not stripped or len(stripped) > 200 or any(c in stripped for c in "\n\r;"):
+        return None
+    if _ASSIGNMENT.search(stripped):
+        return None
+    return stripped
+
+
 # Names of the declared kinds that cannot be a watched object.
 _NON_WATCHABLE = ("*", "(", "[", "void")
 

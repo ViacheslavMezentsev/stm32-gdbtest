@@ -4,7 +4,7 @@ EN: Target reset: the halt, the cache invalidation and the refusal with an activ
 """
 import os
 
-from stm32_gdbtest import case, ApiError, case
+from stm32_gdbtest import case
 
 
 # A reset leaves the core halted at the reset vector and invalidates both caches.
@@ -14,13 +14,8 @@ def reset_target(t):
 
     # An active point makes the reset meaningless, so it is refused before the command runs.
     point = t.breakpoint("board_led_toggle")
-    try:
+    with t.refused("active_points", effect="none", name="a reset with an active point is refused"):
         t.reset()
-    except ApiError as error:
-        t.check("active point code", error.details["code"], "active_points")
-        t.check("active point effect", error.details["effect"], "none")
-    else:
-        t.check("a reset with an active point must be refused", False, True)
     t.check("the refused reset kept the point", point.active, True)
     point.remove()
 

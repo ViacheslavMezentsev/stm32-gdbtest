@@ -360,6 +360,75 @@ class ExtrasTests(unittest.TestCase):
         self.assertEqual((caught.exception.details["row"], caught.exception.details["cell"]), ("case id", "actual"))
         self.assertIn("compare Python values with check(name, actual, expected)", str(caught.exception))
 
+    # Expected refusals.
+    def test_refused_records_one_check_and_suppresses_the_error(self):
+        target = self.target()
+        with target.refused("limit_exceeded", effect="none") as refusal:
+            target._fail("breakpoint", "validation", "none", "limit_exceeded", "budget", limit=2)
+        self.assertEqual(refusal.details["limit"], 2)
+        entry = target.report["checks"][-1]
+        self.assertEqual(entry, dict(name="refused: limit_exceeded", actual=dict(code="limit_exceeded", effect="none"),
+                                     expected=dict(code="limit_exceeded", effect="none"), passed=True, kind="refused"))
+
+    def test_refused_fails_on_success_and_on_another_code(self):
+        target = self.target()
+        with self.assertRaises(CheckFailed):
+            with target.refused("invalid_path", name="must be refused"):
+                pass
+        self.assertEqual((target.report["checks"][-1]["name"], target.report["checks"][-1]["actual"]),
+                         ("must be refused", None))
+        with self.assertRaises(CheckFailed):
+            with target.refused("invalid_path"):
+                target._fail("watch", "validation", "none", "not_addressable", "no address")
+        self.assertEqual(target.report["checks"][-1]["actual"], dict(code="not_addressable"))
+
+    def test_refused_passes_other_exceptions_through(self):
+        target = self.target()
+        with self.assertRaises(CheckFailed):
+            with target.refused("invalid_path"):
+                target.check("inner mismatch", 1, 2)
+        with self.assertRaises(KeyError):
+            with target.refused("invalid_path"):
+                raise KeyError("x")
+        with self.assertRaises(ApiError):
+            target.refused("")
+
+    # Writes: rows and expressions.
+    def write_target(self):
+        target = self.target()
+        state = {"x": 5, "ADC1->CR": 0}
+        def read(expression, path):
+            return eval(expression.replace("ADC1->CR", "ADC1_CR").replace("ADC_CR_ADSTART", "4"),
+                        {}, {"x": state["x"], "ADC1_CR": state["ADC1->CR"]})
+        target._read_value = read
+        target._verify_scope = lambda path: (path == "x", 0x20000000 if path == "x" else 0x40012408)
+        def write_expression(path, literal):
+            state[path] = read(literal, literal)
+        target._write_expression = write_expression
+        return target, state
+
+    def test_write_rows_in_order_with_read_modify_write(self):
+        target, state = self.write_target()
+        results = target.write([("ADC1->CR", "ADC1->CR | ADC_CR_ADSTART"), ("x", "x + 1")])
+        self.assertEqual(state, {"x": 6, "ADC1->CR": 4})
+        self.assertEqual([r["path"] for r in results], ["ADC1->CR", "x"])
+        self.assertTrue(results[1]["verified"])
+        self.assertEqual([m["expression"] for m in target.report["mutations"]], ["ADC1->CR", "x"])
+
+    def test_write_rows_and_values_are_validated(self):
+        target, state = self.write_target()
+        for call, code in ((lambda: target.write([]), "invalid_rows"),
+                           (lambda: target.write([("x",)]), "invalid_rows"),
+                           (lambda: target.write([("x", 1)], 2), "invalid_rows"),
+                           (lambda: target.write("x"), "unsupported_value"),
+                           (lambda: target.write("x", "y = 1"), "unsupported_value"),
+                           (lambda: target.write("x", "x <<= 1"), "unsupported_value"),
+                           (lambda: target.write("x", "x; y"), "unsupported_value")):
+            with self.subTest(code=code), self.assertRaises(ApiError) as caught:
+                call()
+            self.assertEqual(caught.exception.details["code"], code)
+        self.assertEqual(state["x"], 5)
+
     # Raw memory: the type of the second argument decides.
     def test_memory_reads_with_a_size_and_writes_bytes(self):
         target = self.target()

@@ -2,7 +2,7 @@
 RU: Точка наблюдения: адресуемый объект, остановка на записи и отказы.
 EN: A watch point: an addressable object, the write stop and refusals.
 """
-from stm32_gdbtest import case, ApiError, case
+from stm32_gdbtest import case
 
 
 # A watch point stops the core when the firmware writes the watched object.
@@ -34,12 +34,7 @@ def watch_object(t):
     # An unknown object and a non-object expression are refused before the debugger is touched.
     for path, code in (("api030_no_such_object", "invalid_path"),
                        ("app_state.ticks + 1", "not_addressable")):
-        try:
+        with t.refused(code, stage="validation", name=f"watch of {path!r} is refused"):
             t.watch(path)
-        except ApiError as error:
-            t.check("refused watch code", error.details["code"], code)
-            t.check("refused watch stage", error.details["stage"], "validation")
-        else:
-            t.check("an unwatchable object must be refused", False, True)
     t.check("refusals leave no watch point behind",
                  [item.id for item in t.owned if item.watch], [])
