@@ -32,6 +32,9 @@ def main():
         probe = output(str(bin_dir / "arm-none-eabi-gdb-py3"), "-nx", "-batch", "-ex",
                        "python import sys, tomllib, gdb; print(sys.version.split()[0], gdb.VERSION)")
         print(f"GCC {gcc}: GDB-Python {probe}", flush=True)
+    for archive in lock["archives"]:
+        for filename in archive.get("required_files", []):
+            assert (Path(archive["destination"]) / filename).is_file(), str(Path(archive["destination"]) / filename)
     for source in lock["sources"]:
         destination = Path(source["destination"])
         head = output("git", "-c", f"safe.directory={destination}", "-C", str(destination), "rev-parse", "HEAD")

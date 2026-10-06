@@ -18,7 +18,8 @@
     "f103c8",
     "f411ce",
     "f401cc",
-    "f429zi"
+    "f429zi",
+    "at32f403a"
   ],
   "archives": [
     {
@@ -55,6 +56,22 @@
       "sha256": "6f98805688d19672bd699fbbfa2c2cf0fc054ac3df1f0e6a47664d963d530255",
       "kind": "zip",
       "destination": "/usr/local/bin"
+    },
+    {
+      "name": "at32f403a-407-firmware-library-2.0.9",
+      "url": "https://raw.githubusercontent.com/WeActStudio/WeActStudio.BlackPill/f84a429163a78b6df15145dab82cc46b215e7b98/SDK/AT32F403A_407_Firmware_Library_V2.0.9.zip",
+      "sha256": "661672ed45405550b082999ea0948c33f83c5d82e9d64024486df89d762ffbde",
+      "kind": "zip",
+      "destination": "/opt/Artery/AT32F403A_407_Firmware_Library_V2.0.9",
+      "include": [
+        "libraries/cmsis/",
+        "libraries/drivers/inc/"
+      ],
+      "required_files": [
+        "libraries/cmsis/cm4/core_support/core_cm4.h",
+        "libraries/cmsis/cm4/device_support/at32f403a_407.h",
+        "libraries/drivers/inc/at32f403a_407_crm.h"
+      ]
     }
   ],
   "sources": [

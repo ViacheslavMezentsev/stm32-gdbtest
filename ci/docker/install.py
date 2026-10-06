@@ -13,6 +13,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+import zipfile
 
 LOCK = Path(__file__).with_name("dependencies.lock.json")
 LOG = threading.local()
@@ -50,9 +51,24 @@ def install_archive(item):
             if item["kind"] == "tar":
                 run("tar", "-xzf", str(archive), "--strip-components=1", "-C", str(destination))
             elif item["kind"] == "zip":
-                run("unzip", "-q", str(archive), "-d", str(destination))
+                extract_zip(archive, destination, item.get("include", []))
             else:
                 raise ValueError(f"Unknown archive kind: {item['kind']}")
+        for filename in item.get("required_files", []):
+            if not (destination / filename).is_file():
+                raise FileNotFoundError(destination / filename)
+
+
+def extract_zip(archive, destination, include):
+    """Extract a ZIP, optionally only the members under the listed prefixes; members stay inside destination."""
+    with zipfile.ZipFile(archive) as package:
+        members = [name for name in package.namelist() if not include or name.startswith(tuple(include))]
+        root = destination.resolve()
+        for name in members:
+            if not (root / name).resolve().is_relative_to(root):
+                raise ValueError(f"Archive member outside the destination: {name}")
+        package.extractall(destination, members)
+        say(f"extracted {len(members)} members")
 
 
 def install_source(item):

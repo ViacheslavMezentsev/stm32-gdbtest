@@ -48,10 +48,11 @@ def dependency_map(text, build):
 
 
 # Portability P1-8: the family-specific recognition rules in one place. Installation roots kept in input labels
-# (vendor packages and xPack toolchains of any target), package roots listed as cube_packages, and the families
+# (vendor packages: STM32Cube and the Artery firmware library, xPack toolchains of any target), package roots listed
+# as cube_packages, and the families
 # whose `__<NAME>_VERSION_*` macros are recorded (STM32 HAL/LL, CMSIS core).
-INSTALL_PREFIXES = ("STM32Cube_FW_", "xpack-")
-PACKAGE_PREFIXES = ("STM32Cube_FW_",)
+INSTALL_PREFIXES = ("STM32Cube_FW_", "AT32F403A_407_Firmware_Library_", "xpack-")
+PACKAGE_PREFIXES = ("STM32Cube_FW_", "AT32F403A_407_Firmware_Library_")
 VERSION_FAMILIES = r"STM32\w*|CM\w*"
 
 

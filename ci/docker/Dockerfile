@@ -21,6 +21,7 @@ RUN chmod +x /usr/local/bin/stm32-gdbtest-env \
     && dpkg-query -W > /opt/stm32-gdbtest-ci/packages.txt
 
 ENV STM32CUBE_REPOSITORY=/opt/STM32Cube/Repository \
+    AT32_SDK_ROOT=/opt/Artery/AT32F403A_407_Firmware_Library_V2.0.9 \
     CHECK_SPEC=/opt/demo-stm32-skills/embedded-tech-spec/scripts/check_spec.py \
     PYTHONDONTWRITEBYTECODE=1
 WORKDIR /workspace
