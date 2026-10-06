@@ -6,6 +6,9 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- TODO: v0.3.0 field experience (0.3.1 candidates from the examples) and a DDTT practice research track —
+  scenario attributes and verdicts, an adaptive scenario tree, build and tool dependence, tools in RAM.
+
 ## [0.3.0] - 2026-10-06
 
 Extended scenario API. Candidate 0.3.0-rc.1 was never published; the owner sets the `v0.3.0` tag.
