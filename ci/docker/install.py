@@ -68,6 +68,11 @@ def extract_zip(archive, destination, include):
             if not (root / name).resolve().is_relative_to(root):
                 raise ValueError(f"Archive member outside the destination: {name}")
         package.extractall(destination, members)
+        # zipfile drops Unix permissions (unzip keeps them): restore the permission bits, e.g. executable ninja.
+        for info in package.infolist():
+            mode = (info.external_attr >> 16) & 0o777
+            if info.filename in members and mode and not info.is_dir():
+                (destination / info.filename).chmod(mode)
         say(f"extracted {len(members)} members")
 
 
