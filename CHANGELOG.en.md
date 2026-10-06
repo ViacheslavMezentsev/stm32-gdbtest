@@ -13,6 +13,10 @@ Versions: [policy](docs/en/VERSIONING.md).
   peripheral scenarios through the SDK bit fields; 44/44 on the board together with the shared scenarios. The
   Artery SDK is pinned in `ci/dependencies.lock.json`, `tools/vendor_sdk.py` installs it locally; the build
   manifest records the Artery package.
+- Compatible MCU documentation: the README names AT32F403ACGU7 and the validation limits, [compatible
+  MCUs](docs/en/COMPATIBLE_MCU.md) give the step-by-step procedure for your own chip; the [HOWTO](docs/en/HOWTO.md)
+  covers branch push order, bundles and cherry-pick, the CTest stand, write-only registers and the CI failures of the
+  recent changes.
 
 ### Changed
 

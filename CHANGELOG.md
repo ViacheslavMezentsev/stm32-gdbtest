@@ -12,6 +12,9 @@
   проверочной прошивки (WeAct AT32F4 Core Board, AT32F403ACGU7, J-Link) — порт на CMSIS Artery и 20 сценариев
   периферии через битовые поля SDK; на плате 44/44 вместе с общими сценариями. SDK Artery закреплён в
   `ci/dependencies.lock.json`, `tools/vendor_sdk.py` ставит его локально; build manifest записывает пакет Artery.
+- Документация совместимых МК: README называет AT32F403ACGU7 и границы проверки, [совместимые МК](docs/ru/COMPATIBLE_MCU.md)
+  дают пошаговое подключение своего кристалла; [памятка](docs/ru/HOWTO.md) — порядок push веток, bundle и
+  cherry-pick, стенд CTest, регистры только для записи, сбои CI последних изменений.
 
 ### Изменено
 

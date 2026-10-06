@@ -245,7 +245,8 @@ hardware breakpoints, обработчики отказов, диагности�
 MCU одной прошивки могут делить сценарии, каждый со своим профилем (`PROFILE`).
 
 Образцы в репозитории: CI-прошивки `tests/firmware/profiles/` (F030R8, F103C8, F401CC,
-F411CE, F429ZI — Cortex-M0, M3, M4) и пример `examples/minimal-consumer/profile/` (F411CE).
+F411CE, F429ZI — Cortex-M0, M3, M4; AT32F403A — совместимый Cortex-M4) и пример
+`examples/minimal-consumer/profile/` (F411CE).
 
 | MCU | Отладчик / GDB-сервер | Где проверено |
 | --- | --- | --- |
@@ -256,11 +257,19 @@ F411CE, F429ZI — Cortex-M0, M3, M4) и пример `examples/minimal-consumer
 | STM32F411CE | ST-Link / OpenOCD; ST-LINK GDB Server | CI-прошивка (44 сценария), пример, стендовый проект |
 | STM32F429ZI | ST-Link / OpenOCD; ST-LINK GDB Server | CI-прошивка (44 сценария), стендовый проект |
 | STM32G474CE | ST-Link / OpenOCD на Orange Pi 5 | проект потребителя (Arduino Core STM32) |
+| AT32F403ACGU7 (Artery) | J-Link / J-Link GDB Server | CI-прошивка (44 сценария), после 0.3.0 |
 
 Для OpenOCD и ST-LINK GDB Server достаточно профиля. J-Link GDB Server требует
-соответствия имени устройства; сейчас оно есть для STM32F103C8T6, STM32F030R8T6 и
-STM32F103CBT6. H503 не поддержан. Поддержка определяется конкретной
+имени устройства: оно задаётся в профиле (`jlink_device`), а для STM32F103C8T6,
+STM32F030R8T6 и STM32F103CBT6 известно модулю. H503 не поддержан. Поддержка определяется конкретной
 комбинацией MCU, HAL, GDB и backend, а не семейством: [текущее состояние](docs/ru/STATUS.md).
+
+**Совместимые МК других производителей.** Модуль не привязан к ST: нужны ядро Cortex-M и
+GDB-сервер, который подключается к кристаллу. Такой МК (Artery AT32, GigaDevice GD32, Geehy APM32
+и т. п.) подключается своим профилем и CMSIS производителя, без изменений модуля. Проверен пока один —
+AT32F403ACGU7 на WeAct AT32F4 Core Board через J-Link; он не входит в аппаратную кампанию 0.3.0
+и в счётчики выше. Профиль, SDK, особенности сценариев и порядок подключения своего МК —
+в [совместимых МК](docs/ru/COMPATIBLE_MCU.md). Каждый новый кристалл требует своей приёмки на плате.
 
 ## Состояние
 
@@ -279,7 +288,7 @@ RISC-V, полный перенос остальных примеров, упр�
 
 - `stm32_gdbtest/` — runner, GDB-агент, Target API, backend, контракты и CMake-интеграция.
 - `tests/host`, `tests/fixtures` — проверки инфраструктуры без платы.
-- `tests/firmware`, `ci/` — CI-прошивки F030R8/F103C8/F401CC/F411CE/F429ZI, Docker-образ, сценарий
+- `tests/firmware`, `ci/` — CI-прошивки F030R8/F103C8/F401CC/F411CE/F429ZI/AT32F403A, Docker-образ, сценарий
   проверок и `run_hw.py` для аппаратной проверки на стенде; `tests/firmware/common/tests` — общие
   сценарии всех профилей, включая девять сценариев-примеров API.
 - `tests/hal-f030/` — самостоятельная HAL-регрессия F030, CI и аппаратная приёмка.

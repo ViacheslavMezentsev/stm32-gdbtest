@@ -83,6 +83,20 @@ that updates main and deletes the branch on GitHub → deletes the local branch.
 
 Undo: remove the alias with `git config --global --unset-all alias.land`.
 
+### Unpushed branches and push order
+
+```
+git fetch --prune
+git for-each-ref --format="%(refname:short) %(upstream:short) %(upstream:track)" refs/heads
+git log --oneline --graph --branches --not --remotes   # commits that are in no GitHub branch
+git rev-list --count origin/main..<branch>             # how many branch commits are not in main yet
+git merge-base --is-ancestor <branch-A> <branch-B> && echo "A is the base of B"
+```
+
+An empty upstream means the branch is not on GitHub. Push the base branch first (its commits are part of the next
+one), then the branches on top of it: `git push -u origin <base>`, then `git push -u origin <branch>`. This way the
+CI of each branch checks only its own changes.
+
 ### Cleaning up branches
 
 ```
@@ -173,6 +187,10 @@ rm -rf /tmp/stm32-gdbtest-locks                   # only when no runner is activ
 | `GDB server startup timed out after N s` | The server did not become ready. Check `server.log` and the server's log; give a slow debugger `startup_timeout_s` in the stand |
 | Warning `Flash capacity differs … image fits both` | The factory Flash size is larger than the profile (BluePill-Plus 128 KiB); the run continues |
 | After an experiment the board has other firmware or an 0xA5 tail | `run_hw.py … --steps build full-ff` programs the CI firmware with an 0xFF tail |
+| CTest does not find the stand although `run_hw.py` works with the same file | `STM32_GDBTEST_STAND` is a relative path: CTest runs the scenarios from the build directory. Use an absolute path: PS `-DSTM32_GDBTEST_STAND="$PWD\<stand>.local.toml"`, sh `"$PWD/<stand>.local.toml"`, then configure again |
+| `J-Link device mapping not validated for this MCU` | The module does not know the J-Link device name of the MCU: set `jlink_device` in the profile ([compatible MCUs](COMPATIBLE_MCU.md)) |
+| `DEV_ID mismatch` on a compatible MCU | The identifier of a compatible MCU is wider than the 12-bit STM32 DEV_ID: read the register on the board (J-Link Commander `mem32 <address> 1`) and check the `[identity]` address, mask and value against the RM |
+| A peripheral register always reads zero although the firmware writes it | The register is write-only (`RTC_DIV`, `RTC_TA` on AT32F403A): check a readable register of the same function (`RTC_DIVCNT`, `RTC_CNT`); the RM gives the access of every register |
 
 Leftover server processes:
 
@@ -237,6 +255,11 @@ runner" in [hardware CI](HARDWARE_CI.md).
 | Docker Hub is unreachable while building the image | `docker build --build-arg BASE_IMAGE=<mirror>/ubuntu:24.04 …` ([checks and CI](testing.md)) |
 | Files in `build/` are owned by root after a container run on Linux | Run with `--user "$(id -u):$(id -g)" -e HOME=/tmp`; remove old ones: `sudo rm -rf build tests/firmware/build` |
 | CI is red but everything passes locally | Match the checked commit with the branch's latest commit; open the `offline-results` or `linux-stand-*` artifact |
+| Image build: `PermissionError: … 'ninja'` in `verify.py` | A file from a ZIP archive was extracted without the executable bit (Python `zipfile` does not restore Unix permissions). `install.py` restores them from the archive; after changing extraction check `ninja --version` in the built image |
+| `windows-host` red, Linux green: a test compares paths | On Windows tool paths come back with `\`. Compare paths in one form in tests (`.replace("\\", "/")` or `Path`), not raw strings |
+| `format`: clang-format found differences | Format the changed C/H files with `clang-format -i <files>` (the CI image version; locally easiest in the container) and rerun `python3 ci/run_checks.py format` |
+| A new profile broke a host test with reference data | The test iterated every `profiles/` directory; the reference pins its profile list, and a new profile is added to the reference separately |
+| The vendor SDK (Artery) is needed outside CI | `python tools/vendor_sdk.py` installs the pinned archive where CMake looks for it ([compatible MCUs](COMPATIBLE_MCU.md)) |
 
 Remove the image and cache: `docker image rm stm32-gdbtest-ci:local`, `docker builder prune`.
 
@@ -247,6 +270,11 @@ Remove the image and cache: `docker image rm stm32-gdbtest-ci:local`, `docker bu
   allowed); there run `git fetch <bundle> <branch>:refs/agent/tmp`, `git cherry-pick -S`
   of the new commits and `git update-ref -d refs/agent/tmp`. The bundle starts from a
   commit the owner has (for example `origin/main`).
+- The owner's hashes differ from the agent's: `cherry-pick -S` signs the commits anew. So the range uses the agent's
+  hash: `git fetch <bundle> <branch>` and `git cherry-pick -S <agent-hash-of-last-applied>..FETCH_HEAD`.
+  A fetch into `refs/agent/tmp` rejected (`! [rejected]`) means the reference is left from last time:
+  delete it with `git update-ref -d refs/agent/tmp` or use `FETCH_HEAD`. A cherry-pick conflict on an already applied
+  commit: `git cherry-pick --abort` and retry with the correct lower bound of the range.
 - An agent does not push, tag or store passwords; SSH to stands uses keys only.
 
 ## Do not compare reserved MMIO bits

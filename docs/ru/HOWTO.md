@@ -84,6 +84,20 @@ push отправка main и удаление ветки на GitHub → уда
 
 Вернуть как было: удалить псевдоним — `git config --global --unset-all alias.land`.
 
+### Неотправленные ветки и порядок push
+
+```
+git fetch --prune
+git for-each-ref --format="%(refname:short) %(upstream:short) %(upstream:track)" refs/heads
+git log --oneline --graph --branches --not --remotes   # коммиты, которых нет ни в одной ветке GitHub
+git rev-list --count origin/main..<ветка>              # сколько коммитов ветки ещё не в main
+git merge-base --is-ancestor <ветка-A> <ветка-B> && echo "A — основа B"
+```
+
+Пустой upstream — ветки на GitHub нет. Первой пушится ветка-основа (её коммиты входят в следующую), затем
+ветки поверх неё: `git push -u origin <основа>`, потом `git push -u origin <ветка>`. Так CI каждой ветки
+проверяет только её изменения.
+
 ### Уборка веток
 
 ```
@@ -173,6 +187,10 @@ rm -rf /tmp/stm32-gdbtest-locks                   # только если нет
 | `GDB server startup timed out after N s` | Сервер не дошёл до готовности. Посмотреть `server.log` и журнал сервера; медленному отладчику — `startup_timeout_s` в стенде |
 | Предупреждение `Flash capacity differs … image fits both` | Заводской размер Flash больше профиля (BluePill-Plus 128 KiB); запуск не прерывается |
 | После опыта плата с другой прошивкой или с хвостом 0xA5 | `run_hw.py … --steps build full-ff` записывает прошивку CI с хвостом 0xFF |
+| CTest не находит стенд, хотя `run_hw.py` с тем же файлом работает | `STM32_GDBTEST_STAND` задан относительным путём: CTest запускает сценарии из каталога сборки. Указывать абсолютный путь: PS `-DSTM32_GDBTEST_STAND="$PWD\<стенд>.local.toml"`, sh `"$PWD/<стенд>.local.toml"`, затем заново configure |
+| `J-Link device mapping not validated for this MCU` | Для МК не известно имя устройства J-Link: задать `jlink_device` в профиле ([совместимые МК](COMPATIBLE_MCU.md)) |
+| `DEV_ID mismatch` на совместимом МК | Идентификатор совместимого МК шире 12-битного DEV_ID STM32: прочитать регистр на плате (J-Link Commander `mem32 <адрес> 1`) и сверить адрес, маску и значение `[identity]` с RM |
+| Регистр периферии всегда читается нулём, хотя прошивка в него пишет | Регистр только для записи (у AT32F403A — `RTC_DIV`, `RTC_TA`): проверять по читаемому регистру той же функции (`RTC_DIVCNT`, `RTC_CNT`); RM отмечает доступ к каждому регистру |
 
 Оставшиеся процессы серверов:
 
@@ -237,6 +255,11 @@ ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -i <�
 | Docker Hub недоступен при сборке образа | `docker build --build-arg BASE_IMAGE=<зеркало>/ubuntu:24.04 …` ([проверки и CI](testing.md)) |
 | Файлы в `build/` созданы root после запуска контейнера на Linux | Запускать с `--user "$(id -u):$(id -g)" -e HOME=/tmp`; удалить старые: `sudo rm -rf build tests/firmware/build` |
 | CI красный, а локально всё проходит | Сравнить коммит проверки с последним коммитом ветки; открыть артефакт `offline-results` или `linux-stand-*` |
+| Сборка образа: `PermissionError: … 'ninja'` в `verify.py` | Файл из zip-архива распакован без права на запуск (`zipfile` в Python не восстанавливает Unix-права). `install.py` восстанавливает их из архива; при своих правках распаковки проверять запуск `ninja --version` в собранном образе |
+| `windows-host` красный, Linux зелёный: тест сравнивает пути | На Windows пути инструментов возвращаются с `\`. В тестах сравнивать пути в одном виде (`.replace("\\", "/")` или `Path`), а не строки как есть |
+| `format`: clang-format нашёл отличия | Отформатировать изменённые C/H-файлы: `clang-format -i <файлы>` (версия — как в образе CI; локально проще в контейнере) и повторить `python3 ci/run_checks.py format` |
+| Новый профиль сломал host-тест с эталонными данными | Тест перебирал все каталоги `profiles/`; эталон фиксирует свой список профилей, новый профиль добавляется в эталон отдельно |
+| Нужен SDK производителя (Artery) вне CI | `python tools/vendor_sdk.py` ставит закреплённый архив туда, где его ищет CMake ([совместимые МК](COMPATIBLE_MCU.md)) |
 
 Удалить образ и кэш: `docker image rm stm32-gdbtest-ci:local`, `docker builder prune`.
 
@@ -247,6 +270,11 @@ ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -i <�
   `git fetch <bundle> <ветка>:refs/agent/tmp`, `git cherry-pick -S` новых коммитов и
   `git update-ref -d refs/agent/tmp`. Bundle строится от коммита, который есть у
   владельца (например, от `origin/main`).
+- Хэши у владельца отличаются от хэшей агента: `cherry-pick -S` подписывает коммиты заново. Диапазон
+  поэтому задаётся хэшем агента: `git fetch <bundle> <ветка>` и `git cherry-pick -S <хэш-агента-последнего-применённого>..FETCH_HEAD`.
+  Fetch в `refs/agent/tmp` отклонён (`! [rejected]`) — ссылка осталась от прошлого раза: удалить её
+  `git update-ref -d refs/agent/tmp` или брать `FETCH_HEAD`. Конфликт cherry-pick на уже применённом коммите —
+  `git cherry-pick --abort` и повтор с правильной нижней границей диапазона.
 - Агент не выполняет push, не ставит теги и не записывает пароли; для SSH к стендам —
   только ключи.
 

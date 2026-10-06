@@ -247,7 +247,8 @@ for their board, using one of the existing ones as a template. Several MCU varia
 one firmware can share scenarios, each with its own profile (`PROFILE`).
 
 Templates in the repository: the CI firmware `tests/firmware/profiles/` (F030R8,
-F103C8, F401CC, F411CE, F429ZI — Cortex-M0, M3, M4) and the example `examples/minimal-consumer/profile/` (F411CE).
+F103C8, F401CC, F411CE, F429ZI — Cortex-M0, M3, M4; AT32F403A — a compatible Cortex-M4) and the example
+`examples/minimal-consumer/profile/` (F411CE).
 
 | MCU | Debugger / GDB server | Verified in |
 | --- | --- | --- |
@@ -258,11 +259,19 @@ F103C8, F401CC, F411CE, F429ZI — Cortex-M0, M3, M4) and the example `examples/
 | STM32F411CE | ST-Link / OpenOCD; ST-LINK GDB Server | CI firmware (44 cases), example, stand project |
 | STM32F429ZI | ST-Link / OpenOCD; ST-LINK GDB Server | CI firmware (44 cases), stand project |
 | STM32G474CE | ST-Link / OpenOCD on Orange Pi 5 | consumer project (Arduino Core STM32) |
+| AT32F403ACGU7 (Artery) | J-Link / J-Link GDB Server | CI firmware (44 cases), after 0.3.0 |
 
 OpenOCD and ST-LINK GDB Server need only the profile. J-Link GDB Server requires a
-device name mapping, which currently exists for STM32F103C8T6, STM32F030R8T6 and
-STM32F103CBT6. H503 is not supported. Support is defined by the specific combination
+device name: the profile sets it (`jlink_device`), and the module knows it for STM32F103C8T6,
+STM32F030R8T6 and STM32F103CBT6. H503 is not supported. Support is defined by the specific combination
 of MCU, HAL, GDB and backend, not by the family: [current status](docs/en/STATUS.md).
+
+**Compatible MCUs from other vendors.** The module is not tied to ST: it needs a Cortex-M core and a
+GDB server that connects to the chip. Such an MCU (Artery AT32, GigaDevice GD32, Geehy APM32, etc.) is
+attached with its own profile and the vendor CMSIS, without module changes. One is verified so far —
+AT32F403ACGU7 on the WeAct AT32F4 Core Board via J-Link; it is not part of the 0.3.0 hardware campaign
+or the counters above. The profile, the SDK, scenario specifics and the procedure for your own MCU are in
+[compatible MCUs](docs/en/COMPATIBLE_MCU.md). Every new chip needs its own acceptance on a board.
 
 ## Status
 
@@ -281,7 +290,7 @@ supervision and Python packaging remain in the [roadmap](TODO.md).
 
 - `stm32_gdbtest/` — runner, GDB agent, Target API, backends, contracts and CMake integration.
 - `tests/host`, `tests/fixtures` — infrastructure checks without a board.
-- `tests/firmware`, `ci/` — F030R8/F103C8/F401CC/F411CE/F429ZI CI firmware, Docker image, the check
+- `tests/firmware`, `ci/` — F030R8/F103C8/F401CC/F411CE/F429ZI/AT32F403A CI firmware, Docker image, the check
   script and `run_hw.py` for hardware validation on a stand; `tests/firmware/common/tests` — scenarios
   shared by all profiles, including nine API showcase scenarios.
 - `tests/hal-f030/` — standalone HAL F030 regression, CI and hardware acceptance.

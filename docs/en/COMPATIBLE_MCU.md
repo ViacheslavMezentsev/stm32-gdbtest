@@ -51,6 +51,40 @@ like STM32Cube.
 - Conversion constants (temperature sensor) come from the vendor datasheet or example; the source is marked by the
   quality code of the result (`adc_units.c`: 4 — vendor example constants).
 
+## Step by step: attach your own compatible MCU
+
+The procedure for a consumer project; attaching the module and the first scenario follow
+[getting started](GETTING_STARTED.md). Take the values from the chip's RM and datasheet, not from the STM32 analogue.
+
+1. **The debugger sees the chip.** Connect without the module. J-Link Commander:
+   `JLink.exe -device <name> -if SWD -speed 4000 -autoconnect 1` (Linux: `JLinkExe`); the device name comes from the
+   SEGGER supported device list or the device selection dialog. If J-Link does not know the chip, the core name
+   (`Cortex-M4`) connects, but Flash programming is then usually unavailable: use the vendor OpenOCD. For OpenOCD:
+   `openocd -f interface/<probe>.cfg -f target/<target>.cfg`, then `telnet localhost 4444`.
+2. **Three RM values, read on the board.** Read them in the same session (`mem32 <address> 1` in J-Link Commander,
+   `mdw <address>` in OpenOCD, `x/wx <address>` in GDB) and compare with the RM:
+   - the chip identifier (`0xE0042000` on STM32 and many compatibles) → `[identity]` `address`, `mask`, `value`;
+     the mask keeps only the bits the RM calls the identifier;
+   - the factory Flash size in KiB (the low 16 bits of the word) → `flash_size_address`; without such a register the hardware run is
+     refused, so the module does not fit that MCU yet;
+   - `FP_CTRL` (`0xE0002000`): FPB code comparators = `NUM_CODE` (bits 14:12 high, 7:4 low) → `breakpoint_limit`.
+3. **Profile.** Copy the STM32 profile of the same core (Cortex-M0 — `f030r8`, M3 — `f103c8`, M4 — `f411ce` or
+   `at32f403a`) and replace `mcu`, `name`, `flash_start`, `flash_size`, the step 2 fields, `jlink_device` or
+   `openocd_target`. `fault_handlers`, `core_registers` and `[diagnostic_registers]` match the core of the same class
+   when the firmware vector table uses the same handler names.
+4. **Stand.** The server and the probe go to the stand file (`*.local.toml` or `<profile>-<server>.remote.toml`, not
+   in git). For J-Link the stand does not change; for the vendor OpenOCD set its `executable`, and for another probe
+   `interface` and `transport` ([GDB servers](BACKENDS.md)).
+5. **Build with the vendor CMSIS.** The linker script and startup come from the vendor or follow its memory map; keep
+   the SDK outside the repository and pass its path through a CMake or environment variable, like `AT32_SDK_ROOT` in
+   the check firmware.
+6. **Without the board.** `python -B -m stm32_gdbtest doctor --stand <stand>`, then `run --prepare-only` of the first
+   scenario: it checks the profile, the stand, the manifest and the ELF.
+7. **On the board.** Start with a smoke scenario: `boot()`, reaching `main`, reading one peripheral register with a
+   known reset value. On an identity error compare the value read with the RM: usually the mask or the address is
+   wrong. Then the peripheral scenarios by the rules of the "Scenarios" section, and several runs in a row to filter out
+   stand instability.
+
 ## Not validated
 
 Other families of compatible MCUs, vendor OpenOCD builds and probes such as WCH-Link in ARM mode — each needs its
