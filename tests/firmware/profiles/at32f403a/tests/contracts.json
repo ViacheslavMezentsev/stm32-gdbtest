@@ -60,6 +60,44 @@
           "quality": "uint32_t"
         }
       }
+    },
+    "ci_adc_macros": {
+      "macros": {
+        "context": "board_adc_sample",
+        "expressions": [
+          "CRM",
+          "ADC1",
+          "DMA1",
+          "DMA1_CHANNEL1",
+          "NVIC",
+          "SCB",
+          "SCB_ICSR_VECTACTIVE_Msk"
+        ]
+      }
+    },
+    "ci_sleep_macros": {
+      "macros": {
+        "context": "board_delay_ms",
+        "expressions": [
+          "SCB",
+          "SysTick",
+          "NVIC",
+          "SCB_ICSR_VECTACTIVE_Msk"
+        ]
+      }
+    },
+    "ci_rtc_macros": {
+      "macros": {
+        "context": "RTC_Alarm_IRQHandler",
+        "expressions": [
+          "RTC",
+          "CRM",
+          "EXINT",
+          "NVIC",
+          "SCB",
+          "SCB_ICSR_VECTACTIVE_Msk"
+        ]
+      }
     }
   }
 }

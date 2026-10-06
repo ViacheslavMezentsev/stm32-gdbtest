@@ -27,3 +27,49 @@ thread mode resumes. No software event or NVIC pending injection is used; no jit
 ## HW_CI_SYSTICK_IRQ
 Natural SysTick enters exception15 through vector15. The handler increments the
 millisecond counter once, then thread mode can resume. No external time reference.
+
+## HW_CI_ADC_INIT
+ADC1 PCLK2/2, ordinary scan IN16/IN17, 239.5 cycles, calibrated ADC on with VINTRV and temperature sensor;
+normal halfword DMA1 channel1, IRQ11/vector27.
+
+## HW_CI_ADC_DMA
+Two natural scans deliver two halfwords each, exception27 with full transfer done and no transfer error; the ISR
+publishes raw values before the sequence, DMA stops and flags clear.
+
+## HW_CI_ADC_UNITS
+Vendor-example provenance=4; plausible VDDA and die temperature. Values are estimates, not calibrated accuracy.
+
+## HW_CI_ADC_VECTORS
+Four analytic anchors of the vendor-example formula exercise adc_convert_at32f403a through argument injection;
+exact integer output.
+
+## HW_CI_ADC_INVALID
+Zero, saturation, uint16 overflow-range and implausible VDDA inputs yield invalid reading; subsequent acquisition recovers.
+
+## HW_CI_ADC_TIMEOUT
+Mask DMA IRQ11: transfers complete but no notification; after at least 20 ticks enter error4 without stale publication.
+
+## HW_CI_ADC_BUSY
+Enable DMA channel before sample: ownership guard yields error6 without publication; this does not prove active ADC conversion.
+
+## HW_CI_ADC_DISABLED
+Clear ADC ADCEN before sample: error3 without publication. This is not a driver return-code injection.
+
+## HW_CI_RTC_INIT
+LICK, counter RTC divider 39999, initial alarm 2, EXINT17 rising, IRQ41/vector57; no battery-domain reset.
+
+## HW_CI_RTC_ALARM
+Two natural alarms enter exception57 with TAF/EXINT17 pending; thread service rearms, one event per handler,
+application resumes.
+
+## HW_CI_RTC_DEADLINE
+Inject zero mask into the LICK-stable wait; error3 after at least 1000 ticks without changing the battery-domain
+configuration or publishing events. Not a physical oscillator fault.
+
+## HW_CI_SLEEP_SYSTICK
+Ordinary Sleep/WFI interrupted by SysTick exception15 with external IRQs masked; interrupted frame follows WFI,
+delay and ADC state retained.
+
+## HW_CI_SLEEP_TIM2
+With SysTick disabled and only TMR2 enabled, exception44 interrupts WFI; ticks do not advance, restore IRQ controls
+and resume. Not Stop/current measurement.
