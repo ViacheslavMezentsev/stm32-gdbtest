@@ -41,7 +41,7 @@ Extended scenario API. Candidate 0.3.0-rc.1 was never published; the owner sets 
 - Agent skills in `skills/`: `stm32-gdbtest-integrate` (submodule, `hil/` directory, MCU description, CMake, presets,
   stand, first run), `stm32-gdbtest-scenarios` (scenario technique on API 0.3.0, style, migration) and
   `stm32-gdbtest-run` (run ladder, stand layouts, reading `result.json`, common failures). The style test accepts a
-  consumer's scenario files on the command line.
+  consumer's scenario files on the command line; `tests/host/test_skills.py` checks the skills' YAML headers.
 - Shared scenario directory: `tests/firmware/common/tests` for every profile; a user project adds search directories
   with `TEST_DIRS` in CMake or a repeated `--tests` in the CLI, and the package carries them along.
 - Nine showcase scenarios: `HW_CI_INJECT_ZERO`, `HW_CI_WHO_WRITES`, `HW_CI_RETURN_VALUE`, `HW_CI_CONDITIONAL_STOP`,

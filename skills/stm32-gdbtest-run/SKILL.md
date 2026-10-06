@@ -1,6 +1,6 @@
 ---
 name: stm32-gdbtest-run
-description: Запуск сценариев stm32-gdbtest и разбор результатов — doctor, prepare-only, CTest host/hw, один сценарий через CLI, удалённый GDB-сервер по SSH, пакет подготовленного запуска (pack/run --package), аппаратный CI, чтение result.json и журналов при FAIL/ERROR, уборка после аварии. Используй, когда просят «прогнать тесты на плате», «запустить сценарий», «почему ERROR/FAIL», «GDB server startup timed out», «отладчик занят», «собрать пакет для стенда», «запустить на Orange Pi/Linux-стенде»; EN: run stm32-gdbtest scenarios, debug a failed hardware run, prepared run package, remote GDB server.
+description: Запуск сценариев stm32-gdbtest и разбор результатов — doctor, prepare-only, CTest host/hw, один сценарий через CLI, удалённый GDB-сервер по SSH, пакет подготовленного запуска (pack/run --package), аппаратный CI, чтение result.json и журналов при FAIL/ERROR, уборка после аварии. Используй, когда просят «прогнать тесты на плате», «запустить сценарий», «почему ERROR/FAIL», «GDB server startup timed out», «отладчик занят», «собрать пакет для стенда», «запустить на Orange Pi/Linux-стенде»; по-английски — run stm32-gdbtest scenarios, debug a failed hardware run, prepared run package, remote GDB server.
 ---
 
 # Запуск сценариев и разбор результатов
