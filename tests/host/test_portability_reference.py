@@ -17,7 +17,8 @@ from stm32_gdbtest.profile import load_profile  # noqa: E402
 from stm32_gdbtest.runner import tool  # noqa: E402
 
 DATA = Path(__file__).resolve().parent / "data" / "portability_reference.json"
-PROFILES = sorted(path.parent.name for path in (ROOT / "tests/firmware/profiles").glob("*/target.toml"))
+# The profiles that existed before the refactoring; later profiles are not part of the reference.
+PROFILES = ("f030r8", "f103c8", "f401cc", "f411ce", "f429zi")
 # Stand values as load_stand() returns them, without looking up executables on this host.
 STANDS = {
     "openocd": dict(backend="openocd", serial="ABC123", executable="openocd", speed_khz=1000,
