@@ -6,6 +6,16 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+### Changed
+
+- Portability (no behaviour change for existing stands and profiles): binutils take the prefix of the selected
+  GDB (`riscv-none-elf-gdb-py3` → `riscv-none-elf-objdump`); the full-image carrier ELF takes the format of the
+  firmware ELF; fault guards and diagnostics go through an architecture adapter (Cortex-M for now); the report
+  records `arch`.
+- Stand: optional `interface` and `transport` for OpenOCD, `interface = "SWD"/"JTAG"` for J-Link. Profile:
+  optional `jlink_device`, `reset_halt = "monitor reset init"` for OpenOCD. The debugger lock accounts for the
+  probe family.
+
 - TODO: v0.3.0 field experience (0.3.1 candidates from the examples) and a DDTT practice research track —
   scenario attributes and verdicts, an adaptive scenario tree, build and tool dependence, tools in RAM.
 

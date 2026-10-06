@@ -22,6 +22,8 @@ Backend задаёт запуск и готовность сервера, ком
 | `[remote]` | Отдельная таблица: GDB-сервер на хосте стенда Linux по SSH ([Linux-стенд](LINUX_STAND.md#удалённый-gdb-сервер-windows-или-wsl--orange-pi)); `executable` и `programmer_dir` тогда относятся к хосту стенда |
 | `startup_timeout_s` | 1…120, по умолчанию 10 — сколько ждать готовности сервера; больше нужно отладчикам с медленным подключением к цели |
 | `programmer_dir` | Только `stlink`: абсолютный каталог с `STM32_Programmer_CLI.exe` (на Linux — без `.exe`) |
+| `interface` | `openocd`: скрипт интерфейса, по умолчанию `interface/stlink.cfg`; `jlink`: `SWD` (по умолчанию) или `JTAG` |
+| `transport` | Только `openocd`: `transport select …` после скрипта интерфейса (`swd`, `jtag`, `hla_swd`, `hla_jtag`, `dapdirect_swd`, `dapdirect_jtag`, `sdi`); по умолчанию не задаётся |
 
 Неизвестный ключ отклоняется. Шаблоны: [OpenOCD](../../examples/stands/stlink.example.toml)
 и [OpenOCD, ST, J-Link для CI-прошивок](../../tests/firmware/stands/jlink.example.toml)
@@ -31,6 +33,11 @@ Backend задаёт запуск и готовность сервера, ком
 серийные номера не коммитятся (`*.local.toml`). `run --prepare-only --stand …`
 проверяет стенд и команды backend без подключения к отладчику, а `doctor --stand …`
 дополнительно проверяет GDB-Python, OpenOCD и доступ к USB.
+
+Профиль `target.toml` может назвать устройство J-Link ключом `jlink_device` (например, для МК вне проверенных
+STM32); без него используется таблица проверенных STM32. Для OpenOCD профиль допускает `reset_halt =
+"monitor reset init"` — сброс с процедурой инициализации цели. Блокировка отладчика различает семейство зонда:
+другой скрипт интерфейса OpenOCD не делит блокировку с ST-Link того же серийного номера.
 
 На Linux ST-LINK GDB Server (STM32CubeCLT) есть только для x86_64; на aarch64
 (Orange Pi 5) используются OpenOCD и J-Link. OpenOCD 0.10 из репозитория Ubuntu 20.04

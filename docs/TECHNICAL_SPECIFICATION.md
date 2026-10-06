@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.69 (к выпуску 0.3.0) |
+| **Ревизия** | 0.70 (переносимость P1) |
 | **Дата формирования** | 06.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | v0.3.0; Python `0.3.0`, API_VERSION=1, ТЗ API 0.3.7 (р.0.69) |
@@ -127,6 +127,19 @@
 | 0.68 | 05.10.2026 | Решение владельца 05.10.2026: порт сервера на хосте стенда берётся из 61000–64999, выше эфемерного диапазона Linux; при отказе «порт занят» runner повторяет запуск с другим портом до трёх раз. Найдено прогоном схемы 3 сразу после схемы 2 на Orange Pi 5. TC-158. |
 
 | 0.69 | 06.10.2026 | К выпуску 0.3.0: целевая версия v0.3.0, ТЗ API 0.3.7; приложения B и F приведены к приёмке пакета на пяти платах по шести схемам запуска. Требования не меняются. |
+| 0.70 | 07.10.2026 | Переносимость без изменения поведения: binutils с префиксом выбранного GDB, формат ELF-носителя полного образа из ELF прошивки, необязательные ключи стенда `interface`/`transport` (OpenOCD) и `interface` (J-Link), ключ профиля `jlink_device`, `monitor reset init`, семейство зонда в блокировке, адаптер архитектуры для ловушек отказов и диагностики, поле `arch` отчёта. |
+
+### Изменения ревизии 0.70
+
+Изменённые пункты помечены `(р.0.70)`. Значения по умолчанию воспроизводят прежнее поведение для стендов и профилей STM32.
+
+| Пункты | Тип | Суть |
+| :--- | :---: | :--- |
+| 3.3.7 | изм. | Для OpenOCD допускается `reset_halt = monitor reset init`; ключ `jlink_device` |
+| 3.4.2 | изм. | Ключи стенда `interface`, `transport` (OpenOCD) и `interface` (J-Link) |
+| 4.1.1, 6.2.1, 5.17.1 | изм. | binutils и проверка `doctor` — с префиксом выбранного GDB и интерфейсом стенда |
+| 5.10.1 | изм. | Ловушки отказов и диагностика — через адаптер архитектуры по формату ELF; поле `arch` отчёта |
+| 6.3.1, 6.5.2 | изм. | Интерфейс и транспорт в командах OpenOCD и J-Link |
 
 ### Изменения ревизии 0.69
 
@@ -987,7 +1000,7 @@ flowchart LR
 
 3.3.6. `breakpoint_limit` ДОЛЖЕН быть больше числа `fault_handlers`, чтобы для сценария оставалась хотя бы одна аппаратная точка останова. `[R]`
 
-3.3.7. `reset_halt` ДОЛЖЕН равняться `monitor reset halt`, `reset_run` — `monitor reset run`. Поля используются только backend OpenOCD; ST и J-Link берут команды из своего диалекта (п. 6.4.2, 6.5.3). См. вопрос 11.2.4. `[R]`
+3.3.7. `reset_halt` ДОЛЖЕН равняться `monitor reset halt` или `monitor reset init` (р.0.70), `reset_run` — `monitor reset run`. Необязательный ключ `jlink_device` (`[A-Za-z0-9][A-Za-z0-9_.-]*`) задаёт устройство J-Link; без него используется таблица проверенных STM32 (п. 6.5.2) (р.0.70). Поля используются только backend OpenOCD; ST и J-Link берут команды из своего диалекта (п. 6.4.2, 6.5.3). См. вопрос 11.2.4. `[R]`
 
 3.3.8. `identity` ДОЛЖЕН содержать ровно `address`, `mask`, `value` — целые `0…0xFFFFFFFF`; `mask` не равна нулю; `value & ~mask` равно нулю. `[R]`
 
@@ -1003,7 +1016,7 @@ flowchart LR
 
 3.4.1. Стенд ДОЛЖЕН содержать таблицу `[probe]` с `backend` из набора `openocd`, `stlink`, `jlink`; иное значение ДОЛЖНО отклоняться. `[R]`
 
-3.4.2. Допустимые ключи: `backend`, `serial`, `executable`, `speed_khz`, `flash`, `startup_timeout_s` (р.0.8); для `stlink` дополнительно `programmer_dir`. Кроме `[probe]`, стенд МОЖЕТ содержать таблицу `[remote]` (п. 3.4.11) (р.0.9). Неизвестный ключ ДОЛЖЕН отклоняться («Unknown probe setting»). `[R]` (р.0.8)
+3.4.2. Допустимые ключи: `backend`, `serial`, `executable`, `speed_khz`, `flash`, `startup_timeout_s` (р.0.8); для `stlink` дополнительно `programmer_dir`; для `openocd` — `interface` (скрипт `interface/*.cfg`, по умолчанию `interface/stlink.cfg`) и `transport` (`swd`, `jtag`, `hla_swd`, `hla_jtag`, `dapdirect_swd`, `dapdirect_jtag`, `sdi`); для `jlink` — `interface` (`SWD` по умолчанию или `JTAG`) (р.0.70). Кроме `[probe]`, стенд МОЖЕТ содержать таблицу `[remote]` (п. 3.4.11) (р.0.9). Неизвестный ключ ДОЛЖЕН отклоняться («Unknown probe setting»). `[R]` (р.0.8)
 
 3.4.3. `serial` ДОЛЖЕН быть задан явно и соответствовать `[A-Za-z0-9]+`. `[R]`
 
@@ -1111,7 +1124,7 @@ flowchart LR
 
 ### 4.1. Режим загружаемых секций ELF (по умолчанию)
 
-4.1.1. Список секций ДОЛЖЕН формироваться до запуска сервера командой `arm-none-eabi-objdump -h` из каталога GDB над снимком ELF; вывод сохраняется в `elf-sections.txt`. `[R]`
+4.1.1. Список секций ДОЛЖЕН формироваться до запуска сервера командой `<префикс>objdump -h` из каталога GDB (префикс — из имени выбранного GDB, п. 6.2.1) (р.0.70) над снимком ELF; вывод сохраняется в `elf-sections.txt`. `[R]`
 
 4.1.2. В образ ДОЛЖНЫ входить только секции с флагами `CONTENTS`, `ALLOC`, `LOAD` и ненулевым размером; адрес секции — LMA, а не VMA. `[R]`
 
@@ -1305,7 +1318,7 @@ flowchart LR
 
 ### 5.10. Выполнение сценария и Target API
 
-5.10.1. `Target.boot` ДОЛЖЕН удалить принадлежащие Target точки останова, выполнить `reset_halt`, установить аппаратные точки на все `fault_handlers` профиля и достичь `main` (п. 5.10.7). `[R]`
+5.10.1. `Target.boot` ДОЛЖЕН удалить принадлежащие Target точки останова, выполнить `reset_halt`, установить аппаратные точки на все `fault_handlers` профиля и достичь `main` (п. 5.10.7). `[R]` Список ловушек и диагностических регистров ДОЛЖЕН выдавать адаптер архитектуры, выбранный при подготовке по формату ELF прошивки (`objdump -h`); единственный адаптер — Cortex-M, он возвращает `fault_handlers`, `core_registers` и `diagnostic_registers` профиля. Неизвестная архитектура отклоняется при подготовке; отчёт содержит `arch` (машина `objcopy`, например `arm`) (р.0.70).
 
 5.10.2. Модуль сценария ДОЛЖЕН импортироваться по пути из результатов сбора с корнем проекта в `sys.path`; функция вызывается с объектом Target. `[R]`
 
@@ -1425,7 +1438,7 @@ flowchart LR
 
 ### 5.17. Диагностика окружения стенда (`doctor`) (р.0.7)
 
-5.17.1. Команда `doctor [--gdb PATH] [--stand TOML] [--json]` ДОЛЖНА проверять: версию host Python (≥ 3.11); GDB (`--gdb` → `STM32_GDBTEST_GDB` → `arm-none-eabi-gdb-py3` → `arm-none-eabi-gdb` в `PATH` → `bin` каталога `ARM_TOOLCHAIN_ROOT` → на Windows каталог xPack по умолчанию в профиле пользователя (р.0.9)) со встроенным Python ≥ 3.11 и `tomllib`; binutils по п. 6.2.1; CMake ≥ 3.25 и Ninja (отсутствие — WARN, они нужны только CMake-интеграции); каталог блокировок (Linux); при заданном стенде — стенд по п. 3.4 и для OpenOCD — доступность `interface/stlink.cfg`; на Linux — отладчики USB (п. 5.17.3). `[N]` (р.0.7)
+5.17.1. Команда `doctor [--gdb PATH] [--stand TOML] [--json]` ДОЛЖНА проверять: версию host Python (≥ 3.11); GDB (`--gdb` → `STM32_GDBTEST_GDB` → `arm-none-eabi-gdb-py3` → `arm-none-eabi-gdb` в `PATH` → `bin` каталога `ARM_TOOLCHAIN_ROOT` → на Windows каталог xPack по умолчанию в профиле пользователя (р.0.9)) со встроенным Python ≥ 3.11 и `tomllib`; binutils по п. 6.2.1; CMake ≥ 3.25 и Ninja (отсутствие — WARN, они нужны только CMake-интеграции); каталог блокировок (Linux); при заданном стенде — стенд по п. 3.4 и для OpenOCD — доступность скрипта интерфейса стенда (р.0.70); на Linux — отладчики USB (п. 5.17.3). `[N]` (р.0.7)
 
 5.17.2. Каждая проверка ДОЛЖНА давать OK, WARN или FAIL с пояснением; код возврата — 1 при хотя бы одном FAIL, иначе 0. `doctor` НЕ ДОЛЖЕН захватывать блокировку, запускать GDB-сервер или подключаться к цели; OpenOCD запускается только с `-c shutdown` до инициализации адаптера. `[N]` (р.0.7)
 
@@ -1532,11 +1545,11 @@ config/config_props с используемым profile/image и defaults; по�
 
 ### 6.2. GNU Binutils
 
-6.2.1. `arm-none-eabi-objdump` и `arm-none-eabi-objcopy` ДОЛЖНЫ находиться в каталоге выбранного GDB и иметь суффикс его исполняемого файла (`.exe` на Windows). `[U]` (р.0.3)
+6.2.1. `objdump` и `objcopy` ДОЛЖНЫ находиться в каталоге выбранного GDB, иметь префикс цели из его имени (`arm-none-eabi-gdb-py3` → `arm-none-eabi-objdump`, `riscv-none-elf-gdb-py3` → `riscv-none-elf-objdump`, `gdb-multiarch` → `objdump`) (р.0.70) и суффикс его исполняемого файла (`.exe` на Windows). ELF-носитель полного образа ДОЛЖЕН получать формат и машину `objcopy` из формата ELF прошивки (`elf32-littlearm` → `arm`); неизвестный формат отклоняется до записи (р.0.70). `[U]` (р.0.3)
 
 ### 6.3. Backend OpenOCD
 
-6.3.1. Команда: `<openocd> -f interface/stlink.cfg -f <openocd_target> -c "adapter serial <serial>" -c "adapter speed <speed_khz>" -c "bindto 127.0.0.1" -c "gdb_port <port>" -c "tcl_port disabled" -c "telnet_port disabled"`. `[R]`
+6.3.1. Команда: `<openocd> -f <interface> [-c "transport select <transport>"] -f <openocd_target> -c "adapter serial <serial>" -c "adapter speed <speed_khz>" -c "bindto 127.0.0.1" -c "gdb_port <port>" -c "tcl_port disabled" -c "telnet_port disabled"`. `[R]`
 
 6.3.2. Маркер готовности — `Listening on port <port> for gdb connections`; `reset_halt` — из профиля; `finish` — `[reset_run профиля, disconnect]`. `[R]`
 
@@ -1552,7 +1565,7 @@ config/config_props с используемым profile/image и defaults; по�
 
 6.5.1. MCU профиля ДОЛЖЕН отображаться в имя устройства J-Link по таблице: `STM32F103C8T6` → `STM32F103C8`, `STM32F103CBT6` → `STM32F103CB`, `STM32F030R8T6` → `STM32F030R8`. Иной MCU ДОЛЖЕН отклоняться до запуска сервера («mapping not validated»). Соответствие `STM32F103CBT6` добавлено для демонстрационного проекта на WeAct BluePill-Plus и проверено на нём (J-Link CE, пять HIL-сценариев PASS). `[U]` (р.0.25)
 
-6.5.2. Команда: `<server> -device <устройство> -if SWD -speed <speed_khz> -USB <serial> -port <port> -swoport 0 -telnetport 0 -RTTTelnetPort 0 -localhostonly 1 -nogui -strict -timeout 5000 -noir -noreset -nohalt -nosinglerun -vd -log <каталог запуска>/jlink.log`. `[R]`
+6.5.2. Команда (р.0.70: устройство — `jlink_device` профиля или таблица проверенных STM32, интерфейс — `interface` стенда): `<server> -device <устройство> -if <SWD|JTAG> -speed <speed_khz> -USB <serial> -port <port> -swoport 0 -telnetport 0 -RTTTelnetPort 0 -localhostonly 1 -nogui -strict -timeout 5000 -noir -noreset -nohalt -nosinglerun -vd -log <каталог запуска>/jlink.log`. `[R]`
 
 6.5.3. `setup` — `monitor flash breakpoints = 0`; маркер готовности — `Waiting for GDB connection`; `reset_halt` — `monitor reset`; `finish` — `[monitor reset, monitor go, disconnect]`. `[R]`
 

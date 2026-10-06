@@ -22,6 +22,8 @@ The `[probe]` table of the local TOML:
 | `[remote]` | A separate table: the GDB server on a Linux stand host over SSH ([Linux stand](LINUX_STAND.md#remote-gdb-server-windows-or-wsl--orange-pi)); `executable` and `programmer_dir` then refer to the stand host |
 | `startup_timeout_s` | 1…120, default 10 — how long to wait for the server to become ready; probes with a slow target connection need more |
 | `programmer_dir` | `stlink` only: absolute directory containing `STM32_Programmer_CLI.exe` (without `.exe` on Linux) |
+| `interface` | `openocd`: the interface script, default `interface/stlink.cfg`; `jlink`: `SWD` (default) or `JTAG` |
+| `transport` | `openocd` only: `transport select …` after the interface script (`swd`, `jtag`, `hla_swd`, `hla_jtag`, `dapdirect_swd`, `dapdirect_jtag`, `sdi`); not set by default |
 
 Unknown keys are rejected. Templates: [OpenOCD](../../examples/stands/stlink.example.toml)
 and [OpenOCD, ST, J-Link for the CI firmware](../../tests/firmware/stands/jlink.example.toml)
@@ -31,6 +33,11 @@ in the same folder). Local paths (`executable`, `programmer_dir`, `identity_file
 and serial numbers are not committed (`*.local.toml`). `run --prepare-only --stand …`
 validates the stand and backend commands without connecting to the debugger, and
 `doctor --stand …` also checks GDB-Python, OpenOCD and USB access.
+
+A `target.toml` profile may name the J-Link device with the `jlink_device` key (for example for an MCU outside
+the validated STM32 parts); without it the validated STM32 table is used. For OpenOCD a profile accepts
+`reset_halt = "monitor reset init"` — a reset with the target init procedure. The debugger lock tells probe
+families apart: another OpenOCD interface script does not share the lock of an ST-Link with the same serial.
 
 On Linux ST-LINK GDB Server (STM32CubeCLT) exists for x86_64 only; on aarch64
 (Orange Pi 5) use OpenOCD and J-Link. OpenOCD 0.10 from the Ubuntu 20.04 repository
