@@ -55,7 +55,7 @@ hil/
   stands/*.example.toml   шаблоны стендов без серийных номеров
 ```
 
-В `.gitignore` проекта — `*.local.toml` и `build/`. Стенды с серийными номерами не коммитятся.
+В `.gitignore` проекта — `*.local.toml`, `*.remote.toml` и `build/`. Стенды с серийными номерами не коммитятся.
 
 ### 3. Описание MCU
 
@@ -66,13 +66,16 @@ hil/
 | --- | --- |
 | `flash_start`, `flash_size` | карта памяти, объём Flash заказанного кристалла |
 | `flash_size_address` | регистр Flash size (F0 `0x1FFFF7CC`, F1 `0x1FFFF7E0`, F4 `0x1FFF7A22`) |
-| `[identity]` | DBGMCU_IDCODE (`0xE0042000`; на F0 `0x40015800`), маска `0xFFF`, DEV_ID из RM |
+| `[identity]` | DBGMCU_IDCODE (`0xE0042000`; на F0 `0x40015800`), маска `0xFFF`, DEV_ID из RM; у совместимых МК — идентификатор производителя любой ширины (AT32F403A: PID, маска `0xFFFFFFFF`) |
 | `breakpoint_limit` | число компараторов FPB: Cortex-M0 — 4, M3/M4 — 6 |
 | `fault_handlers` | M0 — только `HardFault_Handler`; M3/M4 — ещё MemManage, BusFault, UsageFault |
 | `[diagnostic_registers]` | M3/M4 — CFSR/HFSR; у M0 их нет (CPUID, ICSR, SCR) |
 | `openocd_target` | `target/stm32f0x.cfg`, `stm32f1x.cfg`, `stm32f4x.cfg` и т. п. |
+| `jlink_device` | имя устройства J-Link, если МК нет в таблице проверенных STM32 (например, `AT32F403ACGU7`) |
 
-Точки fault handlers занимают слоты `breakpoint_limit` — сценарию остаётся меньше.
+Точки fault handlers занимают слоты `breakpoint_limit` — сценарию остаётся меньше. Cortex-M-совместимый МК
+другого производителя (Artery AT32, GD32, APM32) подключается своим профилем и CMSIS производителя; образец —
+профиль `at32f403a` ([совместимые МК](../../docs/ru/COMPATIBLE_MCU.md)).
 
 ### 4. Конфигурация сессии
 
@@ -142,8 +145,10 @@ endif()
 ### 7. Стенд
 
 Шаблоны — `tests/firmware/stands/{openocd,stlink,jlink,remote}.example.toml`. Владелец копирует
-шаблон в `hil/stands/<board>.local.toml` и вписывает серийный номер; агент серийные номера в
-коммиты и документы не переносит. `flash = "if-different"` пишет Flash только при отличии образа,
+шаблон в `hil/stands/<board>-<backend>.local.toml` (удалённый стенд из `remote.example.toml` —
+`hil/stands/<board>-<backend>.remote.toml`) и вписывает серийный номер; агент серийные номера в
+коммиты и документы не переносит. Другой зонд для OpenOCD — ключи `interface` и `transport`, J-Link по JTAG —
+`interface = "JTAG"` ([GDB-серверы](../../docs/ru/BACKENDS.md)). `flash = "if-different"` пишет Flash только при отличии образа,
 `verify-only` — только сверяет. Удалённый стенд — таблица `[remote]` с SSH-ключом; пароли не
 поддерживаются ([Linux-стенд](../../docs/ru/LINUX_STAND.md)).
 
@@ -171,7 +176,7 @@ ctest --preset HIL_F411CE-hw -R HW_BOOT
 - gitlink указывает на тег или проверенный коммит, `git submodule update --init` восстанавливает модуль;
 - `ctest --preset <…>-host` зелёный, у каждого `@case` есть требование;
 - `doctor` со стендом без FAIL, один `hw.<ID>` дал PASS, `result.json` прочитан;
-- в коммите нет `*.local.toml`, серийных номеров, ELF и каталогов `build/`;
+- в коммите нет `*.local.toml`, `*.remote.toml`, серийных номеров, ELF и каталогов `build/`;
 - README проекта называет пресеты, файл стенда и версию модуля.
 
 ## Перевод старого потребителя на 0.3.0

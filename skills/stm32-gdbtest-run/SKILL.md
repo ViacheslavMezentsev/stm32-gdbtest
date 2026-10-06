@@ -43,7 +43,7 @@ description: Запуск сценариев stm32-gdbtest и разбор ре�
 | --- | --- | --- |
 | Отладчик у рабочего компьютера | `[probe]` | там же |
 | Linux-стенд, всё на нём | `[probe]`, окружение `tools/linux_stand.py` (`. ~/.local/stm32-gdbtest/env.sh`) | на стенде |
-| Runner на Windows/WSL2, сервер на Linux-стенде | `[probe]` + `[remote]` (host, user, identity_file) | у разработчика; сервер по SSH |
+| Runner на Windows/WSL2, сервер на Linux-стенде | `[probe]` + `[remote]` (host, user, identity_file), файл `<board>-<backend>.remote.toml` | у разработчика; сервер по SSH |
 | Пакет подготовленного запуска | `[probe]` на стенде | сборка и подготовка — в другом месте |
 | Аппаратный CI | стенды раннера `~/.config/stm32-gdbtest/stands/` | self-hosted раннер |
 
