@@ -2,7 +2,7 @@
 RU: Проверки RTC AT32F403A: настройка, повторные прерывания будильника и тайм-аут.
 EN: AT32F403A RTC configuration, repeated alarm interrupts and deadline checks.
 """
-from stm32_gdbtest import case
+from stm32_gdbtest import case, within
 
 
 # LICK clocks the RTC (RM: 40 kHz nominal, not a precision reference).
@@ -22,6 +22,11 @@ RTC_WAIT_DEADLINE_MS = 1000
 CRM_CTRLSTS_LICKSTBL = 1 << 1
 RTC_CTRLH_TAIEN = 1 << 1
 
+# RTC_DIV and RTC_TA are write-only on AT32F403A (RM 17.5.3, 17.5.6): the divider is bounded through the readable
+# divider counter and the alarm is observed through the counter value at the alarm interrupt.
+COUNTER = "(RTC->cnth << 16) | RTC->cntl"
+DIVIDER_COUNTER = "(RTC->divcnth << 16) | RTC->divcntl"
+
 # Firmware counters are uint32_t and wrap around.
 U32_MASK = 0xFFFFFFFF
 
@@ -36,9 +41,9 @@ def rtc_init(t):
         ('LICK stable', 'CRM->ctrlsts_bit.lickstbl', 1),
         ('LICK RTC clock', 'CRM->bpdc_bit.rtcsel', RTCSEL_LICK),
         ('RTC clock enabled', 'CRM->bpdc_bit.rtcen', 1),
-        ('divider', '(RTC->divh << 16) | RTC->divl', LICK_HZ - 1),
+        ('divider counter within the divider', DIVIDER_COUNTER, within(0, LICK_HZ - 1)),
         ('alarm interrupt only', 'RTC->ctrlh', RTC_CTRLH_TAIEN),
-        ('initial alarm', '(RTC->tah << 16) | RTC->tal', FIRST_ALARM_S),
+        ('counter before the first alarm', COUNTER, within(0, FIRST_ALARM_S - 1)),
         ('synchronized', 'RTC->ctrll_bit.updf', 1),
         ('configuration mode off', 'RTC->ctrll_bit.cfgen', 0),
         ('write finished', 'RTC->ctrll_bit.cfgf', 1),
@@ -73,7 +78,8 @@ def rtc_alarm(t):
 
         t.check("one publication per IRQ", t.read("board_rtc_events"), (before + index) & U32_MASK)
 
-        alarm = t.read("(RTC->tah << 16) | RTC->tal")
+        # The counter equals the alarm value when the alarm interrupt is entered.
+        alarm = t.read(COUNTER)
         if previous_alarm is not None:
             # Verify alarm rearmed in thread.
             t.check("alarm rearmed in thread", ((alarm - previous_alarm) & U32_MASK) >= ALARM_PERIOD_S)

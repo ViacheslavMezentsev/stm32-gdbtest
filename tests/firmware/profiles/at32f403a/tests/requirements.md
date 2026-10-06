@@ -56,11 +56,12 @@ Enable DMA channel before sample: ownership guard yields error6 without publicat
 Clear ADC ADCEN before sample: error3 without publication. This is not a driver return-code injection.
 
 ## HW_CI_RTC_INIT
-LICK, counter RTC divider 39999, initial alarm 2, EXINT17 rising, IRQ41/vector57; no battery-domain reset.
+LICK, counter RTC, EXINT17 rising, IRQ41/vector57; no battery-domain reset. RTC_DIV and RTC_TA are write-only
+(RM 17.5.3, 17.5.6): the divider counter stays within 39999 and the counter is below the first alarm (2).
 
 ## HW_CI_RTC_ALARM
-Two natural alarms enter exception57 with TAF/EXINT17 pending; thread service rearms, one event per handler,
-application resumes.
+Two natural alarms enter exception57 with TAF/EXINT17 pending; the counter at consecutive alarms advances by at
+least 2 (thread service rearms), one event per handler, application resumes.
 
 ## HW_CI_RTC_DEADLINE
 Inject zero mask into the LICK-stable wait; error3 after at least 1000 ticks without changing the battery-domain
