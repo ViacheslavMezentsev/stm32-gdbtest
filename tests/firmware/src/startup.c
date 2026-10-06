@@ -8,7 +8,7 @@ extern void SysTick_Handler( void );
 extern void TIM3_IRQHandler( void );
 extern void RTC_IRQHandler( void );
 extern void DMA1_Channel1_IRQHandler( void );
-#elif defined( STM32F103xB )
+#elif defined( STM32F103xB ) || defined( AT32F403ACGU7 )
 extern void SysTick_Handler( void );
 extern void TIM2_IRQHandler( void );
 extern void RTC_Alarm_IRQHandler( void );
@@ -92,9 +92,10 @@ void ( *const vectors[] )( void ) = {
     Default_Handler, DMA1_Channel1_IRQHandler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     TIM3_IRQHandler
-#elif defined( STM32F103xB )
+#elif defined( STM32F103xB ) || defined( AT32F403ACGU7 )
     SysTick_Handler,
-    /* STM32F103xB external IRQ slots 0..27, then TIM2_IRQn=28. */
+    /* STM32F103xB external IRQ slots 0..27, then TIM2_IRQn=28; AT32F403A has the same numbers (DMA1_Channel1 11,
+       TMR2_GLOBAL 28, RTCAlarm 41). */
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, Default_Handler,
     Default_Handler, Default_Handler, Default_Handler, DMA1_Channel1_IRQHandler,

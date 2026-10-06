@@ -6,9 +6,10 @@ from statistics import mean, stdev
 from stm32_gdbtest import case, one_of, within
 
 
-# Accepted series lengths and provenance codes (adc_units.c: 1 typical, 2 two-point, 3 one-point).
+# Accepted series lengths and provenance codes (adc_units.c: 1 typical, 2 two-point, 3 one-point,
+# 4 vendor example constants).
 SERIES_LENGTH = within(2, 20)
-KNOWN_QUALITY = one_of(1, 2, 3)
+KNOWN_QUALITY = one_of(1, 2, 3, 4)
 # Plausibility windows of a reading; not a calibration or accuracy claim.
 PLAUSIBLE_VDDA_MV = within(2800, 3600)
 PLAUSIBLE_DIE_MDEG_C = within(-40_000, 125_000)

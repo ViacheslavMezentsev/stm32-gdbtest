@@ -46,7 +46,7 @@ void board_delay_ms( uint32_t delay_ms );
 void board_adc_init( void );
 void board_adc_sample( void );
 void board_rtc_init( void );
-#if defined( STM32F103xB )
+#if defined( STM32F103xB ) || defined( AT32F403ACGU7 )
 void board_rtc_service( void );
 #endif
 uint32_t app_step( app_state_t* state, app_mode_t mode );

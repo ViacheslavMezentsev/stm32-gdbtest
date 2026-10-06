@@ -312,6 +312,83 @@ void board_led_toggle( void )
 {
     GPIOC->ODR ^= GPIO_ODR_OD13;
 }
+#elif defined( AT32F403ACGU7 )
+#include "at32f403a_407.h"
+#include "at32_bits.h"
+
+/* WeAct AT32F4 Core Board V1.0: PC13, active-low LED, push-pull output. HICK 8 MHz, no PLL. */
+uint32_t SystemCoreClock = 8000000U;
+volatile uint32_t board_ticks_ms;
+volatile uint32_t board_timer_events;
+
+void SysTick_Handler( void )
+{
+    board_ticks_ms++;
+}
+
+void TIM2_IRQHandler( void )
+{
+    if ( ( TMR2->ists & AT32_TMR_ISTS_OVFIF ) != 0U )
+    {
+        TMR2->ists = ~AT32_TMR_ISTS_OVFIF;
+        board_timer_events++;
+    }
+}
+
+void board_delay_ms( uint32_t delay_ms )
+{
+    const uint32_t start = board_ticks_ms;
+    while ( ( uint32_t ) ( board_ticks_ms - start ) < delay_ms )
+    {
+        __WFI();
+    }
+}
+
+static void board_timer_init( void )
+{
+    CRM->apb1en |= AT32_CRM_APB1_TMR2;
+    ( void ) CRM->apb1en;
+    CRM->apb1rst |= AT32_CRM_APB1_TMR2;
+    CRM->apb1rst &= ~AT32_CRM_APB1_TMR2;
+    TMR2->div     = 7999U;
+    TMR2->pr      = 99U;
+    TMR2->swevt   = AT32_TMR_SWEVT_OVFSWTR;
+    /* Discard the overflow flag from loading the divider. */
+    TMR2->ists = 0U;
+    NVIC_ClearPendingIRQ( TMR2_GLOBAL_IRQn );
+    NVIC_SetPriority( TMR2_GLOBAL_IRQn, 2U );
+    TMR2->iden = AT32_TMR_IDEN_OVFIEN;
+    NVIC_EnableIRQ( TMR2_GLOBAL_IRQn );
+    TMR2->ctrl1 = AT32_TMR_CTRL1_TMREN;
+}
+
+void board_init( void )
+{
+    CRM->ctrl |= AT32_CRM_CTRL_HICKEN;
+    while ( ( CRM->ctrl & AT32_CRM_CTRL_HICKSTBL ) == 0U )
+    {
+    }
+    CRM->cfg &= ~( AT32_CRM_CFG_SCLKSEL | AT32_CRM_CFG_AHBDIV | AT32_CRM_CFG_APB1DIV | AT32_CRM_CFG_APB2DIV );
+    while ( ( CRM->cfg & AT32_CRM_CFG_SCLKSTS ) != 0U )
+    {
+    }
+    CRM->ctrl       &= ~AT32_CRM_CTRL_PLLEN;
+    SystemCoreClock  = 8000000U;
+    CRM->apb2en     |= AT32_CRM_APB2_GPIOC;
+    ( void ) CRM->apb2en;
+    /* LED off (high), then PC13 as a push-pull output with moderate drive (IOMC = 10, IOFC = 00). */
+    GPIOC->scr   = AT32_GPIO_PIN13;
+    GPIOC->cfghr = ( GPIOC->cfghr & ~( 0xFU << 20 ) ) | ( 0x2U << 20 );
+    ( void ) SysTick_Config( 8000000U / 1000U );
+    board_timer_init();
+    board_adc_init();
+    board_rtc_init();
+}
+
+void board_led_toggle( void )
+{
+    GPIOC->odt ^= AT32_GPIO_PIN13;
+}
 #else
 #error "Unsupported CI device"
 #endif

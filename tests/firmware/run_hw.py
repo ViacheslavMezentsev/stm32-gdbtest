@@ -64,7 +64,7 @@ def command(args, log, env, timeout=900):
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--profile", required=True,
-                    choices=("f030r8", "f103c8", "f401cc", "f411ce", "f429zi"))
+                    choices=("f030r8", "f103c8", "f401cc", "f411ce", "f429zi", "at32f403a"))
     parser.add_argument("--stand", required=True, type=Path, help="local stand TOML ([probe] table)")
     # Windows keeps the historical per-user defaults; Linux takes them from env.sh.
     home = Path(os.environ["USERPROFILE"]) if os.name == "nt" else None

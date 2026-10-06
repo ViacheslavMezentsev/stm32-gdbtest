@@ -12,6 +12,7 @@ typedef struct
 
 adc_reading_t adc_convert_f030( uint16_t temperature, uint16_t reference, uint16_t reference_cal, uint16_t temperature_cal );
 adc_reading_t adc_convert_f103( uint16_t temperature, uint16_t reference );
+adc_reading_t adc_convert_at32f403a( uint16_t temperature, uint16_t reference );
 adc_reading_t adc_convert_f4_factory( uint16_t temperature, uint16_t reference, uint16_t reference_cal, uint16_t temperature_cal1,
     uint16_t temperature_cal2 );
 #endif

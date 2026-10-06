@@ -23,7 +23,7 @@ void app_loop( void )
     /* The receiver consumes the producer's return value; app_state is published inside it. */
     app_receiver_step();
     board_led_toggle();
-#if defined( STM32F103xB )
+#if defined( STM32F103xB ) || defined( AT32F403ACGU7 )
     board_rtc_service();
 #endif
     board_adc_sample();

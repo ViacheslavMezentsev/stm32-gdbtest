@@ -68,3 +68,23 @@ adc_reading_t adc_convert_f4_factory( uint16_t temperature, uint16_t reference, 
     const adc_reading_t result = { vdda, ( int32_t ) degrees, 2U };
     return result;
 }
+
+adc_reading_t adc_convert_at32f403a( uint16_t temperature, uint16_t reference )
+{
+    const adc_reading_t invalid = { 0U, 0, 0U };
+    if ( !valid_raw( temperature ) || !valid_raw( reference ) )
+    {
+        return invalid;
+    }
+    /* RM AT32F403A/407 19.4.1.2: VINTRV typical 1.2 V. Artery SDK example adc/internal_temperature_sensor:
+       V25 = 1.26 V, slope -4.23 mV/C in T = (V25 - Vsense) / slope + 25, so Vsense rises with temperature. */
+    const uint32_t vdda = 1200U * 4095U / reference;
+    if ( vdda < 2400U || vdda > 3600U )
+    {
+        return invalid;
+    }
+    const int64_t delta          = ( 1200000LL * temperature - 1260000LL * reference ) * 1000LL;
+    const int32_t temperature_mc = 25000 + delta / ( 4230LL * reference );
+    const adc_reading_t result   = { vdda, temperature_mc, 4U };
+    return result;
+}
