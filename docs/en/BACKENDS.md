@@ -30,7 +30,8 @@ and [OpenOCD, ST, J-Link for the CI firmware](../../tests/firmware/stands/jlink.
 (`openocd.example.toml`, `stlink.example.toml` and `remote.example.toml` for a remote stand
 in the same folder). Local paths (`executable`, `programmer_dir`, `identity_file`) expand `~`,
 `%VAR%` and `$VAR`: `%USERPROFILE%/...` instead of a personal path. Local paths
-and serial numbers are not committed (`*.local.toml`). `run --prepare-only --stand …`
+and serial numbers are not committed: local stands are `<profile>-<backend>.local.toml`, remote ones
+`<profile>-<backend>.remote.toml`, both ignored by Git. `run --prepare-only --stand …`
 validates the stand and backend commands without connecting to the debugger, and
 `doctor --stand …` also checks GDB-Python, OpenOCD and USB access.
 

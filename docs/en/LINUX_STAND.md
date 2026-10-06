@@ -128,7 +128,12 @@ the runner starts SSH without interactive input. After key login works, password
 on the Orange Pi can be disabled (`PasswordAuthentication no` in `/etc/ssh/sshd_config`,
 then `sudo systemctl restart ssh`).
 
-The stand is a copy of the [template](../../tests/firmware/stands/remote.example.toml):
+The stand is a copy of the [template](../../tests/firmware/stands/remote.example.toml) named
+`<profile>-<backend>.remote.toml`: `f411ce-openocd.remote.toml`, `f411ce-jlink.remote.toml` or
+`f411ce-stlink.remote.toml`. The `.remote.toml` ending sets it apart from a local `*.local.toml`; Git ignores both.
+ST-LINK GDB Server (`stlink`) exists for Linux on x86_64 only; on an Orange Pi (aarch64) an ST-Link probe is
+attached through OpenOCD (`openocd`). Other ST-Link servers on aarch64 (pyOCD, `st-util` from stlink-tools) are not
+supported by the module: they would need a backend of their own.
 
 ```toml
 [probe]
@@ -165,8 +170,8 @@ the Orange Pi before the server starts (another path: `env_script`). Check and r
 Windows as for a local stand:
 
 ```powershell
-python -B -m stm32_gdbtest doctor --stand tests/firmware/stands/f411ce-remote.toml
-python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-remote.toml
+python -B -m stm32_gdbtest doctor --stand tests/firmware/stands/f411ce-jlink.remote.toml
+python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-jlink.remote.toml
 ```
 
 `doctor` checks Python, the server, the lock directory and USB debuggers on the Orange Pi

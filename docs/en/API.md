@@ -316,7 +316,7 @@ F030 busy ADC check; API unchanged. [Report](F030_ADC_BUSY.md).
 
 F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_DEADLINE.md).
 
-Owned profiles/examples and new packages use `tests`; old `Tests` inputs remain supported. Local remote stands use ignored `remote.toml` / `<profile>-remote.toml`. Reconfigure after renaming. [Conventions](maintenance.md).
+Owned profiles/examples and new packages use `tests`; old `Tests` inputs remain supported. Local remote stands use ignored `<profile>-<backend>.remote.toml` (`openocd`, `jlink`, `stlink`). Reconfigure after renaming. [Conventions](maintenance.md).
 
 [Standalone F030 HAL regression](F030_HAL_REGRESSION.md): test consumer, no API changes.
 

@@ -217,8 +217,9 @@ SHA и весь CI каждой ветки, затем предлагает по
 проекты с Tests и пакеты schema1 с profile/Tests по-прежнему читаются;
 uppercase compatibility fixtures и исторический EXPORT_MANIFEST не переименовываются.
 
-Локальный удалённый стенд: remote.toml или <profile>-remote.toml, без .local.
-Оба шаблона исключены из Git; remote.example.toml остаётся публикуемым шаблоном.
+Локальный удалённый стенд: <profile>-<backend>.remote.toml (backend: openocd, jlink
+или stlink), без .local; локальный стенд — <profile>-<backend>.local.toml.
+Git исключает *.local.toml и *.remote.toml; remote.example.toml остаётся публикуемым шаблоном.
 Существующий файл нужно переименовать и обновить --stand/локальные presets;
 loader не ограничивает имя TOML, старое имя продолжает читаться.
 После смены Tests → tests заново выполнить CMake configure; старые session.json

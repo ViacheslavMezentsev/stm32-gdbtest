@@ -230,8 +230,9 @@ generated names such as Core. Existing external projects with Tests and schema1
 packages with profile/Tests remain readable; uppercase compatibility fixtures
 and the historical EXPORT_MANIFEST keep their spelling.
 
-Local remote stands use remote.toml or <profile>-remote.toml, without .local.
-Both patterns are ignored by Git; remote.example.toml remains a tracked template.
+Local remote stands are named <profile>-<backend>.remote.toml (backend: openocd,
+jlink or stlink), without .local; local stands keep <profile>-<backend>.local.toml.
+Git ignores *.local.toml and *.remote.toml; remote.example.toml remains a tracked template.
 Rename existing files and update --stand/local presets. The loader does not
 restrict TOML names, so old names still work. Reconfigure CMake after Tests →
 tests: existing session.json files retain the old path. API_VERSION and package

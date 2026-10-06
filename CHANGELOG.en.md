@@ -16,6 +16,9 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Changed
 
+- Remote stands are named `<profile>-<backend>.remote.toml` (`openocd`, `jlink`, `stlink`), without `.local`;
+  `.gitignore` ignores `*.local.toml` and `*.remote.toml` instead of `remote.toml` and `*-remote.toml`. The loader
+  does not check the file name, but files with the old names are no longer ignored by Git — rename them.
 - Portability (no behaviour change for existing stands and profiles): binutils take the prefix of the selected
   GDB (`riscv-none-elf-gdb-py3` → `riscv-none-elf-objdump`); the full-image carrier ELF takes the format of the
   firmware ELF; fault guards and diagnostics go through an architecture adapter (Cortex-M for now); the report

@@ -125,7 +125,12 @@ ssh -i $env:USERPROFILE\.ssh\id_ed25519_stand orangepi@<хост> exit   # пр�
 на Orange Pi можно отключить (`PasswordAuthentication no` в `/etc/ssh/sshd_config`,
 затем `sudo systemctl restart ssh`).
 
-Стенд — копия [шаблона](../../tests/firmware/stands/remote.example.toml):
+Стенд — копия [шаблона](../../tests/firmware/stands/remote.example.toml) под именем
+`<профиль>-<backend>.remote.toml`: `f411ce-openocd.remote.toml`, `f411ce-jlink.remote.toml` или
+`f411ce-stlink.remote.toml`. Окончание `.remote.toml` отличает его от локального `*.local.toml`; оба исключены из
+Git. ST-LINK GDB Server (`stlink`) существует для Linux только на x86_64; на Orange Pi (aarch64) отладчик ST-Link
+подключается через OpenOCD (`openocd`). Другие серверы для ST-Link на aarch64 (pyOCD, `st-util` из stlink-tools)
+модулем не поддерживаются: для них нужен отдельный backend.
 
 ```toml
 [probe]
@@ -163,8 +168,8 @@ identity_file = "~/.ssh/id_ed25519_stand"       # или %USERPROFILE%/.ssh/…
 запуск — с Windows, как для локального стенда:
 
 ```powershell
-python -B -m stm32_gdbtest doctor --stand tests/firmware/stands/f411ce-remote.toml
-python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-remote.toml
+python -B -m stm32_gdbtest doctor --stand tests/firmware/stands/f411ce-jlink.remote.toml
+python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-jlink.remote.toml
 ```
 
 `doctor` проверяет через ту же SSH-сессию Python, сервер, каталог блокировок и

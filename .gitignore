@@ -7,8 +7,7 @@
 
 # Local stands: serial numbers, host addresses, key paths (docs/ru/BACKENDS.md)
 *.local.toml
-remote.toml
-*-remote.toml
+*.remote.toml
 
 # Private keys must never be committed; stands reference them by path
 id_rsa*
