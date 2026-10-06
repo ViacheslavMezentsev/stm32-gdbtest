@@ -1,0 +1,24 @@
+schema = 1
+
+[records]
+max_records = 32
+
+[user.measurement]
+count = 5
+expected_quality = 4
+
+# Output limit of the `execute` journal (ТЗ API 6.6, Q5): default 2048, maximum 16384.
+[execute]
+output_limit_chars = 2048
+
+# Reset command of `reset()` (ТЗ API 6.6, Q2); the prepared backend value is used when absent.
+[reset]
+command = "monitor reset halt"
+
+# Frame limit of `frames()` (ТЗ API 6.6, Q1): default 16, maximum 64.
+[frames]
+limit = 16
+
+# Application interval of the CI firmware (ТЗ API 6.6): the waits between checks shrink with it.
+[app]
+delay_ms = 500

@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "contracts": {
+    "ci_gpio_macros": {
+      "macros": {
+        "context": "board_led_toggle",
+        "expressions": [
+          "CRM",
+          "GPIOC"
+        ]
+      }
+    },
+    "ci_clock_macros": {
+      "macros": {
+        "context": "board_led_toggle",
+        "expressions": [
+          "CRM",
+          "SysTick",
+          "SysTick_CTRL_ENABLE_Msk",
+          "SysTick_CTRL_TICKINT_Msk",
+          "SysTick_CTRL_CLKSOURCE_Msk",
+          "SCB",
+          "SCB_ICSR_VECTACTIVE_Msk"
+        ]
+      }
+    },
+    "ci_timer_macros": {
+      "macros": {
+        "context": "TIM2_IRQHandler",
+        "expressions": [
+          "TMR2",
+          "CRM",
+          "NVIC",
+          "SCB",
+          "SCB_ICSR_VECTACTIVE_Msk"
+        ]
+      }
+    },
+    "ci_adc_units": {
+      "type_context": "adc_convert_at32f403a",
+      "functions": {
+        "adc_convert_at32f403a": {
+          "returns": "adc_reading_t",
+          "arguments": [
+            {
+              "name": "temperature",
+              "type": "uint16_t"
+            },
+            {
+              "name": "reference",
+              "type": "uint16_t"
+            }
+          ]
+        }
+      },
+      "fields": {
+        "adc_reading_t": {
+          "vdda_mv": "uint32_t",
+          "temperature_mdeg_c": "int32_t",
+          "quality": "uint32_t"
+        }
+      }
+    }
+  }
+}

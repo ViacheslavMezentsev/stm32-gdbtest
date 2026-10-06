@@ -1,0 +1,6 @@
+# Board description of the CI profile, read by scenarios as t.profile.data["board"].
+# Captured with the run configuration and carried in packages; see session.toml [data].
+[board]
+name = "WeAct AT32F4 Core Board V1.0"
+led = "PC13"
+led_active_low = true
