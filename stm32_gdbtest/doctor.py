@@ -84,7 +84,7 @@ def diagnose(gdb=None, stand=None, sysfs=Path("/sys/bus/usb/devices")):
             add("gdb", "FAIL", f"{gdb}: embedded Python 3.11+ with tomllib required ({version or text[-200:]})")
         else:
             add("gdb", "OK", f"{gdb}: GDB {version.split()[0]}, Python {version.split()[1]}")
-        missing = [name for name in ("arm-none-eabi-objdump", "arm-none-eabi-objcopy")
+        missing = [Path(tool(gdb, name)).name for name in ("objdump", "objcopy")
                    if not Path(tool(gdb, name)).is_file()]
         add("binutils", "FAIL" if missing else "OK",
             ("missing next to GDB: " + ", ".join(missing)) if missing else str(Path(gdb).parent))

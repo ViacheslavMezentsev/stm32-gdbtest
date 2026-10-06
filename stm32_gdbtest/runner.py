@@ -23,6 +23,7 @@ from stm32_gdbtest.build_manifest import load_verified, summary as build_summary
 from stm32_gdbtest.contracts import select_contracts, select_contracts_from
 from stm32_gdbtest.image import parse_sections, validate_regions
 from stm32_gdbtest.full_image import load_policy, canonical_image
+from stm32_gdbtest.toolchain import binutil
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -55,9 +56,11 @@ def local_directory(path, root=ROOT):
 
 
 def tool(gdb, name):
-    """GNU binutils next to the selected GDB; Windows installations carry an .exe suffix."""
-    gdb = Path(gdb)
-    return str(gdb.parent / (name + (gdb.suffix if gdb.suffix.lower() == ".exe" else "")))
+    """GNU binutils next to the selected GDB: `objdump` gets the GDB target prefix, a prefixed name is kept."""
+    if "-" in name:
+        gdb = Path(gdb)
+        return str(gdb.parent / (name + (gdb.suffix if gdb.suffix.lower() == ".exe" else "")))
+    return binutil(gdb, name)
 
 
 def run(session, test, stand_path=None, timeout=None, identity_policy=None, image_policy=None,
@@ -189,14 +192,14 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                 raise RuntimeError("ELF contract preflight failed; see contracts and contract-preflight.log")
         with (out / "prepare.log").open("wb") as log:
             section_text = subprocess.check_output(
-                [tool(gdb, "arm-none-eabi-objdump"), "-h", str(elf)],
+                [tool(gdb, "objdump"), "-h", str(elf)],
                 timeout=15, env=dict(env, LC_ALL="C"), stderr=log, creationflags=FLAGS).decode("utf-8")
             (out / "elf-sections.txt").write_text(section_text, encoding="utf-8")
             regions = parse_sections(section_text, profile["flash_start"], profile["flash_size"])
             # ТЗ 4.1.5: only the selected load sections form the BIN; an empty section with an
             # LMA outside Flash (e.g. empty .data in RAM) must not stretch it to hundreds of MiB.
             selection = [item for region in regions for item in ("-j", region["name"])]
-            subprocess.run([tool(gdb, "arm-none-eabi-objcopy"), "-O", "binary", "--gap-fill=0xFF", *selection,
+            subprocess.run([tool(gdb, "objcopy"), "-O", "binary", "--gap-fill=0xFF", *selection,
                             str(elf), str(image)], check=True, timeout=15, env=env,
                            stdout=log, stderr=subprocess.STDOUT, creationflags=FLAGS)
             subprocess.run(gdb_base + ["-ex", "python import gdb, json; print(gdb.VERSION)"],
@@ -208,7 +211,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
         if full_policy:
             image.write_bytes(canonical_image(image.read_bytes(), regions, full_policy, profile))
             program_elf = out / "program.elf"
-            objcopy = tool(gdb, "arm-none-eabi-objcopy")
+            objcopy = tool(gdb, "objcopy")
             with (out / "prepare.log").open("ab") as log:
                 subprocess.run([objcopy, "-I", "binary", "-O", "elf32-littlearm", "-B", "arm",
                     "--rename-section", ".data=.firmware,alloc,load,readonly,data,contents",
@@ -216,7 +219,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                     str(image), str(program_elf)], check=True, timeout=15, env=env,
                     stdout=log, stderr=subprocess.STDOUT, creationflags=FLAGS)
                 carrier_text = subprocess.check_output(
-                    [tool(gdb, "arm-none-eabi-objdump"), "-h", str(program_elf)],
+                    [tool(gdb, "objdump"), "-h", str(program_elf)],
                     timeout=15, env=dict(env, LC_ALL="C"), stderr=log, creationflags=FLAGS).decode("utf-8")
                 (out / "program-sections.txt").write_text(carrier_text, encoding="utf-8")
                 carrier = parse_sections(carrier_text, profile["flash_start"], profile["flash_size"])

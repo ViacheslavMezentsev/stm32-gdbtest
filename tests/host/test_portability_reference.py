@@ -36,8 +36,9 @@ def snapshot():
         for backend, stand in STANDS.items():
             try:
                 spec = backends.server_spec(stand, 61000, profile, Path("/out"))
-                servers[f"{name}/{backend}"] = {key: [str(part).replace("\\", "/") for part in value] if isinstance(value, list)
-                                                else value for key, value in spec.items()}
+                servers[f"{name}/{backend}"] = {
+                    key: [str(part).replace("\\", "/") for part in value] if isinstance(value, list) else value
+                    for key, value in spec.items()}
             except ValueError as error:
                 servers[f"{name}/{backend}"] = dict(error=str(error))
     return dict(
@@ -45,7 +46,7 @@ def snapshot():
         probe_identity={backend: processes.probe_identity("ABC123" if backend != "jlink" else "123456789", backend)
                         for backend in STANDS},
         remote_check=remote.check_config("id", "openocd"),
-        tools={gdb: [tool(gdb, name) for name in ("arm-none-eabi-objdump", "arm-none-eabi-objcopy")]
+        tools={gdb: [tool(gdb, name) for name in ("objdump", "objcopy")]
                for gdb in ("/x/bin/arm-none-eabi-gdb-py3", "C:/x/bin/arm-none-eabi-gdb-py3.exe")})
 
 

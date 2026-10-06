@@ -39,3 +39,20 @@ def find_gdb(explicit=None):
     """--gdb → STM32_GDBTEST_GDB → PATH (gdb-py3, gdb) → toolchain root; None when absent."""
     return (explicit or os.environ.get("STM32_GDBTEST_GDB") or shutil.which("arm-none-eabi-gdb-py3")
             or shutil.which("arm-none-eabi-gdb") or toolchain_gdb())
+
+
+# `<prefix>gdb`, `<prefix>gdb-py3` or `gdb-multiarch`; the prefix names the target of the whole toolchain.
+_GDB_NAME = re.compile(r"(?P<prefix>.*-)?gdb(?:-py3|-multiarch)?", re.IGNORECASE)
+
+
+def toolchain_prefix(gdb):
+    """Target prefix of the selected GDB (`arm-none-eabi-`, `riscv-none-elf-`), empty for a host GDB."""
+    match = _GDB_NAME.fullmatch(Path(gdb).stem if Path(gdb).suffix.lower() == ".exe" else Path(gdb).name)
+    return (match["prefix"] or "") if match else ""
+
+
+def binutil(gdb, name):
+    """GNU binutils next to the selected GDB with the same target prefix; `.exe` follows the GDB file."""
+    gdb = Path(gdb)
+    suffix = gdb.suffix if gdb.suffix.lower() == ".exe" else ""
+    return str(gdb.parent / (toolchain_prefix(gdb) + name + suffix))
