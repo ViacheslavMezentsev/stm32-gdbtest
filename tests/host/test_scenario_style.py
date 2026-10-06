@@ -1,11 +1,13 @@
 """Style of the bundled scenarios, as described in docs/ru/TESTING_TECHNIQUES.md ("Стиль штатных сценариев").
 
 Run directly to list every finding: python tests/host/test_scenario_style.py
+A consumer project audits its own scenarios by passing them: python <module>/tests/host/test_scenario_style.py hil/tests/board/*.py
 """
 import ast
 import io
 from pathlib import Path
 import re
+import sys
 import tokenize
 import unittest
 
@@ -241,6 +243,12 @@ class ScenarioStyleTests(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    for scenario in scenario_files():
+    # Files given on the command line (a consumer's scenarios) replace the bundled set.
+    chosen = [Path(name).resolve() for name in sys.argv[1:]] or list(scenario_files())
+    findings = 0
+    for scenario in chosen:
         for line_number, finding in audit(scenario):
-            print(f"{scenario.relative_to(ROOT)}:{line_number}: {finding}")
+            shown = scenario.relative_to(ROOT) if scenario.is_relative_to(ROOT) else scenario
+            print(f"{shown}:{line_number}: {finding}")
+            findings += 1
+    sys.exit(1 if findings else 0)

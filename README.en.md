@@ -299,7 +299,8 @@ or newer), x86_64 or aarch64.
 The module is integrated as a **Git submodule** (or a separate clone whose path is set
 by `STM32_GDBTEST_SOURCE_DIR`). MCU settings, application tests and the local stand
 stay with the consumer. Start with [integration and the example](docs/en/GETTING_STARTED.md),
-then move on to [writing tests](docs/en/TEST_AUTHORING.md) — by hand or with an agent.
+then move on to [writing tests](docs/en/TEST_AUTHORING.md) — by hand or with an agent. For an agent —
+the [skills](skills/README.en.md) `stm32-gdbtest-integrate`, `stm32-gdbtest-scenarios` and `stm32-gdbtest-run`.
 
 ## Documentation and related projects
 

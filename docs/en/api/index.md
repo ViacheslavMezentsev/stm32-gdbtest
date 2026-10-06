@@ -2,12 +2,12 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [Русский](../../ru/api/index.md)
 
-Accepted public methods, properties and decorator. Current contract: [API specification 0.3.0](../../TECHNICAL_SPECIFICATION_API.md).
+Accepted public methods, properties and decorator. Current contract: [API specification 0.3.7](../../TECHNICAL_SPECIFICATION_API.md).
 
 Support version identifies implementation availability; specification revision identifies
 contract adoption. API_VERSION=1 is neither a release nor a specification revision.
 The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
-7ed6d0a is 0.2.0.dev0; candidate 972af7c is 0.2.0rc1. No new published tag exists yet.
+7ed6d0a is 0.2.0.dev0; candidate 972af7c is 0.2.0rc1; the 0.3.0 package is release `v0.3.0`.
 
 | Entry | Signature | Support | Initial specification |
 | --- | --- | --- | --- |
@@ -52,9 +52,9 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [api-error](api-error.md) | `ApiError; error.details; error.__cause__` | 0.3.0.dev0 (core) | 0.2.7 (design) |
 | [check-failed](check-failed.md) | `CheckFailed(name)` | 0.3.0.dev0 (core) | 0.2.7 (design) |
 
-Designed 0.3.0 package (not released): methods that passed reference validation. The rows above are
-not an accepted contract: it is fixed by an API specification revision when the package moves into
-the core.
+The 0.3.0 package is released as `v0.3.0`: the rows above are the accepted contract of API specification
+0.3.7. "(design)" in the specification column names the revision where a method was designed, before it
+moved into the core.
 
 The agent supplies Target; do not construct it. GDB calls run only on the main GDB
 thread. boot/close/on_stop/report/owned/stops are internal. The designed package introduces no context/caller.

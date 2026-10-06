@@ -36,7 +36,7 @@ from stm32_gdbtest import case
 @case("HW_CONSUMER_GPIO", labels=("gpio",), contracts=("consumer_gpio",))
 def gpio(t):
     t.reach("app_loop")
-    t.check("GPIOC clock", t.value("(RCC->AHB1ENR & RCC_AHB1ENR_GPIOCEN) != 0"), 1)
+    t.check("GPIOC clock", t.evaluate("(RCC->AHB1ENR & RCC_AHB1ENR_GPIOCEN) != 0"))
 ```
 
 Three more examples for Cortex-M0, M3 and M4 are the CI firmware profiles
@@ -57,7 +57,7 @@ After building and agreeing on an F411/ST-Link/SWD stand, the hardware command
 python -B -m stm32_gdbtest run --session examples/minimal-consumer/build/debug/hwtest/session.json --test HW_CONSUMER_GPIO --stand path/to/stand.local.toml
 ```
 
-`check` records the result and gives FAIL on a mismatch. `value` returns an `int` from
+`check` records the result and gives FAIL on a mismatch. `evaluate` returns the value of
 a GDB expression; an unknown macro or symbol gives ERROR, not zero. `reach` checks the
 actual stop reason: a breakpoint that was set successfully is not a test by itself. A
 GPIO register value does not prove the pin voltage, `uwTick` does not measure an exact
@@ -65,7 +65,7 @@ external duration, Sleep under SWD does not prove current consumption.
 
 **LTO.** With `-flto` functions from different files are inlined into each other: the code
 of an inlined function may run out of source order (`reach` steps wait for a function that
-has already run until the timeout), `force_return` from an inlined function is impossible,
+has already run until the timeout), `ret` from an inlined function is impossible,
 and GDB may name the frame by a clone (`Func() [clone .constprop.0]`; `reach` accepts such
 names). For scenarios that walk through calls or replace a return value, build a test
 variant without LTO: add `-fno-lto` after `-flto` in the compile and link options (GCC uses
@@ -84,4 +84,5 @@ External instruments and power are a deferred host-controller interface
 ([roadmap](../../TODO.md), Russian). There is no standard power-cycle and reconnect API
 yet; do not emulate it with hidden calls from a background GDB thread.
 
-[Techniques catalogue TECH-001…008](TESTING_TECHNIQUES.md) — stable scenario references, build prerequisites, limits and restoration. Preserve TECH-001/003/004 references when migrating HAL scenarios.
+[Techniques catalogue TECH-001…018](TESTING_TECHNIQUES.md) — scenario style, stable references, build prerequisites, limits and restoration. Preserve TECH-001/003/004 references when migrating HAL scenarios.
+Agent skills for integration, scenarios and runs — [skills](../../skills/README.en.md).

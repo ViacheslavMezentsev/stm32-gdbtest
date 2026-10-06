@@ -46,7 +46,7 @@ Transition from the former names (since 0.3.0 a former name warns once per run w
 
 ## First package: records and configuration
 
-Candidate `0.2.0rc1` targets 0.2.0; `API_VERSION=1`, api.toml schema=1. Not released. [API spec 0.3.0](../TECHNICAL_SPECIFICATION_API.md), [accepted results](API_ACCEPTANCE.md).
+Release 0.3.0; `API_VERSION=1`, api.toml schema=1. [API spec](../TECHNICAL_SPECIFICATION_API.md), [accepted results](API_ACCEPTANCE.md).
 
 `record(name, data)` appends a deep copy and returns None. `records(name=None)` returns detached mutable copies: `{'sequence': 1, 'name': 'adc', 'data': ...}`. Names may repeat. The filter is an exact nonempty str; None selects all. Insertion order and sequence starting at 1 survive filtering.
 
@@ -108,7 +108,7 @@ CLI --session accepts the existing generated ELF/GDB/tests JSON with an added se
 
 New pack captures TOML in an internal capsule (base64/SHA256/defaults fingerprint); runner/GDB validate it without original files. New packages require tools supporting the extension; do not use older tools. Old packages use legacy mode. Prepare a new package to change its captured configuration. This is not a record/records export format.
 
-Status: release preparation of **0.3.0** (Python `0.3.0`), the owner publishes the tag, `API_VERSION = 1`. This numbers the
+Status: release **0.3.0** (Python `0.3.0`, [notes](../releases/v0.3.0.md)), `API_VERSION = 1`. This numbers the
 described API surface; it is not a 1.0 stability promise and not a GDB version. The
 module is delivered as a Git submodule; pip installation is not supported yet, and
 the name still has to be checked for uniqueness before publishing. Requirements:

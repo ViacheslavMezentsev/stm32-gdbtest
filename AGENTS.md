@@ -21,6 +21,8 @@ Instructions for AI agents and new contributors ([English](docs/en/maintenance.m
    [каталог техник со стилем сценариев](docs/ru/TESTING_TECHNIQUES.md). Стиль проверяет тест
    `tests/host/test_scenario_style.py`; образцы — `tests/firmware/common/tests` (девять сценариев-примеров)
    и `tests/firmware/profiles/*/tests`. Что и на каких стендах принято — [API_ACCEPTANCE](docs/ru/API_ACCEPTANCE.md).
+   Навыки для агентов проектов-потребителей — [skills](skills/README.md); правило сценариев меняется сначала
+   в каталоге техник и тесте стиля, затем в навыке.
 4. Работайте в ветке `<агент>/<задача>` от актуального main; префикс — имя
    создающего ветку агента или участника (`claude/`, `codex/`, `gemini/`, `dev/`, …).
    PR не используются: проверенная ветка сливается в main перемоткой (`git land`,
