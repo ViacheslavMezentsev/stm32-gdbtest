@@ -2,9 +2,9 @@
 
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
-**Now (2026-10-06).** main holds the 0.3.0 package (Python 0.3.0, API specification 0.3.6, general specification
-0.68), accepted on five boards in six run layouts: [accepted results](API_ACCEPTANCE.md), [metrics](HARDWARE_METRICS.md),
-[release preparation](../releases/v0.3.0-rc.1.md); the owner publishes the tag. Open items — [TODO](../../TODO.md).
+**Now (2026-10-06).** main holds the 0.3.0 package (Python 0.3.0, API specification 0.3.7, general specification
+0.69), accepted on five boards in six run layouts: [accepted results](API_ACCEPTANCE.md), [metrics](HARDWARE_METRICS.md),
+[v0.3.0 release notes](../releases/v0.3.0.md); the owner publishes the tag. Open items — [TODO](../../TODO.md).
 
 Historical stages follow; [v0.2.0-rc.1 preparation](RC020_READINESS.md) is kept for reference.
 

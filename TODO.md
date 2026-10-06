@@ -3,19 +3,19 @@
 ## Текущее состояние — 06.10.2026
 
 - main `782798f` — пакет **0.3.0**: версия модуля `0.3.0`, `API_VERSION = 1`, [ТЗ API](docs/TECHNICAL_SPECIFICATION_API.md)
-  0.3.6, [общее ТЗ](docs/TECHNICAL_SPECIFICATION.md) 0.68. Ветки `claude/api030-fixes`, `claude/api030-gdb`,
+  0.3.7, [общее ТЗ](docs/TECHNICAL_SPECIFICATION.md) 0.69. Ветки `claude/api030-fixes`, `claude/api030-gdb`,
   `claude/api030-profile` слиты перемоткой и удалены.
 - Приёмка: пять плат × шесть схем запуска, 218 сценариев; Docs, Offline и Hardware на main зелёные.
   [Принятые результаты](docs/ru/API_ACCEPTANCE.md), [метрики](docs/ru/HARDWARE_METRICS.md).
 - Что вошло: `profile` вместо `config`/`config_props`/`settings`/`sources`; одна `check` с сопоставителями
   и таблицей; `refused`, `write(rows)`, `memory`, `symbol`, `locals`/`arguments`, строки C; общий каталог
   сценариев и девять сценариев-примеров; каталог техник TECH-001…018 и тест стиля сценариев
-  `tests/host/test_scenario_style.py`. Подробно — [CHANGELOG](CHANGELOG.md), раздел `[0.3.0-rc.1]`.
+  `tests/host/test_scenario_style.py`. Подробно — [CHANGELOG](CHANGELOG.md), раздел `[0.3.0]`.
 
 ## Ближайшие шаги
 
-- [ ] Выпуск 0.3.0 (владелец): выбрать rc или финальный номер, датировать раздел CHANGELOG, сверить
-  [описание выпуска](docs/releases/v0.3.0-rc.1.md) с принятыми результатами, подписанный тег на main.
+- [ ] Выпуск v0.3.0 (владелец): кандидат rc.1 пропущен; раздел CHANGELOG `[0.3.0]` датирован, ревизии ТЗ
+  «к выпуску» выпущены, [описание выпуска](docs/releases/v0.3.0.md) готово — подписанный тег на main и релиз GitHub.
 - [ ] Обновить версию модуля у потребителей (gitlink подмодуля, ссылки в образах сборки) и прогнать их CI.
 - [ ] Повтор порта удалённого сервера на железе (общее ТЗ 0.68, п. 5.18.8): в кампании отказов «port busy»
   не случилось, повтор проверен только host-тестом.

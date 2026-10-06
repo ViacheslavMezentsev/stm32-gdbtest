@@ -267,9 +267,9 @@ of MCU, HAL, GDB and backend, not by the family: [current status](docs/en/STATUS
 ## Status
 
 main holds the **0.3.0** package: module version `0.3.0`, `API_VERSION = 1`, [API specification](docs/TECHNICAL_SPECIFICATION_API.md)
-0.3.6, [general specification](docs/TECHNICAL_SPECIFICATION.md) 0.68 (both Russian). The package is accepted on five
-boards in six run layouts ([accepted results](docs/en/API_ACCEPTANCE.md)); the owner sets the release tag following
-the [release notes](docs/releases/v0.3.0-rc.1.md). Published tags are `v0.1.0-rc.1` and `v0.1.0-rc.2`
+0.3.7, [general specification](docs/TECHNICAL_SPECIFICATION.md) 0.69 (both Russian). The package is accepted on five
+boards in six run layouts ([accepted results](docs/en/API_ACCEPTANCE.md)); the owner sets the `v0.3.0` tag following
+the [release notes](docs/releases/v0.3.0.md). Published tags are `v0.1.0-rc.1` and `v0.1.0-rc.2`
 ([rc.2 acceptance](docs/en/RC2_READINESS.md)). The deprecated `value`, `fields`, `set_value`, `force_return`
 work with a warning and are removed in 0.4.0. Changes are in the [CHANGELOG](CHANGELOG.en.md), the verified scope by
 mechanism in [STATUS](docs/en/STATUS.md).
@@ -312,4 +312,4 @@ then move on to [writing tests](docs/en/TEST_AUTHORING.md) — by hand or with a
 
 License — [MIT](LICENSE). [Origin](SOURCE.md), [rules for developers and agents](AGENTS.md), [maintenance](docs/en/maintenance.md).
 
-[v0.3.0 preparation](docs/releases/v0.3.0-rc.1.md), [v0.2.0-rc.1 preparation and migration](docs/en/RC020_READINESS.md).
+[v0.3.0 release](docs/releases/v0.3.0.md), [v0.2.0-rc.1 preparation and migration](docs/en/RC020_READINESS.md).

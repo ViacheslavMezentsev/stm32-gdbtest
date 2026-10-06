@@ -2,7 +2,7 @@
 
 [Documentation](index.md) → API · [Русский](../ru/API.md)
 
-[Preparing v0.2.0-rc.1](RC020_READINESS.md): Python 0.2.0rc1; not published yet. Historical evidence follows.
+[Release v0.3.0](../releases/v0.3.0.md): Python 0.3.0; candidate v0.2.0-rc.1 was never published. Historical evidence follows.
 
 Production first-package examples and five-MCU verification: [accepted results](API_ACCEPTANCE.md).
 

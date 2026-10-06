@@ -6,17 +6,9 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
-- README, TODO, AGENTS and the reading order in `maintenance` follow the 0.3.0 package: current state and next
-  steps, run layouts with acceptance on five boards, a scenario example on API 0.3.0, both specifications and
-  the method reference on the agent route. Hardware metrics show the full 0.3.0 campaign (218 scenarios).
+## [0.3.0] - 2026-10-06
 
-- Added RU/EN API reference cards with examples and support versions. Specification 0.67/API 0.2.4 fixes the erroneous force_return description without code changes.
-
-- Specification 0.66 clarifies L0/L6 procedures; adds a practical guide to Docker volumes, snapshots, failure evidence and stand restoration. Runtime/API unchanged.
-
-## [0.3.0-rc.1] - 2026-10-05
-
-Extended scenario API; the release is being prepared and the tag is published by the owner.
+Extended scenario API. Candidate 0.3.0-rc.1 was never published; the owner sets the `v0.3.0` tag.
 
 ### Added
 
@@ -92,6 +84,13 @@ Extended scenario API; the release is being prepared and the tag is published by
 - `HW_CI_INJECT_ZERO` and `HW_CI_RETURN_VALUE` no longer stop at a source line number: the receiver's result is
   checked after `finish`. A line number stays only in `HW_CI_UNTIL_TARGET`, which checks the `until(file:line)`
   location itself; a host test keeps source lines out of the other scenarios.
+- README, TODO, AGENTS and the reading order in `maintenance` follow the 0.3.0 package: current state and next
+  steps, run layouts with acceptance on five boards, a scenario example on API 0.3.0, both specifications and
+  the method reference on the agent route. Hardware metrics show the full 0.3.0 campaign (218 scenarios).
+- Added RU/EN API reference cards with examples and support versions. Specification 0.67/API 0.2.4 fixes the erroneous force_return description without code changes.
+- Specification 0.66 clarifies L0/L6 procedures; adds a practical guide to Docker volumes, snapshots, failure evidence and stand restoration. Runtime/API unchanged.
+- Release revisions: general specification 0.69 and API specification 0.3.7 with the final acceptance; release notes
+  `docs/releases/v0.3.0.md` with a stand × GDB matrix and the English text in a collapsed block; the notes format in `VERSIONING`.
 
 ### Fixed
 
@@ -125,7 +124,7 @@ Extended scenario API; the release is being prepared and the tag is published by
 - Some combinations deliver no stop event for a watch point: the stop is marked `inferred` and confirmed by the changed object.
 - `finish()` does not publish the staged stack copy.
 - Hardware verification covered five stands; native DAP stands were not used.
-- New methods and showcase scenarios are covered by host tests; the run on the five stands is still pending.
+- The full scenario suite is accepted on five boards in six run layouts ([accepted results](docs/en/API_ACCEPTANCE.md)).
 - The fault-handler points the agent sets at boot take slots of `breakpoint_limit`.
 
 ## [0.2.0-rc.1] - 2026-10-03

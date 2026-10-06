@@ -2,7 +2,7 @@
 
 Документация · [English](../en/index.md)
 
-[Подготовка v0.2.0-rc.1](RC020_READINESS.md): версия Python 0.2.0rc1; выпуск ещё не опубликован. Исторические сведения ниже сохраняются.
+[Выпуск v0.3.0](../releases/v0.3.0.md): версия Python 0.3.0; кандидат v0.2.0-rc.1 не публиковался. Исторические сведения ниже сохраняются.
 
 [F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.](F429_CMSIS_RTC_SLEEP.md)
 

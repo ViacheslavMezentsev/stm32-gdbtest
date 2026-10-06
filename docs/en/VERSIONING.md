@@ -2,15 +2,13 @@
 
 [Documentation](index.md) → Versions · [Русский](../ru/VERSIONING.md)
 
-[Preparing v0.2.0-rc.1](RC020_READINESS.md): Python 0.2.0rc1; not published yet. Historical evidence follows.
+[Release v0.3.0](../releases/v0.3.0.md): Python version 0.3.0; the extended API is accepted on five boards in six run layouts; the owner publishes the tag.
 
 [rc.2 plan](RC2_READINESS.md): tag `v0.1.0-rc.2`, Python `0.1.0rc2`; published at a0d6547.
 
 The format is MAJOR.MINOR.PATCH per [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html);
-[Preparation v0.3.0-rc.1](../releases/v0.3.0-rc.1.md): Python version 0.3.0; the extended API is implemented and verified on five stands; the owner publishes the tag.
-
-Git tags have the `v` prefix. The current candidate is **v0.2.0-rc.1**, Python **0.2.0rc1**;
-it is not published yet. The previous published candidate is `v0.1.0-rc.2`.
+Git tags have the `v` prefix. The current release is **v0.3.0**, Python **0.3.0**; the owner sets its tag.
+Candidates v0.2.0-rc.1 and v0.3.0-rc.1 were never published. The previous published candidate is `v0.1.0-rc.2`.
 The initial export from the stand project is not a release.
 
 Before 1.0: compatible fixes → 0.1.1; new features or API changes → 0.2.0 with an
@@ -24,7 +22,7 @@ packaging the tag `v0.1.0-rc.1` maps to Python version `0.1.0rc1` and `v0.1.0` t
 `0.1.0`. `API_VERSION` and the JSON/TOML schema numbers are independent of the release
 version and change only when the corresponding contract changes.
 
-The next agreed design target is **0.3.0**: [API audit and redesign](API030_PLAN.md). This neither changes the current runtime nor authorizes publication.
+The API 0.3.0 design is the [API audit and redesign](API030_PLAN.md); the next target is 0.4.0 (removal of deprecated methods, [TODO](../../TODO.md)).
 
 ## Before a release
 
@@ -55,14 +53,17 @@ git push origin v0.1.0
 `-rc` tick "Set as a pre-release") or `gh release create v0.1.0 -F
 docs/releases/v0.1.0.md` (`--prerelease` for candidates).
 
-The notes are plain text without Markdown headings, Russian first, then English after
-a `---` line. Contents: the first line `stm32-gdbtest <version> — <gist>`; the purpose
+The notes have no Markdown headings (lines starting with `#` vanish from the tag message under normal
+cleanup and render large on GitHub). Russian text first; English is the same text in a collapsed
+`<details><summary>English</summary>` … `</details>` block with a blank line after `<summary>` and before
+`</details>`, otherwise GitHub does not render its Markdown. The final check matrix may be a Markdown table
+(stand × GDB version). Contents: the first line `stm32-gdbtest <version> — <gist>`; the purpose
 in one or two sentences; Python version, `API_VERSION`, specification revision;
 "Highlights" — 5–8 user-relevant items from the CHANGELOG; "Final check" — the commit
 and the result matrix; "Limits"; links to CHANGELOG and STATUS.
 GitHub turns `@name` into a user mention (the user appears among the release
 contributors) and `#number` into an issue link, so write such fragments only in
 backticks: `` `@case` ``.
-Example — [v0.1.0-rc.1](../releases/v0.1.0-rc.1.md).
+Example — [v0.3.0](../releases/v0.3.0.md); the former `---` format — [v0.1.0-rc.1](../releases/v0.1.0-rc.1.md).
 
 Branch and commit rules — [maintenance](maintenance.md).

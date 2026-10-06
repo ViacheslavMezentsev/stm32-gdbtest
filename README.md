@@ -265,9 +265,9 @@ STM32F103CBT6. H503 не поддержан. Поддержка определя
 ## Состояние
 
 В main — пакет **0.3.0**: версия модуля `0.3.0`, `API_VERSION = 1`, [ТЗ API](docs/TECHNICAL_SPECIFICATION_API.md)
-0.3.6, [общее ТЗ](docs/TECHNICAL_SPECIFICATION.md) 0.68. Пакет принят на пяти платах по шести схемам запуска
-([принятые результаты](docs/ru/API_ACCEPTANCE.md)); тег выпуска ставит владелец по
-[описанию](docs/releases/v0.3.0-rc.1.md). Опубликованные теги — `v0.1.0-rc.1` и `v0.1.0-rc.2`
+0.3.7, [общее ТЗ](docs/TECHNICAL_SPECIFICATION.md) 0.69. Пакет принят на пяти платах по шести схемам запуска
+([принятые результаты](docs/ru/API_ACCEPTANCE.md)); тег `v0.3.0` ставит владелец по
+[описанию](docs/releases/v0.3.0.md). Опубликованные теги — `v0.1.0-rc.1` и `v0.1.0-rc.2`
 ([приёмка rc.2](docs/ru/RC2_READINESS.md)). Устаревшие `value`, `fields`, `set_value`, `force_return`
 работают с предупреждением и будут удалены в 0.4.0. Изменения — в [CHANGELOG](CHANGELOG.md), проверенный
 объём по механизмам — в [STATUS](docs/ru/STATUS.md).
@@ -309,4 +309,4 @@ tools в модуль не входят. GDB-Python — отдельный ин�
 
 Лицензия — [MIT](LICENSE). [Происхождение](SOURCE.md), [правила для разработчиков и агентов](AGENTS.md), [сопровождение](docs/ru/maintenance.md).
 
-[Подготовка v0.3.0](docs/releases/v0.3.0-rc.1.md), [подготовка и миграция v0.2.0-rc.1](docs/ru/RC020_READINESS.md).
+[Выпуск v0.3.0](docs/releases/v0.3.0.md), [подготовка и миграция v0.2.0-rc.1](docs/ru/RC020_READINESS.md).
