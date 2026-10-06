@@ -23,11 +23,13 @@ full suite: F030R8 48 scenarios, the others 50 each.
 | Remote server | Windows → Orange Pi 5 over SSH | 5 of 5 PASS |
 | Remote server | WSL2 → Orange Pi 5 over SSH | 5 of 5 PASS |
 | Prepared-run package | built in WSL2, run on the Orange Pi 5 | 5 of 5 lifecycles at 10/10 |
+| GitHub hardware CI | packages of the `prepare` job (ubuntu-24.04), run on the Orange Pi 5 self-hosted runner | 5 of 5 lifecycles at 10/10 |
 
 In every suite the only non-PASS is the intended `timeout` check with its expected ERROR. The Linux-stand runs
 found and closed two problems: a Cortex-M0 watch point stopping in a function epilogue (`HW_CI_WHO_WRITES`)
 and a busy server port on the stand host (general specification 0.68). The F030 HAL fixture check without a
-board, `python ci/run_checks.py hal`, passes. The GitHub hardware CI was not run for the 0.3.0 package.
+board, `python ci/run_checks.py hal`, passes. The package schemes check the lifecycle: build, prepare, boot, strict
+identity, full and partial flashing, an image verification refusal, a timeout and the recovery.
 
 ## First package: record/records and config
 
