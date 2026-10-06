@@ -12,6 +12,9 @@ import re
 JLINK_DEVICES = {"STM32F103C8T6": "STM32F103C8", "STM32F103CBT6": "STM32F103CB", "STM32F030R8T6": "STM32F030R8"}
 JLINK_INTERFACES = ("SWD", "JTAG")
 OPENOCD_INTERFACE = "interface/stlink.cfg"
+# OpenOCD reset commands a profile may name; `reset init` runs the target's init procedure (clocks, Flash setup).
+OPENOCD_RESET_HALT = ("monitor reset halt", "monitor reset init")
+OPENOCD_RESET_RUN = ("monitor reset run",)
 OPENOCD_TRANSPORTS = ("swd", "jtag", "hla_swd", "hla_jtag", "dapdirect_swd", "dapdirect_jtag", "sdi")
 _SCRIPT = re.compile(r"interface/[A-Za-z0-9_.-]+\.cfg")
 _DEVICE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]*")

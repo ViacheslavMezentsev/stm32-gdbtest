@@ -44,6 +44,12 @@ class ProbeSettingsTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             probes.validate_stand(dict(JLINK, interface="cJTAG"))
 
+    def test_openocd_reset_commands(self):
+        self.assertEqual(validate_profile(dict(PROFILE, reset_halt="monitor reset init"))["reset_halt"],
+                         "monitor reset init")
+        with self.assertRaisesRegex(ValueError, "reset"):
+            validate_profile(dict(PROFILE, reset_halt="monitor halt"))
+
     def test_lock_family_separates_probes_with_the_same_serial(self):
         self.assertNotEqual(processes.probe_identity("ABC123", "openocd", "wlinke"),
                             processes.probe_identity("ABC123", "openocd"))

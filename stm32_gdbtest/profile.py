@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 import tomllib
 
-from stm32_gdbtest.probes import validate_profile_keys
+from stm32_gdbtest.probes import OPENOCD_RESET_HALT, OPENOCD_RESET_RUN, validate_profile_keys
 
 
 def load_profile(path):
@@ -38,8 +38,8 @@ def validate_profile(data):
             raise ValueError(f"Invalid profile {key}")
     if data["breakpoint_limit"] <= len(data["fault_handlers"]):
         raise ValueError("No breakpoint left for the test")
-    if data["reset_halt"] != "monitor reset halt" or data["reset_run"] != "monitor reset run":
-        raise ValueError("Only OpenOCD reset halt/run is supported by schema 1")
+    if data["reset_halt"] not in OPENOCD_RESET_HALT or data["reset_run"] not in OPENOCD_RESET_RUN:
+        raise ValueError("Only OpenOCD reset halt/init/run is supported by schema 1")
     identity = data["identity"]
     if not isinstance(identity, dict) or set(identity) != {"address", "mask", "value"}:
         raise ValueError("Invalid identity description")
