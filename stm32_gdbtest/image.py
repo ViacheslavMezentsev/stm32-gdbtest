@@ -66,3 +66,18 @@ def compare_regions(read_memory, image, regions, flash_start, flash_size):
                 matches = False
         results.append(dict(region, matches=matches))
     return results
+
+
+# BFD output format of a target ELF and the objcopy machine for a raw BIN wrapped into an ELF of the same kind.
+BFD_MACHINES = {"elf32-littlearm": "arm", "elf32-bigarm": "arm", "elf32-littleriscv": "riscv",
+                "elf64-littleriscv": "riscv", "elf64-littleaarch64": "aarch64"}
+
+
+def elf_format(section_text):
+    """`file format` reported by `objdump -h` and its objcopy machine; an unknown format is refused."""
+    match = re.search(r"file format (\S+)", section_text)
+    if not match:
+        raise ValueError("objdump did not report the ELF file format")
+    if match[1] not in BFD_MACHINES:
+        raise ValueError(f"Unsupported ELF file format for a full image: {match[1]}")
+    return match[1], BFD_MACHINES[match[1]]

@@ -21,7 +21,7 @@ from stm32_gdbtest.reports import CODES, write_reports
 from stm32_gdbtest.compatibility import runtime_manifest
 from stm32_gdbtest.build_manifest import load_verified, summary as build_summary
 from stm32_gdbtest.contracts import select_contracts, select_contracts_from
-from stm32_gdbtest.image import parse_sections, validate_regions
+from stm32_gdbtest.image import elf_format, parse_sections, validate_regions
 from stm32_gdbtest.full_image import load_policy, canonical_image
 from stm32_gdbtest.toolchain import binutil
 
@@ -212,8 +212,10 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
             image.write_bytes(canonical_image(image.read_bytes(), regions, full_policy, profile))
             program_elf = out / "program.elf"
             objcopy = tool(gdb, "objcopy")
+            # The carrier ELF has the format and machine of the firmware ELF (elf32-littlearm/arm for Cortex-M).
+            bfd_format, bfd_machine = elf_format(section_text)
             with (out / "prepare.log").open("ab") as log:
-                subprocess.run([objcopy, "-I", "binary", "-O", "elf32-littlearm", "-B", "arm",
+                subprocess.run([objcopy, "-I", "binary", "-O", bfd_format, "-B", bfd_machine,
                     "--rename-section", ".data=.firmware,alloc,load,readonly,data,contents",
                     "--change-section-address", f".data=0x{full_policy['start']:x}",
                     str(image), str(program_elf)], check=True, timeout=15, env=env,
