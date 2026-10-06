@@ -130,9 +130,10 @@ def diagnose(gdb=None, stand=None, sysfs=Path("/sys/bus/usb/devices")):
     if loaded and loaded["backend"] == "openocd":
         code, text = _output([loaded["executable"], "--version"])
         first = text.splitlines()[0] if text else ""
-        code, text = _output([loaded["executable"], "-f", "interface/stlink.cfg", "-c", "shutdown"])
+        interface = loaded.get("interface", probes.OPENOCD_INTERFACE)
+        code, text = _output([loaded["executable"], "-f", interface, "-c", "shutdown"])
         add("openocd", "FAIL" if code else "OK",
-            first + ("" if not code else ": interface/stlink.cfg not usable, OpenOCD 0.11+ required"))
+            first + ("" if not code else f": {interface} not usable, OpenOCD 0.11+ required"))
 
     if sys.platform.startswith("linux"):
         devices = usb_debuggers(sysfs)
