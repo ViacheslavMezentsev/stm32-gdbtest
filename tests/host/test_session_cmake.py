@@ -67,8 +67,9 @@ class CMakeSessionTests(unittest.TestCase):
                 expected = {'elf','gdb','tests','root','out','stand','profile','build_manifest','test_dirs'}
                 self.assertEqual(set(standard), expected | ({'session_config'} if mode == 'new' else set()))
                 # ТЗ 5.13.2: extra scenario directories follow the profile one in the session and in CTest.
-                extra = [(common / "board").as_posix()] if mode == 'extra' else []
-                self.assertEqual(standard['test_dirs'], extra)
+                # Compared resolved: on Windows the temporary directory may come as an 8.3 short name.
+                extra = [(common / "board").resolve()] if mode == 'extra' else []
+                self.assertEqual([Path(path).resolve() for path in standard['test_dirs']], extra)
                 registered = (build / 'hwtest/tests.cmake').read_text()
                 self.assertIn('HW_CONFIG_FIXTURE', registered)
                 self.assertEqual('HW_COMMON_FIXTURE' in registered, mode == 'extra')
