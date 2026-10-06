@@ -47,12 +47,20 @@ def dependency_map(text, build):
     return result
 
 
+# Portability P1-8: the family-specific recognition rules in one place. Installation roots kept in input labels
+# (vendor packages and xPack toolchains of any target), package roots listed as cube_packages, and the families
+# whose `__<NAME>_VERSION_*` macros are recorded (STM32 HAL/LL, CMSIS core).
+INSTALL_PREFIXES = ("STM32Cube_FW_", "xpack-")
+PACKAGE_PREFIXES = ("STM32Cube_FW_",)
+VERSION_FAMILIES = r"STM32\w*|CM\w*"
+
+
 def label(path, root):
     path = Path(path).resolve()
     if path.is_relative_to(root):
         return path.relative_to(root).as_posix()
     for i, part in enumerate(path.parts):
-        if part.startswith(("STM32Cube_FW_", "xpack-arm-none-eabi-")):
+        if part.startswith(INSTALL_PREFIXES):
             return "/".join(path.parts[i:])
     # Unknown installations retain only a basename; file hash still identifies content.
     return "external/" + path.name
@@ -60,7 +68,7 @@ def label(path, root):
 
 def version_macros(text):
     return {name: int(value, 0) for name, value in re.findall(
-        r"^\s*#define\s+(__(?:STM32\w*|CM\w*)_VERSION_(?:MAIN|SUB1|SUB2|SUB|RC))"
+        r"^\s*#define\s+(__(?:" + VERSION_FAMILIES + r")_VERSION_(?:MAIN|SUB1|SUB2|SUB|RC))"
         r"[ \t]+\(?[ \t]*(0x[0-9A-Fa-f]+|[0-9]+)[uUlL]*[ \t]*\)?[ \t]*(?:/\*[^\n]*|//[^\n]*)?$", text.replace("\r\n", "\n"), re.M)}
 
 
@@ -165,7 +173,7 @@ def snapshot(root, build, elf, profile, ninja, target=None, extra_inputs=()):
         macros = version_macros(data.decode("utf-8", errors="replace"))
         if macros:
             versions.append(dict(file=name, sha256=sha, macros=macros))
-        cubes.update(part for part in path.parts if part.startswith("STM32Cube_FW_"))
+        cubes.update(part for part in path.parts if part.startswith(PACKAGE_PREFIXES))
     return dict(schema=1, evidence="post-link Ninja dependency snapshot",
                 elf_sha256=digest(elf), profile_sha256=digest(profile),
                 compilers=list(compilers.values()), units=units, inputs=inputs,
