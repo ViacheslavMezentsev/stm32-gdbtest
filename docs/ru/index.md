@@ -45,6 +45,7 @@
 - [Manifest](MANIFESTS.md) — метаданные среды выполнения и происхождения сборки.
 - [GDB-серверы](BACKENDS.md) — OpenOCD, ST-LINK GDB Server, J-Link; стенд.
 - [Identity и Flash](TARGET_IDENTITY.md) — DEV_ID и заводской размер Flash.
+- [Совместимые МК](COMPATIBLE_MCU.md) — Cortex-M других производителей: профиль, CMSIS производителя, сценарии (AT32).
 - [Владение отладчиком](DEBUGGER_OWNERSHIP.md) — межпроектная блокировка на Windows и Linux.
 - [Linux-стенд](LINUX_STAND.md) — окружение без root (Ubuntu 20.04, Orange Pi 5), USB, J-Link, удалённый GDB-сервер по SSH, WSL2.
 - [Аппаратный CI](HARDWARE_CI.md) — пакеты подготовленного запуска, self-hosted раннер на Orange Pi, прогоны 24/7.

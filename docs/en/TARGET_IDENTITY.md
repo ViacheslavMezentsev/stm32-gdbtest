@@ -6,6 +6,12 @@ Scenarios run with an explicitly selected profile. DEV_ID, package marking, fact
 Flash size and the MCU name shown by debugger software are different signs. A
 mismatch never switches the profile, HAL, linker script or expectations automatically.
 
+## Identifier of another vendor
+
+`[identity]` sets the address, mask and value; the width is not limited to the 12-bit DEV_ID. On AT32F403ACGU7 the
+same address `0xE0042000` holds the 32-bit Artery PID: mask `0xFFFFFFFF`, value `0x70050347` per the RM
+([compatible MCUs](COMPATIBLE_MCU.md)).
+
 ## Identity policy
 
 The default is `warn`: a DEV_ID mismatch gives a warning and the scenario continues.

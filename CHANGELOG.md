@@ -6,6 +6,13 @@
 
 ## [Unreleased]
 
+### Добавлено
+
+- Cortex-M-совместимые МК других производителей ([описание](docs/ru/COMPATIBLE_MCU.md)): профиль `at32f403a`
+  проверочной прошивки (WeAct AT32F4 Core Board, AT32F403ACGU7, J-Link) — порт на CMSIS Artery и 20 сценариев
+  периферии через битовые поля SDK; на плате 44/44 вместе с общими сценариями. SDK Artery закреплён в
+  `ci/dependencies.lock.json`, `tools/vendor_sdk.py` ставит его локально; build manifest записывает пакет Artery.
+
 ### Изменено
 
 - Переносимость (без изменения поведения существующих стендов и профилей): binutils берутся с префиксом

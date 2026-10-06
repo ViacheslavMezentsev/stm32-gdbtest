@@ -6,6 +6,14 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+### Added
+
+- Cortex-M compatible MCUs from other vendors ([description](docs/en/COMPATIBLE_MCU.md)): the `at32f403a` profile
+  of the check firmware (WeAct AT32F4 Core Board, AT32F403ACGU7, J-Link) — a port to the Artery CMSIS and 20
+  peripheral scenarios through the SDK bit fields; 44/44 on the board together with the shared scenarios. The
+  Artery SDK is pinned in `ci/dependencies.lock.json`, `tools/vendor_sdk.py` installs it locally; the build
+  manifest records the Artery package.
+
 ### Changed
 
 - Portability (no behaviour change for existing stands and profiles): binutils take the prefix of the selected

@@ -45,6 +45,7 @@ the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 - [Manifest](MANIFESTS.md) — runtime and build provenance metadata.
 - [GDB servers](BACKENDS.md) — OpenOCD, ST-LINK GDB Server, J-Link; the stand.
 - [Identity and Flash](TARGET_IDENTITY.md) — DEV_ID and the factory Flash size.
+- [Compatible MCUs](COMPATIBLE_MCU.md) — Cortex-M from other vendors: profile, vendor CMSIS, scenarios (AT32).
 - [Debugger ownership](DEBUGGER_OWNERSHIP.md) — cross-project locking on Windows and Linux.
 - [Linux stand](LINUX_STAND.md) — environment without root (Ubuntu 20.04, Orange Pi 5), USB, J-Link, remote GDB server over SSH, WSL2.
 - [Hardware CI](HARDWARE_CI.md) — prepared run packages, a self-hosted runner on Orange Pi, 24/7 runs.
