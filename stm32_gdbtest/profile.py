@@ -4,6 +4,8 @@ from pathlib import Path
 import re
 import tomllib
 
+from stm32_gdbtest.probes import validate_profile_keys
+
 
 def load_profile(path):
     data = tomllib.loads(Path(path).read_text(encoding="utf-8"))
@@ -15,7 +17,9 @@ def validate_profile(data):
     required = {"schema", "name", "mcu", "openocd_target", "flash_start", "flash_size",
                 "breakpoint_limit", "fault_handlers", "core_registers", "reset_halt",
                 "reset_run", "identity", "diagnostic_registers"}
-    if not required <= set(data) or set(data) - required - {"flash_size_address"} or type(data["schema"]) is not int or data["schema"] != 1:
+    optional = {"flash_size_address", "jlink_device"}
+    if (not required <= set(data) or set(data) - required - optional or type(data["schema"]) is not int
+            or data["schema"] != 1):
         raise ValueError("Invalid target profile schema or keys")
     for key in ("name", "mcu"):
         if not isinstance(data[key], str) or not re.fullmatch(r"[A-Za-z0-9]+", data[key]):
@@ -52,4 +56,5 @@ def validate_profile(data):
         address = data["flash_size_address"]
         if type(address) is not int or not 0 < address <= 0xFFFFFFFE or address % 2:
             raise ValueError("Invalid Flash size register address")
+    validate_profile_keys(data)
     return data

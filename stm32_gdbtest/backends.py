@@ -6,7 +6,7 @@ import re
 import shutil
 import tomllib
 
-from stm32_gdbtest import openocd, remote as remote_host
+from stm32_gdbtest import openocd, probes, remote as remote_host
 from stm32_gdbtest.toolchain import expand_path
 
 
@@ -33,8 +33,11 @@ def load_stand(path):
     allowed = {"backend", "serial", "executable", "speed_khz", "flash", "startup_timeout_s"}
     if data["backend"] == "stlink":
         allowed.add("programmer_dir")
+    if data["backend"] == "jlink":
+        allowed.add("interface")
     if set(data) - allowed:
         raise ValueError("Unknown probe setting; check the stand TOML")
+    probes.validate_stand(data)
     if not re.fullmatch(r"[A-Za-z0-9]+", data.get("serial", "")):
         raise ValueError("Set an alphanumeric debugger serial in the local stand file")
     if data["backend"] == "jlink" and not re.fullmatch(r"[1-9][0-9]{3,}", data["serial"]):
@@ -69,12 +72,9 @@ def load_stand(path):
 
 def server_spec(stand, port, profile, out):
     if stand["backend"] == "jlink":
-        devices = {"STM32F103C8T6": "STM32F103C8", "STM32F103CBT6": "STM32F103CB", "STM32F030R8T6": "STM32F030R8"}
-        if profile["mcu"] not in devices:
-            raise ValueError("J-Link device mapping not validated for this MCU")
         return dict(
-            command=[stand["executable"], "-device", devices[profile["mcu"]],
-                     "-if", "SWD", "-speed", str(stand["speed_khz"]),
+            command=[stand["executable"], "-device", probes.jlink_device(profile),
+                     "-if", stand.get("interface", "SWD"), "-speed", str(stand["speed_khz"]),
                      "-USB", stand["serial"], "-port", str(port),
                      "-swoport", "0", "-telnetport", "0", "-RTTTelnetPort", "0",
                      "-localhostonly", "1", "-nogui", "-strict", "-timeout", "5000",

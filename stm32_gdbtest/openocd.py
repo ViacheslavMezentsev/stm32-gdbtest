@@ -5,6 +5,7 @@ import re
 import shutil
 import tomllib
 
+from stm32_gdbtest.probes import OPENOCD_INTERFACE, validate_stand
 from stm32_gdbtest.toolchain import expand_path
 
 
@@ -25,8 +26,10 @@ def load_stand(path):
 
 def validate(data, local=True):
     """[probe] for OpenOCD; a remote stand resolves the executable on the stand host."""
-    if set(data) - {"backend", "serial", "executable", "speed_khz", "flash", "startup_timeout_s"}:
+    if set(data) - {"backend", "serial", "executable", "speed_khz", "flash", "startup_timeout_s", "interface",
+                    "transport"}:
         raise ValueError("Unknown probe setting; check the stand TOML")
+    validate_stand(data)
     if data.get("backend") != "openocd":
         raise ValueError("Only the openocd backend is supported")
     if not re.fullmatch(r"[A-Za-z0-9]+", data.get("serial", "")):
@@ -46,7 +49,9 @@ def validate(data, local=True):
 
 
 def server_command(stand, port, profile):
-    return [stand["executable"], "-f", "interface/stlink.cfg", "-f", profile["openocd_target"],
+    transport = ["-c", f"transport select {stand['transport']}"] if stand.get("transport") else []
+    return [stand["executable"], "-f", stand.get("interface", OPENOCD_INTERFACE), *transport,
+            "-f", profile["openocd_target"],
             "-c", f"adapter serial {stand['serial']}", "-c", f"adapter speed {stand['speed_khz']}",
             "-c", "bindto 127.0.0.1", "-c", f"gdb_port {port}",
             "-c", "tcl_port disabled", "-c", "telnet_port disabled"]

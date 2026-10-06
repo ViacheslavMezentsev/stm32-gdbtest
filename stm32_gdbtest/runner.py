@@ -24,6 +24,7 @@ from stm32_gdbtest.contracts import select_contracts, select_contracts_from
 from stm32_gdbtest.image import elf_format, parse_sections, validate_regions
 from stm32_gdbtest.full_image import load_policy, canonical_image
 from stm32_gdbtest.toolchain import binutil
+from stm32_gdbtest.probes import family as probe_family
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -103,7 +104,7 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
             # ТЗ 5.16.1: no debugger ownership, server or GDB connection in preparation.
             execute(session, test, stand, out, report, limit, profile, prepare_only=True)
         else:
-            with probe_lock(project_root, stand["serial"], stand["backend"]):
+            with probe_lock(project_root, stand["serial"], stand["backend"], family=probe_family(stand)):
                 execute(session, test, stand, out, report, limit, profile)
     except BaseException:
         report.update(status="ERROR", error=traceback.format_exc())
@@ -287,8 +288,8 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                     port_on_stand = remote_port(tried)
                     tried.append(port_on_stand)
                     backend["ready"] = ready_template.replace("{port}", str(port_on_stand))
-                    config = remote_host.serve_config(probe_identity(stand["serial"], stand["backend"]),
-                                                      port_on_stand, backend["command"])
+                    identity = probe_identity(stand["serial"], stand["backend"], probe_family(stand))
+                    config = remote_host.serve_config(identity, port_on_stand, backend["command"])
                     command = remote_host.ssh_command(remote, "-v", "-o", "ExitOnForwardFailure=yes", "-L",
                                                       f"127.0.0.1:{port}:127.0.0.1:{port_on_stand}")
                     server = subprocess.Popen(command + [remote_host.remote_script(remote, config)], env=env,

@@ -8,7 +8,7 @@ import shutil
 import subprocess
 import sys
 
-from stm32_gdbtest import backends, remote as remote_host
+from stm32_gdbtest import backends, probes, remote as remote_host
 from stm32_gdbtest.processes import FLAGS, lock_directory, probe_identity
 from stm32_gdbtest.runner import tool
 from stm32_gdbtest.toolchain import find_gdb
@@ -153,7 +153,8 @@ def diagnose(gdb=None, stand=None, sysfs=Path("/sys/bus/usb/devices")):
 
 def _check_remote(stand, add):
     remote = stand["remote"]
-    config = remote_host.check_config(probe_identity(stand["serial"], stand["backend"]), stand["executable"])
+    config = remote_host.check_config(probe_identity(stand["serial"], stand["backend"], probes.family(stand)),
+                                       stand["executable"])
     try:
         code, text = _output(remote_host.ssh_command(remote) + [remote_host.remote_script(remote, config)], timeout=40)
     except subprocess.TimeoutExpired:

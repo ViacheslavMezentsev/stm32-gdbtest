@@ -64,19 +64,24 @@ _active = set()
 _active_guard = threading.Lock()
 
 
-def probe_identity(serial, backend="openocd"):
-    """Hash of family:SERIAL; OpenOCD and the ST server share the ST-Link family."""
+def probe_identity(serial, backend="openocd", family=None):
+    """Hash of family:SERIAL; OpenOCD and the ST server share the ST-Link family.
+
+    `family` names the probe when the stand selects another OpenOCD interface (`probes.family`).
+    """
     if backend not in ("openocd", "stlink", "jlink"):
         raise ValueError("Unknown debugger backend")
     if not isinstance(serial, str) or not re.fullmatch(r"[A-Za-z0-9]+", serial):
         raise ValueError("Explicit alphanumeric debugger serial required")
-    family = "jlink" if backend == "jlink" else "stlink"
+    family = family or ("jlink" if backend == "jlink" else "stlink")
+    if not re.fullmatch(r"[a-z0-9][a-z0-9_-]*", family):
+        raise ValueError("Invalid debugger probe family")
     identity = family + ":" + serial.upper()
     return hashlib.sha256(identity.encode("ascii")).hexdigest()
 
 
-def probe_mutex_name(serial, backend="openocd"):
-    return "Local\\stm32-gdbtest.probe.v1." + probe_identity(serial, backend)
+def probe_mutex_name(serial, backend="openocd", family=None):
+    return "Local\\stm32-gdbtest.probe.v1." + probe_identity(serial, backend, family)
 
 
 def lock_directory():
@@ -84,8 +89,8 @@ def lock_directory():
     return Path(os.environ.get("STM32_GDBTEST_LOCK_DIR") or tempfile.gettempdir()) / "stm32-gdbtest-locks"
 
 
-def probe_lock_path(serial, backend="openocd"):
-    return lock_directory() / ("probe.v1." + probe_identity(serial, backend) + ".lock")
+def probe_lock_path(serial, backend="openocd", family=None):
+    return lock_directory() / ("probe.v1." + probe_identity(serial, backend, family) + ".lock")
 
 
 def _kernel_api():
@@ -103,12 +108,12 @@ def _kernel_api():
 
 
 @contextmanager
-def probe_lock(root, serial, backend="openocd"):
+def probe_lock(root, serial, backend="openocd", family=None):
     if os.name == "nt":
-        with _windows_probe_lock(root, serial, backend):
+        with _windows_probe_lock(root, serial, backend, family):
             yield
     else:
-        with _posix_probe_lock(serial, backend):
+        with _posix_probe_lock(serial, backend, family):
             yield
 
 
@@ -126,7 +131,7 @@ def _claim(name):
 
 
 @contextmanager
-def _posix_probe_lock(serial, backend):
+def _posix_probe_lock(serial, backend, family=None):
     """Fail-fast ownership on one host through flock in a shared directory.
 
     The kernel drops flock when the owner dies; the owner record left in the file
@@ -134,7 +139,7 @@ def _posix_probe_lock(serial, backend):
     participating runners only and does not prove that server children terminated.
     """
     import fcntl
-    path = probe_lock_path(serial, backend)
+    path = probe_lock_path(serial, backend, family)
     with _claim(path.name):
         directory = path.parent
         try:
@@ -171,14 +176,14 @@ def _posix_probe_lock(serial, backend):
 
 
 @contextmanager
-def _windows_probe_lock(root, serial, backend="openocd"):
+def _windows_probe_lock(root, serial, backend="openocd", family=None):
     """Fail-fast ownership within one Windows session; also retain legacy local lock.
 
     This coordinates participating runners, not arbitrary vendor tools. Release of
     a dead owner's mutex does not prove that its debug-server children terminated.
     """
     import msvcrt
-    name = probe_mutex_name(serial, backend)
+    name = probe_mutex_name(serial, backend, family)
     with _active_guard:
         if name in _active:
             raise RuntimeError("Debugger already owned by a runner in this process")
