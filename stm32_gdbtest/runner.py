@@ -7,6 +7,7 @@ import math
 import os
 from pathlib import Path, PurePosixPath
 import random
+import re
 import socket
 import subprocess
 import time
@@ -21,10 +22,11 @@ from stm32_gdbtest.reports import CODES, write_reports
 from stm32_gdbtest.compatibility import runtime_manifest
 from stm32_gdbtest.build_manifest import load_verified, summary as build_summary
 from stm32_gdbtest.contracts import select_contracts, select_contracts_from
-from stm32_gdbtest.image import elf_format, parse_sections, validate_regions
+from stm32_gdbtest.image import BFD_MACHINES, elf_format, parse_sections, validate_regions
 from stm32_gdbtest.full_image import load_policy, canonical_image
 from stm32_gdbtest.toolchain import binutil
 from stm32_gdbtest.probes import family as probe_family
+from stm32_gdbtest import arch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -197,6 +199,10 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                 timeout=15, env=dict(env, LC_ALL="C"), stderr=log, creationflags=FLAGS).decode("utf-8")
             (out / "elf-sections.txt").write_text(section_text, encoding="utf-8")
             regions = parse_sections(section_text, profile["flash_start"], profile["flash_size"])
+            # Portability P1-7: the machine of the ELF selects the architecture adapter in the agent.
+            machine = BFD_MACHINES.get((re.search(r"file format (\S+)", section_text) or [None, None])[1])
+            arch.adapter(machine)
+            report["arch"] = machine or arch.DEFAULT_MACHINE
             # ТЗ 4.1.5: only the selected load sections form the BIN; an empty section with an
             # LMA outside Flash (e.g. empty .data in RAM) must not stretch it to hundreds of MiB.
             selection = [item for region in regions for item in ("-j", region["name"])]
@@ -266,7 +272,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                         endpoint=endpoint, flash=stand["flash"], profile=profile, load_regions=regions,
                         full_image_policy=full_policy, program_elf=str(program_elf) if program_elf else None,
                         program_elf_sha256=program_sha, expected_bin_sha256=report["bin_sha256"],
-                        reset_halt=backend["reset_halt"], finish=backend["finish"],
+                        arch=report["arch"], reset_halt=backend["reset_halt"], finish=backend["finish"],
                         setup=backend.get("setup", []),
                         # ТЗ API 4.14.2: the stand as the scenario sees it, without serials or addresses.
                         stand_info=dict(backend=stand["backend"], server="remote" if remote else "local",

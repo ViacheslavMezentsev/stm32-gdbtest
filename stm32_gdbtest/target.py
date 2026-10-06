@@ -238,6 +238,8 @@ class Target:
         self.owned = []
         self.stops = []
         self._warned = set()
+        # Fault guard functions; the architecture adapter may replace them at boot (portability P1-7).
+        self.fault_guards = list(profile.get("fault_handlers", []))
         gdb.events.stop.connect(self.on_stop)
 
     @staticmethod
@@ -1261,7 +1263,7 @@ class Target:
         numbers = set(stop.get("breakpoints", ()))
         owned = {point.id: point for point in self.owned}
         guards = {point.id for point in self.owned
-                  if point.location in self.profile["fault_handlers"]}
+                  if point.location in self.fault_guards}
         if numbers & guards:
             return "fault"
         if numbers & set(owned):
@@ -1288,10 +1290,12 @@ class Target:
             return "other"
         return "unknown"
 
-    def boot(self, reset_command):
+    def boot(self, reset_command, guards=None):
         self.clear()
+        if guards is not None:
+            self.fault_guards = list(guards)
         gdb.execute(reset_command)
-        for name in self.profile["fault_handlers"]:
+        for name in self.fault_guards:
             self.breakpoint(name)
         self.reach("main")
 
@@ -1387,7 +1391,7 @@ class Target:
         session override wins over both. Active points are refused because a reset makes their state
         meaningless; the invalidation runs after any attempt, including a failed one.
         """
-        guards = set(self.profile["fault_handlers"])
+        guards = set(self.fault_guards)
         active = [point.id for point in self.owned if point.active and point.location not in guards]
         if active:
             self._fail("reset", "validation", "none", "active_points",

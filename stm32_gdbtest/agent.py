@@ -12,6 +12,7 @@ import gdb
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+from stm32_gdbtest import arch
 from stm32_gdbtest.target import Target, CheckFailed
 from stm32_gdbtest.compatibility import inspect_gdb_api, require_gdb_api
 from stm32_gdbtest.identity import check_target
@@ -30,6 +31,7 @@ def main():
               "connection_attempted": False}
     connected = False
     target = None
+    adapter = arch.adapter(session.get("arch"))
     try:
         configuration = loads(session['configuration']) if session.get('configuration') else None
         if configuration and (thaw(configuration.config['target']) != profile or
@@ -91,7 +93,7 @@ def main():
                 if key in session["test"]}
         target = Target(report, profile, configuration,
                         context=dict(case=case, stand=session.get("stand_info"), build=session.get("build_info")))
-        target.boot(session["reset_halt"])
+        target.boot(session["reset_halt"], guards=adapter.fault_guards(profile))
         spec = importlib.util.spec_from_file_location("board_test", session["test"]["path"])
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -105,12 +107,12 @@ def main():
         if report["status"] != "PASS" and connected:
             diagnostics = report["diagnostics"] = {}
             diagnostic_errors = {}
-            for name in profile["core_registers"]:
+            for name in adapter.diagnostic_registers(profile):
                 try:
                     diagnostics[name] = int(gdb.newest_frame().read_register(name))
                 except Exception as exc:
                     diagnostic_errors[name] = str(exc)
-            for name, address in profile["diagnostic_registers"].items():
+            for name, address in adapter.diagnostic_memory(profile).items():
                 try:
                     diagnostics[name] = int.from_bytes(
                         gdb.selected_inferior().read_memory(address, 4), "little")
