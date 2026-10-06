@@ -47,7 +47,8 @@ def snapshot():
         probe_identity={backend: processes.probe_identity("ABC123" if backend != "jlink" else "123456789", backend)
                         for backend in STANDS},
         remote_check=remote.check_config("id", "openocd"),
-        tools={gdb: [tool(gdb, name) for name in ("objdump", "objcopy")]
+        # Paths are compared in POSIX form: the reference is the same on Windows and Linux.
+        tools={gdb: [tool(gdb, name).replace("\\", "/") for name in ("objdump", "objcopy")]
                for gdb in ("/x/bin/arm-none-eabi-gdb-py3", "C:/x/bin/arm-none-eabi-gdb-py3.exe")})
 
 
