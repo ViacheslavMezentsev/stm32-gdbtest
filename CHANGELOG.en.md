@@ -6,6 +6,10 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- README, TODO, AGENTS and the reading order in `maintenance` follow the 0.3.0 package: current state and next
+  steps, run layouts with acceptance on five boards, a scenario example on API 0.3.0, both specifications and
+  the method reference on the agent route. Hardware metrics show the full 0.3.0 campaign (218 scenarios).
+
 - Added RU/EN API reference cards with examples and support versions. Specification 0.67/API 0.2.4 fixes the erroneous force_return description without code changes.
 
 - Specification 0.66 clarifies L0/L6 procedures; adds a practical guide to Docker volumes, snapshots, failure evidence and stand restoration. Runtime/API unchanged.

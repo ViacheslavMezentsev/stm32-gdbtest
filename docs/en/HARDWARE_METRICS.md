@@ -2,20 +2,40 @@
 
 [Documentation](index.md) · [Русский](../ru/HARDWARE_METRICS.md)
 
-## Current recorded snapshot — 2026-10-03
+## Current snapshot — full campaign of the 0.3.0 package, 2026-10-05/06
+
+For the first time the whole CMSIS scenario set ran in one campaign on one code base (main `782798f`, the
+code matches the verified revisions of branch `claude/api030-profile`). Distinct profile/scenario
+combinations: **218** — F030R8 42, F103C8/F401CC/F411CE/F429ZI 44 each (the shared directory
+`tests/firmware/common/tests` plus the profile scenarios). Each one passed:
+
+| Layout | Environment | Outcome |
+| --- | --- | --- |
+| Local on Windows | xPack GCC 13.3.1; GDB 14.2.90, 15.2.90, 16.3.90 | 15 of 15 suites (5 boards × 3 GDBs) |
+| Local on a Linux stand | Orange Pi 5, aarch64 | 5 of 5 |
+| Remote server from Windows | Windows → Orange Pi 5 over SSH | 5 of 5 |
+| Remote server from WSL2 | WSL2 → Orange Pi 5 over SSH | 5 of 5 |
+
+The prepared-run package and the GitHub hardware CI check the `run_hw.py` lifecycle (10 steps): 5 of 5 in
+each. The only non-PASS of every suite is the intended `timeout` check with its expected ERROR. README shows
+218 and 2026-10-06; the `Hardware: full campaign 0.3.0` badge describes this snapshot, not the status of
+later commits. The 218 exclude the HAL F030 fixture, the example, repeats and recovery. Details —
+[accepted results](API_ACCEPTANCE.md).
+
+## Previous snapshot — 2026-10-03
 
 [accepted results](API_ACCEPTANCE.md)
 on a working tree based on `7ed6d0a`: F030R8 19/19, F103C8 21/21, F401CC 21/21,
 F411CE 21/21, F429ZI 21/21. Total: **103 CMSIS cases, five board models**.
 Windows/GCC13/GDB14; all five complete suites ran. The public summary lists the scope and limits of this historical result.
 
-README shows 103 and 2026-10-03. `Hardware: historical snapshot` denotes recorded
+README showed 103 and 2026-10-03. `Hardware: historical snapshot` denotes recorded
 working-tree evidence, not current main or CI status. The total excludes HAL
 F030 22/22, minimal consumer 1/1, repeats and restoration. See the report for
 limits and warnings. Unique counts use profile/fixture/ID, not algorithms or
 assertions. Hardware workflow still does not automatically run this full set.
 
-## Previous snapshot (retained history)
+## Snapshot of 2026-10-01 (retained history)
 
 
 Snapshot dated 2026-10-01, with F030/F103/F411 sources in main `591c096`; F401 accepted at `9d22410`; F429 RTC/Sleep added in a dependent branch from `52c49fd`. README
@@ -23,7 +43,7 @@ badges are currently static and updated with this table after reviewing evidence
 The blue `Hardware: historical snapshot` describes the evidence category, not
 the health of current CI. Docs and Offline retain their independent statuses.
 
-## Included results
+## Results of the 2026-10-01 snapshot
 
 Only the `tests/firmware` CMSIS fixtures for these five board models are counted.
 This is a bounded historical set, not every board or execution in project history.
@@ -44,6 +64,10 @@ used a clean checkout of that commit. F030 includes separate scenario fixes;
 the original RTC error remains in the history after the successful repeat.
 
 ## Badge definitions
+
+The badges now show the 0.3.0 campaign: `Boards tested: 5`, `HW cases (recorded): 218`,
+`HW verified (latest): 2026-10-06`, `Hardware: full campaign 0.3.0`. The definitions below are kept from the
+2026-10-01 snapshot and apply the same way; the numbers in them belong to that snapshot.
 
 - `Boards tested: 5` counts distinct board models with a specific MCU in the table.
   Two physical specimens of one model or two backends do not increase it.

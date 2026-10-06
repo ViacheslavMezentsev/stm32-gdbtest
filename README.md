@@ -3,10 +3,10 @@
 [![Docs](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/stm32-gdbtest/docs.yml?branch=main&label=Docs&style=flat-square)](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/workflows/docs.yml)
 [![Offline](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/stm32-gdbtest/offline.yml?branch=main&label=Offline&style=flat-square)](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/workflows/offline.yml)
 
-[![Hardware evidence](https://img.shields.io/badge/Hardware-historical%20snapshot-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
+[![Hardware campaign](https://img.shields.io/badge/Hardware-full%20campaign%200.3.0-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
 [![Board models tested](https://img.shields.io/badge/Boards%20tested-5-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
-[![Recorded hardware cases](https://img.shields.io/badge/HW%20cases%20%28recorded%29-103-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
-[![Latest recorded hardware verification](https://img.shields.io/badge/HW%20verified%20%28latest%29-2026--10--03-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
+[![Recorded hardware cases](https://img.shields.io/badge/HW%20cases%20%28recorded%29-218-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
+[![Latest recorded hardware verification](https://img.shields.io/badge/HW%20verified%20%28latest%29-2026--10--06-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
 
 [English](README.en.md)
 
@@ -66,8 +66,25 @@ flowchart LR
 Runner проверяет входные артефакты, запускает сервер и GDB, ограничивает время
 выполнения и сохраняет результаты. Сценарий достигает нужной точки программы,
 читает переменные, структуры и регистры, сравнивает их с ожиданиями. При необходимости
-он может изменить значение или принудительно завершить функцию для проверки
-реакции вызывающего кода. Тестовая логика не добавляется в прошивку.
+он может изменить значение, принудительно завершить функцию или вызвать функцию
+прошивки, чтобы проверить реакцию вызывающего кода. Тестовая логика не добавляется в прошивку.
+
+```python
+from stm32_gdbtest import case, within
+
+
+# Verify the system clock and the SysTick period after start-up.
+@case("HW_CLOCK", contracts=("clock_macros",))
+def clock(t):
+    t.reach("board_led_toggle")
+
+    # A string cell is a GDB expression; numbers and matchers are Python values.
+    t.check([
+        ("HSI enabled and ready", "RCC->CR & (RCC_CR_HSION | RCC_CR_HSIRDY)", "RCC_CR_HSION | RCC_CR_HSIRDY"),
+        ("1 ms SysTick at 8 MHz", "SysTick->LOAD", 8_000_000 // 1000 - 1),
+        ("VDDA is plausible", "board_adc_reading.vdda_mv", within(2800, 3600))
+    ])
+```
 
 ## Возможности
 
@@ -76,8 +93,11 @@ Runner проверяет входные артефакты, запускает 
 - Проверка и запись образа: по загружаемым секциям ELF или полный образ с заполнением
   и CRC-32 на ПК ([образы и CRC](docs/ru/IMAGES.md)); проверка DEV_ID и размера Flash
   в режимах `warn` и `strict` ([identity](docs/ru/TARGET_IDENTITY.md)).
-- Target API: hardware breakpoints, `reach` с проверкой кадра, чтение значений и
-  структур, `set_value` и `force_return` для инъекций ([API](docs/ru/API.md)).
+- Target API 0.3.0 ([справочник](docs/ru/api/index.md), [API](docs/ru/API.md)): навигация `reach`, `step`,
+  `until`, `finish`, точки `Point` и `watch`; чтение и запись `read`/`write` (в том числе таблицей записей),
+  `evaluate`, `memory`, `symbol`, `registers`, `frames`, `locals`; инъекции `ret` и `call`; одна `check`
+  с сопоставителями и таблицей, ожидаемый отказ `refused`; профиль прогона `profile` с данными проекта и
+  сведениями о сборке; журнал `record`/`records`. Приёмы — в [каталоге техник](docs/ru/TESTING_TECHNIQUES.md).
 - Проверки без оборудования: build manifest, выборочные ELF/HAL-контракты,
   `run --prepare-only`, трассировка требований; на них основан CI
   ([проверки и CI](docs/ru/testing.md)).
@@ -90,7 +110,7 @@ Runner проверяет входные артефакты, запускает 
 
 - **Нужен опыт ручной работы с GDB.** Автор должен понимать, где остановить
   программу, какой стековый кадр (frame) выбран, что делают `step`, `finish`,
-  reset и принудительный возврат. Сценарий автоматизирует эти действия;
+  reset и принудительный возврат (`ret`). Сценарий автоматизирует эти действия;
   модуль не выбирает правильные точки наблюдения и ожидания за разработчика.
 - **Сценарий написан на Python, а выражения вычисляет GDB.** Чтение C/C++-выражений
   через `gdb.parse_and_eval` или Target API не превращает сценарий в произвольный
@@ -107,7 +127,8 @@ Runner проверяет входные артефакты, запускает 
 - **Отладка меняет поведение системы.** Остановки, reset и инъекции влияют на
   время и IRQ; периферия при halt может продолжать работать. Проверка Sleep/WFI
   не измеряет потребление. Число hardware breakpoints ограничено MCU;
-  оптимизация и backend влияют на достижимость точки и работу `finish`/`force_return`.
+  оптимизация и backend влияют на достижимость точки и работу `finish`/`ret`. Точка наблюдения
+  на Cortex-M0 останавливает ядро на одну-две инструкции позже записи.
 - **Нужен исправный и согласованный стенд.** Потеря USB/SWD или зависший сервер
   могут потребовать ручного переподключения; timeout/recovery не гарантирует
   физического восстановления связи. Такой случай сохранён в [приёмке rc.2](docs/ru/RC2_READINESS.md).
@@ -124,14 +145,18 @@ Runner проверяет входные артефакты, запускает 
 
 | Схема | Runner и GDB | GDB-сервер и отладчик | Состояние |
 | --- | --- | --- | --- |
-| Локально на Windows | Windows | тот же компьютер | проверено: 4 стенда |
-| Локально на Linux-стенде | Orange Pi 5, Ubuntu 20.04 aarch64 | тот же компьютер | проверено: 3 стенда |
-| Удалённый сервер с Windows | Windows | Orange Pi 5 по SSH (`[remote]`) | проверено: 3 стенда и проект потребителя |
-| Удалённый сервер из WSL2 | WSL2, Ubuntu 20.04 x86_64 | Orange Pi 5 по SSH | проверено: 3 стенда |
-| Пакет подготовленного запуска | сборка на Windows или в GitHub Actions | Orange Pi 5, `run --package` | проверено: 3 стенда |
-| Аппаратный CI | prepare на GitHub, hardware на self-hosted раннере | Orange Pi 5 (служба раннера) | проверено: 3 стенда |
+| Локально на Windows | Windows, GDB 14.2/15.2/16.3 | тот же компьютер | проверено: 5 плат, полный набор |
+| Локально на Linux-стенде | Orange Pi 5, Ubuntu 20.04 aarch64 | тот же компьютер | проверено: 5 плат, полный набор |
+| Удалённый сервер с Windows | Windows | Orange Pi 5 по SSH (`[remote]`) | проверено: 5 плат, полный набор; проект потребителя |
+| Удалённый сервер из WSL2 | WSL2, Ubuntu 20.04 x86_64 | Orange Pi 5 по SSH | проверено: 5 плат, полный набор |
+| Пакет подготовленного запуска | сборка на Windows, в WSL2 или в GitHub Actions | Orange Pi 5, `run --package` | проверено: 5 плат, жизненный цикл |
+| Аппаратный CI | prepare на GitHub, hardware на self-hosted раннере | Orange Pi 5 (служба раннера) | проверено: 5 плат, жизненный цикл |
 | Локально на Linux x86_64 | Linux-ПК | тот же компьютер | реализовано, на оборудовании не проверялось |
 | WSL2 с отладчиком через usbipd-win | WSL2 | тот же компьютер | реализовано как Linux, не проверялось |
+
+Полный набор — все сценарии CI-прошивки (42 у F030R8, по 44 у остальных), жизненный цикл — 10 шагов
+`run_hw.py`: сборка, подготовка, запуск, строгая identity, образы, тайм-аут и восстановление.
+Кампании пакета 0.3.0 от 05–06.10.2026 — в [принятых результатах](docs/ru/API_ACCEPTANCE.md).
 
 ### Локальный запуск: Windows или Linux
 
@@ -209,7 +234,7 @@ Linux aarch64 недоступен (ST не выпускает его для arm
 используются OpenOCD и J-Link. Подробности: [Linux-стенд](docs/ru/LINUX_STAND.md),
 [GDB-серверы](docs/ru/BACKENDS.md).
 
-**Как читать счётчики.** `Hardware: historical snapshot`, `Boards tested` и `HW cases (recorded)` описывают сохранённые аппаратные протоколы CMSIS-примеров: пять моделей плат и 103 уникальных сочетаний «профиль + fixture + сценарий». Повторы и сборки не увеличивают это число; `HW verified (latest)` — дата самого нового включённого опыта. Это полный локальный прогон рабочей копии от `7ed6d0a` от 03.10.2026, а не проверка текущего main и не процент покрытия. Состав, границы и результаты приведены в [описании метрик и таблице проверок](docs/ru/HARDWARE_METRICS.md).
+**Как читать счётчики.** `Hardware: full campaign 0.3.0`, `Boards tested` и `HW cases (recorded)` описывают полную аппаратную кампанию пакета 0.3.0 на одном коде: пять моделей плат и 218 уникальных сочетаний «профиль + сценарий» (42 у F030R8, по 44 у остальных), каждое прошло на трёх версиях GDB под Windows и в схемах через Orange Pi 5. Повторы и сборки не увеличивают это число; `HW verified (latest)` — дата кампании. Бейджи статические: они не обновляются от запуска CI и не являются процентом покрытия. Состав, границы и прежние срезы — в [описании метрик](docs/ru/HARDWARE_METRICS.md).
 
 ## Профили MCU
 
@@ -224,14 +249,12 @@ F411CE, F429ZI — Cortex-M0, M3, M4) и пример `examples/minimal-consumer
 
 | MCU | Отладчик / GDB-сервер | Где проверено |
 | --- | --- | --- |
-| STM32F030R8 | J-Link STLink / J-Link GDB Server | CI-прошивка, стендовый проект |
-| STM32F103C8 | J-Link CE / J-Link GDB Server | CI-прошивка, стендовый проект |
+| STM32F030R8 | ST-Link (NUCLEO) / OpenOCD; J-Link GDB Server | CI-прошивка (42 сценария), HAL-фикстура, стендовый проект |
+| STM32F103C8 | J-Link / J-Link GDB Server | CI-прошивка (44 сценария), стендовый проект |
 | STM32F103CB | J-Link CE / J-Link GDB Server | демонстрационный проект [stm32-hwtest-bluepill](https://github.com/ViacheslavMezentsev/stm32-hwtest-bluepill) |
-| STM32F401CC | ST-Link / OpenOCD | [CMSIS: 20 сценариев](docs/ru/F401_CMSIS_RTC_SLEEP.md) |
-| STM32F429ZI | ST-Link / OpenOCD | [CMSIS: 20 сценариев](docs/ru/F429_CMSIS_RTC_SLEEP.md) |
-| STM32F411CE | ST-Link / OpenOCD и ST-LINK GDB Server | CI-прошивка, пример, стендовый проект |
-| STM32F429ZI | ST-Link / OpenOCD и ST-LINK GDB Server | стендовый проект |
-| STM32F401CC | ST-Link / ST-LINK GDB Server | стендовый проект, ранние проверки |
+| STM32F401CC | ST-Link / OpenOCD; ST-LINK GDB Server | CI-прошивка (44 сценария), стендовый проект |
+| STM32F411CE | ST-Link / OpenOCD; ST-LINK GDB Server | CI-прошивка (44 сценария), пример, стендовый проект |
+| STM32F429ZI | ST-Link / OpenOCD; ST-LINK GDB Server | CI-прошивка (44 сценария), стендовый проект |
 | STM32G474CE | ST-Link / OpenOCD на Orange Pi 5 | проект потребителя (Arduino Core STM32) |
 
 Для OpenOCD и ST-LINK GDB Server достаточно профиля. J-Link GDB Server требует
@@ -241,13 +264,13 @@ STM32F103CBT6. H503 не поддержан. Поддержка определя
 
 ## Состояние
 
-Опубликован **0.1.0-rc.2**: [приёмка и ограничения](docs/ru/RC2_READINESS.md).
-После rc.1 исправлены manifest и HAL macro contracts, расширен CMSIS F030,
-добавлена самостоятельная HAL F030-регрессия. В rc.2 F103/F411 сохраняют базовые
-boot/GPIO-сценарии. Точный проверенный объём и ограничения — [STATUS](docs/ru/STATUS.md).
-В выпускной ветке версия Python — `0.2.0rc1`, `API_VERSION = 1`.
-Ветка после rc.2 расширяет F103: clocks/GPIO/SysTick/TIM2/ADC/DMA, 15 сценариев;
-[протокол](docs/ru/F103_CMSIS_ADC_DMA.md). Опубликованный тег неизменен.
+В main — пакет **0.3.0**: версия модуля `0.3.0`, `API_VERSION = 1`, [ТЗ API](docs/TECHNICAL_SPECIFICATION_API.md)
+0.3.6, [общее ТЗ](docs/TECHNICAL_SPECIFICATION.md) 0.68. Пакет принят на пяти платах по шести схемам запуска
+([принятые результаты](docs/ru/API_ACCEPTANCE.md)); тег выпуска ставит владелец по
+[описанию](docs/releases/v0.3.0-rc.1.md). Опубликованные теги — `v0.1.0-rc.1` и `v0.1.0-rc.2`
+([приёмка rc.2](docs/ru/RC2_READINESS.md)). Устаревшие `value`, `fields`, `set_value`, `force_return`
+работают с предупреждением и будут удалены в 0.4.0. Изменения — в [CHANGELOG](CHANGELOG.md), проверенный
+объём по механизмам — в [STATUS](docs/ru/STATUS.md).
 
 RISC-V, полный перенос остальных примеров, управление внешним оборудованием,
 надзор за дочерними процессами и Python-упаковка остаются в [дорожной карте](TODO.md).
@@ -257,7 +280,8 @@ RISC-V, полный перенос остальных примеров, упр�
 - `stm32_gdbtest/` — runner, GDB-агент, Target API, backend, контракты и CMake-интеграция.
 - `tests/host`, `tests/fixtures` — проверки инфраструктуры без платы.
 - `tests/firmware`, `ci/` — CI-прошивки F030R8/F103C8/F401CC/F411CE/F429ZI, Docker-образ, сценарий
-  проверок и `run_hw.py` для аппаратной проверки на стенде.
+  проверок и `run_hw.py` для аппаратной проверки на стенде; `tests/firmware/common/tests` — общие
+  сценарии всех профилей, включая девять сценариев-примеров API.
 - `tests/hal-f030/` — самостоятельная HAL-регрессия F030, CI и аппаратная приёмка.
 - `tools/linux_stand.py` — установка окружения Linux-стенда без root.
 - `examples/minimal-consumer/` — самостоятельный пример прошивки и теста для F411.
@@ -276,8 +300,8 @@ tools в модуль не входят. GDB-Python — отдельный ин�
 
 ## Документация и связанные проекты
 
-- [Карта документации](docs/ru/index.md), [ТЗ](docs/TECHNICAL_SPECIFICATION.md).
-- [API и CMake/CLI](docs/ru/API.md), [ELF/HAL-контракты](docs/ru/CONTRACTS.md), [HAL-макросы](docs/ru/HAL_MACRO_GUIDE.md).
+- [Карта документации](docs/ru/index.md), [ТЗ](docs/TECHNICAL_SPECIFICATION.md), [ТЗ API](docs/TECHNICAL_SPECIFICATION_API.md), [принятые результаты](docs/ru/API_ACCEPTANCE.md).
+- [API и CMake/CLI](docs/ru/API.md), [справочник методов](docs/ru/api/index.md), [каталог техник и стиль сценариев](docs/ru/TESTING_TECHNIQUES.md), [ELF/HAL-контракты](docs/ru/CONTRACTS.md), [HAL-макросы](docs/ru/HAL_MACRO_GUIDE.md).
 - [GDB-серверы](docs/ru/BACKENDS.md), [identity и Flash](docs/ru/TARGET_IDENTITY.md), [владение отладчиком](docs/ru/DEBUGGER_OWNERSHIP.md), [manifest](docs/ru/MANIFESTS.md), [образы ELF/BIN и CRC](docs/ru/IMAGES.md).
 - [Текущее состояние](docs/ru/STATUS.md), [проверки и CI](docs/ru/testing.md), [версии](docs/ru/VERSIONING.md), [планы](TODO.md), [изменения](CHANGELOG.md).
 - [stm32-hwtest-blackpill](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill) — прошивки, аппаратные проверки, общая архитектура и практика применения.
@@ -285,4 +309,4 @@ tools в модуль не входят. GDB-Python — отдельный ин�
 
 Лицензия — [MIT](LICENSE). [Происхождение](SOURCE.md), [правила для разработчиков и агентов](AGENTS.md), [сопровождение](docs/ru/maintenance.md).
 
-[Подготовка и миграция v0.2.0-rc.1](docs/ru/RC020_READINESS.md).
+[Подготовка v0.3.0](docs/releases/v0.3.0-rc.1.md), [подготовка и миграция v0.2.0-rc.1](docs/ru/RC020_READINESS.md).

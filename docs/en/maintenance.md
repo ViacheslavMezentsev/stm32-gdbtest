@@ -14,13 +14,19 @@ current revision is stated in its header.
 1. [README](../../README.en.md) — purpose of the
    module, approach and limits.
 2. This page: work cycle, branches, commits, bilingual documentation.
-3. [TODO.md](../../TODO.md) — current branch, merged changes and next steps.
+3. [TODO.md](../../TODO.md) — "Текущее состояние" (current state) and "Ближайшие шаги" (next steps); the
+   history sections below them are not current tasks. [CHANGELOG](../../CHANGELOG.en.md): `[Unreleased]` and the
+   latest release.
 4. [Technical specification](../TECHNICAL_SPECIFICATION.md): revision history, the
    latest revision's change block, open questions (section 11) and code
-   discrepancies (appendix F).
-5. For a specific task — the mechanism description in `docs/` ([API](API.md),
-   [contracts](CONTRACTS.md), [images](IMAGES.md), [backends](BACKENDS.md), etc.),
-   [current status](STATUS.md) and the [CHANGELOG](../../CHANGELOG.en.md).
+   discrepancies (appendix F). [API specification](../TECHNICAL_SPECIFICATION_API.md): the same for the
+   `Target` methods; owner decisions are in section 10.2. Both are Russian.
+5. Scenarios and API: [method reference](api/index.md), [techniques catalogue and scenario style](TESTING_TECHNIQUES.md)
+   (the style is checked by `tests/host/test_scenario_style.py`), [accepted results](API_ACCEPTANCE.md) and
+   [hardware metrics](HARDWARE_METRICS.md).
+6. For a specific task — the mechanism description in `docs/` ([API](API.md),
+   [contracts](CONTRACTS.md), [images](IMAGES.md), [backends](BACKENDS.md), [Linux stand](LINUX_STAND.md), etc.),
+   [current status](STATUS.md) and the [HOWTO](HOWTO.md).
 
 **Work cycle**
 

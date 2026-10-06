@@ -3,10 +3,10 @@
 [![Docs](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/stm32-gdbtest/docs.yml?branch=main&label=Docs&style=flat-square)](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/workflows/docs.yml)
 [![Offline](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/stm32-gdbtest/offline.yml?branch=main&label=Offline&style=flat-square)](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/workflows/offline.yml)
 
-[![Hardware evidence](https://img.shields.io/badge/Hardware-historical%20snapshot-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
+[![Hardware campaign](https://img.shields.io/badge/Hardware-full%20campaign%200.3.0-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
 [![Board models tested](https://img.shields.io/badge/Boards%20tested-5-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
-[![Recorded hardware cases](https://img.shields.io/badge/HW%20cases%20%28recorded%29-103-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
-[![Latest recorded hardware verification](https://img.shields.io/badge/HW%20verified%20%28latest%29-2026--10--03-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
+[![Recorded hardware cases](https://img.shields.io/badge/HW%20cases%20%28recorded%29-218-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
+[![Latest recorded hardware verification](https://img.shields.io/badge/HW%20verified%20%28latest%29-2026--10--06-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
 
 [Русский](README.md)
 
@@ -68,8 +68,25 @@ flowchart LR
 The runner checks the input artifacts, starts the server and GDB, limits the run time
 and saves the results. A scenario reaches the required point of the program, reads
 variables, structures and registers and compares them with expectations. If needed it
-can change a value or force a function to return to test the caller's reaction. No
-test logic is added to the firmware.
+can change a value, force a function to return or call a firmware function to test the
+caller's reaction. No test logic is added to the firmware.
+
+```python
+from stm32_gdbtest import case, within
+
+
+# Verify the system clock and the SysTick period after start-up.
+@case("HW_CLOCK", contracts=("clock_macros",))
+def clock(t):
+    t.reach("board_led_toggle")
+
+    # A string cell is a GDB expression; numbers and matchers are Python values.
+    t.check([
+        ("HSI enabled and ready", "RCC->CR & (RCC_CR_HSION | RCC_CR_HSIRDY)", "RCC_CR_HSION | RCC_CR_HSIRDY"),
+        ("1 ms SysTick at 8 MHz", "SysTick->LOAD", 8_000_000 // 1000 - 1),
+        ("VDDA is plausible", "board_adc_reading.vdda_mv", within(2800, 3600))
+    ])
+```
 
 ## Features
 
@@ -78,8 +95,11 @@ test logic is added to the firmware.
 - Image verification and programming: by loadable ELF sections, or a full image with
   fill and CRC-32 computed on the PC ([images and CRC](docs/en/IMAGES.md)); DEV_ID and
   Flash size checks in `warn` and `strict` modes ([identity](docs/en/TARGET_IDENTITY.md)).
-- Target API: hardware breakpoints, `reach` with a frame check, reading values and
-  structures, `set_value` and `force_return` for injections ([API](docs/en/API.md)).
+- Target API 0.3.0 ([reference](docs/en/api/index.md), [API](docs/en/API.md)): navigation with `reach`, `step`,
+  `until`, `finish`, `Point` and `watch` points; `read`/`write` (including a table of writes), `evaluate`,
+  `memory`, `symbol`, `registers`, `frames`, `locals`; injections with `ret` and `call`; one `check` with
+  matchers and a table, an expected refusal with `refused`; the run `profile` with project data and build
+  facts; the `record`/`records` journal. Techniques are in the [techniques catalogue](docs/en/TESTING_TECHNIQUES.md).
 - Checks without hardware: build manifest, selective ELF/HAL contracts,
   `run --prepare-only`, requirement traceability; CI is built on them
   ([checks and CI](docs/en/testing.md)).
@@ -92,7 +112,7 @@ test logic is added to the firmware.
 
 - **Manual GDB experience is necessary.** The author needs to understand where
   to stop, which stack frame is selected, and what `step`, `finish`, reset and
-  forced return do. A scenario automates those actions; the module does not
+  forced return (`ret`) do. A scenario automates those actions; the module does not
   choose suitable observation points or expectations for the developer.
 - **Scenarios are Python; GDB evaluates expressions.** Reading C/C++ expressions
   through `gdb.parse_and_eval` or Target API does not allow arbitrary C code in
@@ -110,7 +130,8 @@ test logic is added to the firmware.
   timing and IRQs; peripherals may keep running while the core is halted.
   Sleep/WFI checks do not measure power consumption. Hardware breakpoint counts
   are MCU-limited; optimisation and backends affect reachability and
-  `finish`/`force_return` behaviour.
+  `finish`/`ret` behaviour. A Cortex-M0 watch point halts the core one or two instructions
+  after the store.
 - **A working, agreed stand is required.** USB/SWD loss or a stuck server can
   require manual reconnection; timeout/recovery cannot guarantee physical link
   recovery. Such a case is recorded in [rc.2 acceptance](docs/en/RC2_READINESS.md).
@@ -127,14 +148,18 @@ The scenario and the report are the same in every layout; only the local stand f
 
 | Layout | Runner and GDB | GDB server and debugger | Status |
 | --- | --- | --- | --- |
-| Local on Windows | Windows | same computer | verified: 4 stands |
-| Local on a Linux stand | Orange Pi 5, Ubuntu 20.04 aarch64 | same computer | verified: 3 stands |
-| Remote server from Windows | Windows | Orange Pi 5 over SSH (`[remote]`) | verified: 3 stands and the consumer project |
-| Remote server from WSL2 | WSL2, Ubuntu 20.04 x86_64 | Orange Pi 5 over SSH | verified: 3 stands |
-| Prepared run package | build on Windows or in GitHub Actions | Orange Pi 5, `run --package` | verified: 3 stands |
-| Hardware CI | prepare on GitHub, hardware on a self-hosted runner | Orange Pi 5 (runner service) | verified: 3 stands |
+| Local on Windows | Windows, GDB 14.2/15.2/16.3 | same computer | verified: 5 boards, full suite |
+| Local on a Linux stand | Orange Pi 5, Ubuntu 20.04 aarch64 | same computer | verified: 5 boards, full suite |
+| Remote server from Windows | Windows | Orange Pi 5 over SSH (`[remote]`) | verified: 5 boards, full suite; consumer project |
+| Remote server from WSL2 | WSL2, Ubuntu 20.04 x86_64 | Orange Pi 5 over SSH | verified: 5 boards, full suite |
+| Prepared run package | build on Windows, in WSL2 or in GitHub Actions | Orange Pi 5, `run --package` | verified: 5 boards, lifecycle |
+| Hardware CI | prepare on GitHub, hardware on a self-hosted runner | Orange Pi 5 (runner service) | verified: 5 boards, lifecycle |
 | Local on Linux x86_64 | Linux PC | same computer | implemented, not verified on hardware |
 | WSL2 with the debugger via usbipd-win | WSL2 | same computer | implemented as Linux, not verified |
+
+The full suite is every scenario of the CI firmware (42 for F030R8, 44 for each of the others); the lifecycle
+is the 10 steps of `run_hw.py`: build, prepare, boot, strict identity, images, timeout and recovery. The
+0.3.0 package campaigns of 2026-10-05/06 are in the [accepted results](docs/en/API_ACCEPTANCE.md).
 
 ### Local run: Windows or Linux
 
@@ -211,7 +236,7 @@ link is watched by a heartbeat. ST-LINK GDB Server is not available on Linux aar
 (ST does not ship it for arm64), so OpenOCD and J-Link are used on Orange Pi.
 Details: [Linux stand](docs/en/LINUX_STAND.md), [GDB servers](docs/en/BACKENDS.md).
 
-**Reading the counters.** `Hardware: historical snapshot`, `Boards tested` and `HW cases (recorded)` describe recorded CMSIS hardware evidence: five board models and 103 distinct profile/fixture/scenario combinations. Repeats and builds do not increase this count; `HW verified (latest)` is the date of the newest included experiment. This records a complete local working-tree campaign based on `7ed6d0a` on 2026-10-03, not verification of current main or a coverage percentage. See the [metric definitions and results table](docs/en/HARDWARE_METRICS.md) for scope and evidence.
+**Reading the counters.** `Hardware: full campaign 0.3.0`, `Boards tested` and `HW cases (recorded)` describe the full hardware campaign of the 0.3.0 package on one code base: five board models and 218 distinct profile/scenario combinations (42 for F030R8, 44 for each of the others), each passing with three GDB versions on Windows and in the Orange Pi 5 layouts. Repeats and builds do not increase this count; `HW verified (latest)` is the campaign date. The badges are static: a CI run does not update them, and they are not a coverage percentage. Scope, limits and earlier snapshots are in the [metric definitions](docs/en/HARDWARE_METRICS.md).
 
 ## MCU profiles
 
@@ -226,14 +251,12 @@ F103C8, F401CC, F411CE, F429ZI — Cortex-M0, M3, M4) and the example `examples/
 
 | MCU | Debugger / GDB server | Verified in |
 | --- | --- | --- |
-| STM32F030R8 | J-Link STLink / J-Link GDB Server | CI firmware, stand project |
-| STM32F103C8 | J-Link CE / J-Link GDB Server | CI firmware, stand project |
+| STM32F030R8 | ST-Link (NUCLEO) / OpenOCD; J-Link GDB Server | CI firmware (42 cases), HAL fixture, stand project |
+| STM32F103C8 | J-Link / J-Link GDB Server | CI firmware (44 cases), stand project |
 | STM32F103CB | J-Link CE / J-Link GDB Server | demo project [stm32-hwtest-bluepill](https://github.com/ViacheslavMezentsev/stm32-hwtest-bluepill) |
-| STM32F401CC | ST-Link / OpenOCD | [CMSIS: 20 cases](docs/en/F401_CMSIS_RTC_SLEEP.md) |
-| STM32F429ZI | ST-Link / OpenOCD | [CMSIS: 20 cases](docs/en/F429_CMSIS_RTC_SLEEP.md) |
-| STM32F411CE | ST-Link / OpenOCD and ST-LINK GDB Server | CI firmware, example, stand project |
-| STM32F429ZI | ST-Link / OpenOCD and ST-LINK GDB Server | stand project |
-| STM32F401CC | ST-Link / ST-LINK GDB Server | stand project, earlier checks |
+| STM32F401CC | ST-Link / OpenOCD; ST-LINK GDB Server | CI firmware (44 cases), stand project |
+| STM32F411CE | ST-Link / OpenOCD; ST-LINK GDB Server | CI firmware (44 cases), example, stand project |
+| STM32F429ZI | ST-Link / OpenOCD; ST-LINK GDB Server | CI firmware (44 cases), stand project |
 | STM32G474CE | ST-Link / OpenOCD on Orange Pi 5 | consumer project (Arduino Core STM32) |
 
 OpenOCD and ST-LINK GDB Server need only the profile. J-Link GDB Server requires a
@@ -243,13 +266,13 @@ of MCU, HAL, GDB and backend, not by the family: [current status](docs/en/STATUS
 
 ## Status
 
-**0.1.0-rc.2** is published: [acceptance and limits](docs/en/RC2_READINESS.md).
-Since rc.1, manifest and HAL macro contracts were fixed, CMSIS F030 was expanded,
-and a standalone HAL F030 regression fixture was added. In rc.2, F103/F411 provide
-basic boot/GPIO cases. Verified scope and limits: [STATUS](docs/en/STATUS.md).
-The release branch uses Python version `0.2.0rc1`, `API_VERSION = 1`.
-The post-rc.2 branch expands F103: clocks/GPIO/SysTick/TIM2/ADC/DMA, 15 scenarios;
-[report](docs/en/F103_CMSIS_ADC_DMA.md). The published tag is unchanged.
+main holds the **0.3.0** package: module version `0.3.0`, `API_VERSION = 1`, [API specification](docs/TECHNICAL_SPECIFICATION_API.md)
+0.3.6, [general specification](docs/TECHNICAL_SPECIFICATION.md) 0.68 (both Russian). The package is accepted on five
+boards in six run layouts ([accepted results](docs/en/API_ACCEPTANCE.md)); the owner sets the release tag following
+the [release notes](docs/releases/v0.3.0-rc.1.md). Published tags are `v0.1.0-rc.1` and `v0.1.0-rc.2`
+([rc.2 acceptance](docs/en/RC2_READINESS.md)). The deprecated `value`, `fields`, `set_value`, `force_return`
+work with a warning and are removed in 0.4.0. Changes are in the [CHANGELOG](CHANGELOG.en.md), the verified scope by
+mechanism in [STATUS](docs/en/STATUS.md).
 
 RISC-V, full migration of other examples, external instrument control, child process
 supervision and Python packaging remain in the [roadmap](TODO.md).
@@ -258,8 +281,9 @@ supervision and Python packaging remain in the [roadmap](TODO.md).
 
 - `stm32_gdbtest/` — runner, GDB agent, Target API, backends, contracts and CMake integration.
 - `tests/host`, `tests/fixtures` — infrastructure checks without a board.
-- `tests/firmware`, `ci/` — F030R8/F103C8/F411CE CI firmware, Docker image, the check
-  script and `run_hw.py` for hardware validation on a stand.
+- `tests/firmware`, `ci/` — F030R8/F103C8/F401CC/F411CE/F429ZI CI firmware, Docker image, the check
+  script and `run_hw.py` for hardware validation on a stand; `tests/firmware/common/tests` — scenarios
+  shared by all profiles, including nine API showcase scenarios.
 - `tests/hal-f030/` — standalone HAL F030 regression, CI and hardware acceptance.
 - `tools/linux_stand.py` — installs the Linux stand environment without root.
 - `examples/minimal-consumer/` — a standalone firmware and test example for F411.
@@ -279,8 +303,8 @@ then move on to [writing tests](docs/en/TEST_AUTHORING.md) — by hand or with a
 
 ## Documentation and related projects
 
-- [Documentation map](docs/en/index.md), [specification](docs/TECHNICAL_SPECIFICATION.md) (Russian).
-- [API and CMake/CLI](docs/en/API.md), [ELF/HAL contracts](docs/en/CONTRACTS.md), [HAL macros](docs/en/HAL_MACRO_GUIDE.md).
+- [Documentation map](docs/en/index.md), [specification](docs/TECHNICAL_SPECIFICATION.md) and [API specification](docs/TECHNICAL_SPECIFICATION_API.md) (Russian), [accepted results](docs/en/API_ACCEPTANCE.md).
+- [API and CMake/CLI](docs/en/API.md), [method reference](docs/en/api/index.md), [techniques catalogue and scenario style](docs/en/TESTING_TECHNIQUES.md), [ELF/HAL contracts](docs/en/CONTRACTS.md), [HAL macros](docs/en/HAL_MACRO_GUIDE.md).
 - [GDB servers](docs/en/BACKENDS.md), [identity and Flash](docs/en/TARGET_IDENTITY.md), [debugger ownership](docs/en/DEBUGGER_OWNERSHIP.md), [manifest](docs/en/MANIFESTS.md), [ELF/BIN images and CRC](docs/en/IMAGES.md).
 - [Status](docs/en/STATUS.md), [checks and CI](docs/en/testing.md), [versions](docs/en/VERSIONING.md), [plans](TODO.md), [changes](CHANGELOG.en.md).
 - [stm32-hwtest-blackpill](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill) — firmware, hardware checks, overall architecture and practice.
@@ -288,4 +312,4 @@ then move on to [writing tests](docs/en/TEST_AUTHORING.md) — by hand or with a
 
 License — [MIT](LICENSE). [Origin](SOURCE.md), [rules for developers and agents](AGENTS.md), [maintenance](docs/en/maintenance.md).
 
-[v0.2.0-rc.1 preparation and migration](docs/en/RC020_READINESS.md).
+[v0.3.0 preparation](docs/releases/v0.3.0-rc.1.md), [v0.2.0-rc.1 preparation and migration](docs/en/RC020_READINESS.md).

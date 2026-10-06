@@ -2,10 +2,11 @@
 
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
-[Preparing v0.2.0-rc.1](RC020_READINESS.md): Python 0.2.0rc1; not published yet. Historical evidence follows.
-[Preparing v0.3.0-rc.1](../releases/v0.3.0-rc.1.md): Python 0.3.0; the extended API is implemented and verified on five stands; the owner publishes the tag.
+**Now (2026-10-06).** main holds the 0.3.0 package (Python 0.3.0, API specification 0.3.6, general specification
+0.68), accepted on five boards in six run layouts: [accepted results](API_ACCEPTANCE.md), [metrics](HARDWARE_METRICS.md),
+[release preparation](../releases/v0.3.0-rc.1.md); the owner publishes the tag. Open items — [TODO](../../TODO.md).
 
-[Accepted API](API_ACCEPTANCE.md): candidate 0.2.0rc1; current acceptance and limits: [RC020_READINESS](RC020_READINESS.md). Historical stages follow.
+Historical stages follow; [v0.2.0-rc.1 preparation](RC020_READINESS.md) is kept for reference.
 
 [F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](F429_CMSIS_RTC_SLEEP.md)
 
