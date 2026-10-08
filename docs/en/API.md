@@ -381,3 +381,5 @@ Console output separates Scenario, Capture and Command. CSV/HTML are outside thi
 
 `results export` and `results verify`: [contract, CLI and examples](RESULTS.md).
 The journal holds arbitrary data; measurement projections are defined separately. Target methods and existing scenarios need no changes.
+
+`results report` builds standalone JSON/HTML from the index and optional export; [summary and themes](RESULTS.md#jsonhtml-summary-unreleased).

@@ -8,6 +8,9 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- `results report`: standalone JSON/HTML summary, fresh integrity verification, separate outcomes, all attempts and auto/light/dark themes.
+
+
 - Offline `results export` / `results verify`: generic JSON/CSV records, explicit projections, campaign index and integrity checks; bounded processing and publication without replacing previous results.
 
 

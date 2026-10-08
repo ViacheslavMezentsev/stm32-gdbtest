@@ -150,3 +150,37 @@ filesystem; verify publishes a completed file by hard link, refusing unsupported
 no partial direct write into the final destination. Commands use <output>.lock with PID; other writers
 to that destination are unsupported. A crash may leave the lock; confirm its process exited before
 removing that specific lock. Another writer's lock is never auto-removed. No power-loss durability guarantee.
+
+## JSON/HTML summary (Unreleased)
+
+```text
+python -m stm32_gdbtest results report --root build/evidence --index build/export-001/index.json --output build/report-001 --theme auto
+python -m stm32_gdbtest results report --root build/evidence --index build/export-002/index.json --export build/export-002/export.json --output build/report-002 --theme light
+```
+
+Creates a new directory containing campaign.json, campaign.html and integrity.json. --root is required:
+files are rechecked before generation, with the check time in the report. This is neither live monitoring
+nor a new hardware run. Limits/output ownership match export; a partial directory is never published.
+
+Scenario verdict, run command_code, capture, current file integrity and export diagnostics are separate.
+hardware/prepare/unknown groups retain every attempt in selection order within each group. Repeated
+case_id is not collapsed. SKIP is not PASS; unknown outcomes appear as UNKNOWN with their original value
+in details. aggregate_verdict is always null.
+
+Optional --export adds per-attempt generic record/projection counts and diagnostics. Selection, IDs,
+source hashes and record sequences must agree; mismatched or incomplete exports are refused before
+publication. This checks consistency, not authenticity. Export data describes its original snapshot;
+current integrity may already show changed. Without --export, data is shown as “—”, not zero.
+Prepare never requests a journal.
+
+Report code is the maximum of index, fresh integrity and optional export codes: 0 or 2. It describes
+evidence processing, not a campaign verdict. Scenario FAIL/ERROR can still yield a successfully
+produced report; original PASS with capture.error remains independently visible. Data errors produce
+a complete diagnostic report with code 2; invalid schema/linkage or publication failure leaves no final
+directory. Invalid run identity is never repaired by merging attempts.
+
+--theme accepts auto (system preference), light or dark. HTML is standalone: no JavaScript, external
+fonts, network resources or automatic file links. Shared light/dark report palettes, native details
+controls and horizontally scrollable wide tables are used. All user strings are escaped. campaign.json
+is available for external consumers. JSON input limit remains 16 MiB, including --export; omit an oversized
+export and generate an index-only report instead. Nested details are displayed, never executed.

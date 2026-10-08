@@ -217,9 +217,13 @@ def configure_cli(subs):
     export_parser.add_argument('--config', type=Path, help='optional projection TOML')
     verify_parser = commands.add_parser('verify', help='compare evidence against a saved index')
     verify_parser.add_argument('--index', type=Path, required=True)
-    for command in (export_parser, verify_parser):
+    report_parser = commands.add_parser('report', help='standalone JSON/HTML campaign summary')
+    report_parser.add_argument('--index', type=Path, required=True)
+    report_parser.add_argument('--export', dest='export_file', type=Path, help='optional export.json from the same selection')
+    report_parser.add_argument('--theme', choices=('auto', 'light', 'dark'), default='auto')
+    for command in (export_parser, verify_parser, report_parser):
         command.add_argument('--root', type=Path, required=True, help='explicit evidence root')
-        command.add_argument('--output', type=Path, required=True, help='new directory (export) or file (verify)')
+        command.add_argument('--output', type=Path, required=True, help='new directory (export/report) or file (verify)')
         for name, default in vars(Limits()).items():
             command.add_argument('--max-' + name.replace('_', '-'), type=int, default=default)
 
@@ -229,6 +233,10 @@ def main(args):
     document, _ = indexer.load(args.selection if args.results_command == 'export' else args.index)
     if args.results_command == 'export':
         code = pipeline(args.root, document, args.output, args.config, limits)
+    elif args.results_command == 'report':
+        from stm32_gdbtest.result_report import report
+        exported = indexer.load(args.export_file)[0] if args.export_file else None
+        code = report(args.root, document, args.output, limits, exported=exported, theme=args.theme)
     else:
         code = verify_to_file(args.root, document, args.output, limits)
     print(f"Results {args.results_command}: command_code={code}; {args.output}")
