@@ -27,6 +27,7 @@ from stm32_gdbtest.full_image import load_policy, canonical_image
 from stm32_gdbtest.toolchain import binutil
 from stm32_gdbtest.probes import family as probe_family
 from stm32_gdbtest import arch
+from stm32_gdbtest.result_capture import finalize as finalize_capture
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -71,9 +72,10 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
     project_root = Path(session.get("root", ROOT)).resolve()
     out = local_directory(Path(session["out"]) / f"{stamp}-{test['id']}-{os.getpid()}", project_root)
+    capture_enabled = False
     started = time.monotonic()
     report = {"id": test["id"], "status": "ERROR", "checks": [], "started_utc": stamp,
-              "mode": "prepare" if prepare_only else "hardware"}
+              "mode": "prepare" if prepare_only else "hardware", "run_id": out.name}
     if session.get("package"):
         report["package"] = session["package"]  # ТЗ 5.19.3: provenance of a prepared run
     try:
@@ -99,6 +101,7 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
             if stand.get("remote"):
                 report["server_host"] = stand["remote"]["host"]
         configuration = capture(session, image_policy=image_policy)
+        capture_enabled = configuration.capture_results
         session = dict(session, _configuration=configuration)
         profile = thaw(configuration.config['target'])
         report["profile"] = profile
@@ -117,13 +120,20 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
         pass  # Runs failing before server startup still receive an explicit partial manifest.
     report["compatibility"] = runtime_manifest(report, server_log)
     report["duration_s"] = round(time.monotonic() - started, 3)
+    finalize_capture(out, report, capture_enabled)
     write_reports(out, report)
     for warning in report.get("warnings", []):
         print("WARNING: " + warning)
     print(f"{report['status']} {test['id']}: {out / 'result.json'}")
     if report["status"] != "PASS":
         print(report.get("error", "") + report.get("teardown_error", ""))
-    return CODES[report["status"]]
+    if capture_enabled and not prepare_only:
+        print(f"Scenario: {report['status']}")
+        print(f"Capture: {report['capture']['status'].upper()}"
+              + (" — " + report["artifact_error"]["message"] if "artifact_error" in report else ""))
+        command_status = 'ERROR' if report['command_code'] == 2 else report['status']
+        print(f"Command: {command_status} ({report['command_code']})")
+    return report["command_code"]
 
 
 def execute(session, test, stand, out, report, timeout, profile, prepare_only=False):
@@ -268,6 +278,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                                           setup=backend.get("setup", []))
         run_data = dict(test=test, elf=str(elf), image=str(image), result=str(agent_result),
                         configuration=dumps(configuration) if configuration else None,
+                        run_id=report.get("run_id", out.name),
                         identity_policy=session.get("identity_policy", "warn"), root=str(project_root),
                         endpoint=endpoint, flash=stand["flash"], profile=profile, load_regions=regions,
                         full_image_policy=full_policy, program_elf=str(program_elf) if program_elf else None,
@@ -349,6 +360,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
         result = json.loads(agent_result.read_text(encoding="utf-8"))
         if (result.get("id") != test["id"] or result.get("elf_sha256") != report["elf_sha256"]
                 or result.get("bin_sha256") != report["bin_sha256"]
+                or ("run_id" in report and result.get("run_id") != report["run_id"])
                 or result.get("status") not in CODES or returncode != CODES[result["status"]]):
             raise RuntimeError("Invalid or inconsistent GDB report")
         report.update(result)

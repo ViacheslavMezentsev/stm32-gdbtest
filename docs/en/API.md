@@ -348,3 +348,31 @@ F429 fixture adds ADC/DMA and arithmetic; shared converter, public API, schemas 
 F429 uses the shared F4 RTC implementation and vectors; RTC algorithm, public API and schemas are unchanged. [F429 RTC/Sleep](F429_CMSIS_RTC_SLEEP.md).
 
 [HAL F030: five GPIO/RCC techniques and source variants](F030_HAL_GPIO_RCC.md).
+
+## Result journal capture (Unreleased)
+
+Enable required capture in session.toml:
+
+```toml
+[results]
+capture = true
+```
+
+The default is false; scenarios need no migration. Capsule/pack transports this setting;
+prepare-only does not require a journal. After scenario return or exception, before close,
+the runner saves all records() to records.json beside result.json. Target methods are unchanged.
+Schema 1: schema, run_id, case_id, records (sequence/name/data). run_id is the opaque run directory
+name (UTC, ID, PID). Limit: 16 MiB; publication replaces a fully written temporary file in the
+same directory. Existing artifacts are refused. One run owns its directory; concurrent writes
+by other processes are unsupported. There is no power-loss durability guarantee.
+
+result.capture.status: saved/unavailable/error; completion: normal (return), interrupted
+(scenario exception), unknown (scenario not entered or report not received). Saved includes path,
+sha256, count; error includes {type, message}. The host verifies hash, ownership and schema.
+result.status preserves the original verdict. command_code: PASS/FAIL/ERROR → 0/1/2;
+required capture failure → 2, with a separate artifact_error. GDB exit matches status.
+Forced termination may lose the journal; a missing artifact is never replaced with an empty file.
+
+On capture failure JUnit adds an infrastructure testcase <ID>.capture with error, preserving the
+original testcase. The tests count includes this testcase, not an additional MCU check.
+Console output separates Scenario, Capture and Command. CSV/HTML are outside this stage.

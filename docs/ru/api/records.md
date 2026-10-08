@@ -42,3 +42,5 @@ last_two = samples[-2:]
 - [Реализация](../../../stm32_gdbtest/target.py).
 - [Сценарий или проверка реализации](../../../tests/firmware/common/tests/board/test_measurements.py).
 - [record](record.md), [record_error](record-error.md).
+
+Opt-in сохранение runner: [описание](../API.md#захват-журнала-результатов-unreleased). Контракт метода не меняется.

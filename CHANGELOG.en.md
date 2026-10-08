@@ -8,6 +8,9 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- Opt-in records.json capture through session.toml: separate command outcome and infrastructure JUnit error on artifact failure.
+
+
 - Cortex-M compatible MCUs from other vendors ([description](docs/en/COMPATIBLE_MCU.md)): the `at32f403a` profile
   of the check firmware (WeAct AT32F4 Core Board, AT32F403ACGU7, J-Link) — a port to the Artery CMSIS and 20
   peripheral scenarios through the SDK bit fields; 44/44 on the board together with the shared scenarios. The

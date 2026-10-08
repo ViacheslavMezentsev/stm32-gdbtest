@@ -20,6 +20,7 @@ from stm32_gdbtest.image import compare_regions, validate_regions
 from stm32_gdbtest.full_image import compare_full, validate_image
 from stm32_gdbtest.config_transport import loads
 from stm32_gdbtest.configuration import thaw
+from stm32_gdbtest.result_capture import save as save_records
 
 
 def main():
@@ -29,6 +30,9 @@ def main():
     report = {"id": session["test"]["id"], "status": "ERROR", "checks": [],
               "gdb_version": gdb.VERSION, "python_version": sys.version.split()[0],
               "connection_attempted": False}
+    report["run_id"] = session.get("run_id", Path(session["result"]).parent.name)
+    configuration = None
+    completion = "unknown"
     connected = False
     target = None
     adapter = arch.adapter(session.get("arch"))
@@ -97,13 +101,17 @@ def main():
         spec = importlib.util.spec_from_file_location("board_test", session["test"]["path"])
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
+        completion = "interrupted"
         getattr(module, session["test"]["function"])(target)
+        completion = "normal"
         report["status"] = "PASS"
     except CheckFailed:
         report.update(status="FAIL", error=traceback.format_exc())
     except BaseException:
         report.update(status="ERROR", error=traceback.format_exc())
     finally:
+        if configuration and configuration.capture_results:
+            save_records(Path(session["result"]).parent, report, target, completion)
         if report["status"] != "PASS" and connected:
             diagnostics = report["diagnostics"] = {}
             diagnostic_errors = {}

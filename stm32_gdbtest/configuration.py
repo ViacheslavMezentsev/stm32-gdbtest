@@ -55,6 +55,7 @@ class Configuration:
     config_props: object
     session_sha256: str | None
     _source_bytes: object = field(repr=False)
+    capture_results: bool = False
 
 
 def _target_from_snapshot(raw):
@@ -88,8 +89,12 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
         return cache[source]
 
     session_raw, session, session_sha = capture(path)
-    if "config" not in session or set(session) - {"config", "data"} or type(session["config"]) is not dict:
-        raise ConfigError("session", "expected [config] and an optional [data]")
+    if "config" not in session or set(session) - {"config", "data", "results"} or type(session["config"]) is not dict:
+        raise ConfigError("session", "expected [config], optional [data] and [results]")
+    results = session.get("results", {})
+    if (type(results) is not dict or set(results) - {"capture"}
+            or type(results.get("capture", False)) is not bool):
+        raise ConfigError("session", "[results] accepts only capture=true/false")
     links = session["config"]
     if "target" not in links or set(links) - {"target", "api", "image"}:
         raise ConfigError("session", "target required; known file links only")
@@ -149,7 +154,7 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
     effective_api = dict(api, records={**DEFAULTS, **records})
     effective = dict(target=target, api=effective_api, image=image, data=data)
     return Configuration(freeze(effective), freeze(props), session_sha,
-                         MappingProxyType(dict(raw_documents, session=session_raw)))
+                         MappingProxyType(dict(raw_documents, session=session_raw)), results.get("capture", False))
 
 
 def load_legacy(session, *, image_policy=None, environ=None, reader=None):

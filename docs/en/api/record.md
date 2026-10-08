@@ -52,3 +52,5 @@ Scenario-body fragment (case shows a complete declaration). Symbols/macros must 
 - [Implementation](../../../stm32_gdbtest/target.py).
 - [Scenario or implementation check](../../../tests/firmware/common/tests/board/test_measurements.py).
 - [records](records.md), [record_error](record-error.md), [profile](profile.md).
+
+Opt-in runner persistence: [description](../API.md#result-journal-capture-unreleased). The method contract is unchanged.

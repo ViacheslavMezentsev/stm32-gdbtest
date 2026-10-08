@@ -69,7 +69,7 @@ class ProbeLockTests(unittest.TestCase):
         session = dict(root=str(self.root), out=str(self.root / "reports"),
                        stand="mock.toml", profile="mock-profile.toml")
         with patch("stm32_gdbtest.runner.load_stand", return_value=dict(backend="stlink", serial=self.serial)), \
-                patch("stm32_gdbtest.runner.capture", return_value=type("Snapshot", (), {"config": {"target": {}}})()), \
+                patch("stm32_gdbtest.runner.capture", return_value=type("Snapshot", (), {"config": {"target": {}}, "capture_results": False})()), \
                 patch("stm32_gdbtest.runner.execute") as execute:
             self.assertEqual(run(session, dict(id="HW_LOCKED", timeout_s=10)), 2)
             execute.assert_not_called()
@@ -169,7 +169,7 @@ class PosixProbeLockTests(unittest.TestCase):
         session = dict(root=str(self.root), out=str(self.root / "reports"),
                        stand="mock.toml", profile="mock-profile.toml")
         with patch("stm32_gdbtest.runner.load_stand", return_value=dict(backend="stlink", serial=self.serial)), \
-                patch("stm32_gdbtest.runner.capture", return_value=type("Snapshot", (), {"config": {"target": {}}})()), \
+                patch("stm32_gdbtest.runner.capture", return_value=type("Snapshot", (), {"config": {"target": {}}, "capture_results": False})()), \
                 patch("stm32_gdbtest.runner.execute") as execute:
             self.assertEqual(run(session, dict(id="HW_LOCKED", timeout_s=10)), 2)
             execute.assert_not_called()

@@ -52,3 +52,5 @@ t.record("adc.sample", {"vdda_mv": t.value("board_adc_reading.vdda_mv")})
 - [Реализация](../../../stm32_gdbtest/target.py).
 - [Сценарий или проверка реализации](../../../tests/firmware/common/tests/board/test_measurements.py).
 - [records](records.md), [record_error](record-error.md), [profile](profile.md).
+
+Opt-in сохранение runner: [описание](../API.md#захват-журнала-результатов-unreleased). Контракт метода не меняется.

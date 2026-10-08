@@ -42,3 +42,5 @@ Requires at least two previously collected adc.sample records; stdev uses N−1.
 - [Implementation](../../../stm32_gdbtest/target.py).
 - [Scenario or implementation check](../../../tests/firmware/common/tests/board/test_measurements.py).
 - [record](record.md), [record_error](record-error.md).
+
+Opt-in runner persistence: [description](../API.md#result-journal-capture-unreleased). The method contract is unchanged.
