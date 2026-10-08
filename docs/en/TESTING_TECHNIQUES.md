@@ -472,6 +472,26 @@ Profile values are Python values, so they are compared with separate checks and 
 table rows.
 **Boundary:** the profile describes the declared environment; a flash size that differs from the profile
 is a warning when the image fits both ([TARGET_IDENTITY](TARGET_IDENTITY.md)).
+
+Initial SP in the vector table is a stack-top pointer, not a byte address to dereference.
+For the selected contiguous RAM region `[start, end)`, a descending stack may start at `end`
+(as `_estack` is defined in the checked ELF images). For an initial stack with 8-byte alignment
+and room for the first saved value, use:
+
+```python
+# start/end describe the selected stack RAM region from the board/linker configuration.
+initial_sp = int.from_bytes(t.memory(t.profile["flash_start"], 4), "little")
+t.check("initial SP in stack region", start < initial_sp <= end)
+t.check("initial SP aligned", initial_sp % 8, 0)
+```
+
+Reading a nonempty block requires different bounds: `start <= address` and `address + size <= end`.
+Do not read at `end`. The project defines the size and selected bank; the broad SRAM window in
+`memory()` does not establish physical accessibility of that entire region. An SP check proves
+neither sufficient stack space nor separation from data/heap. Live SP after a prologue may differ
+from the vector and must be checked separately. On six checked ELF images the vector equals
+`_estack = end` and the final 8 bytes of selected RAM are readable; no out-of-region access is made.
+
 [profile](api/profile.md), [profile scenario](../../tests/firmware/common/tests/board/test_profile.py).
 
 <a id="tech-018"></a>

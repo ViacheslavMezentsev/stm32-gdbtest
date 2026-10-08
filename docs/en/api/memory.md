@@ -42,8 +42,10 @@ snapshot = t.memory(state["address"], state["size"])      # read: bytes
 t.call("app_step", "&app_state", "APP_MODE_BLINK")
 t.memory(state["address"], snapshot)                     # write: restore the saved bytes
 vectors = t.memory(t.profile["flash_start"], 8)
-t.check("initial SP in SRAM", int.from_bytes(vectors[:4], "little"), within(0x20000000, 0x200FFFFF))
+initial_sp = int.from_bytes(vectors[:4], "little")  # A stack-top pointer, not a readable byte address.
 ```
+
+Initial SP and readable-block bounds require different checks: [TECH-017](../TESTING_TECHNIQUES.md#tech-017).
 
 ## References
 

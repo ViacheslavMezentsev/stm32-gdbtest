@@ -8,6 +8,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Fixed
 
+- TECH-017: distinguish initial SP at the RAM end from readable memory bounds; checked on six stands.
+
 - TECH-013: a watchpoint frame is not necessarily the writer; document delayed stops, function return and incomplete unwinding. Checked on six stands.
 
 - `evaluate(..., as_type=str)` reads GDB zero-sized `char[]` from its address up to NUL/256 bytes,
