@@ -28,3 +28,51 @@ max-width:430px;max-height:440px;overflow:auto;background:var(--panel2);padding:
 footer{padding:24px;color:var(--dim);text-align:center;font-size:12px}
 @media(max-width:700px){main{padding:12px}.hero{padding:14px}h1{font-size:22px}}
 """
+
+
+CSS += """
+.toolbar{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.toolbar[hidden]{display:none}.toolbar fieldset{border:0;padding:0;margin:0}
+.toolbar legend{font-size:12px;color:var(--dim);margin-bottom:4px}
+.toolbar button{font:inherit;color:var(--fg);background:var(--panel);border:1px solid var(--border);
+padding:6px 12px;cursor:pointer;border-radius:5px;margin:2px}
+.toolbar button[aria-pressed=true]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.toolbar button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+:root[data-view=normal] .expert{display:none}
+:root[data-view=normal] table{min-width:800px}
+"""
+
+CONTROLS = '''
+<div class="toolbar" hidden>
+<fieldset><legend>Тема / Theme</legend>
+<button type="button" data-theme-choice="auto">Системная / Auto</button>
+<button type="button" data-theme-choice="light">Светлая / Light</button>
+<button type="button" data-theme-choice="dark">Тёмная / Dark</button></fieldset>
+<fieldset><legend>Режим / View</legend>
+<button type="button" data-view-choice="normal">Обычный / Normal</button>
+<button type="button" data-view-choice="expert">Экспертный / Expert</button></fieldset>
+</div>
+<noscript><p class="muted">JavaScript отключён: показаны все подробности в исходной теме.
+JavaScript disabled: all details shown in the initial theme.</p></noscript>
+'''
+
+# Static script only: evidence text is never interpolated into executable code.
+SCRIPT = '''
+(() => {
+  const root = document.documentElement;
+  function select(kind, value) {
+    root.dataset[kind] = value;
+    document.querySelectorAll('[data-' + kind + '-choice]').forEach(button => {
+      button.setAttribute('aria-pressed', String(button.dataset[kind + 'Choice'] === value));
+    });
+  }
+  for (const kind of ['theme', 'view']) {
+    document.querySelectorAll('[data-' + kind + '-choice]').forEach(button => {
+      button.addEventListener('click', () => select(kind, button.dataset[kind + 'Choice']));
+    });
+  }
+  select('theme', root.dataset.theme);
+  select('view', 'normal');
+  document.querySelector('.toolbar').hidden = false;
+})();
+'''

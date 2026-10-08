@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- HTML report: theme and normal/expert controls; all details remain available without JavaScript.
+
 ### Added
 
 - `results report`: standalone JSON/HTML summary, fresh integrity verification, separate outcomes, all attempts and auto/light/dark themes.

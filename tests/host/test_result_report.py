@@ -82,12 +82,27 @@ class ReportTests(unittest.TestCase):
         for theme in ('auto', 'light', 'dark'):
             _, _, html = self.render(theme, theme=theme)
             elements = Elements(html)
-            self.assertNotIn('script', elements.tags)
+            self.assertEqual(elements.tags.count('script'), 1)
+            from stm32_gdbtest.report_style import SCRIPT
+            self.assertEqual(html.split('<script>')[1].split('</script>')[0], SCRIPT)
             self.assertNotIn('img', elements.tags)
             self.assertFalse(any(key in ('href', 'src', 'onerror') for key, _ in elements.attrs))
             self.assertIn(('data-theme', theme), elements.attrs)
             self.assertIn('&lt;script&gt;', html)
             self.assertEqual(elements.tags.count('details'), 6)
+
+    def test_view_controls_preserve_all_evidence(self):
+        _, data, html = self.render()
+        elements = Elements(html)
+        self.assertEqual(elements.tags.count('button'), 5)
+        self.assertIn(('data-view-choice', 'normal'), elements.attrs)
+        self.assertIn(('data-view-choice', 'expert'), elements.attrs)
+        self.assertIn('noscript', elements.tags)
+        self.assertNotIn(('data-view', 'normal'), elements.attrs)  # Full fallback without JS.
+        self.assertEqual(elements.tags.count('details'), len(data['runs']))
+        self.assertIn('<td>error<small class="expert">', html)  # Error visible in both views.
+        self.assertIn('<td class="expert"><details>', html)
+        self.assertIn('<td class="PASS">PASS</td><td>2</td>', html)
 
     def test_output_limit_and_duplicate_ids(self):
         output = self.root / 'output'

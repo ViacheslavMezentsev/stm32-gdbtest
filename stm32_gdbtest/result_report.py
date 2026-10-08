@@ -8,7 +8,7 @@ from pathlib import Path
 import tempfile
 
 from stm32_gdbtest.result_files import Budget, ownership, output_stream, write_json
-from stm32_gdbtest.report_style import CSS
+from stm32_gdbtest.report_style import CSS, CONTROLS, SCRIPT
 
 VERDICTS = ('PASS', 'FAIL', 'ERROR', 'SKIP', 'UNKNOWN')
 
@@ -123,11 +123,12 @@ def html_chunks(summary, theme):
     yield '<!doctype html><html lang="ru" data-theme="' + theme + '"><head><meta charset="utf-8">'
     yield '<meta name="viewport" content="width=device-width,initial-scale=1"><title>Campaign report</title><style>' + CSS + '</style></head><body>'
     yield '<header><strong>stm32-gdbtest</strong> · Сводка запусков / Campaign report</header><main>'
-    yield '<section class="hero"><h1>' + text(summary['name']) + '</h1><p class="muted">' + text(summary['campaign_id']) + '</p>'
+    yield CONTROLS
+    yield '<section class="hero"><h1>' + text(summary['name']) + '</h1><p class="muted expert">' + text(summary['campaign_id']) + '</p>'
     yield '<p>Проверено / Checked: ' + text(summary['generated_utc']) + '</p></section>'
     yield '<div class="note">Все попытки сохранены. Общий PASS не вычисляется.<br>All attempts retained; no aggregate verdict.</div>'
-    yield '<p>Код отчётной команды / Report command: <strong>' + text(summary['command_code']) + '</strong> · index: ' + text(summary['index_code'])
-    yield ' · integrity: ' + text(summary['integrity_code']) + ' · export: ' + text(summary['export_code']) + '</p>'
+    yield '<p>Код отчётной команды / Report command: <strong>' + text(summary['command_code']) + '</strong><span class="expert"> · index: ' + text(summary['index_code'])
+    yield ' · integrity: ' + text(summary['integrity_code']) + ' · export: ' + text(summary['export_code']) + '</span></p>'
     yield '<p class="muted">Целостность проверена при генерации; это не мониторинг. Prepare не подтверждает работу MCU.<br>'
     yield 'Integrity is checked at generation time, not monitored. Prepare is not MCU execution evidence.</p>'
     for mode, group in summary['counts'].items():
@@ -138,7 +139,7 @@ def html_chunks(summary, theme):
         yield ' · Integrity issues: ' + text(group['integrity_issues']) + '</p><div class="scroll"><table><thead><tr>'
         for title in ('Стенд / Stand', 'Сценарий и попытка / Case and attempt', 'Исход / Verdict', 'Код / Command',
                       'Журнал / Capture', 'Целостность / Integrity', 'Данные / Data', 'Подробности / Details'):
-            yield '<th scope="col">' + title + '</th>'
+            yield '<th scope="col"' + (' class="expert"' if title == 'Подробности / Details' else '') + '>' + title + '</th>'
         yield '</tr></thead><tbody>'
         for row in summary['runs']:
             if row['mode'] != mode:
@@ -146,13 +147,13 @@ def html_chunks(summary, theme):
             capture = row['capture'] or {}
             exported = row['export']
             data = '—' if exported is None else str(exported['records']) + ' records / ' + str(exported['measurements']) + ' values'
-            yield '<tr><td>' + text(row['stand']) + '</td><td>' + text(row['case_id']) + '<small>' + text(row['run_id']) + '</small></td>'
+            yield '<tr><td>' + text(row['stand']) + '</td><td>' + text(row['case_id']) + '<small class="expert">' + text(row['run_id']) + '</small></td>'
             yield '<td class="' + row['verdict'] + '">' + row['verdict'] + '</td><td>' + text(row['command_code']) + '</td>'
-            yield '<td>' + text(capture.get('status', 'unknown')) + '<small>' + text(capture.get('completion')) + '</small></td>'
+            yield '<td>' + text(capture.get('status', 'unknown')) + '<small class="expert">' + text(capture.get('completion')) + '</small></td>'
             yield '<td class="' + row['integrity'] + '">' + row['integrity'] + '</td><td>' + text(data) + '</td>'
-            yield '<td><details><summary>Открыть / Open</summary><pre>' + text(json.dumps(row, ensure_ascii=False, indent=2)) + '</pre></details></td></tr>'
+            yield '<td class="expert"><details><summary>Открыть / Open</summary><pre>' + text(json.dumps(row, ensure_ascii=False, indent=2)) + '</pre></details></td></tr>'
         yield '</tbody></table></div>'
-    yield '</main><footer>SKIP ≠ PASS · UNKNOWN сохранён / retained · No network resources</footer></body></html>'
+    yield '</main><footer>SKIP ≠ PASS · UNKNOWN сохранён / retained · No network resources</footer><script>' + SCRIPT + '</script></body></html>'
 
 
 def report(root, index, output, limits, *, exported=None, theme='auto'):

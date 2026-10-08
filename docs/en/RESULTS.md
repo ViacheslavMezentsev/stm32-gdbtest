@@ -179,8 +179,14 @@ produced report; original PASS with capture.error remains independently visible.
 a complete diagnostic report with code 2; invalid schema/linkage or publication failure leaves no final
 directory. Invalid run identity is never repaired by merging attempts.
 
---theme accepts auto (system preference), light or dark. HTML is standalone: no JavaScript, external
+--theme accepts auto (system preference), light or dark. HTML is standalone: no external
 fonts, network resources or automatic file links. Shared light/dark report palettes, native details
 controls and horizontally scrollable wide tables are used. All user strings are escaped. campaign.json
 is available for external consumers. JSON input limit remains 16 MiB, including --export; omit an oversized
 export and generate an index-only report instead. Nested details are displayed, never executed.
+
+Buttons above the summary select system/light/dark theme and normal/expert view. Normal view keeps
+every attempt and status, including capture/integrity errors; expert view adds IDs, completion,
+individual processing codes and JSON details. Data and JSON remain unchanged. Static embedded
+JavaScript works locally without network or preference storage. Reload restores normal view and
+the --theme default. Without JavaScript all details remain available in the initial theme.
