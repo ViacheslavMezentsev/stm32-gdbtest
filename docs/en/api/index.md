@@ -62,3 +62,8 @@ are outside the accepted package. Examples require matching firmware and stop co
 they are not universal across boards.
 
 [Techniques](../TESTING_TECHNIQUES.md) · [Configuration and migration](../API.md) · [Acceptance](../API_ACCEPTANCE.md).
+
+
+## SKIP (Unreleased)
+
+[skip(reason)](skip.md) — inapplicable scenario completion; reason, records, code77 and migration.

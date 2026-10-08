@@ -155,7 +155,7 @@ def build(root, selection):
             if value is not None and type(value) is not str:
                 entry['diagnostics'].append('invalid ' + source)
         code = report.get('command_code')
-        entry['command_code'] = code if type(code) is int and code in (0, 1, 2) else None
+        entry['command_code'] = code if type(code) is int and code in (0, 1, 2, 77) else None
         if code is not None and entry['command_code'] is None:
             entry['diagnostics'].append('invalid command_code')
         if entry['verdict'] not in ('PASS', 'FAIL', 'ERROR', 'SKIP'):

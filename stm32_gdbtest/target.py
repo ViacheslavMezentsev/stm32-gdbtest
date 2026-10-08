@@ -260,6 +260,11 @@ class Target:
     def records(self, name=None):
         return self._journal.records(name)
 
+    def skip(self, reason):
+        """End an inapplicable scenario, preserving its journal (Unreleased)."""
+        from stm32_gdbtest.scenario import skip
+        skip(self, reason)
+
     def on_stop(self, event):
         # Capture primitive values now: temporary breakpoint objects expire after stop.
         numbers = [bp.number for bp in getattr(event, "breakpoints", ())]

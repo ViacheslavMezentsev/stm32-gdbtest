@@ -7,7 +7,7 @@ function(stm32_gdbtest_register id timeout labels)
     # GDB deadline plus preparation, server startup, recovery and process cleanup.
     math(EXPR outer_timeout "${timeout} + 90")
     set_tests_properties(hw.${id} PROPERTIES TIMEOUT ${outer_timeout}
-        LABELS "hw;${labels}" RESOURCE_LOCK stm32_swd)
+        LABELS "hw;${labels}" RESOURCE_LOCK stm32_swd SKIP_RETURN_CODE 77)
     # ТЗ 5.13.14: host-side preparation of the same scenario, without debugger access.
     add_test(NAME prepare.${id}
         COMMAND "${Python3_EXECUTABLE}" -B "${STM32_GDBTEST_MODULE_ROOT}/stm32_gdbtest/cli.py" run

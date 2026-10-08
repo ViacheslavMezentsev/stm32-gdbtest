@@ -21,6 +21,8 @@ from stm32_gdbtest.full_image import compare_full, validate_image
 from stm32_gdbtest.config_transport import loads
 from stm32_gdbtest.configuration import thaw
 from stm32_gdbtest.result_capture import save as save_records
+from stm32_gdbtest.scenario import ScenarioSkipped, invoke
+from stm32_gdbtest.reports import CODES
 
 
 def main():
@@ -102,9 +104,11 @@ def main():
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         completion = "interrupted"
-        getattr(module, session["test"]["function"])(target)
+        invoke(getattr(module, session["test"]["function"]), target)
         completion = "normal"
         report["status"] = "PASS"
+    except ScenarioSkipped as exc:
+        report.update(status="SKIP", skip_reason=str(exc))
     except CheckFailed:
         report.update(status="FAIL", error=traceback.format_exc())
     except BaseException:
@@ -144,7 +148,7 @@ def main():
         # A value a scenario put into its checks must not cost the whole report: it is kept as its repr.
         Path(session["result"]).write_text(json.dumps(report, indent=2, default=repr) + "\n", encoding="utf-8")
         print(json.dumps(report, default=repr))
-    gdb.execute("quit " + str({"PASS": 0, "FAIL": 1, "ERROR": 2}[report["status"]]))
+    gdb.execute("quit " + str(CODES[report["status"]]))
 
 
 main()

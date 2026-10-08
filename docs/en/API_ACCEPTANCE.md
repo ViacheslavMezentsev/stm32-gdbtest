@@ -104,3 +104,10 @@ original CI image restoration and BOOT/GPIO 12/12 PASS. Each run checks unquoted
 single-quoted float, retaining the original location. Host also checks surrounding whitespace,
 wrong-frame refusal and point cleanup. This is a focused reach regression, not full API acceptance;
 complex linespec syntax is outside scope.
+
+
+## SKIP — Unreleased
+
+F030 SKIP, F411 PASS; skip after navigation on both, BOOT/GPIO recovery4/4. Stock package and actual CTest: F030 skipped, F411 passed. Local verification, not a release.
+
+Additional: SKIP after navigation on F030/F103/F401/F411/F429/AT32, recovery12/12. run_hw rejects unexpected skip and accepts explicit allowance; stock recovery2/2. Docker host:381 tests, OK (4 existing skips); documentation PASS.

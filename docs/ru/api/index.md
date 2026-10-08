@@ -61,3 +61,8 @@ Target передаётся агентом; создавать его самос
 прошивки и места остановки; они не универсальны для всех плат.
 
 [Techniques](../TESTING_TECHNIQUES.md) · [Configuration and migration](../API.md) · [Acceptance](../API_ACCEPTANCE.md).
+
+
+## SKIP (Unreleased)
+
+[skip(reason)](skip.md) — завершение неприменимого сценария; причина, records, код77 и миграция.

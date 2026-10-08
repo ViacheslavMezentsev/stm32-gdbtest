@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Added skip(reason): reason, journal, JUnit/CTest SKIP, code77, explicit run_hw allowance; exit-code consumer migration.
+
 - Fixed false reach frame failures for C++ signatures wrapped in GDB single quotes; original location and point/frame checks are preserved.
 
 - Added event/interval, watchpoint-wait and injection scenarios, a standalone Og/O2 C++ example and TECH-019. Existing API contracts are unchanged.

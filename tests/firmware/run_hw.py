@@ -51,6 +51,27 @@ class StepError(RuntimeError):
     pass
 
 
+class StepSkipped(Exception):
+    def __init__(self, report, path):
+        self.report, self.path = report, path
+        super().__init__(report['skip_reason'])
+
+
+def permitted_skip(code, report, test_id, allowed):
+    return (code == 77 and report.get('status') == 'SKIP' and report.get('command_code') == 77
+            and type(report.get('skip_reason')) is str and bool(report['skip_reason'].strip())
+            and report.get('image_verified') is True and report.get('teardown') == 'reset_run'
+            and test_id in allowed)
+
+
+def step_summary(results):
+    return dict(passed=sum(r['status'] == 'PASS' for r in results),
+                skipped=sum(r['status'] == 'SKIP' for r in results),
+                accepted=bool(results) and all(r['status'] in ('PASS', 'SKIP') for r in results),
+                nothing_tested=bool(results) and all(r['status'] == 'SKIP' for r in results),
+                total=len(results), steps=results)
+
+
 def command(args, log, env, timeout=900):
     started = time.monotonic()
     result = subprocess.run([str(a) for a in args], cwd=ROOT, env=env, timeout=timeout, text=True,
@@ -77,6 +98,8 @@ def main():
                         help="prepared run package from `pack`: no build here, the build step checks the package")
     parser.add_argument("--repeat", type=int, default=1,
                         help="repeat the steps N times (0: until interrupted); build runs only once")
+    parser.add_argument("--allow-skip", action="append", default=[], metavar="HW_ID",
+                        help="accept SKIP for this scenario ID; repeat for multiple IDs")
     args = parser.parse_args()
     if args.repeat < 0:
         sys.exit("--repeat must be 0 (until interrupted) or a positive number")
@@ -136,6 +159,8 @@ def main():
         result = command([*selected_cli, "--test", test_id, "--stand", stand, *extra], log, run_env)
         reports = sorted(selected_runs.glob(f"**/*-{test_id}-*/result.json"), key=lambda p: p.stat().st_mtime)
         report = json.loads(reports[-1].read_text(encoding="utf-8")) if reports else {}
+        if permitted_skip(result.returncode, report, test_id, args.allow_skip):
+            raise StepSkipped(report, reports[-1])
         if result.returncode != expect:
             raise StepError(f"exit {result.returncode}, expected {expect}: {report.get('error', result.stdout[-2000:])}")
         return report, reports[-1] if reports else None
@@ -220,6 +245,8 @@ def main():
             try:
                 report, path = handlers[step]()
                 status, detail = "PASS", None
+            except StepSkipped as skipped:
+                status, detail, report, path = "SKIP", str(skipped), skipped.report, skipped.path
             except Exception as error:  # the next steps still run and report their own state
                 status, detail, report, path = "FAIL", str(error), None, None
             entry = dict(step=step, status=status, seconds=round(time.monotonic() - started, 1), detail=detail,
@@ -236,17 +263,18 @@ def main():
                     host=f"{platform.system()} {platform.release()} {platform.machine()}",
                     toolchain=None if args.package else str(args.toolchain),
                     package=args.package.name if args.package else None,
-                    passed=sum(r["status"] == "PASS" for r in results), total=len(results), steps=results)
+                    **step_summary(results))
 
     if args.repeat == 1:
         summary = iteration(True)
         (out / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         print(f"{summary['passed']}/{summary['total']} steps passed; {out / 'summary.json'}")
-        return 0 if summary["passed"] == summary["total"] else 1
+        return 0 if summary["accepted"] else 1
     # Soak mode (ТЗ 5.20): repeat until N iterations or Ctrl+C; every iteration keeps its summary.
     soak = dict(schema=1, profile=args.profile, stand=stand_path.name, repeat=args.repeat,
                 started_utc=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), iterations=0,
-                passed_iterations=0, step_failures={}, first_failure=None, last_utc=None, interrupted=False)
+                passed_iterations=0, accepted_iterations=0, skipped_steps=0,
+                step_failures={}, first_failure=None, last_utc=None, interrupted=False)
     (out / "iterations").mkdir()
     number = 0
     try:
@@ -260,8 +288,10 @@ def main():
             soak["last_utc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
             if summary["passed"] == summary["total"]:
                 soak["passed_iterations"] += 1
+            soak['accepted_iterations'] += int(summary['accepted'])
+            soak['skipped_steps'] += summary['skipped']
             for entry in summary["steps"]:
-                if entry["status"] != "PASS":
+                if entry["status"] not in ("PASS", "SKIP"):
                     soak["step_failures"][entry["step"]] = soak["step_failures"].get(entry["step"], 0) + 1
                     soak["first_failure"] = soak["first_failure"] or dict(iteration=number, step=entry["step"],
                                                                           detail=entry["detail"])
@@ -270,7 +300,7 @@ def main():
         soak["interrupted"] = True
         (out / "soak.json").write_text(json.dumps(soak, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"{soak['passed_iterations']}/{soak['iterations']} iterations passed; {out / 'soak.json'}")
-    return 0 if soak["iterations"] and soak["passed_iterations"] == soak["iterations"] else 1
+    return 0 if soak["iterations"] and soak["accepted_iterations"] == soak["iterations"] else 1
 
 if __name__ == "__main__":
     sys.exit(main())

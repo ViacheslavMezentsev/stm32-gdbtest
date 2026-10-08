@@ -391,3 +391,8 @@ Composite techniques using the existing API: [events and intervals](TESTING_TECH
 ### reach and C++ quotes (Unreleased)
 
 Use the full signature for an overload. Fixed a false frame-name FAIL with one outer pair of GDB single quotes; unquoted strings work as before. No migration is required; the workaround for 0.3.0 is to omit outer quotes. [Contract](api/reach.md).
+
+
+## SKIP (Unreleased)
+
+[skip(reason)](api/skip.md) — inapplicable scenario completion; reason, records, code77 and migration.

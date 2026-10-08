@@ -60,7 +60,7 @@ def validate_index(root, index, limits=Limits()):
             seen.add(entry['run_id'])
         else:
             require(entry['identity_source'] is None, 'identity without ID')
-        require(entry['command_code'] is None or (type(entry['command_code']) is int and entry['command_code'] in (0, 1, 2)), 'run command code')
+        require(entry['command_code'] is None or (type(entry['command_code']) is int and entry['command_code'] in (0, 1, 2, 77)), 'run command code')
         require(entry['capture'] is None or type(entry['capture']) is dict, 'capture type')
         # Capture is opaque source metadata here, never interpreted as a measurement schema.
         require(type(entry['artifacts']) is list, 'artifact list')
