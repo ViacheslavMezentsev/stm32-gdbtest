@@ -25,6 +25,6 @@ CI_PROFILE: f030r8, f103c8, f401cc, f411ce, f429zi, at32f403a; OPT: Og или O2
 
 Образец сценария — [test_cpp_context.py](profile/tests/board/test_cpp_context.py). Для сохранения records
 подключите [захват](../../docs/ru/RESULTS.md) в отдельном session.toml. Недоступный input вне метода
-отличается от optimized_out: второй случай может не возникнуть даже при O2. CLI-кавычки вокруг
-Converter::apply(int) const в reach не используйте. C++-объекты живут в GDB только в текущем контексте;
+отличается от optimized_out: второй случай может не возникнуть даже при O2. Сценарий проверяет
+reach без кавычек (int) и с одинарными кавычками GDB (float; исправлено в Unreleased). C++-объекты живут в GDB только в текущем контексте;
 в журнал уходят простые снимки. [Объём проверки](../../docs/ru/API_ACCEPTANCE.md).

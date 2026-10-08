@@ -263,6 +263,49 @@ class NavigationTests(unittest.TestCase):
         self.assertEqual(result["stop"]["function"], "app_loop")
         self.assertEqual(len(target.report["checks"]), 2)
 
+    def test_reach_quoted_signature_preserves_location_and_checks_frame(self):
+        # ТЗ API 4.5.2: GDB receives the exact linespec; only comparison unquotes it.
+        for location in ("Converter::apply(int) const", "'Converter::apply(int) const'",
+                         "  'Converter::apply(int) const'  "):
+            with self.subTest(location=location):
+                target = self.target()
+                self.frame = FakeFrame(name="Converter::apply(int) const [clone .constprop.0]")
+                original = target.breakpoint
+                points = []
+
+                def spy(spec, **options):
+                    point = original(spec, **options)
+                    points.append(point)
+                    self.stop(point.id)
+                    return point
+
+                target.breakpoint = spy
+                result = target.reach(location)
+                self.assertEqual(result["location"], location)
+                self.assertEqual(points[0].location, location)
+                self.assertEqual(points[0]._native.location, location)
+                self.assertEqual(result["stop"]["frame"], self.frame.name())
+                self.assertFalse(points[0].is_valid())
+                self.assertEqual(result["outcome"], "reached")
+
+    def test_reach_quoted_signature_still_rejects_wrong_frame(self):
+        target = self.target()
+        self.frame = FakeFrame(name="Other::apply(int) const")
+        original = target.breakpoint
+        points = []
+
+        def spy(spec, **options):
+            point = original(spec, **options)
+            points.append(point)
+            self.stop(point.id)
+            return point
+
+        target.breakpoint = spy
+        with self.assertRaises(CheckFailed):
+            target.reach("'Converter::apply(int) const'")
+        self.assertFalse(points[0].is_valid())
+        self.assertEqual(target.report["checks"][-1]["actual"], "Other::apply")
+
     def test_reach_fails_when_another_point_stopped(self):
         target = self.target()
         self.stop(999)

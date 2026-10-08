@@ -27,7 +27,10 @@ def cpp_context(t):
 
     # Explicit signatures distinguish overloads independently of frame-name normalization.
     for signature, argument, expected, convert in (("int", 4, 11, int), ("float", 1.5, 8.5, float)):
-        t.reach("Converter::apply(" + signature + ") const")
+        location = "Converter::apply(" + signature + ") const"
+        location = "'" + location + "'" if signature == "float" else location
+        reached = t.reach(location)
+        t.check("original linespec retained", reached["location"], location)
         frame = gdb.newest_frame()
         obj = inspect_local(frame, "this", int)
         parameter = inspect_local(frame, "input", convert)

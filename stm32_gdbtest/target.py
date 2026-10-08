@@ -1051,7 +1051,11 @@ class Target:
         self.check(f"breakpoint reached: {location}", point.number in stop.get("breakpoints", []), True)
         frame = gdb.newest_frame().name()
         stop["frame"] = frame
-        self.check(f"frame: {location}", function_name(frame), function_name(location))
+        # GDB linespec quotes are syntax, not part of the frame name (ТЗ API 4.5.2).
+        expected_frame = location.strip()
+        if len(expected_frame) >= 2 and expected_frame[0] == expected_frame[-1] == "'":
+            expected_frame = expected_frame[1:-1]
+        self.check(f"frame: {location}", function_name(frame), function_name(expected_frame))
         if condition is not None:
             # Never accept a stop that happened after a condition evaluation error.
             self.check(f"condition: {condition}", bool(self._integer(condition)), True)

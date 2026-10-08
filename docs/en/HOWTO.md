@@ -507,3 +507,7 @@ use `python ci/check_api_spec.py <path-to-check_spec.py> docs/TECHNICAL_SPECIFIC
 The adapter widens only revision patterns and refuses a changed upstream pattern
 structure. The installed skill is unchanged. Docker CI includes this in the docs
 level; the overall specification still uses the upstream checker directly.
+
+### reach and C++ quotes (Unreleased)
+
+Use the full signature for an overload. Fixed a false frame-name FAIL with one outer pair of GDB single quotes; unquoted strings work as before. No migration is required; the workaround for 0.3.0 is to omit outer quotes. [Contract](api/reach.md).

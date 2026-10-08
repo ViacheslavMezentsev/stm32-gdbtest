@@ -96,3 +96,11 @@ Limits: nominal ticks do not establish timing accuracy; watchpoint IDs may be in
 C++ arguments remained available at O2; no hardware optimized-out case was observed.
 The published wait scenario does not include an intentional timeout.
 [Technique catalogue](TESTING_TECHNIQUES.md), [C++ example](../../tests/cpp-context/README.en.md).
+
+### Single-quoted reach — 2026-10-09
+
+C++ example rerun on the same six stands/tool versions: Og/O2, 12 prepare, 12 HW PASS,
+original CI image restoration and BOOT/GPIO 12/12 PASS. Each run checks unquoted int and
+single-quoted float, retaining the original location. Host also checks surrounding whitespace,
+wrong-frame refusal and point cleanup. This is a focused reach regression, not full API acceptance;
+complex linespec syntax is outside scope.

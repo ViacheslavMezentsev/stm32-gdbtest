@@ -34,3 +34,12 @@ Scenario-body fragment (case shows a complete declaration). Symbols/macros must 
 - [Implementation](../../../stm32_gdbtest/target.py).
 - [Scenario or implementation check](../../../tests/firmware/common/tests/board/test_measurements.py).
 - [breakpoint](breakpoint.md), [case](case.md).
+
+## Unreleased fix
+
+One outer pair of GDB single quotes is ignored when comparing the frame name:
+`t.reach("'Converter::apply(float) const'")`. The original string is passed unchanged to GDB
+and returned in `location`; `stop.frame` retains GDB's name. This is not a general linespec
+parser: point-number and normalized-frame checks remain mandatory.
+API_VERSION=1 and the method signature are unchanged. With 0.3.0 use the unquoted form.
+[Example](../../../tests/cpp-context/profile/tests/board/test_cpp_context.py).

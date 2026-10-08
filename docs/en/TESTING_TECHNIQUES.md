@@ -491,8 +491,8 @@ returned = t.finish()
 ```
 
 Import `gdb` in the scenario; run its calls on the main GDB thread. A full signature distinguishes
-overloads. With current reach, omit outer CLI quotes: GDB reaches the method with quotes,
-but name verification may FAIL. Snapshot values before changing frames. `is_optimized_out`
+overloads. Unreleased reach accepts one outer pair of GDB single quotes
+(`t.reach("'Converter::apply(float) const'")`); the previous release required the unquoted form. Snapshot values before changing frames. `is_optimized_out`
 differs from a missing symbol and from actual zero; lazy fetching may fail. Store plain Python
 data in records, not live gdb.Value objects. Check a return when available, and independently
 check the published program result.

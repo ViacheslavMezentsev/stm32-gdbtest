@@ -25,5 +25,5 @@ SDK is needed for this computational firmware.
 
 Scenario: [test_cpp_context.py](profile/tests/board/test_cpp_context.py). Enable [capture](../../docs/en/RESULTS.md)
 in a separate session.toml to save records. Out-of-scope input differs from optimized_out, which may not
-occur even at O2. Do not add outer CLI quotes around Converter::apply(int) const in reach. GDB objects
+occur even at O2. The scenario checks unquoted int and GDB single-quoted float reach (fixed in Unreleased). GDB objects
 belong to their execution context; records hold plain snapshots. [Verified scope](../../docs/en/API_ACCEPTANCE.md).

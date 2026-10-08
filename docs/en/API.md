@@ -387,3 +387,7 @@ The journal holds arbitrary data; measurement projections are defined separately
 HTML summaries include theme and normal/expert view controls; data remains unchanged.
 
 Composite techniques using the existing API: [events and intervals](TESTING_TECHNIQUES.md#tech-011), [waiting for changes](TESTING_TECHNIQUES.md#tech-015), [C++ context](TESTING_TECHNIQUES.md#tech-019).
+
+### reach and C++ quotes (Unreleased)
+
+Use the full signature for an overload. Fixed a false frame-name FAIL with one outer pair of GDB single quotes; unquoted strings work as before. No migration is required; the workaround for 0.3.0 is to omit outer quotes. [Contract](api/reach.md).

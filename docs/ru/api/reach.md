@@ -34,3 +34,12 @@ t.reach("board_delay_ms")
 - [Реализация](../../../stm32_gdbtest/target.py).
 - [Сценарий или проверка реализации](../../../tests/firmware/common/tests/board/test_measurements.py).
 - [breakpoint](breakpoint.md), [case](case.md).
+
+## Исправление Unreleased
+
+Одна внешняя пара одинарных кавычек GDB не участвует в сравнении имени кадра:
+`t.reach("'Converter::apply(float) const'")`. Исходная строка передаётся GDB без изменения
+и возвращается в `location`; `stop.frame` сохраняет имя GDB. Это не разбор произвольного
+синтаксиса linespec: проверка номера точки и нормализованного имени остаётся обязательной.
+API_VERSION=1 и сигнатура метода не меняются. В 0.3.0 используйте форму без внешних кавычек.
+[Пример](../../../tests/cpp-context/profile/tests/board/test_cpp_context.py).
