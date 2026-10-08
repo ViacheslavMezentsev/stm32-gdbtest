@@ -376,3 +376,8 @@ Forced termination may lose the journal; a missing artifact is never replaced wi
 On capture failure JUnit adds an infrastructure testcase <ID>.capture with error, preserving the
 original testcase. The tests count includes this testcase, not an additional MCU check.
 Console output separates Scenario, Capture and Command. CSV/HTML are outside this stage.
+
+## Saved result processing (Unreleased)
+
+`results export` and `results verify`: [contract, CLI and examples](RESULTS.md).
+The journal holds arbitrary data; measurement projections are defined separately. Target methods and existing scenarios need no changes.

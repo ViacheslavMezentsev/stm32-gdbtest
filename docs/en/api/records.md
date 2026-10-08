@@ -44,3 +44,5 @@ Requires at least two previously collected adc.sample records; stdev uses N−1.
 - [record](record.md), [record_error](record-error.md).
 
 Opt-in runner persistence: [description](../API.md#result-journal-capture-unreleased). The method contract is unchanged.
+
+Record data is arbitrary; name does not define a measurement type. [Generic export and separate projections](../RESULTS.md).

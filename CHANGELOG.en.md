@@ -8,6 +8,9 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Added
 
+- Offline `results export` / `results verify`: generic JSON/CSV records, explicit projections, campaign index and integrity checks; bounded processing and publication without replacing previous results.
+
+
 - Opt-in records.json capture through session.toml: separate command outcome and infrastructure JUnit error on artifact failure.
 
 

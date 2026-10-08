@@ -52,7 +52,11 @@ def main():
     doctor.add_argument("--gdb", type=Path)
     doctor.add_argument("--stand", type=Path)
     doctor.add_argument("--json", action="store_true")
+    from stm32_gdbtest import results
+    results.configure_cli(subs)
     args = parser.parse_args()
+    if args.command == 'results':
+        return results.main(args)
     if args.command == "doctor":
         from stm32_gdbtest.doctor import main as doctor_main
         return doctor_main(args.gdb, args.stand, args.json)

@@ -54,3 +54,5 @@ t.record("adc.sample", {"vdda_mv": t.value("board_adc_reading.vdda_mv")})
 - [records](records.md), [record_error](record-error.md), [profile](profile.md).
 
 Opt-in сохранение runner: [описание](../API.md#захват-журнала-результатов-unreleased). Контракт метода не меняется.
+
+Данные записей произвольны; name не определяет тип измерения. [Общий экспорт и отдельные проекции](../RESULTS.md).
