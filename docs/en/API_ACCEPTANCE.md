@@ -82,3 +82,17 @@ tracemalloc and reachable-object size are measured separately with preallocated 
 Initial integration passed in CPython and GDB14/GDB16: 13 shapes and five boundaries
 per environment, without >2× regression. This is integration evidence, not portable
 absolute timing. Standard records host tests check contractual limits independently.
+
+## Composite technique and example verification — 2026-10-09
+
+A separate series, not a recount of historical API acceptance: the three common scenarios
+`HW_CI_EVENT_INTERVALS`, `HW_CI_WAIT_CHANGES`, `HW_CI_EVENT_INJECTION` passed 18 prepare and 18 HW runs.
+The standalone `HW_CPP_CONTEXT` passed 12 builds, 12 prepare and 12 HW runs (Og/O2).
+Boards: F030R8, F103C8, F401CC, F411CE, F429ZI through OpenOCD and AT32F403A through J-Link.
+Original CI images were restored after both series: 24 BOOT/GPIO PASS, image_verified=true,
+teardown=reset_run. GCC 14.2.1, GDB 15.2.90.20241130-git/Python 3.12.8, OpenOCD 0.12.0, J-Link 8.32.
+
+Limits: nominal ticks do not establish timing accuracy; watchpoint IDs may be inferred.
+C++ arguments remained available at O2; no hardware optimized-out case was observed.
+The published wait scenario does not include an intentional timeout.
+[Technique catalogue](TESTING_TECHNIQUES.md), [C++ example](../../tests/cpp-context/README.en.md).

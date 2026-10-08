@@ -76,6 +76,7 @@ ELF contract nor requirement traceability.
 | Organizing checks | [010 tables](#tech-010), [014 call as a predicate](#tech-014) |
 | Navigation | [015 choosing the stop](#tech-015), [016 stop location](#tech-016) |
 | Measurement series | [011 collection and calculation](#tech-011) |
+| C++ | [019 this, overloads, types](#tech-019) |
 
 Moving a card to another MCU, HAL, GCC or backend needs a new verification: the links point to code
 and protocols, they do not promise the same result in every environment.
@@ -179,6 +180,8 @@ a positive run.
 [ret](api/ret.md), [inject_zero](../../tests/firmware/common/tests/board/test_inject_zero.py),
 [HAL runtime](../../tests/hal-f030/hal_scenarios/peripheral_runtime.py), [HAL fixture](F030_HAL_REGRESSION.md).
 
+The [injection scenario](../../tests/firmware/common/tests/board/test_event_injection.py) compares two paths to a zero result: natural counter wrap and `ret("0")`. The latter skips producer side effects. Check both the receiver branch and producer state; the same result does not imply the same execution.
+
 <a id="tech-005"></a>
 ## TECH-005 — Injecting an argument
 
@@ -202,6 +205,8 @@ SysTick runs, the external runner timeout is mandatory.
 **Boundary:** the software deadline of one stage is checked, not a physical LSI failure and not the
 accuracy of 1000 ms. After the injection, `reset_run` and a positive `HW_CI_RTC_ALARM`.
 [rtc_deadline](../../tests/firmware/profiles/f030r8/tests/board/test_rtc.py), [protocol](F030_RTC_DEADLINE.md).
+
+Temporarily change inputs through a context manager restoring them in `finally`. The [example](../../tests/firmware/common/tests/board/test_event_injection.py) restores only declared ticks/led fields, including exceptional exit. This does not roll back the PC, peripherals, time or the entire program state.
 
 <a id="tech-006"></a>
 ## TECH-006 — Controlled peripheral state through MMIO
@@ -343,6 +348,8 @@ prove accuracy. Record limits are set in `api.toml`; a repeated `records()` make
 [measurement_series](../../tests/firmware/common/tests/board/test_measurement_series.py),
 [record](api/record.md), [records](api/records.md).
 
+**Events and intervals.** The [example](../../tests/firmware/common/tests/board/test_event_intervals.py) records source, epoch, counter width and nominal rate with each sample. Modular subtraction requires matching metadata and an external guarantee that the interval is shorter than one period; it cannot detect missed complete wraps. `board_ticks_ms` denotes nominal firmware ticks, not calibrated time. A Python delay while halted does not measure MCU execution time.
+
 <a id="tech-012"></a>
 ## TECH-012 — Expected refusal of an operation
 
@@ -376,14 +383,11 @@ with t.watch("app_state.ticks"):
     names = [frame["name"] for frame in t.frames(4)["frames"]]
 ```
 
-Check the writer (`names[0]`), the caller (`names[1]`), the stop address inside the writer by
-`t.symbol()` and the new value. Record the chain with `t.record()`.
-**Environment:** a DWT hardware watch point; the object is addressable and of its declared size.
-**Boundary:** on Cortex-M0 a watch point halts the core one or two instructions after the store. When
-the store is the last instruction of the body, the stop lands in the epilogue, which carries no GCC
-unwind information, and GDB loses the calling frame. In the fixture firmware body instructions follow
-the store (`app_received.publications++`). Writes by DMA and other bus masters are invisible to a core
-watch point.
+Check the new value, point ID and frame chain. Frame 0 describes the stop location,
+not a guaranteed writer: delayed stops are possible on M0/M3/M4; the function may have
+returned or called another function. Correlate PC, instructions and stack instead of
+automatically choosing frame 0 or 1. Epilogue unwinding may be unavailable.
+Writes by DMA and other bus masters are invisible to a core watch point.
 [watch](api/watch.md), [frames](api/frames.md),
 [who_writes](../../tests/firmware/common/tests/board/test_who_writes.py).
 
@@ -423,6 +427,8 @@ timing of the firmware.
 [breakpoint](api/breakpoint.md), [Point](api/point.md),
 [conditional_stop](../../tests/firmware/common/tests/board/test_conditional_stop.py),
 [point_budget](../../tests/firmware/common/tests/board/test_point_budget.py).
+
+**Waiting for a change.** The [scenario helper](../../tests/firmware/common/tests/board/test_wait_changes.py) checks the stop kind and its own point ID before the predicate. Its `matched`, `exhausted`, `unexpected-stop` outcomes are an example convention, not new API outcomes. Do not hide a foreign stop by resuming again. A stop-count budget does not replace the scenario timeout. `with` removes its point on normal or exceptional exit; killing GDB requires external recovery. ID evidence may be native or inferred: retain it with the result.
 
 <a id="tech-016"></a>
 ## TECH-016 — Stop location: a function, not a line number
@@ -470,6 +476,32 @@ In Python, `t.evaluate(path, as_type=str)` reads a `char` array up to its zero o
 (at most `STRING_LIMIT`) and is compared with a plain check or `matches(pattern)`. A string literal in
 `$_memeq` needs memory allocated in the target; compare memory objects.
 [evaluate](api/evaluate.md), [strings](../../tests/firmware/common/tests/board/test_strings.py).
+
+<a id="tech-019"></a>
+## TECH-019 — C++ context and typed reads
+
+**Goal:** inspect an object, overload argument and naturally executed return.
+
+```python
+t.reach("Converter::apply(int) const")
+frame = gdb.newest_frame()
+obj = frame.read_var("this").cast(gdb.lookup_type("Converter").pointer())
+t.check("object bias", int(obj.dereference()["bias"]), 7)
+returned = t.finish()
+```
+
+Import `gdb` in the scenario; run its calls on the main GDB thread. A full signature distinguishes
+overloads. With current reach, omit outer CLI quotes: GDB reaches the method with quotes,
+but name verification may FAIL. Snapshot values before changing frames. `is_optimized_out`
+differs from a missing symbol and from actual zero; lazy fetching may fail. Store plain Python
+data in records, not live gdb.Value objects. Check a return when available, and independently
+check the published program result.
+
+**Verified:** [standalone buildable example](../../tests/cpp-context/README.en.md), six boards,
+Og/O2, `-g3`, soft-float, no LTO. Arguments were available in both builds; this does not establish
+an optimized-out hardware case. RTTI, exceptions, inheritance and hard-float were not tested.
+[Scenario](../../tests/cpp-context/profile/tests/board/test_cpp_context.py),
+[read](api/read.md), [evaluate](api/evaluate.md), [finish](api/finish.md).
 
 ## Extending the catalogue
 

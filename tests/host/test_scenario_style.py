@@ -12,7 +12,7 @@ import tokenize
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
-SCENARIOS = ("tests/firmware/common/tests/board/*.py", "tests/firmware/profiles/*/tests/board/*.py",
+SCENARIOS = ("tests/cpp-context/profile/tests/board/*.py", "tests/firmware/common/tests/board/*.py", "tests/firmware/profiles/*/tests/board/*.py",
              "tests/hal-f030/profile/tests/board/*.py", "tests/hal-f030/hal_scenarios/*.py",
              "examples/minimal-consumer/profile/tests/board/*.py")
 LIMIT = 120

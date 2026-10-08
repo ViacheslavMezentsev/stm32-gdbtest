@@ -385,3 +385,5 @@ The journal holds arbitrary data; measurement projections are defined separately
 `results report` builds standalone JSON/HTML from the index and optional export; [summary and themes](RESULTS.md#jsonhtml-summary-unreleased).
 
 HTML summaries include theme and normal/expert view controls; data remains unchanged.
+
+Composite techniques using the existing API: [events and intervals](TESTING_TECHNIQUES.md#tech-011), [waiting for changes](TESTING_TECHNIQUES.md#tech-015), [C++ context](TESTING_TECHNIQUES.md#tech-019).

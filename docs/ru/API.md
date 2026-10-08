@@ -382,3 +382,5 @@ result.status сохраняет исходный вердикт. command_code: 
 `results report` формирует автономный JSON/HTML по индексу и необязательному экспорту; [сводка и темы](RESULTS.md#сводка-jsonhtml-unreleased).
 
 В HTML-сводке доступны переключатели темы и обычного/экспертного представления; данные не меняются.
+
+Составные приёмы на существующем API: [события и интервалы](TESTING_TECHNIQUES.md#tech-011), [ожидание изменений](TESTING_TECHNIQUES.md#tech-015), [C++-контекст](TESTING_TECHNIQUES.md#tech-019).

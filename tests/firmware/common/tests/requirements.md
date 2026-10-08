@@ -192,3 +192,18 @@ prefix (`$_regex`). The same facts are then checked in Python: `evaluate(..., as
 field, the pointer and the RAM copy as text, `matches` checks the version pattern, and `memory` reads both
 blocks with equal bytes. The scenario covers ASCII identification strings, not text encodings or strings
 longer than the read limit.
+
+## HW_CI_EVENT_INTERVALS
+Record three intervals of 500 nominal firmware ticks with matching source, epoch, width and rate.
+A host delay while halted must leave the sampled firmware counter unchanged. Invalid metadata and
+ambiguous intervals are rejected by the helper; this does not establish calibrated timing accuracy.
+
+## HW_CI_WAIT_CHANGES
+Match a predicate only at the owned watchpoint, preserve unrelated points and fault guards, report
+an unrelated stop without silently resuming, and exhaust a finite stop budget. Remove the owned
+point on normal and exceptional exit. The budget is not a wall-clock timeout.
+
+## HW_CI_EVENT_INJECTION
+Compare natural counter wrap with forced zero return: both reach the receiver's zero branch, but
+only natural execution changes producer state. Restore declared input fields on normal and
+exceptional exit and verify the next normal iteration. This is not a full execution rollback.

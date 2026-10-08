@@ -49,3 +49,4 @@ desktop.ini
 /tests/api-extension/
 /tests/**/dev-*/
 # END local development materials
+/tests/cpp-context/build/
