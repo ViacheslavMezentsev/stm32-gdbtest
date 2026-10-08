@@ -6,6 +6,12 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+### Fixed
+
+- `evaluate(..., as_type=str)` reads GDB zero-sized `char[]` from its address up to NUL/256 bytes,
+  fixing ValueError on GDB 15/16 and false successful empty reads on GDB 14. Known `char[N]` bounds
+  remain enforced; an array without size or address gives `read_failed`. API specification 0.3.11, §4.18.
+
 - Added skip(reason): reason, journal, JUnit/CTest SKIP, code77, explicit run_hw allowance; exit-code consumer migration.
 
 - The v0.4.0 candidate removes deprecated Target methods `value`, `fields`, `set_value`, `force_return`;

@@ -6,8 +6,8 @@
 
 | Property | Value |
 | --- | --- |
-| Module support | 0.3.0.dev0 (core) |
-| API specification contract | not accepted; designed revision 0.3.0 |
+| Module support | 0.3.0; char[] fix — Unreleased |
+| API specification contract | §4.3, §4.18; char[] clarified in revision 0.3.8 |
 | API_VERSION | 1 (the effective contract does not change) |
 | Basis | the agreed verification firmware `tests/firmware` and its scenarios (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
 
@@ -29,6 +29,11 @@ elements `unsupported_type`.
 
 Limitations: the expression is evaluated on the current frame; side effects of the expression are
 not rolled back; function calls inside an expression are outside the verified scope.
+
+When GDB reports zero array size (for example, `extern const char name[]`), its address is read using
+pointer rules: up to NUL or the 256-byte limit. A missing address gives `read_failed`. This fixes
+ValueError on GDB 15/16 and false empty strings on GDB 14; known array bounds remain enforced.
+An explicitly declared zero-length array follows the same rule.
 
 ## Example
 

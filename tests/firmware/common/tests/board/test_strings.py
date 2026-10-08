@@ -34,6 +34,11 @@ def strings(t):
     t.check("board pointer as text", t.evaluate("app_info.board", as_type=str), BOARD)
     t.check("RAM copy as text", t.evaluate("app_version_ram", as_type=str), version)
 
+    # Model an extern char[] declaration without changing the firmware or its debug information.
+    # The unknown array bound must not turn a real string into an empty successful read.
+    t.check("unsized Flash string", t.evaluate("*(const char (*)[])app_info.board", as_type=str), BOARD)
+    t.check("unsized RAM string", t.evaluate("*(volatile char (*)[])app_version_ram", as_type=str), VERSION)
+
     # Raw bytes of both blocks: memory() reads the Flash original and the RAM copy.
     size = t.evaluate("sizeof(app_info.version)")
     flash = t.memory(t.evaluate("&app_info.version[0]", as_type=int), size)

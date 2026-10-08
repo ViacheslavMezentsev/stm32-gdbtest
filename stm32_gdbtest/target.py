@@ -500,8 +500,11 @@ class Target:
             self._fail("eval", "readback", "none", "unsupported_type",
                        f"{expression} is not a char array or a char pointer", expression=expression)
         errors = (gdb.error, getattr(gdb, "MemoryError", gdb.error), RuntimeError)
-        if array:
-            size = min(int(kind.sizeof), STRING_LIMIT)
+        # GDB represents an extern char[] declaration with sizeof == 0 (ТЗ API 4.18.1).
+        # It has an address, but no usable bound: read it with the pointer string limit.
+        array_size = int(kind.sizeof) if array else 0
+        if array and array_size > 0:
+            size = min(array_size, STRING_LIMIT)
             address = getattr(value, "address", None)
             try:
                 if address is not None:
@@ -512,9 +515,16 @@ class Target:
             except errors as cause:
                 self._fail("eval", "readback", "none", "read_failed", f"cannot read {expression}",
                            cause=cause, expression=expression)
-            terminated = b"\0" in raw or int(kind.sizeof) <= STRING_LIMIT
+            terminated = b"\0" in raw or array_size <= STRING_LIMIT
         else:
-            address = int(value.cast(gdb.lookup_type("unsigned long"))) if hasattr(value, "cast") else int(value)
+            if array:
+                address = getattr(value, "address", None)
+                if address is None:
+                    self._fail("eval", "readback", "none", "read_failed",
+                               f"{expression} has no array size or address", expression=expression)
+                address = int(address)
+            else:
+                address = int(value.cast(gdb.lookup_type("unsigned long"))) if hasattr(value, "cast") else int(value)
             if address == 0:
                 self._fail("eval", "readback", "none", "null_pointer", f"{expression} is a null pointer",
                            expression=expression)

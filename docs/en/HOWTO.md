@@ -500,6 +500,14 @@ the old pinned SRET technique to a new ELF without renewed analysis.
 Use a full method signature including const: short Converter::apply has two
 locations. Select direct calls by argument type and separately verify this.
 
+## Unsized char[] in GDB
+
+If 0.3.0 `evaluate(name, as_type=str)` raises `ValueError: Argument 'count' should be greater than zero`
+or unexpectedly returns an empty string, inspect `ptype name`: an `extern const char name[]` declaration
+may have zero size in GDB. The 0.3.0 workaround is `evaluate("(const char *)name", as_type=str)`.
+The Unreleased fix reads that array from its address with the 256-byte limit, preserving known `char[N]`
+bounds. `HW_CI_STRINGS` covers both Flash and RAM.
+
 ## Three-component API specification revision
 
 The upstream skill checker recognizes two-component revisions. For the API spec

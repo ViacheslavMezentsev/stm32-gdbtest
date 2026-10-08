@@ -501,6 +501,14 @@ double-арифметику: здесь она выполняется через
 Для метода задавайте полную сигнатуру с const: короткое Converter::apply даёт
 две locations. Прямой вызов выбирайте типом аргумента, отдельно проверяя this.
 
+## Строка char[] без размера в GDB
+
+Если `evaluate(name, as_type=str)` в 0.3.0 выдаёт `ValueError: Argument 'count' should be greater than zero`
+или неожиданную пустую строку, проверьте `ptype name`: объявление `extern const char name[]` может иметь
+нулевой размер в GDB. Обход для 0.3.0 — `evaluate("(const char *)name", as_type=str)`.
+Исправление Unreleased читает такой массив по адресу с лимитом 256 байт; для обычного `char[N]`
+граница массива сохраняется. Проверка — `HW_CI_STRINGS`, включая Flash и RAM.
+
 ## Трёхкомпонентная ревизия ТЗ API
 
 Исходный check_spec.py навыка распознаёт двухкомпонентные ревизии. Для ТЗ API

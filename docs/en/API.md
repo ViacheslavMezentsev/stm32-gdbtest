@@ -13,6 +13,11 @@ Production first-package examples and five-MCU verification: [accepted results](
 
 ## 0.3.0 package: numbers, migration and aliases
 
+Post-0.3.0 fix (Unreleased): `evaluate(path, as_type=str)` reads a `char[]` whose GDB size is zero
+from its address up to NUL or `STRING_LIMIT = 256`, like a pointer. The `const char *` cast workaround
+is no longer required. Known `char[N]` bounds remain enforced; an unsized array without an address
+raises `ApiError(read_failed)`. Signature and `API_VERSION = 1` are unchanged; API specification 0.3.8, §4.18.
+
 Public method cards live in the [reference](api/index.md), grouped into methods, properties,
 decorators, classes and errors. The contract is fixed by API specification 0.3.0-rc.1; the module
 implements every listed method and is verified on five stands. The numbers agreed on 2026-10-04 and

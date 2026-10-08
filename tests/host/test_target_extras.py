@@ -312,6 +312,41 @@ class ExtrasTests(unittest.TestCase):
         target = self.text_target(TextValue(CharType(pointer, 4), pointer=0x20000100))
         self.assertEqual(target.evaluate("app_info.board", as_type=str), "stm32-gdbtest-ci")
 
+    def test_unsized_array_reads_text_without_a_zero_byte_request(self):
+        array = type_constant("TYPE_CODE_ARRAY", None)
+        target = self.text_target(TextValue(CharType(array, 0), address=self.inferior.base))
+        original = self.inferior.read_memory
+
+        def read(address, size):
+            if size == 0:
+                raise ValueError("Argument 'count' should be greater than zero")
+            return original(address, size)
+
+        self.inferior.read_memory = Mock(side_effect=read)
+        for content, expected in ((b"hello\0", "hello"), (b"\0", "")):
+            self.inferior.memory[:len(content)] = content
+            self.assertEqual(target.evaluate("extern_text", as_type=str), expected)
+            self.assertNotIn("truncated", target.report["evaluations"][-1])
+
+    def test_unsized_array_limit_and_unavailable_address(self):
+        array = type_constant("TYPE_CODE_ARRAY", None)
+        self.inferior.memory = bytearray(b"x" * 300)
+        target = self.text_target(TextValue(CharType(array, 0), address=self.inferior.base))
+        self.assertEqual(target.evaluate("extern_text", as_type=str), "x" * 256)
+        self.assertTrue(target.report["evaluations"][-1]["truncated"])
+        for address in (None, self.inferior.base + 400):
+            target = self.text_target(TextValue(CharType(array, 0), address=address))
+            with self.subTest(address=address), self.assertRaises(ApiError) as caught:
+                target.evaluate("extern_text", as_type=str)
+            self.assertEqual(caught.exception.code, "read_failed")
+
+    def test_sized_array_does_not_read_past_its_bound(self):
+        array = type_constant("TYPE_CODE_ARRAY", None)
+        self.inferior.memory = bytearray(b"abc")
+        target = self.text_target(TextValue(CharType(array, 3), address=self.inferior.base))
+        self.assertEqual(target.evaluate("text", as_type=str), "abc")
+        self.assertNotIn("truncated", target.report["evaluations"][-1])
+
     def test_string_refusals_and_truncation(self):
         array, pointer = type_constant("TYPE_CODE_ARRAY", None), type_constant("TYPE_CODE_PTR", None)
         target = self.text_target(TextValue(CharType(pointer, 4), pointer=0))
