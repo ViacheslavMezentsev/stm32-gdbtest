@@ -35,8 +35,10 @@ current revision is stated in its header.
    mechanism description and migration notes ([API](API.md)), a CHANGELOG entry,
    a new spec revision. Code and tests refer to spec items per appendix D (`# ТЗ 5.9.7`).
 3. Local checks of the affected levels (section "Checks").
-4. Signed commit, push the branch, match check results to the branch's latest
-   commit, merge into main.
+4. The agent prepares signed commits and leaves the branch available. The owner pushes each
+   branch and runs `git land` after GitHub CI for the latest SHA is checked. Local checks do not
+   replace CI. The agent does not merge or delete branches without a separate explicit request;
+   “continue” means further preparation, not permission to merge.
 5. Record the branch, commit and status in TODO.md.
 
 **Release** (spec 8.9, [versioning rules](VERSIONING.md)):
