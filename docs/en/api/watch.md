@@ -35,6 +35,8 @@ with t.watch("app_state.ticks"):
 An interface refusal is reported as an operation failure naming the backend, not as a silent absence
 of stops.
 
+PC / frames: [TECH-013](../TESTING_TECHNIQUES.md#tech-013).
+
 ## References
 
 - [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.3.0.

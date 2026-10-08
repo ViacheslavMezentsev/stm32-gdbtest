@@ -383,11 +383,20 @@ with t.watch("app_state.ticks"):
     names = [frame["name"] for frame in t.frames(4)["frames"]]
 ```
 
-Check the new value, point ID and frame chain. Frame 0 describes the stop location,
-not a guaranteed writer: delayed stops are possible on M0/M3/M4; the function may have
-returned or called another function. Correlate PC, instructions and stack instead of
-automatically choosing frame 0 or 1. Epilogue unwinding may be unavailable.
-Writes by DMA and other bus masters are invisible to a core watch point.
+Frames describe the stop location, not necessarily the store instruction. Check the new value,
+retain stop and frames with record(); external analysis requires explicit journal output.
+Compare PC with symbol() and disassembly of the actual ELF. HW_CI_WHO_WRITES checks a known
+firmware location, not a universal writer identification algorithm.
+**Environment:** a hardware watch point and an addressable object of its declared size.
+**Boundary:** the core may stop after the store; delay has also been observed on Cortex-M3,
+not only M0. If a subsequent call executes, the writer may be in the calling frame.
+Unwinding in an epilogue may be incomplete. Neither frames[0] nor frames[1] is automatically
+the writer: source, instructions and a valid chain are required. Insufficient evidence leaves
+the writer unidentified. Do not compute the store address as PC - 2: instruction lengths and
+execution paths differ. The inferred flag classifies the stop reason, not the writer.
+The API guarantees neither a fixed instruction delay nor a complete chain. DMA and other
+bus-master writes are invisible to a core watch point.
+On AT32/J-Link the function had returned after its final store and was absent from the frame chain.
 [watch](api/watch.md), [frames](api/frames.md),
 [who_writes](../../tests/firmware/common/tests/board/test_who_writes.py).
 

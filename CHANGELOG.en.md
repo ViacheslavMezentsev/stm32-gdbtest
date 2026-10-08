@@ -8,6 +8,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ### Fixed
 
+- TECH-013: a watchpoint frame is not necessarily the writer; document delayed stops, function return and incomplete unwinding. Checked on six stands.
+
 - `evaluate(..., as_type=str)` reads GDB zero-sized `char[]` from its address up to NUL/256 bytes,
   fixing ValueError on GDB 15/16 and false successful empty reads on GDB 14. Known `char[N]` bounds
   remain enforced; an array without size or address gives `read_failed`. API specification 0.3.11, §4.18.

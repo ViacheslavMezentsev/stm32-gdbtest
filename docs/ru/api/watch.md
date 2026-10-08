@@ -35,6 +35,8 @@ with t.watch("app_state.ticks"):
 Отказ интерфейса возвращается как отказ операции с указанием backend-а, а не как молчаливое
 отсутствие остановок.
 
+PC / frames: [TECH-013](../TESTING_TECHNIQUES.md#tech-013).
+
 ## Ссылки
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.0.
