@@ -2,7 +2,9 @@
 
 [Documentation](index.md) · [Русский](../ru/RELEASE040_SCOPE.md) · [Release policy](VERSIONING.md) · [Roadmap](../../TODO.md)
 
-Snapshot of `codex/check-techniques` at `00d8c18`, 2026-10-09. This is a proposed release boundary, not a release-readiness claim. The module is still version 0.3.0; the branch has not landed in main. The owner publishes after final CI and acceptance.
+Scope agreed on 2026-10-09 and reconciled with `main` at `44c795d`: `codex/check-techniques`,
+`codex/api040-cleanup`, and `codex/api030-feedback` have landed. This defines the release boundary,
+not release readiness. The module is still version 0.3.0 with `API_VERSION=2`; final acceptance remains.
 
 ## 1. Recommended contents
 
@@ -13,10 +15,11 @@ Snapshot of `codex/check-techniques` at `00d8c18`, 2026-10-09. This is a propose
 | `reach` correction | Include GDB single-quoted C++ signature handling | Host/hardware regression exists; repeat at the release SHA |
 | Compatible MCUs/infrastructure | Include AT32 profile, stand naming and architecture adapters | Already in `[Unreleased]`; verify available backend/build paths at the release SHA |
 | Techniques/examples | Include event/interval, watchpoint wait, injection, standalone C++ Og/O2 and TECH-019 | Examples built on existing API, without new `Target` methods |
-| 0.3.0 field feedback F01–F03 | Candidate after separate push/CI/land of `codex/api030-feedback` and renewed compatibility review | F01 bounded unsized character-array read; F02 watchpoint frame interpretation; F03 initial SP as SRAM boundary. This branch also edits `target.py`, documentation and host tests; it is not in main/current branch |
+| 0.3.0 field feedback F01–F03 | Include; `codex/api030-feedback` has landed | F01 bounded unsized character-array read; F02 watchpoint frame interpretation; F03 initial SP as SRAM boundary. Host/docs/offline passed at `44c795d`; hardware results predate integration and need a release-SHA repeat |
 | API cleanup | **Remove** `value`, `fields`, `set_value`, `force_return` | API spec 6.7, TODO and reference have promised removal in 0.4.0; provide explicit migration for this breaking change |
 
-`API_VERSION` is currently 1. Public method removal changes the contract; recommend 2 in the release branch. TOML/JSON schema versions remain unless their formats change. Keep `@case` as primary and `@test` as an alias: neither is deprecated.
+`API_VERSION` is already 2 because public methods were removed. TOML/JSON schema versions did not change.
+Keep `@case` as primary and `@test` as an alias: neither is deprecated.
 
 ## 2. Scenario and documentation cleanup
 
@@ -24,10 +27,10 @@ A scan of *Git-tracked files* for `t.<name>(…)` and `target.<name>(…)` found
 
 | Location | Finding | Action |
 | --- | --- | --- |
-| `tests/firmware/common/tests`, `tests/firmware/profiles` | No calls of the four former methods | Scan again after branch integration; run stock scenarios on the release SHA |
-| `tests/host` | Compatibility tests for `force_return`/`set_value` and warnings | Replace with absence checks and current `ret`/`write` regressions; retain existing behavioral coverage |
-| `docs/ru`, `docs/en` | Active examples in API, DDTT and `case`, `check-failed`, `record` cards; separate cards of all four former names | Use `read`/`evaluate`, `check(rows)`, `write`, `ret`; keep former-name cards as historical migration and remove them from active method listings |
-| `skills/stm32-gdbtest-scenarios` | Old-to-new table | Keep only as explicit migration guidance; working examples use current API |
+| `tests/firmware/common/tests`, `tests/firmware/profiles` | No calls of the four former methods | Repeat stock scenarios at the release SHA |
+| `tests/host` | Absence checks for former names and current `ret`/`write` regressions are in main | Repeat host regression at the release SHA |
+| `docs/ru`, `docs/en` | Active examples use the current API; former names remain in historical migration | Check `docs.public` and language pairs at the release SHA |
+| `skills/stm32-gdbtest-scenarios` | Old-to-new table remains only as migration guidance | Working examples use the current API |
 | Local `tests/dev-*` and historical results | Earlier research code calls old names | Preserve historical evidence; do not distribute these directories |
 
 Do not blindly replace text:
@@ -37,7 +40,9 @@ Do not blindly replace text:
 - `set_value` returned `None`; `write` returns a result and verifies the applied write. Review any scenario relying on return values or MMIO read effects.
 - `force_return` becomes `ret`; verify returned details and expression type in the current frame.
 
-Legacy cards currently say both “deprecated warning” and “alias without warning until 1.0”; fix this contradiction. Preserve version history in specifications and CHANGELOG. Active reference and examples must describe v0.4.0. After cleanup, old names should appear in tracked scenarios and active examples only within explicitly historical migration sections.
+The cleanup branch resolved the old cards' contradictory warning/alias text. Specification and CHANGELOG
+history is preserved. A tracked-file scan at `44c795d` finds calls of former names only in the skill's
+migration table; these are examples of old code, not executable scenarios.
 
 ## 3. Exclude from v0.4.0
 
@@ -52,16 +57,28 @@ Legacy cards currently say both “deprecated warning” and “alias without wa
 ## 4. Technical debt and release gates
 
 - Use `skip()` in consumer scenarios to learn where it is needed; distinguish inapplicability from malfunction. Direct GDB is unrestricted and SKIP does not roll back actions. This package has not rechecked remote stands or other GDB versions.
-- F01–F03 need branch reconciliation and affected tests; until then they are **not** guaranteed v0.4.0 contents.
-- TODO TECH-016/017: clarify writer frames and initial-SP/RAM boundaries in the techniques catalog if F02/F03 land.
+- F01–F03 are integrated: TECH-013 explains why a stop frame need not identify the writer, and TECH-017
+  separates the initial SP at a RAM boundary from readable addresses. Earlier hardware evidence does not
+  replace a run at the release SHA.
 - Release matrix: Docker host/offline/docs at the exact SHA, real build/package, [release-policy](VERSIONING.md) launch schemes, hardware recovery, a consumer using the actual submodule, and `docs.public`. Branch-local results do not replace final-SHA CI.
 - Align version, `API_VERSION`, current revisions of both specifications, README/STATUS, skills, bilingual CHANGELOG and release notes. Provide a 0.3.0 migration guide.
 
-## 5. Sequence before the release branch
+| Evidence | At `44c795d` | Release gate |
+| --- | --- | --- |
+| Docs, host, F030 offline | 7/7 passed locally | Repeat full Docker suite and GitHub CI at the final SHA |
+| Board scenarios and recovery | Results from separate branches; integrated SHA untested | Full [release-policy](VERSIONING.md) matrix at the release SHA |
+| Consumer as Git submodule | Untested at the integrated SHA | Verify real gitlink and prepare/run path |
+| Version and release documents | `__version__=0.3.0`, API_VERSION=2 | Version 0.4.0, specifications, migration and release notes |
 
-1. Owner pushes `codex/check-techniques`, reviews last-SHA CI and lands it.
-2. Reconcile and finish `codex/api030-feedback` separately under the same workflow. If incompatible or unfinished, leave F01–F03 outside v0.4.0.
-3. From current main, create a small cleanup branch for four methods and migration of tracked tests/examples; verify host, docs, firmware prepare and affected hardware behavior.
-4. Once scope is fixed, prepare a release branch: 0.4.0 version, `API_VERSION=2` if removal is accepted, specifications, CHANGELOG, release notes and final matrix. Owner handles push, land and tag.
+## 5. Release preparation sequence
+
+1. Reconcile the integrated scope and verification matrix: `main` at `44c795d` includes all three accepted
+   branches. Docs 5/5, host and F030 offline passed locally on this SHA (7/7 total); the owner checks GitHub CI separately.
+2. In the release branch, set `__version__` to 0.4.0 and update both specifications, README/STATUS, skills,
+   bilingual CHANGELOG and release notes with 0.3.0 → 0.4.0 migration. `API_VERSION=2` is already set.
+3. At the final SHA, run Docker docs/format/host/firmware, the hardware matrix and recovery, then check a
+   consumer with the real submodule. Record exact tool versions, MCU, backend, ELF/manifest and limits;
+   do not count results from earlier SHAs as final acceptance.
+4. The owner pushes the branch, checks CI at the last SHA, lands it, then creates the tag.
 
 This scope does not transfer experimental methods into core or publish a release.
