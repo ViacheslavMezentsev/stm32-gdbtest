@@ -10,9 +10,32 @@ Contract: [API specification](../TECHNICAL_SPECIFICATION_API.md); guide: [API](A
 At integrated `main` `f57fe72`, local docs 5/5, host and F030 offline passed
 (7/7 total). The release branch raises Python to 0.4.0; `API_VERSION=2` was already
 set when four former methods were removed. Separate hardware checks for SKIP,
-the `reach` fix and F01–F03 belong to earlier SHAs. The full hardware matrix,
-recovery and a consumer using the real submodule remain unverified at the release
-SHA; the new package is not yet accepted.
+the `reach` fix and F01–F03 belonged to earlier SHAs. A local Windows matrix ran
+at runtime commit `bb74cde`; other layouts and a consumer with the real submodule
+remain unchecked, so the release is not yet accepted.
+
+Windows 10 AMD64, GCC 13.3.1-1.1, GDB 14.2.90/Python 3.11.4, OpenOCD 0.12.0
+or J-Link GDB Server 8.32. Each stand passed `run_hw.py` 10/10, then
+`run_suite.py --execute --timeout-recovery` ran every scenario and restored the
+CI firmware: final BOOT/GPIO PASS, `image_verified=true`, `teardown=reset_run`.
+Stage counts include preparation and repeats; the one ERROR per stand is the
+expected timeout with host recovery, not a scenario failure.
+
+| MCU / backend | Scenarios | Stages | ELF SHA-256 |
+| --- | ---: | ---: | --- |
+| F030R8 / OpenOCD | 45 | 98 (97 PASS, 1 expected ERROR) | `8909baf64a2b09ace0eb3879e58c16dc53db7a6d52ee41c94fe9d25301d34efa` |
+| F103C8 / OpenOCD | 47 | 102 (101 PASS, 1 expected ERROR) | `b221cdbc2fbec7dabd2760d0a45356266d501331bd07a59e9479e77ae25fa971` |
+| F401CC / OpenOCD | 47 | 102 (101 PASS, 1 expected ERROR) | `2e5e677ed52fa7f914b44f91807ee69769ae60e87a6304800952bb409adff404` |
+| F411CE / OpenOCD | 47 | 102 (101 PASS, 1 expected ERROR) | `b018f21c89406eb889d952a7266532c234a48cab7de158facd4765afac97932d` |
+| F429ZI / OpenOCD | 47 | 102 (101 PASS, 1 expected ERROR) | `fdec05542e41b323c34fe25c2392a7b53113b822b3304f4b26bf5804adb41bc4` |
+| AT32F403A / J-Link | 47 | 102 (101 PASS, 1 expected ERROR) | `4e1e5888178b65b3ec69eb3bcac9ae2089febdf7e563004503574f13d58d7a9a` |
+
+Total: 280 scenarios and 608 stages (602 PASS, 6 expected ERROR). The first AT32
+`run_hw.py` gave 9/10: CMake cached an obsolete SDK path, so subsequent stages
+used an earlier ELF and were not counted. The original FAIL was retained locally.
+After correcting the path, a fresh build, 10/10 and the full suite passed.
+`run_hw.py` now aborts after a failed `build` (specification 0.78, TC-163);
+this helper-script change followed the matrix.
 
 ## 0.3.0 package
 

@@ -247,7 +247,7 @@ def main():
                 status, detail = "PASS", None
             except StepSkipped as skipped:
                 status, detail, report, path = "SKIP", str(skipped), skipped.report, skipped.path
-            except Exception as error:  # the next steps still run and report their own state
+            except Exception as error:  # independent steps still report their own state
                 status, detail, report, path = "FAIL", str(error), None, None
             entry = dict(step=step, status=status, seconds=round(time.monotonic() - started, 1), detail=detail,
                          report=str(path.relative_to(ROOT)) if path else None)
@@ -258,6 +258,10 @@ def main():
                              debugger_firmware=report.get("compatibility", {}).get("debugger", {}).get("firmware"))
             results.append(entry)
             print(f"{status} {step} ({entry['seconds']}s)" + (f": {detail}" if detail else ""), flush=True)
+            # A stale build directory can contain a valid old session after configure fails.
+            # Never use that session to prepare or program a board (ТЗ 8.22).
+            if step == "build" and status != "PASS":
+                break
         return dict(schema=1, profile=args.profile, backend=probe.get("backend"), stand=stand_path.name,
                     server_host=document.get("remote", {}).get("host", "local"),
                     host=f"{platform.system()} {platform.release()} {platform.machine()}",
@@ -296,6 +300,9 @@ def main():
                     soak["first_failure"] = soak["first_failure"] or dict(iteration=number, step=entry["step"],
                                                                           detail=entry["detail"])
             (out / "soak.json").write_text(json.dumps(soak, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+            if number == 1 and any(entry["step"] == "build" and entry["status"] != "PASS"
+                                   for entry in summary["steps"]):
+                break
     except KeyboardInterrupt:
         soak["interrupted"] = True
         (out / "soak.json").write_text(json.dumps(soak, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

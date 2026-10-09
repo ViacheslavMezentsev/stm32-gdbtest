@@ -260,6 +260,7 @@ ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -i <�
 | `format`: clang-format нашёл отличия | Отформатировать изменённые C/H-файлы: `clang-format -i <файлы>` (версия — как в образе CI; локально проще в контейнере) и повторить `python3 ci/run_checks.py format` |
 | Новый профиль сломал host-тест с эталонными данными | Тест перебирал все каталоги `profiles/`; эталон фиксирует свой список профилей, новый профиль добавляется в эталон отдельно |
 | Нужен SDK производителя (Artery) вне CI | `python tools/vendor_sdk.py` ставит закреплённый архив туда, где его ищет CMake ([совместимые МК](COMPATIBLE_MCU.md)) |
+| AT32 SDK установлен, но `run_hw.py` сообщает `AT32 SDK not found` | В `tests/firmware/build/hw-<профиль>-<стенд>/CMakeCache.txt` мог сохраниться прежний `AT32_SDK_ROOT`. Убедиться, что в выбранном каталоге есть `libraries/cmsis/cm4/device_support/at32f403a_407.h`; затем выполнить `cmake -S tests/firmware -B <каталог-сборки> -DAT32_SDK_ROOT=<каталог-SDK>` и заново весь `run_hw.py`. Результат после неуспешного build не засчитывать: старый `session.json` мог указывать на прежний ELF. Исходный FAIL сохранить. |
 
 Удалить образ и кэш: `docker image rm stm32-gdbtest-ci:local`, `docker builder prune`.
 

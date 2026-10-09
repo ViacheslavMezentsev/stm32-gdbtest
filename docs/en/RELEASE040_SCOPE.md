@@ -67,7 +67,7 @@ migration table; these are examples of old code, not executable scenarios.
 | Evidence | At `44c795d` | Release gate |
 | --- | --- | --- |
 | Docs, host, F030 offline | 7/7 passed locally | Repeat full Docker suite and GitHub CI at the final SHA |
-| Board scenarios and recovery | Results from separate branches; integrated SHA untested | Full [release-policy](VERSIONING.md) matrix at the release SHA |
+| Board scenarios and recovery | At `bb74cde`, six local stands: 10/10 `run_hw` each, 280 scenarios, 608 stages (602 PASS, 6 expected ERROR), BOOT/GPIO recovery 12/12 PASS | Other [release-policy](VERSIONING.md) layouts, affected `run_hw` repeat at the final SHA, and CI |
 | Consumer as Git submodule | Untested at the integrated SHA | Verify real gitlink and prepare/run path |
 | Version and release documents | `__version__=0.3.0`, API_VERSION=2 | Version 0.4.0, specifications, migration and release notes |
 
@@ -78,7 +78,8 @@ migration table; these are examples of old code, not executable scenarios.
 2. In the release branch, `__version__` is set to 0.4.0 and both specifications, README/STATUS, skills,
    bilingual CHANGELOG and draft release notes include 0.3.0 → 0.4.0 migration.
    `API_VERSION=2` is already set; documents will be refined after final acceptance.
-3. At the final SHA, run Docker docs/format/host/firmware, the hardware matrix and recovery, then check a
+3. At `bb74cde`, all six local stands passed their scenarios and recovery. At the final SHA, run Docker
+   docs/format/host/firmware, repeat the affected `run_hw` path and remaining layouts, then check a
    consumer with the real submodule. Record exact tool versions, MCU, backend, ELF/manifest and limits;
    do not count results from earlier SHAs as final acceptance.
 4. The owner pushes the branch, checks CI at the last SHA, lands it, then creates the tag.

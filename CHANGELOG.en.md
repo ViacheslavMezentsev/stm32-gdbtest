@@ -10,6 +10,9 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 Release candidate: publication follows final hardware acceptance and CI at the release SHA.
 
+- `run_hw.py` stops hardware steps and repeats after a failed `build`, preventing use of
+  a stale `session.json` and firmware from an earlier build.
+
 - TECH-017: distinguish initial SP at the RAM end from readable memory bounds; checked on six stands.
 
 - TECH-013: a watchpoint frame is not necessarily the writer; document delayed stops, function return and incomplete unwinding. Checked on six stands.

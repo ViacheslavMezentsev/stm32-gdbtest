@@ -260,6 +260,7 @@ runner" in [hardware CI](HARDWARE_CI.md).
 | `format`: clang-format found differences | Format the changed C/H files with `clang-format -i <files>` (the CI image version; locally easiest in the container) and rerun `python3 ci/run_checks.py format` |
 | A new profile broke a host test with reference data | The test iterated every `profiles/` directory; the reference pins its profile list, and a new profile is added to the reference separately |
 | The vendor SDK (Artery) is needed outside CI | `python tools/vendor_sdk.py` installs the pinned archive where CMake looks for it ([compatible MCUs](COMPATIBLE_MCU.md)) |
+| The AT32 SDK is installed but `run_hw.py` says `AT32 SDK not found` | An old `AT32_SDK_ROOT` may remain in `tests/firmware/build/hw-<profile>-<stand>/CMakeCache.txt`. Check that the selected directory contains `libraries/cmsis/cm4/device_support/at32f403a_407.h`, then run `cmake -S tests/firmware -B <build-dir> -DAT32_SDK_ROOT=<sdk-dir>` and repeat the entire `run_hw.py`. Do not count results after a failed build: a stale `session.json` may point at an old ELF. Preserve the original FAIL. |
 
 Remove the image and cache: `docker image rm stm32-gdbtest-ci:local`, `docker builder prune`.
 

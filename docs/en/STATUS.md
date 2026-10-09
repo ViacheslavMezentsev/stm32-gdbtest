@@ -3,10 +3,11 @@
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
 **Now (2026-10-09).** The release branch prepares candidate v0.4.0: Python 0.4.0,
-API_VERSION=2, API specification 0.3.12, general specification 0.77. Main before this
+API_VERSION=2, API specification 0.3.12, general specification 0.78. Main before this
 branch was `f57fe72`; the [release boundary](RELEASE040_SCOPE.md) is agreed.
-The final hardware matrix and consumer with a real submodule remain unverified;
-the release is not published. Published v0.3.0 was accepted on five boards in six
+Six boards passed the full local scenario suite and recovery at `bb74cde`; other
+run layouts, final-SHA CI and a consumer with a real submodule remain unverified.
+The release is not published. Published v0.3.0 was accepted on five boards in six
 run layouts: [results](API_ACCEPTANCE.md), [metrics](HARDWARE_METRICS.md),
 [release notes](../releases/v0.3.0.md). Open items — [TODO](../../TODO.md).
 
