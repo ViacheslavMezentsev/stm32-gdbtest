@@ -266,16 +266,11 @@ class ExtrasTests(unittest.TestCase):
         self.assertEqual(target.read("app_state", fields=("ticks", "led")),
                          {"ticks": "app_state.ticks", "led": "app_state.led"})
 
-    def test_former_names_warn_once(self):
+    def test_former_names_are_not_public_methods(self):
         target = self.target()
-        target.ret = Mock(return_value={})
-        target.write = Mock(return_value={})
-        target.force_return("0")
-        target.force_return("1")
-        target.set_value("x", 1)
-        self.assertEqual(target.report["warnings"], [
-            "deprecated: force_return() is replaced by ret() and is removed in 0.4.0",
-            "deprecated: set_value() is replaced by write() and is removed in 0.4.0"])
+        for name in ("value", "fields", "set_value", "force_return"):
+            with self.subTest(name=name):
+                self.assertFalse(hasattr(target, name))
 
     # Symbols.
     def test_symbol_reports_address_size_type_and_section(self):

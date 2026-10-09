@@ -275,12 +275,13 @@ or the counters above. The profile, the SDK, scenario specifics and the procedur
 
 ## Status
 
-main holds the **0.3.0** package: module version `0.3.0`, `API_VERSION = 1`, [API specification](docs/TECHNICAL_SPECIFICATION_API.md)
+The published **0.3.0** package has module version `0.3.0`, `API_VERSION = 1`, [API specification](docs/TECHNICAL_SPECIFICATION_API.md)
 0.3.7, [general specification](docs/TECHNICAL_SPECIFICATION.md) 0.69 (both Russian). The package is accepted on five
 boards in six run layouts ([accepted results](docs/en/API_ACCEPTANCE.md)); the owner sets the `v0.3.0` tag following
 the [release notes](docs/releases/v0.3.0.md). Published tags are `v0.1.0-rc.1` and `v0.1.0-rc.2`
-([rc.2 acceptance](docs/en/RC2_READINESS.md)). The deprecated `value`, `fields`, `set_value`, `force_return`
-work with a warning and are removed in 0.4.0. Changes are in the [CHANGELOG](CHANGELOG.en.md), the verified scope by
+([rc.2 acceptance](docs/en/RC2_READINESS.md)). The 0.4.0 candidate has removed the former
+`value`, `fields`, `set_value`, `force_return` methods and uses `API_VERSION=2`; release and full hardware acceptance remain.
+Changes are in the [CHANGELOG](CHANGELOG.en.md), the verified scope by
 mechanism in [STATUS](docs/en/STATUS.md).
 
 RISC-V, full migration of other examples, external instrument control, child process

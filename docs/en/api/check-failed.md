@@ -29,7 +29,7 @@ the report.
 ## Example
 
 ```python
-t.check("ticks advanced", t.value("app_state.ticks") > 0, True)
+t.check("ticks advanced", t.read("app_state.ticks") > 0, True)
 ```
 
 ## References

@@ -237,7 +237,6 @@ class Target:
         self._journal = Journal(**{key: limits[key] for key in DEFAULTS})
         self.owned = []
         self.stops = []
-        self._warned = set()
         # Fault guard functions; the architecture adapter may replace them at boot (portability P1-7).
         self.fault_guards = list(profile.get("fault_handlers", []))
         gdb.events.stop.connect(self.on_stop)
@@ -352,33 +351,12 @@ class Target:
                        "check(rows) is evaluated by GDB, compare Python values with check(name, actual, expected)",
                        cause=error, row=name, cell=cell, expression=expression)
 
-    def _deprecated(self, name, replacement):
-        """Warn once per run about a former name; removal is planned in 0.4.0 (ТЗ API 6.7)."""
-        if name in self._warned:
-            return
-        self._warned.add(name)
-        self.report.setdefault("warnings", []).append(
-            f"deprecated: {name} is replaced by {replacement} and is removed in 0.4.0")
-
-    def value(self, expression):
-        """Deprecated 0.1 read of an integer expression; use `read` or `evaluate` (ТЗ API 6.7)."""
-        self._deprecated("value()", "read() or evaluate()")
-        return self._integer(expression)
-
     def _integer(self, expression):
         value = gdb.parse_and_eval(expression)
         if value.is_optimized_out:
             raise RuntimeError(f"Value optimized out: {expression}")
         value.fetch_lazy()
         return int(value)
-
-    def fields(self, expression, expected):
-        """Deprecated: compare scalar fields; use a `check([(name, path, expected), ...])` table (ТЗ API 6.7)."""
-        self._deprecated("fields()", "check([(name, path, expected), ...])")
-        for field, reference in expected.items():
-            actual = self._integer(f"({expression}).{field}")
-            wanted = self._integer(reference) if isinstance(reference, str) else reference
-            self.check(f"{expression}.{field}", actual, wanted)
 
     def frames(self, limit=None):
         """Frame chain from the innermost frame outwards (ТЗ API 4.5).
@@ -921,11 +899,6 @@ class Target:
         except gdb.error as cause:
             self._fail("write", "command", "none", "command_failed",
                        f"write failed for {path}", cause=cause, path=path, value=literal)
-
-    def set_value(self, expression, value):
-        """Deprecated alias of `write` kept for the 0.2.x name; removed in 0.4.0 (ТЗ API 6.7)."""
-        self._deprecated("set_value()", "write()")
-        self.write(expression, value)
 
     def breakpoint(self, location, temporary=False, *, condition=None, ignore_count=0, when=None):
         """Set a point and return it (ТЗ API 4.4).
@@ -1559,11 +1532,6 @@ class Target:
             except gdb.error:
                 return None
         return None
-
-    def force_return(self, expression):
-        """Deprecated alias of `ret` kept for the 0.2.x name; removed in 0.4.0 (ТЗ API 6.7)."""
-        self._deprecated("force_return()", "ret()")
-        return self.ret(expression)
 
     def clear(self):
         # remove() rewrites self.owned, so iterate over a snapshot (ТЗ API 4.8).

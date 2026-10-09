@@ -4,6 +4,9 @@
 
 [Выпуск v0.3.0](../releases/v0.3.0.md): версия Python 0.3.0; кандидат v0.2.0-rc.1 не публиковался. Исторические сведения ниже сохраняются.
 
+В кандидате v0.4.0 `API_VERSION=2`: `value`, `fields`, `set_value`, `force_return` удалены.
+См. [исторические карточки и миграцию](api/index.md); версия пакета изменится только в выпускной ветке.
+
 Штатные примеры первого пакета и проверка на пяти MCU: [принятые результаты](API_ACCEPTANCE.md).
 
 [Справочник методов и свойств](api/index.md) — отдельные карточки, примеры и версии поддержки.
@@ -35,7 +38,7 @@ J-Link — `monitor reset`; сессия может переопределить
 
 | Прежнее имя | Новое имя | Примечание |
 | --- | --- | --- |
-| `value(expression)` | `read(path)` | чтение объекта с приведением типа |
+| `value(expression)` | `read(path)` или `evaluate(expression)` | объект читается по пути, выражение вычисляется в GDB; проверить тип результата |
 | `fields(expression, expected)` | `check([(name, path, expected), …])` | таблица вычисляет строковые ожидания |
 | `set_value(expression, value)` | `write(path, value)` | появляется проверка применённого значения |
 | `force_return(expression)` | `ret(value=None)` | возврат становится операцией с результатом |
@@ -57,7 +60,7 @@ from statistics import mean, stdev
 from stm32_gdbtest import RecordError
 
 # После каждого согласованного места остановки:
-t.record('adc', {'vdda_mv': t.value('board_measurement.vdda_mv')})
+t.record('adc', {'vdda_mv': t.read('board_measurement.vdda_mv')})
 # После серии из минимум двух измерений:
 values = [r['data']['vdda_mv'] for r in t.records('adc')]
 result = {'mean_mv': mean(values), 'sample_stdev_mv': stdev(values)}
@@ -164,7 +167,7 @@ from stm32_gdbtest import case
 @case("HW_GPIO", timeout_s=20, labels=("gpio",), contracts=("gpio_macros",))
 def gpio(t):
     t.reach("loop")
-    t.check("GPIOC clock", t.value("__HAL_RCC_GPIOC_IS_CLK_ENABLED()"), 1)
+    t.check("GPIOC clock", t.evaluate("__HAL_RCC_GPIOC_IS_CLK_ENABLED()"), 1)
 ```
 
 Пример требует прошивки с функцией `loop` и объявленного контракта `gpio_macros`;
@@ -184,12 +187,11 @@ def gpio(t):
 | Операция | Контракт |
 | --- | --- |
 | [`check(name, actual, expected)`](api/check.md) | Запись результата; несовпадение вызывает `CheckFailed` → FAIL |
-| [`value(expression)`](api/value.md) | `gdb.parse_and_eval`, отказ для optimized-out, возвращает `int` |
-| [`fields(expression, expected)`](api/fields.md) | Поэлементное сравнение скалярных полей с `int` или C-выражением |
+| [`read(path)`](api/read.md) / [`evaluate(expression)`](api/evaluate.md) | Типизированное чтение объекта / вычисление выражения GDB/C |
 | [`reach(location, condition=None)`](api/reach.md) | Временная аппаратная точка, `continue`, проверка причины остановки, кадра и условия (`when=` — прежнее имя `condition`); имя кадра сравнивается без `[clone …]` и параметров (клоны LTO) |
 | [`breakpoint(location, temporary=False, *, condition=None)`](api/breakpoint.md) | Аппаратная точка (`Point`) с проверкой pending и бюджета профиля; `when=` — прежнее имя `condition` |
-| [`set_value(expression, value)`](api/set_value.md) | Явная запись с журналом before/after; допустимость записи в MMIO проверяет автор |
-| [`force_return(expression)`](api/force_return.md) | Принудительный return из текущего кадра с журналом; тело функции не выполняется |
+| [`write(path, value)`](api/write.md) | Явная запись с проверкой и журналом before/after; допустимость записи в MMIO проверяет автор |
+| [`ret(value=None)`](api/ret.md) | Принудительный return из текущего кадра с результатом и журналом; тело функции не выполняется |
 | [`clear()`](api/clear.md) | Удалить точки останова Target, включая точки на fault handlers |
 
 `boot`, `close`, `on_stop`, `report`, `owned`, `stops` и создание Target —

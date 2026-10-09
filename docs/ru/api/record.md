@@ -41,7 +41,7 @@ integer_bits — int.bit_length. Узлы включают имена, ключ�
 ## Пример
 
 ```python
-t.record("adc.sample", {"vdda_mv": t.value("board_adc_reading.vdda_mv")})
+t.record("adc.sample", {"vdda_mv": t.read("board_adc_reading.vdda_mv")})
 ```
 
 Фрагмент для тела сценария (для case — целое объявление). Символы и макросы должны присутствовать в ELF; MCU остановлен в подходящем контексте.

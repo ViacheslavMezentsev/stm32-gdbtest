@@ -174,14 +174,5 @@ class RetTests(unittest.TestCase):
         self.assertEqual(caught.exception.code, "command_failed")
         self.assertIsInstance(caught.exception.__cause__, FakeError)
 
-    def test_force_return_keeps_the_022_contract(self):
-        target = self.target()
-        result = target.force_return("(HAL_StatusTypeDef)1")
-        self.assertEqual(result["operation"], "ret")
-        self.assertEqual(result["command"], "return (HAL_StatusTypeDef)1")
-        self.assertEqual(self.executed[-1], "return (HAL_StatusTypeDef)1")
-        self.assertEqual(target.report["mutations"][-1]["operation"], "ret")
-
-
 if __name__ == "__main__":
     unittest.main()

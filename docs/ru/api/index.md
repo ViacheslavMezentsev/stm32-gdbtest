@@ -2,10 +2,10 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [English](../../en/api/index.md)
 
-Принятые публичные методы, свойства и декоратор. Текущий контракт: [ТЗ API 0.3.7](../../TECHNICAL_SPECIFICATION_API.md).
+Принятые публичные методы, свойства и декоратор. Текущий контракт: [ТЗ API](../../TECHNICAL_SPECIFICATION_API.md).
 
 Версия поддержки означает наличие реализации; ревизия ТЗ — фиксацию контракта.
-`API_VERSION=1` не является номером релиза или ревизии ТЗ. База проверена по тегам
+`API_VERSION=2` в кандидате 0.4.0 фиксирует удаление четырёх прежних методов; это не номер релиза или ревизии ТЗ. База проверена по тегам
 `v0.1.0-rc.1` и `v0.1.0-rc.2`; расширение — коммит `7ed6d0a` (0.2.0.dev0),
 кандидат — `972af7c` (0.2.0rc1); пакет 0.3.0 — выпуск `v0.3.0`.
 
@@ -15,12 +15,8 @@
 | [check](check.md) | `check(name, actual, expected=True)`, `check(rows) -> int` | 0.1.0rc1; сопоставители, истинность и таблица 0.3.0.dev0 (ядро) | 0.1.0; 0.3.4 |
 | [within, near, one_of, matches](matchers.md) | `within(low, high)`, `near(value, tolerance)`, `one_of(*options)`, `matches(pattern)` | 0.3.0.dev0 (ядро) | 0.3.4 |
 | [refused](refused.md) | `with refused(code, *, name=None, **details) as refusal` | 0.3.0.dev0 (ядро) | 0.3.6 |
-| [value](value.md) (устарел) | `value(expression) -> int` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [fields](fields.md) (устарел) | `fields(expression, expected) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [breakpoint](breakpoint.md) | `breakpoint(location, temporary=False, *, condition=None) -> Point` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [reach](reach.md) | `reach(location, condition=None) -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
-| [set_value](set_value.md) (устарел) | `set_value(expression, value) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [force_return](force_return.md) (устарел) | `force_return(expression) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [clear](clear.md) | `clear() -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [record](record.md) | `record(name, data) -> None` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
 | [records](records.md) | `records(name=None) -> list[dict]` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
@@ -52,7 +48,10 @@
 | [api-error](api-error.md) | `ApiError; error.details; error.__cause__` | 0.3.0.dev0 (ядро) | 0.2.7 (проект) |
 | [check-failed](check-failed.md) | `CheckFailed(name)` | 0.3.0.dev0 (ядро) | 0.2.7 (проект) |
 
-Пакет 0.3.0 выпущен как `v0.3.0`: строки выше — принятый контракт ТЗ API 0.3.7. Отметка «(проект)» в
+Прежние методы удалены из кандидата 0.4.0: [value](value.md), [fields](fields.md),
+[set_value](set_value.md), [force_return](force_return.md). Эти карточки оставлены только для миграции.
+
+Пакет 0.3.0 выпущен как `v0.3.0`; действующие строки выше дополнены очисткой API для 0.4.0. Отметка «(проект)» в
 столбце ТЗ называет ревизию, где метод был спроектирован, до переноса в ядро.
 
 Target передаётся агентом; создавать его самостоятельно не нужно. GDB-вызовы выполняются

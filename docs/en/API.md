@@ -4,6 +4,9 @@
 
 [Release v0.3.0](../releases/v0.3.0.md): Python 0.3.0; candidate v0.2.0-rc.1 was never published. Historical evidence follows.
 
+The v0.4.0 candidate uses `API_VERSION=2`: `value`, `fields`, `set_value`, `force_return` have been removed.
+See the [historical cards and migration](api/index.md); the package version changes only in the release branch.
+
 Production first-package examples and five-MCU verification: [accepted results](API_ACCEPTANCE.md).
 
 [Methods and properties reference](api/index.md) — individual cards, examples and support versions.
@@ -35,7 +38,7 @@ Transition from the former names (since 0.3.0 a former name warns once per run w
 
 | Former name | New name | Note |
 | --- | --- | --- |
-| `value(expression)` | `read(path)` | object read with type conversion |
+| `value(expression)` | `read(path)` or `evaluate(expression)` | read an object by path or evaluate a GDB expression; check the result type |
 | `fields(expression, expected)` | `check([(name, path, expected), …])` | the table evaluates string expectations |
 | `set_value(expression, value)` | `write(path, value)` | the applied value gains verification |
 | `force_return(expression)` | `ret(value=None)` | the return becomes an operation with a result |
@@ -57,7 +60,7 @@ from statistics import mean, stdev
 from stm32_gdbtest import RecordError
 
 # At each agreed stop:
-t.record('adc', {'vdda_mv': t.value('board_measurement.vdda_mv')})
+t.record('adc', {'vdda_mv': t.read('board_measurement.vdda_mv')})
 # After at least two measurements:
 values = [r['data']['vdda_mv'] for r in t.records('adc')]
 result = {'mean_mv': mean(values), 'sample_stdev_mv': stdev(values)}
@@ -164,7 +167,7 @@ from stm32_gdbtest import case
 @case("HW_GPIO", timeout_s=20, labels=("gpio",), contracts=("gpio_macros",))
 def gpio(t):
     t.reach("loop")
-    t.check("GPIOC clock", t.value("__HAL_RCC_GPIOC_IS_CLK_ENABLED()"), 1)
+    t.check("GPIOC clock", t.evaluate("__HAL_RCC_GPIOC_IS_CLK_ENABLED()"), 1)
 ```
 
 The example needs firmware with a `loop` function and a declared `gpio_macros`
@@ -186,12 +189,11 @@ imported only inside GDB):
 | Operation | Contract |
 | --- | --- |
 | [`check(name, actual, expected)`](api/check.md) | Records the result; a mismatch raises `CheckFailed` → FAIL |
-| [`value(expression)`](api/value.md) | `gdb.parse_and_eval`, refuses optimized-out values, returns `int` |
-| [`fields(expression, expected)`](api/fields.md) | Per-field comparison of scalar fields with an `int` or a C expression |
+| [`read(path)`](api/read.md) / [`evaluate(expression)`](api/evaluate.md) | Typed object read / GDB/C expression evaluation |
 | [`reach(location, condition=None)`](api/reach.md) | Temporary hardware breakpoint, `continue`, checks stop reason, frame and condition (`when=` is the former name of `condition`); the frame name is compared without `[clone …]` and parameters (LTO clones) |
 | [`breakpoint(location, temporary=False, *, condition=None)`](api/breakpoint.md) | Hardware breakpoint (`Point`) with pending and profile budget checks; `when=` is the former name of `condition` |
-| [`set_value(expression, value)`](api/set_value.md) | Explicit write with a before/after log; the author checks that an MMIO write is safe |
-| [`force_return(expression)`](api/force_return.md) | Forced return from the current frame with a log; the function body is skipped |
+| [`write(path, value)`](api/write.md) | Explicit verified write with a before/after log; the author checks that an MMIO write is safe |
+| [`ret(value=None)`](api/ret.md) | Forced return from the current frame with a result and log; the function body is skipped |
 | [`clear()`](api/clear.md) | Deletes the Target's breakpoints, including those on fault handlers |
 
 `boot`, `close`, `on_stop`, `report`, `owned`, `stops` and Target creation are the

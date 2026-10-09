@@ -326,7 +326,7 @@ OpenOCD, ST-LINK GDB Server и J-Link GDB Server на Windows и Linux. Треб
 | Требования DDTT | stm32-gdbtest |
 | --- | --- |
 | 6.1 | Декоратор `@case`, сбор метаданных без импорта, `Tests/requirements.md` и traceability |
-| 6.2 | Target API: `reach`, `value`, `fields`, `check`, `set_value`, `force_return`, аппаратные точки останова с бюджетом профиля |
+| 6.2 | Target API: `reach`, `read`, `evaluate`, `check`, `write`, `ret`, аппаратные точки останова с бюджетом профиля |
 | 6.3 | Локальный TOML `[probe]` и `[remote]`, `*.local.toml` не коммитятся, SSH только по ключу |
 | 6.4 | Снимок ELF, identity DEV_ID и размер Flash, проверка секций или полного образа с CRC-32, политика `if-different`/`verify-only`, recovery на хосте |
 | 6.5 | `result.json`, `junit.xml`, compatibility manifest, журналы в каталоге запуска |
@@ -342,7 +342,7 @@ from stm32_gdbtest import case
 @case("HW_GPIO", timeout_s=20, labels=("gpio",), contracts=("gpio_macros",))
 def gpio(t):
     t.reach("loop")                                           # DDTT-6.2-1
-    t.check("GPIOC clock", t.value("__HAL_RCC_GPIOC_IS_CLK_ENABLED()"), 1)   # 6.2-2, 6.1-6
+    t.check("GPIOC clock", t.evaluate("__HAL_RCC_GPIOC_IS_CLK_ENABLED()"), 1)   # 6.2-2, 6.1-6
 ```
 
 ## Приложение B. Журнал изменений

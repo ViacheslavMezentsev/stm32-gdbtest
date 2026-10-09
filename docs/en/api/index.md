@@ -2,10 +2,10 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [Русский](../../ru/api/index.md)
 
-Accepted public methods, properties and decorator. Current contract: [API specification 0.3.7](../../TECHNICAL_SPECIFICATION_API.md).
+Accepted public methods, properties and decorator. Current contract: [API specification](../../TECHNICAL_SPECIFICATION_API.md).
 
 Support version identifies implementation availability; specification revision identifies
-contract adoption. API_VERSION=1 is neither a release nor a specification revision.
+contract adoption. API_VERSION=2 in the 0.4.0 candidate records removal of four former methods; it is neither a release nor a specification revision.
 The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 7ed6d0a is 0.2.0.dev0; candidate 972af7c is 0.2.0rc1; the 0.3.0 package is release `v0.3.0`.
 
@@ -15,12 +15,8 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [check](check.md) | `check(name, actual, expected=True)`, `check(rows) -> int` | 0.1.0rc1; matchers, truth and table 0.3.0.dev0 (core) | 0.1.0; 0.3.4 |
 | [within, near, one_of, matches](matchers.md) | `within(low, high)`, `near(value, tolerance)`, `one_of(*options)`, `matches(pattern)` | 0.3.0.dev0 (core) | 0.3.4 |
 | [refused](refused.md) | `with refused(code, *, name=None, **details) as refusal` | 0.3.0.dev0 (core) | 0.3.6 |
-| [value](value.md) (deprecated) | `value(expression) -> int` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [fields](fields.md) (deprecated) | `fields(expression, expected) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [breakpoint](breakpoint.md) | `breakpoint(location, temporary=False, *, condition=None) -> Point` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [reach](reach.md) | `reach(location, condition=None) -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
-| [set_value](set_value.md) (deprecated) | `set_value(expression, value) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
-| [force_return](force_return.md) (deprecated) | `force_return(expression) -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [clear](clear.md) | `clear() -> None` | 0.1.0rc1 / v0.1.0-rc.1 | 0.1.0 |
 | [record](record.md) | `record(name, data) -> None` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
 | [records](records.md) | `records(name=None) -> list[dict]` | 0.2.0.dev0 → 0.2.0rc1 | 0.2.0 |
@@ -52,13 +48,16 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [api-error](api-error.md) | `ApiError; error.details; error.__cause__` | 0.3.0.dev0 (core) | 0.2.7 (design) |
 | [check-failed](check-failed.md) | `CheckFailed(name)` | 0.3.0.dev0 (core) | 0.2.7 (design) |
 
-The 0.3.0 package is released as `v0.3.0`: the rows above are the accepted contract of API specification
-0.3.7. "(design)" in the specification column names the revision where a method was designed, before it
+The former methods have been removed from the 0.4.0 candidate: [value](value.md), [fields](fields.md),
+[set_value](set_value.md), [force_return](force_return.md). Their cards remain only for migration.
+
+The 0.3.0 package is released as `v0.3.0`; the active rows above include the 0.4.0 API cleanup.
+"(design)" in the specification column names the revision where a method was designed, before it
 moved into the core.
 
 The agent supplies Target; do not construct it. GDB calls run only on the main GDB
-thread. boot/close/on_stop/report/owned/stops are internal. The designed package introduces no context/caller.
-are outside the accepted package. Examples require matching firmware and stop context;
+thread. boot/close/on_stop/report/owned/stops are internal. The package introduces no context/caller.
+Examples require matching firmware and stop context;
 they are not universal across boards.
 
 [Techniques](../TESTING_TECHNIQUES.md) · [Configuration and migration](../API.md) · [Acceptance](../API_ACCEPTANCE.md).

@@ -1,17 +1,18 @@
-# value
+# value — removed name
 
 [API](index.md) · [Русский](../../ru/api/value.md)
 
 `value(expression) -> int`
+
+Historical behavior before 0.4.0; use the migration example below in new scenarios.
 
 | Property | Value |
 | --- | --- |
 | Module support | 0.1.0rc1 / v0.1.0-rc.1 |
 | API specification contract | 0.1.0; §4.2 |
 | API_VERSION | 1 |
-| Deprecated | since 0.3.0: one `deprecated` warning per run in `report["warnings"]`; replacement: `read(path)` or `evaluate(expression)`; removal in 0.4.0 (API specification 6.7) |
-| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
-| Former-name alias | value(expression) -> read(path) (the alias works without warnings until 1.0; removal in 0.4.0) |
+| Status | Available through 0.3.0; removed from the 0.4.0 candidate (`API_VERSION=2`) |
+| Migration | `read(path)` for an object, `evaluate(expression)` for an expression; check the required result type |
 
 ## Purpose
 
@@ -21,10 +22,10 @@ expression is a GDB/C expression string in the current context. Evaluates it, fe
 
 Stop the MCU for consistent reads. Optimized-out or missing symbols fail rather than return zero. This is not typed float/structure reading; expressions may have side effects.
 
-## Example
+## Migration example
 
 ```python
-sequence = t.value("board_adc_sequences")
+sequence = t.read("board_adc_sequences")
 t.check("nonnegative sequence", sequence >= 0, True)
 ```
 

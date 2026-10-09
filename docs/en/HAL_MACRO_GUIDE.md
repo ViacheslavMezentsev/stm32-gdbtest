@@ -32,7 +32,7 @@ effects. A statement macro `do { ... } while (0)` is not an ordinary C expressio
   the device header is included only in `board.c`, a stop in `app_loop` from `app.c`
   does not see `RCC` or `GPIO_*`. The CI firmware follows this: the macro context is
   `board_led_toggle`.
-- `Target.value()` uses `gdb.parse_and_eval`. For a mask result compare the mask or
+- `Target.evaluate()` uses `gdb.parse_and_eval`. For a mask result compare the mask or
   normalize it with bool; do not equate any mask with 1.
 - A separate `t.check` per condition keeps diagnostics clear.
 - Prefer CMSIS `_Msk`/`_Pos` over unexplained shifts and masks; the expected mode

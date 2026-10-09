@@ -150,7 +150,8 @@ def tim2_publication(t):
 | `def f(target)`, `target.…` | `def f(t)` |
 | `t.reach("main.c:120")` | `t.reach("функция")` / `t.finish()` |
 
-Старые `value`, `fields`, `set_value`, `force_return` работают с предупреждением до 0.4.0.
+Старые `value`, `fields`, `set_value`, `force_return` удалены из API кандидата 0.4.0 (`API_VERSION=2`).
+Таблица выше служит только для переноса прежних сценариев; новые сценарии используют правую колонку.
 
 ## Перед сдачей
 

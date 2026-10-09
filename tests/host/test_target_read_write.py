@@ -291,13 +291,6 @@ class ReadWriteTests(unittest.TestCase):
                 self.assertEqual(caught.exception.code, "unsupported_value")
                 self.assertEqual(caught.exception.details["effect"], "none")
 
-    def test_set_value_is_the_022_alias(self):
-        target = self.target()
-        self.integer._plain = 5
-        self.assertIsNone(target.set_value("app_state.ticks", 5))
-        self.assertEqual(target.report["mutations"][0]["after"], 5)
-
-
 if __name__ == "__main__":
     unittest.main()
 

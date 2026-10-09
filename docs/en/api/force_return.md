@@ -1,17 +1,18 @@
-# force_return
+# force_return — removed name
 
 [API](index.md) · [Русский](../../ru/api/force_return.md)
 
 `force_return(expression) -> dict`
+
+Historical behavior before 0.4.0; use the migration example below in new scenarios.
 
 | Property | Value |
 | --- | --- |
 | Module support | 0.1.0rc1 / v0.1.0-rc.1 |
 | API specification contract | 0.1.0; §4.7 |
 | API_VERSION | 1 |
-| Deprecated | since 0.3.0: one `deprecated` warning per run in `report["warnings"]`; replacement: `ret(value)`; removal in 0.4.0 (API specification 6.7) |
-| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
-| Former-name alias | `ret(value=None)`; the alias works without warnings until 1.0, removal in 0.4.0; added by revision 0.3.0 |
+| Status | Available through 0.3.0; removed from the 0.4.0 candidate (`API_VERSION=2`) |
+| Migration | `ret(value=None)` returns an operation result; check the type and selected frame |
 
 ## Purpose
 
@@ -21,11 +22,11 @@ Executes GDB return with expression and records the operation, function name and
 
 Return affects the selected frame; the log takes the newest_frame name. Keep the frame selection unchanged for consistent naming. Skips remaining code without undoing prior effects. GDB must support the type/ABI; this is not finish.
 
-## Example
+## Migration example
 
 ```python
 t.reach("HAL_ADC_Start_DMA")
-t.force_return("(HAL_StatusTypeDef)1")
+t.ret("(HAL_StatusTypeDef)1")
 ```
 
 Scenario-body fragment (case shows a complete declaration). Symbols/macros must exist in the ELF and the MCU must be stopped in the appropriate context.

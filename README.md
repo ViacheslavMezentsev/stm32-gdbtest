@@ -273,12 +273,13 @@ AT32F403ACGU7 на WeAct AT32F4 Core Board через J-Link; он не вход
 
 ## Состояние
 
-В main — пакет **0.3.0**: версия модуля `0.3.0`, `API_VERSION = 1`, [ТЗ API](docs/TECHNICAL_SPECIFICATION_API.md)
+Опубликованный пакет **0.3.0**: версия модуля `0.3.0`, `API_VERSION = 1`, [ТЗ API](docs/TECHNICAL_SPECIFICATION_API.md)
 0.3.7, [общее ТЗ](docs/TECHNICAL_SPECIFICATION.md) 0.69. Пакет принят на пяти платах по шести схемам запуска
 ([принятые результаты](docs/ru/API_ACCEPTANCE.md)); тег `v0.3.0` ставит владелец по
 [описанию](docs/releases/v0.3.0.md). Опубликованные теги — `v0.1.0-rc.1` и `v0.1.0-rc.2`
-([приёмка rc.2](docs/ru/RC2_READINESS.md)). Устаревшие `value`, `fields`, `set_value`, `force_return`
-работают с предупреждением и будут удалены в 0.4.0. Изменения — в [CHANGELOG](CHANGELOG.md), проверенный
+([приёмка rc.2](docs/ru/RC2_READINESS.md)). В кандидате 0.4.0 четыре прежних метода
+`value`, `fields`, `set_value`, `force_return` уже удалены, `API_VERSION=2`; выпуск и полная аппаратная приёмка впереди.
+Изменения — в [CHANGELOG](CHANGELOG.md), проверенный
 объём по механизмам — в [STATUS](docs/ru/STATUS.md).
 
 RISC-V, полный перенос остальных примеров, управление внешним оборудованием,

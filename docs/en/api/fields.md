@@ -1,17 +1,18 @@
-# fields
+# fields — removed name
 
 [API](index.md) · [Русский](../../ru/api/fields.md)
 
 `fields(expression, expected) -> None`
+
+Historical behavior before 0.4.0; use the migration example below in new scenarios.
 
 | Property | Value |
 | --- | --- |
 | Module support | 0.1.0rc1 / v0.1.0-rc.1 |
 | API specification contract | 0.1.0; §4.3 |
 | API_VERSION | 1 |
-| Deprecated | since 0.3.0: one `deprecated` warning per run in `report["warnings"]`; replacement: `check([(name, path, expected), …])`; removal in 0.4.0 (API specification 6.7) |
-| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
-| Former-name alias | fields(expression, expected) -> read(path, fields=…) (the alias works without warnings until 1.0; removal in 0.4.0) |
+| Status | Available through 0.3.0; removed from the 0.4.0 candidate (`API_VERSION=2`) |
+| Migration | `check(rows)` for comparisons; `read(path, fields=…)` only reads |
 
 ## Purpose
 
@@ -19,13 +20,16 @@ expected maps field paths to integers or C-expression strings. Reads and compare
 
 ## Contract and limitations
 
-String expectations are evaluated through value, not compared as text. The first error/FAIL stops iteration. Multiple reads are not an atomic snapshot.
+The former method evaluated string expectations as expressions rather than comparing text. The first error/FAIL stopped iteration. Multiple reads were not an atomic snapshot.
 
-## Example
+## Migration example
 
 ```python
 t.reach("HAL_GPIO_Init")
-t.fields("*GPIO_Init", {"Pin": 1 << 5, "Mode": "GPIO_MODE_OUTPUT_PP"})
+t.check([
+    ("GPIO pin", "GPIO_Init->Pin", 1 << 5),
+    ("GPIO mode", "GPIO_Init->Mode", "GPIO_MODE_OUTPUT_PP")
+])
 ```
 
 Scenario-body fragment (case shows a complete declaration). Symbols/macros must exist in the ELF and the MCU must be stopped in the appropriate context.

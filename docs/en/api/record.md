@@ -41,7 +41,7 @@ or caller-retained-copy limits.
 ## Example
 
 ```python
-t.record("adc.sample", {"vdda_mv": t.value("board_adc_reading.vdda_mv")})
+t.record("adc.sample", {"vdda_mv": t.read("board_adc_reading.vdda_mv")})
 ```
 
 Scenario-body fragment (case shows a complete declaration). Symbols/macros must exist in the ELF and the MCU must be stopped in the appropriate context.

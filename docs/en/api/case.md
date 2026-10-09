@@ -30,7 +30,7 @@ from stm32_gdbtest import case
 # Check the initial publication count at main.
 @case("HW_EXAMPLE", timeout_s=20, labels=("adc",))
 def example(t):
-    t.check("initial count", t.value("board_adc_sequences"), 0)
+    t.check("initial count", t.read("board_adc_sequences"), 0)
 ```
 
 Scenario-body fragment (case shows a complete declaration). Symbols/macros must exist in the ELF and the MCU must be stopped in the appropriate context.

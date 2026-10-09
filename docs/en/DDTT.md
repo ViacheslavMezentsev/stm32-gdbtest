@@ -320,7 +320,7 @@ and Linux. Implementation requirements are in the
 | DDTT requirements | stm32-gdbtest |
 | --- | --- |
 | 6.1 | The `@case` decorator, metadata collection without import, `Tests/requirements.md` and traceability |
-| 6.2 | Target API: `reach`, `value`, `fields`, `check`, `set_value`, `force_return`, hardware breakpoints within the profile budget |
+| 6.2 | Target API: `reach`, `read`, `evaluate`, `check`, `write`, `ret`, hardware breakpoints within the profile budget |
 | 6.3 | Local TOML `[probe]` and `[remote]`, `*.local.toml` not committed, SSH with keys only |
 | 6.4 | ELF snapshot, DEV_ID identity and Flash size, section or full-image verification with CRC-32, `if-different`/`verify-only` policy, host recovery |
 | 6.5 | `result.json`, `junit.xml`, compatibility manifest, logs in the run directory |
@@ -336,7 +336,7 @@ from stm32_gdbtest import case
 @case("HW_GPIO", timeout_s=20, labels=("gpio",), contracts=("gpio_macros",))
 def gpio(t):
     t.reach("loop")                                           # DDTT-6.2-1
-    t.check("GPIOC clock", t.value("__HAL_RCC_GPIOC_IS_CLK_ENABLED()"), 1)   # 6.2-2, 6.1-6
+    t.check("GPIOC clock", t.evaluate("__HAL_RCC_GPIOC_IS_CLK_ENABLED()"), 1)   # 6.2-2, 6.1-6
 ```
 
 ## Appendix B. Change log

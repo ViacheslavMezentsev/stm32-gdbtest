@@ -22,7 +22,9 @@ packaging the tag `v0.1.0-rc.1` maps to Python version `0.1.0rc1` and `v0.1.0` t
 `0.1.0`. `API_VERSION` and the JSON/TOML schema numbers are independent of the release
 version and change only when the corresponding contract changes.
 
-The API 0.3.0 design is the [API audit and redesign](API030_PLAN.md); the next target is 0.4.0 (removal of deprecated methods, [TODO](../../TODO.md)).
+The API 0.3.0 design is the [API audit and redesign](API030_PLAN.md); the next target is 0.4.0
+(removal of deprecated methods, `API_VERSION=2`, [TODO](../../TODO.md)). The package version
+changes in the release branch after integration and final verification.
 
 ## Before a release
 

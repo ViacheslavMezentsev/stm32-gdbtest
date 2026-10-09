@@ -11,7 +11,7 @@ class PublicApiTests(unittest.TestCase):
     def test_host_import_does_not_require_gdb(self):
         result = subprocess.run([sys.executable, "-B", "-c",
             "import sys, stm32_gdbtest as api; "
-            "assert issubclass(api.RecordError, ValueError); assert 'gdb' not in sys.modules; assert api.API_VERSION == 1; "
+            "assert issubclass(api.RecordError, ValueError); assert 'gdb' not in sys.modules; assert api.API_VERSION == 2; "
             "f = lambda target: None; assert api.case('HW_EXAMPLE')(f) is f"],
             cwd=ROOT, capture_output=True, text=True, timeout=10)
         self.assertEqual(result.returncode, 0, result.stderr)
