@@ -95,11 +95,14 @@ def clock(t):
 - Image verification and programming: by loadable ELF sections, or a full image with
   fill and CRC-32 computed on the PC ([images and CRC](docs/en/IMAGES.md)); DEV_ID and
   Flash size checks in `warn` and `strict` modes ([identity](docs/en/TARGET_IDENTITY.md)).
-- Target API 0.3.0 ([reference](docs/en/api/index.md), [API](docs/en/API.md)): navigation with `reach`, `step`,
+- Target API 0.4.0 candidate ([reference](docs/en/api/index.md), [API](docs/en/API.md)): navigation with `reach`, `step`,
   `until`, `finish`, `Point` and `watch` points; `read`/`write` (including a table of writes), `evaluate`,
   `memory`, `symbol`, `registers`, `frames`, `locals`; injections with `ret` and `call`; one `check` with
   matchers and a table, an expected refusal with `refused`; the run `profile` with project data and build
-  facts; the `record`/`records` journal. Techniques are in the [techniques catalogue](docs/en/TESTING_TECHNIQUES.md).
+  facts; the `record`/`records` journal and `skip(reason)` for an inapplicable scenario.
+  Former `value`/`fields`/`set_value`/`force_return` methods are removed; see the
+  [migration](docs/en/RELEASE040_SCOPE.md#2-scenario-and-documentation-cleanup).
+  Techniques are in the [techniques catalogue](docs/en/TESTING_TECHNIQUES.md).
 - Checks without hardware: build manifest, selective ELF/HAL contracts,
   `run --prepare-only`, requirement traceability; CI is built on them
   ([checks and CI](docs/en/testing.md)).

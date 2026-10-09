@@ -4,8 +4,10 @@
 
 [Release v0.3.0](../releases/v0.3.0.md): Python 0.3.0; candidate v0.2.0-rc.1 was never published. Historical evidence follows.
 
-The v0.4.0 candidate uses `API_VERSION=2`: `value`, `fields`, `set_value`, `force_return` have been removed.
-See the [historical cards and migration](api/index.md); the package version changes only in the release branch.
+The v0.4.0 candidate has Python version 0.4.0 and `API_VERSION=2`:
+`value`, `fields`, `set_value`, `force_return` have been removed. The release is
+unpublished; final-SHA acceptance remains.
+See the [reference and migration](api/index.md).
 
 Production first-package examples and five-MCU verification: [accepted results](API_ACCEPTANCE.md).
 
@@ -13,10 +15,11 @@ Production first-package examples and five-MCU verification: [accepted results](
 
 ## 0.3.0 package: numbers, migration and aliases
 
-Post-0.3.0 fix (Unreleased): `evaluate(path, as_type=str)` reads a `char[]` whose GDB size is zero
+The 0.4.0 candidate fixes `evaluate(path, as_type=str)` for a `char[]` whose GDB size is zero
 from its address up to NUL or `STRING_LIMIT = 256`, like a pointer. The `const char *` cast workaround
 is no longer required. Known `char[N]` bounds remain enforced; an unsized array without an address
-raises `ApiError(read_failed)`. Signature and `API_VERSION = 1` are unchanged; API specification 0.3.8, §4.18.
+raises `ApiError(read_failed)`. The method signature is unchanged; `API_VERSION=2`
+reflects removal of former methods. API specification 0.3.11, §4.18.
 
 Public method cards live in the [reference](api/index.md), grouped into methods, properties,
 decorators, classes and errors. The contract is fixed by API specification 0.3.0-rc.1; the module
@@ -39,7 +42,8 @@ the maximum. `reset.command` defaults to the backend value: OpenOCD uses the pro
 and J-Link uses `monitor reset`; a session may override it. The journal limits, `breakpoint_limit=4`
 and `timeout_s=20` stay as in the effective tables.
 
-Transition from the former names (since 0.3.0 a former name warns once per run with `deprecated`; removal in 0.4.0):
+Transition from former names: in release 0.3.0 these four methods warn with
+`deprecated`; they are removed in the 0.4.0 candidate.
 
 | Former name | New name | Note |
 | --- | --- | --- |
@@ -116,8 +120,9 @@ CLI --session accepts the existing generated ELF/GDB/tests JSON with an added se
 
 New pack captures TOML in an internal capsule (base64/SHA256/defaults fingerprint); runner/GDB validate it without original files. New packages require tools supporting the extension; do not use older tools. Old packages use legacy mode. Prepare a new package to change its captured configuration. This is not a record/records export format.
 
-Status: release **0.3.0** (Python `0.3.0`, [notes](../releases/v0.3.0.md)), `API_VERSION = 1`. This numbers the
-described API surface; it is not a 1.0 stability promise and not a GDB version. The
+Status: **0.3.0** is published (Python `0.3.0`, [notes](../releases/v0.3.0.md));
+the release branch prepares **0.4.0** (`API_VERSION=2`). This numbers the API
+surface; it is neither a 1.0 stability promise nor a GDB version. The
 module is delivered as a Git submodule; pip installation is not supported yet, and
 the name still has to be checked for uniqueness before publishing. Requirements:
 the [specification](../TECHNICAL_SPECIFICATION.md) (Russian).

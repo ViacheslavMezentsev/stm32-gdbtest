@@ -8,6 +8,7 @@
 
 The format is MAJOR.MINOR.PATCH per [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html);
 Git tags have the `v` prefix. The current release is **v0.3.0**, Python **0.3.0**; the owner sets its tag.
+The release branch prepares **v0.4.0** (Python 0.4.0, API_VERSION=2); it is not yet a published tag.
 Candidates v0.2.0-rc.1 and v0.3.0-rc.1 were never published. The previous published candidate is `v0.1.0-rc.2`.
 The initial export from the stand project is not a release.
 
@@ -22,9 +23,9 @@ packaging the tag `v0.1.0-rc.1` maps to Python version `0.1.0rc1` and `v0.1.0` t
 `0.1.0`. `API_VERSION` and the JSON/TOML schema numbers are independent of the release
 version and change only when the corresponding contract changes.
 
-The API 0.3.0 design is the [API audit and redesign](API030_PLAN.md); the next target is 0.4.0
-(removal of deprecated methods, `API_VERSION=2`, [TODO](../../TODO.md)). The package version
-changes in the release branch after integration and final verification.
+The API 0.3.0 design is the [API audit and redesign](API030_PLAN.md). The 0.4.0
+scope and migration are in the [release map](RELEASE040_SCOPE.md); final acceptance
+and publication are tracked in [TODO](../../TODO.md).
 
 ## Before a release
 

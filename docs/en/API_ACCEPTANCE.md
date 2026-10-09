@@ -5,6 +5,15 @@
 This is a public summary of accepted behavior and acceptance, not a development diary.
 Contract: [API specification](../TECHNICAL_SPECIFICATION_API.md); guide: [API](API.md).
 
+## 0.4.0 candidate — acceptance open
+
+At integrated `main` `f57fe72`, local docs 5/5, host and F030 offline passed
+(7/7 total). The release branch raises Python to 0.4.0; `API_VERSION=2` was already
+set when four former methods were removed. Separate hardware checks for SKIP,
+the `reach` fix and F01–F03 belong to earlier SHAs. The full hardware matrix,
+recovery and a consumer using the real submodule remain unverified at the release
+SHA; the new package is not yet accepted.
+
 ## 0.3.0 package
 
 API specification 0.3.6, general specification 0.68. `profile` (project data, build facts, case, stand, GDB)

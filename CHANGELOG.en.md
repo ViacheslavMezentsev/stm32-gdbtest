@@ -6,6 +6,10 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-09
+
+Release candidate: publication follows final hardware acceptance and CI at the release SHA.
+
 - TECH-017: distinguish initial SP at the RAM end from readable memory bounds; checked on six stands.
 
 - TECH-013: a watchpoint frame is not necessarily the writer; document delayed stops, function return and incomplete unwinding. Checked on six stands.
@@ -16,7 +20,7 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 - Added skip(reason): reason, journal, JUnit/CTest SKIP, code77, explicit run_hw allowance; exit-code consumer migration.
 
-- The v0.4.0 candidate removes deprecated Target methods `value`, `fields`, `set_value`, `force_return`;
+- Removed deprecated Target methods `value`, `fields`, `set_value`, `force_return`;
   use `read`/`evaluate`, `check(rows)`, `write`, `ret`. `API_VERSION` rises to 2; TOML/JSON schemas are unchanged.
 
 - Fixed false reach frame failures for C++ signatures wrapped in GDB single quotes; original location and point/frame checks are preserved.
@@ -59,7 +63,7 @@ Versions: [policy](docs/en/VERSIONING.md).
   optional `jlink_device`, `reset_halt = "monitor reset init"` for OpenOCD. The debugger lock accounts for the
   probe family.
 
-- TODO: v0.3.0 field experience (0.3.1 candidates from the examples) and a DDTT practice research track —
+- TODO: further API field experience and a DDTT practice research track —
   scenario attributes and verdicts, an adaptive scenario tree, build and tool dependence, tools in RAM.
 
 ## [0.3.0] - 2026-10-06

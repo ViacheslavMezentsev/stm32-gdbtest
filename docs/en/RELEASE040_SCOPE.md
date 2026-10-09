@@ -4,7 +4,8 @@
 
 Scope agreed on 2026-10-09 and reconciled with `main` at `44c795d`: `codex/check-techniques`,
 `codex/api040-cleanup`, and `codex/api030-feedback` have landed. This defines the release boundary,
-not release readiness. The module is still version 0.3.0 with `API_VERSION=2`; final acceptance remains.
+not release readiness. At this snapshot the module is version 0.3.0 with `API_VERSION=2`;
+the release branch raises the Python version to 0.4.0. Final acceptance remains.
 
 ## 1. Recommended contents
 
@@ -74,8 +75,9 @@ migration table; these are examples of old code, not executable scenarios.
 
 1. Reconcile the integrated scope and verification matrix: `main` at `44c795d` includes all three accepted
    branches. Docs 5/5, host and F030 offline passed locally on this SHA (7/7 total); the owner checks GitHub CI separately.
-2. In the release branch, set `__version__` to 0.4.0 and update both specifications, README/STATUS, skills,
-   bilingual CHANGELOG and release notes with 0.3.0 → 0.4.0 migration. `API_VERSION=2` is already set.
+2. In the release branch, `__version__` is set to 0.4.0 and both specifications, README/STATUS, skills,
+   bilingual CHANGELOG and draft release notes include 0.3.0 → 0.4.0 migration.
+   `API_VERSION=2` is already set; documents will be refined after final acceptance.
 3. At the final SHA, run Docker docs/format/host/firmware, the hardware matrix and recovery, then check a
    consumer with the real submodule. Record exact tool versions, MCU, backend, ELF/manifest and limits;
    do not count results from earlier SHAs as final acceptance.

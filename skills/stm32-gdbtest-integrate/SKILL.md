@@ -181,8 +181,9 @@ ctest --preset HIL_F411CE-hw -R HW_BOOT
 
 ## Перевод старого потребителя на 0.3.0
 
-Проекты на 0.1/0.2 (`t.value`, `t.fields`, `t.set_value`, `t.force_return`, `t.config`) работают
-с предупреждением `deprecated` до 0.4.0, кроме удалённых `config`/`config_props`/`settings`/`sources`
-(их заменил `t.profile`). Порядок: поднять gitlink, добавить `session.toml`/`api.toml`, если нужны
+На опубликованной 0.3.0 проекты с `t.value`, `t.fields`, `t.set_value`, `t.force_return`
+получают предупреждения `deprecated`. В кандидате 0.4.0 эти четыре метода удалены;
+`config`/`config_props`/`settings`/`sources` ранее заменены `t.profile`. Порядок:
+поднять gitlink до выбранного опубликованного тега, добавить `session.toml`/`api.toml`, если нужны
 лимиты и параметры, переписать сценарии по таблице миграции из [API](../../docs/ru/API.md) и навыку
 `stm32-gdbtest-scenarios`, прогнать host и hw.

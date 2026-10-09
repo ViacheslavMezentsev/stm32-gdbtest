@@ -8,8 +8,8 @@
 
 | Навык | Когда нужен |
 | --- | --- |
-| [stm32-gdbtest-integrate](stm32-gdbtest-integrate/SKILL.md) | подключить модуль к проекту: подмодуль, каталог `hil/`, описание MCU, `session.toml`, CMake, пресеты, стенд, первый прогон; перевод старого потребителя на 0.3.0 |
-| [stm32-gdbtest-scenarios](stm32-gdbtest-scenarios/SKILL.md) | написать или переписать сценарий: требование и контракт, место остановки, `check(rows)`, `write(rows)`, `ret`, `refused`, `watch`, профиль, стиль, техники TECH-001…018 |
+| [stm32-gdbtest-integrate](stm32-gdbtest-integrate/SKILL.md) | подключить модуль к проекту: подмодуль, каталог `hil/`, описание MCU, `session.toml`, CMake, пресеты, стенд, первый прогон; перевод старого потребителя на опубликованную 0.3.0 и миграция для кандидата 0.4.0 |
+| [stm32-gdbtest-scenarios](stm32-gdbtest-scenarios/SKILL.md) | написать или переписать сценарий: требование и контракт, место остановки, `check(rows)`, `write(rows)`, `ret`, `refused`, `watch`, `skip`, профиль, стиль, техники TECH-001…019 |
 | [stm32-gdbtest-run](stm32-gdbtest-run/SKILL.md) | запустить и разобрать результат: `doctor`, host и hw, CLI, удалённый сервер, пакет, CI, `result.json` и журналы, частые отказы |
 
 ## Подключение навыков в проекте

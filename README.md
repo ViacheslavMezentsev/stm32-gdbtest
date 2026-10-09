@@ -93,11 +93,13 @@ def clock(t):
 - Проверка и запись образа: по загружаемым секциям ELF или полный образ с заполнением
   и CRC-32 на ПК ([образы и CRC](docs/ru/IMAGES.md)); проверка DEV_ID и размера Flash
   в режимах `warn` и `strict` ([identity](docs/ru/TARGET_IDENTITY.md)).
-- Target API 0.3.0 ([справочник](docs/ru/api/index.md), [API](docs/ru/API.md)): навигация `reach`, `step`,
+- Target API кандидата 0.4.0 ([справочник](docs/ru/api/index.md), [API](docs/ru/API.md)): навигация `reach`, `step`,
   `until`, `finish`, точки `Point` и `watch`; чтение и запись `read`/`write` (в том числе таблицей записей),
   `evaluate`, `memory`, `symbol`, `registers`, `frames`, `locals`; инъекции `ret` и `call`; одна `check`
   с сопоставителями и таблицей, ожидаемый отказ `refused`; профиль прогона `profile` с данными проекта и
-  сведениями о сборке; журнал `record`/`records`. Приёмы — в [каталоге техник](docs/ru/TESTING_TECHNIQUES.md).
+  сведениями о сборке; журнал `record`/`records`, завершение неприменимого сценария `skip(reason)`.
+  Прежние `value`/`fields`/`set_value`/`force_return` удалены; [миграция](docs/ru/RELEASE040_SCOPE.md#2-очистка-сценариев-и-документации).
+  Приёмы — в [каталоге техник](docs/ru/TESTING_TECHNIQUES.md).
 - Проверки без оборудования: build manifest, выборочные ELF/HAL-контракты,
   `run --prepare-only`, трассировка требований; на них основан CI
   ([проверки и CI](docs/ru/testing.md)).
