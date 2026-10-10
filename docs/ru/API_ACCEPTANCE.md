@@ -315,3 +315,6 @@ Windows локально/st-util на `c156db5`: 20 PASS + 5 SKIP; 65 запис
 
 Внешний диспетчер пакетов на F411/OrangePi: конечные циклы, STOP и неожиданный SKIP;
 [stand_loop](STAND_LOOP.md).
+
+AT32/J-Link/OrangePi на `da5c4cb`: новые сценарии 0.4.0 — 4 PASS + 1 SKIP, 13 записей;
+первый ERROR подключения probe сохранён. [Шестой стенд](API040_SCENARIOS.md).

@@ -2,6 +2,13 @@
 
 [Documentation](index.md) · [Русский](../ru/HARDWARE_METRICS.md)
 
+## Model count and campaign scope
+
+Six models have been tested: five STM32 and AT32F403A. The `Models tested: 6` badge
+describes this fleet; `SSH campaign boards: 5` and 233 describe only the full STM32 campaign below.
+New 0.4.0 scenarios gained a separate AT32/J-Link run on OrangePi: 4 PASS + 1 SKIP.
+[Results and limits](API040_SCENARIOS.md). This does not change the 233 counter.
+
 ## Candidate 0.4.0 snapshot — 2026-10-10
 
 README shows 233 profile/scenario combinations for five STM32 boards over Windows →

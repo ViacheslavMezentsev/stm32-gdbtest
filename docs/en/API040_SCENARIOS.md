@@ -138,3 +138,26 @@ shortening the results directory made the same packages pass completely. Origina
 were not relabelled PASS. [Path limitation workaround](HOWTO.md). This campaign does not establish arbitrary
 long-path support; automatic early diagnostics remain a proposal.
 Core and scenarios were unchanged; this is a selected new-scenario campaign, not the entire API.
+
+## AT32: sixth stand, local execution on OrangePi
+
+2026-10-10, sources `da5c4cb`: fresh GCC 13.3.1 Docker build and enabled/disabled packages.
+Runner/GDB execute directly on OrangePi (Ubuntu 20.04, Python 3.11.16;
+GDB 14.2.90/Python 3.11.4), J-Link GDB Server 9.80, SWD 1000 kHz, AT32F403ACGU7.
+SSH launches the shell; the runner/server layout is local Linux.
+
+Result: **4 PASS + 1 expected SKIP**, 13 records, export/verify/report — 0/0/0.
+Copied JSON/JUnit, records SHA256, data types and SKIP control flow were checked;
+image_verified and reset_run confirmed 5/5. No J-Link GDB Server process remained.
+RECORDS retained the known inferred_stop warning for finish in GDB 14.
+
+The first attempt ended in ERROR before MCU connection: the server could not open J-Link
+(Communication timed out / Could not read J-Link capabilities). After USB reconnection,
+a separate attempt passed. The original ERROR and unavailable capture are retained;
+the probe failure cause is unknown and this retry does not establish long-run stability.
+Preparation also retained a configure rejection for an output directory outside the project root;
+the corrected path built successfully. Shell CRLF was corrected before hardware execution.
+
+The new scenarios are therefore verified on **six models**, across different layouts:
+five STM32 in earlier campaigns, AT32 in a separate local Linux/J-Link campaign.
+This is not six boards in GitHub Hardware: its profile list still contains five STM32 boards.

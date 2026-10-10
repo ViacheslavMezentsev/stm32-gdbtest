@@ -4,7 +4,8 @@
 [![Offline](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/stm32-gdbtest/offline.yml?branch=main&label=Offline&style=flat-square)](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/workflows/offline.yml)
 
 [![Hardware campaign](https://img.shields.io/badge/Hardware-candidate%200.4.0%20SSH-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
-[![Board models tested](https://img.shields.io/badge/Boards%20tested-5-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
+[![Board models tested](https://img.shields.io/badge/Models%20tested-6-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
+[![SSH campaign boards](https://img.shields.io/badge/SSH%20campaign%20boards-5-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
 [![Recorded hardware cases](https://img.shields.io/badge/HW%20cases%20%28recorded%29-233-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
 [![Latest recorded hardware verification](https://img.shields.io/badge/HW%20verified%20%28latest%29-2026--10--10-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
 

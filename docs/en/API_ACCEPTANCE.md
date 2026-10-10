@@ -312,3 +312,6 @@ is retained separately (10 PASS + 5 preflight ERROR); the repeat used a short di
 
 External package dispatcher on F411/OrangePi: finite cycles, STOP and unexpected SKIP;
 [stand_loop](STAND_LOOP.md).
+
+AT32/J-Link/OrangePi at `da5c4cb`: new 0.4.0 scenarios — 4 PASS + 1 SKIP, 13 records;
+the initial probe connection ERROR is retained. [Sixth stand](API040_SCENARIOS.md).
