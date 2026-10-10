@@ -148,5 +148,6 @@ def environment_hint(code):
 
 
 def stand_executable_default(backend):
-    return {"openocd": "openocd", "jlink": "JLinkGDBServerCLExe", "stlink": "ST-LINK_gdbserver"}[backend]
+    return {"openocd": "openocd", "jlink": "JLinkGDBServerCLExe",
+            "stlink": "ST-LINK_gdbserver", "st-util": "st-util"}[backend]
 

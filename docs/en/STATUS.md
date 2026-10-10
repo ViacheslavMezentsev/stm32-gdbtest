@@ -3,7 +3,7 @@
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
 **Now (2026-10-10).** `codex/release-040` prepares v0.4.0: Python 0.4.0,
-API_VERSION=2, target schema 2, API specification 0.3.14, general specification 0.84.
+API_VERSION=2, target schema 2, API specification 0.3.14, general specification 0.85.
 Runtime `b1264c1` passed Docker 26/26 and full suites on six Windows-attached boards
 using OpenOCD/J-Link: 280 scenarios, 608 stages, restoration 12/12. Linux-built
 F411/F429 packages passed 10/10 each on Windows; minimal-consumer with a real
@@ -13,6 +13,8 @@ on F030 reproduced the failure on 7.14.0; after reconnection OpenOCD BOOT/GPIO
 passed 2/2. The cause remains unknown.
 Latest-SHA CI and remote layouts remain unaccepted. [Matrix and limits](API_ACCEPTANCE.md),
 [release boundary](RELEASE040_SCOPE.md). The release is unpublished; current work is in [TODO](../../TODO.md).
+
+Additionally, st-util 1.9.0 on five STM32 boards: lifecycle 10/10 each, 233 scenarios/506 stages (5 expected timeout ERROR outcomes), BOOT/GPIO 10/10. Docker docs+host passed 6/6; Windows/Linux host ran 411 tests each. OrangePi/st-util hardware remains unverified.
 
 Historical stages follow; [v0.2.0-rc.1 preparation](RC020_READINESS.md) is kept for reference.
 

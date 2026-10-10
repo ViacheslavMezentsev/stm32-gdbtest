@@ -57,6 +57,41 @@ Unaccepted results and limits:
   AT32 ID `0x70050347` instead of STM32 ID `0x410`. Fix the remote profile/probe
   mapping before the next run; strict identity remains enabled.
 
+### st-util 1.9.0: five STM32 boards on Windows
+
+2026-10-10, working snapshot of `codex/release-040` after `429098b`, xPack 13.3.1,
+GDB 14.2.90/Python 3.11.4, st-util 1.9.0 (Scoop). The new backend ran on the same
+five ST-Link probes: lifecycle 10/10 each, followed by 233 scenarios and 506 stages —
+501 PASS and 5 expected timeout ERROR outcomes. Every timeout confirmed scenario entry
+and host recovery; final BOOT/GPIO passed 10/10. No USB reconnection was needed during
+these series. The table includes the last full suite per board, including F0/F1 repeats with final setup.
+
+| MCU | Scenarios | Stages | ELF SHA-256 |
+| --- | ---: | ---: | --- |
+| STM32F030R8T6 | 45 | 98 | `13335372db8090b2b7f8a47fa1617fbccf34a73c50f935a71a439cc129b3f03b` |
+| STM32F103C8T6 | 47 | 102 | `76ea87e6f8459f52a3bb6e0ee741dc697cfb62598e55127695662da4b7d482fd` |
+| STM32F401CCU6 | 47 | 102 | `c02f1b0906e7199dfbf762eed79f27e1f493f928c459936e2ecb226785dd69e3` |
+| STM32F411CEU6 | 47 | 102 | `bc04a22df7e0a0d5501d567e1fb4b36dbc0342a586b1668bc72d144dcb48bf2d` |
+| STM32F429ZIT6 | 47 | 102 | `bf0f7c08f59052e549ad21538c979e123578930425dd7a8f946042cb6b98f742` |
+
+All result.json references, expected exit codes, image checks, absence of failed checks
+inside PASS, reset/run and timeout recovery were audited. Host: 411 tests on Windows
+(14 expected skips) and Linux/Docker (4 skips); Docker docs+host passed 6/6.
+This validates the named snapshot, not a future release SHA.
+
+The first F411 lifecycle passed 3/10: the st-util memory map omits the factory register
+at `0x1fff7a22`. Reading it on the same connection succeeded after
+`set mem inaccessible-by-default off`; this setup is applied only to this backend.
+Flash-capacity and identity checks remain enabled. F411 then passed 10/10 and its full suite;
+the original errors are retained. F103 still reports 128 KiB against the profile's 64 KiB:
+an explicit warning, with the image fitting both bounds and strict mode tested separately.
+
+Runtime server version may be `null` when stdout is not flushed before termination;
+doctor confirms 1.9.0 separately. st-util and ST-LINK GDB Server are distinct backends:
+this PASS does not close question 11.2.27 about the ST server. OrangePi/Linux/SSH for
+st-util has configuration host tests only, without a hardware run.
+[Setup and limits](BACKENDS.md#st-util-v040), [installation](LINUX_STAND.md#st-util).
+
 ### Comparing GDB clients on F411/ST-LINK
 
 Server 7.14.0, one probe, one GCC13 ELF with SHA-256

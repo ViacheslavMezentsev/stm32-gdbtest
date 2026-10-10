@@ -14,9 +14,9 @@ The `[probe]` table of the local TOML:
 
 | Key | Value |
 | --- | --- |
-| `backend` | `openocd`, `stlink` (ST-LINK GDB Server) or `jlink` |
+| `backend` | `openocd`, `stlink` (ST-LINK GDB Server), `st-util` or `jlink` |
 | `serial` | Explicit debugger serial number; for J-Link the decimal USB number |
-| `executable` | Server: a name on PATH or an absolute path; defaults `openocd`, `ST-LINK_gdbserver(.exe)`, `JLinkGDBServerCL.exe` (Windows) or `JLinkGDBServerCLExe` (Linux) |
+| `executable` | Server: a name on PATH or an absolute path; defaults `openocd`, `ST-LINK_gdbserver(.exe)`, `st-util(.exe)`, `JLinkGDBServerCL.exe` (Windows) or `JLinkGDBServerCLExe` (Linux) |
 | `speed_khz` | 1…4000, default 1000 — an upper limit, not the actual interface frequency |
 | `flash` | `if-different` (default) or `verify-only` |
 | `[remote]` | A separate table: the GDB server on a Linux stand host over SSH ([Linux stand](LINUX_STAND.md#remote-gdb-server-windows-or-wsl--orange-pi)); `executable` and `programmer_dir` then refer to the stand host |
@@ -26,21 +26,21 @@ The `[probe]` table of the local TOML:
 | `transport` | `openocd` only: `transport select …` after the interface script (`swd`, `jtag`, `hla_swd`, `hla_jtag`, `dapdirect_swd`, `dapdirect_jtag`, `sdi`); not set by default |
 
 Unknown keys are rejected. Templates: [OpenOCD](../../examples/stands/stlink.example.toml)
-and [OpenOCD, ST, J-Link for the CI firmware](../../tests/firmware/stands/jlink.example.toml)
-(`openocd.example.toml`, `stlink.example.toml` and `remote.example.toml` for a remote stand
+and [OpenOCD, ST, st-util, J-Link for the CI firmware](../../tests/firmware/stands/jlink.example.toml)
+(`openocd.example.toml`, `stlink.example.toml`, `st-util.example.toml` and `remote.example.toml` for a remote stand
 in the same folder). Local paths (`executable`, `programmer_dir`, `identity_file`) expand `~`,
 `%VAR%` and `$VAR`: `%USERPROFILE%/...` instead of a personal path. Local paths
 and serial numbers are not committed: local stands are `<profile>-<backend>.local.toml`, remote ones
 `<profile>-<backend>.remote.toml`, both ignored by Git. `run --prepare-only --stand …`
 validates the stand and backend commands without connecting to the debugger, and
-`doctor --stand …` also checks GDB-Python, OpenOCD and USB access.
+`doctor --stand …` also checks GDB-Python, OpenOCD/st-util and USB access.
 
 A `target.toml` profile may name the J-Link device with the `jlink_device` key (for example for an MCU outside
-the validated STM32 parts); without it the validated STM32 table is used. For OpenOCD a profile accepts
+the validated STM32 parts); without it the validated STM32 table is used.
 A schema 2 profile keeps the dialect of each server in a section named after the backend
-(`[openocd]`, `[jlink]`, `[stlink]`); `reset_halt = "monitor reset init"` in `[openocd]`
+(`[openocd]`, `[jlink]`, `[stlink]`, `[st-util]`); `reset_halt = "monitor reset init"` in `[openocd]`
 is a reset with the target init procedure. An absent section means the built-in dialect.
-families apart: another OpenOCD interface script does not share the lock of an ST-Link with the same serial.
+Probe locks distinguish families: another OpenOCD interface script does not share the lock of an ST-Link with the same serial.
 
 On Linux ST-LINK GDB Server (STM32CubeCLT) exists for x86_64 only; on aarch64
 (Orange Pi 5) use OpenOCD and J-Link. OpenOCD 0.10 from the Ubuntu 20.04 repository
@@ -104,3 +104,28 @@ disabled; hardware breakpoints are used.
 
 [Stand commands and results](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/GDB_BACKENDS.md),
 [J-Link experiments](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/JLINK.md) (Russian).
+
+## st-util (v0.4.0)
+
+The open-source [stlink-org/stlink](https://github.com/stlink-org/stlink) server is distinct from
+ST-LINK GDB Server. Stand template: [st-util.example.toml](../../tests/firmware/stands/st-util.example.toml).
+Default executable: `st-util.exe` on Windows, `st-util` on Linux; no CubeProgrammer required.
+`serial` is 24 hexadecimal digits. The target.toml schema 2 section is optional:
+
+```toml
+[st-util]
+reset_halt = "monitor reset"
+```
+
+Start: `--multi --no-reset --serial <SERIAL> --freq <speed_khz>k --listen_port <port>`.
+Ready marker: `Listening at *:<port>`; finish/recovery: `monitor reset`, `monitor resume`,
+`disconnect`. The common ST-Link lock prevents overlap with OpenOCD and the ST server.
+Setup: `set mem inaccessible-by-default off` permits reads of F4 factory registers omitted
+from the server map. Identity and image verification remain enabled. `doctor` checks the version
+without hardware; runtime version is read only from server.log and may be `null` if server stdout
+was not flushed before exit. Debugger firmware/API are not inferred.
+
+st-util listens on all network interfaces; `[remote]` uses the existing module SSH tunnel,
+not `st-util --remote`/st-server. Stand network configuration controls access to that port.
+OrangePi installation: [Linux stand](LINUX_STAND.md#st-util). tools/linux_stand.py does not
+install st-util yet. Exact verified combinations: [matrix](API_ACCEPTANCE.md).

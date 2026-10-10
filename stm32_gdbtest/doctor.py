@@ -134,6 +134,9 @@ def diagnose(gdb=None, stand=None, sysfs=Path("/sys/bus/usb/devices")):
         code, text = _output([loaded["executable"], "-f", interface, "-c", "shutdown"])
         add("openocd", "FAIL" if code else "OK",
             first + ("" if not code else f": {interface} not usable, OpenOCD 0.11+ required"))
+    if loaded and loaded["backend"] == "st-util":
+        code, text = _output([loaded["executable"], "--version"])
+        add("st-util", "FAIL" if code or not re.fullmatch(r"v?\d+\.\d+\.\d+[^\s]*", text) else "OK", text)
 
     if sys.platform.startswith("linux"):
         devices = usb_debuggers(sysfs)

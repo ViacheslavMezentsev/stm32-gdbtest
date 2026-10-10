@@ -199,3 +199,38 @@ crash. The checked path for WSL is the
   `pgrep -a openocd` and `pgrep -a JLink` before retrying.
 - xPack OpenOCD 0.12.0-7 warns about the deprecated `tcl_port`, `telnet_port`,
   `gdb_port`; the commands stay compatible with OpenOCD 0.12.0.
+
+## st-util
+
+An additional ST-Link backend, including Linux aarch64. Windows checks use Scoop
+stlink 1.9.0; OrangePi installation and hardware acceptance have not been performed yet.
+Check the distribution package version first:
+
+```sh
+apt-cache policy stlink-tools
+# Install system packages only as the stand administrator:
+sudo apt install stlink-tools
+st-util --version
+```
+
+For comparison with exactly 1.9.0, use the [upstream source build](https://github.com/stlink-org/stlink/blob/v1.9.0/doc/compiling.md)
+at tag `v1.9.0`, CMake ≥3.21, native GCC, libusb and its development headers. Ubuntu's package
+version may differ. Existing ST-Link udev permissions and SSH rules still apply;
+tools/linux_stand.py does not install this optional component. In `<profile>-st-util.remote.toml`:
+
+```toml
+[probe]
+backend = "st-util"
+serial = "REPLACE_WITH_24_HEX_DIGITS"
+executable = "st-util"
+speed_khz = 1000
+flash = "if-different"
+
+[remote]
+host = "stand-host"
+user = "stand-user"
+```
+
+Replace serial/host/user and add an existing `identity_file` if required. Then run
+`doctor --stand …`, `run --prepare-only`, lifecycle and the full suite on hardware.
+Windows success does not accept Linux/SSH. [Dialect](BACKENDS.md#st-util-v040).

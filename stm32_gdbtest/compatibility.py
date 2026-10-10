@@ -43,6 +43,10 @@ def runtime_manifest(report, server_log=""):
         backend = re.search(r"ST-LINK GDB server\. Version ([0-9][A-Za-z0-9.+_-]*)", server_log)
         debugger = re.search(r"ST-LINK Firmware version\s*:\s*(V[0-9]+J[0-9]+(?:[A-Z][0-9]+)*)", server_log)
         api = None  # This server does not publish the OpenOCD STLINK API field.
+    elif name == "st-util":
+        backend = re.search(r"^st-util (?:v)?([0-9][A-Za-z0-9.+_-]*)\s*$", server_log, re.M)
+        debugger = None  # Do not invent firmware from a library or USB PID.
+        api = None
     else:
         backend = re.search(r"^Open On-Chip Debugger ([0-9][A-Za-z0-9.+_-]*)\b", server_log, re.M)
         debugger = re.search(r"\bSTLINK (V[0-9]+J[0-9]+(?:[A-Z][0-9]+)*) \(API v([0-9]+)\)", server_log)

@@ -17,7 +17,7 @@ def validate_profile(data):
     """Validate a parsed snapshot without reading its original source again.
 
     Schema 1 keeps the OpenOCD reset commands at the top level; schema 2 moves them into a section per
-    GDB server (`[openocd]`, `[jlink]`, `[stlink]`), so one profile serves every backend of the stand.
+    GDB server (`[openocd]`, `[jlink]`, `[stlink]`, `[st-util]`), so one profile serves every backend.
     """
     required = {"schema", "name", "mcu", "openocd_target", "flash_start", "flash_size",
                 "breakpoint_limit", "fault_handlers", "core_registers", "identity",

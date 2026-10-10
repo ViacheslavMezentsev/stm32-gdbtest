@@ -1,0 +1,9 @@
+# Copy to <profile>-st-util.local.toml; replace the serial with 24 hexadecimal digits.
+# Windows: executable = "%USERPROFILE%/scoop/apps/stlink/current/bin/st-util.exe"
+# Linux: st-util must be installed on the stand host; CubeProgrammer is not required.
+[probe]
+backend = "st-util"
+serial = "REPLACE_WITH_24_HEX_DIGITS"
+executable = "st-util"
+speed_khz = 1000
+flash = "if-different"

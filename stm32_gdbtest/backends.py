@@ -16,6 +16,7 @@ WINDOWS = os.name == "nt"
 DEFAULT_SERVER = {
     "jlink": "JLinkGDBServerCL.exe" if WINDOWS else "JLinkGDBServerCLExe",
     "stlink": "ST-LINK_gdbserver.exe" if WINDOWS else "ST-LINK_gdbserver",
+    "st-util": "st-util.exe" if WINDOWS else "st-util",
 }
 PROGRAMMER = "STM32_Programmer_CLI.exe" if WINDOWS else "STM32_Programmer_CLI"
 
@@ -28,8 +29,8 @@ def load_stand(path):
     local = remote is None
     if data.get("backend") == "openocd":
         return dict(openocd.validate(data, local), remote=remote)
-    if data.get("backend") not in ("stlink", "jlink"):
-        raise ValueError("Supported backends: openocd, stlink, jlink")
+    if data.get("backend") not in ("stlink", "jlink", "st-util"):
+        raise ValueError("Supported backends: openocd, stlink, jlink, st-util")
     allowed = {"backend", "serial", "executable", "speed_khz", "flash", "startup_timeout_s"}
     if data["backend"] == "stlink":
         allowed.add("programmer_dir")
@@ -42,6 +43,8 @@ def load_stand(path):
         raise ValueError("Set an alphanumeric debugger serial in the local stand file")
     if data["backend"] == "jlink" and not re.fullmatch(r"[1-9][0-9]{3,}", data["serial"]):
         raise ValueError("J-Link requires an explicit decimal USB serial, not an index or nickname")
+    if data["backend"] == "st-util" and not re.fullmatch(r"[0-9A-Fa-f]{24}", data["serial"]):
+        raise ValueError("st-util requires a 24-digit hexadecimal ST-Link serial")
     speed = data.get("speed_khz", 1000)
     if type(speed) is not int or not 1 <= speed <= 4000:
         raise ValueError("speed_khz must be an integer between 1 and 4000")
@@ -55,7 +58,7 @@ def load_stand(path):
         executable = data.get("executable", remote_host.stand_executable_default(data["backend"]))
     if not executable:
         raise FileNotFoundError("GDB Server executable not found")
-    if data["backend"] == "jlink":
+    if data["backend"] in ("jlink", "st-util"):
         return dict(data, executable=executable, speed_khz=speed, flash=policy, remote=remote)
     if local:
         programmer = Path(expand_path(data.get("programmer_dir", "")))
@@ -93,6 +96,17 @@ def server_spec(stand, port, profile, out):
                     ready=f"Listening on port {port} for gdb connections",
                     reset_halt=reset_halt,
                     finish=[*reset_run, "disconnect"])
+    if stand["backend"] == "st-util":
+        # ТЗ 6.11.1: --multi retains the server for host recovery after a client failure.
+        # No CubeProgrammer, shared mode, remote st-server or reset-on-connect.
+        return dict(
+            command=[stand["executable"], "--multi", "--no-reset", "--serial", stand["serial"].upper(),
+                     "--freq", str(stand["speed_khz"]) + "k", "--listen_port", str(port)],
+            ready=f"Listening at *:{port}", reset_halt=reset_halt,
+            # The server map omits factory registers outside its boot ROM range on F4.
+            setup=["set mem inaccessible-by-default off"],
+            finish=["monitor reset", "monitor resume", "disconnect"],
+        )
     if stand["backend"] != "stlink":
         raise ValueError("Unsupported backend")
     return dict(

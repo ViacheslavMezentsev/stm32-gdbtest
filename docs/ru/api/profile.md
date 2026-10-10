@@ -75,3 +75,5 @@ t.record("run", t.profile)
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.4, п. 4.14.1–4.14.8.
 - [record](record.md), [reset](reset.md).
+
+С v0.4.0 `stand.backend` также принимает `st-util`; его настройка описана в [backend](../BACKENDS.md#st-util-v040).

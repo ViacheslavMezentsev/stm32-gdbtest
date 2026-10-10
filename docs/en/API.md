@@ -413,3 +413,11 @@ Use the full signature for an overload. Fixed a false frame-name FAIL with one o
 ## SKIP (Unreleased)
 
 [skip(reason)](api/skip.md) — inapplicable scenario completion; reason, records, code77 and migration.
+
+## st-util and schema 2 (v0.4.0)
+
+Select `backend = "st-util"` in the stand; target.toml schema 2 may include
+`[st-util]` with `reset_halt = "monitor reset"`, or use the default.
+Existing sections and scenarios need no changes. `profile.stand["backend"]` may
+now be `st-util`; update consumer allowlists. Target methods and API_VERSION=2
+are unchanged. [Configuration and limits](BACKENDS.md#st-util-v040).

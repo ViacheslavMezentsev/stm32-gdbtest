@@ -19,10 +19,11 @@ OPENOCD_RESET_RUN = ("monitor reset run",)
 # Reset dialects of the accepted GDB servers. `monitor reset` is the one command the ST-LINK GDB Server
 # documents for a reset (manual DM00613038, 2.9) and leaves the core halted; `monitor reset halt` is
 # OpenOCD syntax and the ST server answers `Protocol error with Rcmd` to it.
-BACKEND_RESET_HALT = {"openocd": OPENOCD_RESET_HALT, "stlink": ("monitor reset",), "jlink": ("monitor reset",)}
-BACKEND_RESET_RUN = {"openocd": OPENOCD_RESET_RUN, "stlink": (), "jlink": ()}
+BACKEND_RESET_HALT = {"openocd": OPENOCD_RESET_HALT, "stlink": ("monitor reset",),
+                      "jlink": ("monitor reset",), "st-util": ("monitor reset",)}
+BACKEND_RESET_RUN = {"openocd": OPENOCD_RESET_RUN, "stlink": (), "jlink": (), "st-util": ()}
 # A schema 2 profile keeps the commands of each server in a section named after the backend.
-BACKEND_SECTIONS = ("openocd", "jlink", "stlink")
+BACKEND_SECTIONS = ("openocd", "jlink", "stlink", "st-util")
 OPENOCD_TRANSPORTS = ("swd", "jtag", "hla_swd", "hla_jtag", "dapdirect_swd", "dapdirect_jtag", "sdi")
 _SCRIPT = re.compile(r"interface/[A-Za-z0-9_.-]+\.cfg")
 _DEVICE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]*")
@@ -46,7 +47,7 @@ def family(stand):
     """Probe family for ownership locks: ST-Link for the ST server and the default OpenOCD interface."""
     if stand["backend"] == "jlink":
         return "jlink"
-    if stand["backend"] == "stlink":
+    if stand["backend"] in ("stlink", "st-util"):
         return "stlink"
     name = PurePosixPath(stand.get("interface", OPENOCD_INTERFACE)).stem.lower()
     return "stlink" if name.startswith("stlink") else re.sub(r"[^a-z0-9_-]", "-", name)

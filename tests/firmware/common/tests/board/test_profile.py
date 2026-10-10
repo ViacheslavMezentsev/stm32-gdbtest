@@ -47,9 +47,9 @@ def run_profile(t):
     t.check("case contracts", list(profile.case["contracts"]), ["ci_app_api"])
 
     # The stand section names a supported backend and server placement. The list follows the backends the
-    # module loads: OpenOCD, ST-LINK GDB Server and J-Link.
+    # module loads: OpenOCD, ST-LINK GDB Server, st-util and J-Link.
     stand = profile.stand
-    t.check("stand backend", stand["backend"], one_of("openocd", "stlink", "jlink"))
+    t.check("stand backend", stand["backend"], one_of("openocd", "stlink", "st-util", "jlink"))
     t.check("stand server", stand["server"], one_of("local", "remote"))
     t.check("stand speed is unset or positive", stand.get("speed_khz") is None or stand["speed_khz"] > 0)
 

@@ -18,6 +18,7 @@ the release branch raises the Python version to 0.4.0. Final acceptance remains.
 | Techniques/examples | Include event/interval, watchpoint wait, injection, standalone C++ Og/O2 and TECH-019 | Examples built on existing API, without new `Target` methods |
 | 0.3.0 field feedback F01–F03 | Include; `codex/api030-feedback` has landed | F01 bounded unsized character-array read; F02 watchpoint frame interpretation; F03 initial SP as SRAM boundary. Host/docs/offline passed at `44c795d`; hardware results predate integration and need a release-SHA repeat |
 | API cleanup | **Remove** `value`, `fields`, `set_value`, `force_return` | API spec 6.7, TODO and reference have promised removal in 0.4.0; provide explicit migration for this breaking change |
+| st-util | Include a separate backend and optional `[st-util]` target schema 2 section | Agreed on 2026-10-10. Five STM32/Windows lifecycles and full suites passed; OrangePi/SSH hardware remains unverified. [Matrix](API_ACCEPTANCE.md) |
 
 `API_VERSION` is already 2 because public methods were removed. The release branch raises
 the target.toml schema to 2 for backend dialects; other TOML/JSON schemas remain unchanged.

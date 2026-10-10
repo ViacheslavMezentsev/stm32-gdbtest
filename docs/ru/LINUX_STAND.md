@@ -196,3 +196,38 @@ WSL. Этот сценарий на оборудовании не проверя
   `pgrep -a openocd` и `pgrep -a JLink` перед повтором.
 - xPack OpenOCD 0.12.0-7 предупреждает об устаревших `tcl_port`, `telnet_port`,
   `gdb_port`; команды оставлены совместимыми с OpenOCD 0.12.0.
+
+## st-util
+
+Дополнительный backend для ST-Link, включая Linux aarch64. На Windows проверяется Scoop
+stlink 1.9.0; установка и аппаратная проверка OrangePi пока не выполнены.
+Сначала проверьте версию пакета дистрибутива:
+
+```sh
+apt-cache policy stlink-tools
+# Install system packages only as the stand administrator:
+sudo apt install stlink-tools
+st-util --version
+```
+
+Для сравнения именно с 1.9.0 используйте [сборку из исходников upstream](https://github.com/stlink-org/stlink/blob/v1.9.0/doc/compiling.md)
+с тегом `v1.9.0`, CMake ≥3.21, native GCC, libusb и его заголовками. Версия пакета Ubuntu
+может отличаться. Права udev на ST-Link и правила SSH остаются прежними; tools/linux_stand.py
+этот дополнительный компонент не устанавливает. В `<profile>-st-util.remote.toml`:
+
+```toml
+[probe]
+backend = "st-util"
+serial = "REPLACE_WITH_24_HEX_DIGITS"
+executable = "st-util"
+speed_khz = 1000
+flash = "if-different"
+
+[remote]
+host = "stand-host"
+user = "stand-user"
+```
+
+Замените serial/host/user своими значениями и добавьте уже настроенный `identity_file`, если нужен.
+Далее `doctor --stand …`, `run --prepare-only`, lifecycle и полный набор на реальной плате.
+Прохождение Windows не является приёмкой Linux/SSH. [Диалект](BACKENDS.md#st-util-v040).

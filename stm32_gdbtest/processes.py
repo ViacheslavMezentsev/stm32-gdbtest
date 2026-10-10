@@ -69,7 +69,7 @@ def probe_identity(serial, backend="openocd", family=None):
 
     `family` names the probe when the stand selects another OpenOCD interface (`probes.family`).
     """
-    if backend not in ("openocd", "stlink", "jlink"):
+    if backend not in ("openocd", "stlink", "jlink", "st-util"):
         raise ValueError("Unknown debugger backend")
     if not isinstance(serial, str) or not re.fullmatch(r"[A-Za-z0-9]+", serial):
         raise ValueError("Explicit alphanumeric debugger serial required")

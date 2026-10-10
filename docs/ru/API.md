@@ -410,3 +410,11 @@ result.status сохраняет исходный вердикт. command_code: 
 ## SKIP (Unreleased)
 
 [skip(reason)](api/skip.md) — завершение неприменимого сценария; причина, records, код77 и миграция.
+
+## st-util и schema 2 (v0.4.0)
+
+В стенде выберите `backend = "st-util"`; в target.toml schema 2 можно добавить
+`[st-util]` с `reset_halt = "monitor reset"` либо оставить встроенное значение.
+Существующие секции и сценарии менять не требуется. `profile.stand["backend"]`
+теперь может быть `st-util`; обновите собственные списки допустимых серверов.
+Методы Target и API_VERSION=2 не меняются. [Конфигурация и ограничения](BACKENDS.md#st-util-v040).

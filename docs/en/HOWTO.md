@@ -543,3 +543,11 @@ level; the overall specification still uses the upstream checker directly.
 ### reach and C++ quotes (Unreleased)
 
 Use the full signature for an overload. Fixed a false frame-name FAIL with one outer pair of GDB single quotes; unquoted strings work as before. No migration is required; the workaround for 0.3.0 is to omit outer quotes. [Contract](api/reach.md).
+
+## st-util: F4 factory registers
+
+For `Cannot access memory at address 0x1fff7a22`, inspect `info mem` and
+`show mem inaccessible-by-default`: the st-util 1.9.0 map can omit this factory register.
+The st-util backend sets `set mem inaccessible-by-default off` before identity checks.
+This permits a request; it does not replace hardware validation of the address or data.
+Do not remove `flash_size_address` or weaken identity to bypass the error.

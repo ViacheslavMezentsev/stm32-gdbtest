@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.84 (кандидат v0.4.0) |
+| **Ревизия** | 0.85 (кандидат v0.4.0) |
 | **Дата формирования** | 10.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | Кандидат v0.4.0; Python `0.4.0`, API_VERSION=2, ТЗ API 0.3.14 (р.0.81). Публикация после итоговой приёмки. |
@@ -143,6 +143,17 @@
 | 0.82 | 10.10.2026 | Исправлены относительный путь модуля в CTest примера и сохранение частичного вывода CI при тайм-ауте; уточнена диагностика verify-only. TC-166/167. Зафиксированы результаты повторной аппаратной проверки и открытый USB-сбой F411. |
 | 0.83 | 10.10.2026 | Сравнены GDB 14.2.90/15.2.90/16.3.90 на одном F411/ELF и ST-LINK GDB Server 7.14.0: USB ERROR повторился. Вопрос 11.2.27 открыт; последнее восстановление OpenOCD 2/2 PASS. Нормативное API не менялось. |
 | 0.84 | 10.10.2026 | USB-сбой ST-LINK GDB Server 7.14.0 воспроизведён на Nucleo-F030R8 с другим отладчиком: жизненный цикл 10/10, полный набор прерван. После переподключения OpenOCD BOOT/GPIO 2/2. Вопрос 11.2.27 расширен, причина не установлена. |
+| 0.85 | 10.10.2026 | Backend st-util: отдельная секция schema 2, команды reset/resume, общая блокировка ST-Link, doctor и SSH. Учтена неполная карта памяти сервера; identity и проверки образа сохранены. TC-168. |
+
+### Изменения ревизии 0.85
+
+Изменённые и новые пункты помечены `(р.0.85)`.
+
+| Пункт | Вид | Изменение |
+| --- | --- | --- |
+| 3.3.1, 3.3.7, 3.4.1, 6.10.3 | изм. | Новый backend и секция st-util без изменения номера schema 2 |
+| 6.11.1–6.11.4 | нов. | Диалект, настройка GDB, общая блокировка и диагностика st-util |
+| 9.2, 10.3 | изм. | TC-168: валидация, команды, SSH, блокировка и runtime metadata |
 
 ### Изменения ревизии 0.84
 
@@ -1128,9 +1139,9 @@ flowchart LR
 
 3.2.3. Множества идентификаторов требований и сценариев ДОЛЖНЫ совпадать; при расхождении ошибка ДОЛЖНА перечислять недостающие тесты и недостающие требования. `[R]`
 
-### 3.3. Профиль MCU `target.toml` (schema 1)
+### 3.3. Профиль MCU `target.toml` (schema 1/2)
 
-3.3.1. Профиль ДОЛЖЕН содержать ключи `schema`, `name`, `mcu`, `openocd_target`, `flash_start`, `flash_size`, `breakpoint_limit`, `fault_handlers`, `core_registers`, `identity`, `diagnostic_registers` и МОЖЕТ содержать `flash_size_address` и `jlink_device`. Профиль schema 1 ДОЛЖЕН дополнительно содержать `reset_halt` и `reset_run` на верхнем уровне; профиль schema 2 НЕ ДОЛЖЕН их содержать и вместо них МОЖЕТ содержать секции `[openocd]`, `[jlink]`, `[stlink]` (п. 3.3.7). `schema` ДОЛЖНА быть целым `1` или `2`; иные ключи верхнего уровня, иная схема и неизвестные секции ДОЛЖНЫ отклоняться. `[R]`
+3.3.1. Профиль ДОЛЖЕН содержать ключи `schema`, `name`, `mcu`, `openocd_target`, `flash_start`, `flash_size`, `breakpoint_limit`, `fault_handlers`, `core_registers`, `identity`, `diagnostic_registers` и МОЖЕТ содержать `flash_size_address` и `jlink_device`. Профиль schema 1 ДОЛЖЕН дополнительно содержать `reset_halt` и `reset_run` на верхнем уровне; профиль schema 2 НЕ ДОЛЖЕН их содержать и вместо них МОЖЕТ содержать секции `[openocd]`, `[jlink]`, `[stlink]`, `[st-util]` (п. 3.3.7). `schema` ДОЛЖНА быть целым `1` или `2`; иные ключи верхнего уровня, иная схема и неизвестные секции ДОЛЖНЫ отклоняться. `[R]` (р.0.85)
 
 3.3.2. `name` и `mcu` ДОЛЖНЫ соответствовать `[A-Za-z0-9]+`. `[R]`
 
@@ -1142,7 +1153,7 @@ flowchart LR
 
 3.3.6. `breakpoint_limit` ДОЛЖЕН быть больше числа `fault_handlers`, чтобы для сценария оставалась хотя бы одна аппаратная точка останова. `[R]`
 
-3.3.7. Диалект GDB-сервера. В профиле schema 1 `reset_halt` ДОЛЖЕН равняться `monitor reset halt` или `monitor reset init` (р.0.70), `reset_run` — `monitor reset run`; поля используются только backend OpenOCD. В профиле schema 2 те же ключи ДОЛЖНЫ находиться в секции `[openocd]`, а секции `[jlink]` и `[stlink]` МОГУТ содержать только `reset_halt`. Секция МОЖЕТ отсутствовать: тогда действует встроенный диалект сервера — OpenOCD `monitor reset halt` и `monitor reset run`, ST-LINK GDB Server и J-Link GDB Server `monitor reset` (п. 6.4.2, 6.5.3). `reset_run` в секциях ST-LINK и J-Link, неизвестные ключи секции и неизвестные секции ДОЛЖНЫ отклоняться. `[R]` (р.0.79)
+3.3.7. Диалект GDB-сервера. В профиле schema 1 `reset_halt` ДОЛЖЕН равняться `monitor reset halt` или `monitor reset init` (р.0.70), `reset_run` — `monitor reset run`; поля используются только backend OpenOCD. В профиле schema 2 те же ключи ДОЛЖНЫ находиться в секции `[openocd]`, а секции `[jlink]`, `[stlink]` и `[st-util]` МОГУТ содержать только `reset_halt`. Секция МОЖЕТ отсутствовать: тогда действует встроенный диалект сервера — OpenOCD `monitor reset halt` и `monitor reset run`, ST-LINK GDB Server, J-Link GDB Server и st-util `monitor reset` (п. 6.4.2, 6.5.3). `reset_run` в секциях ST-LINK, J-Link и st-util, неизвестные ключи секции и неизвестные секции ДОЛЖНЫ отклоняться. `[R]` (р.0.85)
 
 3.3.8. Команда сброса для `reset()` разрешается в порядке: переопределение сессии
 (`STM32_GDBTEST_RESET_COMMAND`), секция профиля выбранного backend'а или ключи schema 1, встроенный диалект
@@ -1165,7 +1176,7 @@ GDB-сервера. Override НЕ ДОЛЖЕН подменять команды
 
 ### 3.4. Стенд (`[probe]` в локальном TOML)
 
-3.4.1. Стенд ДОЛЖЕН содержать таблицу `[probe]` с `backend` из набора `openocd`, `stlink`, `jlink`; иное значение ДОЛЖНО отклоняться. `[R]`
+3.4.1. Стенд ДОЛЖЕН содержать таблицу `[probe]` с `backend` из набора `openocd`, `stlink`, `jlink`, `st-util`; иное значение ДОЛЖНО отклоняться. `[R]` (р.0.85)
 
 3.4.2. Допустимые ключи: `backend`, `serial`, `executable`, `speed_khz`, `flash`, `startup_timeout_s` (р.0.8); для `stlink` дополнительно `programmer_dir`; для `openocd` — `interface` (скрипт `interface/*.cfg`, по умолчанию `interface/stlink.cfg`) и `transport` (`swd`, `jtag`, `hla_swd`, `hla_jtag`, `dapdirect_swd`, `dapdirect_jtag`, `sdi`); для `jlink` — `interface` (`SWD` по умолчанию или `JTAG`) (р.0.70). Кроме `[probe]`, стенд МОЖЕТ содержать таблицу `[remote]` (п. 3.4.11) (р.0.9). Неизвестный ключ ДОЛЖЕН отклоняться («Unknown probe setting»). `[R]` (р.0.8)
 
@@ -1860,7 +1871,7 @@ nothing_tested; пустая группа не принимается. Host-пр
 
 6.10.2. GDB-сервер и GDB ДОЛЖНЫ запускаться в собственной сессии и группе процессов (`start_new_session`); остановка — `SIGTERM` группе, ожидание 3 с, затем `SIGKILL` группе, ожидание 5 с. Группа ДОЛЖНА останавливаться и после выхода ведущего процесса, пока в ней остаются потомки. `[N]` (р.0.7)
 
-6.10.3. Имена серверов по умолчанию на Linux — `JLinkGDBServerCLExe` и `ST-LINK_gdbserver`, программатор — `STM32_Programmer_CLI` (без `.exe`). ST-LINK GDB Server (STM32CubeCLT) для aarch64 не выпускается: на aarch64 используются backend `openocd` и `jlink`. `[N]` (р.0.7)
+6.10.3. Имена серверов по умолчанию на Linux — `JLinkGDBServerCLExe`, `ST-LINK_gdbserver` и `st-util`, программатор — `STM32_Programmer_CLI` (без `.exe`). ST-LINK GDB Server (STM32CubeCLT) для aarch64 не выпускается: на aarch64 предусмотрены backend `openocd`, `jlink` и `st-util`; аппаратная приёмка каждой комбинации проводится отдельно. `[N]` (р.0.85)
 
 6.10.4. Окружение стенда без root ДОЛЖНО устанавливаться сценарием `tools/linux_stand.py install` в каталог пользователя (по умолчанию `~/.local/stm32-gdbtest`): Python 3.11 (python-build-standalone), CMake, Ninja, xPack GNU Arm GCC с GDB-Python, xPack OpenOCD 0.12.0-7 и CMSIS пакетов Cube. Архивы задаются `tools/linux-stand.lock.json` для x86_64 и aarch64 с SHA-256; версии GCC, CMake, Ninja и Cube ДОЛЖНЫ совпадать с `ci/dependencies.lock.json`. Сценарий ДОЛЖЕН выполняться системным Python ≥ 3.8, не менять системные пакеты, быть повторяемым (установленный компонент с тем же SHA-256 пропускается) и формировать `env.sh` с `PATH`, `ARM_TOOLCHAIN_ROOT`, `STM32CUBE_REPOSITORY`, `STM32_GDBTEST_GDB`. Причина: системные Python 3.8, CMake 3.16 и OpenOCD 0.10 Ubuntu 20.04 не удовлетворяют п. 2.5.2, 2.5.4 и 6.10.6. `[N]` (р.0.7)
 
@@ -1869,6 +1880,16 @@ nothing_tested; пустая группа не принимается. Host-пр
 6.10.6. OpenOCD 0.10 из репозитория Ubuntu 20.04 не содержит `interface/stlink.cfg` и не поддерживается; `doctor` ДОЛЖЕН выявлять такой OpenOCD до запуска (п. 5.17.1). `[N]` (р.0.7)
 
 6.10.7. J-Link STLink (встроенный ST-Link, перепрошитый в J-Link) при подключении показывает графическое окно условий использования; консольный сервер без графического сеанса ждёт около 10 с. Подтверждение окна в графическом сеансе ДОЛЖНО выполняться владельцем стенда и описываться в документации Linux-стенда; модуль окно не обходит. `[N]` (р.0.8)
+
+### 6.11. Backend st-util
+
+6.11.1. Backend `st-util` ДОЛЖЕН запускаться как `st-util(.exe) --multi --no-reset --serial <SERIAL> --freq <speed_khz>k --listen_port <port>`; serial — ровно 24 шестнадцатеричные цифры, передаваемые в верхнем регистре. Маркер готовности — `Listening at *:<port>`. `programmer_dir`, `interface`, shared mode и собственный `--remote` st-util не поддерживаются. `[N]` (р.0.85)
+
+6.11.2. Встроенный reset/halt st-util ДОЛЖЕН быть `monitor reset`; завершение и host recovery — `monitor reset`, `monitor resume`, `disconnect`. Переопределение reset/halt НЕ ДОЛЖНО менять recovery. `--multi` оставляет сервер для повторного подключения клиента. `[N]` (р.0.85)
+
+6.11.3. Setup st-util ДОЛЖЕН выполнять `set mem inaccessible-by-default off`, сохраняя проверки identity, размера Flash, границ и содержимого образа. Причина: карта памяти st-util 1.9.0 не описывает заводской регистр размера Flash F411 по адресу `0x1FFF7A22`; настройка разрешает GDB передать запрос серверу, но не гарантирует доступность адреса. `[N]` (р.0.85)
+
+6.11.4. Блокировка st-util ДОЛЖНА совпадать с блокировкой ST-LINK GDB Server и стандартного ST-Link/OpenOCD для того же serial. Локальный doctor ДОЛЖЕН проверять `st-util --version` без подключения к MCU. Для SSH ДОЛЖЕН использоваться существующий helper и имя `st-util` на хосте стенда; runtime metadata ДОЛЖНЫ оставлять firmware/API отладчика неопределёнными при отсутствии свидетельства в журнале. `[N]` (р.0.85)
 
 ---
 
@@ -2281,6 +2302,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-165 | `test_ci_artifacts`, `test_run_hw_build`, `test_hardware_workflow` (T) | Повтор сохраняет прежний FAIL и артефакты; CI не удаляет HW build; shell workflow сохраняет отказ первого профиля при успехе последнего (р.0.81) |
 | TC-166 | `test_minimal_consumer_resolves_relative_module_for_ctest` (T), TC-66 (I) | Configure с относительным путём модуля формирует абсолютный аргумент host.consumer_offline; проверка контрактов использует tests/contracts.json (р.0.82) |
 | TC-167 | `test_timeout_keeps_partial_output_and_previous_log` (T) | Тайм-аут команды CI сохраняет частичный stdout и прежний лог, возвращает CheckError с тайм-аутом (р.0.82) |
+| TC-168 | `StUtilTests`, `ProfileScenarioTests` (T), run_hw/run_suite (I) | Schema 1/2, serial и чужие ключи, единый reset, неизменный recovery, карта памяти, общий lock ST-Link, SSH, doctor и metadata; аппаратные исходы в docs/ru/API_ACCEPTANCE.md (р.0.85) |
 
 ---
 
@@ -2375,10 +2397,10 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | 3.1.11 | IN: `case` | TC-64 |
 | 3.2.1–3.2.3 | CO: `trace` | TC-38, TC-67 |
 | 3.3.1–3.3.6, 3.3.9–3.3.13 | PR: `load_profile` | TC-35, TC-36 |
-| 3.3.7, 3.3.8 | PR: выбор секции по backend, разрешение команды сброса | TC-36, TC-164 |
+| 3.3.7, 3.3.8 | PR: выбор секции по backend, разрешение команды сброса | TC-36, TC-164, TC-168 |
 | 3.3.11 | ID: `check_target`; BE: `server_spec` | TC-43, TC-47 |
 | 3.3.12 | `tests/fixtures/README.md` | I |
-| 3.4.1–3.4.8 | BE: `load_stand`; OC: `load_stand` | TC-31, TC-33, TC-39 |
+| 3.4.1–3.4.8 | BE: `load_stand`; OC: `load_stand` | TC-31, TC-33, TC-39, TC-168 |
 | 3.4.9 | `.gitignore` (`*.local.toml`); EX: `stands/stlink.example.toml` | I |
 | 3.4.10 | OC: `startup_timeout`; BE: `load_stand`; RU: `execute` | TC-98, TC-97 |
 | 3.4.11 | RM: `load`; BE: `load_stand`; OC: `validate` | TC-99, TC-102 |
@@ -2504,6 +2526,7 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | 6.10.4 | LS; DOC: LINUX_STAND.md | TC-95, TC-96 |
 | 6.10.5, 6.10.6 | DOC: LINUX_STAND.md; DR | I, TC-96 |
 | 6.10.7 | DOC: LINUX_STAND.md | I, TC-97 |
+| 6.11.1–6.11.4 | BE, PR, PS, RM, DR, compatibility.py | TC-168 (р.0.85) |
 | 7.1.1–7.1.3 | RU; AG; все загрузчики схем | TC-03, TC-11, TC-22, TC-59 |
 | 7.1.4 | AG: `finish`; RU: recovery | TC-68, TC-70 |
 | 7.2.1 | RU: `local_directory`, `hwtest-tmp` | TC-24 |

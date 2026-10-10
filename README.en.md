@@ -90,7 +90,7 @@ def clock(t):
 
 ## Features
 
-- Runs scenarios through OpenOCD, ST-LINK GDB Server and J-Link GDB Server; runner and
+- Runs scenarios through OpenOCD, ST-LINK GDB Server, st-util and J-Link GDB Server; runner and
   GDB on Windows or Linux, the GDB server next to them or on the stand's Linux host over SSH.
 - Image verification and programming: by loadable ELF sections, or a full image with
   fill and CRC-32 computed on the PC ([images and CRC](docs/en/IMAGES.md)); DEV_ID and
@@ -264,7 +264,7 @@ F103C8, F401CC, F411CE, F429ZI — Cortex-M0, M3, M4; AT32F403A — a compatible
 | STM32G474CE | ST-Link / OpenOCD on Orange Pi 5 | consumer project (Arduino Core STM32) |
 | AT32F403ACGU7 (Artery) | J-Link / J-Link GDB Server | CI firmware (44 cases), after 0.3.0 |
 
-OpenOCD and ST-LINK GDB Server need only the profile. J-Link GDB Server requires a
+OpenOCD, ST-LINK GDB Server and st-util need only the profile. J-Link GDB Server requires a
 device name: the profile sets it (`jlink_device`), and the module knows it for STM32F103C8T6,
 STM32F030R8T6 and STM32F103CBT6. H503 is not supported. Support is defined by the specific combination
 of MCU, HAL, GDB and backend, not by the family: [current status](docs/en/STATUS.md).

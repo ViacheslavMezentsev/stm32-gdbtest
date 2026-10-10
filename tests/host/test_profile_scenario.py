@@ -108,7 +108,7 @@ class ProfileScenarioTests(unittest.TestCase):
 
     def test_every_supported_backend_passes_the_stand_section(self):
         scenario = self.scenario()
-        for backend in ("openocd", "stlink", "jlink"):
+        for backend in ("openocd", "stlink", "st-util", "jlink"):
             with self.subTest(backend=backend):
                 target = Target(backend)
                 scenario(target)

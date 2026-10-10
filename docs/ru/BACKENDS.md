@@ -14,9 +14,9 @@ Backend задаёт запуск и готовность сервера, ком
 
 | Ключ | Значение |
 | --- | --- |
-| `backend` | `openocd`, `stlink` (ST-LINK GDB Server) или `jlink` |
+| `backend` | `openocd`, `stlink` (ST-LINK GDB Server), `st-util` или `jlink` |
 | `serial` | Явный серийный номер отладчика; для J-Link — десятичный USB-номер |
-| `executable` | Сервер: имя в PATH или абсолютный путь; по умолчанию `openocd`, `ST-LINK_gdbserver(.exe)`, `JLinkGDBServerCL.exe` (Windows) или `JLinkGDBServerCLExe` (Linux) |
+| `executable` | Сервер: имя в PATH или абсолютный путь; по умолчанию `openocd`, `ST-LINK_gdbserver(.exe)`, `st-util(.exe)`, `JLinkGDBServerCL.exe` (Windows) или `JLinkGDBServerCLExe` (Linux) |
 | `speed_khz` | 1…4000, по умолчанию 1000 — верхний предел, не фактическая частота |
 | `flash` | `if-different` (по умолчанию) или `verify-only` |
 | `[remote]` | Отдельная таблица: GDB-сервер на хосте стенда Linux по SSH ([Linux-стенд](LINUX_STAND.md#удалённый-gdb-сервер-windows-или-wsl--orange-pi)); `executable` и `programmer_dir` тогда относятся к хосту стенда |
@@ -26,19 +26,19 @@ Backend задаёт запуск и готовность сервера, ком
 | `transport` | Только `openocd`: `transport select …` после скрипта интерфейса (`swd`, `jtag`, `hla_swd`, `hla_jtag`, `dapdirect_swd`, `dapdirect_jtag`, `sdi`); по умолчанию не задаётся |
 
 Неизвестный ключ отклоняется. Шаблоны: [OpenOCD](../../examples/stands/stlink.example.toml)
-и [OpenOCD, ST, J-Link для CI-прошивок](../../tests/firmware/stands/jlink.example.toml)
-(в той же папке `openocd.example.toml`, `stlink.example.toml` и `remote.example.toml` для
+и [OpenOCD, ST, st-util, J-Link для CI-прошивок](../../tests/firmware/stands/jlink.example.toml)
+(в той же папке `openocd.example.toml`, `stlink.example.toml`, `st-util.example.toml` и `remote.example.toml` для
 удалённого стенда). В локальных путях (`executable`, `programmer_dir`, `identity_file`)
 раскрываются `~`, `%VAR%` и `$VAR`: `%USERPROFILE%/...` вместо личного пути. Локальные пути и
 серийные номера не коммитятся: локальный стенд — `<профиль>-<backend>.local.toml`, удалённый —
 `<профиль>-<backend>.remote.toml`, оба исключены из Git. `run --prepare-only --stand …`
 проверяет стенд и команды backend без подключения к отладчику, а `doctor --stand …`
-дополнительно проверяет GDB-Python, OpenOCD и доступ к USB.
+дополнительно проверяет GDB-Python, OpenOCD/st-util и доступ к USB.
 
 Профиль `target.toml` может назвать устройство J-Link ключом `jlink_device` (например, для МК вне проверенных
 STM32); без него используется таблица проверенных STM32. Диалект каждого сервера задаётся секцией профиля
 схемы 2: `[openocd]` (в том числе `reset_halt = "monitor reset init"` — сброс с процедурой инициализации
-цели), `[jlink]`, `[stlink]`. Секция необязательна: без неё действует встроенный диалект сервера. Блокировка
+цели), `[jlink]`, `[stlink]`, `[st-util]`. Секция необязательна: без неё действует встроенный диалект сервера. Блокировка
 отладчика различает семейство зонда: другой скрипт интерфейса OpenOCD не делит блокировку с ST-Link того же
 серийного номера.
 
@@ -112,3 +112,28 @@ COM frequency 950 kHz. Дополнительный порт SWV (наблюда
 
 [Команды и результаты стендов](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/GDB_BACKENDS.md),
 [опыты J-Link](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/JLINK.md).
+
+## st-util (v0.4.0)
+
+Открытый сервер [stlink-org/stlink](https://github.com/stlink-org/stlink), отдельный от ST-LINK
+GDB Server. Пример стенда — [st-util.example.toml](../../tests/firmware/stands/st-util.example.toml).
+`executable` по умолчанию `st-util.exe` на Windows, `st-util` на Linux; CubeProgrammer не нужен.
+`serial` — 24 шестнадцатеричные цифры. В target.toml schema 2 секция необязательна:
+
+```toml
+[st-util]
+reset_halt = "monitor reset"
+```
+
+Запуск: `--multi --no-reset --serial <SERIAL> --freq <speed_khz>k --listen_port <port>`.
+Готовность: `Listening at *:<port>`; завершение/recovery: `monitor reset`, `monitor resume`,
+`disconnect`. Общая блокировка ST-Link исключает пересечение с OpenOCD и сервером ST.
+Setup: `set mem inaccessible-by-default off` позволяет читать заводские регистры F4,
+не включённые в карту памяти сервера. Identity и проверка образа остаются включёнными.
+`doctor` проверяет версию без платы; runtime version берётся только из server.log и может быть
+`null`, если stdout сервера не сброшен перед завершением. Firmware/API отладчика не выдумываются.
+
+st-util слушает все сетевые интерфейсы; `[remote]` использует существующий SSH-туннель модуля,
+а не `st-util --remote`/st-server. Доступ к порту стенда ограничивается его сетевой конфигурацией.
+Установка на OrangePi — [Linux-стенд](LINUX_STAND.md#st-util). Установщик tools/linux_stand.py
+пока не устанавливает st-util. Точные проверенные комбинации — [матрица](API_ACCEPTANCE.md).
