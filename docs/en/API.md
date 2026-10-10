@@ -439,3 +439,5 @@ SSH wait to25s including cleanup. These fields are diagnostic: use final status 
 [Lifecycle](LINUX_STAND.md#shutdown-diagnostics).
 
 st-util may end its marker with an ellipsis: `Listening at *:port...`. The parser accepts it; an incomplete line without a newline does not establish readiness.
+
+External finite package dispatcher: [stand_loop](STAND_LOOP.md). Target API and existing run/pack commands are unchanged.

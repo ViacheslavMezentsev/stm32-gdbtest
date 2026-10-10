@@ -98,3 +98,5 @@ Historical protocols and exact boundaries: [matrix](API_ACCEPTANCE.md).
 4. Only after acceptance: date the CHANGELOG, create the signed tag and publish as owner.
 
 This scope does not declare the release ready or transfer experimental methods into core.
+
+External finite package dispatcher: [stand_loop](STAND_LOOP.md). Target API and existing run/pack commands are unchanged.

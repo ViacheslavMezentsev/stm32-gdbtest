@@ -155,3 +155,5 @@ the currently attached ST-Link serial, speed_khz=1000 and flash=if-different.
 Preparation check on 2026-10-10: F411 packages from Windows ran locally on OrangePi
 with st-util 1.9.0 — 4 PASS + 1 expected SKIP; export/verify/report succeeded. Doctor passed
 for all five CI profiles. This is a driver/package rehearsal, not a GitHub Actions run.
+
+External finite package dispatcher: [stand_loop](STAND_LOOP.md). Target API and existing run/pack commands are unchanged.

@@ -113,3 +113,5 @@ F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_D
 [Result export and evidence index](RESULTS.md).
 
 New package scenarios: [API 0.4.0](API040_SCENARIOS.md).
+
+- External finite package dispatcher: [stand_loop](STAND_LOOP.md). Target API and existing run/pack commands are unchanged.

@@ -12,12 +12,13 @@
 | [stm32-gdbtest-scenarios](stm32-gdbtest-scenarios/SKILL.md) | написать или переписать сценарий: требование и контракт, место остановки, `check(rows)`, `write(rows)`, `ret`, `refused`, `watch`, `skip`, профиль, стиль, техники TECH-001…019 |
 | [stm32-gdbtest-run](stm32-gdbtest-run/SKILL.md) | запустить и разобрать результат: `doctor`, host и hw, CLI, удалённый сервер, пакет, CI, `result.json` и журналы, частые отказы |
 | [stm32-gdbtest-results](stm32-gdbtest-results/SKILL.md) | разобрать сохранённые свидетельства без платы: порядок файлов, код сценария, records, JUnit, целостность, экспорт/HTML и обоснованный вывод; в том числе агентом pi на OrangePi |
+| [stm32-gdbtest-stand-loop](stm32-gdbtest-stand-loop/SKILL.md) | комплект для автономного стенда, конечные циклы, политика FAIL/SKIP, STOP и передача review.json агенту |
 
 ## Подключение навыков в проекте
 
 Навыки лежат в подмодуле: `modules/stm32-gdbtest/skills/`.
 
-- **Claude Code** ищет навыки проекта в `.claude/skills/<имя>/SKILL.md`. Скопируйте четыре каталога
+- **Claude Code** ищет навыки проекта в `.claude/skills/<имя>/SKILL.md`. Скопируйте пять каталогов
   туда (на Linux и macOS можно символической ссылкой) и обновляйте копию вместе с gitlink модуля:
 
   ```powershell

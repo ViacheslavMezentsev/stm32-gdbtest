@@ -1,0 +1,19 @@
+schema = 1
+stand = "board.local.toml"
+cycles = 2
+interval_s = 5
+on_fail = "stop"
+min_free_mib = 256
+
+# Package prepared with capture=true; use IDs from your own application.
+[[cases]]
+package = "enabled.zip"
+id = "HW_CI_040_RECORDS"
+timeout_s = 60
+
+# This separate package fixes optional_loop=false before packing.
+[[cases]]
+package = "disabled.zip"
+id = "HW_CI_040_SKIP"
+allow_skip = true
+timeout_s = 60

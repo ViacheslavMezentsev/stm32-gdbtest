@@ -1,0 +1,14 @@
+[Unit]
+Description=Bounded stm32-gdbtest campaign %i
+
+[Service]
+Type=simple
+WorkingDirectory=%h/stm32-gdbtest
+ExecStart=/bin/bash -lc '. "%h/.local/stm32-gdbtest/env.sh"; exec python3 -B tools/stand_loop.py --plan "%h/stand/plan.toml" --output "%h/stand/runs/%i"'
+Restart=no
+KillMode=process
+TimeoutStopSec=infinity
+SendSIGKILL=no
+
+[Install]
+WantedBy=default.target

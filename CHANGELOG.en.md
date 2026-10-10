@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Added tools/stand_loop.py: finite local package cycles, evidence validation, STOP and review.json for agents; example plan/systemd unit and host regression. General specification 0.92; Target API unchanged.
+
 - Updated README with verified 0.4.0 layouts and classic/neutral Mermaid; refreshed skills and added stm32-gdbtest-results for artifact and scenario interpretation without rerunning hardware.
 
 - Hardware CI now selects lifecycle/api040: separate PASS/SKIP packages, capture/JSON/JUnit checks, export and HTML; failed doctor prevents the profile hardware run. General specification 0.91.

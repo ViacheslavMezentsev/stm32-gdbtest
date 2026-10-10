@@ -156,3 +156,5 @@ python tests/firmware/api040.py run --enabled-package <enabled.zip> --disabled-p
 Проверка подготовки 10.10.2026: пакеты F411 с Windows исполнены локально на OrangePi
 через st-util 1.9.0 — 4 PASS + 1 ожидаемый SKIP; export/verify/report успешны. Doctor пяти
 CI-профилей прошёл. Это репетиция драйвера и пакетов, не запуск GitHub Actions.
+
+Внешний конечный диспетчер пакетов: [stand_loop](STAND_LOOP.md). Target API не меняется; старые команды run/pack остаются прежними.

@@ -312,3 +312,6 @@ WSL2 → OrangePi/SSH на `d1a9361`: 20 PASS + 5 ожидаемых SKIP, 65 з
 Windows локально/st-util на `c156db5`: 20 PASS + 5 SKIP; 65 записей. Первый проход с длинными путями
 сохранён отдельно (10 PASS + 5 preflight ERROR); повтор выполнен с коротким каталогом.
 [Windows](API040_SCENARIOS.md).
+
+Внешний диспетчер пакетов на F411/OrangePi: конечные циклы, STOP и неожиданный SKIP;
+[stand_loop](STAND_LOOP.md).

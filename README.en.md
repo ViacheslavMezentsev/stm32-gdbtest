@@ -315,7 +315,7 @@ or the counters above. The profile, the SDK, scenario specifics and the procedur
 
 The published package is **0.3.0**. This branch prepares **stm32-gdbtest 0.4.0**:
 `API_VERSION=2`, target schema 2, [API specification](docs/TECHNICAL_SPECIFICATION_API.md) 0.3.16,
-[general specification](docs/TECHNICAL_SPECIFICATION.md) 0.91. These are package/contract versions, not Python versions.
+[general specification](docs/TECHNICAL_SPECIFICATION.md) 0.92. These are package/contract versions, not Python versions.
 `value`, `fields`, `set_value` and `force_return` were removed; matchers, SKIP, records capture and
 external result processing were added. Migration: [API](docs/en/API.md); contents and limits:
 [release scope](docs/en/RELEASE040_SCOPE.md); history: [CHANGELOG](CHANGELOG.en.md).
@@ -331,6 +331,7 @@ ST-LINK GDB Server limitations remain explicit. Next steps: [TODO](TODO.md).
   script and `run_hw.py` for hardware validation on a stand; `tests/firmware/common/tests` — scenarios
   shared by all profiles, including nine API showcase scenarios.
 - `tests/hal-f030/` — standalone HAL F030 regression, CI and hardware acceptance.
+- `tools/stand_loop.py` — [finite autonomous cycles](docs/en/STAND_LOOP.md) from packages and evidence for agents.
 - `tools/linux_stand.py` — installs the Linux stand environment without root.
 - `examples/minimal-consumer/` — a standalone firmware and test example for F411.
 - `docs/ru`, `docs/en` — integration, writing scenarios and mechanism descriptions;

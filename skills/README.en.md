@@ -13,12 +13,13 @@ submodule and link to its documentation.
 | [stm32-gdbtest-scenarios](stm32-gdbtest-scenarios/SKILL.md) | write or rewrite a scenario: requirement and contract, stop location, `check(rows)`, `write(rows)`, `ret`, `refused`, `watch`, `skip`, profile, style, techniques TECH-001…019 |
 | [stm32-gdbtest-run](stm32-gdbtest-run/SKILL.md) | run and read the result: `doctor`, host and hw, CLI, remote server, package, CI, `result.json` and logs, common failures |
 | [stm32-gdbtest-results](stm32-gdbtest-results/SKILL.md) | audit saved evidence without a board: artifact order, scenario source, records, JUnit, integrity, export/HTML and justified conclusions; including a pi agent on OrangePi |
+| [stm32-gdbtest-stand-loop](stm32-gdbtest-stand-loop/SKILL.md) | deployable stand bundle, finite cycles, FAIL/SKIP policy, STOP and review.json handoff to an agent |
 
 ## Using the skills in a project
 
 The skills live in the submodule: `modules/stm32-gdbtest/skills/`.
 
-- **Claude Code** looks for project skills in `.claude/skills/<name>/SKILL.md`. Copy the four
+- **Claude Code** looks for project skills in `.claude/skills/<name>/SKILL.md`. Copy the five
   directories there (a symbolic link works on Linux and macOS) and refresh the copy with the module
   gitlink:
 

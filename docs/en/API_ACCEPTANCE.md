@@ -309,3 +309,6 @@ WSL2 → OrangePi/SSH at `d1a9361`: 20 PASS + 5 expected SKIP, 65 records; serve
 Local Windows/st-util at `c156db5`: 20 PASS + 5 SKIP; 65 records. The first long-path attempt
 is retained separately (10 PASS + 5 preflight ERROR); the repeat used a short directory.
 [Windows](API040_SCENARIOS.md).
+
+External package dispatcher on F411/OrangePi: finite cycles, STOP and unexpected SKIP;
+[stand_loop](STAND_LOOP.md).
