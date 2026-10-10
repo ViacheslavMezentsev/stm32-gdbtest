@@ -36,7 +36,7 @@ else:
 output = local_directory(root / "build/offline", root)
 request_path = output / "request.json"
 result_path = output / "result.json"
-selected = select_contracts(Path(session["profile"]).parent / "Tests/contracts.json",
+selected = select_contracts(Path(session["profile"]).parent / "tests/contracts.json",
                             cases[0]["contracts"], manifest)
 env = os.environ.copy()
 env.update(TMP=str(output), TEMP=str(output), PYTHONDONTWRITEBYTECODE="1",

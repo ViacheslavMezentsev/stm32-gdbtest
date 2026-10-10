@@ -45,4 +45,4 @@ t.reach("main")
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.2.5.
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.14.

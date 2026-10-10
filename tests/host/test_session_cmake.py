@@ -19,6 +19,30 @@ COMPILER = shutil.which("cc") or shutil.which("arm-none-eabi-gcc")
 class CMakeSessionTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("cmake") and shutil.which("ninja") and COMPILER,
                          "CMake/Ninja/C compiler required; exercised in Linux CI")
+    def test_minimal_consumer_resolves_relative_module_for_ctest(self):
+        # A relative path requires both trees to be on the same Windows drive.
+        with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+            root = Path(directory) / "consumer"
+            shutil.copytree(ROOT / "examples/minimal-consumer", root,
+                            ignore=shutil.ignore_patterns("build", "__pycache__"))
+            build = root / "build"
+            result = subprocess.run([
+                "cmake", "-G", "Ninja", "-S", str(root), "-B", str(build),
+                "-DCMAKE_C_COMPILER=" + COMPILER, "-DCMAKE_SYSTEM_NAME=Generic",
+                "-DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY",
+                "-DSTM32_GDBTEST_GDB=" + sys.executable,
+                "-DSTM32_GDBTEST_SOURCE_DIR:PATH=" + Path(os.path.relpath(ROOT, root)).as_posix()
+            ], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            listing = subprocess.run(["ctest", "--test-dir", str(build), "--show-only=json-v1"],
+                                     capture_output=True, text=True, check=True)
+            command = next(test["command"] for test in json.loads(listing.stdout)["tests"]
+                           if test["name"] == "host.consumer_offline")
+            self.assertTrue(Path(command[-1]).is_absolute())
+            self.assertEqual(Path(command[-1]).resolve(), ROOT.resolve())
+
+    @unittest.skipUnless(shutil.which("cmake") and shutil.which("ninja") and COMPILER,
+                         "CMake/Ninja/C compiler required; exercised in Linux CI")
     def test_actual_cmake_old_new_and_conflict(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

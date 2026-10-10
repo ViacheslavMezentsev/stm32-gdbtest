@@ -46,4 +46,4 @@ invalidation steps; link state after a failure is not guaranteed.
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.3.14.

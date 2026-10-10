@@ -303,6 +303,13 @@ If the HAL rerun succeeds, report two runs rather than a single 15/15 PASS.
 
 ## GDB server dialect in the target profile (schema 2)
 
+For `Target USB comms error`, preserve server.log and stlink.log. If OpenOCD subsequently
+reports the impossible `STLINK V0J8S0 / VID:PID 0000:0000`, this is failed access, not a
+verified debugger version. Stop your servers and reconnect USB; after recovery, repeat
+BOOT/GPIO and the original suite in a new directory. Successful scenarios before the
+failure do not establish a successful uninterrupted suite. This failure occurred twice
+on F411 with ST-LINK GDB Server 7.14.0; the cause is not yet established.
+
 Hardware may exit 1 after the last 10/10 because a previous profile failed. Inspect the complete log
 and build/hw/campaign-*.tsv with the doctor/run_hw exit codes. Run 38008347735 failed F103C8 strict
 (DEV_ID mismatch); F429ZI passed 10/10. Check the MCU and probe wiring, keeping strict enabled.

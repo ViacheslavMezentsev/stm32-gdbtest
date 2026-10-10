@@ -55,6 +55,10 @@ GDB-Python и установленный STM32CubeF4 V1.28.3. Пути зада�
 не коммитятся. `ctest --preset offline` выполняет traceability, подготовку
 `prepare.HW_CONSUMER_GPIO` и offline-проверку контрактов без подключения к плате.
 
+Для копии примера с настоящим подмодулем можно передать при configure
+`-DSTM32_GDBTEST_SOURCE_DIR:PATH=vendor/stm32-gdbtest`: путь разрешается от корня
+исходников потребителя, в CTest передаётся абсолютное значение.
+
 Полный набор проверок CI (Windows и Linux, три GCC, три MCU) запускается одной
 командой в Docker-образе — [проверки и CI](testing.md).
 

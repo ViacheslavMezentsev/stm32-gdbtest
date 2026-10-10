@@ -43,8 +43,18 @@ class CheckError(RuntimeError):
 def run(args, *, cwd=ROOT, env=None, expect=0, timeout=600, log=None):
     """Run a command, keep its output in the log file and require the exit code."""
     started = time.monotonic()
-    result = subprocess.run([str(a) for a in args], cwd=cwd, env=env, timeout=timeout,
-                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
+    try:
+        result = subprocess.run([str(a) for a in args], cwd=cwd, env=env, timeout=timeout,
+                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
+    except subprocess.TimeoutExpired as error:
+        output = error.stdout or ""
+        if isinstance(output, bytes):
+            output = output.decode("utf-8", errors="replace")
+        if log:
+            with open(log, "a", encoding="utf-8") as stream:
+                stream.write(f"$ {' '.join(map(str, args))}\n{output}\n[timeout {timeout}s]\n\n")
+        tail = "\n".join(output.splitlines()[-30:])
+        raise CheckError(f"{' '.join(map(str, args))}: timed out after {timeout}s\n{tail}") from error
     if log:
         with open(log, "a", encoding="utf-8") as stream:
             stream.write(f"$ {' '.join(map(str, args))}\n{result.stdout}\n[exit {result.returncode}, "

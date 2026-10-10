@@ -7,50 +7,61 @@ Contract: [API specification](../TECHNICAL_SPECIFICATION_API.md); guide: [API](A
 
 ## 0.4.0 candidate — acceptance open
 
-The release branch raises Python to 0.4.0; `API_VERSION=2` was set when four former
-methods were removed. The target profile moved to schema 2: the GDB server dialect
-lives in the `[openocd]`, `[jlink]` or `[stlink]` section and the reset command is
-resolved once when the run is prepared (API specification 6.6, general 0.79). The
-hardware matrix at `bb74cde` is replaced by the matrix of the schema 2 branch: the
-local CI `docs format host firmware hal` passed 26/26 (docs 5/5, host 393, firmware
-18/18, hal 24/24) and six stands passed the lifecycle and the full suite. A consumer
-with the real submodule is a private project checked after the release; the other
-run layouts belong to 0.3.0 acceptance and are repeated on the final SHA separately.
+Rechecked on 2026-10-10: runtime `b1264c1`, Python 0.4.0, API_VERSION=2,
+target schema 2. Fixed schema 1/OpenOCD compatibility, the reset command source,
+and recovery independence from overrides. Schema/API checks do not establish USB reliability.
 
-Windows 10 AMD64, GCC 13.3.1-1.1, GDB 14.2.90/Python 3.11.4, OpenOCD 0.12.0
-or J-Link GDB Server 8.32. Each stand passed `run_hw.py` 10/10, then
-`run_suite.py --execute --timeout-recovery` ran every scenario and restored the
-CI firmware: final BOOT/GPIO PASS, `image_verified=true`, `teardown=reset_run`.
-Stage counts include preparation and repeats; the one ERROR per stand is the
-expected timeout with host recovery, not a scenario failure.
+Windows 10 AMD64, GCC 13.3.1-1.1, GDB 14.2.90/Python 3.11.4,
+OpenOCD 0.12.0, J-Link 8.32. Six physical boards passed the lifecycle 10/10 each,
+then 280 scenarios and 608 stages: 602 PASS and 6 expected timeout ERROR outcomes
+with recovery. Final BOOT/GPIO: 12/12 PASS. The table counts one completed successful
+suite per board; the additional F411/OpenOCD repeat is excluded from the total.
 
 | MCU / backend | Scenarios | Stages | ELF SHA-256 |
 | --- | ---: | ---: | --- |
-| F030R8 / OpenOCD | 45 | 98 (97 PASS, 1 expected ERROR) | `8909baf64a2b09ace0eb3879e58c16dc53db7a6d52ee41c94fe9d25301d34efa` |
-| F411CE / ST-LINK GDB Server | 47 | 102 (101 PASS, 1 expected ERROR) | `486bc511fe97bfe5f303860784b6d4fead8f25f7ec9182f28c52fb9993416028` |
-| F401CC / OpenOCD | 47 | 102 (101 PASS, 1 expected ERROR) | `2e5e677ed52fa7f914b44f91807ee69769ae60e87a6304800952bb409adff404` |
-| F411CE / OpenOCD | 47 | 102 (101 PASS, 1 expected ERROR) | `b018f21c89406eb889d952a7266532c234a48cab7de158facd4765afac97932d` |
-| F429ZI / OpenOCD | 47 | 102 (101 PASS, 1 expected ERROR) | `fdec05542e41b323c34fe25c2392a7b53113b822b3304f4b26bf5804adb41bc4` |
-| AT32F403A / J-Link | 47 | 102 (101 PASS, 1 expected ERROR) | `4e1e5888178b65b3ec69eb3bcac9ae2089febdf7e563004503574f13d58d7a9a` |
+| STM32F030R8T6 / OpenOCD | 45 | 98 | `8909baf64a2b09ace0eb3879e58c16dc53db7a6d52ee41c94fe9d25301d34efa` |
+| STM32F103C8T6 / OpenOCD | 47 | 102 | `b221cdbc2fbec7dabd2760d0a45356266d501331bd07a59e9479e77ae25fa971` |
+| STM32F401CCU6 / OpenOCD | 47 | 102 | `2e5e677ed52fa7f914b44f91807ee69769ae60e87a6304800952bb409adff404` |
+| STM32F411CEU6 / OpenOCD | 47 | 102 | `b018f21c89406eb889d952a7266532c234a48cab7de158facd4765afac97932d` |
+| STM32F429ZIT6 / OpenOCD | 47 | 102 | `fdec05542e41b323c34fe25c2392a7b53113b822b3304f4b26bf5804adb41bc4` |
+| AT32F403ACGU7 / J-Link | 47 | 102 | `4e1e5888178b65b3ec69eb3bcac9ae2089febdf7e563004503574f13d58d7a9a` |
 
-Total: 280 scenarios and 608 stages (602 PASS, 6 expected ERROR). The stand set is the
-six agreed debuggers: F103C8 / J-Link is replaced by AT32F403A / J-Link, because the
-bench has one J-Link and the AT32 board is easier to test. Scenario counts are unique
-identifiers; stage counts are run lines including preparation and restoration.
+Additional checks:
 
-Schema 2 was verified separately. `HW_CI_RESET` passed on all six stands; on
-F411CE / ST-LINK GDB Server the report recorded `reset_halt = monitor reset`, the
-executed command `monitor reset` and the outcome `halted`, and the checks "reset used
-the configured command" and "reset is journalled" compared it with the effective value
-of the run. The previous behaviour failed there with `Protocol error with Rcmd`: the
-profile passed `monitor reset halt`, which belongs to OpenOCD. The existing
-`HW_CI_PROFILE` on the same stand found the second leftover of the migration, a read of
-the removed `api.reset.command` key; the fix is part of this branch.
+- Clean Docker snapshot `b1264c1`: 26/26, including 18 MCU/GCC 13/14/15 combinations
+  and HAL F030. Windows host and Linux host in a separate volume passed; subsequent
+  consumer-example and CI-output fixes have separate host regressions.
+- F411 and F429 packages built and prepared in Linux ran on Windows/OpenOCD:
+  10/10 each. This checks package relocation, not remote USB or Orange Pi.
+- Independent minimal-consumer with a real `b1264c1` gitlink: configure, build,
+  3/3 offline and hardware GPIO passed. Its relative CTest module-path failure was
+  fixed; repeating the original command passed 3/3. F411 restoration was verified.
+- All result.json references in completed suites were checked, with no unexpected
+  errors inside successful suites. GDB 14 `inferred_stop` warnings remain: these
+  infer a stop reason from state rather than establish a GDB event reason.
 
-Separate hardware checks for SKIP, the `reach` fix and F01–F03 belonged to earlier
-SHAs. The first AT32 `run_hw.py` at `bb74cde` gave 9/10 because CMake cached an
-obsolete SDK path; after correcting the path a fresh build, 10/10 and the full suite
-passed, and `run_hw.py` now aborts after a failed `build` (specification 0.78, TC-163).
+Unaccepted results and limits:
+
+- F411/ST-LINK GDB Server 7.14.0: lifecycle 10/10; two full suites ended with
+  `Target USB comms error` (94 and 68 stages). Server 7.9.0 also passed 10/10,
+  but its full suite stopped at 73 stages. Each contains three ERROR outcomes,
+  including failed restoration. The owner noted possible physical contact disturbance;
+  the cause is unknown and a server-version regression is not established.
+  After reconnection, OpenOCD restored F411: build/BOOT/GPIO 3/3.
+- Initial AT32/J-Link: 2/10, stuck opening the probe; a separate run after USB
+  reconnection passed 10/10 and the full suite. The original failure is retained.
+- A direct bind mount of the Windows working directory hit the 600-second host
+  timeout. A clean Linux volume passed in 26 seconds. These are different storage
+  layouts; no speedup ratio is established. Use the [volume recipe](local-docker-testing.md).
+- GitHub Hardware 38008347735: F429 passed 10/10; F103 strict failed after reading
+  AT32 ID `0x70050347` instead of STM32 ID `0x410`. Fix the remote profile/probe
+  mapping before the next run; strict identity remains enabled.
+
+The full F411/ST-LINK suite remains an open acceptance condition. Latest-SHA CI,
+remote Orange Pi layouts and final release are not yet accepted. The consumer check
+above covers minimal-consumer, not the private mcu_power_board project. Boards are
+currently connected to Windows; historical Linux/SSH results below do not automatically
+apply to this revision. The owner pushes and lands after CI.
 
 ## 0.3.0 package
 

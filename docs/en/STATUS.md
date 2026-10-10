@@ -2,14 +2,15 @@
 
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
-**Now (2026-10-09).** The release branch prepares candidate v0.4.0: Python 0.4.0,
-API_VERSION=2, API specification 0.3.12, general specification 0.78. Main before this
-branch was `f57fe72`; the [release boundary](RELEASE040_SCOPE.md) is agreed.
-Six boards passed the full local scenario suite and recovery at `bb74cde`; other
-run layouts, final-SHA CI and a consumer with a real submodule remain unverified.
-The release is not published. Published v0.3.0 was accepted on five boards in six
-run layouts: [results](API_ACCEPTANCE.md), [metrics](HARDWARE_METRICS.md),
-[release notes](../releases/v0.3.0.md). Open items — [TODO](../../TODO.md).
+**Now (2026-10-10).** `codex/release-040` prepares v0.4.0: Python 0.4.0,
+API_VERSION=2, target schema 2, API specification 0.3.14, general specification 0.82.
+Runtime `b1264c1` passed Docker 26/26 and full suites on six Windows-attached boards
+using OpenOCD/J-Link: 280 scenarios, 608 stages, restoration 12/12. Linux-built
+F411/F429 packages passed 10/10 each on Windows; minimal-consumer with a real
+submodule passed offline and hardware checks on F411. F411/ST-LINK GDB Server:
+short cycles passed, full suites hit USB ERROR on 7.14.0 and 7.9.0; cause unknown.
+Latest-SHA CI and remote layouts remain unaccepted. [Matrix and limits](API_ACCEPTANCE.md),
+[release boundary](RELEASE040_SCOPE.md). The release is unpublished; current work is in [TODO](../../TODO.md).
 
 Historical stages follow; [v0.2.0-rc.1 preparation](RC020_READINESS.md) is kept for reference.
 

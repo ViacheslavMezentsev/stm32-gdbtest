@@ -223,7 +223,8 @@ def main():
 
     def step_verify_only_ff():
         report, path = scenario("HW_CI_GPIO", stand=stand_verify, image_policy=policy, expect=2)
-        require(report.get("flashed") is False, "verify-only wrote Flash")
+        require(report.get("flashed") is False,
+                "verify-only did not confirm flashed=false; inspect result.json for the original error")
         require(report.get("image_verification", {}).get("bytes_match") is False, "A5 tail not detected")
         return report, path
 

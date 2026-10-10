@@ -1,5 +1,6 @@
 """Offline attempts must preserve earlier CI and hardware evidence (ТЗ 8.16)."""
 import json
+import subprocess
 from pathlib import Path
 import tempfile
 import unittest
@@ -9,6 +10,19 @@ from ci import run_checks
 
 
 class CiArtifactTests(unittest.TestCase):
+    def test_timeout_keeps_partial_output_and_previous_log(self):
+        with tempfile.TemporaryDirectory() as directory:
+            log = Path(directory) / "command.log"
+            log.write_text("earlier evidence\n", encoding="utf-8")
+            error = subprocess.TimeoutExpired(["check"], 3, output=b"last started test\npartial\xff")
+            with patch.object(run_checks.subprocess, "run", side_effect=error):
+                with self.assertRaisesRegex(run_checks.CheckError, "timed out after 3s"):
+                    run_checks.run(["check"], timeout=3, log=log)
+            saved = log.read_text(encoding="utf-8")
+            self.assertTrue(saved.startswith("earlier evidence\n"))
+            self.assertIn("last started test", saved)
+            self.assertIn("[timeout 3s]", saved)
+
     def test_each_invocation_keeps_its_own_summary(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

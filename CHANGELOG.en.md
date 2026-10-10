@@ -6,6 +6,10 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Local CI command timeouts preserve partial output; a verify-only failure without flashing evidence
+  is no longer described as a proven Flash write.
+- Fixed a relative submodule path in the minimal consumer's offline check; the contract
+  directory now matches `tests` on case-sensitive filesystems.
 - Fixed reset schema 1/2 migration: legacy `monitor reset init` works with OpenOCD again;
   removed the stale api.reset.command fallback, corrected origin and kept recovery independent of overrides.
 - CI and run_hw artifacts use separate attempt directories and preserve previous FAIL/ERROR evidence.

@@ -55,6 +55,10 @@ installed STM32CubeF4 V1.28.3. Paths come from `ARM_TOOLCHAIN_ROOT` and
 committed. `ctest --preset offline` runs traceability, the `prepare.HW_CONSUMER_GPIO`
 preparation and the offline contract check without connecting to a board.
 
+For a copy of the example with a real submodule, pass
+`-DSTM32_GDBTEST_SOURCE_DIR:PATH=vendor/stm32-gdbtest` during configure: the path is
+resolved from the consumer source root, and CTest receives an absolute value.
+
 The full CI check set (Windows and Linux, three GCC versions, three MCUs) runs with
 one command in the Docker image — [checks and CI](testing.md).
 

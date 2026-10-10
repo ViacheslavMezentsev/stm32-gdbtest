@@ -17,7 +17,10 @@ stand; Linux containers do not replace native Windows regression.
 | Complete offline acceptance | `python3 ci/run_checks.py` | docs/format/host, all GCC × CMSIS profiles, HAL; L1–L5 |
 | L6 hardware acceptance | run_hw.py and run_suite.py on the stand | Selected MCU/backend/firmware only |
 
-Bind mounts from [testing](testing.md) are suitable for short checks. For a full Windows
+Bind mounts from [testing](testing.md) are suitable for short checks.
+Run the host suite in a volume too: on 2026-10-10 the Windows working-directory bind
+mount reached 600 seconds, while a separate clean snapshot in a volume passed in 26 seconds.
+The difference has not been isolated to a single factor; do not raise the timeout instead of moving files. For a full Windows
 matrix, place **both source and build trees in a Docker volume**. Keeping sources on
 Windows can retain the I/O bottleneck. This approach comes from
 [stm32-cmake-yml practice](https://github.com/ViacheslavMezentsev/stm32-cmake-yml/blob/main/docs/en/local-docker-testing.md).

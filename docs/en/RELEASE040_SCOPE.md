@@ -19,7 +19,8 @@ the release branch raises the Python version to 0.4.0. Final acceptance remains.
 | 0.3.0 field feedback F01–F03 | Include; `codex/api030-feedback` has landed | F01 bounded unsized character-array read; F02 watchpoint frame interpretation; F03 initial SP as SRAM boundary. Host/docs/offline passed at `44c795d`; hardware results predate integration and need a release-SHA repeat |
 | API cleanup | **Remove** `value`, `fields`, `set_value`, `force_return` | API spec 6.7, TODO and reference have promised removal in 0.4.0; provide explicit migration for this breaking change |
 
-`API_VERSION` is already 2 because public methods were removed. TOML/JSON schema versions did not change.
+`API_VERSION` is already 2 because public methods were removed. The release branch raises
+the target.toml schema to 2 for backend dialects; other TOML/JSON schemas remain unchanged.
 Keep `@case` as primary and `@test` as an alias: neither is deprecated.
 
 ## 2. Scenario and documentation cleanup
@@ -56,6 +57,10 @@ migration table; these are examples of old code, not executable scenarios.
 | RTOS awareness and external equipment | Separate research and integration |
 
 ## 4. Technical debt and release gates
+
+The 2026-10-10 recheck updates acceptance: [current matrix](API_ACCEPTANCE.md).
+Docker 26/26 and six OpenOCD/J-Link boards passed; full F411/ST-LINK suites remain
+open due to USB ERROR. The historical table below does not override these results.
 
 - Use `skip()` in consumer scenarios to learn where it is needed; distinguish inapplicability from malfunction. Direct GDB is unrestricted and SKIP does not roll back actions. This package has not rechecked remote stands or other GDB versions.
 - F01–F03 are integrated: TECH-013 explains why a stop frame need not identify the writer, and TECH-017
