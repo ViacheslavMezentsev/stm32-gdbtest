@@ -1,5 +1,5 @@
 # RM0360/CubeF0 CMSIS profile; validated on Nucleo via J-Link STLink/SWD.
-schema = 1
+schema = 2
 name = "f030r8"
 mcu = "STM32F030R8T6"
 openocd_target = "target/stm32f0x.cfg"
@@ -9,6 +9,9 @@ flash_size_address = 0x1FFFF7CC
 breakpoint_limit = 4
 fault_handlers = ["HardFault_Handler"]
 core_registers = ["pc", "lr", "sp", "xPSR"]
+
+# Reset dialect of OpenOCD, as read from this profile before schema 2.
+[openocd]
 reset_halt = "monitor reset halt"
 reset_run = "monitor reset run"
 

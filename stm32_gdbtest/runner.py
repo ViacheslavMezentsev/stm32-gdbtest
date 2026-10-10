@@ -286,8 +286,10 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                         arch=report["arch"], reset_halt=backend["reset_halt"], finish=backend["finish"],
                         setup=backend.get("setup", []),
                         # ТЗ API 4.14.2: the stand as the scenario sees it, without serials or addresses.
+                        # `reset_command` is the command the run resolved for `reset()` (ТЗ API 6.6).
                         stand_info=dict(backend=stand["backend"], server="remote" if remote else "local",
-                                        speed_khz=stand.get("speed_khz"), flash=stand["flash"]),
+                                        speed_khz=stand.get("speed_khz"), flash=stand["flash"],
+                                        reset_command=backend["reset_halt"]),
                         # ТЗ API 4.14.8: the build as the scenario sees it; None without a build manifest.
                         build_info=build_summary(report["build_manifest"]) if report.get("build_manifest") else None)
         run_file = out / "run.json"

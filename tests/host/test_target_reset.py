@@ -86,7 +86,7 @@ class ResetTests(unittest.TestCase):
             events=types.SimpleNamespace(stop=Mock()),
         )
 
-    def target(self, command=None, profile=None):
+    def target(self, command=None, profile=None, reset=None):
         import builtins
         real_import = builtins.__import__
 
@@ -112,7 +112,8 @@ class ResetTests(unittest.TestCase):
         if profile:
             settings.update(profile)
         report = {"checks": [], "resets": []}
-        return module.Target(report, settings, configuration), report
+        context = {"reset_halt": reset} if reset is not None else None
+        return module.Target(report, settings, configuration, context=context), report
 
     def test_reset_uses_the_configured_command_and_invalidates(self):
         target, report = self.target(command="monitor reset halt")
@@ -128,15 +129,25 @@ class ResetTests(unittest.TestCase):
         self.assertEqual(result["registers"]["pc"], 0x8000100)
         self.assertEqual(report["resets"][-1]["command"], "monitor reset halt")
 
-    def test_reset_prefers_a_session_override(self):
-        target, _report = self.target(command="monitor reset halt")
-        with patch.dict(os.environ, {"STM32_GDBTEST_RESET_COMMAND": "monitor reset"}):
+    def test_reset_uses_the_command_the_run_resolved(self):
+        # ТЗ API 6.6: the run resolves the command once; the scenario must not read api.toml or the
+        # profile for it. This is what makes one profile serve several backends.
+        target, _report = self.target(command="monitor reset halt", reset="monitor reset")
+        result = target.reset()
+        self.assertEqual(result["command"], "monitor reset")
+
+    def test_reset_prefers_the_run_command_over_the_environment(self):
+        # The override is applied when the run is prepared, so the value recorded in the session wins.
+        target, _report = self.target(command="monitor reset halt", reset="monitor reset")
+        with patch.dict(os.environ, {"STM32_GDBTEST_RESET_COMMAND": "monitor reset init"}):
             result = target.reset()
         self.assertEqual(result["command"], "monitor reset")
 
-    def test_reset_falls_back_to_the_backend_default(self):
-        target, _report = self.target(profile={"reset_halt": "monitor reset halt"})
-        result = target.reset()
+    def test_reset_falls_back_to_the_configured_command_without_a_run(self):
+        # A Target built without a run still works: api.toml stays the fallback.
+        target, _report = self.target(command="monitor reset halt")
+        with patch.dict(os.environ, {"STM32_GDBTEST_RESET_COMMAND": "monitor reset init"}):
+            result = target.reset()
         self.assertEqual(result["command"], "monitor reset halt")
 
     def test_reset_uses_the_generic_default_without_a_backend_value(self):

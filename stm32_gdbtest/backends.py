@@ -71,6 +71,9 @@ def load_stand(path):
 
 
 def server_spec(stand, port, profile, out):
+    # ТЗ 6.4.2/6.5.3: the reset commands come from the dialect of the backend, overridden by the
+    # profile section of that backend (schema 2) or by the profile keys (schema 1).
+    reset_halt, reset_run = probes.dialect(profile, stand["backend"])
     if stand["backend"] == "jlink":
         return dict(
             command=[stand["executable"], "-device", probes.jlink_device(profile),
@@ -82,14 +85,14 @@ def server_spec(stand, port, profile, out):
                      "-log", str(out / "jlink.log")],
             ready="Waiting for GDB connection",
             setup=["monitor flash breakpoints = 0"],
-            reset_halt="monitor reset",
-            finish=["monitor reset", "monitor go", "disconnect"],
+            reset_halt=reset_halt,
+            finish=[reset_halt, "monitor go", "disconnect"],
         )
     if stand["backend"] == "openocd":
         return dict(command=openocd.server_command(stand, port, profile),
                     ready=f"Listening on port {port} for gdb connections",
-                    reset_halt=profile["reset_halt"],
-                    finish=[profile["reset_run"], "disconnect"])
+                    reset_halt=reset_halt,
+                    finish=[*reset_run, "disconnect"])
     if stand["backend"] != "stlink":
         raise ValueError("Unsupported backend")
     return dict(
@@ -98,6 +101,6 @@ def server_spec(stand, port, profile, out):
                  "-cp", stand["programmer_dir"], "--temp-path", str(out),
                  "-f", str(out / "stlink.log"), "-l", "31", "-s"],
         ready="Waiting for debugger connection",
-        reset_halt="monitor reset",
-        finish=["monitor reset", "detach"],
+        reset_halt=reset_halt,
+        finish=[reset_halt, "detach"],
     )

@@ -1,7 +1,6 @@
 """Target API. Imported only inside GDB's main Python thread."""
 
 import hashlib
-import os
 import re
 
 import gdb
@@ -231,6 +230,9 @@ class Target:
         context = dict(context or {})
         self.profile = Profile(profile, configuration, case=context.get("case"), stand=context.get("stand"),
                                gdb=self._gdb_facts(), build=context.get("build"))
+        # ТЗ API 6.6: the run resolves the reset command once (session, backend dialect, profile section);
+        # the scenario does not read `api.toml` or the profile for it.
+        self._reset = context.get("reset_halt")
         self._config = configuration.config if configuration else freeze(dict(
             target=profile, api=dict(schema=1, records=dict(DEFAULTS)), image=None))
         limits = self._config['api']['records']
@@ -1406,10 +1408,14 @@ class Target:
         return dict(entry)
 
     def _reset_command(self):
-        """Reset command in the documented precedence: session, `api.toml`, backend default."""
-        override = os.environ.get("STM32_GDBTEST_RESET_COMMAND")
-        if override:
-            return override
+        """Reset command of the run: the value the backend resolved, else the configured one.
+
+        ТЗ API 6.6: the precedence (session override, profile section of the backend, built-in dialect of
+        the backend) is applied once when the run is prepared, so the scenario and the boot sequence use the
+        same command. `api.toml` and the profile keys stay a fallback for a Target built without a run.
+        """
+        if self._reset:
+            return self._reset
         try:
             configured = self._config["api"]["reset"]["command"]
         except (KeyError, TypeError):
@@ -1419,7 +1425,7 @@ class Target:
                 self._fail("reset", "validation", "none", "invalid_command",
                            "reset.command must be a non-empty string", command=configured)
             return configured
-        return getattr(self.profile, "get", lambda *_: None)("reset_halt") or RESET_COMMAND
+        return RESET_COMMAND
 
     def _invalidate(self, steps):
         """Flush the register cache and the cached frames, recording both outcomes."""

@@ -5,6 +5,7 @@ table for the STM32 parts the module was checked on.
 """
 
 from pathlib import PurePosixPath
+import os
 import re
 
 
@@ -15,6 +16,13 @@ OPENOCD_INTERFACE = "interface/stlink.cfg"
 # OpenOCD reset commands a profile may name; `reset init` runs the target's init procedure (clocks, Flash setup).
 OPENOCD_RESET_HALT = ("monitor reset halt", "monitor reset init")
 OPENOCD_RESET_RUN = ("monitor reset run",)
+# Reset dialects of the accepted GDB servers. `monitor reset` is the one command the ST-LINK GDB Server
+# documents for a reset (manual DM00613038, 2.9) and leaves the core halted; `monitor reset halt` is
+# OpenOCD syntax and the ST server answers `Protocol error with Rcmd` to it.
+BACKEND_RESET_HALT = {"openocd": OPENOCD_RESET_HALT, "stlink": ("monitor reset",), "jlink": ("monitor reset",)}
+BACKEND_RESET_RUN = {"openocd": OPENOCD_RESET_RUN, "stlink": (), "jlink": ()}
+# A schema 2 profile keeps the commands of each server in a section named after the backend.
+BACKEND_SECTIONS = ("openocd", "jlink", "stlink")
 OPENOCD_TRANSPORTS = ("swd", "jtag", "hla_swd", "hla_jtag", "dapdirect_swd", "dapdirect_jtag", "sdi")
 _SCRIPT = re.compile(r"interface/[A-Za-z0-9_.-]+\.cfg")
 _DEVICE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]*")
@@ -57,3 +65,42 @@ def validate_profile_keys(data):
     device = data.get("jlink_device")
     if "jlink_device" in data and not (isinstance(device, str) and _DEVICE.fullmatch(device)):
         raise ValueError("Invalid J-Link device name")
+
+
+def validate_profile_sections(data):
+    """Backend sections of a schema 2 profile: a section per server, keys named after the actions.
+
+    A section is optional; an absent section or an absent key means the built-in dialect of that backend.
+    `reset_run` belongs to OpenOCD only, because the ST and J-Link dialects finish the session with their
+    own commands.
+    """
+    sections = {name: data[name] for name in BACKEND_SECTIONS if name in data}
+    for name, section in sections.items():
+        if not isinstance(section, dict):
+            raise ValueError(f"Section {name} must be a table")
+        extra = set(section) - {"reset_halt", "reset_run"}
+        if extra:
+            raise ValueError(f"Unknown key in section {name}: {sorted(extra)[0]}")
+        if "reset_run" in section and name != "openocd":
+            raise ValueError(f"Section {name} does not use reset_run")
+        if "reset_halt" in section and section["reset_halt"] not in BACKEND_RESET_HALT[name]:
+            raise ValueError(f"Invalid {name} reset_halt: {section['reset_halt']!r}")
+        if "reset_run" in section and section["reset_run"] not in BACKEND_RESET_RUN[name]:
+            raise ValueError(f"Invalid {name} reset_run: {section['reset_run']!r}")
+
+
+def dialect(profile, backend):
+    """Reset commands of one backend: the session override wins, then the profile section, then the dialect.
+
+    ТЗ API 6.6: the run resolves the command once, so `Target.reset()` and the boot sequence use the same
+    value; the environment variable is the session override of the documented precedence.
+    """
+    if backend not in BACKEND_RESET_HALT:
+        raise ValueError("Unsupported backend")
+    override = os.environ.get("STM32_GDBTEST_RESET_COMMAND")
+    section = profile.get(backend)
+    if section is not None and not isinstance(section, dict):
+        raise ValueError(f"Section {backend} must be a table")
+    section = section or {}
+    halt = override or section.get("reset_halt") or BACKEND_RESET_HALT[backend][0]
+    return halt, list(BACKEND_RESET_RUN[backend])

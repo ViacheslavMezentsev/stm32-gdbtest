@@ -98,7 +98,8 @@ def main():
         case = {key: session["test"][key] for key in ("id", "function", "timeout_s", "labels", "contracts")
                 if key in session["test"]}
         target = Target(report, profile, configuration,
-                        context=dict(case=case, stand=session.get("stand_info"), build=session.get("build_info")))
+                        context=dict(case=case, stand=session.get("stand_info"), build=session.get("build_info"),
+                                     reset_halt=session["reset_halt"]))
         target.boot(session["reset_halt"], guards=adapter.fault_guards(profile))
         spec = importlib.util.spec_from_file_location("board_test", session["test"]["path"])
         module = importlib.util.module_from_spec(spec)

@@ -4,7 +4,8 @@ from pathlib import Path
 import re
 import tomllib
 
-from stm32_gdbtest.probes import OPENOCD_RESET_HALT, OPENOCD_RESET_RUN, validate_profile_keys
+from stm32_gdbtest.probes import (BACKEND_SECTIONS, OPENOCD_RESET_HALT, OPENOCD_RESET_RUN,
+                                  validate_profile_keys, validate_profile_sections)
 
 
 def load_profile(path):
@@ -13,13 +14,25 @@ def load_profile(path):
 
 
 def validate_profile(data):
-    """Validate a parsed snapshot without reading its original source again."""
+    """Validate a parsed snapshot without reading its original source again.
+
+    Schema 1 keeps the OpenOCD reset commands at the top level; schema 2 moves them into a section per
+    GDB server (`[openocd]`, `[jlink]`, `[stlink]`), so one profile serves every backend of the stand.
+    """
     required = {"schema", "name", "mcu", "openocd_target", "flash_start", "flash_size",
-                "breakpoint_limit", "fault_handlers", "core_registers", "reset_halt",
-                "reset_run", "identity", "diagnostic_registers"}
+                "breakpoint_limit", "fault_handlers", "core_registers", "identity",
+                "diagnostic_registers"}
     optional = {"flash_size_address", "jlink_device"}
-    if (not required <= set(data) or set(data) - required - optional or type(data["schema"]) is not int
-            or data["schema"] != 1):
+    schema = data.get("schema")
+    if type(schema) is not int or schema not in (1, 2):
+        raise ValueError("Invalid target profile schema or keys")
+    if schema == 1:
+        required = required | {"reset_halt", "reset_run"}
+    else:
+        # The reset commands belong to the backend sections; the old top-level keys are refused so that a
+        # profile cannot name a command for a server it does not speak.
+        optional = optional | set(BACKEND_SECTIONS)
+    if not required <= set(data) or set(data) - required - optional:
         raise ValueError("Invalid target profile schema or keys")
     for key in ("name", "mcu"):
         if not isinstance(data[key], str) or not re.fullmatch(r"[A-Za-z0-9]+", data[key]):
@@ -38,7 +51,8 @@ def validate_profile(data):
             raise ValueError(f"Invalid profile {key}")
     if data["breakpoint_limit"] <= len(data["fault_handlers"]):
         raise ValueError("No breakpoint left for the test")
-    if data["reset_halt"] not in OPENOCD_RESET_HALT or data["reset_run"] not in OPENOCD_RESET_RUN:
+    if schema == 1 and (data["reset_halt"] not in OPENOCD_RESET_HALT
+                        or data["reset_run"] not in OPENOCD_RESET_RUN):
         raise ValueError("Only OpenOCD reset halt/init/run is supported by schema 1")
     identity = data["identity"]
     if not isinstance(identity, dict) or set(identity) != {"address", "mask", "value"}:
@@ -57,4 +71,6 @@ def validate_profile(data):
         if type(address) is not int or not 0 < address <= 0xFFFFFFFE or address % 2:
             raise ValueError("Invalid Flash size register address")
     validate_profile_keys(data)
+    if schema == 2:
+        validate_profile_sections(data)
     return data

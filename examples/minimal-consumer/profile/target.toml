@@ -1,4 +1,4 @@
-schema = 1
+schema = 2
 name = "consumerf411"
 mcu = "STM32F411CEU6"
 openocd_target = "target/stm32f4x.cfg"
@@ -8,6 +8,9 @@ flash_size_address = 0x1FFF7A22
 breakpoint_limit = 6
 fault_handlers = ["HardFault_Handler", "MemManage_Handler", "BusFault_Handler", "UsageFault_Handler"]
 core_registers = ["pc", "lr", "sp", "xPSR"]
+
+# Reset dialect of OpenOCD, as read from this profile before schema 2.
+[openocd]
 reset_halt = "monitor reset halt"
 reset_run = "monitor reset run"
 

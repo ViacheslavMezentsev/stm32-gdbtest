@@ -182,7 +182,7 @@ class HostTests(unittest.TestCase):
     def test_profile_rejects_typo_and_missing_settings(self):
         source = (ROOT / "tests/fixtures/f411ce/target.toml").read_text()
         path = self.directory / "target.toml"
-        for old, new in (("flash_size", "flash_szie"), ('schema = 1', 'schema = 2'),
+        for old, new in (("flash_size", "flash_szie"), ('schema = 2', 'schema = 9'),
                          ('breakpoint_limit = 6', 'breakpoint_limit = 4'),
                          ('flash_size = 524288', 'flash_size = -1'),
                          ('flash_size_address = 0x1FFF7A22', 'flash_size_address = 3')):
