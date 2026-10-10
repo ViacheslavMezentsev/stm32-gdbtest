@@ -53,6 +53,11 @@ DDTT (debugger-driven testing on target, тестирование через о�
 ## Как это работает
 
 ```mermaid
+---
+config:
+  look: classic
+  theme: neutral
+---
 flowchart LR
     I["ELF + профиль MCU + Python-тесты"] --> H["Host runner на ПК"]
     H --> A["GDB-Python: сценарий и Target API"]
@@ -145,20 +150,22 @@ def clock(t):
 Сценарий и отчёт одинаковы во всех схемах; меняется только файл локального стенда
 (`*.local.toml`, `remote.toml`), который остаётся у пользователя.
 
-| Схема | Runner и GDB | GDB-сервер и отладчик | Состояние |
+| Схема | Runner и GDB | GDB-сервер и отладчик | Проверка новых сценариев 0.4.0 |
 | --- | --- | --- | --- |
-| Локально на Windows | Windows, GDB 14.2/15.2/16.3 | тот же компьютер | проверено: 5 плат, полный набор |
-| Локально на Linux-стенде | Orange Pi 5, Ubuntu 20.04 aarch64 | тот же компьютер | проверено: 5 плат, полный набор |
-| Удалённый сервер с Windows | Windows | Orange Pi 5 по SSH (`[remote]`) | проверено: 5 плат, полный набор; проект потребителя |
-| Удалённый сервер из WSL2 | WSL2, Ubuntu 20.04 x86_64 | Orange Pi 5 по SSH | проверено: 5 плат, полный набор |
-| Пакет подготовленного запуска | сборка на Windows, в WSL2 или в GitHub Actions | Orange Pi 5, `run --package` | проверено: 5 плат, жизненный цикл |
-| Аппаратный CI | prepare на GitHub, hardware на self-hosted раннере | Orange Pi 5 (служба раннера) | проверено: 5 плат, жизненный цикл |
-| Локально на Linux x86_64 | Linux-ПК | тот же компьютер | реализовано, на оборудовании не проверялось |
-| WSL2 с отладчиком через usbipd-win | WSL2 | тот же компьютер | реализовано как Linux, не проверялось |
+| Локально на Windows | Windows | тот же компьютер, st-util 1.9.0 | 5 плат: 20 PASS + 5 SKIP |
+| Локально на Linux-стенде | Orange Pi 5, Ubuntu 20.04 aarch64 | тот же компьютер, st-util 1.9.0 | 5 плат: 20 PASS + 5 SKIP, запуск через GitHub |
+| Удалённый сервер с Windows | Windows | Orange Pi 5 по SSH, st-util 1.9.0 | 5 плат: 20 PASS + 5 SKIP |
+| Удалённый сервер из WSL2 | WSL2, Ubuntu 20.04 x86_64 | Orange Pi 5 по SSH, st-util 1.9.0 | 5 плат: 20 PASS + 5 SKIP |
+| Пакет подготовленного запуска | пакет собран отдельно, runner на месте запуска | Windows или Orange Pi 5 | проверен в локальных и SSH-схемах выше |
+| Аппаратный CI | prepare на GitHub, runner/GDB на Orange Pi 5 | тот же Orange Pi, без SSH между runner и сервером | Hardware №13: 20 PASS + 5 SKIP |
+| Локально на Linux x86_64 | Linux-ПК | тот же компьютер | на оборудовании не проверялось |
+| WSL2 с USB-пробросом | WSL2 | USB через usbipd-win | на оборудовании не проверялось |
 
-Полный набор — все сценарии CI-прошивки (42 у F030R8, по 44 у остальных), жизненный цикл — 10 шагов
-`run_hw.py`: сборка, подготовка, запуск, строгая identity, образы, тайм-аут и восстановление.
-Кампании пакета 0.3.0 от 05–06.10.2026 — в [принятых результатах](docs/ru/API_ACCEPTANCE.md).
+Строки «локально на Linux» и «аппаратный CI» описывают один прогон, а не две кампании.
+На каждой плате выполнены четыре новых сценария и отдельный вариант ожидаемого SKIP.
+Это выборочный набор, не повтор всей приёмки API. Версии, SHA, исходные ошибки и ограничения —
+[протоколы 0.4.0](docs/ru/API040_SCENARIOS.md). Полные кампании 0.3.0 (218 сочетаний профиль/сценарий)
+и 0.4.0 SSH (233), а также десятиэтапный lifecycle сохранены в [матрице приёмки](docs/ru/API_ACCEPTANCE.md).
 
 ### Локальный запуск: Windows или Linux
 
@@ -166,6 +173,11 @@ Runner, GDB-Python и сервер работают на одном компью
 и Orange Pi; локальный Linux x86_64 пока не проверен на оборудовании.
 
 ```mermaid
+---
+config:
+  look: classic
+  theme: neutral
+---
 flowchart LR
     subgraph PC["Компьютер: Windows / Linux"]
         R["Runner + GDB-Python"] <--> S["GDB-сервер"]
@@ -181,6 +193,11 @@ Runner и сценарий работают на рабочем ПК; SSH зап
 и передаёт соединение GDB через туннель. Отладчик физически подключён к стенду.
 
 ```mermaid
+---
+config:
+  look: classic
+  theme: neutral
+---
 flowchart LR
     R["Windows / WSL2: runner + GDB-Python"] <-->|SSH tunnel| S["Linux-стенд: GDB-сервер"]
     R --> O["Отчёт"]
@@ -194,6 +211,11 @@ flowchart LR
 `run --package` запускает там и GDB-Python, и сервер; отчёты сохраняются там же.
 
 ```mermaid
+---
+config:
+  look: classic
+  theme: neutral
+---
 flowchart LR
     B["Windows / GitHub: сборка + pack"] --> P["Пакет"]
     P --> R["Linux-стенд: run --package + GDB-Python"]
@@ -209,6 +231,11 @@ GitHub-hosted job собирает и проверяет пакет без пл�
 на Orange Pi скачивает пакет, запускает аппаратную проверку и загружает отчёты.
 
 ```mermaid
+---
+config:
+  look: classic
+  theme: neutral
+---
 flowchart LR
     G["GitHub: build + prepare + pack"] --> A["Артефакт пакета"]
     A --> R["Orange Pi: self-hosted runner + GDB-Python"]
@@ -224,6 +251,11 @@ flowchart LR
 в Linux через usbipd-win. Это отдельный, пока не проверенный на платах вариант.
 
 ```mermaid
+---
+config:
+  look: classic
+  theme: neutral
+---
 flowchart LR
     W["WSL2: runner + GDB-Python + сервер"] <-->|usbipd-win| D["Отладчик: USB Windows"]
     W --> O["Отчёт"]
@@ -233,10 +265,13 @@ flowchart LR
 Удалённый режим работает только по ключам SSH; блокировка отладчика действует на
 хосте стенда, связь контролируется сигналом присутствия. ST-LINK GDB Server на
 Linux aarch64 недоступен (ST не выпускает его для arm64), поэтому на Orange Pi
-используются OpenOCD и J-Link. Подробности: [Linux-стенд](docs/ru/LINUX_STAND.md),
+используются OpenOCD, J-Link и st-util. Подробности: [Linux-стенд](docs/ru/LINUX_STAND.md),
 [GDB-серверы](docs/ru/BACKENDS.md).
 
-**Как читать счётчики.** `Hardware: full campaign 0.3.0`, `Boards tested` и `HW cases (recorded)` описывают полную аппаратную кампанию пакета 0.3.0 на одном коде: пять моделей плат и 218 уникальных сочетаний «профиль + сценарий» (42 у F030R8, по 44 у остальных), каждое прошло на трёх версиях GDB под Windows и в схемах через Orange Pi 5. Повторы и сборки не увеличивают это число; `HW verified (latest)` — дата кампании. Бейджи статические: они не обновляются от запуска CI и не являются процентом покрытия. Состав, границы и прежние срезы — в [описании метрик](docs/ru/HARDWARE_METRICS.md).
+**Как читать счётчики.** Бейдж кандидата описывает сохранённый полный SSH-прогон 0.4.0:
+пять STM32, 233 сочетания «профиль + сценарий», дата 10.10.2026. Он не суммирует новые выборочные
+прогоны и не подтверждает финальный SHA или все backend. Бейджи статические, не процент покрытия.
+Границы и прежние срезы — в [описании метрик](docs/ru/HARDWARE_METRICS.md).
 
 ## Профили MCU
 
@@ -252,14 +287,14 @@ F411CE, F429ZI — Cortex-M0, M3, M4; AT32F403A — совместимый Corte
 
 | MCU | Отладчик / GDB-сервер | Где проверено |
 | --- | --- | --- |
-| STM32F030R8 | ST-Link (NUCLEO) / OpenOCD; J-Link GDB Server | CI-прошивка (42 сценария), HAL-фикстура, стендовый проект |
-| STM32F103C8 | J-Link / J-Link GDB Server | CI-прошивка (44 сценария), стендовый проект |
+| STM32F030R8 | ST-Link (NUCLEO) / OpenOCD, st-util; J-Link GDB Server | CI-прошивка, HAL-фикстура, стендовый проект |
+| STM32F103C8 | J-Link / J-Link GDB Server; ST-Link / st-util | CI-прошивка, стендовый проект |
 | STM32F103CB | J-Link CE / J-Link GDB Server | демонстрационный проект [stm32-hwtest-bluepill](https://github.com/ViacheslavMezentsev/stm32-hwtest-bluepill) |
-| STM32F401CC | ST-Link / OpenOCD; ST-LINK GDB Server | CI-прошивка (44 сценария), стендовый проект |
-| STM32F411CE | ST-Link / OpenOCD; ST-LINK GDB Server | CI-прошивка (44 сценария), пример, стендовый проект |
-| STM32F429ZI | ST-Link / OpenOCD; ST-LINK GDB Server | CI-прошивка (44 сценария), стендовый проект |
+| STM32F401CC | ST-Link / OpenOCD; ST-LINK GDB Server; st-util | CI-прошивка, стендовый проект |
+| STM32F411CE | ST-Link / OpenOCD; ST-LINK GDB Server; st-util | CI-прошивка, пример, стендовый проект |
+| STM32F429ZI | ST-Link / OpenOCD; ST-LINK GDB Server; st-util | CI-прошивка, стендовый проект |
 | STM32G474CE | ST-Link / OpenOCD на Orange Pi 5 | проект потребителя (Arduino Core STM32) |
-| AT32F403ACGU7 (Artery) | J-Link / J-Link GDB Server | CI-прошивка (44 сценария), после 0.3.0 |
+| AT32F403ACGU7 (Artery) | J-Link / J-Link GDB Server; ST-Link / st-util | CI-прошивка, после 0.3.0 |
 
 Для OpenOCD, ST-LINK GDB Server и st-util достаточно профиля. J-Link GDB Server требует
 имени устройства: оно задаётся в профиле (`jlink_device`), а для STM32F103C8T6,
@@ -275,17 +310,15 @@ AT32F403ACGU7 на WeAct AT32F4 Core Board через J-Link; он не вход
 
 ## Состояние
 
-Опубликованный пакет **0.3.0**: версия модуля `0.3.0`, `API_VERSION = 1`, [ТЗ API](docs/TECHNICAL_SPECIFICATION_API.md)
-0.3.7, [общее ТЗ](docs/TECHNICAL_SPECIFICATION.md) 0.69. Пакет принят на пяти платах по шести схемам запуска
-([принятые результаты](docs/ru/API_ACCEPTANCE.md)); тег `v0.3.0` ставит владелец по
-[описанию](docs/releases/v0.3.0.md). Опубликованные теги — `v0.1.0-rc.1` и `v0.1.0-rc.2`
-([приёмка rc.2](docs/ru/RC2_READINESS.md)). В кандидате 0.4.0 четыре прежних метода
-`value`, `fields`, `set_value`, `force_return` уже удалены, `API_VERSION=2`; выпуск и полная аппаратная приёмка впереди.
-Изменения — в [CHANGELOG](CHANGELOG.md), проверенный
-объём по механизмам — в [STATUS](docs/ru/STATUS.md).
+Опубликованный пакет — **0.3.0**. В этой ветке готовится **stm32-gdbtest 0.4.0**:
+`API_VERSION=2`, target schema 2, [ТЗ API](docs/TECHNICAL_SPECIFICATION_API.md) 0.3.16,
+[общее ТЗ](docs/TECHNICAL_SPECIFICATION.md) 0.91. Это версии пакета и контрактов, не версия Python.
+Удалены `value`, `fields`, `set_value`, `force_return`; добавлены сопоставители, SKIP, захват records
+и внешняя обработка результатов. Миграция — [API](docs/ru/API.md), состав и ограничения —
+[граница выпуска](docs/ru/RELEASE040_SCOPE.md), история — [CHANGELOG](CHANGELOG.md).
 
-RISC-V, полный перенос остальных примеров, управление внешним оборудованием,
-надзор за дочерними процессами и Python-упаковка остаются в [дорожной карте](TODO.md).
+Аппаратные протоколы сохранены; публикация кандидата и CI окончательного SHA ещё не подтверждены.
+В частности, ограничения ST-LINK GDB Server остаются явными. Ближайшие шаги — [TODO](TODO.md).
 
 ## Состав и зависимости
 
@@ -309,12 +342,13 @@ tools в модуль не входят. GDB-Python — отдельный ин�
 `STM32_GDBTEST_SOURCE_DIR`). Настройки MCU, тесты приложения и локальный стенд остаются
 у потребителя. Начните с [подключения и примера](docs/ru/GETTING_STARTED.md), затем
 перейдите к [написанию тестов](docs/ru/TEST_AUTHORING.md) — вручную или с помощью агента. Агенту —
-[навыки](skills/README.md) `stm32-gdbtest-integrate`, `stm32-gdbtest-scenarios` и `stm32-gdbtest-run`.
+[навыки](skills/README.md) `stm32-gdbtest-integrate`, `stm32-gdbtest-scenarios`, `stm32-gdbtest-run` и `stm32-gdbtest-results`.
 
 ## Документация и связанные проекты
 
 - [Карта документации](docs/ru/index.md), [ТЗ](docs/TECHNICAL_SPECIFICATION.md), [ТЗ API](docs/TECHNICAL_SPECIFICATION_API.md), [принятые результаты](docs/ru/API_ACCEPTANCE.md).
 - [API и CMake/CLI](docs/ru/API.md), [справочник методов](docs/ru/api/index.md), [каталог техник и стиль сценариев](docs/ru/TESTING_TECHNIQUES.md), [ELF/HAL-контракты](docs/ru/CONTRACTS.md), [HAL-макросы](docs/ru/HAL_MACRO_GUIDE.md).
+- [Экспорт, целостность и HTML](docs/ru/RESULTS.md), [навык интерпретации результатов](skills/stm32-gdbtest-results/SKILL.md).
 - [GDB-серверы](docs/ru/BACKENDS.md), [identity и Flash](docs/ru/TARGET_IDENTITY.md), [владение отладчиком](docs/ru/DEBUGGER_OWNERSHIP.md), [manifest](docs/ru/MANIFESTS.md), [образы ELF/BIN и CRC](docs/ru/IMAGES.md).
 - [Текущее состояние](docs/ru/STATUS.md), [проверки и CI](docs/ru/testing.md), [версии](docs/ru/VERSIONING.md), [планы](TODO.md), [изменения](CHANGELOG.md).
 - [stm32-hwtest-blackpill](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill) — прошивки, аппаратные проверки, общая архитектура и практика применения.

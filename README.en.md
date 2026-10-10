@@ -55,6 +55,11 @@ These videos explain the origins of the approach; the module documentation descr
 ## How it works
 
 ```mermaid
+---
+config:
+  look: classic
+  theme: neutral
+---
 flowchart LR
     I["ELF + MCU profile + Python tests"] --> H["Host runner on the PC"]
     H --> A["GDB-Python: scenario and Target API"]
@@ -149,20 +154,22 @@ def clock(t):
 The scenario and the report are the same in every layout; only the local stand file
 (`*.local.toml`, `remote.toml`) changes, and it stays with the user.
 
-| Layout | Runner and GDB | GDB server and debugger | Status |
+| Layout | Runner and GDB | GDB server and debugger | New 0.4.0 scenario verification |
 | --- | --- | --- | --- |
-| Local on Windows | Windows, GDB 14.2/15.2/16.3 | same computer | verified: 5 boards, full suite |
-| Local on a Linux stand | Orange Pi 5, Ubuntu 20.04 aarch64 | same computer | verified: 5 boards, full suite |
-| Remote server from Windows | Windows | Orange Pi 5 over SSH (`[remote]`) | verified: 5 boards, full suite; consumer project |
-| Remote server from WSL2 | WSL2, Ubuntu 20.04 x86_64 | Orange Pi 5 over SSH | verified: 5 boards, full suite |
-| Prepared run package | build on Windows, in WSL2 or in GitHub Actions | Orange Pi 5, `run --package` | verified: 5 boards, lifecycle |
-| Hardware CI | prepare on GitHub, hardware on a self-hosted runner | Orange Pi 5 (runner service) | verified: 5 boards, lifecycle |
-| Local on Linux x86_64 | Linux PC | same computer | implemented, not verified on hardware |
-| WSL2 with the debugger via usbipd-win | WSL2 | same computer | implemented as Linux, not verified |
+| Local on Windows | Windows | same computer, st-util 1.9.0 | 5 boards: 20 PASS + 5 SKIP |
+| Local on a Linux stand | Orange Pi 5, Ubuntu 20.04 aarch64 | same computer, st-util 1.9.0 | 5 boards: 20 PASS + 5 SKIP, triggered through GitHub |
+| Remote server from Windows | Windows | Orange Pi 5 over SSH, st-util 1.9.0 | 5 boards: 20 PASS + 5 SKIP |
+| Remote server from WSL2 | WSL2, Ubuntu 20.04 x86_64 | Orange Pi 5 over SSH, st-util 1.9.0 | 5 boards: 20 PASS + 5 SKIP |
+| Prepared run package | package built separately, runner at execution site | Windows or Orange Pi 5 | checked in the local and SSH layouts above |
+| Hardware CI | prepare on GitHub, runner/GDB on Orange Pi 5 | same Orange Pi, no SSH between runner and server | Hardware #13: 20 PASS + 5 SKIP |
+| Local on Linux x86_64 | Linux PC | same computer | not hardware-verified |
+| WSL2 USB forwarding | WSL2 | USB through usbipd-win | not hardware-verified |
 
-The full suite is every scenario of the CI firmware (42 for F030R8, 44 for each of the others); the lifecycle
-is the 10 steps of `run_hw.py`: build, prepare, boot, strict identity, images, timeout and recovery. The
-0.3.0 package campaigns of 2026-10-05/06 are in the [accepted results](docs/en/API_ACCEPTANCE.md).
+The local-Linux and hardware-CI rows describe the same run, not two campaigns.
+Each board ran four new scenarios and a separate expected-SKIP variant.
+This is a selected suite, not full API reacceptance. Versions, SHAs, original errors and limits:
+[0.4.0 evidence](docs/en/API040_SCENARIOS.md). Full 0.3.0 campaigns (218 profile/scenario combinations),
+the 0.4.0 SSH campaign (233), and the ten-stage lifecycle remain in the [acceptance matrix](docs/en/API_ACCEPTANCE.md).
 
 ### Local run: Windows or Linux
 
@@ -170,6 +177,11 @@ Runner, GDB-Python and server share one computer. This covers Windows
 and Orange Pi; local Linux x86_64 has not yet been verified on hardware.
 
 ```mermaid
+---
+config:
+  look: classic
+  theme: neutral
+---
 flowchart LR
     subgraph PC["Computer: Windows / Linux"]
         R["Runner + GDB-Python"] <--> S["GDB server"]
@@ -185,6 +197,11 @@ Runner and scenario stay on the workstation. SSH starts the server on the stand
 and tunnels the GDB connection. The debugger is physically attached to the stand.
 
 ```mermaid
+---
+config:
+  look: classic
+  theme: neutral
+---
 flowchart LR
     R["Windows / WSL2: runner + GDB-Python"] <-->|SSH tunnel| S["Linux stand: GDB server"]
     R --> O["Report"]
@@ -198,6 +215,11 @@ A package containing ELF, profile and scenarios is transferred to the stand.
 `run --package` runs both GDB-Python and the server there; reports stay there too.
 
 ```mermaid
+---
+config:
+  look: classic
+  theme: neutral
+---
 flowchart LR
     B["Windows / GitHub: build + pack"] --> P["Package"]
     P --> R["Linux stand: run --package + GDB-Python"]
@@ -213,6 +235,11 @@ A GitHub-hosted job builds and prepares the package without a board. A self-host
 job on Orange Pi downloads it, runs hardware checks and uploads reports.
 
 ```mermaid
+---
+config:
+  look: classic
+  theme: neutral
+---
 flowchart LR
     G["GitHub: build + prepare + pack"] --> A["Package artifact"]
     A --> R["Orange Pi: self-hosted runner + GDB-Python"]
@@ -228,6 +255,11 @@ All test processes run in WSL2; Windows forwards the USB device into Linux
 through usbipd-win. This distinct layout has not yet been verified on boards.
 
 ```mermaid
+---
+config:
+  look: classic
+  theme: neutral
+---
 flowchart LR
     W["WSL2: runner + GDB-Python + server"] <-->|usbipd-win| D["Debugger: USB Windows"]
     W --> O["Report"]
@@ -236,10 +268,13 @@ flowchart LR
 
 Remote mode uses SSH keys only; the debugger lock is held on the stand host and the
 link is watched by a heartbeat. ST-LINK GDB Server is not available on Linux aarch64
-(ST does not ship it for arm64), so OpenOCD and J-Link are used on Orange Pi.
+(ST does not ship it for arm64), so OpenOCD, J-Link and st-util are used on Orange Pi.
 Details: [Linux stand](docs/en/LINUX_STAND.md), [GDB servers](docs/en/BACKENDS.md).
 
-**Reading the counters.** `Hardware: full campaign 0.3.0`, `Boards tested` and `HW cases (recorded)` describe the full hardware campaign of the 0.3.0 package on one code base: five board models and 218 distinct profile/scenario combinations (42 for F030R8, 44 for each of the others), each passing with three GDB versions on Windows and in the Orange Pi 5 layouts. Repeats and builds do not increase this count; `HW verified (latest)` is the campaign date. The badges are static: a CI run does not update them, and they are not a coverage percentage. Scope, limits and earlier snapshots are in the [metric definitions](docs/en/HARDWARE_METRICS.md).
+**Reading the counters.** The candidate badge describes the recorded full 0.4.0 SSH campaign:
+five STM32 boards, 233 profile/scenario combinations, dated 2026-10-10. It does not add selected-suite
+reruns or certify the final SHA or every backend. Badges are static, not coverage percentages.
+Scope and previous snapshots: [metric definitions](docs/en/HARDWARE_METRICS.md).
 
 ## MCU profiles
 
@@ -255,14 +290,14 @@ F103C8, F401CC, F411CE, F429ZI — Cortex-M0, M3, M4; AT32F403A — a compatible
 
 | MCU | Debugger / GDB server | Verified in |
 | --- | --- | --- |
-| STM32F030R8 | ST-Link (NUCLEO) / OpenOCD; J-Link GDB Server | CI firmware (42 cases), HAL fixture, stand project |
-| STM32F103C8 | J-Link / J-Link GDB Server | CI firmware (44 cases), stand project |
+| STM32F030R8 | ST-Link (NUCLEO) / OpenOCD, st-util; J-Link GDB Server | CI firmware, HAL fixture, stand project |
+| STM32F103C8 | J-Link / J-Link GDB Server; ST-Link / st-util | CI firmware, stand project |
 | STM32F103CB | J-Link CE / J-Link GDB Server | demo project [stm32-hwtest-bluepill](https://github.com/ViacheslavMezentsev/stm32-hwtest-bluepill) |
-| STM32F401CC | ST-Link / OpenOCD; ST-LINK GDB Server | CI firmware (44 cases), stand project |
-| STM32F411CE | ST-Link / OpenOCD; ST-LINK GDB Server | CI firmware (44 cases), example, stand project |
-| STM32F429ZI | ST-Link / OpenOCD; ST-LINK GDB Server | CI firmware (44 cases), stand project |
+| STM32F401CC | ST-Link / OpenOCD; ST-LINK GDB Server; st-util | CI firmware, stand project |
+| STM32F411CE | ST-Link / OpenOCD; ST-LINK GDB Server; st-util | CI firmware, example, stand project |
+| STM32F429ZI | ST-Link / OpenOCD; ST-LINK GDB Server; st-util | CI firmware, stand project |
 | STM32G474CE | ST-Link / OpenOCD on Orange Pi 5 | consumer project (Arduino Core STM32) |
-| AT32F403ACGU7 (Artery) | J-Link / J-Link GDB Server | CI firmware (44 cases), after 0.3.0 |
+| AT32F403ACGU7 (Artery) | J-Link / J-Link GDB Server; ST-Link / st-util | CI firmware, after 0.3.0 |
 
 OpenOCD, ST-LINK GDB Server and st-util need only the profile. J-Link GDB Server requires a
 device name: the profile sets it (`jlink_device`), and the module knows it for STM32F103C8T6,
@@ -278,17 +313,15 @@ or the counters above. The profile, the SDK, scenario specifics and the procedur
 
 ## Status
 
-The published **0.3.0** package has module version `0.3.0`, `API_VERSION = 1`, [API specification](docs/TECHNICAL_SPECIFICATION_API.md)
-0.3.7, [general specification](docs/TECHNICAL_SPECIFICATION.md) 0.69 (both Russian). The package is accepted on five
-boards in six run layouts ([accepted results](docs/en/API_ACCEPTANCE.md)); the owner sets the `v0.3.0` tag following
-the [release notes](docs/releases/v0.3.0.md). Published tags are `v0.1.0-rc.1` and `v0.1.0-rc.2`
-([rc.2 acceptance](docs/en/RC2_READINESS.md)). The 0.4.0 candidate has removed the former
-`value`, `fields`, `set_value`, `force_return` methods and uses `API_VERSION=2`; release and full hardware acceptance remain.
-Changes are in the [CHANGELOG](CHANGELOG.en.md), the verified scope by
-mechanism in [STATUS](docs/en/STATUS.md).
+The published package is **0.3.0**. This branch prepares **stm32-gdbtest 0.4.0**:
+`API_VERSION=2`, target schema 2, [API specification](docs/TECHNICAL_SPECIFICATION_API.md) 0.3.16,
+[general specification](docs/TECHNICAL_SPECIFICATION.md) 0.91. These are package/contract versions, not Python versions.
+`value`, `fields`, `set_value` and `force_return` were removed; matchers, SKIP, records capture and
+external result processing were added. Migration: [API](docs/en/API.md); contents and limits:
+[release scope](docs/en/RELEASE040_SCOPE.md); history: [CHANGELOG](CHANGELOG.en.md).
 
-RISC-V, full migration of other examples, external instrument control, child process
-supervision and Python packaging remain in the [roadmap](TODO.md).
+Hardware evidence is retained; candidate publication and final-SHA CI are not yet confirmed.
+ST-LINK GDB Server limitations remain explicit. Next steps: [TODO](TODO.md).
 
 ## Contents and dependencies
 
@@ -313,12 +346,13 @@ The module is integrated as a **Git submodule** (or a separate clone whose path 
 by `STM32_GDBTEST_SOURCE_DIR`). MCU settings, application tests and the local stand
 stay with the consumer. Start with [integration and the example](docs/en/GETTING_STARTED.md),
 then move on to [writing tests](docs/en/TEST_AUTHORING.md) — by hand or with an agent. For an agent —
-the [skills](skills/README.en.md) `stm32-gdbtest-integrate`, `stm32-gdbtest-scenarios` and `stm32-gdbtest-run`.
+the [skills](skills/README.en.md) `stm32-gdbtest-integrate`, `stm32-gdbtest-scenarios`, `stm32-gdbtest-run` and `stm32-gdbtest-results`.
 
 ## Documentation and related projects
 
 - [Documentation map](docs/en/index.md), [specification](docs/TECHNICAL_SPECIFICATION.md) and [API specification](docs/TECHNICAL_SPECIFICATION_API.md) (Russian), [accepted results](docs/en/API_ACCEPTANCE.md).
 - [API and CMake/CLI](docs/en/API.md), [method reference](docs/en/api/index.md), [techniques catalogue and scenario style](docs/en/TESTING_TECHNIQUES.md), [ELF/HAL contracts](docs/en/CONTRACTS.md), [HAL macros](docs/en/HAL_MACRO_GUIDE.md).
+- [Export, integrity and HTML](docs/en/RESULTS.md), [result interpretation skill](skills/stm32-gdbtest-results/SKILL.md).
 - [GDB servers](docs/en/BACKENDS.md), [identity and Flash](docs/en/TARGET_IDENTITY.md), [debugger ownership](docs/en/DEBUGGER_OWNERSHIP.md), [manifest](docs/en/MANIFESTS.md), [ELF/BIN images and CRC](docs/en/IMAGES.md).
 - [Status](docs/en/STATUS.md), [checks and CI](docs/en/testing.md), [versions](docs/en/VERSIONING.md), [plans](TODO.md), [changes](CHANGELOG.en.md).
 - [stm32-hwtest-blackpill](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill) — firmware, hardware checks, overall architecture and practice.

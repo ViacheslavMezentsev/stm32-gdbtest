@@ -21,7 +21,7 @@ stm32-gdbtest проверяет работающую прошивку на на
 Не угадывай — спроси владельца, если этого нет в проекте:
 
 - MCU с точным суффиксом (`STM32F411CEU6`), плата, вывод светодиода или другой наблюдаемый признак;
-- отладчик и GDB-сервер: ST-Link + OpenOCD, ST-Link + ST-LINK GDB Server (CubeCLT) или J-Link;
+- отладчик и GDB-сервер: ST-Link + OpenOCD, ST-Link + ST-LINK GDB Server (CubeCLT) или J-Link, либо ST-Link + st-util;
 - схема стенда: отладчик у рабочего компьютера, на Linux-стенде, или runner на Windows/WSL
   с сервером на Linux-стенде по SSH;
 - toolchain: ARM GCC с `arm-none-eabi-gdb-py3` (GDB с Python ≥ 3.11), CMake ≥ 3.25, Ninja, Python ≥ 3.11;
@@ -33,10 +33,11 @@ stm32-gdbtest проверяет работающую прошивку на на
 
 ```powershell
 git submodule add https://github.com/ViacheslavMezentsev/stm32-gdbtest.git modules/stm32-gdbtest
-git -C modules/stm32-gdbtest checkout v0.3.0
+git -C modules/stm32-gdbtest checkout <agreed-tag-or-commit>
 git add .gitmodules modules/stm32-gdbtest
 ```
 
+Выбери согласованный тег/коммит: 0.3.0 опубликован, 0.4.0 пока кандидат; не предполагай наличие тега v0.4.0.
 Gitlink фиксирует проверенный коммит; configure его не обновляет. Обновление версии — отдельный
 коммит: новый gitlink, чтение раздела CHANGELOG модуля (миграция), прогон host и hw.
 
@@ -91,9 +92,23 @@ board = "board.toml"
 ```
 
 `api.toml` (`schema = 1`) хранит лимиты (`[frames] limit`, `[execute] output_limit_chars`,
-`[reset] command`) и параметры сценариев (`[user.measurement] count = 5` →
+`[records] max_records`) и параметры сценариев (`[user.measurement] count = 5` →
 `t.profile.get("user.measurement.count")`). Таблица значений и максимумов — [API](../../docs/ru/API.md).
 Несколько вариантов MCU — по `session.toml` на вариант или параметр `PROFILE` (не вместе с `SESSION_CONFIG`).
+
+Для кандидата 0.4.0 используй target schema 2 из актуального профиля, включая backend-specific
+команды reset/setup; не переноси monitor-команды OpenOCD в st-util или ST-LINK GDB Server.
+[Страницы backend](../../docs/ru/BACKENDS.md) описывают различия и установку st-util на Ubuntu 20.04.
+Если нужны записи после запуска, добавь в session.toml:
+
+```toml
+[results]
+capture = true
+```
+
+Выдели отдельные выходные каталоги для попыток и обработки; результаты не храни поверх входов.
+`record` сохраняет произвольные данные, не обязательно измерения. План анализа —
+[stm32-gdbtest-results](../stm32-gdbtest-results/SKILL.md).
 
 ### 5. CMake
 
@@ -144,7 +159,7 @@ endif()
 
 ### 7. Стенд
 
-Шаблоны — `tests/firmware/stands/{openocd,stlink,jlink,remote}.example.toml`. Владелец копирует
+Шаблоны — `tests/firmware/stands/{openocd,stlink,jlink,st-util,remote}.example.toml`. Владелец копирует
 шаблон в `hil/stands/<board>-<backend>.local.toml` (удалённый стенд из `remote.example.toml` —
 `hil/stands/<board>-<backend>.remote.toml`) и вписывает серийный номер; агент серийные номера в
 коммиты и документы не переносит. Другой зонд для OpenOCD — ключи `interface` и `transport`, J-Link по JTAG —
