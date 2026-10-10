@@ -97,14 +97,14 @@ if ($checksExit -ne 0) { throw "Checks failed: $checksExit; evidence retained" }
 ```
 
 For docs-only, replace the command with `python3 ci/run_checks.py docs`; keep the rest.
-Inspect source/build/ci/summary.json in the archive: exit code zero, every expected
+Inspect source/build/ci/<run>/summary.json in the archive: exit code zero, every expected
 entry, no FAIL or missing combination. Without --gcc/--profile the runner uses the full
 lock-file matrix; HAL is a separate GCC13 check. A subset is not full acceptance.
 Independent checks continue after failure and produce a failing overall exit code;
 missing evidence never means success.
 
-Two runner invocations in one source tree overwrite build/ci/summary.json and may collide
-in builds. Run sequentially or use separate volumes. Wait for all processes before export.
+Each runner invocation creates build/ci/<run> and separate tests/<fixture>/build/ci/<run> builds.
+Use separate volumes for independent source snapshots. Wait for all processes before export.
 After verifying the archive, remove only the created container and volume with
 `docker rm $exportContainer` and `docker volume rm $volume`; no global prune is needed.
 Run native Windows host separately: `python -B -m unittest discover -s tests/host -v`.

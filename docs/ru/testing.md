@@ -45,7 +45,7 @@ CI-прошивки находятся в [tests/firmware](../../tests/firmware/
 регистров и не являются доказательством поведения HAL. Аппаратный прогон
 28.09.2026 — в [текущем состоянии](STATUS.md#аппаратная-проверка-ci-прошивок-2026-09-28).
 
-Результаты — `build/ci/summary.json`; журналы — `tests/firmware/build/<профиль>-gcc<версия>/ci.log`.
+Результаты — `build/ci/<run>/summary.json`; журналы — `tests/firmware/build/ci/<run>/<профиль>-gcc<версия>/ci.log`.
 В GitHub они сохраняются артефактом `offline-results`.
 
 ## Окружение
@@ -112,7 +112,7 @@ python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stand
 (`*.local.toml` не коммитится). Toolchain и Cube — `--toolchain`, `--cube` или
 `ARM_TOOLCHAIN_ROOT`, `STM32CUBE_REPOSITORY`; на Linux их задаёт `env.sh` окружения
 стенда ([Linux-стенд](LINUX_STAND.md)), на Windows есть значения по умолчанию в
-профиле пользователя. `summary.json` содержит ОС и архитектуру хоста. Итог — `build/hw/<профиль>-<стенд>/summary.json`.
+профиле пользователя. `summary.json` содержит ОС и архитектуру хоста. Итог — `build/hw/<профиль>-<стенд>/<run>/summary.json`.
 Сценарий перезаписывает Flash: используйте только платы, согласованные для опытов.
 
 ## Чего CI не проверяет
@@ -140,8 +140,8 @@ python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stand
 
 Docker использует HAL F0 gitlink из прежнего закреплённого CubeF0 1.11.6;
 F1/F4 остаются CMSIS-only. Workflow запускает `format host firmware hal` и сохраняет
-каталог tests/hal-f030/build/ci-gcc13-linux (логи, ELF, manifest, JSON/JUnit); на Windows
-runner пишет в ci-gcc13-windows.
+каталог `tests/hal-f030/build/ci/<run>/` (логи, ELF, manifest, JSON/JUnit).
+Каждая попытка CI получает новый каталог независимо от ОС.
 Без аргументов runner также включает hal; --gcc/--profile ограничивают только
 CMSIS-матрицу. Для HAL используйте ARM_TOOLCHAIN_ROOT GCC13, STM32CUBE_REPOSITORY;
 без переменной берётся установленный GCC13 по умолчанию Windows/Linux.

@@ -41,7 +41,7 @@ class BuildGuardTests(unittest.TestCase):
                 # Only configure may run. In particular, the scenario CLI cannot use an
                 # existing session.json, even if one happens to be present in the build tree.
                 self.assertEqual(command.call_count, 1)
-                output = root / "build/hw/f030r8-stand"
+                output = next((root / "build/hw/f030r8-stand").iterdir())
                 if repeat == 1:
                     summary = json.loads((output / "summary.json").read_text(encoding="utf-8"))
                     self.assertEqual([(item["step"], item["status"]) for item in summary["steps"]],
@@ -50,3 +50,12 @@ class BuildGuardTests(unittest.TestCase):
                     soak = json.loads((output / "soak.json").read_text(encoding="utf-8"))
                     self.assertEqual(soak["iterations"], 1)
                     self.assertEqual(soak["accepted_iterations"], 0)
+
+                # A second attempt keeps the original FAIL and every earlier artifact intact.
+                artifact = output / "previous-evidence.txt"
+                artifact.write_text("keep", encoding="utf-8")
+                with patch.object(MODULE, "ROOT", root), patch.object(MODULE, "FIRMWARE", firmware), \
+                        patch.object(MODULE, "command", command), patch.object(sys, "argv", argv):
+                    self.assertEqual(MODULE.main(), 1)
+                self.assertEqual(artifact.read_text(encoding="utf-8"), "keep")
+                self.assertEqual(len(list(output.parent.iterdir())), 2)

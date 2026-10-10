@@ -99,14 +99,14 @@ if ($checksExit -ne 0) { throw "Checks failed: $checksExit; evidence retained" }
 ```
 
 Для docs-only замените команду на `python3 ci/run_checks.py docs`; остальной рецепт тот же.
-Проверяйте `source/build/ci/summary.json` внутри архива: exit code 0, все ожидаемые
+Проверяйте `source/build/ci/<run>/summary.json` внутри архива: exit code 0, все ожидаемые
 записи, отсутствие FAIL и пропущенных сочетаний. Без `--gcc`/`--profile` runner берёт
 всю матрицу lock-файла; HAL — отдельная проверка GCC13. Частичный запуск не является
 полной приёмкой. Runner продолжает независимые проверки после ошибки и возвращает
 общий отрицательный результат; отсутствие отчёта не означает успех.
 
-Два вызова runner в одном дереве перезапишут `build/ci/summary.json` и могут столкнуться
-в сборках. Запускайте последовательно либо в разных volume. Архивируйте после завершения
+Каждый вызов runner создаёт `build/ci/<run>` и отдельные сборки `tests/<fixture>/build/ci/<run>`.
+Для независимых снимков исходников по-прежнему используйте разные volume. Архивируйте после завершения
 всех процессов. Удаляйте только созданные здесь контейнер и volume после проверки архива:
 `docker rm $exportContainer`, затем `docker volume rm $volume`; общий prune не нужен.
 Нативный Windows host запускается отдельно: `python -B -m unittest discover -s tests/host -v`.

@@ -87,7 +87,7 @@ python3 -B -m stm32_gdbtest doctor --stand tests/firmware/stands/f411ce-openocd.
 python3 -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-openocd.local.toml
 ```
 
-`run_hw.py` перезаписывает Flash; итог — `build/hw/<профиль>-<стенд>/summary.json`
+`run_hw.py` перезаписывает Flash; итог — `build/hw/<профиль>-<стенд>/<run>/summary.json`
 ([проверки и CI](testing.md)). Для своего проекта окружение то же: CMake-интеграция
 находит `arm-none-eabi-gdb-py3` в `PATH`.
 

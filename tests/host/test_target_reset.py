@@ -116,7 +116,7 @@ class ResetTests(unittest.TestCase):
         return module.Target(report, settings, configuration, context=context), report
 
     def test_reset_uses_the_configured_command_and_invalidates(self):
-        target, report = self.target(command="monitor reset halt")
+        target, report = self.target(reset="monitor reset halt")
         result = target.reset()
         self.assertEqual(result["outcome"], "halted")
         self.assertEqual(result["command"], "monitor reset halt")
@@ -143,20 +143,20 @@ class ResetTests(unittest.TestCase):
             result = target.reset()
         self.assertEqual(result["command"], "monitor reset")
 
-    def test_reset_falls_back_to_the_configured_command_without_a_run(self):
-        # A Target built without a run still works: api.toml stays the fallback.
+    def test_reset_ignores_obsolete_api_command_without_a_run(self):
+        # The old key remains readable data but cannot select a reset dialect.
         target, _report = self.target(command="monitor reset halt")
         with patch.dict(os.environ, {"STM32_GDBTEST_RESET_COMMAND": "monitor reset init"}):
             result = target.reset()
-        self.assertEqual(result["command"], "monitor reset halt")
+        self.assertEqual(result["command"], RESET_COMMAND)
 
     def test_reset_uses_the_generic_default_without_a_backend_value(self):
         target, _report = self.target()
         result = target.reset()
         self.assertEqual(result["command"], RESET_COMMAND)
 
-    def test_reset_rejects_a_blank_configured_command(self):
-        target, _report = self.target(command="   ")
+    def test_reset_rejects_a_blank_run_command(self):
+        target, _report = self.target(reset="   ")
         with self.assertRaises(ApiError) as caught:
             target.reset()
         self.assertEqual(caught.exception.code, "invalid_command")
@@ -178,7 +178,7 @@ class ResetTests(unittest.TestCase):
         self.assertEqual(result["outcome"], "halted")
 
     def test_reset_reports_a_failed_command_and_still_invalidates(self):
-        target, _report = self.target(command="monitor reset halt")
+        target, _report = self.target(reset="monitor reset halt")
         self.reset_failure = "monitor reset halt"
         with self.assertRaises(ApiError) as caught:
             target.reset()

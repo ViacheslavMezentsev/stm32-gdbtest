@@ -8,6 +8,9 @@ The v0.4.0 candidate has Python version 0.4.0 and `API_VERSION=2`:
 `value`, `fields`, `set_value`, `force_return` have been removed. The release is
 unpublished; final-SHA acceptance remains.
 See the [reference and migration](api/index.md).
+Schema 2 selects reset commands from the backend section of `target.toml`; `api.reset.command`
+does not affect execution. Read the effective command from `t.profile.stand["reset_command"]`.
+Schema 1 keys apply only to OpenOCD; the reset override does not change host recovery.
 
 Production first-package examples and five-MCU verification: [accepted results](API_ACCEPTANCE.md).
 

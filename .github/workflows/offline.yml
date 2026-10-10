@@ -57,10 +57,10 @@ jobs:
           path: |
             build/ci/
             build/ci-image.log
-            tests/hal-f030/build/ci-gcc13-linux/
-            tests/firmware/build/*/ci.log
-            tests/firmware/build/*/hwtest/build-manifest.json
-            tests/firmware/build/*/hwtest/runs/*/result.json
+            tests/hal-f030/build/ci/
+            tests/firmware/build/ci/**/ci.log
+            tests/firmware/build/ci/**/build-manifest.json
+            tests/firmware/build/ci/**/result.json
           if-no-files-found: warn
 
   # Stand environment of tools/linux_stand.py on the oldest supported distribution

@@ -11,7 +11,7 @@ Levels (spec 8.11):
 
 Usage inside the CI image (see docs/ru/testing.md):
   python3 ci/run_checks.py [docs] [format] [host] [firmware] [hal] [--gcc VERSION ...] [--profile NAME ...]
-Without levels all of them run. Results: build/ci/summary.json.
+Without levels all of them run. Results: build/ci/<run>/summary.json.
 """
 
 import argparse
@@ -20,7 +20,7 @@ import json
 import os
 from pathlib import Path
 import re
-import shutil
+import tempfile
 import subprocess
 import sys
 import time
@@ -167,8 +167,7 @@ def prepare(build, session, test_id, env, expect=0):
 
 def firmware_pair(gcc, profile):
     toolchain = Path(f"/opt/xpack-arm-none-eabi-gcc-{gcc}")
-    build = FIRMWARE / "build" / f"{profile}-gcc{gcc.split('-')[0]}"
-    shutil.rmtree(build, ignore_errors=True)
+    build = FIRMWARE / "build/ci" / OUT.name / f"{profile}-gcc{gcc.split('-')[0]}"
     build.mkdir(parents=True)
     log = build / "ci.log"
     env = gdb_env(build)
@@ -307,6 +306,7 @@ def level_firmware(record, gccs, profiles):
 # --- main -----------------------------------------------------------------------------------
 
 def main():
+    global OUT
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("levels", nargs="*", metavar="{docs,format,host,firmware,hal}")
     parser.add_argument("--gcc", action="append", choices=LOCK["gcc_versions"])
@@ -316,7 +316,10 @@ def main():
     if unknown:
         parser.error(f"unknown level: {', '.join(unknown)}")
     levels = args.levels or ["docs", "format", "host", "firmware", "hal"]
-    OUT.mkdir(parents=True, exist_ok=True)
+    parent = ROOT / "build/ci"
+    parent.mkdir(parents=True, exist_ok=True)
+    OUT = Path(tempfile.mkdtemp(prefix=time.strftime("%Y%m%dT%H%M%S-", time.gmtime()), dir=parent))
+    print(f"CI artifacts: {OUT}", flush=True)
     results = []
 
     def record(name, check):
@@ -341,8 +344,8 @@ def main():
     if "firmware" in levels:
         level_firmware(record, args.gcc or LOCK["gcc_versions"], args.profile or LOCK["profiles"])
     if "hal" in levels:
-        from ci.hal_f030 import check
-        record("hal.f030.gcc13", lambda: check(run))
+        from ci.hal_f030 import check, FIXTURE
+        record("hal.f030.gcc13", lambda: check(run, build=FIXTURE / "build/ci" / OUT.name))
     summary = dict(schema=1, levels=levels, cmake=os.environ.get("CMAKE_VERSION"),
                    passed=sum(r["status"] == "PASS" for r in results), total=len(results), results=results)
     (OUT / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

@@ -7,6 +7,9 @@
 В кандидате v0.4.0 Python-версия 0.4.0, `API_VERSION=2`:
 `value`, `fields`, `set_value`, `force_return` удалены. См. [справочник и миграцию](api/index.md).
 Выпуск не опубликован; приёмка итогового SHA продолжается.
+В schema 2 команды сброса задаются секцией backend в `target.toml`; `api.reset.command`
+не влияет на выполнение. Действующую команду читайте через `t.profile.stand["reset_command"]`.
+Ключи schema 1 действуют только для OpenOCD; переопределение сброса не меняет host recovery.
 
 Штатные примеры первого пакета и проверка на пяти MCU: [принятые результаты](API_ACCEPTANCE.md).
 

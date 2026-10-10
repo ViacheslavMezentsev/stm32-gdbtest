@@ -86,7 +86,7 @@ def server_spec(stand, port, profile, out):
             ready="Waiting for GDB connection",
             setup=["monitor flash breakpoints = 0"],
             reset_halt=reset_halt,
-            finish=[reset_halt, "monitor go", "disconnect"],
+            finish=["monitor reset", "monitor go", "disconnect"],
         )
     if stand["backend"] == "openocd":
         return dict(command=openocd.server_command(stand, port, profile),
@@ -102,5 +102,5 @@ def server_spec(stand, port, profile, out):
                  "-f", str(out / "stlink.log"), "-l", "31", "-s"],
         ready="Waiting for debugger connection",
         reset_halt=reset_halt,
-        finish=[reset_halt, "detach"],
+        finish=["monitor reset", "detach"],
     )

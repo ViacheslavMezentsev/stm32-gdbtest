@@ -296,12 +296,17 @@ Do not reuse one build alternately from Windows and a Linux container: CMakeCach
 stores absolute paths. “Current CMakeCache.txt directory is different” occurs before
 firmware validation and does not establish a firmware defect. Preserve the failed
 report and old build under another name inside the workspace, then create a clean
-build for the current OS. For tests/hal-f030 the runner separates the builds by OS:
-build/ci-gcc13-windows and build/ci-gcc13-linux (Docker); preserve the directory of
+build for the current OS. CI now creates tests/hal-f030/build/ci/<run> per attempt;
+older versions used ci-gcc13-windows and ci-gcc13-linux. Preserve the directory of
 your OS, not the Git checkout or the whole hardware evidence directory.
 If the HAL rerun succeeds, report two runs rather than a single 15/15 PASS.
 
 ## GDB server dialect in the target profile (schema 2)
+
+Hardware may exit 1 after the last 10/10 because a previous profile failed. Inspect the complete log
+and build/hw/campaign-*.tsv with the doctor/run_hw exit codes. Run 38008347735 failed F103C8 strict
+(DEV_ID mismatch); F429ZI passed 10/10. Check the MCU and probe wiring, keeping strict enabled.
+After moving J-Link to AT32, do not use the old F103/J-Link stand. Every run_hw attempt keeps its own directory.
 
 `reset_halt`/`reset_run` at the top level of `target.toml` is schema 1, and those commands are OpenOCD's.
 For schema 2 set `schema = 2` and move the commands into the section of the server: `[openocd]` (same

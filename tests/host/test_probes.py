@@ -85,6 +85,30 @@ class ProbeSettingsTests(unittest.TestCase):
         self.assertEqual(probes.dialect(profile, "stlink"), ("monitor reset", []))
         self.assertEqual(probes.dialect(profile, "jlink"), ("monitor reset", []))
 
+    def test_schema1_custom_reset_applies_only_to_openocd(self):
+        profile = schema1(reset_halt="monitor reset init", jlink_device="STM32F411CE")
+        for stand in (OPENOCD, STLINK, JLINK):
+            with self.subTest(backend=stand["backend"]):
+                spec = backends.server_spec(stand, 61000, profile, Path("/out"))
+                expected = "monitor reset init" if stand["backend"] == "openocd" else "monitor reset"
+                self.assertEqual(spec["reset_halt"], expected)
+
+    def test_override_does_not_replace_backend_recovery_commands(self):
+        with patch.dict(os.environ, STM32_GDBTEST_RESET_COMMAND="monitor halt"):
+            for stand, finish in ((OPENOCD, ["monitor reset run", "disconnect"]),
+                                  (STLINK, ["monitor reset", "detach"]),
+                                  (JLINK, ["monitor reset", "monitor go", "disconnect"])):
+                with self.subTest(backend=stand["backend"]):
+                    spec = backends.server_spec(stand, 61000, SCHEMA2, Path("/out"))
+                    self.assertEqual(spec["reset_halt"], "monitor halt")
+                    self.assertEqual(spec["finish"], finish)
+
+    def test_invalid_override_is_rejected_before_starting_server(self):
+        for command in ("", "  ", "monitor reset\ncontinue", "monitor reset\r", "monitor reset\0"):
+            with self.subTest(command=command), patch.object(probes.os, "environ", {"STM32_GDBTEST_RESET_COMMAND": command}):
+                with self.assertRaisesRegex(ValueError, "single-line"):
+                    backends.server_spec(OPENOCD, 61000, SCHEMA2, Path("/out"))
+
     def test_schema2_sections_are_validated(self):
         cases = [
             ("stlink", dict(reset_run="monitor reset run"), "does not use reset_run"),

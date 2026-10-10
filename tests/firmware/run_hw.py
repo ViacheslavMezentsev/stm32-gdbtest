@@ -17,7 +17,7 @@ and checks the expected outcome of each step:
 The test boards are reprogrammed: use only boards agreed for experiments.
 Usage (repository root; on Linux first `. ~/.local/stm32-gdbtest/env.sh`, see tools/linux_stand.py):
   python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-openocd.local.toml
-Results: build/hw/<profile>-<stand name>/summary.json and the runner reports it lists.
+Results: build/hw/<profile>-<stand name>/<run>/summary.json and the runner reports it lists.
 
 A package from `python -m stm32_gdbtest pack` replaces the build here (--package; built and
 prepared elsewhere, e.g. in CI). --repeat N repeats the steps (0: until Ctrl+C) and writes
@@ -30,7 +30,7 @@ import json
 import os
 from pathlib import Path
 import platform
-import shutil
+import tempfile
 import subprocess
 import sys
 import time
@@ -111,9 +111,9 @@ def main():
     probe = document["probe"]
     name = f"{args.profile}-{stand_path.name.split('.')[0]}"
     build = FIRMWARE / "build" / f"hw-{name}"
-    out = ROOT / "build/hw" / name
-    shutil.rmtree(out, ignore_errors=True)
-    out.mkdir(parents=True)
+    parent = ROOT / "build/hw" / name
+    parent.mkdir(parents=True, exist_ok=True)
+    out = Path(tempfile.mkdtemp(prefix=time.strftime("%Y%m%dT%H%M%S-", time.gmtime()), dir=parent))
     log = out / "run_hw.log"
     env = dict(os.environ, ARM_TOOLCHAIN_ROOT=str(args.toolchain), STM32CUBE_REPOSITORY=str(args.cube),
                PYTHONDONTWRITEBYTECODE="1")
@@ -142,6 +142,14 @@ def main():
         run_env = dict(env, STM32_GDBTEST_IMAGE_POLICY=str(image_policy)) if image_policy else env
         selected_cli = cli
         selected_runs = runs
+        if not args.package:
+            # Keep run reports outside the reusable CMake build tree (ТЗ 8.16).
+            data = json.loads(session.read_text(encoding="utf-8"))
+            selected_runs = FIRMWARE / "build/hw-results" / name / out.name / "runs"
+            data["out"] = str(selected_runs)
+            descriptor = out / "session.json"
+            descriptor.write_text(json.dumps(data), encoding="utf-8")
+            selected_cli = [sys.executable, "-B", ROOT / "stm32_gdbtest/cli.py", "run", "--session", descriptor]
         if image_policy:
             # Separate legacy-image descriptor deliberately tests the old interface.
             if args.package:
@@ -149,8 +157,6 @@ def main():
                 from stm32_gdbtest.package import open_package
                 data = open_package(package, workdir)
                 selected_runs = Path(data['out'])
-            else:
-                data = json.loads(session.read_text(encoding='utf-8'))
             data.pop('session_config', None)
             data.pop('_config_capsule', None)
             legacy = out / 'session-legacy-image.json'

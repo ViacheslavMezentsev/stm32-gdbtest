@@ -6,6 +6,11 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Fixed reset schema 1/2 migration: legacy `monitor reset init` works with OpenOCD again;
+  removed the stale api.reset.command fallback, corrected origin and kept recovery independent of overrides.
+- CI and run_hw artifacts use separate attempt directories and preserve previous FAIL/ERROR evidence.
+  Hardware CI reports doctor/run_hw exit codes per profile, including failures before the final passing board.
+
 ## [0.4.0] - 2026-10-09
 
 Release candidate: publication follows final hardware acceptance and CI at the release SHA.

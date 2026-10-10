@@ -8,7 +8,6 @@ Python types.
 """
 
 from collections.abc import Mapping
-import os
 from types import MappingProxyType
 
 from stm32_gdbtest.configuration import DEFAULTS, EXECUTE_OUTPUT_LIMIT, FRAMES_LIMIT, freeze
@@ -160,8 +159,6 @@ class Profile(Mapping):
                 return MappingProxyType({"state": "run", "section": section})
             entry = self._files["data." + keys[0]]
             return MappingProxyType({"state": "file", "file": entry["reference"], "sha256": entry["sha256"]})
-        if section == "api" and keys[:2] == ["reset", "command"] and os.environ.get("STM32_GDBTEST_RESET_COMMAND"):
-            return MappingProxyType({"state": "override", "variable": "STM32_GDBTEST_RESET_COMMAND"})
         if section == "api" and (self._api_file is None or _lookup(self._api_file, keys) is _ABSENT):
             return MappingProxyType({"state": "default"})
         entry = self._files.get(section)

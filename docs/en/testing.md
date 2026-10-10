@@ -45,7 +45,7 @@ HAL and without stm32-cmake-yml, one profile each for Cortex-M0, M3 and M4. The
 scenarios check register state and are not evidence of HAL behaviour. The hardware
 run of 2026-09-28 is recorded in the [status page](STATUS.md#hardware-check-of-the-ci-firmware-2026-09-28).
 
-Results go to `build/ci/summary.json`; logs to `tests/firmware/build/<profile>-gcc<version>/ci.log`.
+Results go to `build/ci/<run>/summary.json`; logs to `tests/firmware/build/ci/<run>/<profile>-gcc<version>/ci.log`.
 On GitHub they are kept as the `offline-results` artifact.
 
 ## Environment
@@ -114,7 +114,7 @@ The stand is a local copy of a template from `tests/firmware/stands/*.example.to
 (`*.local.toml` is not committed). Toolchain and Cube — `--toolchain`, `--cube` or
 `ARM_TOOLCHAIN_ROOT`, `STM32CUBE_REPOSITORY`; on Linux the stand environment's `env.sh`
 sets them ([Linux stand](LINUX_STAND.md)), on Windows there are defaults in the user
-profile. `summary.json` records the host OS and architecture. The result is `build/hw/<profile>-<stand>/summary.json`.
+profile. `summary.json` records the host OS and architecture. The result is `build/hw/<profile>-<stand>/<run>/summary.json`.
 The script reprograms Flash: use only boards agreed for experiments.
 
 ## What CI does not check
@@ -142,8 +142,8 @@ contract. No server starts and no MCU firmware executes.
 
 Docker installs the HAL F0 gitlink from the existing pinned CubeF0 1.11.6;
 F1/F4 remain CMSIS-only. Workflow runs `format host firmware hal` and retains
-tests/hal-f030/build/ci-gcc13-linux (logs, ELF, manifest, JSON/JUnit); on Windows the
-runner writes to ci-gcc13-windows.
+`tests/hal-f030/build/ci/<run>/` (logs, ELF, manifest, JSON/JUnit).
+Each CI attempt uses a new directory on either OS.
 The default runner also includes hal; --gcc/--profile only restrict the CMSIS
 matrix. For HAL use ARM_TOOLCHAIN_ROOT pointing to GCC13 and STM32CUBE_REPOSITORY;
 otherwise the Windows/Linux GCC13 default is used. HAL GCC14/15 and hardware

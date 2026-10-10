@@ -72,12 +72,25 @@ jobs:
           . "$HOME/.local/stm32-gdbtest/env.sh"
           stands="${STM32_GDBTEST_STANDS_DIR:-$HOME/.config/stm32-gdbtest/stands}"
           status=0
+          mkdir -p build/hw
+          summary="build/hw/campaign-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.tsv"
+          printf 'profile\tdoctor_exit\thardware_exit\n' > "$summary"
           for profile in $PROFILES; do
             case "$profile" in f030r8|f103c8|f401cc|f411ce|f429zi) ;; *) echo "Unknown profile: $profile"; exit 1 ;; esac
-            python3 -B -m stm32_gdbtest doctor --stand "$stands/$profile.toml" || status=1
+            echo "::group::Hardware $profile"
+            doctor_code=0
+            hardware_code=0
+            python3 -B -m stm32_gdbtest doctor --stand "$stands/$profile.toml" || doctor_code=$?
             python3 -B tests/firmware/run_hw.py --profile "$profile" --stand "$stands/$profile.toml" \
-              --package "build/packages/$profile.zip" ${STEPS:+--steps $STEPS} || status=1
+              --package "build/packages/$profile.zip" ${STEPS:+--steps $STEPS} || hardware_code=$?
+            printf '%s\t%s\t%s\n' "$profile" "$doctor_code" "$hardware_code" >> "$summary"
+            if [ "$doctor_code" -ne 0 ] || [ "$hardware_code" -ne 0 ]; then
+              status=1
+              echo "::error::Profile $profile failed: doctor=$doctor_code hardware=$hardware_code"
+            fi
+            echo "::endgroup::"
           done
+          cat "$summary"
           exit $status
       - name: Keep results
         if: always()
@@ -85,8 +98,9 @@ jobs:
         with:
           name: hardware-results
           path: |
-            build/hw/*/summary.json
-            build/hw/*/run_hw.log
-            build/hw/*/package/*/sessions/*/runs/*/result.json
-            build/hw/*/package/*/sessions/*/runs/*/*.log
+            build/hw/**/*.tsv
+            build/hw/**/summary.json
+            build/hw/**/run_hw.log
+            build/hw/**/result.json
+            build/hw/**/*.log
           if-no-files-found: warn

@@ -1408,24 +1408,13 @@ class Target:
         return dict(entry)
 
     def _reset_command(self):
-        """Reset command of the run: the value the backend resolved, else the configured one.
-
-        ТЗ API 6.6: the precedence (session override, profile section of the backend, built-in dialect of
-        the backend) is applied once when the run is prepared, so the scenario and the boot sequence use the
-        same command. `api.toml` and the profile keys stay a fallback for a Target built without a run.
-        """
-        if self._reset:
-            return self._reset
-        try:
-            configured = self._config["api"]["reset"]["command"]
-        except (KeyError, TypeError):
-            configured = None
-        if configured is not None:
-            if type(configured) is not str or not configured.strip():
-                self._fail("reset", "validation", "none", "invalid_command",
-                           "reset.command must be a non-empty string", command=configured)
-            return configured
-        return RESET_COMMAND
+        """Use the captured run command; obsolete api.reset.command is data only (ТЗ API 6.6)."""
+        command = self._reset if self._reset is not None else RESET_COMMAND
+        if (type(command) is not str or not command.strip()
+                or any(character in command for character in "\r\n\0")):
+            self._fail("reset", "validation", "none", "invalid_command",
+                       "reset command must be a non-empty single line", command=command)
+        return command
 
     def _invalidate(self, steps):
         """Flush the register cache and the cached frames, recording both outcomes."""

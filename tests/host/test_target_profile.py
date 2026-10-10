@@ -22,7 +22,8 @@ PROPS = dict(target=dict(sha256="t" * 64, reference="target.toml", data=TARGET),
                       data=dict(schema=1, user=dict(count=3), reset=dict(command="monitor reset halt"))),
              image=None)
 CASE = dict(id="HW_CI_PROFILE", function="profile", timeout_s=30, labels=("api",), contracts=())
-STAND = dict(backend="openocd", server="local", speed_khz=4000, flash="gdb_load")
+STAND = dict(backend="openocd", server="local", speed_khz=4000, flash="gdb_load",
+             reset_command="monitor reset halt")
 
 
 def configuration(props=PROPS, session="s" * 64):
@@ -82,7 +83,10 @@ class ProfileTests(unittest.TestCase):
         self.assertEqual(dict(profile.origin("api.frames.limit")), dict(state="default"))
         self.assertEqual(dict(profile.origin("case.id")), dict(state="run", section="case"))
         with patch.dict("os.environ", STM32_GDBTEST_RESET_COMMAND="monitor reset"):
-            self.assertEqual(profile.origin("api.reset.command")["state"], "override")
+            self.assertEqual(profile.origin("api.reset.command")["state"], "file")
+            self.assertEqual(profile.get("api.reset.command"), "monitor reset halt")
+            self.assertEqual(profile.get("stand.reset_command"), "monitor reset halt")
+            self.assertEqual(dict(profile.origin("stand.reset_command")), dict(state="run", section="stand"))
         with self.assertRaises(KeyError):
             profile.origin("user.missing")
         with self.assertRaises(KeyError):

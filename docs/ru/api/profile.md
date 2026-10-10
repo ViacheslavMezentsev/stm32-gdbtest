@@ -27,7 +27,7 @@
   `files` (`{роль: {reference, sha256}}` для `target`, `api`, `image`, `session`, `data.<имя>`),
   `build` (сводка build manifest: `compilers`, `cube_packages`, `libraries`, `defines`, `sources`;
   `None` без манифеста), `case` (`id`,
-  `function`, `timeout_s`, `labels`, `contracts`), `stand` (`backend`, `server`, `speed_khz`, `flash`),
+  `function`, `timeout_s`, `labels`, `contracts`), `stand` (`backend`, `server`, `speed_khz`, `flash`, `reset_command`),
   `gdb` (`version`, `stop_details`, `value_history`, `type_is_signed`).
 - `get(path, default=None)` читает путь через точку; путь без имени раздела читает `target.toml`.
 - `origin(path)` сообщает источник значения: `{"state": "file", "file", "sha256"}`,
@@ -65,7 +65,7 @@ board = "board.toml"
 ```python
 count = t.profile.get("user.measurement.count", 10)
 if t.profile.stand["backend"] == "jlink":
-    t.check("J-Link reset command", t.profile.get("api.reset.command"), "monitor reset")
+    t.check("J-Link reset command", t.profile.stand["reset_command"], "monitor reset")
 led = t.profile.data["board"]["board"]["led"]          # "PA5" из board.toml
 t.check("CMSIS-only firmware", "USE_HAL_DRIVER" in t.profile.build["defines"], False)
 t.record("run", t.profile)

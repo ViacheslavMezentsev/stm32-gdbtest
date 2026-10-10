@@ -98,9 +98,14 @@ def dialect(profile, backend):
     if backend not in BACKEND_RESET_HALT:
         raise ValueError("Unsupported backend")
     override = os.environ.get("STM32_GDBTEST_RESET_COMMAND")
+    if override is not None and (not override.strip() or any(c in override for c in "\r\n\0")):
+        raise ValueError("STM32_GDBTEST_RESET_COMMAND must be a non-empty single-line command")
     section = profile.get(backend)
     if section is not None and not isinstance(section, dict):
         raise ValueError(f"Section {backend} must be a table")
     section = section or {}
+    if profile.get("schema") == 1 and backend == "openocd":
+        section = {key: profile[key] for key in ("reset_halt", "reset_run") if key in profile}
     halt = override or section.get("reset_halt") or BACKEND_RESET_HALT[backend][0]
-    return halt, list(BACKEND_RESET_RUN[backend])
+    run = [section["reset_run"]] if "reset_run" in section else list(BACKEND_RESET_RUN[backend])
+    return halt, run
