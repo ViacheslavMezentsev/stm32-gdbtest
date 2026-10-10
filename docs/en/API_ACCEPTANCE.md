@@ -57,6 +57,28 @@ Unaccepted results and limits:
   AT32 ID `0x70050347` instead of STM32 ID `0x410`. Fix the remote profile/probe
   mapping before the next run; strict identity remains enabled.
 
+### Comparing GDB clients on F411/ST-LINK
+
+Server 7.14.0, one probe, one GCC13 ELF with SHA-256
+`f93547938335e12fee86509ee29b68202b808e91d26961f80f052945cea22105`.
+Only the gdb field of a session.json copy changed for the newer clients; firmware was not rebuilt.
+
+| xPack | GDB / Python | Full-suite result |
+| --- | --- | --- |
+| 13.3.1-1.1 | 14.2.90 / 3.11.4 | Two initial attempts: 94 and 68 stages, USB ERROR |
+| 14.2.1-1.1 | 15.2.90 / 3.12.8 | 96 stages: 93 PASS, 3 ERROR; first failure HW_CI_WAIT_CHANGES |
+| 15.2.1-1.1 | 16.3.90 / 3.13.12 | 73 stages: 70 PASS, 3 ERROR; first failure HW_CI_CALL_PREDICATE |
+
+In every case the next scenario's server reported `Target USB comms error` before
+GDB connected; the two subsequent ERROR outcomes were restoration attempts.
+Changing the client did not eliminate the observed failure. After the final USB
+reconnection, BOOT/GPIO through OpenOCD passed 2/2. No full ST-LINK PASS is claimed.
+
+Next diagnostic experiment: isolate server startup/shutdown and USB access, also
+comparing another probe/cable. The current Windows path runs the server with `-e`
+and forcibly stops it after GDB exits; an effect of this lifecycle is a hypothesis,
+not an established cause. Reset commands were not changed to address a USB failure.
+
 The full F411/ST-LINK suite remains an open acceptance condition. Latest-SHA CI,
 remote Orange Pi layouts and final release are not yet accepted. The consumer check
 above covers minimal-consumer, not the private mcu_power_board project. Boards are

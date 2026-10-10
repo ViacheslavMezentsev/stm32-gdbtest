@@ -3,7 +3,7 @@
 [Документация](index.md) → Текущее состояние · [English](../en/STATUS.md)
 
 **Сейчас (10.10.2026).** В `codex/release-040` готовится v0.4.0: Python 0.4.0,
-API_VERSION=2, target schema 2, ТЗ API 0.3.14, общее ТЗ 0.82. Runtime `b1264c1`
+API_VERSION=2, target schema 2, ТЗ API 0.3.14, общее ТЗ 0.83. Runtime `b1264c1`
 прошёл Docker 26/26 и полные наборы шести плат под Windows через OpenOCD/J-Link:
 280 сценариев, 608 этапов, восстановление 12/12. Linux-пакеты F411/F429 на Windows
 дали по 10/10; minimal-consumer с настоящим подмодулем проверен offline и на F411.

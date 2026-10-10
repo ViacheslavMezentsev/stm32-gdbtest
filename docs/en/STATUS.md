@@ -3,7 +3,7 @@
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
 **Now (2026-10-10).** `codex/release-040` prepares v0.4.0: Python 0.4.0,
-API_VERSION=2, target schema 2, API specification 0.3.14, general specification 0.82.
+API_VERSION=2, target schema 2, API specification 0.3.14, general specification 0.83.
 Runtime `b1264c1` passed Docker 26/26 and full suites on six Windows-attached boards
 using OpenOCD/J-Link: 280 scenarios, 608 stages, restoration 12/12. Linux-built
 F411/F429 packages passed 10/10 each on Windows; minimal-consumer with a real
