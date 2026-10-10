@@ -4,7 +4,7 @@
 
 **Состояние на 10.10.2026.**
 
-stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2; общее ТЗ 0.90, ТЗ API 0.3.16.
+stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2; общее ТЗ 0.93, ТЗ API 0.3.16.
 Выпуск готовится в `codex/release-040` и ещё не опубликован.
 
 Локальные свидетельства относятся к нескольким срезам:
@@ -21,7 +21,10 @@ stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2; общее ТЗ 0.90, ТЗ 
 Полные F411/F030 через ST-LINK GDB Server по-прежнему не приняты из-за USB ERROR.
 Успех st-util не закрывает этот отказ. Также открыты диагностика USB serial в doctor,
 причина прежней аномалии F429 SP/SRAM и границы принудительного cleanup.
-GitHub CI последнего SHA и окончательная сверка всех схем выпуска ещё ожидаются.
+10.10.2026 владелец согласовал выпуск с ограничением ST-LINK GDB Server; USB ERROR остаётся долгом.
+После `c156db5` ядро и код сценариев не менялись; добавлен отдельный stand_loop, проверенный на F411.
+Выборочные API040 проверки GitHub/WSL/Windows: по 20 PASS + 5 SKIP; подробности —
+[API040_SCENARIOS](API040_SCENARIOS.md). GitHub CI последнего SHA ещё ожидается.
 
 [API_ACCEPTANCE](API_ACCEPTANCE.md) · [RELEASE040_SCOPE](RELEASE040_SCOPE.md) · [TODO](../../TODO.md).
 

@@ -6,6 +6,10 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-10
+
+- Approved release with the known F411/F030/ST-LINK GDB Server limitation; USB ERROR remains technical debt. General specification 0.93 for release.
+
 - Documented parameters, allowed values, defaults and Flash/FAIL/SKIP policy effects in seven TOML examples; active settings are unchanged.
 
 - Added tools/stand_loop.py: finite local package cycles, evidence validation, STOP and review.json for agents; example plan/systemd unit and host regression. General specification 0.92; Target API unchanged.
@@ -43,7 +47,6 @@ Versions: [policy](docs/en/VERSIONING.md).
 - CI and run_hw artifacts use separate attempt directories and preserve previous FAIL/ERROR evidence.
   Hardware CI reports doctor/run_hw exit codes per profile, including failures before the final passing board.
 
-## [0.4.0] - 2026-10-09
 
 Release candidate: publication follows final hardware acceptance and CI at the release SHA.
 

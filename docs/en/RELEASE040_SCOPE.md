@@ -11,10 +11,10 @@ stm32-gdbtest 0.4.0, `API_VERSION=2`. The local matrix below does not replace la
 
 | Group | v0.4.0 decision | Evidence and gate |
 | --- | --- | --- |
-| Journal/results | Include opt-in `records.json` capture, `results export/verify`, campaign index and standalone JSON/HTML report with themes and normal/expert controls | Already implemented in `[Unreleased]`; verify them together at the release SHA, including capture failure |
+| Journal/results | Include opt-in `records.json` capture, `results export/verify`, campaign index and standalone JSON/HTML report with themes and normal/expert controls | Already implemented in `[0.4.0]`; verify them together at the release SHA, including capture failure |
 | `skip(reason)` | Include minimal imperative SKIP, code 77, JUnit/CTest and explicit `run_hw` allowance | Host/docs and hardware studies completed; retain the [method limits](api/skip.md) |
 | `reach` correction | Include GDB single-quoted C++ signature handling | Host/hardware regression exists; repeat at the release SHA |
-| Compatible MCUs/infrastructure | Include AT32 profile, stand naming and architecture adapters | Already in `[Unreleased]`; verify available backend/build paths at the release SHA |
+| Compatible MCUs/infrastructure | Include AT32 profile, stand naming and architecture adapters | Already in `[0.4.0]`; verify available backend/build paths at the release SHA |
 | Techniques/examples | Include event/interval, watchpoint wait, injection, standalone C++ Og/O2 and TECH-019 | Examples built on existing API, without new `Target` methods |
 | 0.3.0 field feedback F01–F03 | Include; `codex/api030-feedback` has landed | F01 bounded unsized character-array read; F02 watchpoint frame interpretation; F03 initial SP as SRAM boundary. Host/docs/offline passed at `44c795d`; hardware results predate integration and need a release-SHA repeat |
 | API cleanup | **Remove** `value`, `fields`, `set_value`, `force_return` | API spec 6.7, TODO and reference have promised removal in 0.4.0; provide explicit migration for this breaking change |
@@ -59,7 +59,7 @@ migration table; these are examples of old code, not executable scenarios.
 
 ## 4. Evidence and open limits
 
-stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2; general specification 0.90, API specification 0.3.16.
+stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2; general specification 0.93, API specification 0.3.16.
 The release is being prepared in `codex/release-040` and is not published.
 
 Local evidence belongs to several revisions:
@@ -82,7 +82,7 @@ Historical protocols and exact boundaries: [matrix](API_ACCEPTANCE.md).
 
 | Remaining item | Status and next action |
 | --- | --- |
-| F411/F030 ST-LINK GDB Server | Open, specification question 11.2.27; needs a successful full run or an explicit owner decision on the release boundary |
+| F411/F030 ST-LINK GDB Server | Boundary approved on 2026-10-10; USB ERROR remains open debt 11.2.27 |
 | Latest SHA | Check Docker/offline and GitHub CI; runtime changes require affected layouts and recovery checks |
 | Deployment layouts and consumer | Earlier evidence is retained; reconcile subsequent helper changes with local Linux, WSL, packages and Hardware CI instead of carrying PASS forward automatically |
 | Doctor/USB serial | Empty or binary serial; Windows capture needs UTF-8, see HOWTO; representation fix is not accepted yet |
@@ -93,10 +93,23 @@ Historical protocols and exact boundaries: [matrix](API_ACCEPTANCE.md).
 ## 5. Completing preparation
 
 1. Reconcile the final diff with tested sources, schemas and migration; test new changes according to impact.
-2. Finish remaining release checks and record the exact SHA; resolve the ST-LINK acceptance boundary.
+2. Finish remaining release checks and record the exact SHA; retain the approved ST-LINK limitation.
 3. The owner pushes the branch, verifies latest-SHA CI and lands it.
 4. Only after acceptance: date the CHANGELOG, create the signed tag and publish as owner.
 
 This scope does not declare the release ready or transfer experimental methods into core.
 
 External finite package dispatcher: [stand_loop](STAND_LOOP.md). Target API and existing run/pack commands are unchanged.
+
+## Owner decision — 2026-10-10
+
+Release with the known F411/F030/ST-LINK GDB Server limitation is approved; USB ERROR
+remains open technical debt 11.2.27. Verified alternatives are OpenOCD/st-util.
+
+- Selected API 0.4.0 scenarios: GitHub Hardware at `c23f8fe`, WSL2 → OrangePi at
+  `d1a9361`, and Windows/st-util at `c156db5`: each has 20 PASS + 5 expected SKIP on five
+  STM32 boards; records, export and reports verified. These are distinct revisions, not latest-SHA CI.
+- `stand_loop` on F411/OrangePi: two cycles (2 PASS + 2 SKIP), STOP and rejection of
+  unexpected SKIP. The systemd service and pi/Qwen agent have not been exercised.
+- Latest host regression after stand_loop: 451 tests, 4 expected skips; Docker docs+host
+  6/6. TOML comments do not change active settings.
