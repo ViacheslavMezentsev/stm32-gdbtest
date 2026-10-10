@@ -578,3 +578,6 @@ Retain the original log. Successful doctor output does not replace a hardware ch
 ### Long remote scenario budgets
 
 Long check tables: the budget covers the complete GDB process, including connection, checks and teardown. Many navigation and read operations through a remote server add latency; set an explicit scenario timeout_s with margin over measured time. The F401/F411/F429 ADC_INVALID matrix uses120s after measuring about60s over SSH/st-util. Exceeding the budget remains ERROR even when GDB has already saved successful checks.
+
+
+Per-server configuration and details: [OpenOCD](backends/openocd.md), [ST-LINK GDB Server](backends/stlink.md), [J-Link](backends/jlink.md), [st-util](backends/st-util.md).

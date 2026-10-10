@@ -43,89 +43,64 @@ is a reset with the target init procedure. An absent section means the built-in 
 Probe locks distinguish families: another OpenOCD interface script does not share the lock of an ST-Link with the same serial.
 
 On Linux ST-LINK GDB Server (STM32CubeCLT) exists for x86_64 only; on aarch64
-(Orange Pi 5) use OpenOCD and J-Link. OpenOCD 0.10 from the Ubuntu 20.04 repository
+(Orange Pi 5) use OpenOCD, J-Link or the verified st-util build. OpenOCD 0.10 from the Ubuntu 20.04 repository
 lacks `interface/stlink.cfg`, so the stand environment installs xPack OpenOCD 0.12.0-7.
 This build warns about the deprecated `tcl_port`/`telnet_port`/`gdb_port`; the
 commands stay compatible with OpenOCD 0.12.0.
 
+## TOML
+
+| File | Purpose | Backend relationship |
+| --- | --- | --- |
+| `session.toml` | Session configuration; `[config]` paths are relative to its directory | Does not select a server executable |
+| `target.toml` | MCU, memory, identity and schema 2 dialects | Optional `[openocd]`, `[stlink]`, `[jlink]`, `[st-util]` sections |
+| `api.toml` | Scenario API settings and user data | Old `reset.command` was removed; no server commands here |
+| `full_image.toml` | Optional full-image policy | Same image checks for all backends; see [images](IMAGES.md) |
+| `<profile>-<backend>.local.toml` / `.remote.toml` | `[probe]` selects server, serial and options; `[remote]` enables SSH | Local untracked stand file selected by `--stand` or the precedence above |
+| `session.json` | Generated runner inputs, ELF and build | Does not replace user session.toml; not edited manually |
+
+```toml
+# session.toml; these are file references, not backend commands.
+[config]
+target = "target.toml"
+api = "api.toml"
+image = "full_image.toml" # Optional; omit when not using a full-image policy.
+```
+
+Complete `SESSION_CONFIG` integration, session.json generation and CLI: [API](API.md).
+The stand selects the backend, not the target profile. Target sections on individual pages are
+fragments of a complete profile, not standalone target.toml files. Only OpenOCD accepts `reset_run`;
+other finish sequences belong to the backend. One-off `STM32_GDBTEST_RESET_COMMAND` changes reset/halt,
+not recovery; it is not a replacement for portable profile configuration.
+
 ## Verified differences
 
-| Operation | OpenOCD 0.12.0 | ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0) | J-Link GDB Server 8.32 |
+| Backend / details | Readiness | Default reset/halt | Finish and recovery |
 | --- | --- | --- | --- |
-| MCU selection | Profile `openocd_target` | Detected by the ST server; runner identity check kept | MCU → J-Link device mapping |
-| Start | `interface/stlink.cfg` + target, localhost | SWD, attach `-g`, persistent `-e`, serial, CubeProgrammer path | SWD, `-USB <serial>`, localhost, no SWO/Telnet/RTT |
-| Readiness | `Listening on port … for gdb connections` | `Waiting for debugger connection` | `Waiting for GDB connection` |
-| GDB connection | extended-remote | extended-remote | extended-remote |
-| Setup | — | — | `monitor flash breakpoints = 0` |
-| Reset/halt | `monitor reset halt` | `monitor reset` | `monitor reset` |
-| Programming | GDB load, OpenOCD flash driver | GDB load, server calls CubeProgrammer; server-side verify `-s` | GDB load |
-| Finish | `monitor reset run`, `disconnect` | `monitor reset`, `detach` | `monitor reset`, `monitor go`, `disconnect` |
-| External timeout | New GDB client for recovery | New client to the persistent server: reset + detach | New client: reset + go + disconnect |
-| Runtime metadata | OpenOCD version, STLINK firmware and API | Server version and firmware; API v2 is not in the banner (`null`) | Server version and J-Link firmware string |
+| [OpenOCD](backends/openocd.md) | Listening on port … for gdb connections | `monitor reset halt` | `monitor reset run`, `disconnect` |
+| [ST-LINK GDB Server](backends/stlink.md) | Waiting for debugger connection | `monitor reset` | `monitor reset`, `detach` |
+| [J-Link](backends/jlink.md) | Waiting for GDB connection | `monitor reset` | `monitor reset`, `monitor go`, `disconnect` |
+| [st-util](backends/st-util.md) | Listening at *:PORT… (ASCII `...`) | `monitor reset` | `monitor reset`, `monitor resume`, `disconnect` |
 
-All three backends passed the same CI firmware steps on hardware at commit
-`fbc103d`, including the full image and timeout with recovery ([status](STATUS.md)).
-
-Target schema 1 is kept for compatibility: the `openocd_target`, `reset_halt` and
-`reset_run` fields are used only by OpenOCD. ST and J-Link take their commands from
-the backend, while identity, Flash bounds, breakpoints and fault handlers come from
-the common profile. This is transitional compatibility, not a universal profile schema.
+All use `target extended-remote`. Schema 1 remains compatible: top-level reset fields apply only
+to OpenOCD. Schema versions and migration: [API](API.md).
 
 ## Server specifics
 
-**ST-LINK GDB Server** opens the SWD connection itself before the GDB client starts:
-the GDB API check before connecting does not mean the debugger was not accessed.
-Attach does not mean the debugger has no influence. With 1000 kHz requested the
-server reported a COM frequency of 950 kHz. The extra SWV port (observed as GDB
-port + 1) is not used; the CLI help has no equivalent of OpenOCD `bindto`, so the
-processes are meant for a local stand. Shared mode `-t` is not used: both ST
-backends are protected by one lock per serial number and the server belongs to the
-run. Logs and temporary files (`--temp-path`, `-f`, `TEMP`/`TMP`) go to the
-consumer's run directory; the process tree is closed at the end.
-
-**J-Link.** Verified mappings: `STM32F103C8T6` → `STM32F103C8` (J-Link CE) and
-`STM32F030R8T6` → `STM32F030R8` (on-board J-Link STLink on Nucleo); added
-`STM32F103CBT6` → `STM32F103CB` (WeAct BluePill-Plus, J-Link CE). Other MCUs are
-rejected before the server starts until a mapping is verified. Flash breakpoints are
-disabled; hardware breakpoints are used.
+Individual pages cover TOML, dependencies, startup/shutdown, fixes and limits. The st-util page also
+covers 1.6.0/1.9.0 results and building 1.9.0 with private libusb on Ubuntu 20.04.
+Acceptance is version/stand-specific: [matrix](API_ACCEPTANCE.md).
 
 ## Limits and extension
 
-- A vendor server may access SWD already at start. The offline ELF check runs before
-  the server, but the GDB API presence check does not mean there was no hardware access.
-- monitor/detach commands must not be carried over between servers by analogy. A new
-  backend or mapping needs hardware checks of programming, verify-only,
-  timeout/recovery and the final MCU state.
-- Mass erase, option bytes, debugger firmware updates and shared mode are never
-  enabled automatically. Locking — [debugger ownership](DEBUGGER_OWNERSHIP.md).
-- Observation without halt, SWV, external loaders, multicore and authentication are
-  not part of the proven common API; `observe_sleep` and Commander experiments are
-  tools of the stand project.
-
-[Stand commands and results](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/GDB_BACKENDS.md),
-[J-Link experiments](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/JLINK.md) (Russian).
+A vendor server may access SWD on startup before GDB. `prepare-only` does not start a server;
+doctor success does not establish MCU or scenario correctness. New backend acceptance covers
+programming/verify-only, timeout/recovery, shutdown and final MCU state. Do not copy monitor commands
+by analogy. Mass erase, option bytes, debugger firmware updates and shared mode are not enabled automatically.
+Observation without halt, SWV, external loaders, multicore and authentication are outside the verified common API.
+[Ownership](DEBUGGER_OWNERSHIP.md) · [Linux/SSH](LINUX_STAND.md) · [HOWTO](HOWTO.md).
 
 ## st-util (v0.4.0)
 
-The open-source [stlink-org/stlink](https://github.com/stlink-org/stlink) server is distinct from
-ST-LINK GDB Server. Stand template: [st-util.example.toml](../../tests/firmware/stands/st-util.example.toml).
-Default executable: `st-util.exe` on Windows, `st-util` on Linux; no CubeProgrammer required.
-`serial` is 24 hexadecimal digits. The target.toml schema 2 section is optional:
-
-```toml
-[st-util]
-reset_halt = "monitor reset"
-```
-
-Start: `--multi --no-reset --serial <SERIAL> --freq <speed_khz>k --listen_port <port>`.
-Ready marker: `Listening at *:<port>`; finish/recovery: `monitor reset`, `monitor resume`,
-`disconnect`. The common ST-Link lock prevents overlap with OpenOCD and the ST server.
-Setup: `set mem inaccessible-by-default off` permits reads of F4 factory registers omitted
-from the server map. Identity and image verification remain enabled. `doctor` checks the version
-without hardware; runtime version is read only from server.log and may be `null` if server stdout
-was not flushed before exit. Debugger firmware/API are not inferred.
-
-st-util listens on all network interfaces; `[remote]` uses the existing module SSH tunnel,
-not `st-util --remote`/st-server. Stand network configuration controls access to that port.
-OrangePi installation: [Linux stand](LINUX_STAND.md#st-util). tools/linux_stand.py does not
-install st-util yet. Exact verified combinations: [matrix](API_ACCEPTANCE.md).
+Details moved to the [st-util page](backends/st-util.md), including version differences, Ubuntu 20.04
+build, Listening/idle waits and actual server exit.

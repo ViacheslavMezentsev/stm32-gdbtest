@@ -129,8 +129,7 @@ ssh -i $env:USERPROFILE\.ssh\id_ed25519_stand orangepi@<хост> exit   # пр�
 `<профиль>-<backend>.remote.toml`: `f411ce-openocd.remote.toml`, `f411ce-jlink.remote.toml` или
 `f411ce-stlink.remote.toml`. Окончание `.remote.toml` отличает его от локального `*.local.toml`; оба исключены из
 Git. ST-LINK GDB Server (`stlink`) существует для Linux только на x86_64; на Orange Pi (aarch64) отладчик ST-Link
-подключается через OpenOCD (`openocd`). Другие серверы для ST-Link на aarch64 (pyOCD, `st-util` из stlink-tools)
-модулем не поддерживаются: для них нужен отдельный backend.
+подключается через OpenOCD (`openocd`) или проверенный `st-util` 1.9.0. pyOCD не имеет backend в модуле.
 
 ```toml
 [probe]
@@ -199,38 +198,11 @@ WSL. Этот сценарий на оборудовании не проверя
 
 ## st-util
 
-Дополнительный backend для ST-Link, включая Linux aarch64. На Windows проверяется Scoop
-stlink 1.9.0; установка и аппаратная проверка OrangePi пока не выполнены.
-Сначала проверьте версию пакета дистрибутива:
-
-```sh
-apt-cache policy stlink-tools
-# Install system packages only as the stand administrator:
-sudo apt install stlink-tools
-st-util --version
-```
-
-Для сравнения именно с 1.9.0 используйте [сборку из исходников upstream](https://github.com/stlink-org/stlink/blob/v1.9.0/doc/compiling.md)
-с тегом `v1.9.0`, CMake ≥3.21, native GCC, libusb и его заголовками. Версия пакета Ubuntu
-может отличаться. Права udev на ST-Link и правила SSH остаются прежними; tools/linux_stand.py
-этот дополнительный компонент не устанавливает. В `<profile>-st-util.remote.toml`:
-
-```toml
-[probe]
-backend = "st-util"
-serial = "REPLACE_WITH_24_HEX_DIGITS"
-executable = "st-util"
-speed_khz = 1000
-flash = "if-different"
-
-[remote]
-host = "stand-host"
-user = "stand-user"
-```
-
-Замените serial/host/user своими значениями и добавьте уже настроенный `identity_file`, если нужен.
-Далее `doctor --stand …`, `run --prepare-only`, lifecycle и полный набор на реальной плате.
-Прохождение Windows не является приёмкой Linux/SSH. [Диалект](BACKENDS.md#st-util-v040).
+На Ubuntu 20.04/OrangePi проверена отдельная сборка1.9.0 с libusb 1.0.27. Пакет1.6.0 из apt
+не принят для штатного backend. [Отдельная страница](backends/st-util.md) содержит сравнение,
+полный рецепт сборки без замены системных библиотек, remote TOML и диагностику.
+Установщик `tools/linux_stand.py` пока не ставит st-util; CMake берётся из окружения стенда.
+Полные наборы пяти STM32 через SSH и восстановление приняты; [матрица](API_ACCEPTANCE.md).
 
 ## Диагностика завершения
 
@@ -241,9 +213,9 @@ Runner проверяет фактический выход сервера по�
 Перед recovery st-util runner ждёт до5с полной строки Listening нужного порта после последнего
 подключения GDB. Затем выполняет одну попытку recovery (до10с). Перед остановкой снова ждёт idle;
 heartbeat в это время работает. Helper независимо наблюдает idle локально, даже если SSH потерян,
-после чего выполняет ограниченный cleanup: TERM3с, KILL5с, reap5с. Runner ждёт SSH до25с.
+после чего выполняет ограниченный cleanup: TERM 3с, KILL 5с, reap5с. Runner ждёт SSH до25с.
 Неподтверждённый idle даёт ERROR, даже если сервер затем вернул0. Тайм-аут не означает безопасного
 освобождения USB. Подвисший вывод SSH не блокирует остановку; потерянный итоговый маркер даёт ERROR.
-Эти ожидания проверены на host-моделях; аппаратная приёмка обновлённого runtime выполняется отдельно.
+Host-регрессия дополнена полными SSH/st-util наборами пяти STM32; принудительная потеря SSH на реальном USB не принята.
 
 Маркер st-util может завершаться многоточием: `Listening at *:порт...`. Оно учитывается парсером; неполная строка без перевода строки не подтверждает готовность.

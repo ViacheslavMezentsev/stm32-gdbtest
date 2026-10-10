@@ -43,7 +43,9 @@
 - [HAL-макросы](HAL_MACRO_GUIDE.md) — выбор макросов, контекст и контракт макросов.
 - [Образы и CRC](IMAGES.md) — секции ELF, BIN, полный образ и CRC-32/ISO-HDLC.
 - [Manifest](MANIFESTS.md) — метаданные среды выполнения и происхождения сборки.
-- [GDB-серверы](BACKENDS.md) — OpenOCD, ST-LINK GDB Server, J-Link; стенд.
+- [GDB-серверы](BACKENDS.md) — OpenOCD, ST-LINK GDB Server, J-Link, st-util; стенд.
+
+Отдельные backend: [OpenOCD](backends/openocd.md) · [ST-LINK GDB Server](backends/stlink.md) · [J-Link](backends/jlink.md) · [st-util](backends/st-util.md).
 - [Identity и Flash](TARGET_IDENTITY.md) — DEV_ID и заводской размер Flash.
 - [Совместимые МК](COMPATIBLE_MCU.md) — Cortex-M других производителей: профиль, CMSIS производителя, сценарии (AT32).
 - [Владение отладчиком](DEBUGGER_OWNERSHIP.md) — межпроектная блокировка на Windows и Linux.

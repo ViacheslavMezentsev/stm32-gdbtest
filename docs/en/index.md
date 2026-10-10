@@ -43,7 +43,9 @@ the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 - [HAL macros](HAL_MACRO_GUIDE.md) — choosing macros, context and the macro contract.
 - [Images and CRC](IMAGES.md) — ELF sections, BIN, full image and CRC-32/ISO-HDLC.
 - [Manifest](MANIFESTS.md) — runtime and build provenance metadata.
-- [GDB servers](BACKENDS.md) — OpenOCD, ST-LINK GDB Server, J-Link; the stand.
+- [GDB servers](BACKENDS.md) — OpenOCD, ST-LINK GDB Server, J-Link, st-util; the stand.
+
+Backend pages: [OpenOCD](backends/openocd.md) · [ST-LINK GDB Server](backends/stlink.md) · [J-Link](backends/jlink.md) · [st-util](backends/st-util.md).
 - [Identity and Flash](TARGET_IDENTITY.md) — DEV_ID and the factory Flash size.
 - [Compatible MCUs](COMPATIBLE_MCU.md) — Cortex-M from other vendors: profile, vendor CMSIS, scenarios (AT32).
 - [Debugger ownership](DEBUGGER_OWNERSHIP.md) — cross-project locking on Windows and Linux.

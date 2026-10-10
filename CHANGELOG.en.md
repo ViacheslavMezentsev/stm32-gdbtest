@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Added dedicated OpenOCD, ST-LINK GDB Server, J-Link and st-util pages: TOML, lifecycle, limits and reasons for fixes; st-util includes a 1.6.0/1.9.0 comparison and Ubuntu 20.04 build instructions.
+
 - Clarified version labels: the stm32-gdbtest package version is distinct from the Python interpreter version, API_VERSION and specification revisions.
 
 - Reconciled release documents, current evidence and limits; general specification 0.89, API specification 0.3.15. Contracts are unchanged.

@@ -132,8 +132,8 @@ The stand is a copy of the [template](../../tests/firmware/stands/remote.example
 `<profile>-<backend>.remote.toml`: `f411ce-openocd.remote.toml`, `f411ce-jlink.remote.toml` or
 `f411ce-stlink.remote.toml`. The `.remote.toml` ending sets it apart from a local `*.local.toml`; Git ignores both.
 ST-LINK GDB Server (`stlink`) exists for Linux on x86_64 only; on an Orange Pi (aarch64) an ST-Link probe is
-attached through OpenOCD (`openocd`). Other ST-Link servers on aarch64 (pyOCD, `st-util` from stlink-tools) are not
-supported by the module: they would need a backend of their own.
+attached through OpenOCD (`openocd`) or the verified [st-util 1.9.0 build](backends/st-util.md).
+pyOCD does not have a module backend. The Ubuntu 20.04 stlink-tools 1.6.0 package is not accepted.
 
 ```toml
 [probe]
@@ -202,38 +202,11 @@ crash. The checked path for WSL is the
 
 ## st-util
 
-An additional ST-Link backend, including Linux aarch64. Windows checks use Scoop
-stlink 1.9.0; OrangePi installation and hardware acceptance have not been performed yet.
-Check the distribution package version first:
-
-```sh
-apt-cache policy stlink-tools
-# Install system packages only as the stand administrator:
-sudo apt install stlink-tools
-st-util --version
-```
-
-For comparison with exactly 1.9.0, use the [upstream source build](https://github.com/stlink-org/stlink/blob/v1.9.0/doc/compiling.md)
-at tag `v1.9.0`, CMake ≥3.21, native GCC, libusb and its development headers. Ubuntu's package
-version may differ. Existing ST-Link udev permissions and SSH rules still apply;
-tools/linux_stand.py does not install this optional component. In `<profile>-st-util.remote.toml`:
-
-```toml
-[probe]
-backend = "st-util"
-serial = "REPLACE_WITH_24_HEX_DIGITS"
-executable = "st-util"
-speed_khz = 1000
-flash = "if-different"
-
-[remote]
-host = "stand-host"
-user = "stand-user"
-```
-
-Replace serial/host/user and add an existing `identity_file` if required. Then run
-`doctor --stand …`, `run --prepare-only`, lifecycle and the full suite on hardware.
-Windows success does not accept Linux/SSH. [Dialect](BACKENDS.md#st-util-v040).
+Ubuntu 20.04/OrangePi was checked with a separate 1.9.0 build and libusb 1.0.27. The apt 1.6.0 package
+is not accepted for the public backend. The [dedicated page](backends/st-util.md) includes comparison,
+a complete build recipe without replacing system libraries, remote TOML and diagnosis.
+`tools/linux_stand.py` does not install st-util yet; CMake comes from the stand environment.
+Full SSH suites and recovery on five STM32 boards passed; see the [matrix](API_ACCEPTANCE.md).
 
 ## Shutdown diagnostics
 
@@ -244,7 +217,7 @@ Requested SIGTERM after EOF is accepted for OpenOCD/J-Link/ST-LINK, not st-util.
 Before st-util recovery, runner waits up to5s for a complete Listening line for the current port
 after the last GDB connection, then makes one recovery attempt (up to10s). It waits for idle again
 before stopping; heartbeat remains active. Helper independently observes idle locally even if SSH
-is lost, then performs bounded cleanup: TERM3s, KILL5s, reap5s. Runner waits up to25s for SSH.
+is lost, then performs bounded cleanup: TERM 3s, KILL 5s, reap5s. Runner waits up to25s for SSH.
 Unconfirmed idle means ERROR even if the server subsequently returns0. Timeout does not mean safe
 USB release. A stalled SSH output does not block cleanup; a missing final marker means ERROR.
 These waits are covered by host models; updated runtime hardware acceptance remains separate.
