@@ -305,3 +305,6 @@ Docker docs+host6/6 (426 тестов,6 штатных пропусков); ст
 
 GitHub Hardware на `c23f8fe`: пять плат, 20 PASS + 5 ожидаемых SKIP; повторно проверены 75 файлов.
 [Протокол выбранного набора](API040_SCENARIOS.md#github-hardware-новый-набор-040).
+
+WSL2 → OrangePi/SSH на `d1a9361`: 20 PASS + 5 ожидаемых SKIP, 65 записей; завершение серверов 25/25.
+[WSL2](API040_SCENARIOS.md).

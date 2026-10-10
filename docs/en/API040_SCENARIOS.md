@@ -103,4 +103,21 @@ shutdown_wait.ready; no capture/cleanup/teardown errors.
 Warnings remain explicit: GDB 14 infers the finish stop reason (inferred_stop); the F103 profile limits
 Flash to 64 KiB while the device reports 128 KiB, and the image fits both bounds.
 This accepts the selected suite through GitHub, not the original ten-stage lifecycle, the entire API
-or other execution layouts. The next separate step is WSL2 → OrangePi/SSH.
+or other execution layouts. The WSL2 → OrangePi/SSH result follows below.
+
+## WSL2 → OrangePi: the new 0.4.0 suite
+
+2026-10-10, snapshot `d1a9361`: runner in WSL2/Ubuntu 20.04, Python 3.11.16,
+xPack 13.3.1-1.1 (GDB 14.2.90, embedded Python 3.11.4); st-util 1.9.0 on OrangePi over SSH.
+Packages were prepared on Windows from previously checked ELF files; firmware was not rebuilt in WSL.
+Source and package SHA256 hashes were retained; execution used a separate directory on the Linux filesystem.
+
+F030R8, F103, F401CC, F411CE, F429ZI: doctor 5/5, **4 PASS + 1 expected SKIP** per board.
+Total: 20 PASS, 5 SKIP (exit 77), 65 records. Independent JSON/JUnit and records digest validation passed;
+export/verify/report succeeded for all five profiles. All 25 runs confirm image_verified,
+reset_run, shutdown_wait.ready and remote server exit 0 / idle.ready.
+No capture/cleanup/teardown errors or USB failures occurred. The existing inferred_stop and F103 Flash
+capacity warnings remain; no new anomalies were found.
+
+This verifies portable packages and the selected scenarios through WSL2 → SSH,
+not a complete API or lifecycle rerun. Core and scenarios were unchanged.

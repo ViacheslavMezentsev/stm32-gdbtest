@@ -302,3 +302,6 @@ New selective campaign: [API 0.4.0 scenarios](API040_SCENARIOS.md), five STM32 b
 
 GitHub Hardware at `c23f8fe`: five boards, 20 PASS + 5 expected SKIP; 75 files reverified.
 [Selected-suite evidence](API040_SCENARIOS.md#github-hardware-the-new-040-suite).
+
+WSL2 → OrangePi/SSH at `d1a9361`: 20 PASS + 5 expected SKIP, 65 records; server shutdown confirmed 25/25.
+[WSL2](API040_SCENARIOS.md).
