@@ -248,3 +248,20 @@ complex linespec syntax is outside scope.
 F030 SKIP, F411 PASS; skip after navigation on both, BOOT/GPIO recovery4/4. Stock package and actual CTest: F030 skipped, F411 passed. Local verification, not a release.
 
 Additional: SKIP after navigation on F030/F103/F401/F411/F429/AT32, recovery12/12. run_hw rejects unexpected skip and accepts explicit allowance; stock recovery2/2. Docker host:381 tests, OK (4 existing skips); documentation PASS.
+
+## st-util over SSH: recovery/idle — 2026-10-10
+
+Runtime `4cb5e0a`: Windows → OrangePi, F030R8/F103C8/F401CC/F411CE/F429ZI.
+xPack GCC13.3.1-1.1 (GDB14.2.90/Python3.11.4), helper Python3.11.16,
+st-util1.9.0 with libusb1.0.27, OpenOCD xPack0.12.0-7.
+Per board: smoke BOOT/GPIO, running/halted MCU timeout, BOOT/GPIO after each, OpenOCD restoration.
+Total60 PASS and10 expected timeout ERROR with recovery; all70 outcomes expected.
+st-util40 exit0 completions with helper idle; OpenOCD30 requested SIGTERM/exit-15. Release15/15 and final5/5.
+
+The first run on previous runtime stopped on F030: parser did not recognize the Listening ellipsis.
+After2/2 restoration checks the format was fixed and host regression passed (426 tests, Docker docs+host6/6).
+Redirected Windows doctor required explicit UTF-8 ([HOWTO](HOWTO.md)). Disconnect, GDB encoding, missing
+recovery ELF, SWD speed and F103 Flash capacity diagnostics are retained. F429 SP/SRAM anomaly did not
+recur in this series; its previous cause remains unknown. This is a short lifecycle check; full suites
+on new runtime, long series and deliberate SSH loss with real USB remain separate checks. Absence of
+USB failures does not guarantee safe forced cleanup.

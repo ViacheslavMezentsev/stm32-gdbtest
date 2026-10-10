@@ -565,3 +565,11 @@ For docs.public create a temporary index there (`git init`, `git add .`), then r
 `python3 ci/run_checks.py docs host`. Retain the source archive and copy build/ci back before
 removing the created container. Keep an interrupted bind-mount run separately without relabeling
 it PASS. Compare identical source snapshots and check selections.
+
+## Doctor on Windows: redirected output encoding
+
+If `doctor` ends with `charmap codec can't encode character` while printing a USB serial,
+select UTF-8 for Python: `python -X utf8 -m stm32_gdbtest doctor --stand <file>`.
+In a calling Python process use `subprocess.run(..., text=True, encoding="utf-8")`.
+ST-Link/V2 may return a binary serial: an output encoding error does not establish an MCU/USB fault.
+Retain the original log. Successful doctor output does not replace a hardware check.
