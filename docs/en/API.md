@@ -38,8 +38,10 @@ the transition from the former names are recorded below.
   waits between checks follow it |
 
 The values are read from `api.toml`; a method call may lower `limit` and a profile may raise it up to
-the maximum. `reset.command` defaults to the backend value: OpenOCD uses the profile's `reset_halt`
-and J-Link uses `monitor reset`; a session may override it. The journal limits, `breakpoint_limit=4`
+the maximum. The reset command comes from the backend dialect: OpenOCD uses `monitor reset halt`
+and `monitor reset run`, ST-LINK GDB Server and J-Link use `monitor reset`; the section of the target
+profile for the selected server (`[openocd]`, `[jlink]`, `[stlink]`) or a session may override it.
+The `api.toml` key `reset.command` is removed. The journal limits, `breakpoint_limit=4`
 and `timeout_s=20` stay as in the effective tables.
 
 Transition from former names: in release 0.3.0 these four methods warn with

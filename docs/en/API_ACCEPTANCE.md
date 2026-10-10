@@ -7,12 +7,15 @@ Contract: [API specification](../TECHNICAL_SPECIFICATION_API.md); guide: [API](A
 
 ## 0.4.0 candidate — acceptance open
 
-At integrated `main` `f57fe72`, local docs 5/5, host and F030 offline passed
-(7/7 total). The release branch raises Python to 0.4.0; `API_VERSION=2` was already
-set when four former methods were removed. Separate hardware checks for SKIP,
-the `reach` fix and F01–F03 belonged to earlier SHAs. A local Windows matrix ran
-at runtime commit `bb74cde`; other layouts and a consumer with the real submodule
-remain unchecked, so the release is not yet accepted.
+The release branch raises Python to 0.4.0; `API_VERSION=2` was set when four former
+methods were removed. The target profile moved to schema 2: the GDB server dialect
+lives in the `[openocd]`, `[jlink]` or `[stlink]` section and the reset command is
+resolved once when the run is prepared (API specification 6.6, general 0.79). The
+hardware matrix at `bb74cde` is replaced by the matrix of the schema 2 branch: the
+local CI `docs format host firmware hal` passed 26/26 (docs 5/5, host 393, firmware
+18/18, hal 24/24) and six stands passed the lifecycle and the full suite. A consumer
+with the real submodule is a private project checked after the release; the other
+run layouts belong to 0.3.0 acceptance and are repeated on the final SHA separately.
 
 Windows 10 AMD64, GCC 13.3.1-1.1, GDB 14.2.90/Python 3.11.4, OpenOCD 0.12.0
 or J-Link GDB Server 8.32. Each stand passed `run_hw.py` 10/10, then
@@ -24,18 +27,30 @@ expected timeout with host recovery, not a scenario failure.
 | MCU / backend | Scenarios | Stages | ELF SHA-256 |
 | --- | ---: | ---: | --- |
 | F030R8 / OpenOCD | 45 | 98 (97 PASS, 1 expected ERROR) | `8909baf64a2b09ace0eb3879e58c16dc53db7a6d52ee41c94fe9d25301d34efa` |
-| F103C8 / OpenOCD | 47 | 102 (101 PASS, 1 expected ERROR) | `b221cdbc2fbec7dabd2760d0a45356266d501331bd07a59e9479e77ae25fa971` |
+| F411CE / ST-LINK GDB Server | 47 | 102 (101 PASS, 1 expected ERROR) | `486bc511fe97bfe5f303860784b6d4fead8f25f7ec9182f28c52fb9993416028` |
 | F401CC / OpenOCD | 47 | 102 (101 PASS, 1 expected ERROR) | `2e5e677ed52fa7f914b44f91807ee69769ae60e87a6304800952bb409adff404` |
 | F411CE / OpenOCD | 47 | 102 (101 PASS, 1 expected ERROR) | `b018f21c89406eb889d952a7266532c234a48cab7de158facd4765afac97932d` |
 | F429ZI / OpenOCD | 47 | 102 (101 PASS, 1 expected ERROR) | `fdec05542e41b323c34fe25c2392a7b53113b822b3304f4b26bf5804adb41bc4` |
 | AT32F403A / J-Link | 47 | 102 (101 PASS, 1 expected ERROR) | `4e1e5888178b65b3ec69eb3bcac9ae2089febdf7e563004503574f13d58d7a9a` |
 
-Total: 280 scenarios and 608 stages (602 PASS, 6 expected ERROR). The first AT32
-`run_hw.py` gave 9/10: CMake cached an obsolete SDK path, so subsequent stages
-used an earlier ELF and were not counted. The original FAIL was retained locally.
-After correcting the path, a fresh build, 10/10 and the full suite passed.
-`run_hw.py` now aborts after a failed `build` (specification 0.78, TC-163);
-this helper-script change followed the matrix.
+Total: 280 scenarios and 608 stages (602 PASS, 6 expected ERROR). The stand set is the
+six agreed debuggers: F103C8 / J-Link is replaced by AT32F403A / J-Link, because the
+bench has one J-Link and the AT32 board is easier to test. Scenario counts are unique
+identifiers; stage counts are run lines including preparation and restoration.
+
+Schema 2 was verified separately. `HW_CI_RESET` passed on all six stands; on
+F411CE / ST-LINK GDB Server the report recorded `reset_halt = monitor reset`, the
+executed command `monitor reset` and the outcome `halted`, and the checks "reset used
+the configured command" and "reset is journalled" compared it with the effective value
+of the run. The previous behaviour failed there with `Protocol error with Rcmd`: the
+profile passed `monitor reset halt`, which belongs to OpenOCD. The existing
+`HW_CI_PROFILE` on the same stand found the second leftover of the migration, a read of
+the removed `api.reset.command` key; the fix is part of this branch.
+
+Separate hardware checks for SKIP, the `reach` fix and F01–F03 belonged to earlier
+SHAs. The first AT32 `run_hw.py` at `bb74cde` gave 9/10 because CMake cached an
+obsolete SDK path; after correcting the path a fresh build, 10/10 and the full suite
+passed, and `run_hw.py` now aborts after a failed `build` (specification 0.78, TC-163).
 
 ## 0.3.0 package
 

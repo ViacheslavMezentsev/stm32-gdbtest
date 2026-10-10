@@ -302,6 +302,17 @@ build/ci-gcc13-windows и build/ci-gcc13-linux (Docker); сохранять ну
 своей ОС, не Git checkout и не весь каталог с аппаратными отчётами.
 После успешного повторного HAL-этапа укажите два прогона, не единый 15/15 PASS.
 
+## Диалект GDB-сервера в профиле цели (schema 2)
+
+`reset_halt`/`reset_run` на верхнем уровне `target.toml` — это схема 1, её команды OpenOCD. Для схемы 2
+поставьте `schema = 2` и перенесите команды в секцию сервера: `[openocd]` (значения те же),
+`[jlink]`, `[stlink]`. Секцию можно не указывать — тогда действует встроенное значение сервера
+(`monitor reset halt` у OpenOCD, `monitor reset` у ST-LINK GDB Server и J-Link). Из `api.toml`
+удалите ключ `reset.command`: команда сброса берётся из диалекта backend'а. Проверьте результат
+через `run --prepare-only --stand …` — он печатает действующие команды без обращения к отладчику.
+Ошибка `Protocol error with Rcmd` при `reset()` означает, что профиль задал команду чужого сервера:
+`monitor reset halt` принадлежит OpenOCD, а не ST-LINK GDB Server. [Серверы](BACKENDS.md).
+
 ## Не смешивать prepare и HW-отчёты одной сессии
 
 ### Выбор другой версии GDB

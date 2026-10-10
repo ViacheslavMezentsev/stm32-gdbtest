@@ -37,7 +37,9 @@ validates the stand and backend commands without connecting to the debugger, and
 
 A `target.toml` profile may name the J-Link device with the `jlink_device` key (for example for an MCU outside
 the validated STM32 parts); without it the validated STM32 table is used. For OpenOCD a profile accepts
-`reset_halt = "monitor reset init"` — a reset with the target init procedure. The debugger lock tells probe
+A schema 2 profile keeps the dialect of each server in a section named after the backend
+(`[openocd]`, `[jlink]`, `[stlink]`); `reset_halt = "monitor reset init"` in `[openocd]`
+is a reset with the target init procedure. An absent section means the built-in dialect.
 families apart: another OpenOCD interface script does not share the lock of an ST-Link with the same serial.
 
 On Linux ST-LINK GDB Server (STM32CubeCLT) exists for x86_64 only; on aarch64

@@ -38,8 +38,10 @@
   зависят ожидания между проверками |
 
 Значения читаются из `api.toml`; вызов метода может уменьшить `limit`, профиль — увеличить до
-максимума. `reset.command` по умолчанию берётся из backend-а: OpenOCD — `reset_halt` профиля,
-J-Link — `monitor reset`; сессия может переопределить значение. Лимиты журнала, `breakpoint_limit=4`
+максимума. Команду сброса задаёт диалект backend-а: OpenOCD — `monitor reset halt` и
+`monitor reset run`, ST-LINK GDB Server и J-Link — `monitor reset`; секция профиля цели для
+выбранного сервера (`[openocd]`, `[jlink]`, `[stlink]`) или сессия могут переопределить значение.
+Ключ `api.toml` `reset.command` удалён. Лимиты журнала, `breakpoint_limit=4`
 и `timeout_s=20` остаются из действующих таблиц.
 
 Переход со прежних имён: в выпуске 0.3.0 эти четыре метода предупреждают `deprecated`,

@@ -301,6 +301,17 @@ build/ci-gcc13-windows and build/ci-gcc13-linux (Docker); preserve the directory
 your OS, not the Git checkout or the whole hardware evidence directory.
 If the HAL rerun succeeds, report two runs rather than a single 15/15 PASS.
 
+## GDB server dialect in the target profile (schema 2)
+
+`reset_halt`/`reset_run` at the top level of `target.toml` is schema 1, and those commands are OpenOCD's.
+For schema 2 set `schema = 2` and move the commands into the section of the server: `[openocd]` (same
+values), `[jlink]`, `[stlink]`. The section may be omitted, and then the built-in value of the server
+applies (`monitor reset halt` for OpenOCD, `monitor reset` for ST-LINK GDB Server and J-Link). Remove
+the `api.toml` key `reset.command`: the reset command comes from the backend dialect. Check the result
+with `run --prepare-only --stand ...`, which prints the effective commands without touching a debugger.
+A `Protocol error with Rcmd` from `reset()` means the profile named a command of another server:
+`monitor reset halt` belongs to OpenOCD, not to ST-LINK GDB Server. [Servers](BACKENDS.md).
+
 ## Do not mix prepare and hardware reports from one session
 
 ### Selecting another GDB version

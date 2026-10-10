@@ -30,8 +30,10 @@ and publication are tracked in [TODO](../../TODO.md).
 ## Before a release
 
 1. Host and offline checks: CI is green on the final commit ([checks and CI](testing.md)).
-2. Hardware check of the CI firmware with `run_hw.py` on the final commit on the
-   F030R8/ST-Link/OpenOCD, F103C8/J-Link, F411CE/OpenOCD and F411CE/ST-LINK GDB Server stands.
+2. Hardware check of the CI firmware with `run_hw.py` on the final commit on six stands:
+   F030R8/OpenOCD, F401CC/OpenOCD, F411CE/OpenOCD, F411CE/ST-LINK GDB Server,
+   F429ZI/OpenOCD and AT32F403A/J-Link. The set is agreed with the owner: the bench has
+   one J-Link, so the AT32 board replaces F103C8.
 3. Consumer integration through a real Git submodule; if needed, agreed hardware and
    recovery checks of the consumer.
 4. Documentation and migration match the code; LICENSE is present; no local artifacts

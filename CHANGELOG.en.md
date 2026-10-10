@@ -10,6 +10,11 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 Release candidate: publication follows final hardware acceptance and CI at the release SHA.
 
+- The target profile `target.toml` moves to schema 2: the GDB server dialect lives in the
+  `[openocd]`, `[jlink]` or `[stlink]` section, and an absent section means the built-in value of the
+  server. The reset command is resolved once when the run is prepared and published to a scenario as
+  `stand.reset_command`; the `api.toml` key `reset.command` is removed. Schema 1 stays readable for
+  the profiles already delivered.
 - `run_hw.py` stops hardware steps and repeats after a failed `build`, preventing use of
   a stale `session.json` and firmware from an earlier build.
 
