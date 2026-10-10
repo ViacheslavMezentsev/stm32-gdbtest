@@ -84,3 +84,5 @@ The original ERROR remains saved; configuration now references the original mani
 This fixes campaign setup without relaxing validation or changing the core. Existing hardware scenarios
 were not run in this campaign; it does not close ST-LINK GDB Server or AT32 limitations.
 
+
+GitHub and prepared packages use [Hardware api040 mode](HARDWARE_CI.md#selecting-the-new-api-040-suite).

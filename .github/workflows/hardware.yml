@@ -9,6 +9,12 @@ on:
         description: 'CI profiles, space separated (f030r8 f103c8 f401cc f411ce f429zi)'
         required: true
         default: 'f030r8 f103c8 f401cc f411ce f429zi'
+      suite:
+        description: 'Hardware suite: lifecycle or the five API 0.4.0 runs per board'
+        type: choice
+        options: [lifecycle, api040]
+        default: lifecycle
+        required: true
       steps:
         description: 'run_hw.py steps, space separated; empty for all'
         required: false
@@ -28,6 +34,7 @@ jobs:
     timeout-minutes: 30
     env:
       PROFILES: ${{ inputs.profiles }}
+      SUITE: ${{ inputs.suite }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Cache pinned downloads (verified by SHA-256 on use)
@@ -40,13 +47,21 @@ jobs:
       - name: Build, prepare and pack the CI firmware
         run: |
           . "$HOME/.local/stm32-gdbtest/env.sh"
+          case "$SUITE" in lifecycle|api040) ;; *) echo "Unknown suite: $SUITE"; exit 1 ;; esac
           mkdir -p build/packages
           for profile in $PROFILES; do
             case "$profile" in f030r8|f103c8|f401cc|f411ce|f429zi) ;; *) echo "Unknown profile: $profile"; exit 1 ;; esac
             (cd tests/firmware && cmake --preset "$profile" && cmake --build --preset "$profile" \
               && ctest --preset "$profile-offline")
-            python3 -B -m stm32_gdbtest pack --session "tests/firmware/build/$profile/hwtest/session.json" \
-              --output "build/packages/$profile.zip"
+            if [ "$SUITE" = api040 ]; then
+              python3 -B tests/firmware/api040.py pack --session "tests/firmware/build/$profile/hwtest/session.json" \
+                --output "tests/firmware/build/api040-pack/$profile"
+              cp "tests/firmware/build/api040-pack/$profile/enabled.zip" "build/packages/$profile-enabled.zip"
+              cp "tests/firmware/build/api040-pack/$profile/disabled.zip" "build/packages/$profile-disabled.zip"
+            else
+              python3 -B -m stm32_gdbtest pack --session "tests/firmware/build/$profile/hwtest/session.json" \
+                --output "build/packages/$profile.zip"
+            fi
           done
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -60,6 +75,7 @@ jobs:
     timeout-minutes: 60
     env:
       PROFILES: ${{ inputs.profiles }}
+      SUITE: ${{ inputs.suite }}
       STEPS: ${{ inputs.steps }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -71,6 +87,10 @@ jobs:
         run: |
           . "$HOME/.local/stm32-gdbtest/env.sh"
           stands="${STM32_GDBTEST_STANDS_DIR:-$HOME/.config/stm32-gdbtest/stands}"
+          case "$SUITE" in lifecycle|api040) ;; *) echo "Unknown suite: $SUITE"; exit 1 ;; esac
+          if [ "$SUITE" = api040 ] && [ -n "$STEPS" ]; then
+            echo "steps applies only to lifecycle; leave it empty for api040"; exit 1
+          fi
           status=0
           mkdir -p build/hw
           summary="build/hw/campaign-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.tsv"
@@ -81,8 +101,16 @@ jobs:
             doctor_code=0
             hardware_code=0
             python3 -B -m stm32_gdbtest doctor --stand "$stands/$profile.toml" || doctor_code=$?
-            python3 -B tests/firmware/run_hw.py --profile "$profile" --stand "$stands/$profile.toml" \
-              --package "build/packages/$profile.zip" ${STEPS:+--steps $STEPS} || hardware_code=$?
+            if [ "$doctor_code" -ne 0 ]; then
+              hardware_code=125 # not started after failed preflight
+            elif [ "$SUITE" = api040 ]; then
+              python3 -B tests/firmware/api040.py run --enabled-package "build/packages/$profile-enabled.zip" \
+                --disabled-package "build/packages/$profile-disabled.zip" --stand "$stands/$profile.toml" \
+                --output "build/hw/api040/$profile" || hardware_code=$?
+            else
+              python3 -B tests/firmware/run_hw.py --profile "$profile" --stand "$stands/$profile.toml" \
+                --package "build/packages/$profile.zip" ${STEPS:+--steps $STEPS} || hardware_code=$?
+            fi
             printf '%s\t%s\t%s\n' "$profile" "$doctor_code" "$hardware_code" >> "$summary"
             if [ "$doctor_code" -ne 0 ] || [ "$hardware_code" -ne 0 ]; then
               status=1
@@ -101,6 +129,10 @@ jobs:
             build/hw/**/*.tsv
             build/hw/**/summary.json
             build/hw/**/run_hw.log
-            build/hw/**/result.json
+            build/hw/**/*.json
+            build/hw/**/*.xml
+            build/hw/**/*.csv
+            build/hw/**/*.html
+            build/hw/**/export.toml
             build/hw/**/*.log
           if-no-files-found: warn

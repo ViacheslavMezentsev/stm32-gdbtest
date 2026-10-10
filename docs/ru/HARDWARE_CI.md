@@ -121,3 +121,38 @@ python3 -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stan
 
 До исправления новое открытие пакета удаляло весь каталог хэша, включая runs.
 Утерянные JSON не восстанавливаются из summary: нужен повтор проверки.
+
+## Выбор нового набора API 0.4.0
+
+Hardware → Run workflow: выберите выпускную ветку, `suite=api040`, профили
+`f030r8 f103c8 f401cc f411ce f429zi`; поле `steps` оставьте пустым.
+`suite=lifecycle` сохраняет прежние десять этапов `run_hw.py`; default — lifecycle.
+Новый режим не запускает старые аппаратные сценарии и не является полным повтором приёмки API.
+
+Prepare собирает ту же прошивку и создаёт два пакета на профиль через `tests/firmware/api040.py pack`:
+четыре сценария с включённой возможностью и один SKIP с выключенной. Capture включён в обеих
+конфигурациях до упаковки; capsule после проверки хешей не меняется. На стенде `api040.py run`
+проверяет 4 PASS + 1 SKIP (77), JSON/JUnit, хеш и принадлежность records, типы данных и finally.
+Успешный export не скрывает отказ аппаратного сценария. После отказа doctor MCU не запускается.
+
+`hardware-results` содержит JSON, JUnit XML, CSV, HTML, журналы и TSV с кодами каждого профиля.
+Отчёты лежат в `api040/<профиль>/<попытка>/report/campaign.html`, сводка — рядом в summary.json.
+Каждая попытка получает отдельный каталог. Скачивайте весь артефакт, сохраняя структуру;
+для повторного verify используйте каталог конкретной попытки как `--root`.
+При отказе сохраняются частичные результаты; отсутствие отчёта остаётся ошибкой.
+
+Локальная проверка тех же команд (пути являются примерами):
+
+```text
+python tests/firmware/api040.py pack --session <session.json> --output <новый-каталог-пакетов>
+python tests/firmware/api040.py run --enabled-package <enabled.zip> --disabled-package <disabled.zip> --stand <stand.toml> --output build/hw/api040/manual
+```
+
+В CI-стендах на OrangePi используйте локальные `[probe]`, без `[remote]`: runner и GDB находятся
+на том же хосте. Для принятой конфигурации st-util задайте абсолютный путь к сборке 1.9.0,
+серийный номер текущего ST-Link, speed_khz=1000 и flash=if-different.
+[Установка st-util](backends/st-util.md) · [Сценарии и границы проверки](API040_SCENARIOS.md).
+
+Проверка подготовки 10.10.2026: пакеты F411 с Windows исполнены локально на OrangePi
+через st-util 1.9.0 — 4 PASS + 1 ожидаемый SKIP; export/verify/report успешны. Doctor пяти
+CI-профилей прошёл. Это репетиция драйвера и пакетов, не запуск GitHub Actions.

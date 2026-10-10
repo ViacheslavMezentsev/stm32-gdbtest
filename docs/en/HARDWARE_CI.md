@@ -120,3 +120,38 @@ required evidence and completing all runs that use those directories.
 
 Previously, reopening a package removed the entire hash directory, including runs.
 Lost JSON reports cannot be recovered from summary: verification must be repeated.
+
+## Selecting the new API 0.4.0 suite
+
+Hardware → Run workflow: choose the release branch, `suite=api040`, profiles
+`f030r8 f103c8 f401cc f411ce f429zi`, and leave `steps` empty.
+`suite=lifecycle` retains the original ten `run_hw.py` stages and remains the default.
+The new mode does not run existing hardware scenarios or replace full API acceptance.
+
+Prepare builds the same firmware and creates two packages per profile with `tests/firmware/api040.py pack`:
+four scenarios with the capability enabled and one SKIP with it disabled. Both configurations enable
+capture before packing; verified capsules are not patched. On the stand, `api040.py run` checks
+4 PASS + 1 SKIP (77), JSON/JUnit, record hashes/ownership, data types and finally execution.
+Successful export cannot hide a hardware rejection. Failed doctor prevents the MCU run.
+
+`hardware-results` contains JSON, JUnit XML, CSV, HTML, logs and per-profile exit-code TSV.
+Reports are at `api040/<profile>/<attempt>/report/campaign.html`, with summary.json beside the report folder.
+Every attempt has its own directory. Download the complete artifact preserving its layout;
+use the individual attempt directory as `--root` for subsequent verify.
+Partial results survive failure; a missing report remains an error.
+
+Local equivalents (example paths):
+
+```text
+python tests/firmware/api040.py pack --session <session.json> --output <new-package-directory>
+python tests/firmware/api040.py run --enabled-package <enabled.zip> --disabled-package <disabled.zip> --stand <stand.toml> --output build/hw/api040/manual
+```
+
+OrangePi CI stands use local `[probe]` without `[remote]`: runner and GDB execute on that host.
+For the accepted st-util configuration, specify an absolute path to the 1.9.0 build,
+the currently attached ST-Link serial, speed_khz=1000 and flash=if-different.
+[st-util installation](backends/st-util.md) · [Scenarios and acceptance boundaries](API040_SCENARIOS.md).
+
+Preparation check on 2026-10-10: F411 packages from Windows ran locally on OrangePi
+with st-util 1.9.0 — 4 PASS + 1 expected SKIP; export/verify/report succeeded. Doctor passed
+for all five CI profiles. This is a driver/package rehearsal, not a GitHub Actions run.

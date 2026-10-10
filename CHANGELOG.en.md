@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Hardware CI now selects lifecycle/api040: separate PASS/SKIP packages, capture/JSON/JUnit checks, export and HTML; failed doctor prevents the profile hardware run. General specification 0.91.
+
 - Added four API 0.4.0 scenarios: mixed records, conditional SKIP, SKIP reason validation and string views; selected five-board STM32/SSH/st-util runs yielded 20 PASS and 5 expected SKIP, with capture/export/JSON/JUnit verified.
 
 - Added dedicated OpenOCD, ST-LINK GDB Server, J-Link and st-util pages: TOML, lifecycle, limits and reasons for fixes; st-util includes a 1.6.0/1.9.0 comparison and Ubuntu 20.04 build instructions.

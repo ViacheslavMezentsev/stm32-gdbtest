@@ -3,7 +3,7 @@
 ## Текущее состояние — 10.10.2026
 
 - Опубликован v0.3.0; кандидат v0.4.0 готовится в `codex/release-040`, не опубликован.
-  stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2, общее ТЗ 0.90, ТЗ API 0.3.16.
+  stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2, общее ТЗ 0.91, ТЗ API 0.3.16.
 - Последний проверенный пакет сценариев — `a6b6dbd`. Runtime remote lifecycle `4cb5e0a`:
   пять STM32 через SSH/st-util, 233 сценария, 516 этапов (243 prepare, 268 HW PASS,
   5 ожидаемых timeout ERROR), восстановление и освобождение стендов подтверждены.
@@ -18,6 +18,10 @@
 
 - Новые [сценарии API 0.4.0](docs/ru/API040_SCENARIOS.md): 25 prepare PASS, 20 HW PASS, 5 ожидаемых SKIP
   на пяти STM32/SSH/st-util; 65 записей, экспорт/целостность/JSON/JUnit/HTML проверены. Ядро не менялось.
+
+- Hardware CI: подготовлен выбор `suite=api040` и сохранение JSON/JUnit/records/HTML.
+  На OrangePi обновлены пять CI-стендов (st-util 1.9.0), doctor 5/5; репетиция пакетов F411 —
+  4 PASS + 1 SKIP и успешная обработка результатов. GitHub dispatch ещё не выполнялся.
 
 ## Ближайшие шаги
 
