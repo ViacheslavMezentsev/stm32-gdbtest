@@ -8,6 +8,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [0.4.0] - 2026-10-10
 
+- Hardware CI: added AT32/J-Link as the sixth profile, CMake presets and SHA256-checked SDK installation; general specification 0.94.
+
 - Verified new 0.4.0 scenarios on the sixth model, AT32/J-Link/OrangePi: 4 PASS + 1 SKIP, 13 records; initial connection ERROR retained. Badges distinguish six models from five SSH campaign boards.
 
 - Approved release with the known F411/F030/ST-LINK GDB Server limitation; USB ERROR remains technical debt. General specification 0.93 for release.

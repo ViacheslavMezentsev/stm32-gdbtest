@@ -316,7 +316,7 @@ or the counters above. The profile, the SDK, scenario specifics and the procedur
 
 The published package is **0.3.0**. This branch prepares **stm32-gdbtest 0.4.0**:
 `API_VERSION=2`, target schema 2, [API specification](docs/TECHNICAL_SPECIFICATION_API.md) 0.3.16,
-[general specification](docs/TECHNICAL_SPECIFICATION.md) 0.93. These are package/contract versions, not Python versions.
+[general specification](docs/TECHNICAL_SPECIFICATION.md) 0.94. These are package/contract versions, not Python versions.
 `value`, `fields`, `set_value` and `force_return` were removed; matchers, SKIP, records capture and
 external result processing were added. Migration: [API](docs/en/API.md); contents and limits:
 [release scope](docs/en/RELEASE040_SCOPE.md); history: [CHANGELOG](CHANGELOG.en.md).

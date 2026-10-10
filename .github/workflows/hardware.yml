@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       profiles:
-        description: 'CI profiles, space separated (f030r8 f103c8 f401cc f411ce f429zi)'
+        description: 'CI profiles, space separated (f030r8 f103c8 f401cc f411ce f429zi at32f403a)'
         required: true
-        default: 'f030r8 f103c8 f401cc f411ce f429zi'
+        default: 'f030r8 f103c8 f401cc f411ce f429zi at32f403a'
       suite:
         description: 'Hardware suite: lifecycle or the five API 0.4.0 runs per board'
         type: choice
@@ -50,7 +50,11 @@ jobs:
           case "$SUITE" in lifecycle|api040) ;; *) echo "Unknown suite: $SUITE"; exit 1 ;; esac
           mkdir -p build/packages
           for profile in $PROFILES; do
-            case "$profile" in f030r8|f103c8|f401cc|f411ce|f429zi) ;; *) echo "Unknown profile: $profile"; exit 1 ;; esac
+            case "$profile" in f030r8|f103c8|f401cc|f411ce|f429zi|at32f403a) ;; *) echo "Unknown profile: $profile"; exit 1 ;; esac
+            if [ "$profile" = at32f403a ]; then
+              export AT32_SDK_ROOT="$RUNNER_TEMP/at32-sdk"
+              python3 tools/vendor_sdk.py --destination "$AT32_SDK_ROOT"
+            fi
             (cd tests/firmware && cmake --preset "$profile" && cmake --build --preset "$profile" \
               && ctest --preset "$profile-offline")
             if [ "$SUITE" = api040 ]; then
@@ -96,7 +100,7 @@ jobs:
           summary="build/hw/campaign-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.tsv"
           printf 'profile\tdoctor_exit\thardware_exit\n' > "$summary"
           for profile in $PROFILES; do
-            case "$profile" in f030r8|f103c8|f401cc|f411ce|f429zi) ;; *) echo "Unknown profile: $profile"; exit 1 ;; esac
+            case "$profile" in f030r8|f103c8|f401cc|f411ce|f429zi|at32f403a) ;; *) echo "Unknown profile: $profile"; exit 1 ;; esac
             echo "::group::Hardware $profile"
             doctor_code=0
             hardware_code=0

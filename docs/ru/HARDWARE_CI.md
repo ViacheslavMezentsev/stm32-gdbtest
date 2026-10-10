@@ -158,3 +158,10 @@ python tests/firmware/api040.py run --enabled-package <enabled.zip> --disabled-p
 CI-профилей прошёл. Это репетиция драйвера и пакетов, не запуск GitHub Actions.
 
 Внешний конечный диспетчер пакетов: [stand_loop](STAND_LOOP.md). Target API не меняется; старые команды run/pack остаются прежними.
+
+Hardware теперь принимает `at32f403a` в обоих наборах и включает его в шесть профилей по умолчанию.
+Prepare устанавливает закреплённый SDK через `tools/vendor_sdk.py` с SHA256 в `$RUNNER_TEMP/at32-sdk`.
+На OrangePi требуется `$STM32_GDBTEST_STANDS_DIR/at32f403a.toml` (по умолчанию
+`~/.config/stm32-gdbtest/stands/at32f403a.toml`): backend=jlink, серийник вашего J-Link и путь к серверу.
+Для отдельной проверки: profiles=`at32f403a`, suite=`api040`, steps оставить пустым.
+Локальная приёмка платы не заменяет запуск обновлённого workflow на GitHub.

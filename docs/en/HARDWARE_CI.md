@@ -157,3 +157,10 @@ with st-util 1.9.0 — 4 PASS + 1 expected SKIP; export/verify/report succeeded.
 for all five CI profiles. This is a driver/package rehearsal, not a GitHub Actions run.
 
 External finite package dispatcher: [stand_loop](STAND_LOOP.md). Target API and existing run/pack commands are unchanged.
+
+Hardware now accepts `at32f403a` in both suites and includes it in the six default profiles.
+Prepare installs the pinned SDK using `tools/vendor_sdk.py` with SHA256 verification into `$RUNNER_TEMP/at32-sdk`.
+OrangePi needs `$STM32_GDBTEST_STANDS_DIR/at32f403a.toml` (default:
+`~/.config/stm32-gdbtest/stands/at32f403a.toml`): backend=jlink, your J-Link serial and server path.
+For a separate check: profiles=`at32f403a`, suite=`api040`, leave steps empty.
+Local board acceptance does not replace running the updated workflow on GitHub.

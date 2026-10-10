@@ -25,19 +25,20 @@ class HardwareWorkflowTests(unittest.TestCase):
             environment.write_text("# isolated test environment\n")
             tool = root / "python3"
             tool.write_text('#!/bin/sh\ncase "$*" in\n'
-                            '  *doctor*f103c8*) exit "${DOCTOR_EXIT:-0}" ;;\n'
-                            '  *run_hw.py*f103c8*|*api040.py*f103c8*) exit "${HW_EXIT:-0}" ;;\n'
+                            '  *doctor*"$FAIL_PROFILE"*) exit "${DOCTOR_EXIT:-0}" ;;\n'
+                            '  *run_hw.py*"$FAIL_PROFILE"*|*api040.py*"$FAIL_PROFILE"*) exit "${HW_EXIT:-0}" ;;\n'
                             'esac\nexit 0\n')
             tool.chmod(0o755)
-            for suite, (doctor, hardware) in product(("lifecycle", "api040"), ((0, 0), (1, 0), (0, 1))):
-                with self.subTest(suite=suite, doctor=doctor, hardware=hardware):
+            for profile, suite, (doctor, hardware) in product(
+                    ("f103c8", "at32f403a"), ("lifecycle", "api040"), ((0, 0), (1, 0), (0, 1))):
+                with self.subTest(profile=profile, suite=suite, doctor=doctor, hardware=hardware):
                     env = dict(os.environ, HOME=str(root), PATH=str(root) + os.pathsep + os.environ["PATH"],
-                               PROFILES="f103c8 f429zi", SUITE=suite, STEPS="", GITHUB_RUN_ID="test",
+                               PROFILES=f"{profile} f429zi", FAIL_PROFILE=profile, SUITE=suite, STEPS="", GITHUB_RUN_ID="test",
                                GITHUB_RUN_ATTEMPT=f"{doctor}{hardware}", DOCTOR_EXIT=str(doctor), HW_EXIT=str(hardware))
                     result = subprocess.run(["bash", "-e", "-o", "pipefail", "-c", script], cwd=root, env=env,
                                             capture_output=True, text=True, timeout=20)
                     self.assertEqual(result.returncode, int(bool(doctor or hardware)), result.stderr)
-                    self.assertIn(f"f103c8\t{doctor}\t{125 if doctor else hardware}", result.stdout)
+                    self.assertIn(f"{profile}\t{doctor}\t{125 if doctor else hardware}", result.stdout)
                     self.assertIn("f429zi\t0\t0", result.stdout)
                     if doctor or hardware:
-                        self.assertIn("::error::Profile f103c8 failed", result.stdout)
+                        self.assertIn(f"::error::Profile {profile} failed", result.stdout)

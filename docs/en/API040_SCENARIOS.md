@@ -160,4 +160,5 @@ the corrected path built successfully. Shell CRLF was corrected before hardware 
 
 The new scenarios are therefore verified on **six models**, across different layouts:
 five STM32 in earlier campaigns, AT32 in a separate local Linux/J-Link campaign.
-This is not six boards in GitHub Hardware: its profile list still contains five STM32 boards.
+This is not a six-board GitHub Hardware result. AT32 was subsequently added to its profile list;
+the first updated workflow run is still pending. [Operation](HARDWARE_CI.md).

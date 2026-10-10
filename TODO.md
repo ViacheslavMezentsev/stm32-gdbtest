@@ -3,7 +3,7 @@
 ## Текущее состояние — 10.10.2026
 
 - Опубликован v0.3.0; кандидат v0.4.0 готовится в `codex/release-040`, не опубликован.
-  stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2, общее ТЗ 0.93, ТЗ API 0.3.16.
+  stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2, общее ТЗ 0.94, ТЗ API 0.3.16.
 - Последний проверенный пакет сценариев — `a6b6dbd`. Runtime remote lifecycle `4cb5e0a`:
   пять STM32 через SSH/st-util, 233 сценария, 516 этапов (243 prepare, 268 HW PASS,
   5 ожидаемых timeout ERROR), восстановление и освобождение стендов подтверждены.
@@ -40,7 +40,11 @@
 
 - Шестой стенд AT32/J-Link/OrangePi на `da5c4cb`: новые сценарии 4 PASS + 1 SKIP,
   13 записей; первый probe ERROR сохранён, повтор после USB reconnect успешен.
-  Добавление AT32 в GitHub Hardware остаётся отдельным изменением CI.
+  AT32 добавлен в GitHub Hardware; запуск на GitHub после push ещё ожидается.
+
+- AT32 включён в Hardware lifecycle/api040 и presets. Docker docs+host 6/6,
+  AT32 CTest 52/52 и оба вида пакетов PASS; SDK по закреплённому SHA256 установлен на Linux.
+  Файл стенда на OrangePi настроен, doctor PASS. GitHub-проверка новой матрицы ожидается.
 
 ## Ближайшие шаги
 

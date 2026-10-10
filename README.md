@@ -313,7 +313,7 @@ AT32F403ACGU7 на WeAct AT32F4 Core Board через J-Link; он не вход
 
 Опубликованный пакет — **0.3.0**. В этой ветке готовится **stm32-gdbtest 0.4.0**:
 `API_VERSION=2`, target schema 2, [ТЗ API](docs/TECHNICAL_SPECIFICATION_API.md) 0.3.16,
-[общее ТЗ](docs/TECHNICAL_SPECIFICATION.md) 0.93. Это версии пакета и контрактов, не версия Python.
+[общее ТЗ](docs/TECHNICAL_SPECIFICATION.md) 0.94. Это версии пакета и контрактов, не версия Python.
 Удалены `value`, `fields`, `set_value`, `force_return`; добавлены сопоставители, SKIP, захват records
 и внешняя обработка результатов. Миграция — [API](docs/ru/API.md), состав и ограничения —
 [граница выпуска](docs/ru/RELEASE040_SCOPE.md), история — [CHANGELOG](CHANGELOG.md).
