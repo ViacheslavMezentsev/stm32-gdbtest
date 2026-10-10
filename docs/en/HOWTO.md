@@ -10,7 +10,7 @@ A new solution to a common problem is added here in the same commit (RU and EN).
 Notation: **PS** — PowerShell on Windows, **sh** — a Linux shell (Orange Pi, WSL). Git
 commands are the same in both except for quoting (section "The `git land` alias").
 
-[Practical Docker and L6 workflow](local-docker-testing.md): snapshot, volume, evidence and stand restoration.
+[Practical Docker and L6 workflow](local-ci.md): snapshot, volume, evidence and stand restoration.
 
 ## Git: working without pull requests
 
@@ -250,19 +250,7 @@ runner" in [hardware CI](HARDWARE_CI.md).
 
 ## Docker and CI
 
-| Problem | Solution |
-| --- | --- |
-| Docker Hub is unreachable while building the image | `docker build --build-arg BASE_IMAGE=<mirror>/ubuntu:24.04 …` ([checks and CI](testing.md)) |
-| Files in `build/` are owned by root after a container run on Linux | Run with `--user "$(id -u):$(id -g)" -e HOME=/tmp`; remove old ones: `sudo rm -rf build tests/firmware/build` |
-| CI is red but everything passes locally | Match the checked commit with the branch's latest commit; open the `offline-results` or `linux-stand-*` artifact |
-| Image build: `PermissionError: … 'ninja'` in `verify.py` | A file from a ZIP archive was extracted without the executable bit (Python `zipfile` does not restore Unix permissions). `install.py` restores them from the archive; after changing extraction check `ninja --version` in the built image |
-| `windows-host` red, Linux green: a test compares paths | On Windows tool paths come back with `\`. Compare paths in one form in tests (`.replace("\\", "/")` or `Path`), not raw strings |
-| `format`: clang-format found differences | Format the changed C/H files with `clang-format -i <files>` (the CI image version; locally easiest in the container) and rerun `python3 ci/run_checks.py format` |
-| A new profile broke a host test with reference data | The test iterated every `profiles/` directory; the reference pins its profile list, and a new profile is added to the reference separately |
-| The vendor SDK (Artery) is needed outside CI | `python tools/vendor_sdk.py` installs the pinned archive where CMake looks for it ([compatible MCUs](COMPATIBLE_MCU.md)) |
-| The AT32 SDK is installed but `run_hw.py` says `AT32 SDK not found` | An old `AT32_SDK_ROOT` may remain in `tests/firmware/build/hw-<profile>-<stand>/CMakeCache.txt`. Check that the selected directory contains `libraries/cmsis/cm4/device_support/at32f403a_407.h`, then run `cmake -S tests/firmware -B <build-dir> -DAT32_SDK_ROOT=<sdk-dir>` and repeat the entire `run_hw.py`. Do not count results after a failed build: a stale `session.json` may point at an old ELF. Preserve the original FAIL. |
-
-Remove the image and cache: `docker image rm stm32-gdbtest-ci:local`, `docker builder prune`.
+[Docker, permissions and CI troubleshooting](local-ci.md#docker-and-ci) is in the unified guide.
 
 ## For agents
 
@@ -554,17 +542,9 @@ Do not remove `flash_size_address` or weaken identity to bypass the error.
 
 ## Slow Windows Docker bind mounts
 
-If host tests spend excessive time waiting on the filesystem (`ps ... wchan` shows `p9_client_rpc`),
-retain the log and copy an exact source snapshot into the Linux container filesystem.
-Archive the `git ls-files -co --exclude-standard` list, including modified and new files;
-do not copy the entire build, local research or `.git` with local keys. git archive HEAD alone
-cannot validate uncommitted edits.
-
-Run without network, transfer the archive with `docker cp` and extract into a separate directory.
-For docs.public create a temporary index there (`git init`, `git add .`), then run
-`python3 ci/run_checks.py docs host`. Retain the source archive and copy build/ci back before
-removing the created container. Keep an interrupted bind-mount run separately without relabeling
-it PASS. Compare identical source snapshots and check selections.
+Use the [local CI procedure](local-ci.md): sources and builds in a volume, exact snapshots
+and evidence export even on failure. It replaces the older temporary Git index recipe:
+current docs.public supports snapshots without .git.
 
 ## Doctor on Windows: redirected output encoding
 

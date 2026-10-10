@@ -155,6 +155,9 @@ Do not automatically include the sandbox in production tests, CI or the shipped 
 
 ## Checks
 
+Before running local checks, follow the [local CI guide](local-ci.md); on Windows use a source/build volume.
+
+
 1. Offline checks in the CI Docker image: `python3 ci/run_checks.py` — the docs, format, host
    and firmware levels ([checks and CI](testing.md)). Before a push run the levels
    affected by the change.

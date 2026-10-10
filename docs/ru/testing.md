@@ -2,7 +2,7 @@
 
 [Документация](index.md) → Проверки и CI · [English](../en/testing.md)
 
-[Практический порядок Docker и L6](local-docker-testing.md): снимок, volume, отчёты и восстановление стенда.
+[Практический порядок Docker и L6](local-ci.md): снимок, volume, отчёты и восстановление стенда.
 
 ## Уровни доказательств
 
@@ -37,49 +37,16 @@ CI проверяет модуль до GDB-сервера: без отладч�
 | format | Исходники C/C++ соответствуют `.clang-format` (`clang-format --dry-run --Werror`, версия ≥ 16) | `ci/run_checks.py format` в Docker-образе, workflow Offline |
 | host | Host-тесты модуля `tests/host` | Linux в Docker-образе, Windows (Python 3.11, 3.13) и Ubuntu 20.04 x86_64/aarch64 на Python окружения стенда, workflow Offline |
 | stand | Установка окружения Linux-стенда в чистом `ubuntu:20.04`, `doctor`, шаги `build` и `prepare` сценария `run_hw.py` для трёх профилей | Задание `linux-stand` workflow Offline на `ubuntu-24.04` и `ubuntu-24.04-arm` |
-| firmware | Сборка CI-прошивок F030R8, F103C8, F411CE каждым GCC из lock-файла; build manifest; CTest `host` (traceability, `prepare.<ID>` с offline-контрактами); подготовка полного образа; отказ слишком малой политики образа; 10 отрицательных вариантов ELF-контрактов; наличие и выравнивание на 4 байта секций загрузки, включая `.data` | `ci/run_checks.py firmware` в Docker-образе, workflow Offline |
+| firmware | Сборка CI-прошивок F030R8, F103C8, F401CC, F411CE, F429ZI, AT32F403A каждым GCC из lock-файла; build manifest; CTest `host` (traceability, `prepare.<ID>` с offline-контрактами); подготовка полного образа; отказ слишком малой политики образа; 10 отрицательных вариантов ELF-контрактов; наличие и выравнивание на 4 байта секций загрузки, включая `.data` | `ci/run_checks.py firmware` в Docker-образе, workflow Offline |
 | hal | HAL F030/GCC13: 24 CTest, 22 prepare JSON, положительный и 5 отрицательных contracts; без сервера | `ci/run_checks.py hal`, workflow Offline |
 
 CI-прошивки находятся в [tests/firmware](../../tests/firmware/README.md): CMSIS без HAL и
 без stm32-cmake-yml, по профилю на Cortex-M0, M3 и M4. Сценарии проверяют состояние
 регистров и не являются доказательством поведения HAL. Аппаратный прогон
-28.09.2026 — в [текущем состоянии](STATUS.md#аппаратная-проверка-ci-прошивок-2026-09-28).
+28.09.2026 — в [текущем состоянии](STATUS_ARCHIVE.md#аппаратная-проверка-ci-прошивок-2026-09-28).
 
 Результаты — `build/ci/<run>/summary.json`; журналы — `tests/firmware/build/ci/<run>/<профиль>-gcc<версия>/ci.log`.
 В GitHub они сохраняются артефактом `offline-results`.
-
-## Окружение
-
-Образ `ci/docker/Dockerfile` собирается из закреплённого [lock-файла](../../ci/dependencies.lock.json):
-Ubuntu 24.04 по digest, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1 (каждый с
-`arm-none-eabi-gdb-py3`), CMake 3.28.3, Ninja 1.12.1, CMSIS из STM32CubeF0 1.11.6,
-F1 1.8.7 и F4 1.28.3 (F1/F4 — только `Drivers/CMSIS`, F0 — также HAL) и `check_spec.py` навыка
-embedded-tech-spec. Версии GCC и CMake совпадают с stm32-cmake-yml; CMake 3.19.8
-не используется, так как модулю нужен CMake ≥ 3.25. Архивы проверяются по SHA-256,
-репозитории — по коммиту. При сборке образ проверяет GDB-Python каждого GCC.
-
-## Запуск локально
-
-Docker Desktop (Windows) или Docker Engine (Linux), из корня репозитория:
-
-```powershell
-docker build -f ci/docker/Dockerfile -t stm32-gdbtest-ci:local .
-docker run --rm --network none --mount "type=bind,source=${PWD},target=/workspace" `
-  stm32-gdbtest-ci:local python3 ci/run_checks.py
-```
-
-В Linux продолжение строки — `\`, а для файлов с правами текущего пользователя
-добавьте `--user "$(id -u):$(id -g)" -e HOME=/tmp`. Выборочно:
-`python3 ci/run_checks.py firmware --gcc 13.3.1-1.1 --profile f411ce`.
-Без аргументов выполняются все уровни. Уровень docs использует `CHECK_SPEC` из образа.
-
-Если реестр Docker Hub недоступен, передайте зеркало того же образа Ubuntu 24.04:
-`--build-arg BASE_IMAGE=<зеркало>/ubuntu:24.04`. Значение по умолчанию закреплено digest.
-
-Без Docker: host-тесты — `python -B -m unittest discover -s tests/host -v`;
-CI-прошивка — presets в `tests/firmware` (`cmake --preset f411ce`,
-`cmake --build --preset f411ce`, `ctest --preset f411ce-offline`) при заданных
-`ARM_TOOLCHAIN_ROOT` и `STM32CUBE_REPOSITORY`.
 
 ## Workflows GitHub Actions
 
@@ -96,25 +63,6 @@ CI-прошивка — presets в `tests/firmware` (`cmake --preset f411ce`,
 Результат проверки относится к конкретному коммиту; сверяйте его с последним
 коммитом ветки перед слиянием.
 
-## Аппаратная проверка CI-прошивок (разработка)
-
-Отдельно от CI те же прошивки проверяются на локальном стенде Windows или Linux
-сценарием `tests/firmware/run_hw.py`. Он собирает профиль, запускает сценарии через штатный
-runner и GDB-сервер и сверяет ожидаемый исход каждого шага: запись и повтор без
-записи, strict identity, полный образ с хвостом 0xA5, ожидаемый ERROR в verify-only,
-восстановление 0xFF, timeout с восстановлением и повторный PASS.
-
-```powershell
-python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stands/f411ce-openocd.local.toml
-```
-
-Стенд — локальная копия шаблона из `tests/firmware/stands/*.example.toml`
-(`*.local.toml` не коммитится). Toolchain и Cube — `--toolchain`, `--cube` или
-`ARM_TOOLCHAIN_ROOT`, `STM32CUBE_REPOSITORY`; на Linux их задаёт `env.sh` окружения
-стенда ([Linux-стенд](LINUX_STAND.md)), на Windows есть значения по умолчанию в
-профиле пользователя. `summary.json` содержит ОС и архитектуру хоста. Итог — `build/hw/<профиль>-<стенд>/<run>/summary.json`.
-Сценарий перезаписывает Flash: используйте только платы, согласованные для опытов.
-
 ## Чего CI не проверяет
 
 - Подключение к GDB-серверу, отладчику и MCU, запись Flash, identity, Target API
@@ -128,24 +76,4 @@ python -B tests/firmware/run_hw.py --profile f411ce --stand tests/firmware/stand
 
 ## HAL F030 в offline CI
 
-Уровень `python -B ci/run_checks.py hal` собирает tests/hal-f030 на GCC13.3.1,
-требует ровно24 CTest (22 prepare + trace + fixture), проверяет22 свежих JSON
-с хешем ELF, без обращений к оборудованию. Контракты запрошенных сценариев — PASS;
-для сценариев без contracts NOT_REQUESTED не означает проверку HAL.
-
-Отдельный положительный preflight, затем пять независимых ошибок: отсутствующий
-макрос, неверный macro context, return type HAL_ADC_Start_DMA, значение HAL_ERROR,
-тип аргумента HAL_ADC_ConvCpltCallback. Каждый отказ должен иметь ERROR именно
-в изменённом контракте. Сервер не запускается, прошивка MCU не выполняется.
-
-Docker использует HAL F0 gitlink из прежнего закреплённого CubeF0 1.11.6;
-F1/F4 остаются CMSIS-only. Workflow запускает `format host firmware hal` и сохраняет
-каталог `tests/hal-f030/build/ci/<run>/` (логи, ELF, manifest, JSON/JUnit).
-Каждая попытка CI получает новый каталог независимо от ОС.
-Без аргументов runner также включает hal; --gcc/--profile ограничивают только
-CMSIS-матрицу. Для HAL используйте ARM_TOOLCHAIN_ROOT GCC13, STM32CUBE_REPOSITORY;
-без переменной берётся установленный GCC13 по умолчанию Windows/Linux.
-HAL GCC14/15 и аппаратная регрессия остаются отдельными задачами.
-
-Для приёмки rc.2 см. [матрицу](RC2_READINESS.md). `tests/firmware/run_hw.py`
-использует boot/GPIO для проверки runner; полный набор F030 запускается отдельно.
+[Состав проверки и команды](local-ci.md#hal-f030-в-offline-ci).

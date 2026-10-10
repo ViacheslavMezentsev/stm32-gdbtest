@@ -8,6 +8,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [0.4.1] - 2026-10-10
 
+- Unified local CI guide: Windows volumes, working-tree/commit snapshots, L0–L6 and failure export; AGENTS item 5 links directly to it.
+
 - Shortened README: moved run layouts and MCU profiles to dedicated pages, refreshed the 0.4.0 API example and simplified limitations. Mermaid retains flat shapes without a forced light palette.
 - Updated STATUS and retained earlier summaries in STATUS_ARCHIVE. Each skill now explains inputs, recommended use and expected outcomes.
 - Package version 0.4.1; API_VERSION=2 and schemas unchanged, general specification 0.95.

@@ -144,7 +144,7 @@ Workflows CI запускаются для любой ветки, поэтому
 
 ## Проверки
 
-1. Offline-проверки в Docker-образе CI: `python3 ci/run_checks.py` — уровни docs, format, host
+1. Offline-проверки в Docker-образе CI: [Порядок локального CI](local-ci.md), `python3 ci/run_checks.py` — уровни docs, format, host
    и firmware ([проверки и CI](testing.md)). Перед push выполняются уровни,
    затронутые изменением.
 2. Host-тесты модуля без Docker: `python -B -m unittest discover -s tests/host -v`;

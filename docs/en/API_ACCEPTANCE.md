@@ -61,7 +61,7 @@ Unaccepted results and limits:
   reconnection passed 10/10 and the full suite. The original failure is retained.
 - A direct bind mount of the Windows working directory hit the 600-second host
   timeout. A clean Linux volume passed in 26 seconds. These are different storage
-  layouts; no speedup ratio is established. Use the [volume recipe](local-docker-testing.md).
+  layouts; no speedup ratio is established. Use the [volume recipe](local-ci.md).
 - GitHub Hardware 38008347735: F429 passed 10/10; F103 strict failed after reading
   AT32 ID `0x70050347` instead of STM32 ID `0x410`. Fix the remote profile/probe
   mapping before the next run; strict identity remains enabled.
