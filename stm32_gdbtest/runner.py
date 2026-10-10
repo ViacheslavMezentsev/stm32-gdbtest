@@ -369,6 +369,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
     except BaseException:
         report.update(status="ERROR", error=traceback.format_exc())
     finally:
+        report["status_before_cleanup"] = report["status"]
         try:
             stop_tree(client)
             if (ready and report.get("connection_attempted", True)
@@ -394,5 +395,8 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                     except subprocess.TimeoutExpired:
                         pass
                 stop_tree(server)
+                if remote and server is not None and ready:
+                    text = (out / "server.log").read_bytes()[server_from:].decode(errors="replace")
+                    remote_host.record_shutdown(report, text, server.returncode, stand["backend"])
             except BaseException:
                 report.update(status="ERROR", cleanup_error=traceback.format_exc())

@@ -234,3 +234,10 @@ user = "stand-user"
 Replace serial/host/user and add an existing `identity_file` if required. Then run
 `doctor --stand …`, `run --prepare-only`, lifecycle and the full suite on hardware.
 Windows success does not accept Linux/SSH. [Dialect](BACKENDS.md#st-util-v040).
+
+## Shutdown diagnostics
+
+Runner checks the actual post-cleanup server exit. Crashes, SIGKILL, heartbeat timeout and missing
+confirmation produce ERROR, retaining the original outcome. See [result format](API.md).
+Requested SIGTERM after EOF is accepted for OpenOCD/J-Link/ST-LINK, not st-util. Readiness/idle
+and updated lifecycle hardware acceptance remain separate.

@@ -231,3 +231,10 @@ user = "stand-user"
 Замените serial/host/user своими значениями и добавьте уже настроенный `identity_file`, если нужен.
 Далее `doctor --stand …`, `run --prepare-only`, lifecycle и полный набор на реальной плате.
 Прохождение Windows не является приёмкой Linux/SSH. [Диалект](BACKENDS.md#st-util-v040).
+
+## Диагностика завершения
+
+Runner проверяет фактический выход сервера после cleanup. Авария, SIGKILL, heartbeat timeout
+и отсутствие подтверждения дают ERROR; исходный статус сохраняется. См. [формат результата](API.md).
+Штатный SIGTERM после EOF допускается для OpenOCD/J-Link/ST-LINK, но не st-util. Readiness/idle
+и аппаратная приёмка обновлённого жизненного цикла выполняются отдельно.

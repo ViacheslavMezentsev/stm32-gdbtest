@@ -8,6 +8,7 @@ Protocol on stdout (the SSH channel), one marker per line:
   STM32_GDBTEST_REMOTE ready-to-start port=<n> dir=<path>   before the server starts
   STM32_GDBTEST_REMOTE error=<code> <text>                  refusal, exit code 3
   STM32_GDBTEST_REMOTE log=<name>                           followed by a log file
+  STM32_GDBTEST_REMOTE server-result=<json>                 actual child exit after cleanup
   STM32_GDBTEST_REMOTE exit=<code>                          final line
 The server is stopped when stdin reaches EOF (the runner closed or lost the session) or,
 with "heartbeat_s" in the config, when stdin brings no data for that long (the link died
@@ -83,9 +84,11 @@ def port_free(port):
 
 
 def stop_group(process):
+    signals = []
     for sig, grace in ((signal.SIGTERM, 3.0), (signal.SIGKILL, 5.0)):
         try:
             os.killpg(process.pid, sig)
+            signals.append(int(sig))
         except (ProcessLookupError, PermissionError):
             break
         deadline = time.monotonic() + grace
@@ -94,11 +97,13 @@ def stop_group(process):
             try:
                 os.killpg(process.pid, 0)
             except (ProcessLookupError, PermissionError):
-                return
+                return signals
             time.sleep(0.05)
     if process.poll() is None:
         process.kill()
+        signals.append(int(signal.SIGKILL))
     process.wait(timeout=5)
+    return signals
 
 
 def serve(config):
@@ -110,6 +115,8 @@ def serve(config):
     directory = tempfile.mkdtemp(prefix="stm32-gdbtest-")
     process = None
     lost = False
+    reason = "process_exit"
+    signals = []
     try:
         command = [item.replace("{port}", str(port)).replace("{dir}", directory) for item in config["command"]]
         executable = shutil.which(command[0])
@@ -126,16 +133,17 @@ def serve(config):
             readable, _, _ = select.select([sys.stdin], [], [], 0.5)
             if readable:
                 if not os.read(sys.stdin.fileno(), 4096):
+                    reason = "stdin_eof"
                     break
                 last = time.monotonic()
             elif heartbeat and time.monotonic() - last > heartbeat:
                 lost = True
+                reason = "heartbeat_timeout"
                 break
-        return process.poll() or 0
     finally:
         try:
             if process is not None:
-                stop_group(process)
+                signals = stop_group(process)
             try:
                 for name in [] if lost else config.get("logs", []):
                     path = os.path.join(directory, name)
@@ -149,6 +157,10 @@ def serve(config):
             shutil.rmtree(directory, ignore_errors=True)
         finally:
             release(descriptor)
+    # ТЗ 5.18.9: evaluate the actual child result only after cleanup and reap.
+    code = process.wait(timeout=5)
+    say("server-result=" + json.dumps(dict(returncode=code, reason=reason, signals=signals)))
+    return code
 
 
 def check(config):

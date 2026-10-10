@@ -138,6 +138,50 @@ def check_result(text):
     return json.loads(value) if value else None
 
 
+def shutdown_result(text, ssh_returncode, backend):
+    """Classify the current helper's completed shutdown, retaining raw POSIX codes (ТЗ 5.18.9)."""
+    result = dict(ssh_returncode=ssh_returncode, returncode=None, reason="unknown", signals=[])
+    try:
+        # Only complete lines are evidence; an EOF in the middle of a marker is not completion.
+        lines = text[:text.rfind("\n") + 1].splitlines()
+        records = [line.partition("=")[2] for line in lines
+                   if line.startswith("STM32_GDBTEST_REMOTE server-result=")]
+        exits = [line.partition("=")[2] for line in lines if line.startswith("STM32_GDBTEST_REMOTE exit=")]
+        if len(records) != 1 or len(exits) != 1:
+            raise ValueError("missing or duplicate remote completion marker")
+        value = json.loads(records[0])
+        if (not isinstance(value, dict) or set(value) != {"returncode", "reason", "signals"}
+                or type(value["returncode"]) is not int
+                or value["reason"] not in ("stdin_eof", "heartbeat_timeout", "process_exit")
+                or not isinstance(value["signals"], list)
+                or any(type(sig) is not int or sig not in (15, 9) for sig in value["signals"])):
+            raise ValueError("invalid remote server result")
+        result.update(value)
+        code = value["returncode"]
+        if int(exits[0]) != code or ssh_returncode != (code & 255):
+            raise ValueError("remote completion disagrees with helper/SSH exit")
+        if value["reason"] == "heartbeat_timeout" or 9 in value["signals"]:
+            raise ValueError("remote shutdown required heartbeat recovery or SIGKILL")
+        # Other backends may use the default SIGTERM handler when stopped by helper EOF.
+        terminated = (backend in ("openocd", "jlink", "stlink") and code == -15
+                      and value["reason"] == "stdin_eof" and 15 in value["signals"])
+        if code != 0 and not terminated:
+            raise ValueError(f"remote server exited with code {code}")
+        if backend == "st-util" and value["reason"] != "stdin_eof":
+            raise ValueError("st-util exited before requested cleanup")
+    except (ValueError, TypeError, KeyError) as error:
+        result["error"] = str(error)
+    return result
+
+
+def record_shutdown(report, text, ssh_returncode, backend):
+    """Keep scenario evidence intact when server cleanup changes the overall outcome."""
+    result = shutdown_result(text, ssh_returncode, backend)
+    report["remote_server"] = result
+    if "error" in result:
+        report.update(status="ERROR", cleanup_error=result["error"])
+
+
 def forwarding_ready(tunnel_log):
     return "Local forwarding listening on" in tunnel_log or "Local connections to" in tunnel_log
 

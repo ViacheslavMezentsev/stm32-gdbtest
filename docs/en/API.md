@@ -421,3 +421,13 @@ Select `backend = "st-util"` in the stand; target.toml schema 2 may include
 Existing sections and scenarios need no changes. `profile.stand["backend"]` may
 now be `st-util`; update consumer allowlists. Target methods and API_VERSION=2
 are unchanged. [Configuration and limits](BACKENDS.md#st-util-v040).
+
+## Remote server completion (v0.4.0)
+
+In result.json, `status_before_cleanup` retains the outcome before recovery/cleanup. `remote_server`
+contains actual POSIX `returncode`, `reason`, `signals`, `ssh_returncode` and `error` on failure.
+For example SIGABRT is returncode -6 while SSH returns250. Unknown means null, not0.
+Cleanup failure produces final ERROR and cleanup_error, retaining checks, original error and skip_reason.
+Consumers must use final status; status_before_cleanup is diagnostic. Target API and API_VERSION are
+unchanged. st-util requires exit0 after requested shutdown; SIGKILL, heartbeat timeout or missing
+confirmation means ERROR. This does not guarantee USB-safe shutdown.

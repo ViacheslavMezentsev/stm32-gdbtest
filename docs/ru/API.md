@@ -418,3 +418,13 @@ result.status сохраняет исходный вердикт. command_code: 
 Существующие секции и сценарии менять не требуется. `profile.stand["backend"]`
 теперь может быть `st-util`; обновите собственные списки допустимых серверов.
 Методы Target и API_VERSION=2 не меняются. [Конфигурация и ограничения](BACKENDS.md#st-util-v040).
+
+## Завершение удалённого сервера (v0.4.0)
+
+В result.json `status_before_cleanup` сохраняет исход до recovery/cleanup. Блок `remote_server`
+содержит фактический POSIX `returncode`, `reason`, `signals`, `ssh_returncode` и при отказе `error`.
+Например, SIGABRT — returncode -6, хотя SSH возвращает250. Неизвестный код — null, не0.
+Авария cleanup даёт итоговый ERROR и cleanup_error, сохраняя checks, исходный error и skip_reason.
+Потребители должны использовать итоговый status; status_before_cleanup нужен для диагностики.
+Target API и API_VERSION не меняются. Для st-util ожидается exit0 после запрошенного завершения;
+SIGKILL, heartbeat timeout или отсутствие подтверждения — ERROR. Это не гарантия безопасности USB.

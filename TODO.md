@@ -3,7 +3,7 @@
 ## Текущее состояние — 10.10.2026
 
 - Опубликован v0.3.0; v0.4.0 готовится в `codex/release-040`, не опубликован.
-  Python 0.4.0, API_VERSION=2, target schema 2, ТЗ API 0.3.14, общее ТЗ 0.85.
+  Python 0.4.0, API_VERSION=2, target schema 2, ТЗ API 0.3.14, общее ТЗ 0.86.
 - Исправлены остатки миграции reset, изолированы артефакты (вопрос ТЗ 11.2.26),
   Hardware CI показывает отказ каждого профиля. Runtime `b1264c1`: Docker 26/26,
   шесть плат OpenOCD/J-Link — 280 сценариев, 608 этапов, BOOT/GPIO 12/12.
@@ -15,6 +15,8 @@
 - Дополнительно st-util 1.9.0 на пяти STM32: жизненный цикл по 10/10, 233 сценария/506 этапов (5 ожидаемых timeout ERROR), BOOT/GPIO 10/10. Docker docs+host 6/6; Windows/Linux host по 411 тестов. OrangePi/st-util ещё не проверен на оборудовании.
 - Последующие исправления примера и журналов CI проверяются отдельно от runtime.
   Владелец пушит ветку, проверяет CI последнего SHA и выполняет land.
+
+- Подготовлен первый пакет remote cleanup: фактический POSIX exit после reap, обработка runner и status_before_cleanup. Windows host 417 тестов (15 пропусков), Docker docs+host 6/6. Следом — readiness/idle; аппаратная приёмка нового runtime ещё не выполнена.
 
 ## Ближайшие шаги
 

@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- SSH helper retains the actual post-cleanup server exit; runner detects crashes and forced termination while preserving original outcomes and checks.
+
 - Added the `st-util` backend: schema 2 section, serial, doctor, shared ST-Link lock and SSH;
   F4 factory registers are accessible through GDB memory-map setup without weakening identity.
 

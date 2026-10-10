@@ -551,3 +551,17 @@ For `Cannot access memory at address 0x1fff7a22`, inspect `info mem` and
 The st-util backend sets `set mem inaccessible-by-default off` before identity checks.
 This permits a request; it does not replace hardware validation of the address or data.
 Do not remove `flash_size_address` or weaken identity to bypass the error.
+
+## Slow Windows Docker bind mounts
+
+If host tests spend excessive time waiting on the filesystem (`ps ... wchan` shows `p9_client_rpc`),
+retain the log and copy an exact source snapshot into the Linux container filesystem.
+Archive the `git ls-files -co --exclude-standard` list, including modified and new files;
+do not copy the entire build, local research or `.git` with local keys. git archive HEAD alone
+cannot validate uncommitted edits.
+
+Run without network, transfer the archive with `docker cp` and extract into a separate directory.
+For docs.public create a temporary index there (`git init`, `git add .`), then run
+`python3 ci/run_checks.py docs host`. Retain the source archive and copy build/ci back before
+removing the created container. Keep an interrupted bind-mount run separately without relabeling
+it PASS. Compare identical source snapshots and check selections.
