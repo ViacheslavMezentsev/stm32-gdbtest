@@ -583,3 +583,15 @@ ST-Link/V2 может возвращать бинарный serial: ошибка
 
 
 Настройки и особенности каждого сервера: [OpenOCD](backends/openocd.md), [ST-LINK GDB Server](backends/stlink.md), [J-Link](backends/jlink.md), [st-util](backends/st-util.md).
+
+## Windows GDB: длинные пути пакета
+
+Если contract-preflight.log показывает FileNotFoundError для существующего contract-request.json,
+проверьте длину полного пути. В xPack 13.3.1-1.1 встроенный Python GDB не прочитал файл по пути
+длиннее 260 символов, хотя Python runner создал его. Вложенные workdir/session/run и ID сценария
+увеличивают длину; короткого имени самого файла недостаточно.
+
+Сохраните исходный ERROR и повторите с коротким новым каталогом: например, `build/w4` для
+`tests/firmware/api040.py run --output`, либо короткий `--workdir` для `run --package`.
+Не переносите старые результаты поверх новых и не отключайте проверку контрактов.
+Один лишь системный параметр длинных путей Windows не подтверждает поддержку конкретной сборкой GDB.

@@ -581,3 +581,15 @@ Long check tables: the budget covers the complete GDB process, including connect
 
 
 Per-server configuration and details: [OpenOCD](backends/openocd.md), [ST-LINK GDB Server](backends/stlink.md), [J-Link](backends/jlink.md), [st-util](backends/st-util.md).
+
+## Windows GDB: long package paths
+
+If contract-preflight.log reports FileNotFoundError for an existing contract-request.json,
+check the full path length. With xPack 13.3.1-1.1, GDB's embedded Python could not read a path
+longer than 260 characters although the runner's Python created the file. Nested workdir/session/run
+folders and scenario IDs add length; a short filename alone is insufficient.
+
+Preserve the original ERROR and retry in a short new directory: for example, `build/w4` for
+`tests/firmware/api040.py run --output`, or a short `--workdir` for `run --package`.
+Do not overwrite old results or disable contract validation.
+The Windows long-path setting alone does not establish support in a particular GDB build.

@@ -308,3 +308,7 @@ GitHub Hardware на `c23f8fe`: пять плат, 20 PASS + 5 ожидаемы�
 
 WSL2 → OrangePi/SSH на `d1a9361`: 20 PASS + 5 ожидаемых SKIP, 65 записей; завершение серверов 25/25.
 [WSL2](API040_SCENARIOS.md).
+
+Windows локально/st-util на `c156db5`: 20 PASS + 5 SKIP; 65 записей. Первый проход с длинными путями
+сохранён отдельно (10 PASS + 5 preflight ERROR); повтор выполнен с коротким каталогом.
+[Windows](API040_SCENARIOS.md).

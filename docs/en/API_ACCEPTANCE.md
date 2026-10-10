@@ -305,3 +305,7 @@ GitHub Hardware at `c23f8fe`: five boards, 20 PASS + 5 expected SKIP; 75 files r
 
 WSL2 → OrangePi/SSH at `d1a9361`: 20 PASS + 5 expected SKIP, 65 records; server shutdown confirmed 25/25.
 [WSL2](API040_SCENARIOS.md).
+
+Local Windows/st-util at `c156db5`: 20 PASS + 5 SKIP; 65 records. The first long-path attempt
+is retained separately (10 PASS + 5 preflight ERROR); the repeat used a short directory.
+[Windows](API040_SCENARIOS.md).

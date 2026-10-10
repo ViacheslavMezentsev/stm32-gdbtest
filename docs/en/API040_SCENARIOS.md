@@ -121,3 +121,20 @@ capacity warnings remain; no new anomalies were found.
 
 This verifies portable packages and the selected scenarios through WSL2 → SSH,
 not a complete API or lifecycle rerun. Core and scenarios were unchanged.
+
+## Windows: the local new 0.4.0 suite
+
+2026-10-10, snapshot `c156db5`: Python 3.11.9, xPack 13.3.1-1.1/GDB 14.2.90,
+Scoop st-util 1.9.0; runner, GDB and server local to Windows, five STM32 boards attached over USB.
+The same packages as in WSL were used with matching SHA256 hashes. Doctor 5/5;
+F030R8, F103, F401CC, F411CE, F429ZI — **4 PASS + 1 expected SKIP** each.
+Total: 20 PASS + 5 SKIP, 65 records; JSON/JUnit and records digests checked,
+export/verify/report 5/5. All 25 runs confirm image verification, reset_run and shutdown_wait.ready;
+no st-util processes remain after the campaign. No USB failures occurred. Inferred_stop and F103 Flash warnings remain.
+
+The first attempt is retained separately: 10 PASS and 5 contract preflight ERRORs before MCU connection.
+GDB's embedded Python could not open an existing contract-request.json with a path longer than 260 characters;
+shortening the results directory made the same packages pass completely. Original ERRORs and unavailable capture
+were not relabelled PASS. [Path limitation workaround](HOWTO.md). This campaign does not establish arbitrary
+long-path support; automatic early diagnostics remain a proposal.
+Core and scenarios were unchanged; this is a selected new-scenario campaign, not the entire API.
