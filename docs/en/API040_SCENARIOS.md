@@ -161,4 +161,16 @@ the corrected path built successfully. Shell CRLF was corrected before hardware 
 The new scenarios are therefore verified on **six models**, across different layouts:
 five STM32 in earlier campaigns, AT32 in a separate local Linux/J-Link campaign.
 This is not a six-board GitHub Hardware result. AT32 was subsequently added to its profile list;
-the first updated workflow run is still pending. [Operation](HARDWARE_CI.md).
+the first updated workflow result is recorded below. [Operation](HARDWARE_CI.md).
+
+## GitHub Hardware: AT32
+
+2026-10-10, [Hardware #14](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/runs/38038425534), attempt 1, SHA `ba10b1291f7c1d0d7504cd56885a77f69233ffb4`: success confirmed through GitHub API.
+The hardware-results.zip archive matches the GitHub artifact digest:
+`66abb5068aa74a492ebabc144dcbb899febbe6d59cc00d203c26671dd699f7ac`.
+
+AT32/J-Link, suite=api040: **4 PASS + 1 expected SKIP**, 13 records; doctor/hardware_exit — 0/0.
+JSON/JUnit, SHA256 of all 15 indexed files and record types were rechecked. Export/verify/report — 0/0/0;
+image_verified and reset_run confirmed 5/5, no capture/teardown/cleanup errors.
+The known inferred_stop warning for finish in GDB 14 remains; no new anomalies were found.
+This is the selected AT32 GitHub suite, not full lifecycle or a simultaneous six-board campaign.

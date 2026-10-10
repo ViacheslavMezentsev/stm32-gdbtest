@@ -8,6 +8,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [0.4.0] - 2026-10-10
 
+- GitHub Hardware #14 at `ba10b12`: AT32 — 4 PASS + 1 SKIP, 13 records; archive and 15 files verified.
+
 - Hardware CI: added AT32/J-Link as the sixth profile, CMake presets and SHA256-checked SDK installation; general specification 0.94.
 
 - Verified new 0.4.0 scenarios on the sixth model, AT32/J-Link/OrangePi: 4 PASS + 1 SKIP, 13 records; initial connection ERROR retained. Badges distinguish six models from five SSH campaign boards.

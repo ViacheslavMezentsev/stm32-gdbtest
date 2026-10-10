@@ -161,4 +161,16 @@ image_verified и reset_run подтверждены 5/5. После завер�
 Таким образом, новые сценарии проверены на **шести моделях**, но в разных схемах:
 пять STM32 — предыдущие кампании, AT32 — отдельная локальная Linux/J-Link кампания.
 Это не результат шести плат в GitHub Hardware. Впоследствии AT32 добавлен в его список профилей;
-первый запуск обновлённого workflow ещё ожидается. [Запуск](HARDWARE_CI.md).
+результат первого запуска приведён ниже. [Запуск](HARDWARE_CI.md).
+
+## GitHub Hardware: AT32
+
+10.10.2026, [Hardware №14](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/runs/38038425534), попытка 1, SHA `ba10b1291f7c1d0d7504cd56885a77f69233ffb4`: success подтверждён GitHub API.
+Архив hardware-results.zip совпадает с digest артефакта GitHub:
+`66abb5068aa74a492ebabc144dcbb899febbe6d59cc00d203c26671dd699f7ac`.
+
+AT32/J-Link, suite=api040: **4 PASS + 1 ожидаемый SKIP**, 13 записей; doctor/hardware_exit — 0/0.
+Повторно проверены JSON/JUnit, SHA256 всех 15 файлов индекса и типы records. Export/verify/report — 0/0/0;
+image_verified и reset_run подтверждены 5/5, ошибок capture/teardown/cleanup нет.
+Сохранено известное предупреждение inferred_stop для finish в GDB 14; новых аномалий не обнаружено.
+Это выбранный набор AT32 через GitHub, не полный lifecycle и не одновременный прогон шести плат.

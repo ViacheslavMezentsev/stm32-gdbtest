@@ -40,11 +40,11 @@
 
 - Шестой стенд AT32/J-Link/OrangePi на `da5c4cb`: новые сценарии 4 PASS + 1 SKIP,
   13 записей; первый probe ERROR сохранён, повтор после USB reconnect успешен.
-  AT32 добавлен в GitHub Hardware; запуск на GitHub после push ещё ожидается.
+  AT32 добавлен в GitHub Hardware; GitHub Hardware №14 на `ba10b12` прошёл: 4 PASS + 1 SKIP.
 
 - AT32 включён в Hardware lifecycle/api040 и presets. Docker docs+host 6/6,
   AT32 CTest 52/52 и оба вида пакетов PASS; SDK по закреплённому SHA256 установлен на Linux.
-  Файл стенда на OrangePi настроен, doctor PASS. GitHub-проверка новой матрицы ожидается.
+  Файл стенда на OrangePi настроен, doctor PASS. GitHub-проверка AT32 принята по Hardware №14; это отдельный прогон шестой платы.
 
 ## Ближайшие шаги
 

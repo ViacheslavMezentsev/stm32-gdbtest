@@ -315,3 +315,5 @@ External package dispatcher on F411/OrangePi: finite cycles, STOP and unexpected
 
 AT32/J-Link/OrangePi at `da5c4cb`: new 0.4.0 scenarios — 4 PASS + 1 SKIP, 13 records;
 the initial probe connection ERROR is retained. [Sixth stand](API040_SCENARIOS.md).
+
+GitHub Hardware #14 at `ba10b12`: AT32 — 4 PASS + 1 SKIP, 13 records; archive and 15 files verified. [API040](API040_SCENARIOS.md).

@@ -318,3 +318,5 @@ Windows локально/st-util на `c156db5`: 20 PASS + 5 SKIP; 65 запис
 
 AT32/J-Link/OrangePi на `da5c4cb`: новые сценарии 0.4.0 — 4 PASS + 1 SKIP, 13 записей;
 первый ERROR подключения probe сохранён. [Шестой стенд](API040_SCENARIOS.md).
+
+GitHub Hardware №14 на `ba10b12`: AT32 — 4 PASS + 1 SKIP, 13 записей; архив и 15 файлов проверены. [API040](API040_SCENARIOS.md).
