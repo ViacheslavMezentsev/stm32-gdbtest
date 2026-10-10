@@ -437,3 +437,5 @@ each with `ready`, `reason`, `elapsed_s`, `limit_s`. The latter confirms idle ob
 host; exit0 alone is insufficient. Listening waits are limited to5s, host recovery to10s, and the final
 SSH wait to25s including cleanup. These fields are diagnostic: use final status for acceptance.
 [Lifecycle](LINUX_STAND.md#shutdown-diagnostics).
+
+st-util may end its marker with an ellipsis: `Listening at *:port...`. The parser accepts it; an incomplete line without a newline does not establish readiness.

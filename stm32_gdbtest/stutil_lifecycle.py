@@ -32,7 +32,7 @@ class IdleLog:
             if line.endswith("GDB connected."):
                 self.connected = True
                 self.idle = False
-            match = re.search(r"Listening at \*:(\d+)\s*$", line)
+            match = re.search(r"Listening at \*:(\d+)(?:\.\.\.)?\s*$", line)
             if match:
                 self.idle = int(match[1]) == self.port
         self.previous = complete

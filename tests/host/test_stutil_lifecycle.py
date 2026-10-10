@@ -12,7 +12,7 @@ import unittest
 from stm32_gdbtest import remote
 from stm32_gdbtest.stutil_lifecycle import IdleLog, wait_idle
 
-LISTEN = b"2026-10-10 INFO gdb-server.c: Listening at *:62000\n"
+LISTEN = b"2026-10-10 INFO gdb-server.c: Listening at *:62000...\n"
 CONNECT = b"2026-10-10 INFO gdb-server.c: GDB connected.\n"
 
 
@@ -39,6 +39,9 @@ class StutilIdleTests(unittest.TestCase):
     def test_already_disconnected_and_delayed_disconnect(self):
         for snapshots in ([LISTEN + CONNECT + LISTEN], [LISTEN + CONNECT, LISTEN + CONNECT + LISTEN]):
             self.assertTrue(self.wait(snapshots)["ready"])
+        self.assertTrue(self.wait([(LISTEN + CONNECT + LISTEN).replace(b"...", b"")])["ready"])
+        for suffix in (b"..", b"....", b"garbage"):
+            self.assertFalse(self.wait([CONNECT + LISTEN.replace(b"...", suffix)])["ready"])
 
     def test_partial_wrong_port_new_connection_and_late_lines(self):
         for suffix in (LISTEN.rstrip(), LISTEN.replace(b"62000", b"62001"), LISTEN + CONNECT):
@@ -86,13 +89,13 @@ def stop(*args):
     with open(evidence, 'w') as stream: stream.write('idle' if idle else 'active')
     sys.exit(0)
 signal.signal(signal.SIGTERM, stop)
-print('Listening at *:' + port, flush=True)
+print('Listening at *:' + port + '...', flush=True)
 print('GDB connected.', flush=True)
 print('CHILD_READY', flush=True)
 time.sleep(0.3)
 if mode != 'never':
     idle = True
-    print('Listening at *:' + port, flush=True)
+    print('Listening at *:' + port + '...', flush=True)
 if mode == 'spoof':
     print('STM32_GDBTEST_REMOTE exit=999', flush=True)
 if mode == 'stalled':

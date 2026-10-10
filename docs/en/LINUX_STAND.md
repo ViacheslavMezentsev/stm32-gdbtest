@@ -248,3 +248,5 @@ is lost, then performs bounded cleanup: TERM3s, KILL5s, reap5s. Runner waits up 
 Unconfirmed idle means ERROR even if the server subsequently returns0. Timeout does not mean safe
 USB release. A stalled SSH output does not block cleanup; a missing final marker means ERROR.
 These waits are covered by host models; updated runtime hardware acceptance remains separate.
+
+st-util may end its marker with an ellipsis: `Listening at *:port...`. The parser accepts it; an incomplete line without a newline does not establish readiness.

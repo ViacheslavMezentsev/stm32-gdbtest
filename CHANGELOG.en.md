@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Fixed recognition of actual st-util `Listening at *:port...` output; regression includes the trailing ellipsis.
+
 - st-util waits for Listening before recovery and idle before shutdown; helper also performs bounded
   observation when SSH is lost. Unconfirmed idle remains ERROR even when the server exits0.
 
