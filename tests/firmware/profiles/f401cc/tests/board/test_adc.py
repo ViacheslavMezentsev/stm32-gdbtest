@@ -151,7 +151,8 @@ def adc_vectors(t):
 
 
 # Reject invalid conversion inputs and verify subsequent measurement recovery.
-@case("HW_CI_ADC_INVALID", timeout_s=60, labels=("adc", "negative", "arithmetic"), contracts=("ci_adc_units",))
+# Allow remote debugger round trips for the complete invalid-input matrix.
+@case("HW_CI_ADC_INVALID", timeout_s=120, labels=("adc", "negative", "arithmetic"), contracts=("ci_adc_units",))
 def adc_invalid(t):
     # Exercise invalid inputs individually, then verify that normal acquisition recovers.
     for index in range(5):

@@ -573,3 +573,8 @@ select UTF-8 for Python: `python -X utf8 -m stm32_gdbtest doctor --stand <file>`
 In a calling Python process use `subprocess.run(..., text=True, encoding="utf-8")`.
 ST-Link/V2 may return a binary serial: an output encoding error does not establish an MCU/USB fault.
 Retain the original log. Successful doctor output does not replace a hardware check.
+
+
+### Long remote scenario budgets
+
+Long check tables: the budget covers the complete GDB process, including connection, checks and teardown. Many navigation and read operations through a remote server add latency; set an explicit scenario timeout_s with margin over measured time. The F401/F411/F429 ADC_INVALID matrix uses120s after measuring about60s over SSH/st-util. Exceeding the budget remains ERROR even when GDB has already saved successful checks.

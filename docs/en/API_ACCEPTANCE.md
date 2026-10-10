@@ -265,3 +265,26 @@ recovery ELF, SWD speed and F103 Flash capacity diagnostics are retained. F429 S
 recur in this series; its previous cause remains unknown. This is a short lifecycle check; full suites
 on new runtime, long series and deliberate SSH loss with real USB remain separate checks. Absence of
 USB failures does not guarantee safe forced cleanup.
+
+
+## Full st-util suites over SSH — 2026-10-10
+
+The same runtime and tools completed F030R8 (45 scenarios), F103C8, F401CC, F411CE and F429ZI
+(47 each):233 main scenarios. Including prepare, post-fault checks, timeout/recovery and restoration,
+there are516 stages:243 prepare,268 HW PASS and5 expected timeout ERROR outcomes.
+All263 st-util completions returned actual exit0 with confirmed idle. OpenOCD BOOT/GPIO10/10;
+all five stands released their locks, with no server processes remaining after the suites.
+
+The first full F411 run hit the60-second ADC_INVALID deadline although GDB saved140 passing checks.
+That ERROR was not converted to PASS. A120-second diagnostic completed in61.625s.
+The equivalent F401/F411/F429 matrix budget was therefore raised to120s; assertions and runtime are unchanged.
+Repeated full F411/F429 suites passed; ADC_INVALID took61.657/58.890s. The changed F401 scenario
+was checked separately:60.047s,140 checks PASS, OpenOCD BOOT/GPIO2/2 and clean release.
+Durations include overhead outside GDB; they do not measure MCU function execution time.
+F030/F103 and unchanged F401 scenarios were not rerun.
+
+Logs retain disconnect, GDB encoding, inferred_stop, SWD speed and F103 Flash diagnostics.
+No USB ERROR/libusb assertion was observed. The earlier F429 SP/SRAM anomaly did not recur;
+its cause, earlier ST-LINK GDB Server failures and forced USB cleanup safety remain unresolved.
+Docker docs+host6/6 (426 tests,6 expected skips); scenario style2/2.
+This is local hardware acceptance for specific configurations, not a replacement for GitHub CI on the release SHA.

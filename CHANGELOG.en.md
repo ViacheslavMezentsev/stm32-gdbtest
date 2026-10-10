@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Increased the F401/F411/F429 ADC_INVALID scenario budget to120s: the complete matrix over SSH/st-util can take more than60s; assertions and the runner default timeout are unchanged.
+
 - Fixed recognition of actual st-util `Listening at *:port...` output; regression includes the trailing ellipsis.
 
 - st-util waits for Listening before recovery and idle before shutdown; helper also performs bounded
