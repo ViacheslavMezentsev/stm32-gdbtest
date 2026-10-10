@@ -6,7 +6,7 @@ from stm32_gdbtest.matchers import matches, near, one_of, within
 
 # Source checkouts may be read-only, including GDB imports and the -m entry point.
 sys.dont_write_bytecode = True
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 API_VERSION = 2
 __all__ = ["case", "test", "within", "near", "one_of", "matches", "API_VERSION", "__version__", "ApiError", "CheckFailed",
            "RecordError"]

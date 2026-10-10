@@ -16,6 +16,30 @@ submodule and link to its documentation.
 | [stm32-gdbtest-stand-loop](stm32-gdbtest-stand-loop/SKILL.md) | deployable stand bundle, finite cycles, FAIL/SKIP policy, STOP and review.json handoff to an agent |
 | [stm32-gdbtest-develop](stm32-gdbtest-develop/SKILL.md) | develop firmware through DDTT: plan, scenario before the fix, baseline FAIL, correction, regression and target evidence review |
 
+## Choosing and combining skills
+
+Start with the task instead of loading every skill. Give the agent the project path, module version
+and permitted scope; hardware work also needs an up-to-date stand description.
+
+| Skill | Recommended use | Expected result |
+| --- | --- | --- |
+| `integrate` | First integration or version upgrade. Supply the CMake project and desired tag; verify configuration and prepare before one hardware scenario | Pinned gitlink, HIL configuration, presets and a reproducible run command |
+| `scenarios` | A firmware requirement is already defined. Specify observable behaviour and allowed interventions; derive expectations from the requirement, not the current board response | Scenario, requirement and ELF contract, configuration parameters and consistent style |
+| `run` | Execute a specific attempt. Supply a session/package and stand; start with doctor and prepare. Code changes belong in `develop`, not unexplained retries | Command and scenario outcomes, logs, recovery and an explanation of FAIL/ERROR/SKIP |
+| `results` | Evidence already exists. Supply the complete attempt/campaign and matching sources; check provenance and integrity before interpreting records | Evidence-backed conclusions; arbitrary journal entries are not automatically treated as measurements |
+| `stand-loop` | Repeat an accepted immutable bundle. Define finite cycles, FAIL/SKIP policy and STOP; rebuild the bundle when the ELF/scenario changes | Separate attempts, cycle summary and review.json handoff; application sources are not required on the stand |
+| `develop` | Change firmware with feedback from the circuit. Supply requirements, sources, stand description and an iteration budget; retain the plan and baseline FAIL before fixing | Requirement → check → fix → regression, preserved failures and explicit evidence boundaries |
+
+Typical routes:
+
+- New project: `integrate` → `scenarios` → `run` → `results`.
+- Firmware change: `develop` uses `scenarios`, `run` and `results` at each iteration.
+- Autonomous stand: `stand-loop` → `results`; a discovered issue becomes a separate `develop` cycle.
+
+On OrangePi, result review needs evidence and the matching module version; execution needs a bundle,
+GDB/backend and the stand; development additionally needs sources and a compiler.
+Selecting a skill does not launch a background agent or grant access to external equipment.
+
 ## Using the skills in a project
 
 The skills live in the submodule: `modules/stm32-gdbtest/skills/`.

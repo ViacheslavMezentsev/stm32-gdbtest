@@ -3,7 +3,7 @@
 [![Docs](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/stm32-gdbtest/docs.yml?branch=main&label=Docs&style=flat-square)](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/workflows/docs.yml)
 [![Offline](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/stm32-gdbtest/offline.yml?branch=main&label=Offline&style=flat-square)](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/workflows/offline.yml)
 
-[![Hardware campaign](https://img.shields.io/badge/Hardware-candidate%200.4.0%20SSH-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
+[![Hardware campaign](https://img.shields.io/badge/Hardware-0.4.0%20SSH-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
 [![Board models tested](https://img.shields.io/badge/Models%20tested-6-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
 [![SSH campaign boards](https://img.shields.io/badge/SSH%20campaign%20boards-5-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
 [![API 0.4.0 models](https://img.shields.io/badge/API%200.4.0%20models-6-blue?style=flat-square)](docs/en/API040_SCENARIOS.md)
@@ -60,7 +60,6 @@ These videos explain the origins of the approach; the module documentation descr
 ---
 config:
   look: classic
-  theme: neutral
 ---
 flowchart LR
     I["ELF + MCU profile + Python tests"] --> H["Host runner on the PC"]
@@ -79,21 +78,39 @@ can change a value, force a function to return or call a firmware function to te
 caller's reaction. No test logic is added to the firmware.
 
 ```python
-from stm32_gdbtest import case, within
+from stm32_gdbtest import case, one_of
 
 
-# Verify the system clock and the SysTick period after start-up.
-@case("HW_CLOCK", contracts=("clock_macros",))
-def clock(t):
-    t.reach("board_led_toggle")
+# Observe one application step and retain evidence for the report.
+@case("HW_APP_STEP", contracts=("ci_app_api",))
+def app_step(t):
+    enabled = t.profile.user.get("sample_step", True)
+    t.check("sample_step is boolean", type(enabled) is bool)
+    if not enabled:
+        t.skip("sample_step disabled in api.toml")
 
-    # A string cell is a GDB expression; numbers and matchers are Python values.
+    # Read named fields, then stop after the producer and its wrapper return.
+    t.reach("app_loop")
+    before = t.read("app_state", fields={"ticks": None, "led": None})
+    t.reach("app_step")
+    t.finish()
+    t.finish()
+    after = t.read("app_state", fields={"ticks": None, "led": None})
+    t.record("app.step", {"before": before, "after": after})
+
+    # Check the increment with unsigned wraparound and the allowed LED states.
     t.check([
-        ("HSI enabled and ready", "RCC->CR & (RCC_CR_HSION | RCC_CR_HSIRDY)", "RCC_CR_HSION | RCC_CR_HSIRDY"),
-        ("1 ms SysTick at 8 MHz", "SysTick->LOAD", 8_000_000 // 1000 - 1),
-        ("VDDA is plausible", "board_adc_reading.vdda_mv", within(2800, 3600))
+        ("one step published", (after["ticks"] - before["ticks"]) & 0xFFFFFFFF, 1),
+        ("LED state", after["led"], one_of(0, 1))
     ])
 ```
+
+The example uses common CI firmware symbols and the `ci_app_api` contract; supply your application's
+symbols and expectations. `skip()` ends an inapplicable scenario; it must not hide a hardware failure.
+Enable `[results] capture = true` in `session.toml` to retain records after the run:
+`record()` stores arbitrary data, here two application states. Export and HTML:
+[result processing](docs/en/RESULTS.md); [verified 0.4.0 scenarios](docs/en/API040_SCENARIOS.md).
+
 
 ## Features
 
@@ -102,7 +119,7 @@ def clock(t):
 - Image verification and programming: by loadable ELF sections, or a full image with
   fill and CRC-32 computed on the PC ([images and CRC](docs/en/IMAGES.md)); DEV_ID and
   Flash size checks in `warn` and `strict` modes ([identity](docs/en/TARGET_IDENTITY.md)).
-- Target API 0.4.0 candidate ([reference](docs/en/api/index.md), [API](docs/en/API.md)): navigation with `reach`, `step`,
+- Target API 0.4.x ([reference](docs/en/api/index.md), [API](docs/en/API.md)): navigation with `reach`, `step`,
   `until`, `finish`, `Point` and `watch` points; `read`/`write` (including a table of writes), `evaluate`,
   `memory`, `symbol`, `registers`, `frames`, `locals`; injections with `ret` and `call`; one `check` with
   matchers and a table, an expected refusal with `refused`; the run `profile` with project data and build
@@ -120,211 +137,22 @@ def clock(t):
 
 ## Limitations
 
-- **Manual GDB experience is necessary.** The author needs to understand where
-  to stop, which stack frame is selected, and what `step`, `finish`, reset and
-  forced return (`ret`) do. A scenario automates those actions; the module does not
-  choose suitable observation points or expectations for the developer.
-- **Scenarios are Python; GDB evaluates expressions.** Reading C/C++ expressions
-  through `gdb.parse_and_eval` or Target API does not allow arbitrary C code in
-  a scenario. A `do { ... } while (0)` statement macro, for example, is not an
-  evaluable expression. Calling a function from an expression executes code on
-  the MCU and can change state or hang; MMIO reads can also have side effects.
-- **Available data depends on the ELF and current context.** `-g3` preserves macro
-  definitions but cannot restore variables, types or functions removed by
-  optimisation. A HAL/CMSIS macro needs a source location in a compilation unit
-  where it is defined; entering another function or changing the frame may make
-  it unavailable. A contract checks macro presence and expansion, not the safety
-  of evaluating it on hardware. See [macros](docs/en/HAL_MACRO_GUIDE.md) and
-  [testing techniques](docs/en/TESTING_TECHNIQUES.md).
-- **Debugging changes system behaviour.** Stops, resets and injections affect
-  timing and IRQs; peripherals may keep running while the core is halted.
-  Sleep/WFI checks do not measure power consumption. Hardware breakpoint counts
-  are MCU-limited; optimisation and backends affect reachability and
-  `finish`/`ret` behaviour. A Cortex-M0 watch point halts the core one or two instructions
-  after the store.
-- **A working, agreed stand is required.** USB/SWD loss or a stuck server can
-  require manual reconnection; timeout/recovery cannot guarantee physical link
-  recovery. Such a case is recorded in [rc.2 acceptance](docs/en/RC2_READINESS.md).
-  Support is verified for a specific MCU, build, GDB and backend combination.
-- **Results apply to the scenario's conditions.** Injecting a HAL return code
-  checks an application branch, not the physical cause of a peripheral failure.
-  The module does not replace measuring instruments or calculate coverage
-  automatically; PASS does not mean all of HAL or every device mode was tested.
+- **GDB knowledge is required.** The author chooses stop points, frames, expectations and permitted injections.
+  Scenarios are Python; GDB evaluates C/C++ expressions. Statement macros such as `do { ... } while (0)`
+  are not expressions; function calls and MMIO reads can change device state.
+- **Data depends on the ELF and frame.** `-g3` preserves macros, not objects removed by optimization.
+  A macro must be available in the current compilation unit; a contract does not prove that evaluating
+  it is safe. See [macros](docs/en/HAL_MACRO_GUIDE.md).
+- **Debug stops affect the device.** Halt, reset and injections change timing and IRQ behaviour; peripherals
+  may keep running. Points are limited by MCU resources, `finish`/`ret` depend on the build and backend;
+  a Cortex-M0 watchpoint may stop one or two instructions after the write.
+- **Connection recovery may require intervention.** Recovery is an attempt, not a guarantee after USB/SWD loss.
+  Acceptance applies to a specific MCU/build/GDB/backend combination; see [known limits](docs/en/STATUS.md).
+- **PASS applies to the scenario.** Injection checks an application response, not the physical cause of failure.
+  The module does not replace instruments, measure Sleep/WFI current or compute coverage automatically.
 
-## Run layouts
-
-The scenario and the report are the same in every layout; only the local stand file
-(`*.local.toml`, `remote.toml`) changes, and it stays with the user.
-
-| Layout | Runner and GDB | GDB server and debugger | New 0.4.0 scenario verification |
-| --- | --- | --- | --- |
-| Local on Windows | Windows | same computer, st-util 1.9.0 / J-Link | 6 boards, separate runs: 24 PASS + 6 SKIP |
-| Local on a Linux stand | Orange Pi 5, Ubuntu 20.04 aarch64 | same computer, st-util 1.9.0 / J-Link | 6 boards, separate runs: 24 PASS + 6 SKIP, triggered through GitHub |
-| Remote server from Windows | Windows | Orange Pi 5 over SSH, st-util 1.9.0 | 5 boards: 20 PASS + 5 SKIP |
-| Remote server from WSL2 | WSL2, Ubuntu 20.04 x86_64 | Orange Pi 5 over SSH, st-util 1.9.0 | 5 boards: 20 PASS + 5 SKIP |
-| Prepared run package | package built separately, runner at execution site | Windows or Orange Pi 5 | checked in the local and SSH layouts above |
-| Hardware CI | prepare on GitHub, runner/GDB on Orange Pi 5 | same Orange Pi, no SSH between runner and server | Hardware #13 + #14: 6 boards, 24 PASS + 6 SKIP |
-| Local on Linux x86_64 | Linux PC | same computer | not hardware-verified |
-| WSL2 USB forwarding | WSL2 | USB through usbipd-win | not hardware-verified |
-
-The local-Linux and hardware-CI rows share evidence from #13/#14; do not add them together.
-Six-board totals combine separate STM32 and AT32 runs at different SHAs, not one campaign.
-Each board ran four new scenarios and a separate expected-SKIP variant.
-This is a selected suite, not full API reacceptance. Versions, SHAs, original errors and limits:
-[0.4.0 evidence](docs/en/API040_SCENARIOS.md). Full 0.3.0 campaigns (218 profile/scenario combinations),
-the 0.4.0 SSH campaign (233), and the ten-stage lifecycle remain in the [acceptance matrix](docs/en/API_ACCEPTANCE.md).
-
-### Local run: Windows or Linux
-
-Runner, GDB-Python and server share one computer. This covers Windows
-and Orange Pi; local Linux x86_64 has not yet been verified on hardware.
-
-```mermaid
----
-config:
-  look: classic
-  theme: neutral
----
-flowchart LR
-    subgraph PC["Computer: Windows / Linux"]
-        R["Runner + GDB-Python"] <--> S["GDB server"]
-        R --> O["Report"]
-    end
-    S <-->|USB| D["Debugger"]
-    D <-->|SWD| M["STM32"]
-```
-
-### Remote server: Windows or WSL2 → Linux stand
-
-Runner and scenario stay on the workstation. SSH starts the server on the stand
-and tunnels the GDB connection. The debugger is physically attached to the stand.
-
-```mermaid
----
-config:
-  look: classic
-  theme: neutral
----
-flowchart LR
-    R["Windows / WSL2: runner + GDB-Python"] <-->|SSH tunnel| S["Linux stand: GDB server"]
-    R --> O["Report"]
-    S <-->|USB| D["Debugger"]
-    D <-->|SWD| M["STM32"]
-```
-
-### Package: build separately from execution
-
-A package containing ELF, profile and scenarios is transferred to the stand.
-`run --package` runs both GDB-Python and the server there; reports stay there too.
-
-```mermaid
----
-config:
-  look: classic
-  theme: neutral
----
-flowchart LR
-    B["Windows / GitHub: build + pack"] --> P["Package"]
-    P --> R["Linux stand: run --package + GDB-Python"]
-    R --> O["Report"]
-    R <--> S["GDB server"]
-    S <-->|USB| D["Debugger"]
-    D <-->|SWD| M["STM32"]
-```
-
-### Hardware CI: GitHub and a self-hosted runner
-
-A GitHub-hosted job builds and prepares the package without a board. A self-hosted
-job on Orange Pi downloads it, runs hardware checks and uploads reports.
-
-```mermaid
----
-config:
-  look: classic
-  theme: neutral
----
-flowchart LR
-    G["GitHub: build + prepare + pack"] --> A["Package artifact"]
-    A --> R["Orange Pi: self-hosted runner + GDB-Python"]
-    R --> O["GitHub: reports"]
-    R <--> S["GDB server"]
-    S <-->|USB| D["Debugger"]
-    D <-->|SWD| M["STM32"]
-```
-
-### WSL2 USB forwarding: not hardware-verified
-
-All test processes run in WSL2; Windows forwards the USB device into Linux
-through usbipd-win. This distinct layout has not yet been verified on boards.
-
-```mermaid
----
-config:
-  look: classic
-  theme: neutral
----
-flowchart LR
-    W["WSL2: runner + GDB-Python + server"] <-->|usbipd-win| D["Debugger: USB Windows"]
-    W --> O["Report"]
-    D <-->|SWD| M["STM32"]
-```
-
-Remote mode uses SSH keys only; the debugger lock is held on the stand host and the
-link is watched by a heartbeat. ST-LINK GDB Server is not available on Linux aarch64
-(ST does not ship it for arm64), so OpenOCD, J-Link and st-util are used on Orange Pi.
-Details: [Linux stand](docs/en/LINUX_STAND.md), [GDB servers](docs/en/BACKENDS.md).
-
-**Reading the counters.** The candidate badge describes the recorded full 0.4.0 SSH campaign:
-five STM32 boards, 233 profile/scenario combinations, dated 2026-10-10. It does not add selected-suite
-reruns or certify the final SHA or every backend. Badges are static, not coverage percentages.
-Scope and previous snapshots: [metric definitions](docs/en/HARDWARE_METRICS.md).
-
-## MCU profiles
-
-A profile is a `target.toml` file describing a specific MCU: Flash, DEV_ID, number of
-hardware breakpoints, fault handlers, diagnostic registers, the OpenOCD target. The
-module has no ready-made profile library "for any STM32": the consumer writes a profile
-for their board, using one of the existing ones as a template. Several MCU variants of
-one firmware can share scenarios, each with its own profile (`PROFILE`).
-
-Templates in the repository: the CI firmware `tests/firmware/profiles/` (F030R8,
-F103C8, F401CC, F411CE, F429ZI — Cortex-M0, M3, M4; AT32F403A — a compatible Cortex-M4) and the example
-`examples/minimal-consumer/profile/` (F411CE).
-
-| MCU | Debugger / GDB server | Verified in |
-| --- | --- | --- |
-| STM32F030R8 | ST-Link (NUCLEO) / OpenOCD, st-util; J-Link GDB Server | CI firmware, HAL fixture, stand project |
-| STM32F103C8 | J-Link / J-Link GDB Server; ST-Link / st-util | CI firmware, stand project |
-| STM32F103CB | J-Link CE / J-Link GDB Server | demo project [stm32-hwtest-bluepill](https://github.com/ViacheslavMezentsev/stm32-hwtest-bluepill) |
-| STM32F401CC | ST-Link / OpenOCD; ST-LINK GDB Server; st-util | CI firmware, stand project |
-| STM32F411CE | ST-Link / OpenOCD; ST-LINK GDB Server; st-util | CI firmware, example, stand project |
-| STM32F429ZI | ST-Link / OpenOCD; ST-LINK GDB Server; st-util | CI firmware, stand project |
-| STM32G474CE | ST-Link / OpenOCD on Orange Pi 5 | consumer project (Arduino Core STM32) |
-| AT32F403ACGU7 (Artery) | J-Link / J-Link GDB Server; ST-Link / st-util | CI firmware, after 0.3.0 |
-
-OpenOCD, ST-LINK GDB Server and st-util need only the profile. J-Link GDB Server requires a
-device name: the profile sets it (`jlink_device`), and the module knows it for STM32F103C8T6,
-STM32F030R8T6 and STM32F103CBT6. H503 is not supported. Support is defined by the specific combination
-of MCU, HAL, GDB and backend, not by the family: [current status](docs/en/STATUS.md).
-
-**Compatible MCUs from other vendors.** The module is not tied to ST: it needs a Cortex-M core and a
-GDB server that connects to the chip. Such an MCU (Artery AT32, GigaDevice GD32, Geehy APM32, etc.) is
-attached with its own profile and the vendor CMSIS, without module changes. One is verified so far —
-AT32F403ACGU7 on the WeAct AT32F4 Core Board via J-Link; it is not part of the 0.3.0 hardware campaign
-or the counters above. The profile, the SDK, scenario specifics and the procedure for your own MCU are in
-[compatible MCUs](docs/en/COMPATIBLE_MCU.md). Every new chip needs its own acceptance on a board.
-
-## Status
-
-The published package is **0.3.0**. This branch prepares **stm32-gdbtest 0.4.0**:
-`API_VERSION=2`, target schema 2, [API specification](docs/TECHNICAL_SPECIFICATION_API.md) 0.3.16,
-[general specification](docs/TECHNICAL_SPECIFICATION.md) 0.94. These are package/contract versions, not Python versions.
-`value`, `fields`, `set_value` and `force_return` were removed; matchers, SKIP, records capture and
-external result processing were added. Migration: [API](docs/en/API.md); contents and limits:
-[release scope](docs/en/RELEASE040_SCOPE.md); history: [CHANGELOG](CHANGELOG.en.md).
-
-Hardware evidence is retained; candidate publication and final-SHA CI are not yet confirmed.
-ST-LINK GDB Server limitations remain explicit. Next steps: [TODO](TODO.md).
+[Current status, versions and acceptance limits](docs/en/STATUS.md) ·
+[run layouts](docs/en/RUN_LAYOUTS.md) · [MCU profiles](docs/en/MCU_PROFILES.md).
 
 ## Contents and dependencies
 
@@ -350,7 +178,7 @@ The module is integrated as a **Git submodule** (or a separate clone whose path 
 by `STM32_GDBTEST_SOURCE_DIR`). MCU settings, application tests and the local stand
 stay with the consumer. Start with [integration and the example](docs/en/GETTING_STARTED.md),
 then move on to [writing tests](docs/en/TEST_AUTHORING.md) — by hand or with an agent. For an agent —
-the [skills](skills/README.en.md) `stm32-gdbtest-integrate`, `stm32-gdbtest-scenarios`, `stm32-gdbtest-run` and `stm32-gdbtest-results`.
+the [skill recommendations](skills/README.en.md): integration, scenarios, execution, results, stand loops and development.
 
 ## Documentation and related projects
 
@@ -364,4 +192,4 @@ the [skills](skills/README.en.md) `stm32-gdbtest-integrate`, `stm32-gdbtest-scen
 
 License — [MIT](LICENSE). [Origin](SOURCE.md), [rules for developers and agents](AGENTS.md), [maintenance](docs/en/maintenance.md).
 
-[v0.3.0 release](docs/releases/v0.3.0.md), [v0.2.0-rc.1 preparation and migration](docs/en/RC020_READINESS.md).
+[v0.4.1 preparation](docs/releases/v0.4.1.md), [v0.4.0 release](docs/releases/v0.4.0.md), [v0.2.0-rc.1 preparation and migration](docs/en/RC020_READINESS.md).

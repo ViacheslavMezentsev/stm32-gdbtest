@@ -40,7 +40,7 @@ Instructions for AI agents and new contributors ([English](docs/en/maintenance.m
    коммите; ТЗ ведётся только на русском и не переводится.
 8. Сборка и host PASS не означают HW PASS. Аппаратный запуск — только на
    согласованном стенде, без mass erase, option bytes и shared mode; ERROR не скрывать.
-   Схемы запуска и их приёмка — README («Схемы запуска») и [API_ACCEPTANCE](docs/ru/API_ACCEPTANCE.md).
+   Схемы запуска и их приёмка — [RUN_LAYOUTS](docs/ru/RUN_LAYOUTS.md) и [API_ACCEPTANCE](docs/ru/API_ACCEPTANCE.md).
 9. MCU, платы, ожидания и тесты приложения — в проекте потребителя; тестовые
    hooks в прошивку не добавлять; GDB API — только из основного потока GDB.
 10. Не коммитить локальные TOML стендов, серийные номера, персональные пути,

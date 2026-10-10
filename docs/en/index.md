@@ -2,7 +2,7 @@
 
 Documentation · [Русский](../ru/index.md)
 
-[Release v0.3.0](../releases/v0.3.0.md): stm32-gdbtest 0.3.0; candidate v0.2.0-rc.1 was never published. Historical evidence follows.
+[Published v0.4.0](../releases/v0.4.0.md); [preparing v0.4.1](../releases/v0.4.1.md). See [STATUS](STATUS.md) for the current summary; earlier milestones are retained below.
 
 [F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](F429_CMSIS_RTC_SLEEP.md)
 
@@ -30,6 +30,10 @@ the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 [Practical Docker and L6 workflow](local-docker-testing.md): snapshot, volume, evidence and stand restoration.
 
 ## Getting started
+
+- [Run layouts](RUN_LAYOUTS.md) — placement of runner, GDB and probe, verified combinations.
+- [MCU profiles](MCU_PROFILES.md) — target.toml and verified boards.
+- [Current status](STATUS.md) — versions, evidence and limits.
 
 - [DDTT specification](DDTT.md) — the debugger-driven testing on target method: terms, principles, requirements for scenarios, stands and tools.
 

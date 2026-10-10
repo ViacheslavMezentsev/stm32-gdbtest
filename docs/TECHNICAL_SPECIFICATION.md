@@ -5,10 +5,10 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.94 (к выпуску v0.4.0) |
+| **Ревизия** | 0.95 (к выпуску v0.4.1) |
 | **Дата формирования** | 10.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
-| **Целевая версия** | Кандидат v0.4.0; пакет stm32-gdbtest `0.4.0`, API_VERSION=2, ТЗ API 0.3.16 (р.0.90). Публикация после итоговой приёмки. |
+| **Целевая версия** | Пакет stm32-gdbtest `0.4.1` (редакция документации); API_VERSION=2, target schema 2, ТЗ API 0.3.16 без изменений (р.0.95). Публикация владельцем после CI итогового SHA. |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
@@ -160,6 +160,16 @@
 | 0.93 | 10.10.2026 | К выпуску v0.4.0: владелец принял ограничение полных F411/F030/ST-LINK GDB Server; USB ERROR остаётся долгом, выпуск опирается на проверенные конфигурации OpenOCD/st-util. API, TC и матрица требований не меняются. |
 
 | 0.94 | 10.10.2026 | Hardware CI: шестой профиль AT32, presets и закреплённый SDK на prepare; регрессия doctor/FAIL для обоих наборов. API не меняется. |
+| 0.95 | 10.10.2026 | Редакция документации к v0.4.1: отдельные схемы запуска и профили MCU, актуальный STATUS с архивом, рекомендации навыков и цикл DDTT. Поведение, API, схемы, требования, TC и матрица приёмки не меняются. |
+
+### Изменения ревизии 0.95
+
+Изменены реквизиты и карта документации. Новых нормативных требований нет.
+
+| Пункт | Тип | Что изменилось |
+| :--- | :--- | :--- |
+| Реквизиты | изм. | Целевая версия пакета 0.4.1; совместимость API и форматы сохранены (р.0.95) |
+| Карта документации | изм. | RUN_LAYOUTS, MCU_PROFILES, STATUS_ARCHIVE; навыки включают цикл разработки с обратной связью |
 
 ### Изменения ревизии 0.94
 

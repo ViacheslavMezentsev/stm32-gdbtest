@@ -3,7 +3,7 @@
 [![Docs](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/stm32-gdbtest/docs.yml?branch=main&label=Docs&style=flat-square)](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/workflows/docs.yml)
 [![Offline](https://img.shields.io/github/actions/workflow/status/ViacheslavMezentsev/stm32-gdbtest/offline.yml?branch=main&label=Offline&style=flat-square)](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/workflows/offline.yml)
 
-[![Hardware campaign](https://img.shields.io/badge/Hardware-candidate%200.4.0%20SSH-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
+[![Hardware campaign](https://img.shields.io/badge/Hardware-0.4.0%20SSH-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
 [![Board models tested](https://img.shields.io/badge/Models%20tested-6-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
 [![SSH campaign boards](https://img.shields.io/badge/SSH%20campaign%20boards-5-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
 [![API 0.4.0 models](https://img.shields.io/badge/API%200.4.0%20models-6-blue?style=flat-square)](docs/ru/API040_SCENARIOS.md)
@@ -58,7 +58,6 @@ DDTT (debugger-driven testing on target, тестирование через о�
 ---
 config:
   look: classic
-  theme: neutral
 ---
 flowchart LR
     I["ELF + профиль MCU + Python-тесты"] --> H["Host runner на ПК"]
@@ -77,21 +76,39 @@ Runner проверяет входные артефакты, запускает 
 прошивки, чтобы проверить реакцию вызывающего кода. Тестовая логика не добавляется в прошивку.
 
 ```python
-from stm32_gdbtest import case, within
+from stm32_gdbtest import case, one_of
 
 
-# Verify the system clock and the SysTick period after start-up.
-@case("HW_CLOCK", contracts=("clock_macros",))
-def clock(t):
-    t.reach("board_led_toggle")
+# Observe one application step and retain evidence for the report.
+@case("HW_APP_STEP", contracts=("ci_app_api",))
+def app_step(t):
+    enabled = t.profile.user.get("sample_step", True)
+    t.check("sample_step is boolean", type(enabled) is bool)
+    if not enabled:
+        t.skip("sample_step disabled in api.toml")
 
-    # A string cell is a GDB expression; numbers and matchers are Python values.
+    # Read named fields, then stop after the producer and its wrapper return.
+    t.reach("app_loop")
+    before = t.read("app_state", fields={"ticks": None, "led": None})
+    t.reach("app_step")
+    t.finish()
+    t.finish()
+    after = t.read("app_state", fields={"ticks": None, "led": None})
+    t.record("app.step", {"before": before, "after": after})
+
+    # Check the increment with unsigned wraparound and the allowed LED states.
     t.check([
-        ("HSI enabled and ready", "RCC->CR & (RCC_CR_HSION | RCC_CR_HSIRDY)", "RCC_CR_HSION | RCC_CR_HSIRDY"),
-        ("1 ms SysTick at 8 MHz", "SysTick->LOAD", 8_000_000 // 1000 - 1),
-        ("VDDA is plausible", "board_adc_reading.vdda_mv", within(2800, 3600))
+        ("one step published", (after["ticks"] - before["ticks"]) & 0xFFFFFFFF, 1),
+        ("LED state", after["led"], one_of(0, 1))
     ])
 ```
+
+Пример использует символы общей CI-прошивки и контракт `ci_app_api`; в приложении задайте свои
+символы и ожидания. `skip()` завершает весь неприменимый сценарий, а не скрывает отказ оборудования.
+Для сохранения записей после запуска включите `[results] capture = true` в `session.toml`:
+`record()` хранит произвольные данные, здесь — два состояния приложения. Экспорт и HTML —
+[обработка результатов](docs/ru/RESULTS.md); [проверенные сценарии 0.4.0](docs/ru/API040_SCENARIOS.md).
+
 
 ## Возможности
 
@@ -100,7 +117,7 @@ def clock(t):
 - Проверка и запись образа: по загружаемым секциям ELF или полный образ с заполнением
   и CRC-32 на ПК ([образы и CRC](docs/ru/IMAGES.md)); проверка DEV_ID и размера Flash
   в режимах `warn` и `strict` ([identity](docs/ru/TARGET_IDENTITY.md)).
-- Target API кандидата 0.4.0 ([справочник](docs/ru/api/index.md), [API](docs/ru/API.md)): навигация `reach`, `step`,
+- Target API 0.4.x ([справочник](docs/ru/api/index.md), [API](docs/ru/API.md)): навигация `reach`, `step`,
   `until`, `finish`, точки `Point` и `watch`; чтение и запись `read`/`write` (в том числе таблицей записей),
   `evaluate`, `memory`, `symbol`, `registers`, `frames`, `locals`; инъекции `ret` и `call`; одна `check`
   с сопоставителями и таблицей, ожидаемый отказ `refused`; профиль прогона `profile` с данными проекта и
@@ -117,211 +134,22 @@ def clock(t):
 
 ## Ограничения
 
-- **Нужен опыт ручной работы с GDB.** Автор должен понимать, где остановить
-  программу, какой стековый кадр (frame) выбран, что делают `step`, `finish`,
-  reset и принудительный возврат (`ret`). Сценарий автоматизирует эти действия;
-  модуль не выбирает правильные точки наблюдения и ожидания за разработчика.
-- **Сценарий написан на Python, а выражения вычисляет GDB.** Чтение C/C++-выражений
-  через `gdb.parse_and_eval` или Target API не превращает сценарий в произвольный
-  C-код. В частности, statement-макрос `do { ... } while (0)` не является
-  вычисляемым выражением. Вызов функции из выражения исполняет код на MCU и может
-  изменить состояние или зависнуть; чтение MMIO тоже может иметь побочный эффект.
-- **Доступность данных зависит от ELF и текущего контекста.** `-g3` сохраняет
-  определения макросов, но не возвращает удалённые оптимизатором переменные,
-  типы и функции. Для HAL/CMSIS-макроса нужна исходная позиция в единице компиляции,
-  где он определён; после перехода в другую функцию или смены frame он может
-  стать недоступен. Контракт проверяет наличие и раскрытие макроса, но не
-  безопасность его вычисления на плате. См. [макросы](docs/ru/HAL_MACRO_GUIDE.md)
-  и [техники тестирования](docs/ru/TESTING_TECHNIQUES.md).
-- **Отладка меняет поведение системы.** Остановки, reset и инъекции влияют на
-  время и IRQ; периферия при halt может продолжать работать. Проверка Sleep/WFI
-  не измеряет потребление. Число hardware breakpoints ограничено MCU;
-  оптимизация и backend влияют на достижимость точки и работу `finish`/`ret`. Точка наблюдения
-  на Cortex-M0 останавливает ядро на одну-две инструкции позже записи.
-- **Нужен исправный и согласованный стенд.** Потеря USB/SWD или зависший сервер
-  могут потребовать ручного переподключения; timeout/recovery не гарантирует
-  физического восстановления связи. Такой случай сохранён в [приёмке rc.2](docs/ru/RC2_READINESS.md).
-  Поддержка проверяется для конкретного сочетания MCU, сборки, GDB и backend.
-- **Результат ограничен условиями сценария.** Инъекция кода возврата HAL проверяет
-  ветвь приложения, но не воспроизводит физическую причину ошибки периферии.
-  Модуль не заменяет измерительные приборы и не вычисляет покрытие автоматически;
-  PASS не означает проверку всей HAL или всех режимов устройства.
+- **Нужно понимать GDB.** Автор выбирает точки остановки, кадры, ожидания и допустимые инъекции.
+  Сценарий написан на Python; C/C++-выражения вычисляет GDB. Statement-макросы вроде
+  `do { ... } while (0)` выражениями не становятся; вызовы функций и чтение MMIO могут менять состояние.
+- **Данные зависят от ELF и кадра.** `-g3` сохраняет макросы, но не удалённые оптимизатором объекты.
+  Макрос должен быть доступен в текущей единице компиляции; контракт не доказывает безопасность
+  его вычисления. Подробнее: [макросы](docs/ru/HAL_MACRO_GUIDE.md).
+- **Остановки влияют на устройство.** Halt, reset и инъекции меняют время и IRQ; периферия может
+  продолжать работу. Точки ограничены ресурсами MCU, `finish`/`ret` зависят от сборки и backend;
+  watchpoint Cortex-M0 может остановить ядро на одну-две инструкции позже записи.
+- **Связь может потребовать ручного восстановления.** Recovery — попытка, не гарантия после потери USB/SWD.
+  Приёмка относится к сочетанию MCU, сборки, GDB и backend; [известные ограничения](docs/ru/STATUS.md).
+- **PASS относится к сценарию.** Инъекция проверяет реакцию приложения, а не физическую причину отказа.
+  Модуль не заменяет измерительные приборы, не измеряет ток при Sleep/WFI и не вычисляет покрытие автоматически.
 
-## Схемы запуска
-
-Сценарий и отчёт одинаковы во всех схемах; меняется только файл локального стенда
-(`*.local.toml`, `remote.toml`), который остаётся у пользователя.
-
-| Схема | Runner и GDB | GDB-сервер и отладчик | Проверка новых сценариев 0.4.0 |
-| --- | --- | --- | --- |
-| Локально на Windows | Windows | тот же компьютер, st-util 1.9.0 / J-Link | 6 плат, отдельные прогоны: 24 PASS + 6 SKIP |
-| Локально на Linux-стенде | Orange Pi 5, Ubuntu 20.04 aarch64 | тот же компьютер, st-util 1.9.0 / J-Link | 6 плат, отдельные прогоны: 24 PASS + 6 SKIP, запуск через GitHub |
-| Удалённый сервер с Windows | Windows | Orange Pi 5 по SSH, st-util 1.9.0 | 5 плат: 20 PASS + 5 SKIP |
-| Удалённый сервер из WSL2 | WSL2, Ubuntu 20.04 x86_64 | Orange Pi 5 по SSH, st-util 1.9.0 | 5 плат: 20 PASS + 5 SKIP |
-| Пакет подготовленного запуска | пакет собран отдельно, runner на месте запуска | Windows или Orange Pi 5 | проверен в локальных и SSH-схемах выше |
-| Аппаратный CI | prepare на GitHub, runner/GDB на Orange Pi 5 | тот же Orange Pi, без SSH между runner и сервером | Hardware №13 + №14: 6 плат, 24 PASS + 6 SKIP |
-| Локально на Linux x86_64 | Linux-ПК | тот же компьютер | на оборудовании не проверялось |
-| WSL2 с USB-пробросом | WSL2 | USB через usbipd-win | на оборудовании не проверялось |
-
-Строки «локально на Linux» и «аппаратный CI» используют общие свидетельства №13/№14; их не суммируют.
-Итоги шести плат объединяют отдельные STM32- и AT32-прогоны на разных SHA, а не единый запуск.
-На каждой плате выполнены четыре новых сценария и отдельный вариант ожидаемого SKIP.
-Это выборочный набор, не повтор всей приёмки API. Версии, SHA, исходные ошибки и ограничения —
-[протоколы 0.4.0](docs/ru/API040_SCENARIOS.md). Полные кампании 0.3.0 (218 сочетаний профиль/сценарий)
-и 0.4.0 SSH (233), а также десятиэтапный lifecycle сохранены в [матрице приёмки](docs/ru/API_ACCEPTANCE.md).
-
-### Локальный запуск: Windows или Linux
-
-Runner, GDB-Python и сервер работают на одном компьютере. Это схема Windows
-и Orange Pi; локальный Linux x86_64 пока не проверен на оборудовании.
-
-```mermaid
----
-config:
-  look: classic
-  theme: neutral
----
-flowchart LR
-    subgraph PC["Компьютер: Windows / Linux"]
-        R["Runner + GDB-Python"] <--> S["GDB-сервер"]
-        R --> O["Отчёт"]
-    end
-    S <-->|USB| D["Отладчик"]
-    D <-->|SWD| M["STM32"]
-```
-
-### Удалённый сервер: Windows или WSL2 → Linux-стенд
-
-Runner и сценарий работают на рабочем ПК; SSH запускает сервер на стенде
-и передаёт соединение GDB через туннель. Отладчик физически подключён к стенду.
-
-```mermaid
----
-config:
-  look: classic
-  theme: neutral
----
-flowchart LR
-    R["Windows / WSL2: runner + GDB-Python"] <-->|SSH tunnel| S["Linux-стенд: GDB-сервер"]
-    R --> O["Отчёт"]
-    S <-->|USB| D["Отладчик"]
-    D <-->|SWD| M["STM32"]
-```
-
-### Пакет: сборка отдельно от запуска
-
-На компьютер стенда передаётся пакет с ELF, профилем и сценариями.
-`run --package` запускает там и GDB-Python, и сервер; отчёты сохраняются там же.
-
-```mermaid
----
-config:
-  look: classic
-  theme: neutral
----
-flowchart LR
-    B["Windows / GitHub: сборка + pack"] --> P["Пакет"]
-    P --> R["Linux-стенд: run --package + GDB-Python"]
-    R --> O["Отчёт"]
-    R <--> S["GDB-сервер"]
-    S <-->|USB| D["Отладчик"]
-    D <-->|SWD| M["STM32"]
-```
-
-### Аппаратный CI: GitHub и self-hosted раннер
-
-GitHub-hosted job собирает и проверяет пакет без платы. Self-hosted job
-на Orange Pi скачивает пакет, запускает аппаратную проверку и загружает отчёты.
-
-```mermaid
----
-config:
-  look: classic
-  theme: neutral
----
-flowchart LR
-    G["GitHub: build + prepare + pack"] --> A["Артефакт пакета"]
-    A --> R["Orange Pi: self-hosted runner + GDB-Python"]
-    R --> O["GitHub: отчёты"]
-    R <--> S["GDB-сервер"]
-    S <-->|USB| D["Отладчик"]
-    D <-->|SWD| M["STM32"]
-```
-
-### WSL2 с USB-пробросом: аппаратно не проверено
-
-Все процессы тестирования работают в WSL2; Windows передаёт USB-устройство
-в Linux через usbipd-win. Это отдельный, пока не проверенный на платах вариант.
-
-```mermaid
----
-config:
-  look: classic
-  theme: neutral
----
-flowchart LR
-    W["WSL2: runner + GDB-Python + сервер"] <-->|usbipd-win| D["Отладчик: USB Windows"]
-    W --> O["Отчёт"]
-    D <-->|SWD| M["STM32"]
-```
-
-Удалённый режим работает только по ключам SSH; блокировка отладчика действует на
-хосте стенда, связь контролируется сигналом присутствия. ST-LINK GDB Server на
-Linux aarch64 недоступен (ST не выпускает его для arm64), поэтому на Orange Pi
-используются OpenOCD, J-Link и st-util. Подробности: [Linux-стенд](docs/ru/LINUX_STAND.md),
-[GDB-серверы](docs/ru/BACKENDS.md).
-
-**Как читать счётчики.** Бейдж кандидата описывает сохранённый полный SSH-прогон 0.4.0:
-пять STM32, 233 сочетания «профиль + сценарий», дата 10.10.2026. Он не суммирует новые выборочные
-прогоны и не подтверждает финальный SHA или все backend. Бейджи статические, не процент покрытия.
-Границы и прежние срезы — в [описании метрик](docs/ru/HARDWARE_METRICS.md).
-
-## Профили MCU
-
-Профиль — файл `target.toml` с описанием конкретного MCU: Flash, DEV_ID, число
-hardware breakpoints, обработчики отказов, диагностические регистры, цель OpenOCD.
-Готовой библиотеки профилей «для любого STM32» в модуле нет: профиль пишет
-потребитель под свою плату, взяв за образец один из имеющихся. Несколько вариантов
-MCU одной прошивки могут делить сценарии, каждый со своим профилем (`PROFILE`).
-
-Образцы в репозитории: CI-прошивки `tests/firmware/profiles/` (F030R8, F103C8, F401CC,
-F411CE, F429ZI — Cortex-M0, M3, M4; AT32F403A — совместимый Cortex-M4) и пример
-`examples/minimal-consumer/profile/` (F411CE).
-
-| MCU | Отладчик / GDB-сервер | Где проверено |
-| --- | --- | --- |
-| STM32F030R8 | ST-Link (NUCLEO) / OpenOCD, st-util; J-Link GDB Server | CI-прошивка, HAL-фикстура, стендовый проект |
-| STM32F103C8 | J-Link / J-Link GDB Server; ST-Link / st-util | CI-прошивка, стендовый проект |
-| STM32F103CB | J-Link CE / J-Link GDB Server | демонстрационный проект [stm32-hwtest-bluepill](https://github.com/ViacheslavMezentsev/stm32-hwtest-bluepill) |
-| STM32F401CC | ST-Link / OpenOCD; ST-LINK GDB Server; st-util | CI-прошивка, стендовый проект |
-| STM32F411CE | ST-Link / OpenOCD; ST-LINK GDB Server; st-util | CI-прошивка, пример, стендовый проект |
-| STM32F429ZI | ST-Link / OpenOCD; ST-LINK GDB Server; st-util | CI-прошивка, стендовый проект |
-| STM32G474CE | ST-Link / OpenOCD на Orange Pi 5 | проект потребителя (Arduino Core STM32) |
-| AT32F403ACGU7 (Artery) | J-Link / J-Link GDB Server; ST-Link / st-util | CI-прошивка, после 0.3.0 |
-
-Для OpenOCD, ST-LINK GDB Server и st-util достаточно профиля. J-Link GDB Server требует
-имени устройства: оно задаётся в профиле (`jlink_device`), а для STM32F103C8T6,
-STM32F030R8T6 и STM32F103CBT6 известно модулю. H503 не поддержан. Поддержка определяется конкретной
-комбинацией MCU, HAL, GDB и backend, а не семейством: [текущее состояние](docs/ru/STATUS.md).
-
-**Совместимые МК других производителей.** Модуль не привязан к ST: нужны ядро Cortex-M и
-GDB-сервер, который подключается к кристаллу. Такой МК (Artery AT32, GigaDevice GD32, Geehy APM32
-и т. п.) подключается своим профилем и CMSIS производителя, без изменений модуля. Проверен пока один —
-AT32F403ACGU7 на WeAct AT32F4 Core Board через J-Link; он не входит в аппаратную кампанию 0.3.0
-и в счётчики выше. Профиль, SDK, особенности сценариев и порядок подключения своего МК —
-в [совместимых МК](docs/ru/COMPATIBLE_MCU.md). Каждый новый кристалл требует своей приёмки на плате.
-
-## Состояние
-
-Опубликованный пакет — **0.3.0**. В этой ветке готовится **stm32-gdbtest 0.4.0**:
-`API_VERSION=2`, target schema 2, [ТЗ API](docs/TECHNICAL_SPECIFICATION_API.md) 0.3.16,
-[общее ТЗ](docs/TECHNICAL_SPECIFICATION.md) 0.94. Это версии пакета и контрактов, не версия Python.
-Удалены `value`, `fields`, `set_value`, `force_return`; добавлены сопоставители, SKIP, захват records
-и внешняя обработка результатов. Миграция — [API](docs/ru/API.md), состав и ограничения —
-[граница выпуска](docs/ru/RELEASE040_SCOPE.md), история — [CHANGELOG](CHANGELOG.md).
-
-Аппаратные протоколы сохранены; публикация кандидата и CI окончательного SHA ещё не подтверждены.
-В частности, ограничения ST-LINK GDB Server остаются явными. Ближайшие шаги — [TODO](TODO.md).
+[Текущее состояние, версии и границы приёмки](docs/ru/STATUS.md) ·
+[схемы запуска](docs/ru/RUN_LAYOUTS.md) · [профили MCU](docs/ru/MCU_PROFILES.md).
 
 ## Состав и зависимости
 
@@ -346,7 +174,7 @@ tools в модуль не входят. GDB-Python — отдельный ин�
 `STM32_GDBTEST_SOURCE_DIR`). Настройки MCU, тесты приложения и локальный стенд остаются
 у потребителя. Начните с [подключения и примера](docs/ru/GETTING_STARTED.md), затем
 перейдите к [написанию тестов](docs/ru/TEST_AUTHORING.md) — вручную или с помощью агента. Агенту —
-[навыки](skills/README.md) `stm32-gdbtest-integrate`, `stm32-gdbtest-scenarios`, `stm32-gdbtest-run` и `stm32-gdbtest-results`.
+[рекомендации по выбору навыков](skills/README.md): подключение, сценарии, запуск, результаты, стендовый цикл и разработка.
 
 ## Документация и связанные проекты
 
@@ -360,4 +188,4 @@ tools в модуль не входят. GDB-Python — отдельный ин�
 
 Лицензия — [MIT](LICENSE). [Происхождение](SOURCE.md), [правила для разработчиков и агентов](AGENTS.md), [сопровождение](docs/ru/maintenance.md).
 
-[Выпуск v0.3.0](docs/releases/v0.3.0.md), [подготовка и миграция v0.2.0-rc.1](docs/ru/RC020_READINESS.md).
+[Подготовка v0.4.1](docs/releases/v0.4.1.md), [выпуск v0.4.0](docs/releases/v0.4.0.md), [подготовка и миграция v0.2.0-rc.1](docs/ru/RC020_READINESS.md).

@@ -593,3 +593,12 @@ Preserve the original ERROR and retry in a short new directory: for example, `bu
 `tests/firmware/api040.py run --output`, or a short `--workdir` for `run --package`.
 Do not overwrite old results or disable contract validation.
 The Windows long-path setting alone does not establish support in a particular GDB build.
+
+## Mermaid and dark mode
+
+If a diagram keeps light nodes in GitHub dark mode, inspect its `config`:
+an explicit `theme: neutral` selects the print palette and overrides the viewer setting.
+Keep `look: classic` for flat shapes, but avoid `theme`, `themeVariables` and fixed
+node colors in shared README files. Check both themes after publication:
+colors depend on the viewer's Mermaid version and configuration.
+[Mermaid theming](https://mermaid.js.org/config/theming.html).
