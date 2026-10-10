@@ -113,3 +113,11 @@ remains open technical debt 11.2.27. Verified alternatives are OpenOCD/st-util.
   unexpected SKIP. The systemd service and pi/Qwen agent have not been exercised.
 - Latest host regression after stand_loop: 451 tests, 4 expected skips; Docker docs+host
   6/6. TOML comments do not change active settings.
+
+## Final release handoff
+
+GitHub Docs, Offline and Hardware #14 succeeded at `ba10b12`. Subsequent changes
+are documentation only; tested code and configuration are unchanged.
+The local AT32/Windows run additionally completed the selected sixth-board matrix.
+v0.4.0 content preparation is complete; final documentation push, CI of that SHA,
+land and the signed tag remain with the owner. Known limitations above still apply.

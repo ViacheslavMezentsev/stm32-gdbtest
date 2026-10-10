@@ -218,3 +218,11 @@ Cortex-M0 or every F0 backend combination.
 [Five-profile acceptance review and remaining HAL checks](CMSIS_ACCEPTANCE.md).
 
 [HAL F030: five GPIO/RCC techniques and source variants](F030_HAL_GPIO_RCC.md).
+
+## Final release handoff
+
+GitHub Docs, Offline and Hardware #14 succeeded at `ba10b12`. Subsequent changes
+are documentation only; tested code and configuration are unchanged.
+The local AT32/Windows run additionally completed the selected sixth-board matrix.
+v0.4.0 content preparation is complete; final documentation push, CI of that SHA,
+land and the signed tag remain with the owner. Known limitations above still apply.
