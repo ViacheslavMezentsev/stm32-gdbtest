@@ -74,12 +74,34 @@ GDB connected; the two subsequent ERROR outcomes were restoration attempts.
 Changing the client did not eliminate the observed failure. After the final USB
 reconnection, BOOT/GPIO through OpenOCD passed 2/2. No full ST-LINK PASS is claimed.
 
+### Another probe: Nucleo-F030R8
+
+2026-10-10, runtime unchanged from `b1264c1`, server 7.14.0,
+GDB 14.2.90/Python 3.11.4 from xPack 13.3.1. The Nucleo ST-Link firmware is
+V2J45M31; the compared F411 probe uses V2J43M28. F030 ELF:
+`19004fbb238ab96c54e29d9090f981ec73e00cd5ad37960419e00670b1d79628`.
+
+Lifecycle: 10/10. The full suite stopped before `HW_CI_INJECT_ZERO`:
+76 stages, 73 PASS (47 preparations and 26 hardware scenarios), 3 ERROR
+(the initial failure and two restoration attempts). Again, `Target USB comms error`
+occurred while opening the probe, before GDB connected. No second long suite was run.
+
+Before reconnection, OpenOCD could not restore the board either: BOOT/GPIO 0/2,
+an invalid V8J0S0 / VID:PID 0000:0001 version response, then initialization failure.
+After physically reconnecting USB, BOOT/GPIO passed 2/2.
+The original ERROR results and separate successful restoration were retained.
+
+The symptom therefore reproduces on two different probes and MCUs; it is not
+limited to the F411 unit. This does not isolate the cause among the server,
+driver, USB connection, probe firmware and process lifecycle.
+Probe firmware and reset code were not changed for the comparison.
+
 Next diagnostic experiment: isolate server startup/shutdown and USB access, also
 comparing another probe/cable. The current Windows path runs the server with `-e`
 and forcibly stops it after GDB exits; an effect of this lifecycle is a hypothesis,
 not an established cause. Reset commands were not changed to address a USB failure.
 
-The full F411/ST-LINK suite remains an open acceptance condition. Latest-SHA CI,
+Full F411/F030/ST-LINK suites remain an open acceptance condition. Latest-SHA CI,
 remote Orange Pi layouts and final release are not yet accepted. The consumer check
 above covers minimal-consumer, not the private mcu_power_board project. Boards are
 currently connected to Windows; historical Linux/SSH results below do not automatically

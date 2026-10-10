@@ -3,12 +3,14 @@
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
 **Now (2026-10-10).** `codex/release-040` prepares v0.4.0: Python 0.4.0,
-API_VERSION=2, target schema 2, API specification 0.3.14, general specification 0.83.
+API_VERSION=2, target schema 2, API specification 0.3.14, general specification 0.84.
 Runtime `b1264c1` passed Docker 26/26 and full suites on six Windows-attached boards
 using OpenOCD/J-Link: 280 scenarios, 608 stages, restoration 12/12. Linux-built
 F411/F429 packages passed 10/10 each on Windows; minimal-consumer with a real
 submodule passed offline and hardware checks on F411. F411/ST-LINK GDB Server:
-short cycles passed, full suites hit USB ERROR on 7.14.0 and 7.9.0; cause unknown.
+short cycles passed, full suites hit USB ERROR on 7.14.0 and 7.9.0. Another probe
+on F030 reproduced the failure on 7.14.0; after reconnection OpenOCD BOOT/GPIO
+passed 2/2. The cause remains unknown.
 Latest-SHA CI and remote layouts remain unaccepted. [Matrix and limits](API_ACCEPTANCE.md),
 [release boundary](RELEASE040_SCOPE.md). The release is unpublished; current work is in [TODO](../../TODO.md).
 

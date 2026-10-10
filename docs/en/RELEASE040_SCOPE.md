@@ -59,7 +59,7 @@ migration table; these are examples of old code, not executable scenarios.
 ## 4. Technical debt and release gates
 
 The 2026-10-10 recheck updates acceptance: [current matrix](API_ACCEPTANCE.md).
-Docker 26/26 and six OpenOCD/J-Link boards passed; full F411/ST-LINK suites remain
+Docker 26/26 and six OpenOCD/J-Link boards passed; full F411/F030 ST-LINK suites remain
 open due to USB ERROR. The historical table below does not override these results.
 
 - Use `skip()` in consumer scenarios to learn where it is needed; distinguish inapplicability from malfunction. Direct GDB is unrestricted and SKIP does not roll back actions. This package has not rechecked remote stands or other GDB versions.
