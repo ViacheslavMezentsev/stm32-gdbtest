@@ -111,3 +111,5 @@ F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_D
 [0.3.0 plan: API audit and redesign](API030_PLAN.md).
 
 [Result export and evidence index](RESULTS.md).
+
+New package scenarios: [API 0.4.0](API040_SCENARIOS.md).

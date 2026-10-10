@@ -297,3 +297,5 @@ No USB ERROR/libusb assertion was observed. The earlier F429 SP/SRAM anomaly did
 its cause, earlier ST-LINK GDB Server failures and forced USB cleanup safety remain unresolved.
 Docker docs+host6/6 (426 tests,6 expected skips); scenario style2/2.
 This is local hardware acceptance for specific configurations, not a replacement for GitHub CI on the release SHA.
+
+New selective campaign: [API 0.4.0 scenarios](API040_SCENARIOS.md), five STM32 boards including expected SKIP.

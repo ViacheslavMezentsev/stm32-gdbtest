@@ -50,3 +50,5 @@ t.check("version", version, matches(r"^v1\.\d+\.\d+"))
 ## Ссылки
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.2.5; `as_type=str`: ревизия 0.3.5, п. 4.18.1–4.18.2.
+
+Новый выборочный прогон: [сценарии API 0.4.0](../API040_SCENARIOS.md), пять STM32, включая ожидаемый SKIP.

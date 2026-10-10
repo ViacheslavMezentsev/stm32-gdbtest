@@ -207,3 +207,20 @@ point on normal and exceptional exit. The budget is not a wall-clock timeout.
 Compare natural counter wrap with forced zero return: both reach the receiver's zero branch, but
 only natural execution changes producer state. Restore declared input fields on normal and
 exceptional exit and verify the next normal iteration. This is not a full execution rollback.
+
+## HW_CI_040_RECORDS
+Retain MCU state, a transition, a measured tick delta and arbitrary typed diagnostics. Input and selected
+copies cannot mutate the journal. Capture/export must preserve all records and their order/types.
+
+## HW_CI_040_SKIP
+A boolean user.release040.optional_loop policy controls applicability (default true). False yields SKIP
+with capability and finally evidence, but no executed/completed records. True reaches app_loop and PASS.
+This does not turn a failed hardware feature into an inapplicable feature.
+
+## HW_CI_040_SKIP_VALIDATION
+Refuse six invalid reasons (including the configured text limit) with no skip or journal change;
+a subsequent app_loop stop and completion record prove execution can continue.
+
+## HW_CI_040_STRING_VIEWS
+A bounded three-byte char view reads only the prefix, while unsized and pointer views read the complete
+NUL-terminated RAM version. None of these views modifies the bytes. No invalid address is accessed.
