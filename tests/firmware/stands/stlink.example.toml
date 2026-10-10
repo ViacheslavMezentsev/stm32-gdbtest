@@ -2,9 +2,18 @@
 # CubeCLT exists for Windows and Linux x86_64 only; on Linux drop the .exe suffixes,
 # for example /opt/st/stm32cubeclt_1.22.0/STLink-gdb-server/bin/ST-LINK_gdbserver.
 [probe]
+# GDB server backend: "openocd", "stlink", "jlink" or "st-util"; required. Backend-specific fields differ.
 backend = "stlink"
+# Required debugger USB serial (letters/digits), not the MCU ID; replace this placeholder.
 serial = "REPLACE_WITH_STLINK_SERIAL"
+# Server executable: name on PATH or path; on the stand host when [remote] is present.
 executable = "C:/ST/STM32CubeCLT/STLink-gdb-server/bin/ST-LINK_gdbserver.exe"
+# Required for stlink: absolute directory containing STM32_Programmer_CLI(.exe), not the executable itself.
 programmer_dir = "C:/ST/STM32CubeCLT/STM32CubeProgrammer/bin"
+# Requested debug clock in kHz: integer 1..4000; default 1000. Actual supported speed depends on the probe.
 speed_khz = 1000
+# Flash policy: "if-different" (default) programs mismatching Flash and verifies it; "verify-only" never programs.
+# Both policies report ERROR if final Flash verification fails; verify-only also rejects any mismatch.
 flash = "if-different"
+# Server startup timeout in seconds: integer 1..120; default 10. This is not the scenario timeout.
+# startup_timeout_s = 10

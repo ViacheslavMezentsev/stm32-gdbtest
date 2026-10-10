@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Documented parameters, allowed values, defaults and Flash/FAIL/SKIP policy effects in seven TOML examples; active settings are unchanged.
+
 - Added tools/stand_loop.py: finite local package cycles, evidence validation, STOP and review.json for agents; example plan/systemd unit and host regression. General specification 0.92; Target API unchanged.
 
 - Updated README with verified 0.4.0 layouts and classic/neutral Mermaid; refreshed skills and added stm32-gdbtest-results for artifact and scenario interpretation without rerunning hardware.

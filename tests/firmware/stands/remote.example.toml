@@ -2,15 +2,32 @@
 # Copy to <profile>-<backend>.remote.toml, e.g. f411ce-openocd.remote.toml or f411ce-jlink.remote.toml
 # (Git ignores *.remote.toml). SSH keys only: no passwords here (docs/en/LINUX_STAND.md).
 [probe]
-backend = "openocd"                      # or "jlink"; ST-LINK GDB Server has no arm64 build
+# GDB server backend: "openocd", "stlink", "jlink" or "st-util"; required. Backend-specific fields differ.
+backend = "openocd"                      # or "jlink" / "st-util" on arm64; "stlink" requires x86_64
+# Required debugger USB serial, not the MCU ID: letters/digits for OpenOCD/ST-LINK GDB Server.
+# J-Link: decimal, at least four digits, no leading zero; st-util: exactly 24 hexadecimal digits.
 serial = "REPLACE_WITH_DEBUGGER_SERIAL"
+# Server executable: name on PATH or path; on the stand host when [remote] is present.
 executable = "openocd"                   # on the stand host; J-Link: /opt/SEGGER/JLink/JLinkGDBServerCLExe
+# Requested debug clock in kHz: integer 1..4000; default 1000. Actual supported speed depends on the probe.
 speed_khz = 1000
+# Flash policy: "if-different" (default) programs mismatching Flash and verifies it; "verify-only" never programs.
+# Both policies report ERROR if final Flash verification fails; verify-only also rejects any mismatch.
 flash = "if-different"
 
+# Server startup timeout in seconds: integer 1..120; default 10. This is not the scenario timeout.
+# startup_timeout_s = 10
+
 [remote]
+# Required stand address, hostname or SSH config alias; the GDB server and debugger run there.
 host = "REPLACE_WITH_STAND_HOST"         # address, name or ~/.ssh/config alias
+# SSH account on the stand host; omit to use the SSH client/config default.
 user = "orangepi"
+# SSH port: integer 1..65535; default 22.
 # port = 22
+# Private SSH key on the runner computer; existing absolute path after ~, %VAR% or $VAR expansion.
+# Omit to let SSH select keys; password authentication is not supported.
 # identity_file = "~/.ssh/id_ed25519_stand"      # ~, %USERPROFILE%, $HOME are expanded
+# POSIX environment script on the stand host, optionally starting with ~/; an explicit missing script fails.
+# If omitted, ~/.local/stm32-gdbtest/env.sh is sourced only when readable.
 # env_script = "~/.local/stm32-gdbtest/env.sh"   # default when the file exists

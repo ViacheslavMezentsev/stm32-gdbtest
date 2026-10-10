@@ -2,8 +2,16 @@
 # Windows: executable = "%USERPROFILE%/scoop/apps/stlink/current/bin/st-util.exe"
 # Linux: st-util must be installed on the stand host; CubeProgrammer is not required.
 [probe]
+# GDB server backend: "openocd", "stlink", "jlink" or "st-util"; required. Backend-specific fields differ.
 backend = "st-util"
+# Required ST-Link USB serial: exactly 24 hexadecimal digits (0-9, A-F); either letter case is accepted.
 serial = "REPLACE_WITH_24_HEX_DIGITS"
+# Server executable: name on PATH or path; on the stand host when [remote] is present.
 executable = "st-util"
+# Requested debug clock in kHz: integer 1..4000; default 1000. Actual supported speed depends on the probe.
 speed_khz = 1000
+# Flash policy: "if-different" (default) programs mismatching Flash and verifies it; "verify-only" never programs.
+# Both policies report ERROR if final Flash verification fails; verify-only also rejects any mismatch.
 flash = "if-different"
+# Server startup timeout in seconds: integer 1..120; default 10. This is not the scenario timeout.
+# startup_timeout_s = 10

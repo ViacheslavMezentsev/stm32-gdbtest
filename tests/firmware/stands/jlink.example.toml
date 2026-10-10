@@ -1,9 +1,17 @@
 # J-Link (also the J-Link STLink firmware on Nucleo). Copy to <profile>-jlink.local.toml.
 # The serial is the decimal USB number shown by J-Link tools.
 [probe]
+# GDB server backend: "openocd", "stlink", "jlink" or "st-util"; required. Backend-specific fields differ.
 backend = "jlink"
+# Required J-Link USB serial: decimal digits, at least four, no leading zero; not a probe index.
 serial = "REPLACE_WITH_JLINK_SERIAL"
 # Windows; on Linux (x86_64, arm64): "/opt/SEGGER/JLink/JLinkGDBServerCLExe".
+# Server executable: name on PATH or path; on the stand host when [remote] is present.
 executable = "C:/Program Files/SEGGER/JLink/JLinkGDBServerCL.exe"
+# Requested debug clock in kHz: integer 1..4000; default 1000. Actual supported speed depends on the probe.
 speed_khz = 1000
+# Flash policy: "if-different" (default) programs mismatching Flash and verifies it; "verify-only" never programs.
+# Both policies report ERROR if final Flash verification fails; verify-only also rejects any mismatch.
 flash = "if-different"
+# Server startup timeout in seconds: integer 1..120; default 10. This is not the scenario timeout.
+# startup_timeout_s = 10

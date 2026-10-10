@@ -1,19 +1,33 @@
+# Plan format version; required integer 1 (not the package or Target API version).
 schema = 1
+# Required local stand TOML path, relative to this plan or absolute; [remote] is not supported by this tool.
 stand = "board.local.toml"
+# Number of complete ordered cycles: integer 1..10000; default 1. No infinite-loop value.
 cycles = 2
+# Pause between cycles in seconds: integer 0..86400; default 0. No pause is added between cases.
 interval_s = 5
+# On scenario FAIL: "stop" (default) or "continue"; either leaves the campaign unsuccessful. ERROR always stops.
 on_fail = "stop"
+# Minimum free output-disk space in MiB: integer 1..1048576; default 256. No space reservation or auto-deletion.
 min_free_mib = 256
 
 # Package prepared with capture=true; use IDs from your own application.
 [[cases]]
+# Required package ZIP path, relative to this plan or absolute; capture=true must be fixed before packing.
 package = "enabled.zip"
+# Required exact scenario ID from this package manifest; cases run in the order listed (1..64 entries).
 id = "HW_CI_040_RECORDS"
+# Runner/GDB timeout in seconds: integer 1..3600; default 60. Not a timeout for the entire campaign.
 timeout_s = 60
 
 # This separate package fixes optional_loop=false before packing.
 [[cases]]
+# Required package ZIP path, relative to this plan or absolute; capture=true must be fixed before packing.
 package = "disabled.zip"
+# Required exact scenario ID from this package manifest; cases run in the order listed (1..64 entries).
 id = "HW_CI_040_SKIP"
+# Boolean true/false; default false. true permits SKIP, but does not require it or turn it into PASS.
+# An unexpected SKIP or a cycle containing only SKIPs stops the campaign with ERROR.
 allow_skip = true
+# Runner/GDB timeout in seconds: integer 1..3600; default 60. Not a timeout for the entire campaign.
 timeout_s = 60

@@ -1,8 +1,16 @@
 [probe]
+# GDB server backend: "openocd", "stlink", "jlink" or "st-util"; required. Backend-specific fields differ.
 backend = "openocd"
+# Required debugger USB serial (letters/digits), not the MCU ID; replace this placeholder.
 serial = "REPLACE_WITH_STLINK_SERIAL"
+# Server executable: name on PATH or path; on the stand host when [remote] is present.
 executable = "openocd"
+# Requested debug clock in kHz: integer 1..4000; default 1000. Actual supported speed depends on the probe.
 speed_khz = 1000
 # if-different: прошить ELF только при несовпадении Flash, затем проверить.
 # verify-only: не прошивать, несовпадение считать ERROR.
+# Flash policy: "if-different" (default) programs mismatching Flash and verifies it; "verify-only" never programs.
+# Both policies report ERROR if final Flash verification fails; verify-only also rejects any mismatch.
 flash = "if-different"
+# Server startup timeout in seconds: integer 1..120; default 10. This is not the scenario timeout.
+# startup_timeout_s = 10
