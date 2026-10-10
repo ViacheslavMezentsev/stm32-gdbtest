@@ -320,3 +320,6 @@ AT32/J-Link/OrangePi на `da5c4cb`: новые сценарии 0.4.0 — 4 PAS
 первый ERROR подключения probe сохранён. [Шестой стенд](API040_SCENARIOS.md).
 
 GitHub Hardware №14 на `ba10b12`: AT32 — 4 PASS + 1 SKIP, 13 записей; архив и 15 файлов проверены. [API040](API040_SCENARIOS.md).
+
+AT32/Windows/J-Link 8.32 на `9747eab`: 4 PASS + 1 SKIP, 13 записей, 15 файлов проверены;
+новые сценарии шестой платы проверены на Windows и Linux/GitHub. [API040](API040_SCENARIOS.md).

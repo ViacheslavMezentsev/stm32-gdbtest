@@ -6,6 +6,7 @@
 [![Hardware campaign](https://img.shields.io/badge/Hardware-candidate%200.4.0%20SSH-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
 [![Board models tested](https://img.shields.io/badge/Models%20tested-6-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
 [![SSH campaign boards](https://img.shields.io/badge/SSH%20campaign%20boards-5-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
+[![API 0.4.0 models](https://img.shields.io/badge/API%200.4.0%20models-6-blue?style=flat-square)](docs/en/API040_SCENARIOS.md)
 [![Recorded hardware cases](https://img.shields.io/badge/HW%20cases%20%28recorded%29-233-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
 [![Latest recorded hardware verification](https://img.shields.io/badge/HW%20verified%20%28latest%29-2026--10--10-blue?style=flat-square)](docs/en/HARDWARE_METRICS.md)
 
@@ -157,16 +158,17 @@ The scenario and the report are the same in every layout; only the local stand f
 
 | Layout | Runner and GDB | GDB server and debugger | New 0.4.0 scenario verification |
 | --- | --- | --- | --- |
-| Local on Windows | Windows | same computer, st-util 1.9.0 | 5 boards: 20 PASS + 5 SKIP |
-| Local on a Linux stand | Orange Pi 5, Ubuntu 20.04 aarch64 | same computer, st-util 1.9.0 | 5 boards: 20 PASS + 5 SKIP, triggered through GitHub |
+| Local on Windows | Windows | same computer, st-util 1.9.0 / J-Link | 6 boards, separate runs: 24 PASS + 6 SKIP |
+| Local on a Linux stand | Orange Pi 5, Ubuntu 20.04 aarch64 | same computer, st-util 1.9.0 / J-Link | 6 boards, separate runs: 24 PASS + 6 SKIP, triggered through GitHub |
 | Remote server from Windows | Windows | Orange Pi 5 over SSH, st-util 1.9.0 | 5 boards: 20 PASS + 5 SKIP |
 | Remote server from WSL2 | WSL2, Ubuntu 20.04 x86_64 | Orange Pi 5 over SSH, st-util 1.9.0 | 5 boards: 20 PASS + 5 SKIP |
 | Prepared run package | package built separately, runner at execution site | Windows or Orange Pi 5 | checked in the local and SSH layouts above |
-| Hardware CI | prepare on GitHub, runner/GDB on Orange Pi 5 | same Orange Pi, no SSH between runner and server | Hardware #13: 20 PASS + 5 SKIP |
+| Hardware CI | prepare on GitHub, runner/GDB on Orange Pi 5 | same Orange Pi, no SSH between runner and server | Hardware #13 + #14: 6 boards, 24 PASS + 6 SKIP |
 | Local on Linux x86_64 | Linux PC | same computer | not hardware-verified |
 | WSL2 USB forwarding | WSL2 | USB through usbipd-win | not hardware-verified |
 
-The local-Linux and hardware-CI rows describe the same run, not two campaigns.
+The local-Linux and hardware-CI rows share evidence from #13/#14; do not add them together.
+Six-board totals combine separate STM32 and AT32 runs at different SHAs, not one campaign.
 Each board ran four new scenarios and a separate expected-SKIP variant.
 This is a selected suite, not full API reacceptance. Versions, SHAs, original errors and limits:
 [0.4.0 evidence](docs/en/API040_SCENARIOS.md). Full 0.3.0 campaigns (218 profile/scenario combinations),

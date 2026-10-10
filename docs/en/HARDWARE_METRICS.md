@@ -125,3 +125,6 @@ can then be published separately in `ci-badges`, following
 Display the date and SHA; do not present old success as verification of new main.
 A partial run must not replace the full result; a new failure must not be hidden
 behind an old green count. Automation remains in [TODO](../../TODO.md).
+
+AT32/Windows/J-Link 8.32 at `9747eab`: 4 PASS + 1 SKIP, 13 records, 15 files verified;
+the sixth board new scenarios are verified on Windows and Linux/GitHub. [API040](API040_SCENARIOS.md).

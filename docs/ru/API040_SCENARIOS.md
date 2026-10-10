@@ -174,3 +174,23 @@ AT32/J-Link, suite=api040: **4 PASS + 1 ожидаемый SKIP**, 13 запис
 image_verified и reset_run подтверждены 5/5, ошибок capture/teardown/cleanup нет.
 Сохранено известное предупреждение inferred_stop для finish в GDB 14; новых аномалий не обнаружено.
 Это выбранный набор AT32 через GitHub, не полный lifecycle и не одновременный прогон шести плат.
+
+## AT32: Windows, завершение выбранной матрицы
+
+10.10.2026, `9747eab`, Windows 10/Python 3.11.9, xPack 13.3.1 (GDB 14.2.90/Python 3.11.4),
+J-Link GDB Server 8.32, SWD 1000 kHz. Те же enabled/disabled ZIP, что в локальном опыте
+OrangePi на `da5c4cb` (SHA256 пакетов совпадает), без пересборки прошивки.
+С первой попытки: **4 PASS + 1 ожидаемый SKIP**, 13 записей, export/verify/report — 0/0/0.
+Перепроверены 15 файлов индекса, JSON/JUnit, типы records и ветвление SKIP;
+image_verified/reset_run — 5/5, ошибок cleanup нет, J-Link Server завершён.
+Единственное предупреждение — известный inferred_stop для finish в GDB 14.
+
+| AT32, новые сценарии 0.4.0 | SHA | Итог |
+| --- | --- | --- |
+| Локальный Linux/OrangePi, J-Link 9.80 | `da5c4cb` | 4 PASS + 1 SKIP после USB reconnect; первый probe ERROR сохранён |
+| GitHub Hardware №14, OrangePi/J-Link 9.80 | `ba10b12` | 4 PASS + 1 SKIP |
+| Локальный Windows, J-Link 8.32 | `9747eab` | 4 PASS + 1 SKIP с первой попытки |
+
+Для выбранных новых сценариев AT32 проверен на Windows и Linux, в том числе через GitHub.
+Дополнительный повтор того же набора для подготовки 0.4.0 не требуется без новых изменений или аномалий.
+Это не доказательство длительной устойчивости J-Link и не проверка AT32 по SSH-схеме runner → server.

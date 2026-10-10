@@ -174,3 +174,23 @@ JSON/JUnit, SHA256 of all 15 indexed files and record types were rechecked. Expo
 image_verified and reset_run confirmed 5/5, no capture/teardown/cleanup errors.
 The known inferred_stop warning for finish in GDB 14 remains; no new anomalies were found.
 This is the selected AT32 GitHub suite, not full lifecycle or a simultaneous six-board campaign.
+
+## AT32: Windows, selected matrix completion
+
+2026-10-10, `9747eab`, Windows 10/Python 3.11.9, xPack 13.3.1 (GDB 14.2.90/Python 3.11.4),
+J-Link GDB Server 8.32, SWD 1000 kHz. The same enabled/disabled ZIP files as in the local
+OrangePi experiment at `da5c4cb` (matching package SHA256), without rebuilding firmware.
+First attempt: **4 PASS + 1 expected SKIP**, 13 records, export/verify/report — 0/0/0.
+Rechecked 15 indexed files, JSON/JUnit, record types and SKIP control flow;
+image_verified/reset_run — 5/5, no cleanup errors, J-Link Server terminated.
+The only warning is the known inferred_stop for finish in GDB 14.
+
+| AT32, new 0.4.0 scenarios | SHA | Result |
+| --- | --- | --- |
+| Local Linux/OrangePi, J-Link 9.80 | `da5c4cb` | 4 PASS + 1 SKIP after USB reconnect; initial probe ERROR retained |
+| GitHub Hardware #14, OrangePi/J-Link 9.80 | `ba10b12` | 4 PASS + 1 SKIP |
+| Local Windows, J-Link 8.32 | `9747eab` | 4 PASS + 1 SKIP on first attempt |
+
+The selected new AT32 scenarios are verified on Windows and Linux, including GitHub execution.
+No further repetition of this suite is needed for 0.4.0 preparation absent new changes or anomalies.
+This does not establish long-run J-Link stability or AT32 in the runner → remote-server SSH layout.

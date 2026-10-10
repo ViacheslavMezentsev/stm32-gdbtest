@@ -6,6 +6,7 @@
 [![Hardware campaign](https://img.shields.io/badge/Hardware-candidate%200.4.0%20SSH-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
 [![Board models tested](https://img.shields.io/badge/Models%20tested-6-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
 [![SSH campaign boards](https://img.shields.io/badge/SSH%20campaign%20boards-5-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
+[![API 0.4.0 models](https://img.shields.io/badge/API%200.4.0%20models-6-blue?style=flat-square)](docs/ru/API040_SCENARIOS.md)
 [![Recorded hardware cases](https://img.shields.io/badge/HW%20cases%20%28recorded%29-233-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
 [![Latest recorded hardware verification](https://img.shields.io/badge/HW%20verified%20%28latest%29-2026--10--10-blue?style=flat-square)](docs/ru/HARDWARE_METRICS.md)
 
@@ -153,16 +154,17 @@ def clock(t):
 
 | Схема | Runner и GDB | GDB-сервер и отладчик | Проверка новых сценариев 0.4.0 |
 | --- | --- | --- | --- |
-| Локально на Windows | Windows | тот же компьютер, st-util 1.9.0 | 5 плат: 20 PASS + 5 SKIP |
-| Локально на Linux-стенде | Orange Pi 5, Ubuntu 20.04 aarch64 | тот же компьютер, st-util 1.9.0 | 5 плат: 20 PASS + 5 SKIP, запуск через GitHub |
+| Локально на Windows | Windows | тот же компьютер, st-util 1.9.0 / J-Link | 6 плат, отдельные прогоны: 24 PASS + 6 SKIP |
+| Локально на Linux-стенде | Orange Pi 5, Ubuntu 20.04 aarch64 | тот же компьютер, st-util 1.9.0 / J-Link | 6 плат, отдельные прогоны: 24 PASS + 6 SKIP, запуск через GitHub |
 | Удалённый сервер с Windows | Windows | Orange Pi 5 по SSH, st-util 1.9.0 | 5 плат: 20 PASS + 5 SKIP |
 | Удалённый сервер из WSL2 | WSL2, Ubuntu 20.04 x86_64 | Orange Pi 5 по SSH, st-util 1.9.0 | 5 плат: 20 PASS + 5 SKIP |
 | Пакет подготовленного запуска | пакет собран отдельно, runner на месте запуска | Windows или Orange Pi 5 | проверен в локальных и SSH-схемах выше |
-| Аппаратный CI | prepare на GitHub, runner/GDB на Orange Pi 5 | тот же Orange Pi, без SSH между runner и сервером | Hardware №13: 20 PASS + 5 SKIP |
+| Аппаратный CI | prepare на GitHub, runner/GDB на Orange Pi 5 | тот же Orange Pi, без SSH между runner и сервером | Hardware №13 + №14: 6 плат, 24 PASS + 6 SKIP |
 | Локально на Linux x86_64 | Linux-ПК | тот же компьютер | на оборудовании не проверялось |
 | WSL2 с USB-пробросом | WSL2 | USB через usbipd-win | на оборудовании не проверялось |
 
-Строки «локально на Linux» и «аппаратный CI» описывают один прогон, а не две кампании.
+Строки «локально на Linux» и «аппаратный CI» используют общие свидетельства №13/№14; их не суммируют.
+Итоги шести плат объединяют отдельные STM32- и AT32-прогоны на разных SHA, а не единый запуск.
 На каждой плате выполнены четыре новых сценария и отдельный вариант ожидаемого SKIP.
 Это выборочный набор, не повтор всей приёмки API. Версии, SHA, исходные ошибки и ограничения —
 [протоколы 0.4.0](docs/ru/API040_SCENARIOS.md). Полные кампании 0.3.0 (218 сочетаний профиль/сценарий)

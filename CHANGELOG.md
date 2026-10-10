@@ -8,6 +8,8 @@
 
 ## [0.4.0] - 2026-10-10
 
+- AT32/Windows/J-Link 8.32 на `9747eab`: 4 PASS + 1 SKIP, 13 записей, 15 файлов проверены; новые сценарии шестой платы проверены на Windows и Linux/GitHub.
+
 - GitHub Hardware №14 на `ba10b12`: AT32 — 4 PASS + 1 SKIP, 13 записей; архив и 15 файлов проверены.
 
 - Hardware CI: добавлен AT32/J-Link шестым профилем, CMake presets и установка SDK по SHA256; общее ТЗ 0.94.

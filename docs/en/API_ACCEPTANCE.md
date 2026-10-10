@@ -317,3 +317,6 @@ AT32/J-Link/OrangePi at `da5c4cb`: new 0.4.0 scenarios — 4 PASS + 1 SKIP, 13 r
 the initial probe connection ERROR is retained. [Sixth stand](API040_SCENARIOS.md).
 
 GitHub Hardware #14 at `ba10b12`: AT32 — 4 PASS + 1 SKIP, 13 records; archive and 15 files verified. [API040](API040_SCENARIOS.md).
+
+AT32/Windows/J-Link 8.32 at `9747eab`: 4 PASS + 1 SKIP, 13 records, 15 files verified;
+the sixth board new scenarios are verified on Windows and Linux/GitHub. [API040](API040_SCENARIOS.md).
