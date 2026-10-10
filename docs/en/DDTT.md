@@ -2,7 +2,7 @@
 
 [Documentation](index.md) → DDTT specification · [Русский](../ru/DDTT.md)
 
-**Debugger-Driven Testing on Target (DDTT), specification 0.2 — draft.**
+**Debugger-Driven Testing on Target (DDTT), specification 0.3.0 — draft.**
 
 ## Abstract
 
@@ -18,13 +18,17 @@ agent writes the scenarios.
 
 ## Status of this document
 
-Draft 0.2 of 2026-09-28. The specification is maintained in the
+Draft 0.3.0 of 2026-10-10. The specification is maintained in the
 [stm32-gdbtest](https://github.com/ViacheslavMezentsev/stm32-gdbtest) repository, which
 is its first (reference) implementation; the specification itself does not depend on
 it. Versions follow SemVer: before 1.0 incompatible changes are possible, and each one
 is recorded in the [change log](#appendix-b-change-log). The Russian version is the
 source; this English version is updated together with it. Feedback goes to the
 repository issues.
+
+Normative clarifications in 0.3.0 are proposed for agreement. They do not change released
+module contracts, whose sources are the [API specification](../TECHNICAL_SPECIFICATION_API.md)
+and [general specification](../TECHNICAL_SPECIFICATION.md).
 
 ## 1. Introduction
 
@@ -74,7 +78,7 @@ Out of scope:
 The key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** and **MAY** are to be
 interpreted as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and
 [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174) when, and only when, they appear in
-bold. Sections 1, 9, 10 and the appendices are informative; sections 2–8 are normative.
+bold. Sections 1, 9–11 and the appendices are informative; sections 2–8 are normative.
 
 Conformance classes:
 
@@ -94,6 +98,7 @@ capabilities are declared separately:
 | DDTT-Image — image verification and programming, full image | DDTT-6.4-4…DDTT-6.4-6 |
 | DDTT-Preflight — checks without hardware | 6.7 |
 | DDTT-Remote — debug server on a stand host | DDTT-6.3-4…DDTT-6.3-6 |
+| DDTT-Skip — explicit scenario inapplicability | DDTT-6.5-6 |
 
 Requirements have permanent identifiers `DDTT-<section>-<number>` (for example
 DDTT-6.1-1); numbers are never reused.
@@ -116,7 +121,7 @@ DDTT-6.1-1); numbers are never reused.
 | Stand host | The computer the adapter is connected to, when it differs from the host. |
 | Stand layout | The distribution of the tool, debugger, server and adapter across computers. |
 | Run | One execution of one scenario on one stand. |
-| Verdict | The outcome of a run: PASS, FAIL or ERROR. |
+| Verdict | Scenario outcome: PASS, FAIL, ERROR; also SKIP with DDTT-Skip. Command exit additionally reflects required-artifact failures. |
 | Preflight | Checks of the image, contracts and stand without accessing the target. |
 | Injection | An explicit change of target state by a scenario (writing a value, forcing a function return). |
 | Debugger influence | A change of target behaviour caused by halts, resets and injections. |
@@ -143,6 +148,10 @@ DDTT-6.1-1); numbers are never reused.
 ## 5. Model
 
 ```mermaid
+---
+config:
+  look: classic
+---
 flowchart LR
     S["Scenario in the repository"] --> R["Tool (runner)"]
     I["Image with debug information"] --> R
@@ -219,8 +228,10 @@ to it is then an authenticated channel (section 6.3).
 - **DDTT-6.4-4.** (DDTT-Image) The tool **MUST** compare target memory with the image's
   load sections and state explicitly in the report what was verified (sections, the
   full range, a checksum).
-- **DDTT-6.4-5.** (DDTT-Image) Memory programming **MUST** follow the stand policy; a
-  verify-only mode **MUST NOT** write memory.
+- **DDTT-6.4-5.** (DDTT-Image) Image programming **MUST** follow the stand policy; a
+  verify-only mode **MUST NOT** program the image or erase its range. This restriction
+  applies to image preparation, not to declared scenario injections or debugger
+  control operations.
 - **DDTT-6.4-6.** (DDTT-Image) Irreversible operations (mass erase, option bytes, read
   protection) **MUST NOT** be performed without explicit instruction.
 - **DDTT-6.4-7.** Scenario execution **MUST** be limited by an external time limit
@@ -233,16 +244,24 @@ to it is then an authenticated channel (section 6.3).
 
 - **DDTT-6.5-1.** The verdict **MUST** be one of: PASS — all checks passed; FAIL — a
   scenario check did not match; ERROR — an input, infrastructure or target failure or an
-  unexpected exception.
+  unexpected exception. With DDTT-Skip, SKIP is also allowed: explicit scenario
+  inapplicability with a reason; it is not PASS.
 - **DDTT-6.5-2.** The tool **MUST** produce a machine-readable report (for example JSON and
   JUnit XML) on any outcome once the run has started and return an exit code matching
-  the verdict.
+  the verdict and mandatory artifact-processing failures (DDTT-6.5-7).
 - **DDTT-6.5-3.** The report **MUST** contain the scenario identifier, the image hash, the
   checks, the evidence scope of image verification, the injections performed and the
   teardown method.
 - **DDTT-6.5-4.** The report **SHOULD** contain the debugger, server and adapter versions
   observed during the run and **MUST NOT** contain credentials or personal paths.
 - **DDTT-6.5-5.** Logs of all started processes **MUST** be kept next to the report.
+
+- **DDTT-6.5-6.** (DDTT-Skip) Skipping **MUST** end the scenario with a non-empty reason,
+  retain available evidence and perform normal teardown. SKIP **MUST NOT** replace an
+  established FAIL/ERROR and **MUST NOT** count as a completed check.
+- **DDTT-6.5-7.** When mandatory artifact processing has a separate outcome, the tool
+  **MUST** preserve the scenario outcome and artifact error separately; the command
+  **MUST** signal that processing error even when the scenario passed.
 
 ### 6.6. Exclusive access
 
@@ -308,40 +327,224 @@ to it is then an authenticated channel (section 6.3).
 The abbreviation DDTT should not be confused with DDT — data-driven testing, the Python
 `ddt` library and the Linaro DDT debugger.
 
-## 10. Reference implementation (informative)
+## 10. Implementation in stm32-gdbtest 0.4.1 (informative)
 
-[stm32-gdbtest](../../README.en.md) implements DDTT Core and the DDTT-Image,
-DDTT-Preflight and DDTT-Remote capabilities for STM32 Cortex-M0/M3/M4 through
-GDB-Python and the OpenOCD, ST-LINK GDB Server and J-Link GDB Server servers on Windows
-and Linux. Implementation requirements are in the
-[specification](../TECHNICAL_SPECIFICATION.md) (Russian), verified configurations in the
-[status](STATUS.md).
+Baseline: published package **0.4.1**, `API_VERSION=2`, `target.toml` schema 2;
+general specification 0.95, API specification 0.3.16. **This DDTT specification 0.3.0**
+has an independent version. Evidence is v0.4.1 source and accepted reports, not new hardware runs.
 
-| DDTT requirements | stm32-gdbtest |
+The module provides Core, Image, Preflight, Remote and Skip mechanisms. This is an implementation
+map, **not a claim that every MUST is fully satisfied**; gaps are listed in 10.6.
+Method requirements are not weakened simply to match current code.
+
+### 10.1. Roles and inputs
+
+| Role | Implementation artifact | Responsibility |
+| --- | --- | --- |
+| Requirement and scenario | Python with `@case`, stable ID and requirements.md entry; metadata collected without import | Firmware project |
+| Session configuration | `session.toml`: `config.target`, `config.api`, optional `config.image` policy, result capture | Firmware project |
+| MCU | `target.toml`: memory, identity, points, fault guards, backend reset dialects; not a stand serial | Firmware project |
+| Parameters | `api.toml`: API settings and project data; available through `t.profile`, including `t.profile.user` | Scenario author |
+| Image and provenance | ELF/DWARF, build manifest; generated `session.json` connects build to runner | Build/CMake |
+| Connection | Local TOML; `*.local.toml`, `<profile>-<backend>.remote.toml`; no published secrets | Stand owner |
+| Executor | Host Python → GDB-Python → OpenOCD, ST-LINK GDB Server, st-util or J-Link | Module and environment |
+| Portable input | `pack` creates input for `run --package`; the local stand is selected separately | Build host / operator |
+
+`session.toml` is source configuration, `session.json` a generated build artifact,
+`result.json` one attempt's result. They are not interchangeable. A package runs scenarios
+on OrangePi without the project; changing firmware needs sources and a compiler.
+[Configuration/CLI](API.md), [manifests](MANIFESTS.md), [run layouts](RUN_LAYOUTS.md).
+
+### 10.2. Requirements and tools
+
+| Requirements | 0.4.1 mechanisms | Evidence to inspect |
+| --- | --- | --- |
+| 6.1 | `@case`, collect, traceability, contracts | Requirement ID, selected scenario and ELF |
+| 6.2 | Target and GDB-Python; [reference](api/index.md) | Stop reason/location, values, current frame and MCU resources |
+| 6.3 | [Backends](BACKENDS.md), [SSH](LINUX_STAND.md) | Board/profile/probe match; doctor alone does not check the MCU |
+| 6.4 | [runner.py](../../stm32_gdbtest/runner.py), [agent.py](../../stm32_gdbtest/agent.py) | ELF snapshot, identity, image verification, failure phase, teardown/recovery |
+| 6.5 | [reports.py](../../stm32_gdbtest/reports.py), [result_capture.py](../../stm32_gdbtest/result_capture.py) | Verdict, command code, capture and integrity separately |
+| 6.6 | [Debugger ownership](DEBUGGER_OWNERSHIP.md) | One owner; stand-host lock; no killing foreign processes |
+| 6.7 | `run --prepare-only`, [contracts](CONTRACTS.md) | No server; NOT_REQUESTED is not a passed contract |
+| 6.8 | CLI, CTest, doctor, [stand_loop.py](../../tools/stand_loop.py) | Same package; separate attempts; explicit SKIP policy |
+| 7 | [Develop skill](../../skills/stm32-gdbtest-develop/SKILL.md) | Plan, requirement-specific baseline FAIL, fix, regression, restoration |
+
+| Scenario task | Tools | Boundary |
+| --- | --- | --- |
+| Navigation | `reach`, `resume`, `step`, `until`, `finish`, `reset` | finish executes the rest of a function; ret forces its return; inspect stop results and inferred_stop |
+| Points | `breakpoint`, `watch`, Point objects | Hardware budget, function prologue, optimization and watchpoint delay |
+| State | `read`, `evaluate`, `memory`, `registers`, `frames`, `locals`, `symbol` | frames is the current stack, not a historical call tree; MMIO reads can have effects |
+| Assertions | `check`, `check(rows)`, matchers, `refused` | Requirement-derived expectations; an expected exception does not prove absence of partial effects |
+| Injections | `write`, `write(rows)`, memory writes, `ret`, `call` | No general transaction/rollback; calls and expressions can execute firmware |
+| Evidence | `profile`, `record`, `records`, `skip` | Arbitrary journal; skip ends a scenario, not a block or other tests |
+| Low-level access | `execute`, direct GDB-Python | Supported, but dependencies and untracked effects limit portability |
+
+Direct GDB-Python does not automatically constitute a portable class-6.1 scenario: the author
+assesses DDTT-6.1-3 and retains observations separately. execute records command metadata,
+not all side effects. GDB APIs run on GDB's main thread. [Techniques](TESTING_TECHNIQUES.md)
+separate Python/GDB composition from Target methods: gdb.Value, disassembly and series
+calculations do not need a new Target method for every technique.
+
+Shipped examples: [events and intervals](../../tests/firmware/common/tests/board/test_event_intervals.py),
+[event injection](../../tests/firmware/common/tests/board/test_event_injection.py),
+[watchpoint](../../tests/firmware/common/tests/board/test_watch.py),
+[conditional SKIP](../../tests/firmware/common/tests/board/test_release040_skip.py).
+Their expectations belong to the CI firmware; an application needs its own requirements.
+
+### 10.3. One run
+
+1. Build ELF, manifest and session; declare expected outcomes and restoration firmware.
+2. Run doctor and prepare: environment and input checks, not HW PASS.
+3. The runner creates a unique attempt directory, snapshots ELF/configuration, checks inputs
+   and contracts; the hardware path uses exclusive probe ownership.
+4. Start backend/GDB, check identity and declared image scope, reset/halt and execute the
+   scenario. Identity warn is weaker than strict.
+5. With capture enabled, the agent attempts to save records before closing Target, then
+   performs teardown. On failure/timeout the host separately attempts recovery.
+6. The host writes final JSON/JUnit, validates capture and returns the command code.
+   Restoring the agreed ELF is checked separately: reset_run is not firmware restoration.
+
+These are responsibilities; runner/agent define exact failure branches. Prepare bypasses
+the hardware lock and server. Early failures leave some fields/logs absent. Power loss,
+USB failure or forced termination can leave the target state unknown.
+Commands, run passports and restoration: [local CI, L6](local-ci.md).
+
+### 10.4. Outcomes and artifacts
+
+| Scenario outcome | Meaning | Usual command code |
+| --- | --- | --- |
+| PASS | Scenario completed, assertions passed | 0 |
+| FAIL | An assertion failed | 1 |
+| ERROR | Input, execution, infrastructure or teardown error | 2 |
+| SKIP | Explicit inapplicability with a reason | 77 |
+
+Required capture failure makes command_code=2 even with status=PASS or SKIP; the scenario
+outcome is retained and JUnit adds an infrastructure error. Do not infer success from status
+alone, stdout or the largest numeric code. Teardown failure can change the outcome to ERROR
+regardless of earlier successful checks.
+
+| Artifact | Purpose and limits |
 | --- | --- |
-| 6.1 | The `@case` decorator, metadata collection without import, `Tests/requirements.md` and traceability |
-| 6.2 | Target API: `reach`, `read`, `evaluate`, `check`, `write`, `ret`, hardware breakpoints within the profile budget |
-| 6.3 | Local TOML `[probe]` and `[remote]`, `*.local.toml` not committed, SSH with keys only |
-| 6.4 | ELF snapshot, DEV_ID identity and Flash size, section or full-image verification with CRC-32, `if-different`/`verify-only` policy, host recovery |
-| 6.5 | `result.json`, `junit.xml`, compatibility manifest, logs in the run directory |
-| 6.6 | Windows mutex, Linux `flock`, stand host lock |
-| 6.7 | `run --prepare-only`, ELF/HAL contracts, build manifest |
-| 6.8 | CLI, CTest, `run_hw.py`, `doctor`, CI workflows |
+| `result.json`, `junit.xml` | Final host result: mode, ID/run_id, checks, image evidence, diagnostics and completion according to the reached phase |
+| `agent-result.json` | Internal GDB result; not a substitute for host reporting after cleanup and capture validation |
+| `firmware.elf`, manifest, `config.json`, logs | Inputs/provenance; availability depends on phase and mode; some data is local |
+| `records.json` | With `[results] capture = true` in session.toml; schema, run_id, case_id, records; hash and ownership checked |
+| `index.json`, `export.json`, CSV | External export of explicitly selected attempts; records/projections, not a new MCU verdict |
+| JSON/HTML summary | Data presentation; missing/changed files differ from firmware FAIL |
+| Stand-cycle `review.json` | Agent input; cycle policy does not replace individual run outcomes |
+
+record(name, data) snapshots arbitrary data. The author chooses its name; sequence is order,
+not time. Measurements need explicit units, sampling context and conversions; the scenario
+calculates mean/standard deviation. Record observations before potentially terminating checks.
+Hard interruption can prevent capture; unavailable/error does not mean an empty successful journal.
+[Export](RESULTS.md), [interpretation skill](../../skills/stm32-gdbtest-results/SKILL.md).
+
+### 10.5. Repetition and external equipment
+
+stand_loop.py executes a finite TOML plan of accepted packages, retains attempts, handles STOP
+and expected SKIP. This operates an immutable package, not an agent editing firmware.
+All-SKIP does not establish device testing. Version 0.4.1 has no dynamic dependency tree or
+automatic disabling of other branches based on records; scenarios have no automatically shared journal.
+
+Power supplies, loads, telemetry and instruments use external tools under an agreed plan.
+The module provides diagnostics and results, not a universal equipment-control protocol.
+A systemd service and autonomous pi/Qwen integration have not been established by stand_loop
+testing. [Stand cycles](STAND_LOOP.md).
+
+### 10.6. Open conformance boundaries
+
+| Requirement | 0.4.1 evidence and further checks |
+| --- | --- |
+| 6.2-4, 6.5-3: all injections before/after | write/memory and mutations provide partial data; ret, call, side-effecting evaluate and raw GDB do not snapshot every effect. Completeness needs an audit; scenarios explicitly record relevant values meanwhile |
+| 6.5-4: no personal paths | Local tracebacks, configuration and logs can contain paths/addresses. Full sanitization is not guaranteed; inspect before publication. This is a draft gap, not permission to delete original evidence |
+| 6.3-6, 6.4-8: cleanup/recovery | SSH helper, watchdog and finally implement attempts; power/USB/network loss prevents guaranteed recovery. Test failure configurations; unknown is not success |
+| 6.5-2: report on every failure | Handled after run-directory creation; disk-write failure/process termination can prevent complete artifacts. Missing reports remain error/unknown evidence |
+| 6.2-1: stop reason | Some GDB versions use inferred reasons with warnings. Check location/data too; inference is not an explicit server event |
+| Complete hardware acceptance | Specific combinations are accepted; extended F411/F030/ST-LINK GDB Server suites are limited by USB ERROR |
+
+These are audit tasks, not new API promises or proof that all other MUSTs have been met.
+[Acceptance](API_ACCEPTANCE.md), [0.4.0 scenarios](API040_SCENARIOS.md) and [metrics](HARDWARE_METRICS.md)
+retain versions, configurations and limitations.
+
+## 11. Development with target feedback (informative)
+
+The plan specifies the requirement, observable assertion, allowed changes, stand, injections,
+iteration budget and restoration firmware.
+
+1. Retain revisions, configuration, ELF/manifest and scenario. Derive expectations from requirements.
+2. Obtain the target FAIL. Connection/contract ERROR does not establish a defect. If the original
+   image is unavailable, note the missing baseline; do not break code just to get red.
+3. Fix the application, build a new ELF and repeat the same check. Preserve the old FAIL;
+   explain criterion changes separately, never weaken expectations merely to get PASS.
+4. Check adjacent scenarios and agreed board variants. Suppressing IRQ models a missing notification,
+   not a physical DMA fault or free-running timing deadlines.
+5. Confirm restoration, review artifacts and stop within the budget. Resolve stand issues first
+   after USB ERROR, wrong identity or failed restoration.
+
+Practice in [STATUS](STATUS.md): BluePill F103CB ADC cleanup after early POST failure;
+BlackPill F411/F401 retention of a timeout diagnostic code. Baseline FAIL, fixes and regression
+were used without test hooks. These are individual verified cycles, not proof of general agent autonomy.
+
+The [develop skill](../../skills/stm32-gdbtest-develop/SKILL.md) defines the procedure;
+[scenarios](../../skills/stm32-gdbtest-scenarios/SKILL.md), [run](../../skills/stm32-gdbtest-run/SKILL.md)
+and [results](../../skills/stm32-gdbtest-results/SKILL.md) detail its steps. Accepted changes get
+a new package and a separately agreed repetition plan.
+
 
 ## Appendix A. Example scenario (informative)
 
-```python
-from stm32_gdbtest import case
+The example uses the common CI firmware and ci_app_api contract: app_loop, app_step and
+app_state. Two finish calls correspond to its producer and caller wrapper, specific to
+this firmware. Based on the [verified records scenario](../../tests/firmware/common/tests/board/test_release040_records.py).
+Add a project requirement for HW_APP_STEP; other ELFs need their own symbols and contract.
 
-@case("HW_GPIO", timeout_s=20, labels=("gpio",), contracts=("gpio_macros",))
-def gpio(t):
-    t.reach("loop")                                           # DDTT-6.2-1
-    t.check("GPIOC clock", t.evaluate("__HAL_RCC_GPIOC_IS_CLK_ENABLED()"), 1)   # 6.2-2, 6.1-6
+```python
+"""
+RU: Проверка шага приложения и сохранение состояния.
+EN: Check an application step and retain its state.
+"""
+from stm32_gdbtest import case, one_of
+
+
+# Observe one application step and retain evidence for the report.
+@case("HW_APP_STEP", contracts=("ci_app_api",))
+def app_step(t):
+    enabled = t.profile.user.get("sample_step", True)
+    t.check("sample_step is boolean", type(enabled) is bool)
+    if not enabled:
+        t.skip("sample_step disabled in api.toml")
+
+    # Read named fields, then stop after the producer and its wrapper return.
+    t.reach("app_loop")
+    before = t.read("app_state", fields={"ticks": None, "led": None})
+    t.reach("app_step")
+    t.finish()
+    t.finish()
+    after = t.read("app_state", fields={"ticks": None, "led": None})
+    t.record("app.step", {"before": before, "after": after})
+
+    # Check the increment with unsigned wraparound and the allowed LED states.
+    t.check([
+        ("one step published", (after["ticks"] - before["ticks"]) & 0xFFFFFFFF, 1),
+        ("LED state", after["led"], one_of(0, 1))
+    ])
 ```
+
+To retain the journal on disk, in session.toml:
+
+```toml
+[results]
+capture = true
+```
+
+Inspect result.json and capture afterwards; a record does not replace an assertion.
+sample_step=false expects SKIP, not evidence of MCU behavior. No new hardware run is
+claimed for this DDTT revision.
 
 ## Appendix B. Change log
 
 | Version | Date | Changes |
 | --- | --- | --- |
+| 0.3.0 | 2026-10-10 | Aligned with package 0.4.1: DDTT-Skip (6.5-6), artifact outcome (6.5-7; clarified 6.4-5 and 6.5-1/2), implementation/gap map, development loop and example. Existing IDs retained; module API unchanged |
 | 0.2 | 2026-09-28 | Name refined: Debugger-Driven Testing on Target instead of Debugger-Driven On-Target Testing; the general notion "debugger-driven testing" introduced, DDTT is its variant for a separate target device (1.3, 3). Requirements unchanged |
 | 0.1 | 2026-09-28 | First draft: scope, terms, principles, model, requirements for scenarios, the target API, stands, the run lifecycle, reports, access, preflight, automation and agent scenarios; the stm32-gdbtest reference implementation |

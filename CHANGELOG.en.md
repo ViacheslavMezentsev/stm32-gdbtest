@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- DDTT draft 0.3.0 mapped to implementation 0.4.1: SKIP, artifact outcomes, API/file map, development loop and open conformance boundaries; runtime unchanged.
+
 ## [0.4.1] - 2026-10-10
 
 - Unified local CI guide: Windows volumes, working-tree/commit snapshots, L0–L6 and failure export; AGENTS item 5 links directly to it.
