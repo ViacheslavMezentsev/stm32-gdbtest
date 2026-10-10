@@ -2,17 +2,28 @@
 
 [Документация](index.md) → Текущее состояние · [English](../en/STATUS.md)
 
-**Сейчас (10.10.2026).** В `codex/release-040` готовится v0.4.0: Python 0.4.0,
-API_VERSION=2, target schema 2, ТЗ API 0.3.14, общее ТЗ 0.85. Runtime `b1264c1`
-прошёл Docker 26/26 и полные наборы шести плат под Windows через OpenOCD/J-Link:
-280 сценариев, 608 этапов, восстановление 12/12. Linux-пакеты F411/F429 на Windows
-дали по 10/10; minimal-consumer с настоящим подмодулем проверен offline и на F411.
-F411/ST-LINK GDB Server: короткие циклы PASS, полные серии прерывались USB ERROR
-на 7.14.0 и 7.9.0. На F030 с другим отладчиком сбой повторился на 7.14.0;
-после переподключения OpenOCD BOOT/GPIO 2/2. Причина не установлена. CI последнего SHA и удалённые схемы
-ещё не приняты. [Матрица и ограничения](API_ACCEPTANCE.md), [граница выпуска](RELEASE040_SCOPE.md).
-Дополнительно st-util 1.9.0 на пяти STM32: жизненный цикл по 10/10, 233 сценария/506 этапов (5 ожидаемых timeout ERROR), BOOT/GPIO 10/10. Docker docs+host 6/6; Windows/Linux host по 411 тестов. OrangePi/st-util ещё не проверен на оборудовании.
-Выпуск не опубликован; актуальные задачи — [TODO](../../TODO.md).
+**Состояние на 10.10.2026.**
+
+Python 0.4.0, API_VERSION=2, target schema 2; общее ТЗ 0.89, ТЗ API 0.3.15.
+Выпуск готовится в `codex/release-040` и ещё не опубликован.
+
+Локальные свидетельства относятся к нескольким срезам:
+
+- `b1264c1`: Docker 26/26; шесть Windows-стендов OpenOCD/J-Link, 280 сценариев,
+  608 этапов; Linux-пакеты F411/F429 на Windows по 10/10; minimal-consumer
+  с настоящим подмодулем — offline 3/3 и GPIO F411 PASS.
+- Remote lifecycle `4cb5e0a`, сценарии до `a6b6dbd`: Windows → OrangePi/st-util 1.9.0,
+  пять STM32, 233 сценария, 516 этапов с подготовкой и восстановлением;
+  268 HW PASS и 5 ожидаемых timeout ERROR, OpenOCD BOOT/GPIO 10/10, стенды освобождены.
+  ADC_INVALID F4 получил 120 с после сохранённого ERROR F411; изменённый F401 проверен отдельно.
+- После изменений lifecycle: 426 host-тестов, Docker docs+host 6/6; итоговые документы проверяются отдельно.
+
+Полные F411/F030 через ST-LINK GDB Server по-прежнему не приняты из-за USB ERROR.
+Успех st-util не закрывает этот отказ. Также открыты диагностика USB serial в doctor,
+причина прежней аномалии F429 SP/SRAM и границы принудительного cleanup.
+GitHub CI последнего SHA и окончательная сверка всех схем выпуска ещё ожидаются.
+
+[API_ACCEPTANCE](API_ACCEPTANCE.md) · [RELEASE040_SCOPE](RELEASE040_SCOPE.md) · [TODO](../../TODO.md).
 
 Ниже — история предыдущих этапов; [подготовка v0.2.0-rc.1](RC020_READINESS.md) сохраняется для справки.
 

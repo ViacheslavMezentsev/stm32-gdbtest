@@ -5,6 +5,15 @@
 This is a public summary of accepted behavior and acceptance, not a development diary.
 Contract: [API specification](../TECHNICAL_SPECIFICATION_API.md); guide: [API](API.md).
 
+## Current summary — 2026-10-10
+
+The candidate is unpublished. Current versions: Python 0.4.0, API_VERSION=2, target schema 2,
+general specification 0.89, API specification 0.3.15. Latest local reconciliation: `a6b6dbd`.
+Separate campaigns follow: six Windows OpenOCD/J-Link stands, Windows/st-util,
+short recovery/idle checks and full SSH/st-util suites on five STM32 boards. Their counts must
+not be summed as unique scenarios or treated as latest-SHA CI evidence.
+[Release gates and open limits](RELEASE040_SCOPE.md#4-evidence-and-open-limits).
+
 ## 0.4.0 candidate — acceptance open
 
 Rechecked on 2026-10-10: runtime `b1264c1`, Python 0.4.0, API_VERSION=2,
@@ -271,7 +280,7 @@ USB failures does not guarantee safe forced cleanup.
 
 The same runtime and tools completed F030R8 (45 scenarios), F103C8, F401CC, F411CE and F429ZI
 (47 each):233 main scenarios. Including prepare, post-fault checks, timeout/recovery and restoration,
-there are516 stages:243 prepare,268 HW PASS and5 expected timeout ERROR outcomes.
+there are516 stages:243 prepare, 268 HW PASS and 5 expected timeout ERROR outcomes.
 All263 st-util completions returned actual exit0 with confirmed idle. OpenOCD BOOT/GPIO10/10;
 all five stands released their locks, with no server processes remaining after the suites.
 

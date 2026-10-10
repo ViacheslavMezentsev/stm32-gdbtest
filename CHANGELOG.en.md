@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Reconciled release documents, current evidence and limits; general specification 0.89, API specification 0.3.15. Contracts are unchanged.
+
 - Increased the F401/F411/F429 ADC_INVALID scenario budget to120s: the complete matrix over SSH/st-util can take more than60s; assertions and the runner default timeout are unchanged.
 
 - Fixed recognition of actual st-util `Listening at *:port...` output; regression includes the trailing ellipsis.

@@ -2,7 +2,18 @@
 
 [Documentation](index.md) · [Русский](../ru/HARDWARE_METRICS.md)
 
-## Current snapshot — full campaign of the 0.3.0 package, 2026-10-05/06
+## Candidate 0.4.0 snapshot — 2026-10-10
+
+README shows 233 profile/scenario combinations for five STM32 boards over Windows →
+OrangePi/st-util 1.9.0: F030 has 45, F103/F401/F411/F429 have 47 each. This combines completed
+suites with unchanged remote lifecycle runtime and a separate F4 ADC_INVALID budget change
+(final state `a6b6dbd`); it is not an all-layout campaign on the final SHA.
+516 stages comprise 243 prepare, 268 HW PASS and 5 expected timeout ERROR outcomes; the F401
+budget recheck and restoration are counted separately. See the [matrix](API_ACCEPTANCE.md).
+The blue candidate badge does not establish a published release, current CI or ST-LINK GDB Server acceptance.
+The previous multi-layout 0.3.0 campaign is retained below.
+
+## Previous snapshot — full campaign of the 0.3.0 package, 2026-10-05/06
 
 For the first time the whole CMSIS scenario set ran in one campaign on one code base (main `782798f`, the
 code matches the verified revisions of branch `claude/api030-profile`). Distinct profile/scenario
@@ -17,7 +28,7 @@ combinations: **218** — F030R8 42, F103C8/F401CC/F411CE/F429ZI 44 each (the sh
 | Remote server from WSL2 | WSL2 → Orange Pi 5 over SSH | 5 of 5 |
 
 The prepared-run package and the GitHub hardware CI check the `run_hw.py` lifecycle (10 steps): 5 of 5 in
-each. The only non-PASS of every suite is the intended `timeout` check with its expected ERROR. README shows
+each. The only non-PASS of every suite is the intended `timeout` check with its expected ERROR. At that time README showed
 218 and 2026-10-06; the `Hardware: full campaign 0.3.0` badge describes this snapshot, not the status of
 later commits. The 218 exclude the HAL F030 fixture, the example, repeats and recovery. Details —
 [accepted results](API_ACCEPTANCE.md).

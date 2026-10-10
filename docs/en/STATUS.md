@@ -2,19 +2,28 @@
 
 [Documentation](index.md) → Status · [Русский](../ru/STATUS.md)
 
-**Now (2026-10-10).** `codex/release-040` prepares v0.4.0: Python 0.4.0,
-API_VERSION=2, target schema 2, API specification 0.3.14, general specification 0.85.
-Runtime `b1264c1` passed Docker 26/26 and full suites on six Windows-attached boards
-using OpenOCD/J-Link: 280 scenarios, 608 stages, restoration 12/12. Linux-built
-F411/F429 packages passed 10/10 each on Windows; minimal-consumer with a real
-submodule passed offline and hardware checks on F411. F411/ST-LINK GDB Server:
-short cycles passed, full suites hit USB ERROR on 7.14.0 and 7.9.0. Another probe
-on F030 reproduced the failure on 7.14.0; after reconnection OpenOCD BOOT/GPIO
-passed 2/2. The cause remains unknown.
-Latest-SHA CI and remote layouts remain unaccepted. [Matrix and limits](API_ACCEPTANCE.md),
-[release boundary](RELEASE040_SCOPE.md). The release is unpublished; current work is in [TODO](../../TODO.md).
+**Status on 2026-10-10.**
 
-Additionally, st-util 1.9.0 on five STM32 boards: lifecycle 10/10 each, 233 scenarios/506 stages (5 expected timeout ERROR outcomes), BOOT/GPIO 10/10. Docker docs+host passed 6/6; Windows/Linux host ran 411 tests each. OrangePi/st-util hardware remains unverified.
+Python 0.4.0, API_VERSION=2, target schema 2; general specification 0.89, API specification 0.3.15.
+The release is being prepared in `codex/release-040` and is not published.
+
+Local evidence belongs to several revisions:
+
+- `b1264c1`: Docker 26/26; six Windows OpenOCD/J-Link stands, 280 scenarios,
+  608 stages; Linux-built F411/F429 packages on Windows 10/10 each; minimal-consumer
+  with a real submodule passed offline 3/3 and GPIO on F411.
+- Remote lifecycle `4cb5e0a`, scenarios through `a6b6dbd`: Windows → OrangePi/st-util 1.9.0,
+  five STM32 boards, 233 scenarios, 516 stages including prepare and restoration;
+  268 HW PASS and 5 expected timeout ERROR outcomes, OpenOCD BOOT/GPIO 10/10 and clean release.
+  F4 ADC_INVALID received 120s after the preserved F411 ERROR; changed F401 was checked separately.
+- After lifecycle changes: 426 host tests, Docker docs+host 6/6; final documents are checked separately.
+
+Full F411/F030 ST-LINK GDB Server suites remain unaccepted because of USB ERROR.
+Passing st-util does not close this failure. USB serial diagnostics in doctor, the cause of the
+previous F429 SP/SRAM anomaly and forced-cleanup limits remain open as well.
+Latest-SHA GitHub CI and final reconciliation of all release layouts remain pending.
+
+[API_ACCEPTANCE](API_ACCEPTANCE.md) · [RELEASE040_SCOPE](RELEASE040_SCOPE.md) · [TODO](../../TODO.md).
 
 Historical stages follow; [v0.2.0-rc.1 preparation](RC020_READINESS.md) is kept for reference.
 

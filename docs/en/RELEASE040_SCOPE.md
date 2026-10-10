@@ -4,8 +4,8 @@
 
 Scope agreed on 2026-10-09 and reconciled with `main` at `44c795d`: `codex/check-techniques`,
 `codex/api040-cleanup`, and `codex/api030-feedback` have landed. This defines the release boundary,
-not release readiness. At this snapshot the module is version 0.3.0 with `API_VERSION=2`;
-the release branch raises the Python version to 0.4.0. Final acceptance remains.
+not release readiness. Current state was reconciled on 2026-10-10 against `a6b6dbd`;
+Python 0.4.0, `API_VERSION=2`. The local matrix below does not replace latest-SHA CI.
 
 ## 1. Recommended contents
 
@@ -18,7 +18,7 @@ the release branch raises the Python version to 0.4.0. Final acceptance remains.
 | Techniques/examples | Include event/interval, watchpoint wait, injection, standalone C++ Og/O2 and TECH-019 | Examples built on existing API, without new `Target` methods |
 | 0.3.0 field feedback F01–F03 | Include; `codex/api030-feedback` has landed | F01 bounded unsized character-array read; F02 watchpoint frame interpretation; F03 initial SP as SRAM boundary. Host/docs/offline passed at `44c795d`; hardware results predate integration and need a release-SHA repeat |
 | API cleanup | **Remove** `value`, `fields`, `set_value`, `force_return` | API spec 6.7, TODO and reference have promised removal in 0.4.0; provide explicit migration for this breaking change |
-| st-util | Include a separate backend and optional `[st-util]` target schema 2 section | Agreed on 2026-10-10. Five STM32/Windows lifecycles and full suites passed; OrangePi/SSH hardware remains unverified. [Matrix](API_ACCEPTANCE.md) |
+| st-util | Include a separate backend and optional `[st-util]` target schema 2 section | Agreed on 2026-10-10. Five STM32/Windows lifecycles and full suites passed; OrangePi/SSH full suites on five STM32 boards also passed. [Matrix](API_ACCEPTANCE.md) |
 
 `API_VERSION` is already 2 because public methods were removed. The release branch raises
 the target.toml schema to 2 for backend dialects; other TOML/JSON schemas remain unchanged.
@@ -57,37 +57,44 @@ migration table; these are examples of old code, not executable scenarios.
 | `fault`, `cycles`, `snapshot/diff`, HSE measurement | Open TODO/API-spec candidates without agreed implementation and acceptance for v0.4.0 |
 | RTOS awareness and external equipment | Separate research and integration |
 
-## 4. Technical debt and release gates
+## 4. Evidence and open limits
 
-The 2026-10-10 recheck updates acceptance: [current matrix](API_ACCEPTANCE.md).
-Docker 26/26 and six OpenOCD/J-Link boards passed; full F411/F030 ST-LINK suites remain
-open due to USB ERROR. The historical table below does not override these results.
+Python 0.4.0, API_VERSION=2, target schema 2; general specification 0.89, API specification 0.3.15.
+The release is being prepared in `codex/release-040` and is not published.
 
-- Use `skip()` in consumer scenarios to learn where it is needed; distinguish inapplicability from malfunction. Direct GDB is unrestricted and SKIP does not roll back actions. This package has not rechecked remote stands or other GDB versions.
-- F01–F03 are integrated: TECH-013 explains why a stop frame need not identify the writer, and TECH-017
-  separates the initial SP at a RAM boundary from readable addresses. Earlier hardware evidence does not
-  replace a run at the release SHA.
-- Release matrix: Docker host/offline/docs at the exact SHA, real build/package, [release-policy](VERSIONING.md) launch schemes, hardware recovery, a consumer using the actual submodule, and `docs.public`. Branch-local results do not replace final-SHA CI.
-- Align version, `API_VERSION`, current revisions of both specifications, README/STATUS, skills, bilingual CHANGELOG and release notes. Provide a 0.3.0 migration guide.
+Local evidence belongs to several revisions:
 
-| Evidence | At `44c795d` | Release gate |
-| --- | --- | --- |
-| Docs, host, F030 offline | 7/7 passed locally | Repeat full Docker suite and GitHub CI at the final SHA |
-| Board scenarios and recovery | At `bb74cde`, six local stands: 10/10 `run_hw` each, 280 scenarios, 608 stages (602 PASS, 6 expected ERROR), BOOT/GPIO recovery 12/12 PASS | Other [release-policy](VERSIONING.md) layouts, affected `run_hw` repeat at the final SHA, and CI |
-| Consumer as Git submodule | Untested at the integrated SHA | Verify real gitlink and prepare/run path |
-| Version and release documents | `__version__=0.3.0`, API_VERSION=2 | Version 0.4.0, specifications, migration and release notes |
+- `b1264c1`: Docker 26/26; six Windows OpenOCD/J-Link stands, 280 scenarios,
+  608 stages; Linux-built F411/F429 packages on Windows 10/10 each; minimal-consumer
+  with a real submodule passed offline 3/3 and GPIO on F411.
+- Remote lifecycle `4cb5e0a`, scenarios through `a6b6dbd`: Windows → OrangePi/st-util 1.9.0,
+  five STM32 boards, 233 scenarios, 516 stages including prepare and restoration;
+  268 HW PASS and 5 expected timeout ERROR outcomes, OpenOCD BOOT/GPIO 10/10 and clean release.
+  F4 ADC_INVALID received 120s after the preserved F411 ERROR; changed F401 was checked separately.
+- After lifecycle changes: 426 host tests, Docker docs+host 6/6; final documents are checked separately.
 
-## 5. Release preparation sequence
+Full F411/F030 ST-LINK GDB Server suites remain unaccepted because of USB ERROR.
+Passing st-util does not close this failure. USB serial diagnostics in doctor, the cause of the
+previous F429 SP/SRAM anomaly and forced-cleanup limits remain open as well.
+Latest-SHA GitHub CI and final reconciliation of all release layouts remain pending.
 
-1. Reconcile the integrated scope and verification matrix: `main` at `44c795d` includes all three accepted
-   branches. Docs 5/5, host and F030 offline passed locally on this SHA (7/7 total); the owner checks GitHub CI separately.
-2. In the release branch, `__version__` is set to 0.4.0 and both specifications, README/STATUS, skills,
-   bilingual CHANGELOG and draft release notes include 0.3.0 → 0.4.0 migration.
-   `API_VERSION=2` is already set; documents will be refined after final acceptance.
-3. At `bb74cde`, all six local stands passed their scenarios and recovery. At the final SHA, run Docker
-   docs/format/host/firmware, repeat the affected `run_hw` path and remaining layouts, then check a
-   consumer with the real submodule. Record exact tool versions, MCU, backend, ELF/manifest and limits;
-   do not count results from earlier SHAs as final acceptance.
-4. The owner pushes the branch, checks CI at the last SHA, lands it, then creates the tag.
+Historical protocols and exact boundaries: [matrix](API_ACCEPTANCE.md).
 
-This scope does not transfer experimental methods into core or publish a release.
+| Remaining item | Status and next action |
+| --- | --- |
+| F411/F030 ST-LINK GDB Server | Open, specification question 11.2.27; needs a successful full run or an explicit owner decision on the release boundary |
+| Latest SHA | Check Docker/offline and GitHub CI; runtime changes require affected layouts and recovery checks |
+| Deployment layouts and consumer | Earlier evidence is retained; reconcile subsequent helper changes with local Linux, WSL, packages and Hardware CI instead of carrying PASS forward automatically |
+| Doctor/USB serial | Empty or binary serial; Windows capture needs UTF-8, see HOWTO; representation fix is not accepted yet |
+| F429 SP/SRAM | Not reproduced in the repeated campaign; cause unknown |
+| Forced termination | Host regression exists; SSH loss on real USB and emergency cleanup safety are not established |
+| Deferred checks | Hardware HAL F030, occupied-port retry, consumer SKIP practice; other API debt is in section 3 |
+
+## 5. Completing preparation
+
+1. Reconcile the final diff with tested sources, schemas and migration; test new changes according to impact.
+2. Finish remaining release checks and record the exact SHA; resolve the ST-LINK acceptance boundary.
+3. The owner pushes the branch, verifies latest-SHA CI and lands it.
+4. Only after acceptance: date the CHANGELOG, create the signed tag and publish as owner.
+
+This scope does not declare the release ready or transfer experimental methods into core.
