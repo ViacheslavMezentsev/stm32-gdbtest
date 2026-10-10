@@ -3,7 +3,7 @@
 ## Текущее состояние — 10.10.2026
 
 - Опубликован v0.3.0; кандидат v0.4.0 готовится в `codex/release-040`, не опубликован.
-  Python 0.4.0, API_VERSION=2, target schema 2, общее ТЗ 0.89, ТЗ API 0.3.15.
+  stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2, общее ТЗ 0.90, ТЗ API 0.3.16.
 - Последний проверенный пакет сценариев — `a6b6dbd`. Runtime remote lifecycle `4cb5e0a`:
   пять STM32 через SSH/st-util, 233 сценария, 516 этапов (243 prepare, 268 HW PASS,
   5 ожидаемых timeout ERROR), восстановление и освобождение стендов подтверждены.
@@ -257,7 +257,7 @@
 Offline SUCCESS. Незакрытые отметки в исходном плане ниже — история подготовки.
 
 
-- codex/release-0.1.0-rc.2 от main eaf31ea: Python 0.1.0rc2, API_VERSION=1,
+- codex/release-0.1.0-rc.2 от main eaf31ea: stm32-gdbtest 0.1.0rc2, API_VERSION=1,
   ТЗ 0.45 к выпуску, итоговый текст docs/releases/v0.1.0-rc.2.md. Тег не создан.
 - [x] Документальный аудит eaf31ea принят: Docs и все пять Offline jobs SUCCESS.
 - [x] Orange Pi и три стенда подтверждены владельцем; doctor без FAIL/WARN.

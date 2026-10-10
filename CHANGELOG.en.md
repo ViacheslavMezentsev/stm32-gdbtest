@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Clarified version labels: the stm32-gdbtest package version is distinct from the Python interpreter version, API_VERSION and specification revisions.
+
 - Reconciled release documents, current evidence and limits; general specification 0.89, API specification 0.3.15. Contracts are unchanged.
 
 - Increased the F401/F411/F429 ADC_INVALID scenario budget to120s: the complete matrix over SSH/st-util can take more than60s; assertions and the runner default timeout are unchanged.
@@ -382,7 +384,7 @@ server limitation: manual USB reconnection was required. Signed tag published at
 
 ### Changed
 
-- Prepared Python version `0.1.0rc2`, API_VERSION=1 and release specification 0.42;
+- Prepared package version `0.1.0rc2`, API_VERSION=1 and release specification 0.42;
   final candidate acceptance remains pending.
 
 - Documentation reconciled before rc.2: current status, examples, CI and lowercase tests; historical protocols separated from current plans. Specification 0.41 records acceptance/publication rules; the audit stage did not change runtime.
@@ -408,7 +410,7 @@ server limitation: manual USB reconnection was required. Signed tag published at
 
 ## [0.1.0-rc.1] — 2026-09-29
 
-The first release candidate (Python version `0.1.0rc1`, `API_VERSION = 1`, specification revision 0.21).
+The first release candidate (package version `0.1.0rc1`, `API_VERSION = 1`, specification revision 0.21).
 
 ### Added
 

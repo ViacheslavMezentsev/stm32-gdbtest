@@ -5,7 +5,7 @@
 Accepted public methods, properties and decorator. Current contract: [API specification](../../TECHNICAL_SPECIFICATION_API.md).
 
 Support version identifies implementation availability; specification revision identifies
-contract adoption. API_VERSION=2 in the 0.4.0 candidate records removal of four former methods; the branch's Python version is 0.4.0, but the release is unpublished. API_VERSION is neither a release nor a specification revision.
+contract adoption. API_VERSION=2 in the 0.4.0 candidate records removal of four former methods; the branch's package version is 0.4.0, but the release is unpublished. API_VERSION is neither a release nor a specification revision.
 The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 7ed6d0a is 0.2.0.dev0; candidate 972af7c is 0.2.0rc1; the 0.3.0 package is release `v0.3.0`.
 

@@ -7,8 +7,8 @@ Contract: [API specification](../TECHNICAL_SPECIFICATION_API.md); guide: [API](A
 
 ## Current summary — 2026-10-10
 
-The candidate is unpublished. Current versions: Python 0.4.0, API_VERSION=2, target schema 2,
-general specification 0.89, API specification 0.3.15. Latest local reconciliation: `a6b6dbd`.
+The candidate is unpublished. Current versions: stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2,
+general specification 0.90, API specification 0.3.16. Latest local reconciliation: `a6b6dbd`.
 Separate campaigns follow: six Windows OpenOCD/J-Link stands, Windows/st-util,
 short recovery/idle checks and full SSH/st-util suites on five STM32 boards. Their counts must
 not be summed as unique scenarios or treated as latest-SHA CI evidence.
@@ -16,7 +16,7 @@ not be summed as unique scenarios or treated as latest-SHA CI evidence.
 
 ## 0.4.0 candidate — acceptance open
 
-Rechecked on 2026-10-10: runtime `b1264c1`, Python 0.4.0, API_VERSION=2,
+Rechecked on 2026-10-10: runtime `b1264c1`, stm32-gdbtest 0.4.0, API_VERSION=2,
 target schema 2. Fixed schema 1/OpenOCD compatibility, the reset command source,
 and recovery independence from overrides. Schema/API checks do not establish USB reliability.
 

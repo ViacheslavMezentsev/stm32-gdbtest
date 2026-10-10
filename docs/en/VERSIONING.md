@@ -2,13 +2,13 @@
 
 [Documentation](index.md) → Versions · [Русский](../ru/VERSIONING.md)
 
-[Release v0.3.0](../releases/v0.3.0.md): Python version 0.3.0; the extended API is accepted on five boards in six run layouts; the owner publishes the tag.
+[Release v0.3.0](../releases/v0.3.0.md): package version 0.3.0; the extended API is accepted on five boards in six run layouts; the owner publishes the tag.
 
-[rc.2 plan](RC2_READINESS.md): tag `v0.1.0-rc.2`, Python `0.1.0rc2`; published at a0d6547.
+[rc.2 plan](RC2_READINESS.md): tag `v0.1.0-rc.2`, stm32-gdbtest `0.1.0rc2`; published at a0d6547.
 
 The format is MAJOR.MINOR.PATCH per [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html);
-Git tags have the `v` prefix. The current release is **v0.3.0**, Python **0.3.0**; the owner sets its tag.
-The release branch prepares **v0.4.0** (Python 0.4.0, API_VERSION=2); it is not yet a published tag.
+Git tags have the `v` prefix. The current release is **v0.3.0**, stm32-gdbtest **0.3.0**; the owner sets its tag.
+The release branch prepares **v0.4.0** (stm32-gdbtest 0.4.0, API_VERSION=2); it is not yet a published tag.
 Candidates v0.2.0-rc.1 and v0.3.0-rc.1 were never published. The previous published candidate is `v0.1.0-rc.2`.
 The initial export from the stand project is not a release.
 
@@ -19,13 +19,19 @@ stability. A published tag is never moved: a fix gets a new version. The consume
 gitlink pins the SHA; a tag makes selecting that SHA easier.
 
 The version source is `__version__` in `stm32_gdbtest/__init__.py`. For future Python
-packaging the tag `v0.1.0-rc.1` maps to Python version `0.1.0rc1` and `v0.1.0` to
+packaging the tag `v0.1.0-rc.1` maps to package version `0.1.0rc1` and `v0.1.0` to
 `0.1.0`. `API_VERSION` and the JSON/TOML schema numbers are independent of the release
 version and change only when the corresponding contract changes.
 
 The API 0.3.0 design is the [API audit and redesign](API030_PLAN.md). The 0.4.0
 scope and migration are in the [release map](RELEASE040_SCOPE.md); final acceptance
 and publication are tracked in [TODO](../../TODO.md).
+
+
+The `stm32-gdbtest` package version is `__version__`, not the Python interpreter version.
+`API_VERSION` is the scenario API compatibility number; the general and API specification
+revisions version the documents. For example, the candidate package is 0.4.0 with `API_VERSION=2`.
+Interpreter versions are listed separately for host Python and Python embedded in GDB.
 
 ## Before a release
 
@@ -63,7 +69,7 @@ cleanup and render large on GitHub). Russian text first; English is the same tex
 `<details><summary>English</summary>` … `</details>` block with a blank line after `<summary>` and before
 `</details>`, otherwise GitHub does not render its Markdown. The final check matrix may be a Markdown table
 (stand × GDB version). Contents: the first line `stm32-gdbtest <version> — <gist>`; the purpose
-in one or two sentences; Python version, `API_VERSION`, specification revision;
+in one or two sentences; package version, `API_VERSION`, specification revision;
 "Highlights" — 5–8 user-relevant items from the CHANGELOG; "Final check" — the commit
 and the result matrix; "Limits"; links to CHANGELOG and STATUS.
 GitHub turns `@name` into a user mention (the user appears among the release

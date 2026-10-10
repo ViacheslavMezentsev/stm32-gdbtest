@@ -5,7 +5,7 @@
 Scope agreed on 2026-10-09 and reconciled with `main` at `44c795d`: `codex/check-techniques`,
 `codex/api040-cleanup`, and `codex/api030-feedback` have landed. This defines the release boundary,
 not release readiness. Current state was reconciled on 2026-10-10 against `a6b6dbd`;
-Python 0.4.0, `API_VERSION=2`. The local matrix below does not replace latest-SHA CI.
+stm32-gdbtest 0.4.0, `API_VERSION=2`. The local matrix below does not replace latest-SHA CI.
 
 ## 1. Recommended contents
 
@@ -59,7 +59,7 @@ migration table; these are examples of old code, not executable scenarios.
 
 ## 4. Evidence and open limits
 
-Python 0.4.0, API_VERSION=2, target schema 2; general specification 0.89, API specification 0.3.15.
+stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2; general specification 0.90, API specification 0.3.16.
 The release is being prepared in `codex/release-040` and is not published.
 
 Local evidence belongs to several revisions:

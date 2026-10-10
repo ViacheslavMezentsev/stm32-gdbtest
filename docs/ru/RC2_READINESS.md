@@ -30,7 +30,7 @@ API_VERSION=1 и схемы сохраняются, если аудит не о�
 1. **Сверка документации**, codex/rc2-docs-audit: актуальные руководства и планы
    согласованы с кодом, даты и результаты отделены от истории, RU/EN согласованы.
    Версию не менять, старое описание тега rc.1 не редактировать.
-2. **Выпускная ветка** от принятого main: Python 0.1.0rc2, раздел CHANGELOG
+2. **Выпускная ветка** от принятого main: stm32-gdbtest 0.1.0rc2, раздел CHANGELOG
    0.1.0-rc.2 в обеих локализациях, новая ревизия ТЗ к выпуску, README/API/STATUS
    и docs/releases/v0.1.0-rc.2.md. До приёмки описание явно является черновиком.
 3. **Offline** на опубликованном SHA: Docs и все пять jobs Offline; CMSIS
@@ -110,7 +110,7 @@ GDB-серверы не запускались, MCU не подключалис�
 
 ## Локальная подготовка выпускной ветки (01.10.2026)
 
-Python 0.1.0rc2, API_VERSION=1, ТЗ 0.42. Windows docs/host 4/4 PASS.
+stm32-gdbtest 0.1.0rc2, API_VERSION=1, ТЗ 0.42. Windows docs/host 4/4 PASS.
 Linux Docker: docs/format/host и девять CMSIS сочетаний прошли (14 этапов).
 HAL первоначально отклонён CMake из-за Windows cache в build/ci-gcc13; каталог
 сохранён как ci-gcc13-windows-before-rc2. На чистом build отдельный HAL-прогон

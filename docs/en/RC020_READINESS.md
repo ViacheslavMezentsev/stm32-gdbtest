@@ -2,7 +2,7 @@
 
 [Documentation](index.md) · [Русский](../ru/RC020_READINESS.md)
 
-Agreed on 2026-10-03. Python `0.2.0rc1`, API specification **0.2.3**, API_VERSION=1,
+Agreed on 2026-10-03. stm32-gdbtest `0.2.0rc1`, API specification **0.2.3**, API_VERSION=1,
 api.toml schema=1, main specification **0.65**. Prepared locally; no tag or publication yet.
 
 ## Scope

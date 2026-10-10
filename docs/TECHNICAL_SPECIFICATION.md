@@ -5,10 +5,10 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.89 (кандидат v0.4.0) |
+| **Ревизия** | 0.90 (кандидат v0.4.0) |
 | **Дата формирования** | 10.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
-| **Целевая версия** | Кандидат v0.4.0; Python `0.4.0`, API_VERSION=2, ТЗ API 0.3.14 (р.0.81). Публикация после итоговой приёмки. |
+| **Целевая версия** | Кандидат v0.4.0; пакет stm32-gdbtest `0.4.0`, API_VERSION=2, ТЗ API 0.3.16 (р.0.90). Публикация после итоговой приёмки. |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
@@ -152,6 +152,19 @@
 | 0.88 | 10.10.2026 | Учтено многоточие реального st-util после Listening; отказ на F030 сохранён, регрессия TC-170 дополнена. |
 
 | 0.89 | 10.10.2026 | Редакционная сверка кандидата: приложения B/F отражают schema 2, потребителя и полные SSH/st-util наборы; ограничения отделены от принятого. Контракты, TC и матрица требований не изменены. |
+
+| 0.90 | 10.10.2026 | Уточнён термин версии пакета stm32-gdbtest, отличный от версии интерпретатора Python. Историческое сокращение пояснено; контракты и проверки не меняются. |
+
+### Изменения ревизии 0.90
+
+Изменённые пункты помечены `(р.0.90)`.
+
+| Пункты | Тип | Суть |
+| :--- | :--- | :--- |
+| Реквизиты, приложения | изм. | Версия пакета, версия совместимости API и ревизии документов различаются явно |
+
+В прежних записях «Python 0.x» и «версия Python 0.x» означают версию пакета
+stm32-gdbtest (`__version__`), а не интерпретатора. История ревизий сохранена.
 
 ### Изменения ревизии 0.89
 
@@ -2737,7 +2750,7 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | Блокировка Linux | `<STM32_GDBTEST_LOCK_DIR или системный каталог временных файлов (/tmp, TMPDIR)>/stm32-gdbtest-locks/probe.v1.<sha256>.lock`, запись `pid=<PID>` (р.0.7) | 5.4.8, 5.4.9 |
 | Окружение стенда Linux | Python 3.11.16, CMake 3.28.3, Ninja 1.12.1, GCC 13.3.1-1.1, OpenOCD 0.12.0-7; `~/.local/stm32-gdbtest` (р.0.7) | 6.10.4 |
 | Каталог временных файлов | `build/hwtest-tmp` | 6.1.4 |
-| Цель расширения / api.toml schema | 0.4.0 / 1; Python 0.4.0 (р.0.77) | 8.48 |
+| Цель расширения / api.toml schema | 0.4.0 / 1; пакет stm32-gdbtest 0.4.0 (р.0.90) | 8.48 |
 | `__version__` / `API_VERSION` | `0.4.0` / `2` (р.0.77) | 5.15.3 |
 | `prepare.<ID>` TIMEOUT | 90 с (р.0.3) | 5.13.14 |
 | GCC CI | xPack 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1 (р.0.3) | 8.13 |
@@ -2865,14 +2878,14 @@ D.5. В ревизии 0.1 ссылки в коде отсутствуют; их
 
 ## Приложение F. Расхождения документации и кода
 
-Кандидат v0.4.0: Python 0.4.0, API_VERSION=2, target schema 2; остальные схемы
+Кандидат v0.4.0: пакет stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2; остальные схемы
 TOML/JSON не менялись. Текущее подтверждение приведено в приложении B; вопрос 11.2.26
 об изоляции артефактов закрыт. Вопрос 11.2.27 о полном ST-LINK GDB Server прогоне открыт:
 успех st-util/OpenOCD не устраняет USB ERROR другого backend. Дополнительные ограничения:
 бинарный/пустой USB serial при doctor, неповторившаяся аномалия F429 SP/SRAM, непроверенная
 безопасность принудительного USB cleanup. Аппаратный обрыв SSH и повтор занятого порта
 не считать доказанными host-тестами. Правило публикации и условия выпуска —
-docs/ru/RELEASE040_SCOPE.md; итоговый CI и сверка SHA ещё ожидаются. (р.0.89)
+docs/ru/RELEASE040_SCOPE.md; итоговый CI и сверка SHA ещё ожидаются. (р.0.90)
 
 Выпуск 0.3.0: приёмка на пяти платах по шести схемам (приложение B) выявила и закрыла два расхождения —
 остановку точки наблюдения Cortex-M0 в эпилоге (`HW_CI_WHO_WRITES`, исправлено в проверочной прошивке) и

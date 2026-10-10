@@ -29,7 +29,7 @@ contract change; that would need a separate decision and migration guidance.
 1. **Documentation review**, codex/rc2-docs-audit: current guides and plans match
    code, dates and evidence are separated from history, RU/EN agree. Do not change
    the version or edit the published rc.1 tag description.
-2. **Release branch** from accepted main: Python 0.1.0rc2, CHANGELOG 0.1.0-rc.2
+2. **Release branch** from accepted main: stm32-gdbtest 0.1.0rc2, CHANGELOG 0.1.0-rc.2
    in both languages, release specification revision, README/API/STATUS and
    docs/releases/v0.1.0-rc.2.md. Notes remain an explicit draft until acceptance.
 3. **Offline** at the published SHA: Docs and all five Offline jobs; nine CMSIS
@@ -109,7 +109,7 @@ Code, firmware and published rc.1 notes are unchanged. Specification revision is
 
 ## Local release-branch preparation (2026-10-01)
 
-Python 0.1.0rc2, API_VERSION=1, specification 0.42. Windows docs/host 4/4 PASS.
+stm32-gdbtest 0.1.0rc2, API_VERSION=1, specification 0.42. Windows docs/host 4/4 PASS.
 Linux Docker: docs/format/host and nine CMSIS combinations passed (14 stages).
 HAL initially failed CMake configuration because build/ci-gcc13 held a Windows cache;
 it was preserved as ci-gcc13-windows-before-rc2. A separate clean HAL run passed

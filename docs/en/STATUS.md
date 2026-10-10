@@ -4,7 +4,7 @@
 
 **Status on 2026-10-10.**
 
-Python 0.4.0, API_VERSION=2, target schema 2; general specification 0.89, API specification 0.3.15.
+stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2; general specification 0.90, API specification 0.3.16.
 The release is being prepared in `codex/release-040` and is not published.
 
 Local evidence belongs to several revisions:

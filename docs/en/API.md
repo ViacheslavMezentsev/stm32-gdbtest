@@ -2,9 +2,9 @@
 
 [Documentation](index.md) → API · [Русский](../ru/API.md)
 
-[Release v0.3.0](../releases/v0.3.0.md): Python 0.3.0; candidate v0.2.0-rc.1 was never published. Historical evidence follows.
+[Release v0.3.0](../releases/v0.3.0.md): stm32-gdbtest 0.3.0; candidate v0.2.0-rc.1 was never published. Historical evidence follows.
 
-The v0.4.0 candidate has Python version 0.4.0 and `API_VERSION=2`:
+The v0.4.0 candidate has package version 0.4.0 and `API_VERSION=2`:
 `value`, `fields`, `set_value`, `force_return` have been removed. The release is
 unpublished; final-SHA acceptance remains.
 See the [reference and migration](api/index.md).
@@ -125,7 +125,7 @@ CLI --session accepts the existing generated ELF/GDB/tests JSON with an added se
 
 New pack captures TOML in an internal capsule (base64/SHA256/defaults fingerprint); runner/GDB validate it without original files. New packages require tools supporting the extension; do not use older tools. Old packages use legacy mode. Prepare a new package to change its captured configuration. This is not a record/records export format.
 
-Status: **0.3.0** is published (Python `0.3.0`, [notes](../releases/v0.3.0.md));
+Status: **0.3.0** is published (stm32-gdbtest `0.3.0`, [notes](../releases/v0.3.0.md));
 the release branch prepares **0.4.0** (`API_VERSION=2`). This numbers the API
 surface; it is neither a 1.0 stability promise nor a GDB version. The
 module is delivered as a Git submodule; pip installation is not supported yet, and
