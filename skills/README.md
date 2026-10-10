@@ -8,17 +8,18 @@
 
 | Навык | Когда нужен |
 | --- | --- |
-| [stm32-gdbtest-integrate](stm32-gdbtest-integrate/SKILL.md) | подключить модуль к проекту: подмодуль, каталог `hil/`, описание MCU, `session.toml`, CMake, пресеты, стенд, первый прогон; перевод старого потребителя на опубликованную 0.3.0 и миграция для кандидата 0.4.0 |
+| [stm32-gdbtest-integrate](stm32-gdbtest-integrate/SKILL.md) | подключить модуль к проекту: подмодуль, каталог `hil/`, описание MCU, `session.toml`, CMake, пресеты, стенд, первый прогон; перевод старого потребителя на опубликованную 0.4.0 |
 | [stm32-gdbtest-scenarios](stm32-gdbtest-scenarios/SKILL.md) | написать или переписать сценарий: требование и контракт, место остановки, `check(rows)`, `write(rows)`, `ret`, `refused`, `watch`, `skip`, профиль, стиль, техники TECH-001…019 |
 | [stm32-gdbtest-run](stm32-gdbtest-run/SKILL.md) | запустить и разобрать результат: `doctor`, host и hw, CLI, удалённый сервер, пакет, CI, `result.json` и журналы, частые отказы |
 | [stm32-gdbtest-results](stm32-gdbtest-results/SKILL.md) | разобрать сохранённые свидетельства без платы: порядок файлов, код сценария, records, JUnit, целостность, экспорт/HTML и обоснованный вывод; в том числе агентом pi на OrangePi |
 | [stm32-gdbtest-stand-loop](stm32-gdbtest-stand-loop/SKILL.md) | комплект для автономного стенда, конечные циклы, политика FAIL/SKIP, STOP и передача review.json агенту |
+| [stm32-gdbtest-develop](stm32-gdbtest-develop/SKILL.md) | изменить прошивку через DDTT: план, сценарий до исправления, исходный FAIL, исправление, регрессия и разбор свидетельств на плате |
 
 ## Подключение навыков в проекте
 
 Навыки лежат в подмодуле: `modules/stm32-gdbtest/skills/`.
 
-- **Claude Code** ищет навыки проекта в `.claude/skills/<имя>/SKILL.md`. Скопируйте пять каталогов
+- **Claude Code** ищет навыки проекта в `.claude/skills/<имя>/SKILL.md`. Скопируйте нужные каталоги
   туда (на Linux и macOS можно символической ссылкой) и обновляйте копию вместе с gitlink модуля:
 
   ```powershell

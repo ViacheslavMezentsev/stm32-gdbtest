@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Added `stm32-gdbtest-develop`: firmware development through DDTT, baseline FAIL, independent expectations, preserved attempts, regression and recovery. Updated integration guidance for released 0.4.0.
+
 ## [0.4.0] - 2026-10-10
 
 - AT32/Windows/J-Link 8.32 at `9747eab`: 4 PASS + 1 SKIP, 13 records, 15 files verified; the sixth board new scenarios are verified on Windows and Linux/GitHub.
