@@ -83,7 +83,13 @@ def _shell_path(path):
 
 def remote_script(remote, config):
     """POSIX shell command for the stand host; base64 keeps quoting independent of the local OS."""
-    code = base64.b64encode(HELPER.read_bytes()).decode("ascii")
+    lifecycle = HELPER.with_name("stutil_lifecycle.py").read_text(encoding="utf-8")
+    source = ("import sys, types\n"
+              "_lifecycle = types.ModuleType('stutil_lifecycle')\n"
+              "sys.modules['stutil_lifecycle'] = _lifecycle\n"
+              + "exec(" + repr(lifecycle) + ", _lifecycle.__dict__)\n"
+              + HELPER.read_text(encoding="utf-8"))
+    code = base64.b64encode(source.encode("utf-8")).decode("ascii")
     data = base64.b64encode(json.dumps(config).encode("utf-8")).decode("ascii")
     if remote["env_script"]:
         prefix = f". {_shell_path(remote['env_script'])} >/dev/null 2>&1 || exit 97; "
@@ -94,9 +100,9 @@ def remote_script(remote, config):
             + code + " " + data + " 2>&1")
 
 
-def serve_config(identity, port, command):
+def serve_config(identity, port, command, backend=None):
     return dict(mode="serve", identity=identity, port=port, command=command, logs=LOGS,
-                heartbeat_s=HEARTBEAT_TIMEOUT_S)
+                heartbeat_s=HEARTBEAT_TIMEOUT_S, backend=backend)
 
 
 class Heartbeat:
@@ -150,7 +156,8 @@ def shutdown_result(text, ssh_returncode, backend):
         if len(records) != 1 or len(exits) != 1:
             raise ValueError("missing or duplicate remote completion marker")
         value = json.loads(records[0])
-        if (not isinstance(value, dict) or set(value) != {"returncode", "reason", "signals"}
+        if (not isinstance(value, dict) or set(value) not in (
+                {"returncode", "reason", "signals"}, {"returncode", "reason", "signals", "idle"})
                 or type(value["returncode"]) is not int
                 or value["reason"] not in ("stdin_eof", "heartbeat_timeout", "process_exit")
                 or not isinstance(value["signals"], list)
@@ -169,6 +176,14 @@ def shutdown_result(text, ssh_returncode, backend):
             raise ValueError(f"remote server exited with code {code}")
         if backend == "st-util" and value["reason"] != "stdin_eof":
             raise ValueError("st-util exited before requested cleanup")
+        if backend == "st-util":
+            idle = value.get("idle")
+            if (not isinstance(idle, dict) or set(idle) != {"ready", "reason", "elapsed_s", "limit_s"}
+                    or idle.get("ready") is not True or idle.get("reason") != "ready"
+                    or type(idle.get("elapsed_s")) not in (int, float)
+                    or type(idle.get("limit_s")) not in (int, float)
+                    or idle["limit_s"] != 5 or not 0 <= idle["elapsed_s"] <= idle["limit_s"]):
+                raise ValueError("st-util idle before shutdown was not confirmed")
     except (ValueError, TypeError, KeyError) as error:
         result["error"] = str(error)
     return result

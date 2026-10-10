@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+- st-util ожидает Listening перед recovery и idle перед завершением; helper выполняет ограниченное
+  ожидание и при потере SSH. Неподтверждённый idle остаётся ERROR даже при exit0 сервера.
+
 - SSH helper сохраняет фактический код сервера после cleanup; runner выявляет аварии и принудительную остановку, сохраняя исходный статус и проверки сценария.
 
 - Добавлен backend `st-util`: секция schema 2, serial, doctor, общий lock ST-Link и SSH;

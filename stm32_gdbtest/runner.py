@@ -27,6 +27,7 @@ from stm32_gdbtest.full_image import load_policy, canonical_image
 from stm32_gdbtest.toolchain import binutil
 from stm32_gdbtest.probes import family as probe_family
 from stm32_gdbtest import arch
+from stm32_gdbtest.stutil_lifecycle import IdleLog, wait_idle
 from stm32_gdbtest.result_capture import finalize as finalize_capture
 
 
@@ -36,6 +37,14 @@ ROOT = Path(__file__).resolve().parents[1]
 # replaced by another one up to REMOTE_PORT_ATTEMPTS times.
 REMOTE_PORTS = (61000, 64999)
 REMOTE_PORT_ATTEMPTS = 3
+
+
+def stutil_ready(state, out, server, report, phase, require_connection=True):
+    evidence = wait_idle(state, lambda: (out / "server.log").read_bytes(),
+                         lambda: server.poll() is None, require_connection=require_connection)
+    report[phase] = evidence
+    if not evidence["ready"]:
+        raise RuntimeError("st-util " + phase + ": " + evidence["reason"])
 
 
 def remote_port(tried=()):
@@ -138,6 +147,7 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
 
 def execute(session, test, stand, out, report, timeout, profile, prepare_only=False):
     server = client = remote = heartbeat = None
+    idle_state = None
     ready = False
     env = os.environ.copy()
     project_root = Path(session.get("root", ROOT)).resolve()
@@ -308,7 +318,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                     tried.append(port_on_stand)
                     backend["ready"] = ready_template.replace("{port}", str(port_on_stand))
                     identity = probe_identity(stand["serial"], stand["backend"], probe_family(stand))
-                    config = remote_host.serve_config(identity, port_on_stand, backend["command"])
+                    config = remote_host.serve_config(identity, port_on_stand, backend["command"], stand["backend"])
                     command = remote_host.ssh_command(remote, "-v", "-o", "ExitOnForwardFailure=yes", "-L",
                                                       f"127.0.0.1:{port}:127.0.0.1:{port_on_stand}")
                     server = subprocess.Popen(command + [remote_host.remote_script(remote, config)], env=env,
@@ -318,6 +328,8 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                 else:
                     server = subprocess.Popen(backend["command"], env=env, cwd=out,
                                               stdout=server_log, stderr=subprocess.STDOUT, **spawn_options())
+                if stand["backend"] == "st-util":
+                    idle_state = IdleLog(port_on_stand if remote else port, server_from)
                 deadline = time.monotonic() + limit + (10 if remote else 0)  # SSH connection and authentication
                 retry = False
                 while time.monotonic() < deadline:
@@ -343,7 +355,11 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                         raise RuntimeError("GDB server exited before ready; see server.log"
                                            + (" and tunnel.log" + (f" ({hint})" if hint else "") if remote else ""))
                     tunnel = (out / "tunnel.log").read_bytes()[tunnel_from:].decode(errors="replace") if remote else ""
-                    if backend["ready"] in text and (not remote or remote_host.forwarding_ready(tunnel)):
+                    listening = backend["ready"] in text
+                    if idle_state is not None:
+                        idle_state.observe((out / "server.log").read_bytes())
+                        listening = idle_state.idle and idle_state.error is None
+                    if listening and (not remote or remote_host.forwarding_ready(tunnel)):
                         ready = True
                         break
                     time.sleep(0.1)
@@ -374,6 +390,8 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
             stop_tree(client)
             if (ready and report.get("connection_attempted", True)
                     and report.get("teardown") != "reset_run"):
+                if idle_state is not None:
+                    stutil_ready(idle_state, out, server, report, "recovery_wait")
                 with (out / "recovery.log").open("wb") as log:
                     finish = [item for command in backend["finish"] for item in ("-ex", command)]
                     subprocess.run(gdb_base + ["-ex", "set confirm off", "-ex",
@@ -384,6 +402,11 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
         except BaseException:
             report.update(status="ERROR", teardown_error=traceback.format_exc())
         finally:
+            if idle_state is not None and server is not None:
+                try:
+                    stutil_ready(idle_state, out, server, report, "shutdown_wait", require_connection=False)
+                except BaseException:
+                    report.update(status="ERROR", cleanup_error=traceback.format_exc())
             try:
                 if heartbeat is not None:
                     heartbeat.stop()
@@ -391,7 +414,8 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                     # EOF on the session lets the helper stop the server, send its logs and unlock.
                     server.stdin.close()
                     try:
-                        server.wait(timeout=12)
+                        # Helper: idle 5s, TERM 3s, KILL 5s, reap 5s, output 1s, plus transport margin.
+                        server.wait(timeout=25)
                     except subprocess.TimeoutExpired:
                         pass
                 stop_tree(server)

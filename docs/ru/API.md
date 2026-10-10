@@ -428,3 +428,9 @@ result.status сохраняет исходный вердикт. command_code: 
 Потребители должны использовать итоговый status; status_before_cleanup нужен для диагностики.
 Target API и API_VERSION не меняются. Для st-util ожидается exit0 после запрошенного завершения;
 SIGKILL, heartbeat timeout или отсутствие подтверждения — ERROR. Это не гарантия безопасности USB.
+
+Для st-util добавлены `recovery_wait` (если требовался recovery), `shutdown_wait` и
+`remote_server.idle`: `ready`, `reason`, `elapsed_s`, `limit_s`. Последнее поле подтверждает
+наблюдение idle на хосте стенда; без него exit0 недостаточно. Ожидание Listening ограничено5с,
+host recovery —10с; итоговое ожидание SSH —25с с учётом cleanup. Эти поля диагностические:
+для принятия результата используйте итоговый status. [Жизненный цикл](LINUX_STAND.md#диагностика-завершения).

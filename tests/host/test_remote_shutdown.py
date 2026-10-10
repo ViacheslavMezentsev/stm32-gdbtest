@@ -15,11 +15,12 @@ from stm32_gdbtest import remote
 
 def completion(code, reason="stdin_eof", signals=None):
     value = dict(returncode=code, reason=reason, signals=[15] if signals is None else signals)
+    value["idle"] = dict(ready=True, reason="ready", elapsed_s=0, limit_s=5)
     return "STM32_GDBTEST_REMOTE server-result=" + json.dumps(value) + f"\nSTM32_GDBTEST_REMOTE exit={code}\n"
 
 
 class RemoteShutdownTests(unittest.TestCase):
-    def test_runner_checks_shutdown_after_the_agent_report(self):
+    def _runner_report(self, teardown="reset_run", idle=True):
         from stm32_gdbtest import runner
         from stm32_gdbtest.profile import load_profile
         from test_prepare import PROFILE, SECTIONS
@@ -38,6 +39,7 @@ class RemoteShutdownTests(unittest.TestCase):
             server, client = MagicMock(), MagicMock()
             server.poll.return_value = None
             server.returncode = None
+            recoveries = []
 
             def finish_server():
                 with (out / "server.log").open("a") as stream:
@@ -49,13 +51,15 @@ class RemoteShutdownTests(unittest.TestCase):
 
             def spawn(command, **kwargs):
                 if command[0] == "ssh":
-                    kwargs["stdout"].write(b"READY\n")
+                    kwargs["stdout"].write(b"Listening at *:62000\n")
                     kwargs["stdout"].flush()
                     kwargs["stderr"].write(b"Local forwarding listening on\n")
                     kwargs["stderr"].flush()
                     return server
+                with (out / "server.log").open("ab") as stream:
+                    stream.write(b"GDB connected.\n" + (b"Listening at *:62000\n" if idle else b""))
                 result = dict(id="TEST", status="PASS", elf_sha256=report["elf_sha256"],
-                              bin_sha256=report["bin_sha256"], teardown="reset_run", checks=[{"passed": True}])
+                              bin_sha256=report["bin_sha256"], teardown=teardown, checks=[{"passed": True}])
                 (out / "agent-result.json").write_text(json.dumps(result))
                 client.wait.return_value = 0
                 return client
@@ -63,6 +67,14 @@ class RemoteShutdownTests(unittest.TestCase):
             def tools(command, **kwargs):
                 if "--gap-fill=0xFF" in command:
                     Path(command[-1]).write_bytes(bytes(range(32)))
+                if any("target extended-remote" in arg for arg in command):
+                    self.assertTrue(report["recovery_wait"]["ready"])
+                    recoveries.append(command)
+
+            original_wait = runner.wait_idle
+
+            def short_wait(*args, **kwargs):
+                return original_wait(*args, **kwargs, limit=0.02)
 
             with patch.object(runner.subprocess, "check_output", return_value=SECTIONS.encode()), \
                     patch.object(runner.subprocess, "run", side_effect=tools), \
@@ -72,12 +84,33 @@ class RemoteShutdownTests(unittest.TestCase):
                                                                          reset_halt="reset", finish=["finish"])), \
                     patch.object(remote, "ssh_command", return_value=["ssh"]), \
                     patch.object(remote, "remote_script", return_value="fake-script"), \
+                    patch.object(runner, "wait_idle", side_effect=short_wait), \
                     patch.object(remote, "Heartbeat"):
-                runner.execute(session, dict(id="TEST", contracts=[]), stand, out, report, 10, load_profile(PROFILE))
-            self.assertEqual(report["status_before_cleanup"], "PASS", report)
-            self.assertEqual(report["status"], "ERROR")
-            self.assertEqual(report["remote_server"]["returncode"], -6)
-            self.assertEqual(report["checks"], [{"passed": True}])
+                with patch.object(runner, "remote_port", return_value=62000):
+                    runner.execute(session, dict(id="TEST", contracts=[]), stand, out, report, 10, load_profile(PROFILE))
+            return report, recoveries
+
+    def test_runner_checks_shutdown_after_the_agent_report(self):
+        report, recoveries = self._runner_report()
+        self.assertEqual(report["status_before_cleanup"], "PASS", report)
+        self.assertEqual(report["status"], "ERROR")
+        self.assertEqual(report["remote_server"]["returncode"], -6)
+        self.assertEqual(report["checks"], [{"passed": True}])
+        self.assertEqual(recoveries, [])
+
+    def test_runner_waits_before_single_recovery_attempt(self):
+        report, recoveries = self._runner_report(teardown=None)
+        self.assertEqual(len(recoveries), 1)
+        self.assertEqual(report["teardown"], "reset_run (host recovery)")
+        self.assertTrue(report["shutdown_wait"]["ready"])
+
+    def test_runner_does_not_reconnect_when_idle_is_unknown(self):
+        report, recoveries = self._runner_report(teardown=None, idle=False)
+        self.assertEqual(recoveries, [])
+        self.assertEqual(report["recovery_wait"]["reason"], "deadline")
+        self.assertFalse(report["shutdown_wait"]["ready"])
+        self.assertIn("teardown_error", report)
+        self.assertEqual(report["remote_server"]["returncode"], -6)
 
     def test_cleanup_failure_preserves_all_original_outcomes(self):
         for status in ("PASS", "FAIL", "SKIP", "ERROR"):

@@ -6,6 +6,9 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- st-util waits for Listening before recovery and idle before shutdown; helper also performs bounded
+  observation when SSH is lost. Unconfirmed idle remains ERROR even when the server exits0.
+
 - SSH helper retains the actual post-cleanup server exit; runner detects crashes and forced termination while preserving original outcomes and checks.
 
 - Added the `st-util` backend: schema 2 section, serial, doctor, shared ST-Link lock and SSH;

@@ -29,12 +29,80 @@ import sys
 import tempfile
 import time
 
+from stutil_lifecycle import IdleLog, wait_idle
+
 MARK = "STM32_GDBTEST_REMOTE"
+OUTPUT = None
 
 
 def say(text):
+    if OUTPUT is not None:
+        OUTPUT.write((MARK + " " + text + "\n").encode("utf-8"))
+        return
     sys.stdout.write(MARK + " " + text + "\n")
     sys.stdout.flush()
+
+
+class OutputRelay:
+    """A stalled SSH reader must not prevent local cleanup of the USB process."""
+
+    def __init__(self):
+        self.pending = b""
+        self.failed = False
+        os.set_blocking(sys.stdout.fileno(), False)
+
+    def write(self, data):
+        if len(self.pending) + len(data) > 1024 * 1024:
+            self.failed = True
+            self.pending = b""
+        if not self.failed:
+            self.pending += data
+            self.flush()
+
+    def flush(self):
+        if self.pending:
+            try:
+                sent = os.write(sys.stdout.fileno(), self.pending)
+                self.pending = self.pending[sent:]
+            except BlockingIOError:
+                pass
+            except OSError:
+                self.failed = True
+                self.pending = b""
+
+    def finish(self):
+        deadline = time.monotonic() + 1
+        while self.pending and time.monotonic() < deadline:
+            self.flush()
+            time.sleep(0.01)
+
+
+class ServerLog:
+    """Keep child output off the SSH pipe; inspect it locally even when that pipe is lost."""
+
+    def __init__(self, directory):
+        self.path = os.path.join(directory, "server-output.log")
+        self.writer = open(self.path, "wb")
+        self.reader = open(self.path, "rb")
+        self.data = b""
+        self.forwarded = 0
+
+    def read(self):
+        self.data += self.reader.read()
+        end = self.data.rfind(b"\n") + 1
+        lines = self.data[self.forwarded:end].splitlines(keepends=True)
+        # Child text must not impersonate helper control records.
+        for line in lines:
+            if line.startswith(MARK.encode("ascii") + b" "):
+                line = b"SERVER: " + line
+            OUTPUT.write(line)
+        self.forwarded = end
+        OUTPUT.flush()
+        return self.data
+
+    def close(self):
+        self.writer.close()
+        self.reader.close()
 
 
 def lock_path(identity):
@@ -107,6 +175,7 @@ def stop_group(process):
 
 
 def serve(config):
+    global OUTPUT
     port = config["port"]
     if not port_free(port):
         say("error=port Remote port %d is busy" % port)
@@ -117,6 +186,8 @@ def serve(config):
     lost = False
     reason = "process_exit"
     signals = []
+    child_log = None
+    idle = None
     try:
         command = [item.replace("{port}", str(port)).replace("{dir}", directory) for item in config["command"]]
         executable = shutil.which(command[0])
@@ -124,13 +195,19 @@ def serve(config):
             say("error=executable GDB server not found on the stand host: " + command[0])
             return 3
         command[0] = executable
+        if config.get("backend") == "st-util":
+            OUTPUT = OutputRelay()
+            child_log = ServerLog(directory)
         say("ready-to-start port=%d dir=%s" % (port, directory))
-        process = subprocess.Popen(command, cwd=directory, stdin=subprocess.DEVNULL, stdout=sys.stdout,
+        process = subprocess.Popen(command, cwd=directory, stdin=subprocess.DEVNULL,
+                                   stdout=child_log.writer if child_log else sys.stdout,
                                    stderr=subprocess.STDOUT, start_new_session=True)
         heartbeat = config.get("heartbeat_s")
         last = time.monotonic()
         while process.poll() is None:
-            readable, _, _ = select.select([sys.stdin], [], [], 0.5)
+            if child_log:
+                child_log.read()
+            readable, _, _ = select.select([sys.stdin], [], [], 0.05 if child_log else 0.5)
             if readable:
                 if not os.read(sys.stdin.fileno(), 4096):
                     reason = "stdin_eof"
@@ -143,7 +220,18 @@ def serve(config):
     finally:
         try:
             if process is not None:
-                signals = stop_group(process)
+                try:
+                    if child_log:
+                        idle = wait_idle(IdleLog(port, control_markers=False), child_log.read,
+                                         lambda: process.poll() is None, require_connection=False)
+                except Exception as error:
+                    idle = dict(ready=False, reason="idle observation failed: " + str(error),
+                                elapsed_s=0, limit_s=5)
+                finally:
+                    # Even failure of the observer must not leave the USB server running.
+                    signals = stop_group(process)
+                if child_log:
+                    child_log.read()
             try:
                 for name in [] if lost else config.get("logs", []):
                     path = os.path.join(directory, name)
@@ -154,12 +242,17 @@ def serve(config):
                 sys.stdout.flush()
             except OSError:
                 pass  # the session is gone (runner closed or lost); logs stay unsent
+            if child_log:
+                child_log.close()
             shutil.rmtree(directory, ignore_errors=True)
         finally:
             release(descriptor)
     # ТЗ 5.18.9: evaluate the actual child result only after cleanup and reap.
     code = process.wait(timeout=5)
-    say("server-result=" + json.dumps(dict(returncode=code, reason=reason, signals=signals)))
+    result = dict(returncode=code, reason=reason, signals=signals)
+    if idle is not None:
+        result["idle"] = idle
+    say("server-result=" + json.dumps(result))
     return code
 
 
@@ -210,6 +303,8 @@ def main():
             say("exit=%d" % code)
         except OSError:
             pass
+        if OUTPUT is not None:
+            OUTPUT.finish()
     return code
 
 

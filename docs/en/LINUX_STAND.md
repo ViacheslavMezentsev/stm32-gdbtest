@@ -239,5 +239,12 @@ Windows success does not accept Linux/SSH. [Dialect](BACKENDS.md#st-util-v040).
 
 Runner checks the actual post-cleanup server exit. Crashes, SIGKILL, heartbeat timeout and missing
 confirmation produce ERROR, retaining the original outcome. See [result format](API.md).
-Requested SIGTERM after EOF is accepted for OpenOCD/J-Link/ST-LINK, not st-util. Readiness/idle
-and updated lifecycle hardware acceptance remain separate.
+Requested SIGTERM after EOF is accepted for OpenOCD/J-Link/ST-LINK, not st-util.
+
+Before st-util recovery, runner waits up to5s for a complete Listening line for the current port
+after the last GDB connection, then makes one recovery attempt (up to10s). It waits for idle again
+before stopping; heartbeat remains active. Helper independently observes idle locally even if SSH
+is lost, then performs bounded cleanup: TERM3s, KILL5s, reap5s. Runner waits up to25s for SSH.
+Unconfirmed idle means ERROR even if the server subsequently returns0. Timeout does not mean safe
+USB release. A stalled SSH output does not block cleanup; a missing final marker means ERROR.
+These waits are covered by host models; updated runtime hardware acceptance remains separate.

@@ -87,7 +87,9 @@ class RemoteSettingsTests(unittest.TestCase):
         script = remote.remote_script(settings, config)
         self.assertIn('"$HOME"/.local/stm32-gdbtest/env.sh', script)
         parts = script.split("exec python3 -c 'import base64,sys;exec(base64.b64decode(sys.argv[1]))' ")[1].split()
-        self.assertEqual(base64.b64decode(parts[0]), remote.HELPER.read_bytes())
+        source = base64.b64decode(parts[0]).decode()
+        self.assertTrue(source.endswith(remote.HELPER.read_text(encoding="utf-8")))
+        self.assertIn("sys.modules['stutil_lifecycle']", source)
         self.assertEqual(json.loads(base64.b64decode(parts[1])), config)
         self.assertNotIn("it's", script)
 

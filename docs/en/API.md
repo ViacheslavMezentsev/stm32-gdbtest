@@ -431,3 +431,9 @@ Cleanup failure produces final ERROR and cleanup_error, retaining checks, origin
 Consumers must use final status; status_before_cleanup is diagnostic. Target API and API_VERSION are
 unchanged. st-util requires exit0 after requested shutdown; SIGKILL, heartbeat timeout or missing
 confirmation means ERROR. This does not guarantee USB-safe shutdown.
+
+st-util adds `recovery_wait` (when recovery was needed), `shutdown_wait` and `remote_server.idle`,
+each with `ready`, `reason`, `elapsed_s`, `limit_s`. The latter confirms idle observation on the stand
+host; exit0 alone is insufficient. Listening waits are limited to5s, host recovery to10s, and the final
+SSH wait to25s including cleanup. These fields are diagnostic: use final status for acceptance.
+[Lifecycle](LINUX_STAND.md#shutdown-diagnostics).
