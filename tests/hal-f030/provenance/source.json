@@ -173,8 +173,8 @@
     {
       "source": "profiles/f030r8/target.toml",
       "destination": "profile/target.toml",
-      "sha256": "e24b226fde8565598e7b7f11a02a03883e91d38a670e11323441a5144ffb048a",
-      "migrated_sha256": "e24b226fde8565598e7b7f11a02a03883e91d38a670e11323441a5144ffb048a"
+      "sha256": "54fdf2baf1cae79ba3968b0951e1babc5e346ae29e74191c2434d2b53b388bbf",
+      "migrated_sha256": "54fdf2baf1cae79ba3968b0951e1babc5e346ae29e74191c2434d2b53b388bbf"
     },
     {
       "source": "LICENSE",

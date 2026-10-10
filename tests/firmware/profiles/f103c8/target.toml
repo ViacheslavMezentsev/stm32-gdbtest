@@ -1,5 +1,5 @@
 # CI profile (WeAct BluePill-Plus, LED on PB2); CMSIS-only firmware, not a HAL evidence.
-schema = 1
+schema = 2
 name = "cif103c8"
 mcu = "STM32F103C8T6"
 openocd_target = "target/stm32f1x.cfg"
@@ -9,6 +9,9 @@ flash_size_address = 0x1FFFF7E0
 breakpoint_limit = 6
 fault_handlers = ["HardFault_Handler", "MemManage_Handler", "BusFault_Handler", "UsageFault_Handler"]
 core_registers = ["pc", "lr", "sp", "xPSR"]
+
+# Reset dialect of OpenOCD, as read from this profile before schema 2.
+[openocd]
 reset_halt = "monitor reset halt"
 reset_run = "monitor reset run"
 

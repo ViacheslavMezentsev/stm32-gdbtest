@@ -11,10 +11,6 @@ expected_quality = 1
 [execute]
 output_limit_chars = 2048
 
-# Reset command of `reset()` (ТЗ API 6.6, Q2); the prepared backend value is used when absent.
-[reset]
-command = "monitor reset halt"
-
 # Frame limit of `frames()` (ТЗ API 6.6, Q1): default 16, maximum 64.
 [frames]
 limit = 16
