@@ -2,8 +2,6 @@
 RU: Сброс цели: остановка, инвалидация кэшей и отказ при активной точке.
 EN: Target reset: the halt, the cache invalidation and the refusal with an active point.
 """
-import os
-
 from stm32_gdbtest import case
 
 
@@ -19,9 +17,9 @@ def reset_target(t):
     t.check("the refused reset kept the point", point.active, True)
     point.remove()
 
-    # The effective command halts the core and both invalidation steps succeed; a session override
-    # wins over api.toml, as the documented precedence states.
-    configured = os.environ.get("STM32_GDBTEST_RESET_COMMAND") or t.profile.get("api.reset.command")
+    # The effective command halts the core and both invalidation steps succeed; the run resolves the
+    # command from the backend dialect (schema 2 section or profile keys) and a session override wins.
+    configured = t.profile.stand.get("reset_command")
     result = t.reset()
     t.check("reset reports the halt", result["outcome"], "halted")
     t.check("reset used the configured command", result["command"], configured)

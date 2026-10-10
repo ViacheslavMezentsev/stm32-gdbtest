@@ -46,9 +46,10 @@ def run_profile(t):
     t.check("case timeout", profile.case["timeout_s"], 45)
     t.check("case contracts", list(profile.case["contracts"]), ["ci_app_api"])
 
-    # The stand section names a supported backend and server placement.
+    # The stand section names a supported backend and server placement. The list follows the backends the
+    # module loads: OpenOCD, ST-LINK GDB Server and J-Link.
     stand = profile.stand
-    t.check("stand backend", stand["backend"], one_of("openocd", "jlink"))
+    t.check("stand backend", stand["backend"], one_of("openocd", "stlink", "jlink"))
     t.check("stand server", stand["server"], one_of("local", "remote"))
     t.check("stand speed is unset or positive", stand.get("speed_khz") is None or stand["speed_khz"] > 0)
 
@@ -58,7 +59,11 @@ def run_profile(t):
     t.check("mcu comes from target.toml", (origin["state"], origin["file"]),
             ("file", profile.files["target"]["reference"]))
     t.check("effective records limit", profile.get("api.records.max_records", 0), within(1, 1024))
-    t.check("reset command", profile.get("api.reset.command"), one_of("monitor reset", "monitor reset halt"))
+
+    # The run resolves the reset command from the dialect of the backend and publishes it to the scenario;
+    # the scenario does not read `api.toml` for it (ТЗ API 6.6, schema 2 of the target profile).
+    t.check("reset command", stand["reset_command"],
+            one_of("monitor reset", "monitor reset halt", "monitor reset init"))
 
     # The project data file board.toml is declared in session.toml [data] and captured with the run.
     board = profile.data["board"]["board"]
