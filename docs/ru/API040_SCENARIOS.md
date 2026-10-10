@@ -86,3 +86,21 @@ SSH → OrangePi/Ubuntu 20.04, st-util 1.9.0 и libusb 1.0.27. Основа runt
 
 
 Для GitHub и подготовленных пакетов теперь используется [режим Hardware api040](HARDWARE_CI.md#выбор-нового-набора-api-040).
+
+## GitHub Hardware: новый набор 0.4.0
+
+10.10.2026, [Hardware №13](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/runs/38033220573), попытка 1, `codex/release-040`,
+SHA `c23f8fe43ed2055e5df876b0bbd46615e69baeeb`: GitHub API подтверждает success.
+Режим api040: подготовка пакетов на GitHub, локальные runner/GDB/st-util 1.9.0 на OrangePi.
+F030R8, F103, F401CC, F411CE, F429ZI: на каждой плате **4 PASS + 1 ожидаемый SKIP**;
+doctor/hardware_exit в TSV — 0/0 для всех пяти профилей.
+
+Повторная проверка скачанного hardware-results.zip: 25 согласованных JSON/JUnit, 65 записей,
+75 файлов result/records/JUnit совпадают с хешами индекса, verify 5/5. Общий экспорт совпадает
+с исходными records, HTML сохраняет разделение PASS/SKIP. Везде подтверждены image_verified,
+reset_run и shutdown_wait.ready; ошибок capture/cleanup/teardown нет.
+
+Предупреждения сохранены: GDB 14 определяет причину finish косвенно (inferred_stop); у F103
+профиль ограничен 64 KiB при фактически прочитанных 128 KiB, образ помещается в обе границы.
+Эта кампания подтверждает выбранный набор через GitHub, не прежний десятиэтапный lifecycle,
+не весь API и не остальные схемы размещения. Следующий отдельный шаг — WSL2 → OrangePi/SSH.

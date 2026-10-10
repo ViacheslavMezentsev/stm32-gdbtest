@@ -21,7 +21,7 @@
 
 - Hardware CI: подготовлен выбор `suite=api040` и сохранение JSON/JUnit/records/HTML.
   На OrangePi обновлены пять CI-стендов (st-util 1.9.0), doctor 5/5; репетиция пакетов F411 —
-  4 PASS + 1 SKIP и успешная обработка результатов. GitHub dispatch ещё не выполнялся.
+  4 PASS + 1 SKIP и успешная обработка результатов. GitHub Hardware №13 на `c23f8fe` — success: 20 PASS + 5 SKIP, артефакт проверен.
 
 ## Ближайшие шаги
 

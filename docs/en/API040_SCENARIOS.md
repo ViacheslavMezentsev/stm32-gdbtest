@@ -86,3 +86,21 @@ were not run in this campaign; it does not close ST-LINK GDB Server or AT32 limi
 
 
 GitHub and prepared packages use [Hardware api040 mode](HARDWARE_CI.md#selecting-the-new-api-040-suite).
+
+## GitHub Hardware: the new 0.4.0 suite
+
+2026-10-10, [Hardware #13](https://github.com/ViacheslavMezentsev/stm32-gdbtest/actions/runs/38033220573), attempt 1, `codex/release-040`,
+SHA `c23f8fe43ed2055e5df876b0bbd46615e69baeeb`: the GitHub API confirms success.
+api040 mode: packages prepared on GitHub; runner/GDB/st-util 1.9.0 local to OrangePi.
+F030R8, F103, F401CC, F411CE, F429ZI: **4 PASS + 1 expected SKIP** per board;
+the TSV records doctor/hardware_exit 0/0 for every profile.
+
+Rechecking downloaded hardware-results.zip confirmed 25 consistent JSON/JUnit outcomes, 65 records,
+75 result/records/JUnit files matching indexed hashes, and verify 5/5. Generic export equals captured
+records; HTML preserves PASS/SKIP separation. Every run confirms image_verified, reset_run and
+shutdown_wait.ready; no capture/cleanup/teardown errors.
+
+Warnings remain explicit: GDB 14 infers the finish stop reason (inferred_stop); the F103 profile limits
+Flash to 64 KiB while the device reports 128 KiB, and the image fits both bounds.
+This accepts the selected suite through GitHub, not the original ten-stage lifecycle, the entire API
+or other execution layouts. The next separate step is WSL2 → OrangePi/SSH.

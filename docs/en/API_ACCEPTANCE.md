@@ -299,3 +299,6 @@ Docker docs+host6/6 (426 tests,6 expected skips); scenario style2/2.
 This is local hardware acceptance for specific configurations, not a replacement for GitHub CI on the release SHA.
 
 New selective campaign: [API 0.4.0 scenarios](API040_SCENARIOS.md), five STM32 boards including expected SKIP.
+
+GitHub Hardware at `c23f8fe`: five boards, 20 PASS + 5 expected SKIP; 75 files reverified.
+[Selected-suite evidence](API040_SCENARIOS.md#github-hardware-the-new-040-suite).
