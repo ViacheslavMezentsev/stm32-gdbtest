@@ -51,3 +51,6 @@ desktop.ini
 /tests/manual/
 # END local development materials
 /tests/cpp-context/build/
+
+# Local executable research artifacts (legacy manual paths remain ignored).
+/tests/sandbox/

@@ -121,7 +121,7 @@ CI workflows run for any branch, so a new prefix needs no workflow change.
 ### Local development and public documentation
 
 New research uses local `docs/research/NN-short-name/` for documents and
-`tests/manual/NN-short-name/` for code. Both roots are ignored by Git.
+`tests/sandbox/NN-short-name/` for code. Both roots are ignored by Git. Use the same identifier in both directories. Keep executable prototypes, HEX, settings, logs, reports and backups in the sandbox.
 
 1. Read the local research README, HISTORY and the selected study summary first.
    Report missing materials; do not claim that earlier results were reverified.

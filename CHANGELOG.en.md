@@ -10,7 +10,7 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 - Added a scenario checklist and informative DDTT guidance on rig validation, evidence completeness and feedback; clarified historical records/results status. Runtime is unchanged.
 
-- Simplified local research rules: new studies are numbered and use tests/manual sandboxes; existing studies remain unchanged.
+- Simplified local research rules: new studies are numbered and use tests/sandbox sandboxes; existing studies remain unchanged.
 
 - DDTT draft 0.3.0 mapped to implementation 0.4.1: SKIP, artifact outcomes, API/file map, development loop and open conformance boundaries; runtime unchanged.
 
