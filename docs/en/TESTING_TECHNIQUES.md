@@ -576,6 +576,9 @@ PC/SP matched before and after the series; GDB's warning about assuming MSP rema
 This does not verify all registers, PSP, ISR, RTOS, optimized builds or real hardware.
 These limits concern forced sandbox calls, not the hardware example above.
 
+The published neutral [C++/GDB/Renode example](../../tests/renode-cache/README.en.md) includes
+commands, host checks and a separate scenario; it is not part of the hardware CI matrix.
+
 <a id="tech-020"></a>
 ## TECH-020 — Deferred writes and idempotence
 

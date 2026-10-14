@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Added a standalone Windows C++/GDB/Renode example: host cache checks, live-object calls, a limited teaching Flash model, negative control and preserved artifacts. No new backend/Target API.
+
 - Extended C++/MMIO/call techniques and added TECH-020 for deferred writes; DDTT and the checklist describe host/emulator preparation, negative controls and evidence limits. Documentation only; no new backend/API.
 
 - Updated 0.4.1/0.4.2 preparation status and documentation navigation; scenarios/develop skills link to the shared checklist before long experiments.

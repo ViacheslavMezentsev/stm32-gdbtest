@@ -1,0 +1,19 @@
+// Neutral Cortex-M4 teaching platform, not a board model.
+ram: Memory.MappedMemory @ sysbus 0x20000000
+    size: 0x10000
+nvic: IRQControllers.NVIC @ sysbus 0xE000E000
+    priorityMask: 0xF0
+    systickFrequency: 16000000
+    IRQ -> cpu@0
+cpu: CPU.CortexM @ sysbus
+    cpuType: "cortex-m4"
+    nvic: nvic
+flash: Memory.MappedMemory @ sysbus 0x08000000
+    size: 0x80000
+// An explicit guard permits checking beyond the final modeled page.
+guard: Memory.MappedMemory @ sysbus 0x08080000
+    size: 0x1000
+controller: Python.PythonPeripheral @ sysbus 0x40022000
+    size: 0x400
+    initable: true
+    filename: "@FLASH_MODEL@"
