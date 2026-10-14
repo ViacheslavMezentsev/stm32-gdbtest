@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Extended C++/MMIO/call techniques and added TECH-020 for deferred writes; DDTT and the checklist describe host/emulator preparation, negative controls and evidence limits. Documentation only; no new backend/API.
+
 - Updated 0.4.1/0.4.2 preparation status and documentation navigation; scenarios/develop skills link to the shared checklist before long experiments.
 
 - Added a scenario checklist and informative DDTT guidance on rig validation, evidence completeness and feedback; clarified historical records/results status. Runtime is unchanged.

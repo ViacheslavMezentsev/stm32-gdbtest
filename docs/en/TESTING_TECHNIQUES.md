@@ -79,6 +79,7 @@ ELF contract nor requirement traceability.
 | Navigation | [015 choosing the stop](#tech-015), [016 stop location](#tech-016) |
 | Measurement series | [011 collection and calculation](#tech-011) |
 | C++ | [019 this, overloads, types](#tech-019) |
+| Storage | [020 deferred writes](#tech-020) |
 
 Moving a card to another MCU, HAL, GCC or backend needs a new verification: the links point to code
 and protocols, they do not promise the same result in every environment.
@@ -237,6 +238,13 @@ is halted. Peripheral registers are written without a read-back confirmation (`v
 then a normal `HW_CI_ADC_DMA`; a failed recovery stops the series.
 [ADC_BUSY](F030_ADC_BUSY.md), [adc_faults F030](../../tests/firmware/profiles/f030r8/tests/board/test_adc_faults.py),
 [ADC/DMA F103](F103_CMSIS_ADC_DMA.md), [ADC/DMA F411](F411_CMSIS_ADC_DMA.md), [write](api/write.md).
+
+**Check the model before using it.** Establish which peripheral properties are modeled:
+register access, side effects, protection, completion and errors. A limited Flash model used with
+Renode 1.17 allowed LOCK bypass through CR and reported EOP without payload writes. These are
+model limitations, not STM32 properties. Direct GDB MMIO access and CPU driver execution are
+different paths; record which one was used. Check data and neighboring regions independently
+of success flags; unknown or unsupported properties do not receive PASS.
 
 <a id="tech-007"></a>
 ## TECH-007 — Independent numerical vectors and invalid inputs
@@ -423,6 +431,13 @@ side effects of the call remain the author's responsibility. `memory()` writes o
 [call](api/call.md), [memory](api/memory.md),
 [call_predicate](../../tests/firmware/common/tests/board/test_call_predicate.py).
 
+**A return value does not replace an effect.** Define the expected change and invariants before
+the call. Afterwards compare the return value, exact data, operation counters and unchanged
+neighboring regions. A driver counter establishes logical driver operations, not physical bus
+transactions. Restore state even after an assertion fails; preserve restoration failures separately
+from the original error. A byte copy is not universal C++ restoration: account for lifetime,
+pointed-to memory and external resources. See [deferred writes](#tech-020) for a specific case.
+
 <a id="tech-015"></a>
 ## TECH-015 — Choosing the right stop
 
@@ -533,6 +548,61 @@ Og/O2, `-g3`, soft-float, no LTO. Arguments were available in both builds; this 
 an optimized-out hardware case. RTTI, exceptions, inheritance and hard-float were not tested.
 [Scenario](../../tests/cpp-context/profile/tests/board/test_cpp_context.py),
 [read](api/read.md), [evaluate](api/evaluate.md), [finish](api/finish.md).
+
+### Calling a live object's method in a sandbox
+
+Stop after construction while the object, adapter and argument buffer are still alive. Select
+the owning frame and retain typed pointers in GDB convenience variables. Do not reuse them after
+their lifetime ends. Obtain sizes from debug information; an arbitrary "free" SRAM address is not
+an allocated buffer. Check that callable method code exists in the ELF and whether the call can
+wait for interrupts, delays or resources.
+
+GDB Python example after selecting the frame containing `interactive` and `call_byte`:
+
+```python
+# The live object and argument storage belong to the neutral example.
+gdb.execute("set $cache = &interactive")
+gdb.execute("set $input = &call_byte")
+assert int(gdb.parse_and_eval("$cache->write(5, $input, 1)")) == 1
+assert int(gdb.parse_and_eval("$cache->dirty()")) == 1
+```
+
+This executes CPU code, rather than reading an object copy. Also check effects using
+[TECH-020](#tech-020). Call the GDB API only from GDB's main thread.
+
+**Scope of this experiment:** Windows, Renode 1.17, neutral Cortex-M4 ELF, C++17, `-O0`, no LTO,
+GDB 14.2.90 with Python 3.11.4. Calls used `gdb.parse_and_eval`, not the regular `Target.call()`.
+PC/SP matched before and after the series; GDB's warning about assuming MSP remained.
+This does not verify all registers, PSP, ISR, RTOS, optimized builds or real hardware.
+These limits concern forced sandbox calls, not the hardware example above.
+
+<a id="tech-020"></a>
+## TECH-020 — Deferred writes and idempotence
+
+**Goal:** distinguish cache changes from persistence and detect missing or redundant writes.
+
+Prerequisites: a known initial image, owned objects and buffers, independent storage reads and
+an observable logical-store counter. Define expectations independently of the implementation.
+
+| Action | Check |
+| --- | --- |
+| Write a changed byte to the cache | Success, dirty set, storage and store counter unchanged |
+| Commit a dirty cache | Exact image matches, dirty cleared, counter increases by one, neighbors unchanged |
+| Commit a clean cache again | Success without data or counter changes |
+| Supply an out-of-bounds range | Refusal without cache, storage or counter changes |
+| Simulate failure or incorrect readback | Error detected, dirty retained, retry checked separately |
+
+Use a host fake first for failures and partial changes. Then check GDB calls and the memory image
+in an emulator. Establish a known starting state for each independent case; afterwards verify
+restoration or terminate the emulator instance owned by the experiment. The contract defines
+dirty behavior when a byte is changed back; it need not automatically become false.
+
+**Verified:** 39 host checks of a neutral wrapper; two independent Renode cycles confirmed C++
+calls and persistence effects. Failures and corrupt readback were checked with a host fake,
+not a Renode fault model. Selected boundary-page erases were checked in the model; protection,
+physical programming, endurance and power loss are not established. This is a scenario technique,
+not a new storage API or hardware acceptance of EEPROM/Flash.
+
 
 ## Extending the catalogue
 

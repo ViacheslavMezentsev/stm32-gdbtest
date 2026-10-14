@@ -42,6 +42,22 @@ A short review before a long run. Complements the [API reference](api/index.md),
 - Halting the CPU need not halt peripherals. Calling a function through GDB executes MCU code
   again; a pause, an inferior call and free execution are different experimental conditions.
 
+## Before moving from a sandbox to hardware
+
+- Separate the host fake, emulator and board: each checks a different claim.
+- For C++, check completed construction, object lifetime, the owning frame, callable method
+  code and the size of the argument buffer owned by the example.
+- Establish whether the call can wait for an interrupt, delay or occupied resource.
+- Check data, counters and unchanged neighbors independently of a bool/success flag.
+- Record properties the model does not reproduce; do not extend its PASS to those properties.
+- In a separate negative run, supply an incorrect expectation: obtain FAIL and artifacts.
+  Check preparation failure separately: it is ERROR, not a refusal by the tested function.
+- Confirm owned-process cleanup and port release after errors; do not kill unrelated
+  processes by name or discard original FAIL/ERROR evidence.
+
+See the [DDTT route](DDTT.md#sandbox-route) and [TECH-020](TESTING_TECHNIQUES.md#tech-020)
+for persistence effects. These checks do not replace agreement on the hardware experiment.
+
 ## After a run
 
 1. Separate the scenario verdict, artifact capture outcome and command outcome.

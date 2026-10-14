@@ -512,6 +512,49 @@ The [checklist](SCENARIO_CHECKLIST.md) supports review; [results](RESULTS.md) de
 artifact validation. These informative explanations add no new API guarantees.
 
 
+<a id="sandbox-route"></a>
+### 11.2. Preparing scenarios with a host and emulator (informative)
+
+Before hardware DDTT, a useful route is: contract → host fake → neutral ELF and GDB in an emulator
+→ analyze discrepancies → refine the scenario/model → agreed board verification.
+This prepares a scenario; it does not replace the target device with an emulator.
+
+| Stage | Establishes | Does not establish |
+| --- | --- | --- |
+| Host fake | State policy, bounds, handling of injected failures and retries | MCU ABI, GDB calls, peripherals |
+| Emulator and GDB | Expressions/methods available in the selected ELF, observed effects in that model | Missing or simplified peripheral properties, physical timing |
+| Board | Selected firmware behavior under agreed hardware conditions | Every MCU, compiler and equipment configuration |
+
+Define changes and invariants before the experiment; afterwards assess return values, data,
+counters and surrounding state separately. For a live C++ object, establish lifetime, the owning
+frame and argument-memory ownership. A call executes CPU code and can wait for a hardware event;
+halting the core does not make it unconditionally safe.
+
+Negative controls also check the scenario: an incorrect expectation produces FAIL, unsuitable
+preparation produces ERROR. Preserve original evidence. Describe a model gap explicitly instead
+of weakening an expectation. For example, EOP without payload writes does not establish Flash
+programming; independent data readback is needed. This description introduces neither a new
+API verdict nor a report schema.
+
+Link each run to a pre-build source snapshot, tool versions, input hashes, commands and a separate
+results directory. Hashes are neither a digital signature nor a guarantee of hermetic builds.
+Check owned-process termination and resource release even on failure; a successful emulator exit
+alone does not prove its startup script executed successfully.
+
+**Feedback:** observation → applicability limit → additional check → new attempt. For example,
+a GDB SP warning prompted PC/SP comparison before and after calls. Matching values reduced
+uncertainty but did not establish PSP/ISR/RTOS behavior or remove the warning.
+
+Practical basis: Windows, Renode 1.17, neutral C++17 ELF at `-O0`, GDB 14.2.90/Python 3.11.4;
+39 host checks, two independent emulator cycles and separate expected FAIL and ERROR runs.
+Calls used GDB Python; regular Target/runner, Linux, debugpy and hardware acceptance of this
+route remain unverified. The Flash model does not establish LOCK protection or physical
+programming. This guidance introduces no public Renode backend, CLI or TOML.
+
+See [C++](TESTING_TECHNIQUES.md#tech-019), [deferred writes](TESTING_TECHNIQUES.md#tech-020) and
+the [checklist](SCENARIO_CHECKLIST.md). This 2026-10-15 clarification is informative: normative
+IDs, DDTT version 0.3.0 and module contracts remain unchanged.
+
 ## Appendix A. Example scenario (informative)
 
 The example uses the common CI firmware and ci_app_api contract: app_loop, app_step and
