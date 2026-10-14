@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Updated 0.4.1/0.4.2 preparation status and documentation navigation; scenarios/develop skills link to the shared checklist before long experiments.
+
 - Added a scenario checklist and informative DDTT guidance on rig validation, evidence completeness and feedback; clarified historical records/results status. Runtime is unchanged.
 
 - Simplified local research rules: new studies are numbered and use tests/manual sandboxes; existing studies remain unchanged.

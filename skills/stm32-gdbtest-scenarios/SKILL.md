@@ -1,6 +1,6 @@
 ---
 name: stm32-gdbtest-scenarios
-description: Техника написания тестовых сценариев stm32-gdbtest на API кандидата 0.4.0 — требование и контракт, выбор места остановки, таблицы check(rows) и write(rows), подмена возврата ret, инъекции, refused, watch/frames, профиль прогона, стиль сценариев и каталог техник TECH-001…019. Используй, когда просят «написать сценарий/тест для платы», «проверить регистр/периферию/callback через GDB», «добавить HW_-кейс», «перевести сценарии с value/set_value/force_return на новый API», «сделать ревью сценария»; по-английски — write a stm32-gdbtest scenario, hardware test case, migrate scenarios to API 0.4.0.
+description: Техника написания тестовых сценариев stm32-gdbtest на API 0.4.0/0.4.1 — требование и контракт, выбор места остановки, таблицы check(rows) и write(rows), подмена возврата ret, инъекции, refused, watch/frames, профиль прогона, стиль сценариев и каталог техник TECH-001…019. Используй, когда просят «написать сценарий/тест для платы», «проверить регистр/периферию/callback через GDB», «добавить HW_-кейс», «перевести сценарии с value/set_value/force_return на новый API», «сделать ревью сценария»; по-английски — write a stm32-gdbtest scenario, hardware test case, migrate scenarios to API 0.4.0.
 ---
 
 # Сценарии stm32-gdbtest
@@ -150,7 +150,7 @@ def tim2_publication(t):
 | `def f(target)`, `target.…` | `def f(t)` |
 | `t.reach("main.c:120")` | `t.reach("функция")` / `t.finish()` |
 
-Старые `value`, `fields`, `set_value`, `force_return` удалены из API кандидата 0.4.0 (`API_VERSION=2`).
+Старые `value`, `fields`, `set_value`, `force_return` удалены из API 0.4.0/0.4.1 (`API_VERSION=2`).
 Таблица выше служит только для переноса прежних сценариев; новые сценарии используют правую колонку.
 
 ## Перед сдачей
@@ -174,3 +174,17 @@ skip завершает весь сценарий, finally выполняетс�
 не заменяя проверку маски равенством всего регистра. Примеры пакета: test_release040_*.py в общих сценариях.
 После прогона сопоставь выполненные ветви и checks с журналом по
 [навыку результатов](../stm32-gdbtest-results/SKILL.md); наличие record само по себе не является check.
+
+## Осмотр перед длительным опытом
+
+Перед аппаратной серией прочитай [шпаргалку сценариста](../../docs/ru/SCENARIO_CHECKLIST.md)
+([English](../../docs/en/SCENARIO_CHECKLIST.md)). Проверь предпосылки обвязки отдельно от
+поведения приложения; prepare не исполняет тело аппаратного сценария. Для анализа по records
+заранее определи обязательные записи и проверь захват. После неожиданного исхода различи
+ошибку приложения, сценария, обвязки, API и исходного предположения; не ослабляй ожидание
+до установления причины. Эвристическое замечание не объявляй нарушением контракта.
+
+Before a long run, use the linked checklist. Validate rig prerequisites separately from application
+behavior; prepare does not execute the hardware scenario body. Define required records and capture
+before evidence analysis. Classify unexpected outcomes as application, scenario, rig, API or
+assumption errors before changing expectations. A heuristic hint is not a contract violation.

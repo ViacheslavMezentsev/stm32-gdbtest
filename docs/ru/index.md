@@ -2,25 +2,7 @@
 
 Документация · [English](../en/index.md)
 
-[Опубликован v0.4.0](../releases/v0.4.0.md); [готовится v0.4.1](../releases/v0.4.1.md). Актуальная сводка — [STATUS](STATUS.md); ниже сохранены ссылки на прежние этапы.
-
-[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.](F429_CMSIS_RTC_SLEEP.md)
-
-[F429 ADC/DMA/units/failures:15/15 HW +3 повтора, HAL восстановлена; ТЗ0.56.](F429_CMSIS_ADC_DMA.md)
-
-[F429 CMSIS baseline:7/7 HW, HAL восстановлена; ТЗ0.55. Пятый профиль в CI, ADC/RTC ещё впереди.](F429_CMSIS_BASELINE.md)
-
-[F401 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.54.](F401_CMSIS_RTC_SLEEP.md)
-
-[F401 ADC/DMA/units/failures:15/15 HW и три положительных повтора, HAL восстановлен; ТЗ0.53.](F401_CMSIS_ADC_DMA.md)
-
-[F401 CMSIS baseline: 7/7 HW через ST-Link/OpenOCD, HAL boot/blink восстановлены. Flash256/RAM64; ADC/RTC ещё не перенесены.](F401_CMSIS_BASELINE.md)
-
-[Метрики аппаратных проверок и таблица результатов](HARDWARE_METRICS.md).
-
-[Подготовка rc.2 и матрица приёмки](RC2_READINESS.md).
-
-[Аппаратная приёмка HAL F030](F030_HAL_VALIDATION.md): 17/17, шесть повторов, timeout/recovery и восстановление исходной прошивки проверены на Windows/ST-Link/OpenOCD; ТЗ 0.40. API без изменений.
+[Опубликован v0.4.0](../releases/v0.4.0.md); [Выпуск v0.4.1](../releases/v0.4.1.md). Актуальная сводка — [STATUS](STATUS.md); исторические протоколы вынесены в конец страницы.
 
 Введение — [README](../../README.md): реализация [DDTT](DDTT.md) для STM32 — проверки
 работающей прошивки на реальной плате через GDB и SWD-отладчик сценариями в
@@ -121,3 +103,23 @@ F030: RTC deadline через инъекцию аргумента, API без и
 Сценарии нового пакета: [API 0.4.0](API040_SCENARIOS.md).
 
 - Внешний конечный диспетчер пакетов: [stand_loop](STAND_LOOP.md). Target API не меняется; старые команды run/pack остаются прежними.
+
+## Исторические этапы приёмки
+
+[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.](F429_CMSIS_RTC_SLEEP.md)
+
+[F429 ADC/DMA/units/failures:15/15 HW +3 повтора, HAL восстановлена; ТЗ0.56.](F429_CMSIS_ADC_DMA.md)
+
+[F429 CMSIS baseline:7/7 HW, HAL восстановлена; ТЗ0.55. Пятый профиль в CI, ADC/RTC ещё впереди.](F429_CMSIS_BASELINE.md)
+
+[F401 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.54.](F401_CMSIS_RTC_SLEEP.md)
+
+[F401 ADC/DMA/units/failures:15/15 HW и три положительных повтора, HAL восстановлен; ТЗ0.53.](F401_CMSIS_ADC_DMA.md)
+
+[F401 CMSIS baseline: 7/7 HW через ST-Link/OpenOCD, HAL boot/blink восстановлены. Flash256/RAM64; ADC/RTC ещё не перенесены.](F401_CMSIS_BASELINE.md)
+
+[Метрики аппаратных проверок и таблица результатов](HARDWARE_METRICS.md).
+
+[Подготовка rc.2 и матрица приёмки](RC2_READINESS.md).
+
+[Аппаратная приёмка HAL F030](F030_HAL_VALIDATION.md): 17/17, шесть повторов, timeout/recovery и восстановление исходной прошивки проверены на Windows/ST-Link/OpenOCD; ТЗ 0.40. API без изменений.

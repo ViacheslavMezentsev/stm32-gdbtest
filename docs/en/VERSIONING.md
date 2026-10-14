@@ -8,7 +8,8 @@
 
 The format is MAJOR.MINOR.PATCH per [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html);
 Git tags have the `v` prefix. **v0.4.0** is published at `9c3ff2d`.
-Documentation release **v0.4.1** is in preparation (API_VERSION=2 and schemas unchanged); it is not published yet.
+Documentation [release v0.4.1](../releases/v0.4.1.md) retains API_VERSION=2 and the 0.4.0 schemas.
+Further documentation fixes are being prepared for 0.4.2; that version is not released yet.
 Candidates v0.2.0-rc.1 and v0.3.0-rc.1 were never published. The previous published candidate is `v0.1.0-rc.2`.
 The initial export from the stand project is not a release.
 
@@ -30,7 +31,7 @@ and publication are tracked in [TODO](../../TODO.md).
 
 The `stm32-gdbtest` package version is `__version__`, not the Python interpreter version.
 `API_VERSION` is the scenario API compatibility number; the general and API specification
-revisions version the documents. For example, the prepared package is 0.4.1 with `API_VERSION=2`.
+revisions version the documents. For example, release 0.4.1 has package version 0.4.1 with `API_VERSION=2`.
 Interpreter versions are listed separately for host Python and Python embedded in GDB.
 
 ## Before a release

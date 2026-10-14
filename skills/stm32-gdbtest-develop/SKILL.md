@@ -85,3 +85,17 @@ Watchpoint ставь после инициализации наблюдаемо
 `stm32-gdbtest-stand-loop`. План разработки и TOML-план повторения комплекта — разные
 документы. Новый ELF или сценарий требуют нового комплекта и проверки его целостности;
 не меняй содержимое уже исполняемого комплекта между циклами.
+
+## Осмотр перед длительным опытом
+
+Перед аппаратной серией прочитай [шпаргалку сценариста](../../docs/ru/SCENARIO_CHECKLIST.md)
+([English](../../docs/en/SCENARIO_CHECKLIST.md)). Проверь предпосылки обвязки отдельно от
+поведения приложения; prepare не исполняет тело аппаратного сценария. Для анализа по records
+заранее определи обязательные записи и проверь захват. После неожиданного исхода различи
+ошибку приложения, сценария, обвязки, API и исходного предположения; не ослабляй ожидание
+до установления причины. Эвристическое замечание не объявляй нарушением контракта.
+
+Before a long run, use the linked checklist. Validate rig prerequisites separately from application
+behavior; prepare does not execute the hardware scenario body. Define required records and capture
+before evidence analysis. Classify unexpected outcomes as application, scenario, rig, API or
+assumption errors before changing expectations. A heuristic hint is not a contract violation.

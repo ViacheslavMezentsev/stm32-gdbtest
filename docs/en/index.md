@@ -2,25 +2,7 @@
 
 Documentation · [Русский](../ru/index.md)
 
-[Published v0.4.0](../releases/v0.4.0.md); [preparing v0.4.1](../releases/v0.4.1.md). See [STATUS](STATUS.md) for the current summary; earlier milestones are retained below.
-
-[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](F429_CMSIS_RTC_SLEEP.md)
-
-[F429 ADC/DMA/units/failures:15/15 HW +3 repeats, HAL restored; specification0.56.](F429_CMSIS_ADC_DMA.md)
-
-[F429 CMSIS baseline:7/7 HW, HAL restored; specification0.55. Fifth CI profile; ADC/RTC remain pending.](F429_CMSIS_BASELINE.md)
-
-[F401 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.54.](F401_CMSIS_RTC_SLEEP.md)
-
-[F401 ADC/DMA/units/failures:15/15 HW and three positive repeats, HAL restored; specification0.53.](F401_CMSIS_ADC_DMA.md)
-
-[F401 CMSIS baseline: 7/7 HW through ST-Link/OpenOCD, HAL boot/blink restored. Flash256/RAM64; ADC/RTC are not migrated yet.](F401_CMSIS_BASELINE.md)
-
-[Hardware metrics and results table](HARDWARE_METRICS.md).
-
-[rc.2 readiness and acceptance matrix](RC2_READINESS.md).
-
-[HAL F030 hardware acceptance](F030_HAL_VALIDATION.md): 17/17, six repeats, timeout/recovery and original firmware restoration verified on Windows/ST-Link/OpenOCD; specification 0.40. API unchanged.
+[Published v0.4.0](../releases/v0.4.0.md); [Release v0.4.1](../releases/v0.4.1.md). See [STATUS](STATUS.md) for the current summary; historical acceptance reports are listed at the end.
 
 Introduction — [README](../../README.en.md): an implementation of [DDTT](DDTT.md) for
 STM32 — checks of running firmware on a real board through GDB and an SWD debugger,
@@ -121,3 +103,23 @@ F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_D
 New package scenarios: [API 0.4.0](API040_SCENARIOS.md).
 
 - External finite package dispatcher: [stand_loop](STAND_LOOP.md). Target API and existing run/pack commands are unchanged.
+
+## Historical acceptance stages
+
+[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](F429_CMSIS_RTC_SLEEP.md)
+
+[F429 ADC/DMA/units/failures:15/15 HW +3 repeats, HAL restored; specification0.56.](F429_CMSIS_ADC_DMA.md)
+
+[F429 CMSIS baseline:7/7 HW, HAL restored; specification0.55. Fifth CI profile; ADC/RTC remain pending.](F429_CMSIS_BASELINE.md)
+
+[F401 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.54.](F401_CMSIS_RTC_SLEEP.md)
+
+[F401 ADC/DMA/units/failures:15/15 HW and three positive repeats, HAL restored; specification0.53.](F401_CMSIS_ADC_DMA.md)
+
+[F401 CMSIS baseline: 7/7 HW through ST-Link/OpenOCD, HAL boot/blink restored. Flash256/RAM64; ADC/RTC are not migrated yet.](F401_CMSIS_BASELINE.md)
+
+[Hardware metrics and results table](HARDWARE_METRICS.md).
+
+[rc.2 readiness and acceptance matrix](RC2_READINESS.md).
+
+[HAL F030 hardware acceptance](F030_HAL_VALIDATION.md): 17/17, six repeats, timeout/recovery and original firmware restoration verified on Windows/ST-Link/OpenOCD; specification 0.40. API unchanged.

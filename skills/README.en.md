@@ -16,6 +16,8 @@ submodule and link to its documentation.
 | [stm32-gdbtest-stand-loop](stm32-gdbtest-stand-loop/SKILL.md) | deployable stand bundle, finite cycles, FAIL/SKIP policy, STOP and review.json handoff to an agent |
 | [stm32-gdbtest-develop](stm32-gdbtest-develop/SKILL.md) | develop firmware through DDTT: plan, scenario before the fix, baseline FAIL, correction, regression and target evidence review |
 
+Before a hardware series, use the [scenario checklist](../docs/en/SCENARIO_CHECKLIST.md): it complements scenarios/develop and replaces neither prepare nor board testing.
+
 ## Choosing and combining skills
 
 Start with the task instead of loading every skill. Give the agent the project path, module version
