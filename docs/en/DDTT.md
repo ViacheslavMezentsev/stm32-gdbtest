@@ -547,13 +547,42 @@ uncertainty but did not establish PSP/ISR/RTOS behavior or remove the warning.
 
 Practical basis: Windows, Renode 1.17, neutral C++17 ELF at `-O0`, GDB 14.2.90/Python 3.11.4;
 39 host checks, two independent emulator cycles and separate expected FAIL and ERROR runs.
-Calls used GDB Python; regular Target/runner, Linux, debugpy and hardware acceptance of this
+Calls used GDB Python; full Target/runner integration, Linux, debugpy and hardware acceptance of this
 route remain unverified. The Flash model does not establish LOCK protection or physical
 programming. This guidance introduces no public Renode backend, CLI or TOML.
 
 See [C++](TESTING_TECHNIQUES.md#tech-019), [deferred writes](TESTING_TECHNIQUES.md#tech-020) and
 the [checklist](SCENARIO_CHECKLIST.md). This 2026-10-15 clarification is informative: normative
 IDs, DDTT version 0.3.0 and module contracts remain unchanged.
+
+### 11.3. Validate the observer and separate outcomes (informative)
+
+Before changing firmware, validate the observer with a negative control: a wrong expectation,
+incomplete snapshot or missing required evidence must be detected. The error may be in the
+scenario, artifact reader or API. Localize the layer and reproduce a minimal case first; application
+changes must not compensate for an analyzer defect.
+
+Distinguish scenario-body outcome, evidence capture, data analysis and restoration in feedback.
+Analysis PASS never cancels scenario FAIL; restoration PASS never cancels a body error. Missing
+required observations are not measured zeros. Check ownership/integrity, required completeness,
+fields/types/units, then the numeric criterion. This guidance adds no mandatory result.json fields
+or universal measurement schema.
+
+For mutable memory, define the region and independent size beforehand; check snapshot length
+and boundary preservation. Verify recovery after a Python exception by readback; unknown recovery
+requires stopping. Byte copies do not automatically restore external resources or object invariants,
+and `finally` does not cover process death.
+
+Neutral host/GDB/Renode experiments clarified these limits: a string RHS in `write()` may execute
+twice with verification; ELF preflight can pass a name that `Target.call()` refuses. Evaluate values
+explicitly and choose the appropriate call path without weakening expectations. Repeat the same
+route after a correction, preserving original FAIL/ERROR evidence and neighboring controls.
+An observation becomes a technique/contract improvement proposal, not an automatic new API guarantee.
+
+Scope: selected Windows/GDB 14.2.90/Renode 1.17, neutral ELF `-O0 -g3`; individual Target methods
+executed directly in GDB. Full standard-runner integration, debugpy, DMA and hardware acceptance
+of this route remain unverified. Normative IDs and DDTT version are unchanged.
+
 
 ## Appendix A. Example scenario (informative)
 

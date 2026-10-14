@@ -68,6 +68,19 @@ for persistence effects. These checks do not replace agreement on the hardware e
 6. Record limits: injecting state tests a reaction, not whether the real event or task produces
    that state; an emulator PASS is not HW PASS.
 
+## Evidence review questions
+
+- Is snapshot size independently established and length checked before writing? Was `sizeof` converted to bool?
+- Was a side-effecting RHS evaluated once before `write()`? Successful readback does not exclude duplicate calls.
+- Is preflight PASS being confused with a valid `call()` name or object readiness?
+- Were record names, counts, fields, types and units checked before numeric analysis? Empty `all()` is not evidence.
+- Are body failure, capture outcome, analysis verdict and restoration retained separately?
+- Did the experiment stop on restoration failure without hiding the original error behind successful cleanup?
+
+Examples: [tables and writes](TESTING_TECHNIQUES.md#tech-010),
+[records](TESTING_TECHNIQUES.md#tech-011), [C++ and snapshots](TESTING_TECHNIQUES.md#tech-019).
+
+
 ## What automation can check
 
 Existing tools check syntax, parameters and requested ELF contracts. Text-based hints cannot

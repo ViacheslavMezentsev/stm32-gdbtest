@@ -337,6 +337,38 @@ usual care. `reach`, writes and dependent calculations are not moved into a tabl
 expression; such checks stay separate.
 [check](api/check.md), [matchers](api/matchers.md), host — `tests/host/test_target_extras.py`.
 
+### Text and bit masks
+
+```python
+# Scalar strings are literal text; table strings are GDB expressions.
+t.check("state text", "READY", "READY")
+t.check([("enabled", "(flags & 0x20) != 0", 1)])
+t.check("raw mask", t.read("flags & 0x20"), 0x20)
+```
+
+Mask `0x20` is not `1`. Normalize only for a boolean expectation; retain the mask when checking
+bits. A pointer can be read as a numeric address, not the object at that address; dereference it
+explicitly. Compare `sizeof` with `gdb.lookup_type("Packet").sizeof`; converting a nonzero size
+to `bool` yields `True`, not a size.
+
+### Evaluate once before writing
+
+In the current `write()` implementation, a string RHS with `verify=True` for an addressable SRAM
+object is evaluated for the expected value and again during GDB assignment. A changing result can
+produce `verification_failed` after the write; a constant result can conceal duplicate side effects.
+For such expressions, obtain a plain number first:
+
+```python
+# The function executes target code; its prerequisites must already hold.
+value = t.evaluate("next_sample()", as_type=int)
+t.write("sample_copy", value, verify=True)
+```
+
+Here `write()` does not call `next_sample()` again. This is not atomic; `verify=False` removes
+write verification and is not a general fix. Observation scope: ordinary SRAM, selected GDB and
+neutral ELF; MMIO has different semantics.
+
+
 <a id="tech-011"></a>
 ## TECH-011 — Collecting measurements and calculating from records
 
@@ -359,6 +391,24 @@ prove accuracy. Record limits are set in `api.toml`; a repeated `records()` make
 [record](api/record.md), [records](api/records.md).
 
 **Events and intervals.** The [example](../../tests/firmware/common/tests/board/test_event_intervals.py) records source, epoch, counter width and nominal rate with each sample. Modular subtraction requires matching metadata and an external guarantee that the interval is shorter than one period; it cannot detect missed complete wraps. `board_ticks_ms` denotes nominal firmware ticks, not calibrated time. A Python delay while halted does not measure MCU execution time.
+
+### Required data and separate analysis
+
+Records hold arbitrary supported data, not only measurements. The consumer defines names, fields,
+units and expected sample counts. A `bool` is valid journal data but need not be a valid measurement:
+use `type(value) in (int, float)` when excluding booleans. Convert `gdb.Value` and `bytes` explicitly,
+for example with `int(value)` and `data.hex()`; the type does not establish units.
+
+For file analysis, validate capture ownership/integrity first, then required completeness, record
+presence/count, fields/types/units and finally numeric conditions. `all([])` returns `True`:
+an empty selection must not pass a measurement check. A `record()` error and a missing capture
+file are failures at different stages.
+
+Keep the analysis verdict separate from the scenario outcome. Analysis may distinguish insufficient
+evidence (ERROR) from complete out-of-range data (FAIL); that is consumer policy, not a new module
+result schema. Analysis PASS never cancels scenario FAIL. An exact count of two or rejection of
+interrupted series is not universal: define these policies before running the specific experiment.
+
 
 <a id="tech-012"></a>
 ## TECH-012 — Expected refusal of an operation
@@ -578,6 +628,31 @@ These limits concern forced sandbox calls, not the hardware example above.
 
 The published neutral [C++/GDB/Renode example](../../tests/renode-cache/README.en.md) includes
 commands, host checks and a separate scenario; it is not part of the hardware CI matrix.
+
+### Call validation and complete restoration
+
+`Target.call()` accepts a plain function name and numeric arguments; a free C++ function can fit
+that interface. `Object::method` and `object.method` do not become valid names merely because an
+[ELF contract](CONTRACTS.md) passed. Direct `gdb.parse_and_eval` is a separate path whose effects
+and evidence the scenario must retain. An inline declaration does not guarantee a callable body.
+Hidden `this` may have type `Object * const`, distinct from `Object *` and `const Object *`;
+do not remove qualifiers just to pass preflight.
+
+Before changing ordinary memory, compare an independently known layout with DWARF, then check
+the returned byte count against the size. Equality of two equally short snapshots proves nothing.
+In a neutral example, guards before and after the object help: check them immediately after mutation
+and after restoration. `memory()` does not replace explicit length validation.
+
+After a body exception, restore in `finally`, then read back and compare the entire agreed region.
+Retain body and restoration failures separately; unconfirmed restoration prohibits further changes.
+Successful restoration does not cancel the original failure. `finally` cannot guarantee recovery
+from process death or lost connectivity; byte copies cannot restore external resources or arbitrary
+C++ invariants.
+
+These boundaries were additionally checked on a neutral ELF with Windows/Renode 1.17, GDB 14.2.90,
+`-O0 -g3`: types/calls and restoration of simple RAM. Transport failures were injected in a host model;
+actual GDB short reads and DMA restoration were not established.
+
 
 <a id="tech-020"></a>
 ## TECH-020 — Deferred writes and idempotence
