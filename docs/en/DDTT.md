@@ -491,6 +491,27 @@ and [results](../../skills/stm32-gdbtest-results/SKILL.md) detail its steps. Acc
 a new package and a separately agreed repetition plan.
 
 
+### 11.1. Rig validation and evidence boundaries
+
+Validate the test rig separately from application behavior. Before the main experiment,
+establish its prerequisites and observation completeness: matching incomplete snapshots
+does not establish restoration. The influence scope includes external resources, not just
+object bytes. Restoring memory does not prove that peripheral state was restored.
+
+Describe the executed path, injected conditions and bypassed parts for each experiment.
+Injected time state tests the reaction to that state, not actual elapsed time. A GDB function
+call executes MCU code; halted-core properties cannot describe the entire experiment.
+Emulation establishes properties of the selected model, not the physical hardware.
+
+Investigate unexpected results as possible application, scenario, rig, API or assumption errors.
+The cycle is: hypothesis → rig validation → experiment → minimal reproduction → technique or
+contract refinement → repeat. Preserve original failures, inputs and criteria; distinguish a
+DDTT improvement proposal from an accepted requirement.
+
+The [checklist](SCENARIO_CHECKLIST.md) supports review; [results](RESULTS.md) describes
+artifact validation. These informative explanations add no new API guarantees.
+
+
 ## Appendix A. Example scenario (informative)
 
 The example uses the common CI firmware and ci_app_api contract: app_loop, app_step and

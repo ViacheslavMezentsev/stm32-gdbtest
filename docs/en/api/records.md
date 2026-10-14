@@ -11,7 +11,7 @@
 | API_VERSION | 1 |
 | Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
 
-Implemented extension; `0.2.0rc1` is a local candidate, not a published stable release.
+Available in 0.4.1. The 0.2.0 entries above retain introduction history; candidate `0.2.0rc1` was not published separately.
 
 ## Purpose
 

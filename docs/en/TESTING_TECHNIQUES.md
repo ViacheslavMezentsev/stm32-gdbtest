@@ -8,6 +8,8 @@ The cards describe techniques verified by the bundled scenarios of the module: t
 and the F030 HAL fixture (`tests/hal-f030`). These are method cards, not new specification
 requirements, API operations or coverage metrics.
 
+Before a run, use the [scenario checklist](SCENARIO_CHECKLIST.md).
+
 ## Bundled scenario style
 
 The host test [`tests/host/test_scenario_style.py`](../../tests/host/test_scenario_style.py) checks

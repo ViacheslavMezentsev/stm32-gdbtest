@@ -2,9 +2,12 @@
 
 [Documentation](index.md) → Results · [Русский](../ru/RESULTS.md)
 
-Available in Unreleased. These are external host commands: they read saved files, never start GDB or
+Available since 0.4.0. These are external host commands: they read saved files, never start GDB or
 access the MCU, and add no Target methods. Existing scenarios need no migration. Enable
 [journal capture](API.md#result-journal-capture-unreleased) when running scenarios.
+
+Sections retaining the historical `Unreleased` label below describe features included in 0.4.0 and available in 0.4.1; headings are retained for link compatibility.
+
 
 ## What is exported
 

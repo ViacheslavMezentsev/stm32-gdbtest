@@ -16,6 +16,9 @@ Production first-package examples and five-MCU verification: [accepted results](
 
 [Methods and properties reference](api/index.md) — individual cards, examples and support versions.
 
+Sections retaining the historical `Unreleased` label below describe features included in 0.4.0 and available in 0.4.1; headings are retained for link compatibility.
+
+
 ## 0.3.0 package: numbers, migration and aliases
 
 The 0.4.0 candidate fixes `evaluate(path, as_type=str)` for a `char[]` whose GDB size is zero

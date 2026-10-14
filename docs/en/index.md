@@ -31,6 +31,8 @@ the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 
 ## Getting started
 
+- [Scenario checklist](SCENARIO_CHECKLIST.md) — review before a run, before changing state and after the experiment.
+
 - [Run layouts](RUN_LAYOUTS.md) — placement of runner, GDB and probe, verified combinations.
 - [MCU profiles](MCU_PROFILES.md) — target.toml and verified boards.
 - [Current status](STATUS.md) — versions, evidence and limits.
