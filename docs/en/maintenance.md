@@ -120,38 +120,32 @@ CI workflows run for any branch, so a new prefix needs no workflow change.
 
 ### Local development and public documentation
 
-Research plans, prototypes and raw results remain local under `docs/research/`;
-the entire directory is excluded from Git. Experimental test directories use the
-`dev-*` prefix and the `tests/**/dev-*/` ignore filter. Existing experimental
-directories and `tools/research/` are also explicitly excluded in .gitignore.
-Do not force-add these files to the index.
+New research uses local `docs/research/NN-short-name/` for documents and
+`tests/manual/NN-short-name/` for code. Both roots are ignored by Git.
 
-Publish accepted contracts, techniques and acceptance results sufficient for users,
-without links to local material. Production host tests, board fixtures and examples
-remain public. In the release branch, run `python ci/run_checks.py docs`:
-the separate docs.public check reads local-development filters from .gitignore and
-rejects tracked private files and links into them, even if the target exists locally.
-This governs the current tree; prior Git history is not automatically purged.
+1. Read the local research README, HISTORY and the selected study summary first.
+   Report missing materials; do not claim that earlier results were reverified.
+2. Allocate the next two-digit number in this repository, starting at 01 if none exist.
+   Check both roots and HISTORY; never reuse numbers, including cancelled reservations.
+   The repository root is not an experimental workspace.
+3. A short study needs only a README with its goal, plan, result and next step.
+   Add plan.md and results.md as it grows. Separate languages, matrices and debt files
+   are optional for local studies; public documentation remains bilingual.
+4. Record conditions and expected outcomes before an experiment, then commands, facts,
+   limitations and log links. Keep hardware identity, tool versions and input SHA-256 locally.
+   Preserve original FAIL/ERROR evidence and update HISTORY with newest entries first.
+5. Start without hardware. Before experimental writes or erasure, agree on the board and
+   operations, back up and verify all affected memory. Restore and verify it after every
+   experiment, including failure. Do not write with an invalid backup; stop and report if
+   restoration is impossible. Do not remove protection or change option bytes to proceed.
+6. Never force-add either local root. Transfer accepted outcomes to production code, tests
+   and public documentation without private report links. Prototypes do not enter CI automatically.
 
-Before starting or continuing research, read the [dedicated agent rules](../../AGENTS.md#проведение-исследований)
-and the local `docs/research/README.en.md`, if present, followed by the study plan, summary and latest
-report. The local conventions define the `ru/en/results` structure and input/output filenames.
-Result history is in local `docs/research/HISTORY.md` and `HISTORY.en.md`: date, brief change and
-output links, newest first, without code versions. New studies use `plan.md`, `verification.md`, `results.md`, `questions.md` and
-`technical-debt.md` in both languages; stages use `<stage>-plan.md` and `<stage>-results.md`.
-Keep historical filenames and list them in the document map. Use lowercase-kebab-case directory names.
-Record expected outcomes and conditions before runs; retain actual results, versions, prototype/input
-hashes, logs and limitations afterwards. Never overwrite original FAIL/ERROR evidence after a fix.
-Host PASS does not replace HW PASS; follow project hardware and restoration rules.
-After each stage, update both report localizations, the summary, matrix, questions and local history;
-tell the owner the result and next step. Distinguish observations, proposals and accepted decisions.
-Report missing local materials explicitly rather than treating prior outcomes as verified.
-Experimental API integration into the core requires separate agreement. Local paths here specify
-storage conventions, not links to shipped documents; the publication checks above remain mandatory.
-
-Section 2.1 of the local README defines the `tests/dev-*` sandbox: explicit run commands,
-code-to-report links and preservation of tested source snapshots before editing.
-Do not automatically include the sandbox in production tests, CI or the shipped package.
+Existing studies retain their names, structures and results; no migration or renumbering.
+Experimental API integration into the core requires separate agreement.
+`python ci/run_checks.py docs` includes docs.public, which rejects private files and links
+in the published tree. These paths describe local conventions, not shipped documents.
+Prior Git history is not automatically purged.
 
 ## Checks
 

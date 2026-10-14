@@ -48,5 +48,6 @@ desktop.ini
 /tests/api-experiments/
 /tests/api-extension/
 /tests/**/dev-*/
+/tests/manual/
 # END local development materials
 /tests/cpp-context/build/

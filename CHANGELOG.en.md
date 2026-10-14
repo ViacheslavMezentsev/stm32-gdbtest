@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Simplified local research rules: new studies are numbered and use tests/manual sandboxes; existing studies remain unchanged.
+
 - DDTT draft 0.3.0 mapped to implementation 0.4.1: SKIP, artifact outcomes, API/file map, development loop and open conformance boundaries; runtime unchanged.
 
 ## [0.4.1] - 2026-10-10
