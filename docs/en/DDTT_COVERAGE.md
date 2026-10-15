@@ -101,3 +101,7 @@ VS Code display. The public exporter adds host regressions for stale evidence, e
 Accepting additional template associations does not constitute hardware verification of those points.
 This is a DDTT evidence view; FPB observers, function tracing and manual debugpy debugging are outside
 this tool's scope.
+
+## Tool compatibility
+
+Maps without `environment` retain hardware semantics. Use `environment: "emulator"` for a separate emulator map. Missing `purpose` means automated; manual is excluded. A line with CONFIRMED and UNKNOWN is now omitted from LCOV unless FAILED is also present. Rebind maps anchored to comments. See [portable reports](PORTABLE_DDTT.md).

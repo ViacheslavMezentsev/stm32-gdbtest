@@ -87,6 +87,22 @@ class PortableTests(unittest.TestCase):
         self.assertIn('a%2Cb.cpp',text);self.assertNotIn('\n',text)
 
 class ProbeTests(unittest.TestCase):
+    def test_gdb_timeout_cleans_up_and_retains_error(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            for name in ('elf','model','scenario.py','app.cpp'):(root/name).write_text('fixture')
+            mapping=dict(schema=1,environment='emulator',elf_sha256=core.digest(root/'elf'),points=[dict(source='app.cpp',source_sha256=core.digest(root/'app.cpp'),anchor='fixture',scenario='ONE',check='one')])
+            with patch.object(renode_probe.subprocess,'Popen') as popen, patch.object(renode_probe,'terminate') as terminate, patch.object(renode_probe.subprocess,'run',side_effect=subprocess.TimeoutExpired('gdb',.1)):
+                def ready(*args,**kwargs):
+                    kwargs['stdout'].write(b'GDB server with all CPUs started');kwargs['stdout'].flush()
+                    return popen.return_value
+                popen.side_effect=ready
+                code=renode_probe.run(root,root/'elf',root/'model',root/'scenario.py',mapping,root/'runs','gdb','renode','ONE',.1)
+                self.assertEqual(code,1);terminate.assert_called_once()
+            result=json.loads(next((root/'runs').glob('*/result.json')).read_text())
+            self.assertEqual(result['status'],'ERROR');self.assertIn('timed out',result['error'])
+            self.assertEqual(result['cleanup'],'VERIFIED')
+
     def test_readiness_timeout_preserves_error_and_cleans_owned_process(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp)

@@ -44,6 +44,6 @@ Publish only public-ddtt as a static Pages artifact. Select Settings â†’ Pages â
 then use an explicitly triggered deploy workflow with pages:write and id-token:write after
 tests pass. Its environment URL or Visit site opens the report. Publication/account settings
 are not performed by the tool. Do not replace an existing site without authorization.
-Workflow example: examples/ddtt-coverage/pages.yml.
+Workflow fragments: [pages.yml](../../examples/ddtt-coverage/pages.yml); not a standalone workflow.
 
 See [Renode](RENODE_PROBES.md) and the [coverage skill](../../skills/stm32-gdbtest-coverage/SKILL.md).

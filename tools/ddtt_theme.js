@@ -2,7 +2,7 @@
 (() => {
   const root = document.documentElement, button = document.getElementById('theme');
   const media = window.matchMedia('(prefers-color-scheme: dark)');
-  const key = 'bluepill-ddtt-theme';
+  const key = 'stm32-gdbtest-ddtt-theme';
   const modes = ['dark', 'light', 'auto'];
   let mode = 'dark';
   try { const saved = localStorage.getItem(key); if (modes.includes(saved)) mode = saved; } catch (_) {}

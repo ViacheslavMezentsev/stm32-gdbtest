@@ -454,3 +454,5 @@ Local board acceptance does not replace running the updated workflow on GitHub.
 
 
 Check-evidence colouring: [DDTT in VS Code](DDTT_COVERAGE.md); external exporter, no Target API changes.
+
+[Portable HTML/LCOV/Cobertura](PORTABLE_DDTT.md) and [Renode probes](RENODE_PROBES.md) are external tools, not new Target methods.

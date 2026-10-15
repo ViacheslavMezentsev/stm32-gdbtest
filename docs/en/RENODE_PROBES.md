@@ -43,3 +43,7 @@ with a host control; its supported scope is unchanged. See the
 [Renode skill](../../skills/stm32-gdbtest-renode/SKILL.md) and [DDTT reports](PORTABLE_DDTT.md).
 
 Negative control: repeat with `--negative-control`. Expect FAIL, exit 1 and a red method-call point; the next ordinary run must PASS again.
+
+## P1 validation
+
+Renode 1.17 was checked on Windows and Linux: startup and a method call, 3/3. On Windows the negative control produced two confirmations and one failure (exit 1), followed by another 3/3 ordinary run. The existing C++/RAM/cache example also passed. Host regressions cover readiness failure and GDB timeout with cleanup. This does not validate UART, ADC/DMA or the six physical stands.

@@ -15,6 +15,9 @@ submodule and link to its documentation.
 | [stm32-gdbtest-results](stm32-gdbtest-results/SKILL.md) | audit saved evidence without a board: artifact order, scenario source, records, JUnit, integrity, export/HTML and justified conclusions; including a pi agent on OrangePi |
 | [stm32-gdbtest-stand-loop](stm32-gdbtest-stand-loop/SKILL.md) | deployable stand bundle, finite cycles, FAIL/SKIP policy, STOP and review.json handoff to an agent |
 | [stm32-gdbtest-develop](stm32-gdbtest-develop/SKILL.md) | develop firmware through DDTT: plan, scenario before the fix, baseline FAIL, correction, regression and target evidence review |
+| [stm32-gdbtest-coverage](stm32-gdbtest-coverage/SKILL.md) | map integration, portable reports, provenance and unknown outcomes. |
+| [stm32-gdbtest-renode](stm32-gdbtest-renode/SKILL.md) | short ELF/GDB probes without a board, model limitations and resource cleanup. |
+
 
 Before a hardware series, use the [scenario checklist](../docs/en/SCENARIO_CHECKLIST.md): it complements scenarios/develop and replaces neither prepare nor board testing.
 
@@ -74,6 +77,3 @@ The skills are part of the module: a change comes with a CHANGELOG entry and a l
 On OrangePi, the results skill needs only the module checkout and saved artifacts. Point the agent
 to SKILL.md in project instructions; no integration with a specific pi shell is required.
 Use documentation matching the result producer; missing fields in old formats remain unknown.
-
-- [stm32-gdbtest-coverage](stm32-gdbtest-coverage/SKILL.md) — map integration, portable reports, provenance and unknown outcomes.
-- [stm32-gdbtest-renode](stm32-gdbtest-renode/SKILL.md) — short ELF/GDB probes without a board, model limitations and resource cleanup.

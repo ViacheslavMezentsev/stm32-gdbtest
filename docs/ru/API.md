@@ -451,3 +451,5 @@ Prepare устанавливает закреплённый SDK через `tool
 
 
 Раскраска свидетельств проверок: [DDTT в VS Code](DDTT_COVERAGE.md); внешний экспортёр, без изменения Target API.
+
+[Переносимый HTML/LCOV/Cobertura](PORTABLE_DDTT.md) и [Renode-пробы](RENODE_PROBES.md) — внешние инструменты, не новые методы Target.
