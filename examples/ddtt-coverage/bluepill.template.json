@@ -1,0 +1,47 @@
+{
+  "points": [
+    {
+      "source": "src/app.cpp",
+      "anchor": "g_app.last_toggle_ms = now;",
+      "scenario": "HW_BLINK",
+      "check": "toggles a half period apart, ms"
+    },
+    {
+      "source": "src/app.cpp",
+      "anchor": "board::ledToggle();",
+      "scenario": "HW_BLINK",
+      "check": "LED state changed"
+    },
+    {
+      "source": "src/app.cpp",
+      "anchor": "++g_app.blink_count;",
+      "scenario": "HW_BLINK",
+      "check": "blink counter advanced by one"
+    },
+    {
+      "source": "src/app.cpp",
+      "anchor": "g_app.setup_done     = 1;",
+      "scenario": "HW_POST_VDDA_LOW",
+      "check": "setup still finished"
+    },
+    {
+      "source": "src/app.cpp",
+      "anchor": "g_app.setup_done     = 1;",
+      "scenario": "HW_SETUP_DONE",
+      "check": "setup finished"
+    },
+    {
+      "source": "src/app.cpp",
+      "anchor": "g_app.last_toggle_ms = board::millis();",
+      "scenario": "HW_TOGGLE_WRITERS",
+      "check": "setup() stores the start time, called from main()"
+    },
+    {
+      "source": "src/app.cpp",
+      "anchor": "g_app.last_toggle_ms = now;",
+      "scenario": "HW_TOGGLE_WRITERS",
+      "check": "loop() stores the toggle time, called from main()"
+    }
+  ],
+  "schema": 1
+}

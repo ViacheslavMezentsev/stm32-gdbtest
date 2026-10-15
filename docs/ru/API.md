@@ -448,3 +448,6 @@ Prepare устанавливает закреплённый SDK через `tool
 `~/.config/stm32-gdbtest/stands/at32f403a.toml`): backend=jlink, серийник вашего J-Link и путь к серверу.
 Для отдельной проверки: profiles=`at32f403a`, suite=`api040`, steps оставить пустым.
 Локальная приёмка платы не заменяет запуск обновлённого workflow на GitHub.
+
+
+Раскраска свидетельств проверок: [DDTT в VS Code](DDTT_COVERAGE.md); внешний экспортёр, без изменения Target API.

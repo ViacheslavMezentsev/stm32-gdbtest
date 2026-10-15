@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- External DDTT-to-LCOV exporter, BluePill/BlackPill maps and VS Code guide; stale evidence protection and separate UNKNOWN states. Candidate 0.4.2, no core/API changes.
+
 - Refined techniques, checklist and informative DDTT guidance: types/masks, precomputed writes, complete snapshots/restoration, required records and separate analysis, and C++/preflight boundaries. Runtime and API contracts are unchanged.
 
 - Added a standalone Windows C++/GDB/Renode example: host cache checks, live-object calls, a limited teaching Flash model, negative control and preserved artifacts. No new backend/Target API.

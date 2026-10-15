@@ -125,3 +125,6 @@ F030: RTC deadline через инъекцию аргумента, API без и
 [Аппаратная приёмка HAL F030](F030_HAL_VALIDATION.md): 17/17, шесть повторов, timeout/recovery и восстановление исходной прошивки проверены на Windows/ST-Link/OpenOCD; ТЗ 0.40. API без изменений.
 
 Нейтральный пример без платы: [C++/GDB/Renode, кэш и отложенная запись](../../tests/renode-cache/README.md).
+
+
+Раскраска свидетельств проверок: [DDTT в VS Code](DDTT_COVERAGE.md); внешний экспортёр, без изменения Target API.

@@ -641,3 +641,6 @@ claimed for this DDTT revision.
 | 0.3.0 | 2026-10-10 | Aligned with package 0.4.1: DDTT-Skip (6.5-6), artifact outcome (6.5-7; clarified 6.4-5 and 6.5-1/2), implementation/gap map, development loop and example. Existing IDs retained; module API unchanged |
 | 0.2 | 2026-09-28 | Name refined: Debugger-Driven Testing on Target instead of Debugger-Driven On-Target Testing; the general notion "debugger-driven testing" introduced, DDTT is its variant for a separate target device (1.3, 3). Requirements unchanged |
 | 0.1 | 2026-09-28 | First draft: scope, terms, principles, model, requirements for scenarios, the target API, stands, the run lifecycle, reports, access, preflight, automation and agent scenarios; the stm32-gdbtest reference implementation |
+
+
+Check-evidence colouring: [DDTT in VS Code](DDTT_COVERAGE.md); external exporter, no Target API changes.

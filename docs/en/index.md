@@ -125,3 +125,6 @@ New package scenarios: [API 0.4.0](API040_SCENARIOS.md).
 [HAL F030 hardware acceptance](F030_HAL_VALIDATION.md): 17/17, six repeats, timeout/recovery and original firmware restoration verified on Windows/ST-Link/OpenOCD; specification 0.40. API unchanged.
 
 Neutral board-free example: [C++/GDB/Renode, cache and deferred writes](../../tests/renode-cache/README.en.md).
+
+
+Check-evidence colouring: [DDTT in VS Code](DDTT_COVERAGE.md); external exporter, no Target API changes.

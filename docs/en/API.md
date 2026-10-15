@@ -451,3 +451,6 @@ OrangePi needs `$STM32_GDBTEST_STANDS_DIR/at32f403a.toml` (default:
 `~/.config/stm32-gdbtest/stands/at32f403a.toml`): backend=jlink, your J-Link serial and server path.
 For a separate check: profiles=`at32f403a`, suite=`api040`, leave steps empty.
 Local board acceptance does not replace running the updated workflow on GitHub.
+
+
+Check-evidence colouring: [DDTT in VS Code](DDTT_COVERAGE.md); external exporter, no Target API changes.

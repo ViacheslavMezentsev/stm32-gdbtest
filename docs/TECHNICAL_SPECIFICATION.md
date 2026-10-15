@@ -5,10 +5,10 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.96 (синхронизация документации после v0.4.1) |
-| **Дата формирования** | 10.10.2026 |
+| **Ревизия** | 0.97 (внешняя раскраска DDTT для кандидата 0.4.2) |
+| **Дата формирования** | 15.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
-| **Целевая версия** | Пакет stm32-gdbtest `0.4.1` (редакция документации); API_VERSION=2, target schema 2, ТЗ API 0.3.16 без изменений (р.0.95). Публикация владельцем после CI итогового SHA. |
+| **Целевая версия** | Кандидат пакета stm32-gdbtest `0.4.2` (внешний инструментарий); API_VERSION=2, target schema 2, ТЗ API 0.3.16 без изменений (р.0.95). Публикация владельцем после CI итогового SHA. |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
@@ -162,6 +162,15 @@
 | 0.94 | 10.10.2026 | Hardware CI: шестой профиль AT32, presets и закреплённый SDK на prepare; регрессия doctor/FAIL для обоих наборов. API не меняется. |
 | 0.95 | 10.10.2026 | Редакция документации к v0.4.1: отдельные схемы запуска и профили MCU, актуальный STATUS с архивом, рекомендации навыков и цикл DDTT. Поведение, API, схемы, требования, TC и матрица приёмки не меняются. |
 | 0.96 | 10.10.2026 | Синхронизация ссылки на DDTT 0.3.0: практическая карта реализации и границы соответствия; нормативные уточнения DDTT остаются предложением. Поведение модуля и TC не меняются. |
+
+| 0.97 | 15.10.2026 | Внешний экспортёр свидетельств DDTT в LCOV; TC-172. Ядро, API и схемы runner неизменны. |
+
+### Изменения ревизии 0.97
+
+| Пункт | Тип | Что изменилось |
+| :--- | :--- | :--- |
+| 5.26 | нов. | Карта проверок, UNKNOWN, LCOV и отдельный исход экспорта |
+| 9.2, 10.2 | нов. | TC-172: host-регрессии экспортёра |
 
 ### Изменения ревизии 0.96
 
@@ -1941,6 +1950,20 @@ interval_s, on_fail и min_free_mib. Неизвестные поля и неве
 Принудительное восстановление USB, дедлайн зависшего host CLI, рестарт службы и очистка
 диска первым вариантом НЕ ДОЛЖНЫ обещаться. `[N]` (р.0.92)
 
+### 5.26. Внешняя раскраска DDTT (р.0.97)
+
+5.26.1. Внешний tools/ddtt_coverage.py ДОЛЖЕН связывать точное имя проверки и ID сценария
+с уникальной строкой исходника по карте, SHA-256 исходника/ELF и build_manifest результата. `[N]`
+
+5.26.2. Последняя выбранная аппаратная попытка ДОЛЖНА определять свидетельство; ERROR, SKIP,
+несовпадающий ELF/manifest, отсутствующая проверка и неоднозначность времени ДОЛЖНЫ давать UNKNOWN.
+Prepare НЕ ДОЛЖЕН давать свидетельства. UNKNOWN НЕ ДОЛЖЕН экспортироваться как DA=0. `[N]`
+
+5.26.3. LCOV ДОЛЖЕН содержать DA=1 для подтверждённой проверки и DA=0 для выполненной неуспешной;
+на общей строке FAILED имеет приоритет. JSON schema 1 ДОЛЖЕН сохранять все точки, причины,
+идентичность свидетельств и состояния отдельно от успешности команды экспорта. Ошибка входа
+ДОЛЖНА очищать старый LCOV и давать ERROR sidecar/код 2. Успешный экспорт — код 0. `[N]`
+
 ## 6. Требования к интерфейсам
 
 ### 6.1. GDB и GDB-Python
@@ -2474,6 +2497,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-168 | `StUtilTests`, `ProfileScenarioTests` (T), run_hw/run_suite (I) | Schema 1/2, serial и чужие ключи, единый reset, неизменный recovery, карта памяти, общий lock ST-Link, SSH, doctor и metadata; аппаратные исходы в docs/ru/API_ACCEPTANCE.md (р.0.85) |
 | TC-169 | `RemoteShutdownTests`, `RemoteShutdownProcessTests` (T) | Linux exit 0/7/SIGABRT/SIGTERM/SIGKILL, EOF/heartbeat/естественный выход, повреждённые маркеры; PASS GDB + авария cleanup даёт ERROR с сохранёнными checks (р.0.86) |
 | TC-170 | `StutilIdleTests`, `StutilIdleProcessTests` (T) | Полные события текущего порта/попытки, старые/частичные маркеры, усечение, deadline и смерть процесса; Linux idle перед SIGTERM, EOF, heartbeat, потеря и переполнение вывода (р.0.88) |
+| TC-172 | `DdttCoverageTests` (T) | Привязки, устаревание, UNKNOWN, конфликт строк, ошибки и очистка старой раскраски (р.0.97) |
 | TC-171 | `StandLoopTests` (T), ручной пакетный прогон (I) | Конечные циклы, неизменные снимки, doctor/prepare gate, PASS/FAIL/SKIP/ERROR, capture/JUnit, STOP, lock, место и отдельные коды обработки (р.0.92) |
 
 ---
@@ -2667,6 +2691,7 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | 5.22.1, 5.22.2, 5.22.3, 5.22.4, 5.22.5, 5.22.6 | `results`, `result_index`, `result_export`, `result_files`, `cli` | TC-160 |
 | 5.23.1, 5.23.2, 5.23.3, 5.23.4 | `result_report`, `report_style`, `results` | TC-161 |
 | 5.24.1, 5.24.2, 5.24.3 | `agent`, `runner`, `reports`, `result_index`, `run_hw` | TC-162 |
+| 5.26.1, 5.26.2, 5.26.3 | tools/ddtt_coverage.py; tests/host/test_ddtt_coverage.py | TC-172 (р.0.97) |
 | 5.25.1, 5.25.2, 5.25.3, 5.25.4, 5.25.5 | tools/stand_loop.py; tests/host/test_stand_loop.py | TC-171 (р.0.92) |
 | 5.18.7 | RM: `Heartbeat`, `serve_config`; RH: `serve`; RU: `execute` | TC-110, TC-111 |
 | 5.18.9 | RH: `serve`, `stop_group`; RM: `shutdown_result`, `record_shutdown`; RU: `execute` | TC-169 (р.0.86) |
@@ -2997,6 +3022,12 @@ D.5. В ревизии 0.1 ссылки в коде отсутствуют; их
 ---
 
 ## Приложение F. Расхождения документации и кода
+
+Раскраска DDTT — внешний tools/ddtt_coverage.py; регрессии TC-172 проверяют преобразование
+свидетельств без оборудования. Первые семь привязок основаны на аппаратных прогонах BluePill/BlackPill;
+добавочные привязки шаблона требуют новых выбранных сценариев. Полное покрытие исходников,
+автоматическое принятие GitHub/GitLab и новые Target API не заявлены. (р.0.97)
+
 
 Граница v0.4.0 согласована владельцем: полный F411/F030/ST-LINK GDB Server не принят;
 USB ERROR остаётся техническим долгом 11.2.27. Выпуск использует проверенные OpenOCD/st-util;

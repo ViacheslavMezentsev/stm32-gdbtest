@@ -1,0 +1,23 @@
+{
+  "points": [
+    {
+      "source": "src/program.cpp",
+      "anchor": "platform_fault = APP_FAULT_ADC_TIMEOUT;",
+      "scenario": "HW_ADC_TIMEOUT_DIAGNOSTIC",
+      "check": "application ADC timeout code"
+    },
+    {
+      "source": "src/program.cpp",
+      "anchor": "platform_led_toggle();",
+      "scenario": "HW_GPIO",
+      "check": "LED on before the toggle"
+    },
+    {
+      "source": "src/program.cpp",
+      "anchor": "++app_state.timer_events;",
+      "scenario": "HW_TIMER_IRQ_PUBLICATION",
+      "check": "one event per completed handler"
+    }
+  ],
+  "schema": 1
+}
