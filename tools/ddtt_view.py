@@ -105,4 +105,3 @@ document.querySelectorAll('.code-line').forEach(button=>button.addEventListener(
 document.querySelectorAll('aside section').forEach(s=>s.hidden=s.id!==button.dataset.key);
 document.querySelectorAll('.code-line').forEach(s=>s.classList.toggle('selected',s===button));
 document.getElementById('hint').hidden=true;}));filter();</script></body></html>''')
-

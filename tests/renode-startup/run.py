@@ -40,6 +40,7 @@ def main():
     mapping=core.load(base/'map.template.json');mapping['elf_sha256']=core.digest(elf)
     for point in mapping['points']:
         point['source_sha256']=core.digest(ROOT/point['source'])
+    core.project(ROOT,mapping,[])
     (out/'map.json').write_text(json.dumps(mapping,indent=2),encoding='utf-8')
     runs=out/'runs';runs.mkdir()
     provenance.begin(ROOT,sha,runs,out/'campaign.json',names,mapping)

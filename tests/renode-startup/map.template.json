@@ -1,5 +1,24 @@
-{"schema":1,"environment":"emulator","points":[
-{"source":"tests/renode-startup/startup.cpp","anchor":"started = 1;","scenario":"EMU_STARTUP","check":"startup completed"},
-{"source":"tests/renode-startup/startup.cpp","anchor":"counter.add(3);","scenario":"EMU_STARTUP","check":"counter initialized"},
-{"source":"tests/renode-startup/startup.cpp","anchor":"void add(unsigned n) { value += n; }","scenario":"EMU_STARTUP","check":"method updated object"}
-]}
+{
+  "schema": 1,
+  "environment": "emulator",
+  "points": [
+    {
+      "source": "tests/renode-startup/startup.cpp",
+      "anchor": "started       = 1;",
+      "scenario": "EMU_STARTUP",
+      "check": "startup completed"
+    },
+    {
+      "source": "tests/renode-startup/startup.cpp",
+      "anchor": "counter.add( 3 );",
+      "scenario": "EMU_STARTUP",
+      "check": "counter initialized"
+    },
+    {
+      "source": "tests/renode-startup/startup.cpp",
+      "anchor": "void add( unsigned n ) { value += n; }",
+      "scenario": "EMU_STARTUP",
+      "check": "method updated object"
+    }
+  ]
+}
