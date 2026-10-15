@@ -7,6 +7,10 @@ import json
 from pathlib import Path
 import re
 import sys
+try:
+    from .ddtt_guard import validate_point
+except ImportError:
+    from ddtt_guard import validate_point
 
 
 def digest(path):
@@ -20,6 +24,8 @@ def load(path):
 def validate(mapping):
     if mapping.get("schema", 1) != 1 or not isinstance(mapping.get("points"), list):
         raise ValueError("Expected map schema 1 and points array")
+    if mapping.get("environment", "hardware") not in ("hardware", "emulator", "host"):
+        raise ValueError("Invalid evidence environment")
     for entry in [mapping, *mapping["points"]]:
         key = "elf_sha256" if entry is mapping else "source_sha256"
         if not re.fullmatch(r"[0-9a-f]{64}", entry.get(key, "")):
@@ -35,13 +41,13 @@ def validate(mapping):
 
 
 def project(root, mapping, results):
-    """Latest selected hardware attempt wins, including incompatible/error attempts."""
+    """Latest selected automated attempt wins, including incompatible/error attempts."""
     validate(mapping)
     root = Path(root).resolve()
     by_case = defaultdict(list)
     for path in sorted(set(Path(p).resolve() for p in results)):
         data = load(path)
-        if data.get("mode") != "hardware":
+        if data.get("mode") != mapping.get("environment", "hardware") or data.get("purpose", "automated") != "automated":
             continue
         stamp = datetime.fromisoformat(data["started_utc"].replace("Z", "+00:00"))
         if stamp.tzinfo is None:
@@ -54,12 +60,11 @@ def project(root, mapping, results):
             raise ValueError("source outside project or invalid LCOV path")
         if digest(source) != point["source_sha256"]:
             raise ValueError("source changed: " + point["source"])
-        matches = [i for i, line in enumerate(source.read_text(encoding="utf-8-sig").splitlines(), 1)
-                   if line.strip() == point["anchor"].strip()]
+        matches = [validate_point(root, point)]
         if len(matches) != 1:
             raise ValueError("Source anchor must match exactly one line: " + point["anchor"])
         row = dict(point, absolute_source=source.as_posix(), line=matches[0], state="UNKNOWN",
-                   reason="no hardware attempt", evidence=None)
+                   reason="no eligible attempt", evidence=None)
         candidates = sorted(by_case[point["scenario"]], key=lambda item: item[0])
         if candidates:
             stamp, data, path = candidates[-1]
@@ -85,12 +90,15 @@ def project(root, mapping, results):
 
 
 def render(rows):
-    files = defaultdict(dict)
+    grouped = defaultdict(list)
     for row in rows:
-        if row["state"] == "UNKNOWN":
-            continue
-        marks = files[row["absolute_source"]]
-        marks[row["line"]] = min(marks.get(row["line"], 1), int(row["state"] == "CONFIRMED"))
+        grouped[(row["absolute_source"], row["line"])].append(row["state"])
+    files = defaultdict(dict)
+    for (source, line), states in grouped.items():
+        if "FAILED" in states:
+            files[source][line] = 0
+        elif "UNKNOWN" not in states:
+            files[source][line] = 1
     lines = ["TN:DDTT_check_evidence"]
     for path, marks in sorted(files.items()):
         lines += ["SF:" + path] + ["DA:%d,%d" % pair for pair in sorted(marks.items())]

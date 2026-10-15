@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- P1: portable DDTT HTML/Cobertura/annotations, sealed campaigns, separate environments, Renode/GDB launcher and two skills. Target API unchanged.
+
 - External DDTT-to-LCOV exporter, BluePill/BlackPill maps and VS Code guide; stale evidence protection and separate UNKNOWN states. Candidate 0.4.2, no core/API changes.
 
 - Refined techniques, checklist and informative DDTT guidance: types/masks, precomputed writes, complete snapshots/restoration, required records and separate analysis, and C++/preflight boundaries. Runtime and API contracts are unchanged.

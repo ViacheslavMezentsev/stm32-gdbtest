@@ -74,3 +74,6 @@ The skills are part of the module: a change comes with a CHANGELOG entry and a l
 On OrangePi, the results skill needs only the module checkout and saved artifacts. Point the agent
 to SKILL.md in project instructions; no integration with a specific pi shell is required.
 Use documentation matching the result producer; missing fields in old formats remain unknown.
+
+- [stm32-gdbtest-coverage](stm32-gdbtest-coverage/SKILL.md) — map integration, portable reports, provenance and unknown outcomes.
+- [stm32-gdbtest-renode](stm32-gdbtest-renode/SKILL.md) — short ELF/GDB probes without a board, model limitations and resource cleanup.

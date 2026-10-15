@@ -128,3 +128,6 @@ F030: RTC deadline через инъекцию аргумента, API без и
 
 
 Раскраска свидетельств проверок: [DDTT в VS Code](DDTT_COVERAGE.md); внешний экспортёр, без изменения Target API.
+
+- [Portable DDTT / Переносимый DDTT](PORTABLE_DDTT.md)
+- [Renode probes / Проверки Renode](RENODE_PROBES.md)

@@ -1,8 +1,11 @@
 """Bind a reviewed template to current source bytes and a built ELF; no board access."""
+from pathlib import Path
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parents[2]))
+from tools.ddtt_guard import validate_point
 import argparse
 import hashlib
 import json
-from pathlib import Path
 
 
 def main():
@@ -19,6 +22,7 @@ def main():
             raise ValueError("source outside project")
         if sum(line.strip() == point["anchor"].strip() for line in path.read_text(encoding="utf-8-sig").splitlines()) != 1:
             raise ValueError("Review changed/ambiguous anchor: " + point["anchor"])
+        validate_point(root, point)
         point["source_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)

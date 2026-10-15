@@ -128,3 +128,6 @@ Neutral board-free example: [C++/GDB/Renode, cache and deferred writes](../../te
 
 
 Check-evidence colouring: [DDTT in VS Code](DDTT_COVERAGE.md); external exporter, no Target API changes.
+
+- [Portable DDTT / Переносимый DDTT](PORTABLE_DDTT.md)
+- [Renode probes / Проверки Renode](RENODE_PROBES.md)
