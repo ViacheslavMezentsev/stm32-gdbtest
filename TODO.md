@@ -4,7 +4,9 @@
 
 Ветка `codex/cpp-preflight-qualifiers`: const на уровнях указателя, явный this,
 регрессии static/namespace и границы вызова; Target.call без изменений.
-ТЗ 0.100; API_VERSION=2 и schema 1 сохранены. Подписанный коммит, push/CI/land владельцем.
+ТЗ 0.100; API_VERSION=2 и schema 1 сохранены. Реализация 1a4c2b8 подписана.
+Host Windows/Linux 482 теста (16/6 пропусков), docs/host/format 7/7; Renode Windows
+xPack13/14/15 и Linux14: 20 offline + 32 runtime. Push/CI/land владельцем.
 Далее — оставшиеся P2-регрессии и отдельная аппаратная приёмка P5.
 
 

@@ -344,3 +344,7 @@ C++ preflight, кандидат 0.4.2: Windows host — 482 теста, 16 шт�
 Renode 1.17 — в каждом прогоне 20 offline и 32 runtime-утверждения PASS.
 Прежний preflight с тем же fixture даёт ожидаемый FAIL на this. Объект, PC/SP
 восстановлены; платы не использовались. Пример: tests/renode-startup/run_cpp.py.
+
+Linux Docker: docs/host/format 7/7; host 482 теста, 6 штатных пропусков.
+Linux xPack 14 + Renode 1.17: 20 offline и 32 runtime-утверждения PASS.
+Реализация проверена на 1a4c2b8; последующий документальный коммит только фиксирует результаты.

@@ -341,3 +341,7 @@ C++ preflight, 0.4.2 candidate: Windows host — 482 tests, 16 expected skips; x
 Renode 1.17 — 20 offline and 32 runtime assertions PASS in each run.
 The previous preflight fails on this with the same fixture, as expected. Object
 and PC/SP restored; no boards used. Example: tests/renode-startup/run_cpp.py.
+
+Linux Docker: docs/host/format 7/7; host 482 tests, 6 expected skips.
+Linux xPack 14 + Renode 1.17: 20 offline and 32 runtime assertions PASS.
+Implementation checked at 1a4c2b8; the subsequent documentation commit only records results.
