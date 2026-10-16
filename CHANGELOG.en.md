@@ -6,7 +6,9 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
-- Bounded SVD loader, [mmio].svd, immutable catalog and source-byte transport through runner/packages; no MMIO operations.
+- Public Target.mmio.read/write: SVD permissions/effects, explicit override, one direct RSP request without readback/retry, MMIOError and audit; host and Renode, no hardware acceptance.
+
+- Bounded SVD loader, [mmio].svd, immutable catalog and source-byte transport through runner/packages.
 
 - For 0.5.0: minimal QEMU backend (netduinoplus2), opt-in semihosting, loopback GDB, host and Windows/Linux checks; shared Renode lifecycle retained.
 

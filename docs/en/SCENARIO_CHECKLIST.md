@@ -98,4 +98,4 @@ The 0.4.2 candidate supports pointer qualifiers; see [details](CONTRACTS.md).
 - Run Renode with an access log, then the same segment on an authorized target board/backend.
 - Define semantic recovery, not generic snapshot restoration; do not retry blindly after errors.
 
-[MMIO limitations and skill](MMIO.md). No safe MMIO method has been published yet.
+[MMIO limitations and skill](MMIO.md). For the 0.5.0 candidate use [mmio.read/write](api/mmio.md); SVD and ACK do not establish physical effects.

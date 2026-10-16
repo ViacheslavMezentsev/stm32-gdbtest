@@ -3,7 +3,7 @@
 [Документация](index.md) · [Русский](../ru/SVD.md)
 
 The first 0.5.0 package adds an SVD resource to run configuration.
-MMIO read/write and Target.mmio are not implemented yet; selecting SVD grants no access.
+Operations use [Target.mmio.read/write](api/mmio.md); an SVD alone does not validate a device.
 
 ```toml
 [config]
@@ -45,4 +45,4 @@ svd.capture (runner write). ZIP integrity may fail earlier at the package layer.
 Messages/details are diagnostic; codes provide stable classification.
 
 This validates a description, not a board, Renode model or physical MMIO transaction.
-Operations, override and transport qualification remain a separate package.
+See the [MMIO reference](api/mmio.md) for operations, override and transport guarantees.

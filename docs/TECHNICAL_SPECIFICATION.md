@@ -5,10 +5,10 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.103 (SVD: загрузка и захват для 0.5.0) |
+| **Ревизия** | 0.104 (SVD и публичный MMIO для 0.5.0) |
 | **Дата формирования** | 16.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
-| **Целевая версия** | Кандидат пакета stm32-gdbtest `0.5.0`; API_VERSION=2, target schema 3 (schema 1/2 совместимы), ТЗ API 0.3.19; контракты memory/write (р.0.99), Renode и QEMU (р.0.102). Публикация владельцем после CI итогового SHA. |
+| **Целевая версия** | Кандидат пакета stm32-gdbtest `0.5.0`; API_VERSION=2, target schema 3 (schema 1/2 совместимы), ТЗ API 0.3.20; MMIO/SVD (р.0.104), контракты memory/write (р.0.99), Renode и QEMU (р.0.102). Публикация владельцем после CI итогового SHA. |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
@@ -176,6 +176,14 @@
 | 0.102 | 16.10.2026 | Минимальный QEMU netduinoplus2, явный semihosting, TC-177. |
 
 | 0.103 | 16.10.2026 | Ограниченный SVD-loader, снимок в конфигурации/пакете, TC-178. |
+
+| 0.104 | 16.10.2026 | SVD-каталог используется публичным Target.mmio; контракт операций — ТЗ API 4.21. |
+
+### Изменения ревизии 0.104
+
+| Пункт | Тип | Содержание |
+| --- | --- | --- |
+| 5.20.13 | изм. | Связь снимка SVD с публичным MMIO; TC-178 и ТЗ API TC-31 |
 
 ### Изменения ревизии 0.103
 
@@ -1893,9 +1901,9 @@ session.toml без подстановок или сетевой загрузк�
 Поддержанное подмножество ДОЛЖНО сохранять права/побочные эффекты; неизвестные
 конструкции отклоняются, отсутствующий access не становится rw. Ошибки ДОЛЖНЫ
 классифицироваться svd.source/syntax/forbidden_construct/limit/reference/integrity/capture
-со stage=configuration, effect=none. MMIO-операции этим пакетом НЕ предоставляются.
+со stage=configuration, effect=none. Операции по каталогу ДОЛЖНЫ выполняться согласно ТЗ API 4.21.
 Получатель ДОЛЖЕН проверять снимок и строить каталог из его байтов, а не открывать
-исходный путь. [N] (р.0.103)
+исходный путь. [N] (р.0.104)
 
 ### 5.21. Захват журнала результатов (р.0.72)
 

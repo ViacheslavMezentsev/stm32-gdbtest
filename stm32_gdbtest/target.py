@@ -237,6 +237,9 @@ class Target:
             target=profile, api=dict(schema=1, records=dict(DEFAULTS)), image=None))
         limits = self._config['api']['records']
         self._journal = Journal(**{key: limits[key] for key in DEFAULTS})
+        from stm32_gdbtest.mmio import MMIO, GdbTransport
+        self.mmio = MMIO(configuration.svd_catalog if configuration else None,
+                         GdbTransport(gdb, profile), self.record)
         self.owned = []
         self.stops = []
         # Fault guard functions; the architecture adapter may replace them at boot (portability P1-7).

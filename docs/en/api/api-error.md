@@ -24,7 +24,7 @@ into the same dictionary. `code` is also available as a property.
 
 Limitations: the operation vocabulary is closed (`read`, `write`, `eval`, `registers`, `frames`,
 `breakpoint`, `watch`, `resume`, `reach`, `step`, `until`, `finish`, `ret`, `call`, `reset`, `execute`,
-`record`, `records`, `config`); stages are `validation`, `command`, `observe`, `readback`; effects are
+`record`, `records`, `config`, `mmio.read`, `mmio.write`); stages are `validation`, `command`, `observe`, `readback`, `transport`, `audit`; effects are
 `none`, `unknown`, `partial`, `applied`. `effect` reports only the observed effect and a failure does
 not roll back what already happened. The full code set is formed as the methods are implemented.
 
@@ -44,3 +44,5 @@ An operation failure differs from a check mismatch: the former is `ApiError`, th
 ## References
 
 - [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.7.
+
+[MMIOError](mmio.md) defines the effect=none/unknown boundary and journal failures.

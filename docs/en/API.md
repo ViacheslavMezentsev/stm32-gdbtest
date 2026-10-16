@@ -479,4 +479,4 @@ name and numeric arguments. Contract PASS does not authorize an unsafe call.
 
 ## SVD migration for 0.5.0
 
-[Loading, capture and compatibility](SVD.md). MMIO operations are not shipped yet.
+[Loading, capture and compatibility](SVD.md). Public [mmio.read/write](api/mmio.md) are available in the 0.5.0 candidate.

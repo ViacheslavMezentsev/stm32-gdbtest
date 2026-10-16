@@ -345,3 +345,7 @@ and PC/SP restored; no boards used. Example: tests/renode-startup/run_cpp.py.
 Linux Docker: docs/host/format 7/7; host 482 tests, 6 expected skips.
 Linux xPack 14 + Renode 1.17: 20 offline and 32 runtime assertions PASS.
 Implementation checked at 1a4c2b8; the subsequent documentation commit only records results.
+
+## MMIO — 0.5.0 candidate
+
+Public MMIO read/write (0.5.0 candidate) were checked with host regressions and a Renode 1.17 teaching model on Windows/Linux using xPack 14.2.1 (GDB 15.2.90). Coverage includes permissions/effects, 8/16/32-bit writes, RTC/FIFO/W1C, override, inheritance, no retry after lost ACK/short reply and an incorrect-SVD negative control. No hardware qualification of these operations was performed. [Commands and artifacts](../../tests/mmio-renode/README.md).

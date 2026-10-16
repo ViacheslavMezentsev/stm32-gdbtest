@@ -60,8 +60,7 @@ time and complex wiring. See the [official modeling guide](https://renode.readth
 
 SVD tags do not create device behavior. A teaching SVD must match REPL and callbacks;
 define effect oracles independently of the SVD generator/parser. Test incorrect
-access/readAction and explicit description overrides separately. The SVD/MMIO parser
-is not yet a public module API.
+access/readAction and explicit description overrides separately. The 0.5.0 candidate provides [SVD and mmio.read/write](../../../docs/en/api/mmio.md); the internal parser does not replace an independent model oracle.
 
 Renode width translation can split accesses and introduce RMW; inspect supported
 interfaces and AllowedTranslation. Unsupported addresses/widths may produce a warning

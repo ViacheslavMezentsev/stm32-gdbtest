@@ -3,8 +3,7 @@
 [Documentation](index.md) · [Русский](../ru/MMIO.md)
 
 **Known limitation: the existing general memory methods are not an MMIO interface
-without hidden accesses.** A separate contract is being investigated; there is no
-public MMIO method yet. This document describes current behavior without changing it.
+without hidden accesses.** The 0.5.0 candidate provides a separate [mmio interface](api/mmio.md). The warnings below about general methods still apply.
 
 ## What scenario authors need to know
 

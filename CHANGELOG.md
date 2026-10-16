@@ -6,7 +6,9 @@
 
 ## [Unreleased]
 
-- Ограниченный SVD-loader, [mmio].svd, неизменяемый каталог и перенос исходных байтов через runner/пакет; без MMIO-операций.
+- Публичные Target.mmio.read/write: SVD-права и эффекты, явный override, один прямой RSP-запрос без readback/повтора, MMIOError и журнал; host и Renode, без аппаратной приёмки.
+
+- Ограниченный SVD-loader, [mmio].svd, неизменяемый каталог и перенос исходных байтов через runner/пакет.
 
 - Для 0.5.0: минимальный QEMU backend (netduinoplus2), semihosting по выбору, loopback GDB, host и Windows/Linux проверки; общий lifecycle Renode сохранён.
 

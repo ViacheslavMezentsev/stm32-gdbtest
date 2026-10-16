@@ -23,7 +23,7 @@
 
 Ограничения: словарь операций закрыт (`read`, `write`, `eval`, `registers`, `frames`, `breakpoint`,
 `watch`, `resume`, `reach`, `step`, `until`, `finish`, `ret`, `call`, `reset`, `execute`, `record`,
-`records`, `config`); шаги — `validation`, `command`, `observe`, `readback`; эффекты — `none`,
+`records`, `config`, `mmio.read`, `mmio.write`); шаги — `validation`, `command`, `observe`, `readback`, `transport`, `audit`; эффекты — `none`,
 `unknown`, `partial`, `applied`. `effect` сообщает только наблюдаемый эффект, отказ не откатывает уже
 выполненные действия. Полный перечень кодов формируется по мере реализации методов.
 
@@ -42,3 +42,5 @@ except ApiError as error:
 ## Ссылки
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.2.7.
+
+[MMIOError](mmio.md) уточняет границу effect=none/unknown и ошибки журнала.
