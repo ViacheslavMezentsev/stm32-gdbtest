@@ -337,3 +337,10 @@ AT32/Windows/J-Link 8.32 на `9747eab`: 4 PASS + 1 SKIP, 13 записей, 15 
 [Renode](RENODE_PROBES.md#регрессия-memorywrite). ELF -O0/-g3; обычная RAM, модель Cortex-M3.
 Это не аппаратная приёмка P5; короткий ответ настоящего GDB не воспроизведён. Сигнатуры и
 API_VERSION=2 сохранены; нормативный контракт — ТЗ API 0.3.17.
+
+## C++ preflight — 16.10.2026
+
+C++ preflight, кандидат 0.4.2: Windows host — 482 теста, 16 штатных пропусков; xPack GCC/GDB 13/14/15,
+Renode 1.17 — в каждом прогоне 20 offline и 32 runtime-утверждения PASS.
+Прежний preflight с тем же fixture даёт ожидаемый FAIL на this. Объект, PC/SP
+восстановлены; платы не использовались. Пример: tests/renode-startup/run_cpp.py.

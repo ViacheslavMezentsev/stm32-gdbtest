@@ -6,9 +6,9 @@
 
 | Property | Value |
 | --- | --- |
-| Module support | 0.3.0.dev0 (core) |
-| API specification contract | not accepted; designed revision 0.3.0 |
-| API_VERSION | 1 (the effective contract does not change) |
+| Module support | 0.3.0 |
+| API specification contract | accepted, section 4.8 |
+| API_VERSION | 2 (package 0.4.x) |
 | Basis | the agreed verification firmware `tests/firmware` and its scenarios (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
 
 ## Purpose
@@ -17,9 +17,11 @@ Calls a debugged program's function on the halted core and returns the call resu
 
 ## Contract and limitations
 
-Arguments are passed by value: integers, finite floating-point numbers, booleans and safe GDB expressions (`&object`, members, casts) are accepted. The result describes `operation`, `function`, `arguments`, the built `expression`, `outcome`, `return_value` and `return_state` (`available` or `void`), and the call is recorded in `mutations`.
+Arguments are passed by value: integers, finite floating-point numbers, booleans are accepted; GDB expression strings are rejected. The result describes `operation`, `function`, `arguments`, the built `expression`, `outcome`, `return_value` and `return_state` (`available` or `void`), and the call is recorded in `mutations`.
 
-The defaults are `depth = 1` (maximum 2) and `args_max = 4` (maximum 8); a profile may raise them while a call may only lower them.
+The function name must be a plain identifier. `Class::method`, `namespace::function`
+and `object.method` produce `invalid_function`; a string argument produces
+`unsupported_argument`. Successful [C++ preflight](../CONTRACTS.md) does not extend this interface.
 
 Limitations: the call runs on the halted core and changes its state — the function's side effects
 are kept; a long call is bounded by the scenario timeout; pointers, floating-point numbers and
@@ -37,4 +39,4 @@ exception.
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), section 4.8; the current contract is not extended in 0.4.2.

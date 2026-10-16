@@ -334,3 +334,10 @@ Repeat with `tests/renode-startup/run_contracts.py`; arguments and revision comp
 [Renode](RENODE_PROBES.md#memorywrite-regression). ELF -O0/-g3; ordinary RAM, Cortex-M3 model.
 This is not P5 hardware acceptance; an actual short GDB response was not reproduced. Signatures and
 API_VERSION=2 remain unchanged; normative contract: API specification 0.3.17.
+
+## C++ preflight — 16.10.2026
+
+C++ preflight, 0.4.2 candidate: Windows host — 482 tests, 16 expected skips; xPack GCC/GDB 13/14/15,
+Renode 1.17 — 20 offline and 32 runtime assertions PASS in each run.
+The previous preflight fails on this with the same fixture, as expected. Object
+and PC/SP restored; no boards used. Example: tests/renode-startup/run_cpp.py.

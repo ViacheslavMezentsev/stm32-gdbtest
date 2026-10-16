@@ -461,3 +461,12 @@ Prepare устанавливает закреплённый SDK через `tool
 к типу адресата; прежний побочный двойной вызов исчезает. Отказ GDB при присваивании имеет
 command_failed/effect=unknown, отказ последующего чтения — read_failed/effect=applied.
 Подробности и границы: [memory](api/memory.md), [write](api/write.md).
+
+## Миграция C++ preflight к 0.4.2
+
+Schema 1 и API_VERSION=2 сохраняются. Контракт может явно задавать `this` как
+`Class * const` или `const Class * const` по DWARF; подмена константности объекта
+константностью указателя недопустима. Старые C-контракты не требуют изменений.
+Квалифицированные имена `Class::method` и `namespace::function` относятся к
+[preflight](CONTRACTS.md), но не к [call](api/call.md): тот по-прежнему принимает
+простое имя и числовые аргументы. PASS контракта не разрешает небезопасный вызов.

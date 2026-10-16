@@ -86,3 +86,6 @@ Examples: [tables and writes](TESTING_TECHNIQUES.md#tech-010),
 Existing tools check syntax, parameters and requested ELF contracts. Text-based hints cannot
 replace semantic review and may be wrong. This page introduces no new automated checker.
 Preflight is not a hardware test and does not prove that the scenario body is error-free.
+
+For a C++ contract, inspect DWARF for `this`: `T * const` and `const T *` differ.
+The 0.4.2 candidate supports pointer qualifiers; see [details](CONTRACTS.md).

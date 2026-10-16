@@ -637,6 +637,8 @@ that interface. `Object::method` and `object.method` do not become valid names m
 and evidence the scenario must retain. An inline declaration does not guarantee a callable body.
 Hidden `this` may have type `Object * const`, distinct from `Object *` and `const Object *`;
 do not remove qualifiers just to pass preflight.
+The 0.4.2 candidate accepts `Object * const` in an explicit this contract;
+`tests/renode-startup/run_cpp.py` separates offline inspection from a real call in Renode.
 
 Before changing ordinary memory, compare an independently known layout with DWARF, then check
 the returned byte count against the size. Equality of two equally short snapshots proves nothing.

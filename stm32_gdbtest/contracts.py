@@ -116,6 +116,10 @@ def inspect_contracts(api, selected):
 
     def ctype(name, block):
         # Resolve pointer spelling explicitly: lookup_type accepts names, not C expressions.
+        # ТЗ 5.6.12: preserve const at each level, including DWARF artificial this.
+        name = name.strip()
+        if name.endswith(" const"):
+            return ctype(name[:-6], block).const()
         if name.endswith(" *"):
             return ctype(name[:-2], block).pointer()
         if name.startswith("const "):

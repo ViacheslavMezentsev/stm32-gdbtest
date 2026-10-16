@@ -1,5 +1,13 @@
 # Дорожная карта
 
+## 16.10.2026 — P2: C++ preflight
+
+Ветка `codex/cpp-preflight-qualifiers`: const на уровнях указателя, явный this,
+регрессии static/namespace и границы вызова; Target.call без изменений.
+ТЗ 0.100; API_VERSION=2 и schema 1 сохранены. Подписанный коммит, push/CI/land владельцем.
+Далее — оставшиеся P2-регрессии и отдельная аппаратная приёмка P5.
+
+
 ## 16.10.2026 — P2: memory/write
 
 Ветка `codex/memory-write-contracts`: полный ответ memory, однократный RHS write,

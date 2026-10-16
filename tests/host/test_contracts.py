@@ -126,3 +126,57 @@ class ContractTests(unittest.TestCase):
         self.assertEqual(report["status"], "ERROR")
         self.assertEqual(report["contracts"]["status"], "ERROR")
         self.assertFalse((out / "server.log").exists())
+
+
+class CppQualifierTests(unittest.TestCase):
+    """Structural GDB double: qualifiers at different levels must remain distinct."""
+
+    def test_this_qualifiers_and_existing_c_types(self):
+        class Type:
+            def __init__(self, name): self.name = name
+            def pointer(self): return Type(("pointer", self.name))
+            def const(self): return Type(("const", self.name))
+            def strip_typedefs(self): return self
+            def __eq__(self, other): return isinstance(other, Type) and self.name == other.name
+
+        base = Type("Counter")
+        for spelling, actual_type in [
+            ("Counter *", base.pointer()),
+            ("Counter * const", base.pointer().const()),
+            ("const Counter *", base.const().pointer()),
+            ("const Counter * const", base.const().pointer().const()),
+            ("Counter const * const", base.const().pointer().const()),
+            ("Counter * const *", base.pointer().const().pointer()),
+            ("unsigned int", Type("unsigned int")),
+        ]:
+            class FunctionType(Type):
+                def target(self): return Type("void")
+                def fields(self): return [type("Field", (), {"type": actual_type})()]
+
+            class Symbol:
+                is_function = True
+                type = FunctionType("function")
+                def value(self): return type("Value", (), {"address": 0x08000100})()
+
+            class Api:
+                def lookup_type(self, name, block):
+                    if name not in ("Counter", "void", "unsigned int"):
+                        raise ValueError("Unknown type: " + name)
+                    return Type(name)
+                def lookup_global_symbol(self, name): return Symbol()
+                def block_for_pc(self, address):
+                    return [type("Arg", (), {"name": "this", "type": actual_type, "is_argument": True})()]
+
+            def inspect(typename):
+                return inspect_contracts(Api(), {"contracts": {"cpp": {
+                    "type_context": "Counter::add", "functions": {"Counter::add": {
+                        "returns": "void", "arguments": [{"name": "this", "type": typename}]}}}}})
+
+            with self.subTest(spelling=spelling):
+                self.assertEqual(inspect(spelling)["status"], "PASS")
+                self.assertEqual(inspect("absent type")["status"], "ERROR")
+                if spelling == "Counter * const":
+                    for wrong in ("Counter *", "const Counter *", "const Counter * const"):
+                        report = inspect(wrong)
+                        self.assertEqual(report["status"], "ERROR")
+                        self.assertIn("argument 0", report["errors"][0]["error"])

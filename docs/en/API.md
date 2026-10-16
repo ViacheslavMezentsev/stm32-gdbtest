@@ -464,3 +464,12 @@ responses with incomplete_read. `write()` evaluates RHS once and verifies the va
 to the destination type; the previous duplicate side effect is removed. GDB assignment failures
 use command_failed/effect=unknown; subsequent read failures use read_failed/effect=applied.
 See [memory](api/memory.md) and [write](api/write.md) for details and limits.
+
+## Migrating C++ preflight to 0.4.2
+
+Schema 1 and API_VERSION=2 are unchanged. A contract can explicitly declare `this`
+as `Class * const` or `const Class * const` according to DWARF; pointer constness
+must not replace object constness. Existing C contracts need no migration.
+Qualified names `Class::method` and `namespace::function` belong to
+[preflight](CONTRACTS.md), not [call](api/call.md): that method still accepts a plain
+name and numeric arguments. Contract PASS does not authorize an unsafe call.

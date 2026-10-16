@@ -51,7 +51,7 @@ snapshot is stored separately from the build.
 Argument and return types are resolved in the function's own block. A global
 `lookup_type` produced a false `GPIO_TypeDef` mismatch between C and C++ compilation
 units, and comparing strings does not fix that, so GDB Type equality in the right
-context is used. Named types, `const Type` and `Type *` are supported; there is no
+context is used. Named types, `const Type`, `Type *` and `Type * const` are supported; there is no
 universal C/C++ parser for arrays, templates and function pointers.
 
 ## Limits of the evidence
@@ -71,3 +71,40 @@ CI exercises the mechanism on the CI firmware, including 10 negative contract
 variants ([checks and CI](testing.md)).
 [Profile contracts and offline regression](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/HAL_CONTRACTS.md)
 (Russian) stay with the stand project.
+
+## C++: qualified names and `this` (0.4.2)
+
+`functions` and `type_context` accept `Probe::add`, `Probe::twice` and
+`demo::increment` when `lookup_global_symbol` finds the function in the selected ELF.
+This is contract inspection, not a new form of `Target.call()`.
+
+Types retain qualifiers at each level: `Probe * const` is a const pointer to a mutable
+object; `const Probe *` points to a const object; `const Probe * const` has both
+qualifiers. `Probe const` is also supported. Qualifiers are not discarded; typedefs
+are stripped for comparison. This is a limited resolver for named types, pointers
+(the ` *` separator) and `const`, not a general C++ parser.
+
+Include the artificial `this` argument explicitly in the ordered list as represented
+in DWARF. With the tested GCC, `Probe::add(unsigned n)` requires:
+
+```json
+{"returns": "void", "arguments": [
+  {"name": "this", "type": "Probe * const"},
+  {"name": "n", "type": "unsigned int"}
+]}
+```
+
+For `unsigned Probe::read() const`, expect `this: const Probe * const`;
+static methods and namespace functions have no `this`.
+Inspect the actual ELF: other compilers and optimization may change its representation.
+An absent inline method produces ERROR, not a skip.
+
+Preflight PASS does not prove object readiness, call safety or compatibility with
+`Target.call()`. Methods use the separate direct-GDB technique on a halted core with
+known object state. Overloads, inheritance, virtual calls, constructors and LTO are
+not accepted by this example.
+
+Repeatable check: `tests/renode-startup/run_cpp.py --cxx <arm-g++> --gdb <gdb-py3>
+--renode <renode>`. A separate batch GDB without an inferior runs first, then Renode;
+results, negative contracts and input hashes are in `build/cpp-preflight/<run>/`.
+`--module-root` compares the same ELF fixture with an earlier core.
