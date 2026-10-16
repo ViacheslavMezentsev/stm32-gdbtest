@@ -178,7 +178,17 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
         program_sha = None
         configuration = session.get('_configuration')
         if configuration:
-            (out / 'config.json').write_text(dumps(configuration), encoding='utf-8')
+            try:
+                (out / 'config.json').write_text(dumps(configuration), encoding='utf-8')
+                if configuration.svd_catalog is not None:
+                    from stm32_gdbtest.svd import save_source
+                    report['svd'] = save_source(out, configuration.svd_catalog,
+                                                configuration._source_bytes['svd'])
+            except OSError as exc:
+                if configuration.svd_catalog is not None:
+                    from stm32_gdbtest.svd import SvdError
+                    raise SvdError('svd.capture') from exc
+                raise
         if configuration and configuration.config['image'] is not None:
             full_policy = thaw(configuration.config['image']['image'])
             policy_sha = configuration.config_props['image']['sha256']

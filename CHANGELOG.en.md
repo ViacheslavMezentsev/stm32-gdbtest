@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Bounded SVD loader, [mmio].svd, immutable catalog and source-byte transport through runner/packages; no MMIO operations.
+
 - For 0.5.0: minimal QEMU backend (netduinoplus2), opt-in semihosting, loopback GDB, host and Windows/Linux checks; shared Renode lifecycle retained.
 
 - For 0.5.0: native local Renode backend, target schema 3, isolated scenarios and emulator artifacts; Windows/Linux example. Keep is deferred.

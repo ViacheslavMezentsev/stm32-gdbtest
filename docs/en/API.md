@@ -476,3 +476,7 @@ must not replace object constness. Existing C contracts need no migration.
 Qualified names `Class::method` and `namespace::function` belong to
 [preflight](CONTRACTS.md), not [call](api/call.md): that method still accepts a plain
 name and numeric arguments. Contract PASS does not authorize an unsafe call.
+
+## SVD migration for 0.5.0
+
+[Loading, capture and compatibility](SVD.md). MMIO operations are not shipped yet.

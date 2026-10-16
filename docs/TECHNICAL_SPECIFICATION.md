@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.102 (минимальный QEMU для 0.5.0) |
+| **Ревизия** | 0.103 (SVD: загрузка и захват для 0.5.0) |
 | **Дата формирования** | 16.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | Кандидат пакета stm32-gdbtest `0.5.0`; API_VERSION=2, target schema 3 (schema 1/2 совместимы), ТЗ API 0.3.19; контракты memory/write (р.0.99), Renode и QEMU (р.0.102). Публикация владельцем после CI итогового SHA. |
@@ -174,6 +174,15 @@
 | 0.101 | 16.10.2026 | Штатный Renode, target schema 3, отдельное окружение эмулятора, TC-176; переход к 0.5.0. |
 
 | 0.102 | 16.10.2026 | Минимальный QEMU netduinoplus2, явный semihosting, TC-177. |
+
+| 0.103 | 16.10.2026 | Ограниченный SVD-loader, снимок в конфигурации/пакете, TC-178. |
+
+### Изменения ревизии 0.103
+
+| Пункт | Тип | Содержание |
+| --- | --- | --- |
+| 5.20.13 | нов. | SVD: загрузка, бюджеты, капсула и ошибки |
+| 9, 10 | нов. | TC-178 и прослеживаемость |
 
 ### Изменения ревизии 0.102
 
@@ -1873,6 +1882,21 @@ api — defaults с config_props['api']=None; невыбранный image — N
 config/config_props с используемым profile/image и defaults; повреждение переноса,
 устаревший manifest и конфликты ДОЛЖНЫ отклоняться до запуска MCU. `[N]` (р.0.60)
 
+5.20.13. Необязательный [mmio].svd в session.toml ДОЛЖЕН задавать файл относительно
+session.toml без подстановок или сетевой загрузки. Выбранный SVD ДОЛЖЕН быть захвачен
+как исходные байты/SHA-256 и неизменяемый каталог до сервера; ошибки запрещают запуск.
+Капсула с SVD ДОЛЖНА иметь schema=2, без SVD сохранять schema=1; пакет переносит снимок
+без зависимости от исходного пути. Runner ДОЛЖЕН сохранить source.svd до сервера
+и проверить байты; ошибка записи — svd.capture, несовпадение — svd.integrity.
+Парсер ДОЛЖЕН ограничивать исходник 8 MiB, глубину XML 64, узлы 100000, derived-depth 32,
+экземпляры/регистры 100000, копии узлов 2000000, dim 4096; DTD/сущности запрещены.
+Поддержанное подмножество ДОЛЖНО сохранять права/побочные эффекты; неизвестные
+конструкции отклоняются, отсутствующий access не становится rw. Ошибки ДОЛЖНЫ
+классифицироваться svd.source/syntax/forbidden_construct/limit/reference/integrity/capture
+со stage=configuration, effect=none. MMIO-операции этим пакетом НЕ предоставляются.
+Получатель ДОЛЖЕН проверять снимок и строить каталог из его байтов, а не открывать
+исходный путь. [N] (р.0.103)
+
 ### 5.21. Захват журнала результатов (р.0.72)
 
 5.21.1. session.toml ДОЛЖЕН принимать [results] capture=true/false (по умолчанию false).
@@ -2610,6 +2634,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-175 | `CppQualifierTests`; `tests/renode-startup/run_cpp.py` (T/D) | this, const-метод, static/namespace, неверная сигнатура и отсутствующий inline; offline без inferior, Renode с восстановлением объекта/PC/SP (р.0.100) |
 | TC-176 | tests/host/test_renode_backend.py, test_target_reset.py; tests/renode-backend/run.py Windows/Linux | Schema/отказы до транспорта, prepare, PASS/FAIL/reset refusal/timeout/repeat PASS, capture и cleanup |
 | TC-177 | tests/host/test_qemu_backend.py; tests/qemu-backend/run.py Windows/Linux | Конфигурация/отказы, prepare, PASS/FAIL/reset/timeout/repeat, ранний выход, semihosting и cleanup (р.0.102) |
+| TC-178 | tests/host/test_svd.py; Windows/Linux, без MCU | SVD: права, массивы/наследование, бюджеты, захват и перенос (р.0.103) |
 | TC-174 | `ProbeTests`; `tests/renode-startup/run.py` (T/D) | Отказ готовности и очистка; реальный startup, вызов C++-метода, отрицательный контроль и повторный запуск (р.0.98) |
 | TC-171 | `StandLoopTests` (T), ручной пакетный прогон (I) | Конечные циклы, неизменные снимки, doctor/prepare gate, PASS/FAIL/SKIP/ERROR, capture/JUnit, STOP, lock, место и отдельные коды обработки (р.0.92) |
 
@@ -2845,6 +2870,7 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | 6.11.1–6.11.4 | BE, PR, PS, RM, DR, compatibility.py | TC-168 (р.0.85) |
 | 6.12.1, 6.12.2, 6.12.3, 6.12.4, 6.12.5 | emulators.py, profile.py, runner.py, agent.py | TC-176 (р.0.101) |
 | 6.13.1, 6.13.2, 6.13.3, 6.13.4 | emulators.py, runner.py, doctor.py, agent.py | TC-177 (р.0.102) |
+| 5.20.13 | svd.py, configuration.py, config_transport.py, runner.py, package.py | TC-178 (р.0.103) |
 | 7.1.1–7.1.3 | RU; AG; все загрузчики схем | TC-03, TC-11, TC-22, TC-59 |
 | 7.1.4 | AG: `finish`; RU: recovery | TC-68, TC-70 |
 | 7.2.1 | RU: `local_directory`, `hwtest-tmp` | TC-24 |
@@ -3337,3 +3363,4 @@ QEMU, keep, SSH, multicore, зависимости REPL и внутрисцен�
 | Пункт | Метод | Проверка |
 | --- | --- | --- |
 | 6.13.1–6.13.4 | T | TC-177: host и Windows/Linux QEMU; не HW-приёмка |
+| 5.20.13 | T | TC-178: host Windows/Linux, SVD capture/package |

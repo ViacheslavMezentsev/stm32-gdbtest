@@ -55,6 +55,7 @@ class Configuration:
     session_sha256: str | None
     _source_bytes: object = field(repr=False)
     capture_results: bool = False
+    svd_catalog: object = field(default=None, repr=False)
 
 
 def _target_from_snapshot(raw):
@@ -73,6 +74,7 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
             "STM32_GDBTEST_IMAGE_POLICY"):
         raise ConfigError("conflict", "session config and PROFILE/image override")
     path = Path(path).resolve()
+    supplied_reader = reader
     reader = Path.read_bytes if reader is None else reader
     cache = {}
 
@@ -88,8 +90,8 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
         return cache[source]
 
     session_raw, session, session_sha = capture(path)
-    if "config" not in session or set(session) - {"config", "data", "results"} or type(session["config"]) is not dict:
-        raise ConfigError("session", "expected [config], optional [data] and [results]")
+    if "config" not in session or set(session) - {"config", "data", "results", "mmio"} or type(session["config"]) is not dict:
+        raise ConfigError("session", "expected [config], optional [data], [results] and [mmio]")
     results = session.get("results", {})
     if (type(results) is not dict or set(results) - {"capture"}
             or type(results.get("capture", False)) is not bool):
@@ -125,6 +127,24 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
         raw_documents["data." + name] = raw
         props["data." + name] = dict(data=parsed, sha256=sha, reference=reference)
 
+    catalog = None
+    if 'mmio' in session:
+        from stm32_gdbtest import svd
+        mmio = session['mmio']
+        if (not isinstance(mmio, dict) or set(mmio) != {'svd'}
+                or type(mmio['svd']) is not str or not mmio['svd'].strip()):
+            raise ConfigError('session', '[mmio] requires only a nonempty svd path')
+        reference = mmio['svd']
+        source = (path.parent / reference).resolve()
+        try:
+            raw = supplied_reader(source) if supplied_reader else svd.read_source(source)
+        except (OSError, KeyError) as exc:
+            raise svd.SvdError('svd.source') from exc
+        catalog = svd.parse(raw)
+        raw_documents['svd'] = raw
+        props['svd'] = dict(reference=reference, sha256=catalog.sha256,
+                            data=dict(registers=len(catalog.registers)))
+
     try:
         target = _target_from_snapshot(raw_documents["target"])
     except ValueError as exc:
@@ -153,7 +173,7 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
     effective_api = dict(api, records={**DEFAULTS, **records})
     effective = dict(target=target, api=effective_api, image=image, data=data)
     return Configuration(freeze(effective), freeze(props), session_sha,
-                         MappingProxyType(dict(raw_documents, session=session_raw)), results.get("capture", False))
+                         MappingProxyType(dict(raw_documents, session=session_raw)), results.get("capture", False), catalog)
 
 
 def load_legacy(session, *, image_policy=None, environ=None, reader=None):

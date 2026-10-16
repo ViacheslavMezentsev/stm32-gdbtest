@@ -16,7 +16,7 @@ def dumps(snapshot):
     files = {name: {"base64": base64.b64encode(raw).decode("ascii"),
                     "sha256": hashlib.sha256(raw).hexdigest()}
              for name, raw in snapshot._source_bytes.items()}
-    return json.dumps(dict(format="stm32-gdbtest-config", schema=1,
+    return json.dumps(dict(format="stm32-gdbtest-config", schema=2 if "svd" in snapshot._source_bytes else 1,
                            defaults=fingerprint(), files=files,
                            references={k: v["reference"] for k, v in snapshot.config_props.items() if v is not None}), allow_nan=False)
 
@@ -33,18 +33,27 @@ def loads(text):
         data = json.loads(text, object_pairs_hook=unique)
         if (set(data) != {"format", "schema", "defaults", "files", "references"}
                 or data["format"] != "stm32-gdbtest-config" or type(data["schema"]) is not int
-                or data["schema"] != 1 or data["defaults"] != fingerprint()):
+                or data["schema"] not in (1, 2) or data["defaults"] != fingerprint()):
             raise ValueError("incompatible capsule or defaults")
         files = data["files"]
-        if not {"target"} <= set(files) or {name for name in set(files) - {"session", "target", "api", "image"}
+        if not {"target"} <= set(files) or {name for name in set(files) - {"session", "target", "api", "image", "svd"}
                                              if not name.startswith("data.")}:
             raise ValueError("invalid capsule file set")
+        if ("svd" in files) != (data["schema"] == 2):
+            raise ValueError("incompatible SVD capsule schema")
         raw = {}
         for name, item in files.items():
             if set(item) != {"base64", "sha256"}:
                 raise ValueError("invalid source metadata")
+            if name == 'svd':
+                from stm32_gdbtest.svd import Limits, SvdError
+                if len(item['base64']) > 4 * ((Limits().bytes + 2) // 3):
+                    raise SvdError('svd.limit', 'limit_bytes')
             value = base64.b64decode(item["base64"], validate=True)
             if hashlib.sha256(value).hexdigest() != item["sha256"]:
+                if name == "svd":
+                    from stm32_gdbtest.svd import SvdError
+                    raise SvdError("svd.integrity")
                 raise ValueError("source hash mismatch")
             raw[name] = value
         import tomllib
@@ -53,6 +62,8 @@ def loads(text):
         if is_new:
             declared = tomllib.loads(raw["session"].decode("utf-8"))
             expected = dict(declared["config"], **{"data." + k: v for k, v in declared.get("data", {}).items()})
+            if 'mmio' in declared:
+                expected['svd'] = declared['mmio']['svd']
             if expected != links:
                 raise ValueError("source references differ from session")
         if not is_new and set(links) - {"target", "image"}:
@@ -78,4 +89,7 @@ def loads(text):
         return load_legacy({"profile": links["target"]}, image_policy=links.get("image"),
                            environ={}, reader=legacy_sources.__getitem__)
     except (ValueError, TypeError, KeyError, AttributeError, UnicodeError) as exc:
+        from stm32_gdbtest.svd import SvdError
+        if isinstance(exc, SvdError):
+            raise
         raise ConfigError("transport", str(exc)) from exc
