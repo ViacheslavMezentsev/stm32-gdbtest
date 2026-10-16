@@ -77,3 +77,5 @@ The skills are part of the module: a change comes with a CHANGELOG entry and a l
 On OrangePi, the results skill needs only the module checkout and saved artifacts. Point the agent
 to SKILL.md in project instructions; no integration with a specific pi shell is required.
 Use documentation matching the result producer; missing fields in old formats remain unknown.
+
+For peripheral investigations use the Renode skill [MMIO resource](stm32-gdbtest-renode/references/mmio.en.md): model access logs, followed by authorized target-board validation. Copy the complete skill directory, including references.

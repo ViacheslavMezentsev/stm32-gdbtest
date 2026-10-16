@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- MMIO warnings in the API reference, techniques and checklist; Renode skill resource for access measurement followed by target-board validation. Known limitations are explicit; core and API unchanged.
+
 - C++ preflight: const at each pointer level and explicit this qualifiers; host and Renode regressions for methods and namespaces. Target.call() is unchanged; its reference card is corrected.
 
 - P2: memory requires complete responses (incomplete_read); write evaluates RHS once with GDB conversions and explicit error effects. Host and neutral Renode regressions, API specification 0.3.17; hardware acceptance remains separate.

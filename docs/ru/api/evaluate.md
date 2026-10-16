@@ -2,6 +2,8 @@
 
 [API](index.md) · [English](../../en/api/evaluate.md)
 
+> **MMIO:** Выражения и преобразования могут читать периферию и иметь побочные эффекты; volatile не задаёт число обращений. [Ограничения и проверка на модели/плате](../MMIO.md).
+
 `evaluate(expression, *, as_type=None) -> int | float | bool | str`
 
 | Свойство | Значение |

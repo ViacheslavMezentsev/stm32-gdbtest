@@ -2,6 +2,8 @@
 
 Documentation · [Русский](../ru/index.md)
 
+**Peripheral registers:** [known MMIO limitations and recommended validation route](MMIO.md).
+
 [Published v0.4.0](../releases/v0.4.0.md); [Release v0.4.1](../releases/v0.4.1.md). See [STATUS](STATUS.md) for the current summary; historical acceptance reports are listed at the end.
 
 Introduction — [README](../../README.en.md): an implementation of [DDTT](DDTT.md) for

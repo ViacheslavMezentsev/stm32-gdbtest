@@ -2,6 +2,8 @@
 
 [API](index.md) · [English](../../en/api/check.md)
 
+> **MMIO:** В таблице строковые actual и expected вычисляются и могут читать MMIO. Готовые Python-значения сравниваются без дополнительных чтений MCU. [Ограничения и проверка на модели/плате](../MMIO.md).
+
 `check(name, actual, expected=<истина>) -> None`; `check(rows) -> int`
 
 | Свойство | Значение |

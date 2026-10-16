@@ -2,6 +2,8 @@
 
 [API](index.md) · [English](../../en/api/memory.md)
 
+> **MMIO:** Метод ограничен окнами SRAM/Flash и не является обходом для доступа к MMIO. Не расширяйте окна профиля ради периферии. [Ограничения и проверка на модели/плате](../MMIO.md).
+
 `memory(address, size | data, *, verify=None) -> bytes | dict`
 
 | Свойство | Значение |

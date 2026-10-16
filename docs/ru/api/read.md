@@ -2,6 +2,8 @@
 
 [API](index.md) · [English](../../en/api/read.md)
 
+> **MMIO:** Составное чтение может затронуть соседние регистры; volatile не гарантирует одно обращение. [Ограничения и проверка на модели/плате](../MMIO.md).
+
 `read(path, *, fields=None, start=0, count=None) -> scalar | list | dict`
 
 | Свойство | Значение |

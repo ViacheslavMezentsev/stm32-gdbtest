@@ -2,6 +2,8 @@
 
 [Documentation](index.md) → API · [Русский](../ru/API.md)
 
+**Peripheral registers:** [known MMIO limitations and recommended validation route](MMIO.md).
+
 [Release v0.3.0](../releases/v0.3.0.md): stm32-gdbtest 0.3.0; candidate v0.2.0-rc.1 was never published. Historical evidence follows.
 
 The v0.4.0 candidate has package version 0.4.0 and `API_VERSION=2`:

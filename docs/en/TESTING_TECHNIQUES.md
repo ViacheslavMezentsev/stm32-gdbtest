@@ -694,3 +694,14 @@ are part of the experience too. Update RU and EN, scenario comments and the styl
 HAL or optimization change, repeat the affected preflight and hardware runs, not only the links.
 
 The 0.4.2 candidate removes repeated RHS evaluation: see the [write contract](api/write.md). Explicit pre-evaluation remains useful for older versions.
+
+## Investigating peripheral accesses
+
+Before applying techniques to MMIO, use the [API limitations](MMIO.md) and
+[Renode skill resource](../../skills/stm32-gdbtest-renode/references/mmio.en.md).
+Correlate three layers: method call → GDB/RSP request → model callback.
+Define expectations from register semantics before running, independently of the model result.
+Check positive and negative cases in Renode first, then repeat the minimal segment on your
+target with the specific server and safe recovery. This is an investigation recommendation,
+not a new scenario syntax rule or proof of exact physical transaction count.
+WO/W1C/FIFO cannot be handled using a generic RAM snapshot.

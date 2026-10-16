@@ -2,6 +2,8 @@
 
 [API](index.md) · [Русский](../../ru/api/memory.md)
 
+> **MMIO:** This method is restricted to SRAM/Flash windows and is not an MMIO bypass. Do not widen profile windows to include peripherals. [Limitations and model/board validation](../MMIO.md).
+
 `memory(address, size | data, *, verify=None) -> bytes | dict`
 
 | Property | Value |

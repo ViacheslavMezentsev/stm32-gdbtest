@@ -2,6 +2,8 @@
 
 [API](index.md) · [Русский](../../ru/api/read.md)
 
+> **MMIO:** Composite reads may touch neighboring registers; volatile does not guarantee one access. [Limitations and model/board validation](../MMIO.md).
+
 `read(path, *, fields=None, start=0, count=None) -> scalar | list | dict`
 
 | Property | Value |

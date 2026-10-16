@@ -2,6 +2,8 @@
 
 [API](index.md) · [Русский](../../ru/api/check.md)
 
+> **MMIO:** String actual and expected table cells are evaluated and may read MMIO. Ready Python values are compared without additional MCU reads. [Limitations and model/board validation](../MMIO.md).
+
 `check(name, actual, expected=<truth>) -> None`; `check(rows) -> int`
 
 | Property | Value |

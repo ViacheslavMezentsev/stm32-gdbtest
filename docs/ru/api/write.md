@@ -2,6 +2,8 @@
 
 [API](index.md) · [English](../../en/api/write.md)
 
+> **MMIO:** Даже verify=False сохраняет чтение before. Однократный RHS не устраняет повторное вычисление LHS и возможный RMW битового поля. Для MMIO outside нет подтверждающего readback; это не делает запись безопасной для WO/FIFO/read-to-clear. [Ограничения и проверка на модели/плате](../MMIO.md).
+
 `write(path, value, *, verify=True) -> dict`; `write(rows, *, verify=True) -> list[dict]`
 
 | Свойство | Значение |

@@ -2,6 +2,8 @@
 
 [API](index.md) · [Русский](../../ru/api/write.md)
 
+> **MMIO:** Even verify=False retains the before read. Single RHS evaluation does not remove repeated LHS evaluation or possible bitfield RMW. MMIO outside scope has no confirming readback; this does not make WO/FIFO/read-to-clear writes safe. [Limitations and model/board validation](../MMIO.md).
+
 `write(path, value, *, verify=True) -> dict`; `write(rows, *, verify=True) -> list[dict]`
 
 | Property | Value |

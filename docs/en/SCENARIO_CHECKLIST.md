@@ -89,3 +89,13 @@ Preflight is not a hardware test and does not prove that the scenario body is er
 
 For a C++ contract, inspect DWARF for `this`: `T * const` and `const T *` differ.
 The 0.4.2 candidate supports pointer qualifiers; see [details](CONTRACTS.md).
+
+## Before accessing MMIO
+
+- Establish register semantics: RO/WO/RW, W1C, read-to-clear, FIFO; allowed width and order.
+- Check hidden accesses: before remains with verify=False; check tables evaluate strings; bitfields may cause RMW.
+- Disable unrelated IDE register refresh during measurement. Halt does not freeze DMA.
+- Run Renode with an access log, then the same segment on an authorized target board/backend.
+- Define semantic recovery, not generic snapshot restoration; do not retry blindly after errors.
+
+[MMIO limitations and skill](MMIO.md). No safe MMIO method has been published yet.

@@ -2,6 +2,8 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [Русский](../../ru/api/index.md)
 
+**Peripheral registers:** [known MMIO limitations and recommended validation route](../MMIO.md).
+
 Accepted public methods, properties and decorator. Current contract: [API specification](../../TECHNICAL_SPECIFICATION_API.md).
 
 Support version identifies implementation availability; specification revision identifies

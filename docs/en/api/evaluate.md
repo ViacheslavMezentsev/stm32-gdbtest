@@ -2,6 +2,8 @@
 
 [API](index.md) · [Русский](../../ru/api/evaluate.md)
 
+> **MMIO:** Expressions and conversions may read peripherals and have side effects; volatile does not specify access count. [Limitations and model/board validation](../MMIO.md).
+
 `evaluate(expression, *, as_type=None) -> int | float | bool | str`
 
 | Property | Value |
