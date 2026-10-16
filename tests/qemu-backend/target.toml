@@ -1,0 +1,11 @@
+schema = 3
+environment = "emulator"
+architecture = "cortex-m"
+name = "NeutralM4"
+mcu = "CortexM4"
+flash_start = 0x08000000
+flash_size = 65536
+breakpoint_limit = 6
+fault_handlers = []
+core_registers = ["pc", "sp"]
+[diagnostic_registers]

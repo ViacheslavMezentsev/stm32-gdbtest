@@ -79,3 +79,11 @@ backticks: `` `@case` ``.
 Example — [v0.3.0](../releases/v0.3.0.md); the former `---` format — [v0.1.0-rc.1](../releases/v0.1.0-rc.1.md).
 
 Branch and commit rules — [maintenance](maintenance.md).
+
+## Moving to 0.5.0: emulators
+
+Existing hardware target schemas 1/2 and stands need no migration. For a new local
+emulator route, create a separate schema 3 target with environment=emulator and
+a stand with [emulator] and [qemu] or [renode]. Do not carry over hardware identity
+or full Flash programming policy. reset currently refuses before a command.
+Configuration and limits: [QEMU](QEMU.md), [Renode](RENODE.md).

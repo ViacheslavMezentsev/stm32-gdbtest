@@ -78,7 +78,7 @@ def load_stand(path):
 def server_spec(stand, port, profile, out):
     # ТЗ 6.4.2/6.5.3: the reset commands come from the dialect of the backend, overridden by the
     # profile section of that backend (schema 2) or by the profile keys (schema 1).
-    if stand["backend"] == "renode":
+    if stand.get("environment") == "emulator":
         return emulators.server_spec(stand, port, profile, out)
     reset_halt, reset_run = probes.dialect(profile, stand["backend"])
     if stand["backend"] == "jlink":

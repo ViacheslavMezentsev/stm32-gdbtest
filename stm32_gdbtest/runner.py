@@ -119,7 +119,7 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
             raise ValueError('Stand and target environments differ')
         if emulator:
             if configuration.config['image'] is not None:
-                raise ValueError('Full Flash programming policies are not supported by Renode')
+                raise ValueError('Full Flash programming policies are not supported by emulators')
             report.update(environment='emulator', hardware_accessed=False,
                           mode='prepare' if prepare_only else 'emulator', emulator=emulators.provenance(stand))
         if prepare_only:
@@ -336,6 +336,10 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                                               stderr=tunnel_log, **spawn_options())
                     heartbeat = remote_host.Heartbeat(server.stdin)
                 else:
+                    if stand['backend'] == 'qemu':
+                        version = subprocess.check_output([stand['executable'], '--version'], timeout=limit)
+                        server_log.write(version)
+                        server_log.flush()
                     server = subprocess.Popen(backend["command"], env=env, cwd=out,
                                               stdout=server_log, stderr=subprocess.STDOUT,
                                               stdin=subprocess.PIPE if stand["backend"] == "renode" else None, **spawn_options())
@@ -366,7 +370,12 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                         raise RuntimeError("GDB server exited before ready; see server.log"
                                            + (" and tunnel.log" + (f" ({hint})" if hint else "") if remote else ""))
                     tunnel = (out / "tunnel.log").read_bytes()[tunnel_from:].decode(errors="replace") if remote else ""
-                    listening = backend["ready"] in text
+                    if stand['backend'] == 'qemu':
+                        with socket.socket() as connection:
+                            connection.settimeout(min(0.2, max(0.01, deadline - time.monotonic())))
+                            listening = connection.connect_ex(('127.0.0.1', port)) == 0
+                    else:
+                        listening = backend["ready"] in text
                     if idle_state is not None:
                         idle_state.observe((out / "server.log").read_bytes())
                         listening = idle_state.idle and idle_state.error is None
@@ -399,7 +408,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
         report["status_before_cleanup"] = report["status"]
         try:
             stop_tree(client)
-            if (stand and stand["backend"] != "renode" and ready and report.get("connection_attempted", True)
+            if (stand and stand.get("environment") != "emulator" and ready and report.get("connection_attempted", True)
                     and report.get("teardown") != "reset_run"):
                 if idle_state is not None:
                     stutil_ready(idle_state, out, server, report, "recovery_wait")
@@ -429,7 +438,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                         server.wait(timeout=25)
                     except subprocess.TimeoutExpired:
                         pass
-                if stand and stand['backend'] == 'renode':
+                if stand and stand.get('environment') == 'emulator':
                     emulators.stop(server, stand['shutdown_timeout_s'])
                     if server is not None and server.stdin is not None:
                         server.stdin.close()
@@ -437,7 +446,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                         with socket.socket() as check_port:
                             check_port.settimeout(1)
                             if check_port.connect_ex(('127.0.0.1', port)) == 0:
-                                raise RuntimeError('Renode GDB port remains open after cleanup')
+                                raise RuntimeError('Emulator GDB port remains open after cleanup')
                     report['cleanup'] = 'VERIFIED'
                 else:
                     stop_tree(server)

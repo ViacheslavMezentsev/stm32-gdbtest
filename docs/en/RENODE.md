@@ -4,7 +4,7 @@
 
 Added for 0.5.0. Each scenario owns a fresh Renode process and one single-core machine.
 Validated route: Renode 1.17, Cortex-M3, Windows and Linux. Emulator PASS is not hardware PASS.
-QEMU, SSH, attach, keep and machine reuse are not supported yet.
+SSH, attach, keep and machine reuse are not supported yet.
 
 ## Configuration
 
@@ -63,3 +63,5 @@ container without networking.
 Reloading ELF does not clear peripheral/event state. Future acceleration may reuse an
 owned process while recreating its machine, with explicit isolation tests. keep is
 currently rejected; preserving machine state needs a separate contract.
+
+[QEMU](QEMU.md) — a separate minimal backend.

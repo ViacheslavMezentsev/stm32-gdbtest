@@ -75,7 +75,7 @@ def main():
         report["flashed"] = False
         if emulator:
             if len(inferior.threads()) != 1:
-                raise RuntimeError('Renode backend requires exactly one CPU thread')
+                raise RuntimeError('Emulator backend requires exactly one CPU thread')
             if not gdb.selected_thread() or not gdb.selected_thread().is_stopped():
                 raise RuntimeError('Emulator CPU is not halted')
             report['identity_verification'] = 'emulator-model; no hardware identity claimed'

@@ -1,5 +1,13 @@
 # Дорожная карта
 
+## 16.10.2026 — минимальный QEMU для 0.5.0
+
+Ветка `codex/qemu-backend`: netduinoplus2, target schema 3, отдельный процесс,
+loopback GDB, semihosting по выбору. Windows QEMU 11.1.0 и Linux 11.0.0: 7/7
+ожидаемых исходов, включая FAIL/ERROR и очистку; Renode 1.17 регрессия на обеих ОС.
+Windows host: 494 теста, 16 skips. Аппаратные стенды не использовались.
+Push → CI итогового SHA → land выполняет владелец. Keep/attach/другие машины отложены.
+
 ## 16.10.2026 — имена общих сценариев
 
 Ветка `codex/scenario-descriptive-names`: четыре файла без release040, ссылки обновлены.
@@ -620,4 +628,4 @@ Offline SUCCESS. Незакрытые отметки в исходном пла�
 Локально: Windows host 489 (16 skips), Linux docs/host/format 7/7; Renode 1.17
 Windows/Linux: prepare и шесть ожидаемых исходов, capture/cleanup. Не аппаратная
 приёмка; push/CI/land — владелец.
-QEMU, зависимости REPL и повторное использование процесса — следующие этапы.
+Минимальный QEMU добавлен следующим этапом; зависимости REPL и повторное использование процесса остаются отложенными.

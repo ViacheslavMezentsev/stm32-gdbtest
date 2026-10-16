@@ -6,7 +6,9 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
-- For 0.5.0: native local Renode backend, target schema 3, isolated scenarios and emulator artifacts; Windows/Linux example. QEMU and keep are deferred.
+- For 0.5.0: minimal QEMU backend (netduinoplus2), opt-in semihosting, loopback GDB, host and Windows/Linux checks; shared Renode lifecycle retained.
+
+- For 0.5.0: native local Renode backend, target schema 3, isolated scenarios and emulator artifacts; Windows/Linux example. Keep is deferred.
 
 
 - Four common scenario filenames describe features without release040; provenance is recorded in comments, while IDs and configuration remain unchanged.

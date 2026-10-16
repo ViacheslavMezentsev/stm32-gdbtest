@@ -6,7 +6,9 @@
 
 ## [Unreleased]
 
-- Для 0.5.0: штатный локальный Renode backend, target schema 3, изоляция сценариев и эмуляторные артефакты; Windows/Linux пример. QEMU и keep отложены.
+- Для 0.5.0: минимальный QEMU backend (netduinoplus2), semihosting по выбору, loopback GDB, host и Windows/Linux проверки; общий lifecycle Renode сохранён.
+
+- Для 0.5.0: штатный локальный Renode backend, target schema 3, изоляция сценариев и эмуляторные артефакты; Windows/Linux пример. Keep отложен.
 
 
 - Имена четырёх общих сценариев описывают возможности без release040; происхождение отмечено в комментариях, идентификаторы и конфигурация сохранены.

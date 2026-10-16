@@ -1,4 +1,4 @@
-"""Owned local emulator configuration and Renode startup (ТЗ 6.12)."""
+"""Owned local emulator configuration and startup (ТЗ 6.12–6.13)."""
 import hashlib
 import math
 import os
@@ -12,6 +12,10 @@ from stm32_gdbtest.toolchain import expand_path
 
 
 def load(document, path):
+    if not isinstance(document.get('emulator'), dict):
+        raise ValueError('emulator must be a table')
+    if document['emulator'].get('backend') == 'qemu':
+        return load_qemu(document)
     if set(document) != {'schema', 'emulator', 'renode'} or type(document['schema']) is not int or document['schema'] != 1:
         raise ValueError('Emulator stand requires schema=1, [emulator] and [renode] only')
     data = document['emulator']
@@ -49,6 +53,8 @@ def path_argument(path):
 
 
 def server_spec(stand, port, profile, out):
+    if stand['backend'] == 'qemu':
+        return qemu_spec(stand, port, profile, out)
     if profile.get('environment') != 'emulator':
         raise ValueError('Renode requires an emulator target schema 3')
     platform = out / 'platform.repl'
@@ -65,6 +71,9 @@ def server_spec(stand, port, profile, out):
 
 
 def provenance(stand):
+    if stand['backend'] == 'qemu':
+        return dict(machine=stand['machine'], semihosting=stand['semihosting'],
+                    lifetime='per-scenario', reset_supported=False, gdb_bind_scope='127.0.0.1')
     return dict(platform_sha256=hashlib.sha256(stand['platform_bytes']).hexdigest(),
                 platform_file='platform.repl', lifetime='per-scenario', reset_supported=False,
                 gdb_bind_scope='server-default; may listen on all interfaces')
@@ -78,10 +87,50 @@ def stop(process, timeout):
             result = subprocess.run(['taskkill', '/PID', str(process.pid), '/T', '/F'],
                                     capture_output=True, timeout=timeout, creationflags=subprocess.CREATE_NO_WINDOW)
             if result.returncode and process.poll() is None:
-                raise RuntimeError('Cannot stop owned Renode process tree')
+                raise RuntimeError('Cannot stop owned emulator process tree')
     else:
         try:
             os.killpg(process.pid, signal.SIGKILL)
         except ProcessLookupError:
             pass
     process.wait(timeout=timeout)
+
+
+def load_qemu(document):
+    """Minimal QEMU contract: an allowlisted single-core machine, no arbitrary args."""
+    if set(document) != {'schema', 'emulator', 'qemu'} or type(document['schema']) is not int or document['schema'] != 1:
+        raise ValueError('QEMU stand requires schema=1, [emulator] and [qemu] only')
+    data = document['emulator']
+    if set(data) - {'backend', 'executable', 'startup_timeout_s', 'shutdown_timeout_s'}:
+        raise ValueError('Unknown emulator setting')
+    model = document['qemu']
+    if not isinstance(model, dict) or set(model) - {'machine', 'semihosting'}:
+        raise ValueError('Unknown QEMU setting')
+    if model.get('machine') != 'netduinoplus2':
+        raise ValueError('QEMU currently supports netduinoplus2 only')
+    semihosting = model.get('semihosting', False)
+    if type(semihosting) is not bool:
+        raise ValueError('semihosting must be boolean')
+    limits = {}
+    for key, default in [('startup_timeout_s', 15), ('shutdown_timeout_s', 5)]:
+        value = data.get(key, default)
+        if type(value) not in (int, float) or not math.isfinite(value) or not 0 < value <= 60:
+            raise ValueError('Invalid ' + key)
+        limits[key] = value
+    executable = shutil.which(expand_path(data.get('executable', 'qemu-system-arm')))
+    if not executable:
+        raise FileNotFoundError('QEMU executable not found')
+    return dict(backend='qemu', environment='emulator', executable=executable,
+                machine=model['machine'], semihosting=semihosting, remote=None,
+                flash='verify-only', **limits)
+
+
+def qemu_spec(stand, port, profile, out):
+    if profile.get('environment') != 'emulator':
+        raise ValueError('QEMU requires an emulator target schema 3')
+    command = [stand['executable'], '-M', stand['machine'], '-display', 'none',
+               '-monitor', 'none', '-serial', 'file:' + str(out / 'uart.log'), '-no-reboot',
+               '-S', '-gdb', f'tcp:127.0.0.1:{port}', '-kernel', str(out / 'firmware.elf')]
+    if stand['semihosting']:
+        command += ['-semihosting-config', 'enable=on,target=native']
+    return dict(command=command, ready=None, reset_halt=None, finish=['disconnect'], setup=[])

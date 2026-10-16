@@ -1,0 +1,15 @@
+# Stand schema; emulator stands use version 1.
+schema = 1
+[emulator]
+# Backend selector: this example uses qemu.
+backend = "qemu"
+# PATH name or absolute path to qemu-system-arm.
+executable = "qemu-system-arm"
+# Positive host seconds, at most 60; defaults 15 and 5.
+startup_timeout_s = 15
+shutdown_timeout_s = 5
+[qemu]
+# Initial supported model; other machines are rejected.
+machine = "netduinoplus2"
+# Opt-in trusted guest access to host semihosting services; default false.
+semihosting = false

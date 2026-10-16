@@ -138,6 +138,13 @@ def diagnose(gdb=None, stand=None, sysfs=Path("/sys/bus/usb/devices")):
         code, text = _output([loaded["executable"], "--version"])
         add("st-util", "FAIL" if code or not re.fullmatch(r"v?\d+\.\d+\.\d+[^\s]*", text) else "OK", text)
 
+    if loaded and loaded['backend'] == 'qemu':
+        code, text = _output([loaded['executable'], '--version'])
+        add('qemu', 'FAIL' if code else 'OK', text)
+        code, text = _output([loaded['executable'], '-machine', 'help'])
+        present = any(line.split() and line.split()[0] == loaded['machine'] for line in text.splitlines())
+        add('model', 'OK' if not code and present else 'FAIL', loaded['machine'])
+        return results
     if loaded and loaded['backend'] == 'renode':
         code, text = _output([loaded['executable'], '--version'])
         add('renode', 'FAIL' if code else 'OK', text)
