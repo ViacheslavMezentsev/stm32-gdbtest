@@ -6,7 +6,9 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
-- Public Target.mmio.read/write: SVD permissions/effects, explicit override, one direct RSP request without readback/retry, MMIOError and audit; host and Renode, no hardware acceptance.
+- Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](docs/en/API_ACCEPTANCE.md).
+
+- Public Target.mmio.read/write: SVD permissions/effects, explicit override, one direct RSP request without readback/retry, MMIOError and audit; host and Renode; the hardware matrix and its scope are recorded above.
 
 - Bounded SVD loader, [mmio].svd, immutable catalog and source-byte transport through runner/packages.
 

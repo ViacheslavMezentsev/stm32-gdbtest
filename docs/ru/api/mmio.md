@@ -2,7 +2,7 @@
 
 [API](index.md) · [English](../../en/api/mmio.md)
 
-Поддержка: кандидат 0.5.0; ТЗ API 0.3.20, п. 4.21; API_VERSION=2.
+Поддержка: кандидат 0.5.0; ТЗ API 0.3.21, п. 4.21; API_VERSION=2.
 
 ```python
 value = target.mmio.read("GPIOA.IDR")
@@ -81,3 +81,5 @@ Override требует непустую причину и совпадение 
 `python -m unittest discover -s tests/host -p test_mmio.py`.
 
 Соединение должно обслуживать ровно один inferior: прямой пакет не выбирает процесс многопроцессного remote-сервера.
+
+Аппаратная приёмка 16.10.2026: шесть MCU, 141 проверка выбранного 32-битного GPIO/DMA маршрута, recovery VERIFIED. Границы и матрица — [API_ACCEPTANCE](../API_ACCEPTANCE.md).

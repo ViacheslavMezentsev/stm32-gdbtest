@@ -2,7 +2,7 @@
 
 [API](index.md) · [Русский](../../ru/api/mmio.md)
 
-Available in the 0.5.0 candidate; API specification 0.3.20 §4.21; API_VERSION=2.
+Available in the 0.5.0 candidate; API specification 0.3.21 §4.21; API_VERSION=2.
 
 ```python
 value = target.mmio.read("GPIOA.IDR")
@@ -81,3 +81,5 @@ W1C, 8/16/32 bits, inheritance, lost ACK and incorrect SVD. Host regression:
 `python -m unittest discover -s tests/host -p test_mmio.py`.
 
 The connection must serve exactly one inferior: raw packets do not select a process on a multiprocess remote server.
+
+Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](../API_ACCEPTANCE.md).

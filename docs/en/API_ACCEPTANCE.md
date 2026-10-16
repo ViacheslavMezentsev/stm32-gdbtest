@@ -348,4 +348,50 @@ Implementation checked at 1a4c2b8; the subsequent documentation commit only reco
 
 ## MMIO — 0.5.0 candidate
 
-Public MMIO read/write (0.5.0 candidate) were checked with host regressions and a Renode 1.17 teaching model on Windows/Linux using xPack 14.2.1 (GDB 15.2.90). Coverage includes permissions/effects, 8/16/32-bit writes, RTC/FIFO/W1C, override, inheritance, no retry after lost ACK/short reply and an incorrect-SVD negative control. No hardware qualification of these operations was performed. [Commands and artifacts](../../tests/mmio-renode/README.md).
+Public MMIO read/write (0.5.0 candidate) were checked with host regressions and a Renode 1.17 teaching model on Windows/Linux using xPack 14.2.1 (GDB 15.2.90). Coverage includes permissions/effects, 8/16/32-bit writes, RTC/FIFO/W1C, override, inheritance, no retry after lost ACK/short reply and an incorrect-SVD negative control. The selected hardware route was subsequently qualified as recorded below. [Commands and artifacts](../../tests/mmio-renode/README.md).
+
+## MMIO/SVD hardware acceptance, 2026-10-16
+
+0.5.0 candidate, implementation `aa2362c`, Windows, xPack 14.2.1-1.1 / GDB
+15.2.90.20241130-git. A local hardware harness called public MMIO/GdbTransport on the
+GDB main thread. This is manual qualification, not a standard runner/CI campaign.
+
+| MCU | GPIO | DMA | Checks | Recovery |
+| --- | --- | --- | --- | --- |
+| F030R8 | PA5 | DMA1 channel1 | 23/23 PASS | VERIFIED |
+| F103 WeAct | PB2 | DMA1 channel1 | 23/23 PASS | VERIFIED |
+| F401CC | PC13 | DMA2 stream0 | 24/24 PASS | VERIFIED |
+| F411CE | PC13 | DMA2 stream0 | 24/24 PASS | VERIFIED |
+| F429ZI | PG13 | DMA2 stream0 | 24/24 PASS | VERIFIED |
+| AT32F403A | PC13 | DMA1 channel1 | 23/23 PASS | VERIFIED |
+
+141 assertions across six hardware runs, not 141 separate scenarios.
+STM32: ST-Link/OpenOCD 0.12.0. AT32: J-Link/WinUSB, Artery OpenOCD
+0.11.0+dev-ga8daba8-dirty (2026-07-10). Other backends were not qualified by this series.
+
+Confirmed: 32-bit IDR, one LED ODR bit, WO set/reset, permission/type/range refusals,
+effect consent and explicit override; single-word DMA M2M, guards, zero and selective
+TC W1C. F4 FCR includes read-only FS: a documented override used only writable mask
+0x87, followed by explicit readback. An ACK alone was not evidence of the effect.
+
+Reviewed minimal SVD subsets came from STM32 CMSIS/Artery SDK, not complete vendor SVDs.
+Addresses/masks were checked against headers; reserved bits and all access sequences
+are not fully described. The subset deliberately restricts NVIC ISPR to read-only.
+
+Admission: halted CPU, confirmed MCU, push-pull GPIO, clocks already enabled, idle DMA,
+clean selected-channel flags/pending. A 16-byte SRAM region was temporarily borrowed
+under a full snapshot, not declared free memory or a universal allocator. F429 also
+excluded DMA2D/ETH/OTGHS/LTDC. Cleanup compared complete Flash/SRAM and CPU context:
+F030: 64/8 KiB, 21 registers; F103: 128/20 KiB, 23; F401: 256/64 KiB, 23;
+F411: 512/128 KiB, 23; F429: 2048/192 KiB plus 64 KiB CCM, 23;
+AT32: 1024/96 KiB, 23. All matched. No Flash writes, reset or resume;
+boards remained halted and owned processes were reaped.
+
+Initial CPU-register harness errors, missing WinUSB and J-Link USB timeout remain
+in local logs; final runs followed harness corrections/reconnection. The public
+core was not changed for these experiments.
+
+**Not qualified by this series:** hardware 8/16-bit accesses, RTC/FIFO destructive
+reads, arbitrary registers/backends, physical APB/AHB transaction counts, automatic
+recovery after losing GDB. Host/Renode fault injection is not hardware fault acceptance.
+This closes the selected MMIO matrix, not the entire release P5 campaign.

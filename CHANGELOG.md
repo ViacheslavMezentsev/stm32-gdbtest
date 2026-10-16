@@ -6,7 +6,9 @@
 
 ## [Unreleased]
 
-- Публичные Target.mmio.read/write: SVD-права и эффекты, явный override, один прямой RSP-запрос без readback/повтора, MMIOError и журнал; host и Renode, без аппаратной приёмки.
+- Аппаратная приёмка 16.10.2026: шесть MCU, 141 проверка выбранного 32-битного GPIO/DMA маршрута, recovery VERIFIED. Границы и матрица — [API_ACCEPTANCE](docs/ru/API_ACCEPTANCE.md).
+
+- Публичные Target.mmio.read/write: SVD-права и эффекты, явный override, один прямой RSP-запрос без readback/повтора, MMIOError и журнал; host и Renode; аппаратная матрица и её границы приведены выше.
 
 - Ограниченный SVD-loader, [mmio].svd, неизменяемый каталог и перенос исходных байтов через runner/пакет.
 

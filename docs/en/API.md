@@ -480,3 +480,6 @@ name and numeric arguments. Contract PASS does not authorize an unsafe call.
 ## SVD migration for 0.5.0
 
 [Loading, capture and compatibility](SVD.md). Public [mmio.read/write](api/mmio.md) are available in the 0.5.0 candidate.
+
+
+Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](API_ACCEPTANCE.md).

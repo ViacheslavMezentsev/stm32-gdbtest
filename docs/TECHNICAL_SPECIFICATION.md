@@ -5,10 +5,10 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.104 (SVD и публичный MMIO для 0.5.0) |
+| **Ревизия** | 0.105 (SVD и публичный MMIO для 0.5.0) |
 | **Дата формирования** | 16.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
-| **Целевая версия** | Кандидат пакета stm32-gdbtest `0.5.0`; API_VERSION=2, target schema 3 (schema 1/2 совместимы), ТЗ API 0.3.20; MMIO/SVD (р.0.104), контракты memory/write (р.0.99), Renode и QEMU (р.0.102). Публикация владельцем после CI итогового SHA. |
+| **Целевая версия** | Кандидат пакета stm32-gdbtest `0.5.0`; API_VERSION=2, target schema 3 (schema 1/2 совместимы), ТЗ API 0.3.21; MMIO/SVD (р.0.104), контракты memory/write (р.0.99), Renode и QEMU (р.0.102). Публикация владельцем после CI итогового SHA. |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
@@ -178,6 +178,15 @@
 | 0.103 | 16.10.2026 | Ограниченный SVD-loader, снимок в конфигурации/пакете, TC-178. |
 
 | 0.104 | 16.10.2026 | SVD-каталог используется публичным Target.mmio; контракт операций — ТЗ API 4.21. |
+
+| 0.105 | 16.10.2026 | Аппаратные свидетельства MMIO и независимость статуса выпуска; без изменения ядра. |
+
+### Изменения ревизии 0.105
+
+| Пункт | Тип | Содержание |
+| --- | --- | --- |
+| 5.20.14 | нов. | Аппаратные свидетельства MMIO и независимость статуса выпуска; TC-179 |
+| 9, 10 | изм. | Проверка и прослеживаемость аппаратной квалификации |
 
 ### Изменения ревизии 0.104
 
@@ -1905,6 +1914,10 @@ session.toml без подстановок или сетевой загрузк�
 Получатель ДОЛЖЕН проверять снимок и строить каталог из его байтов, а не открывать
 исходный путь. [N] (р.0.104)
 
+5.20.14. Отчёт аппаратной квалификации SVD/MMIO ДОЛЖЕН отделять сохранённое описание регистров, наблюдаемый эффект и проверку восстановления; локальная матрица НЕ ДОЛЖНА автоматически закрывать общую выпускную кампанию. `[N]` (р.0.105)
+
+Подтверждено 16.10.2026: Windows/OpenOCD, шесть MCU, 141 проверка; Flash не записывалась. Условия и ограничения — [API_ACCEPTANCE](ru/API_ACCEPTANCE.md).
+
 ### 5.21. Захват журнала результатов (р.0.72)
 
 5.21.1. session.toml ДОЛЖЕН принимать [results] capture=true/false (по умолчанию false).
@@ -2643,6 +2656,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-176 | tests/host/test_renode_backend.py, test_target_reset.py; tests/renode-backend/run.py Windows/Linux | Schema/отказы до транспорта, prepare, PASS/FAIL/reset refusal/timeout/repeat PASS, capture и cleanup |
 | TC-177 | tests/host/test_qemu_backend.py; tests/qemu-backend/run.py Windows/Linux | Конфигурация/отказы, prepare, PASS/FAIL/reset/timeout/repeat, ранний выход, semihosting и cleanup (р.0.102) |
 | TC-178 | tests/host/test_svd.py; Windows/Linux, без MCU | SVD: права, массивы/наследование, бюджеты, захват и перенос (р.0.103) |
+| TC-179 | D/I: docs/ru/API_ACCEPTANCE.md | Обезличенная приёмка MMIO, 6 MCU, восстановление; выпускные ограничения сохранены (р.0.105) |
 | TC-174 | `ProbeTests`; `tests/renode-startup/run.py` (T/D) | Отказ готовности и очистка; реальный startup, вызов C++-метода, отрицательный контроль и повторный запуск (р.0.98) |
 | TC-171 | `StandLoopTests` (T), ручной пакетный прогон (I) | Конечные циклы, неизменные снимки, doctor/prepare gate, PASS/FAIL/SKIP/ERROR, capture/JUnit, STOP, lock, место и отдельные коды обработки (р.0.92) |
 
@@ -2879,6 +2893,7 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | 6.12.1, 6.12.2, 6.12.3, 6.12.4, 6.12.5 | emulators.py, profile.py, runner.py, agent.py | TC-176 (р.0.101) |
 | 6.13.1, 6.13.2, 6.13.3, 6.13.4 | emulators.py, runner.py, doctor.py, agent.py | TC-177 (р.0.102) |
 | 5.20.13 | svd.py, configuration.py, config_transport.py, runner.py, package.py | TC-178 (р.0.103) |
+| 5.20.14 | docs/ru/API_ACCEPTANCE.md | TC-179 (р.0.105) |
 | 7.1.1–7.1.3 | RU; AG; все загрузчики схем | TC-03, TC-11, TC-22, TC-59 |
 | 7.1.4 | AG: `finish`; RU: recovery | TC-68, TC-70 |
 | 7.2.1 | RU: `local_directory`, `hwtest-tmp` | TC-24 |

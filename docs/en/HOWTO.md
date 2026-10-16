@@ -582,3 +582,14 @@ Keep `look: classic` for flat shapes, but avoid `theme`, `themeVariables` and fi
 node colors in shared README files. Check both themes after publication:
 colors depend on the viewer's Mermaid version and configuration.
 [Mermaid theming](https://mermaid.js.org/config/theming.html).
+
+## J-Link / OpenOCD: WinUSB and a USB stall
+
+On Windows, OpenOCD/J-Link needs a suitable USB driver (WinUSB for the verified route);
+the Segger driver may produce `LIBUSB_ERROR_NOT_SUPPORTED`. Change only the selected
+probe's driver. If OpenOCD stalls while requesting J-Link capabilities before connecting
+to the MCU after switching drivers, stop the process owned by the run and reconnect
+that probe's USB cable. This restored communication in the accepted experiment.
+Do not increase the timeout or classify this as an MCU failure; retain the original log.
+If communication was lost after MCU writes, state restoration must be checked separately;
+reconnecting alone is insufficient.

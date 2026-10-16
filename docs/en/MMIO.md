@@ -61,3 +61,6 @@ Use [stm32-gdbtest-renode](../../skills/stm32-gdbtest-renode/SKILL.md) and its
 These stages provide evidence at different layers; Renode PASS does not replace hardware
 validation, and the final register value on a board does not prove physical transaction
 count. Mark unsupported peripherals and unmeasured boundaries as unverified.
+
+
+Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](API_ACCEPTANCE.md).
