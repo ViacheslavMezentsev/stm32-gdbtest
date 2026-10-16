@@ -24,8 +24,14 @@ def validate_profile(data):
                 "diagnostic_registers"}
     optional = {"flash_size_address", "jlink_device"}
     schema = data.get("schema")
-    if type(schema) is not int or schema not in (1, 2):
+    if type(schema) is not int or schema not in (1, 2, 3):
         raise ValueError("Invalid target profile schema or keys")
+    if schema == 3:
+        if data.get('environment') not in ('hardware', 'emulator') or data.get('architecture') != 'cortex-m':
+            raise ValueError('Schema 3 requires environment and architecture=cortex-m')
+        required |= {'environment', 'architecture'}
+        if data['environment'] == 'emulator':
+            required -= {'identity', 'openocd_target'}
     if schema == 1:
         required = required | {"reset_halt", "reset_run"}
     else:
@@ -37,7 +43,7 @@ def validate_profile(data):
     for key in ("name", "mcu"):
         if not isinstance(data[key], str) or not re.fullmatch(r"[A-Za-z0-9]+", data[key]):
             raise ValueError(f"Invalid profile {key}")
-    if not re.fullmatch(r"target/[A-Za-z0-9_-]+\.cfg", data["openocd_target"]):
+    if "openocd_target" in data and not re.fullmatch(r"target/[A-Za-z0-9_-]+\.cfg", data["openocd_target"]):
         raise ValueError("Invalid OpenOCD target script")
     for key in ("flash_start", "flash_size", "breakpoint_limit"):
         if type(data[key]) is not int or not 0 < data[key] <= 0xFFFFFFFF:
@@ -54,13 +60,14 @@ def validate_profile(data):
     if schema == 1 and (data["reset_halt"] not in OPENOCD_RESET_HALT
                         or data["reset_run"] not in OPENOCD_RESET_RUN):
         raise ValueError("Only OpenOCD reset halt/init/run is supported by schema 1")
-    identity = data["identity"]
-    if not isinstance(identity, dict) or set(identity) != {"address", "mask", "value"}:
-        raise ValueError("Invalid identity description")
-    if any(type(v) is not int or not 0 <= v <= 0xFFFFFFFF for v in identity.values()):
-        raise ValueError("Invalid identity values")
-    if not identity["mask"] or identity["value"] & ~identity["mask"]:
-        raise ValueError("Invalid identity mask")
+    if "identity" in data:
+        identity = data["identity"]
+        if not isinstance(identity, dict) or set(identity) != {"address", "mask", "value"}:
+            raise ValueError("Invalid identity description")
+        if any(type(v) is not int or not 0 <= v <= 0xFFFFFFFF for v in identity.values()):
+            raise ValueError("Invalid identity values")
+        if not identity["mask"] or identity["value"] & ~identity["mask"]:
+            raise ValueError("Invalid identity mask")
     registers = data["diagnostic_registers"]
     if not isinstance(registers, dict) or any(
             not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", k) or type(v) is not int
@@ -71,6 +78,6 @@ def validate_profile(data):
         if type(address) is not int or not 0 < address <= 0xFFFFFFFE or address % 2:
             raise ValueError("Invalid Flash size register address")
     validate_profile_keys(data)
-    if schema == 2:
+    if schema in (2, 3):
         validate_profile_sections(data)
     return data

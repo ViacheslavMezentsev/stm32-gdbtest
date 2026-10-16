@@ -29,6 +29,7 @@ def main():
     session = json.loads(Path(os.environ["STM32_GDBTEST_RUN"]).read_text(encoding="utf-8"))
     sys.path.insert(1, str(Path(session.get("root", ROOT)).resolve()))
     profile = session["profile"]
+    emulator = session.get("environment") == "emulator"
     report = {"id": session["test"]["id"], "status": "ERROR", "checks": [],
               "gdb_version": gdb.VERSION, "python_version": sys.version.split()[0],
               "connection_attempted": False}
@@ -64,15 +65,23 @@ def main():
         report["gdb_api_checks"] = inspect_gdb_api(gdb)
         require_gdb_api(report["gdb_api_checks"])
         report["connection_attempted"] = True
-        gdb.execute("target extended-remote " + session["endpoint"])
+        gdb.execute(("target remote " if emulator else "target extended-remote ") + session["endpoint"])
         connected = True
         for command in session.get("setup", []):
             gdb.execute(command)
-        gdb.execute(session["reset_halt"])
+        if session["reset_halt"] is not None:
+            gdb.execute(session["reset_halt"])
         inferior = gdb.selected_inferior()
         report["flashed"] = False
-        check_target(profile, inferior.read_memory, len(image),
-                     session.get("identity_policy", "warn"), report)
+        if emulator:
+            if len(inferior.threads()) != 1:
+                raise RuntimeError('Renode backend requires exactly one CPU thread')
+            if not gdb.selected_thread() or not gdb.selected_thread().is_stopped():
+                raise RuntimeError('Emulator CPU is not halted')
+            report['identity_verification'] = 'emulator-model; no hardware identity claimed'
+        else:
+            check_target(profile, inferior.read_memory, len(image),
+                         session.get("identity_policy", "warn"), report)
         for warning in report.get("warnings", []):
             print("WARNING: " + warning)
         def verify_image():
@@ -143,7 +152,7 @@ def main():
             if connected:
                 for command in session["finish"]:
                     gdb.execute(command)
-                report["teardown"] = "reset_run"
+                report["teardown"] = "disconnected" if emulator else "reset_run"
         except BaseException:
             report.update(status="ERROR", teardown_error=traceback.format_exc())
         # A value a scenario put into its checks must not cost the whole report: it is kept as its repr.

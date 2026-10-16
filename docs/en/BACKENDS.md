@@ -2,6 +2,7 @@
 
 [Documentation](index.md) → GDB servers · [Русский](../ru/BACKENDS.md)
 
+For 0.5.0: [Renode and target schema 3](RENODE.md); schemas 1/2 remain supported.
 A backend defines server start and readiness, setup, reset, finish and recovery
 commands. Scenarios use the common Target API; peripheral expectations stay with the
 consumer. The stand is selected by `--stand` → `STM32_GDBTEST_STAND` → `session.stand`

@@ -49,3 +49,5 @@ invalidation steps; link state after a failure is not guaranteed.
 - [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.3.14.
 
 Since v0.4.0, backend `st-util` uses `monitor reset`; the optional `[st-util]` section belongs to schema 2. The method contract is unchanged.
+
+Renode: `reset()` currently refuses before a command (`unsupported_backend`, `validation`, `none`). A fresh run uses a new process; [backend contract](../RENODE.md).

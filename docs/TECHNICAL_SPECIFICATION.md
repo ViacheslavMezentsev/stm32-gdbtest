@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.100 (C++ preflight и квалификаторы this) |
+| **Ревизия** | 0.101 (Renode и target schema 3 для 0.5.0) |
 | **Дата формирования** | 16.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | Кандидат пакета stm32-gdbtest `0.4.2` (внешний инструментарий); API_VERSION=2, target schema 2, ТЗ API 0.3.17, контракты memory/write (р.0.99). Публикация владельцем после CI итогового SHA. |
@@ -170,6 +170,15 @@
 | 0.99 | 16.10.2026 | Актуализирована ссылка целевой версии на ТЗ API 0.3.17; контракты runner не меняются. |
 
 | 0.100 | 16.10.2026 | C++ preflight: const на уровнях указателя, явный this, квалифицированные имена; TC-175, Target.call без расширения. |
+
+| 0.101 | 16.10.2026 | Штатный Renode, target schema 3, отдельное окружение эмулятора, TC-176; переход к 0.5.0. |
+
+### Изменения ревизии 0.101
+
+| Пункт | Вид | Изменение |
+| :--- | :--- | :--- |
+| 6.12 | нов. | Изолированный Renode, схема цели, артефакты и границы |
+| 9, 10, F | нов. | TC-176 и прослеживаемость; QEMU/keep не реализованы |
 
 ### Изменения ревизии 0.100
 
@@ -2113,6 +2122,29 @@ Prepare и явно ручные попытки НЕ ДОЛЖНЫ давать �
 
 ---
 
+### 6.12. Backend Renode (р.0.101)
+
+6.12.1. [N] Стенд schema=1 содержит только emulator и renode; backend=renode,
+executable, startup_timeout_s (15), shutdown_timeout_s (5), platform. Таймауты
+положительные до 60 с. Probe/remote/keep/неизвестные ключи отклоняются. (р.0.101)
+
+6.12.2. [N] Target schema 3 требует environment=hardware|emulator и architecture=cortex-m.
+Hardware сохраняет обязательные поля schema 2; emulator исключает identity/openocd_target.
+Schema 1/2 совместимы; несоответствие окружений отклоняется до запуска. (р.0.101)
+
+6.12.3. [N] Каждый сценарий получает новый локальный процесс, одну машину и один
+CPU-thread; ELF/самодостаточный REPL копируются в каталог запуска. Внешние зависимости
+REPL и полная политика Flash отклоняются; загруженные файловые секции Flash проверяются
+перед main. Аппаратный DEV_ID не имитируется как свидетельство. (р.0.101)
+
+6.12.4. [N] Результат помечается emulator, hardware_accessed=false; сохраняются
+SHA модели, версия Renode, records и журналы. Таймаут — время хоста; ошибка очистки
+даёт ERROR с сохранением status_before_cleanup. Проверяется закрытие GDB-порта. (р.0.101)
+
+6.12.5. [N] reset отклоняется до команды с unsupported_backend/validation/none.
+Не обещается эквивалентность перезагрузки ELF сбросу модели. Runner подключается к
+127.0.0.1; сервер Renode может слушать все интерфейсы. Firewall не меняется. (р.0.101)
+
 ## 7. Нефункциональные требования
 
 ### 7.1. Безопасность воздействия на оборудование
@@ -2545,6 +2577,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-172 | `DdttCoverageTests` (T) | Привязки, устаревание, UNKNOWN, конфликт строк, ошибки и очистка старой раскраски (р.0.97) |
 | TC-173 | `PortableTests` (T) | Происхождение, подмена карты/результата, приватность, ссылки, разделение сред и ручных запусков (р.0.98) |
 | TC-175 | `CppQualifierTests`; `tests/renode-startup/run_cpp.py` (T/D) | this, const-метод, static/namespace, неверная сигнатура и отсутствующий inline; offline без inferior, Renode с восстановлением объекта/PC/SP (р.0.100) |
+| TC-176 | tests/host/test_renode_backend.py, test_target_reset.py; tests/renode-backend/run.py Windows/Linux | Schema/отказы до транспорта, prepare, PASS/FAIL/reset refusal/timeout/repeat PASS, capture и cleanup |
 | TC-174 | `ProbeTests`; `tests/renode-startup/run.py` (T/D) | Отказ готовности и очистка; реальный startup, вызов C++-метода, отрицательный контроль и повторный запуск (р.0.98) |
 | TC-171 | `StandLoopTests` (T), ручной пакетный прогон (I) | Конечные циклы, неизменные снимки, doctor/prepare gate, PASS/FAIL/SKIP/ERROR, capture/JUnit, STOP, lock, место и отдельные коды обработки (р.0.92) |
 
@@ -2778,6 +2811,7 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | 6.10.5, 6.10.6 | DOC: LINUX_STAND.md; DR | I, TC-96 |
 | 6.10.7 | DOC: LINUX_STAND.md | I, TC-97 |
 | 6.11.1–6.11.4 | BE, PR, PS, RM, DR, compatibility.py | TC-168 (р.0.85) |
+| 6.12.1, 6.12.2, 6.12.3, 6.12.4, 6.12.5 | emulators.py, profile.py, runner.py, agent.py | TC-176 (р.0.101) |
 | 7.1.1–7.1.3 | RU; AG; все загрузчики схем | TC-03, TC-11, TC-22, TC-59 |
 | 7.1.4 | AG: `finish`; RU: recovery | TC-68, TC-70 |
 | 7.2.1 | RU: `local_directory`, `hwtest-tmp` | TC-24 |
@@ -3256,3 +3290,11 @@ G.32. Рабочая копия от7a261e8: F429/DISCO/ST-Link/V2/OpenOCD/Windo
 G.33. Рабочая копия зависимой ветки от52c49fd: F429/DISCO/ST-Link/V2/OpenOCD/Windows GCC13,20/20 HW +5 повторов; ожидаемый host timeout ERROR/recovery и RTC/ADC после него PASS, HAL boot/blink восстановлены. Протокол docs/ru/F429_CMSIS_RTC_SLEEP.md. Пять CMSIS-профилей имеют аппаратные протоколы; итоговая сверка HAL→CMSIS и F411-consumer ещё впереди. F401/F411 после объединения векторов проверяются offline. API/схемы/тег rc.2 неизменны. (р.0.57)
 
 G.34. HAL F030 расширен до22 cases: Windows/OpenOCD/ST-Link,22/22 HW +15 повторов, timeout/recovery и restore PASS. Первоначальный WinError5 restore и Linux contract ERROR сохранены в F030_HAL_GPIO_RCC.md; второй возник из-за const RCC в CI при одинаковом имени пакета. Строгий fixture selector проверен для обоих hash; firmware ELF не изменён. CMSIS98 метрика не включает HAL. (р.0.58)
+
+### Дополнение F: Renode (р.0.101)
+
+| Требования | Метод | Проверка |
+| --- | --- | --- |
+| 6.12.1–6.12.5 | T | TC-176: host и Windows/Linux Renode; не HW-приёмка |
+
+QEMU, keep, SSH, multicore, зависимости REPL и внутрисценарный reset остаются за границей первой реализации.

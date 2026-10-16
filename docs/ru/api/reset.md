@@ -48,3 +48,5 @@ t.reach("main")
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.14.
 
 С v0.4.0 backend `st-util` использует `monitor reset`; необязательная секция `[st-util]` принадлежит schema 2. Контракт метода не изменён.
+
+Renode: `reset()` пока отклоняется до команды (`unsupported_backend`, `validation`, `none`). Чистый запуск — новый процесс; [контракт backend](../RENODE.md).

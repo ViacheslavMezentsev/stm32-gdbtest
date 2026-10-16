@@ -6,7 +6,7 @@ import re
 import shutil
 import tomllib
 
-from stm32_gdbtest import openocd, probes, remote as remote_host
+from stm32_gdbtest import openocd, probes, emulators, remote as remote_host
 from stm32_gdbtest.toolchain import expand_path
 
 
@@ -23,6 +23,8 @@ PROGRAMMER = "STM32_Programmer_CLI.exe" if WINDOWS else "STM32_Programmer_CLI"
 
 def load_stand(path):
     document = tomllib.loads(Path(path).read_text(encoding="utf-8"))
+    if "emulator" in document:
+        return emulators.load(document, path)
     data = document["probe"]
     # ТЗ 5.18.1: [remote] moves the server to a stand host; its tools are resolved there.
     remote = remote_host.load(document.get("remote"))
@@ -76,6 +78,8 @@ def load_stand(path):
 def server_spec(stand, port, profile, out):
     # ТЗ 6.4.2/6.5.3: the reset commands come from the dialect of the backend, overridden by the
     # profile section of that backend (schema 2) or by the profile keys (schema 1).
+    if stand["backend"] == "renode":
+        return emulators.server_spec(stand, port, profile, out)
     reset_halt, reset_run = probes.dialect(profile, stand["backend"])
     if stand["backend"] == "jlink":
         return dict(

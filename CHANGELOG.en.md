@@ -6,6 +6,9 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- For 0.5.0: native local Renode backend, target schema 3, isolated scenarios and emulator artifacts; Windows/Linux example. QEMU and keep are deferred.
+
+
 - Four common scenario filenames describe features without release040; provenance is recorded in comments, while IDs and configuration remain unchanged.
 
 - Renode skill: finding STM32 peripherals, building models, SVD tags and offline dependencies; platform loading is distinguished from device validation.

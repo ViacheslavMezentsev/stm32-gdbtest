@@ -170,6 +170,15 @@ class ResetTests(unittest.TestCase):
         self.assertEqual(caught.exception.details["effect"], "none")
         self.assertEqual(self.commands, [])
 
+    def test_emulator_reset_refused_without_command(self):
+        target, _ = self.target()
+        target.profile = {'environment': 'emulator'}
+        with self.assertRaises(ApiError) as caught:
+            target.reset()
+        self.assertEqual(caught.exception.code, 'unsupported_backend')
+        self.assertEqual(caught.exception.details['effect'], 'none')
+        self.assertEqual(self.commands, [])
+
     def test_reset_proceeds_after_points_are_removed(self):
         target, _report = self.target()
         point = target.breakpoint("app_loop")

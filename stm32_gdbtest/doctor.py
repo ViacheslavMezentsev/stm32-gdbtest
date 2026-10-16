@@ -138,6 +138,11 @@ def diagnose(gdb=None, stand=None, sysfs=Path("/sys/bus/usb/devices")):
         code, text = _output([loaded["executable"], "--version"])
         add("st-util", "FAIL" if code or not re.fullmatch(r"v?\d+\.\d+\.\d+[^\s]*", text) else "OK", text)
 
+    if loaded and loaded['backend'] == 'renode':
+        code, text = _output([loaded['executable'], '--version'])
+        add('renode', 'FAIL' if code else 'OK', text)
+        add('model', 'OK', loaded['platform'] + '; self-contained; not executed by doctor')
+        return results
     if sys.platform.startswith("linux"):
         devices = usb_debuggers(sysfs)
         for device in devices:

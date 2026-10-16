@@ -2,6 +2,7 @@
 
 [Документация](index.md) → GDB-серверы · [English](../en/BACKENDS.md)
 
+Для 0.5.0: [Renode и target schema 3](RENODE.md); schema 1/2 сохраняются.
 Backend задаёт запуск и готовность сервера, команды setup, reset, завершения и
 восстановления. Сценарии пользуются общим Target API; ожидания периферии остаются
 у потребителя. Стенд выбирается `--stand` → `STM32_GDBTEST_STAND` → `session.stand`

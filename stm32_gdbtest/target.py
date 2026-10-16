@@ -1306,7 +1306,8 @@ class Target:
         self.clear()
         if guards is not None:
             self.fault_guards = list(guards)
-        gdb.execute(reset_command)
+        if reset_command is not None:
+            gdb.execute(reset_command)
         for name in self.fault_guards:
             self.breakpoint(name)
         self.reach("main")
@@ -1403,6 +1404,9 @@ class Target:
         session override wins over both. Active points are refused because a reset makes their state
         meaningless; the invalidation runs after any attempt, including a failed one.
         """
+        if self.profile.get('environment') == 'emulator':
+            self._fail('reset', 'validation', 'none', 'unsupported_backend',
+                       'reset is not yet qualified for this emulator; start a new run')
         guards = set(self.fault_guards)
         active = [point.id for point in self.owned if point.active and point.location not in guards]
         if active:

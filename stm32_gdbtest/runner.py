@@ -26,7 +26,7 @@ from stm32_gdbtest.image import BFD_MACHINES, elf_format, parse_sections, valida
 from stm32_gdbtest.full_image import load_policy, canonical_image
 from stm32_gdbtest.toolchain import binutil
 from stm32_gdbtest.probes import family as probe_family
-from stm32_gdbtest import arch
+from stm32_gdbtest import arch, emulators
 from stm32_gdbtest.stutil_lifecycle import IdleLog, wait_idle
 from stm32_gdbtest.result_capture import finalize as finalize_capture
 
@@ -114,9 +114,19 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
         session = dict(session, _configuration=configuration)
         profile = thaw(configuration.config['target'])
         report["profile"] = profile
+        emulator = stand is not None and stand.get('environment') == 'emulator'
+        if stand and emulator != (profile.get('environment') == 'emulator'):
+            raise ValueError('Stand and target environments differ')
+        if emulator:
+            if configuration.config['image'] is not None:
+                raise ValueError('Full Flash programming policies are not supported by Renode')
+            report.update(environment='emulator', hardware_accessed=False,
+                          mode='prepare' if prepare_only else 'emulator', emulator=emulators.provenance(stand))
         if prepare_only:
             # ТЗ 5.16.1: no debugger ownership, server or GDB connection in preparation.
             execute(session, test, stand, out, report, limit, profile, prepare_only=True)
+        elif emulator:
+            execute(session, test, stand, out, report, limit, profile)
         else:
             with probe_lock(project_root, stand["serial"], stand["backend"], family=probe_family(stand)):
                 execute(session, test, stand, out, report, limit, profile)
@@ -286,7 +296,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
             backend = server_spec(stand, port, profile, out)
         report["backend_commands"] = dict(reset_halt=backend["reset_halt"], finish=backend["finish"],
                                           setup=backend.get("setup", []))
-        run_data = dict(test=test, elf=str(elf), image=str(image), result=str(agent_result),
+        run_data = dict(environment=stand.get("environment", "hardware"), test=test, elf=str(elf), image=str(image), result=str(agent_result),
                         configuration=dumps(configuration) if configuration else None,
                         run_id=report.get("run_id", out.name),
                         identity_policy=session.get("identity_policy", "warn"), root=str(project_root),
@@ -297,7 +307,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                         setup=backend.get("setup", []),
                         # ТЗ API 4.14.2: the stand as the scenario sees it, without serials or addresses.
                         # `reset_command` is the command the run resolved for `reset()` (ТЗ API 6.6).
-                        stand_info=dict(backend=stand["backend"], server="remote" if remote else "local",
+                        stand_info=dict(environment=stand.get("environment", "hardware"), backend=stand["backend"], server="remote" if remote else "local",
                                         speed_khz=stand.get("speed_khz"), flash=stand["flash"],
                                         reset_command=backend["reset_halt"]),
                         # ТЗ API 4.14.8: the build as the scenario sees it; None without a build manifest.
@@ -327,7 +337,8 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                     heartbeat = remote_host.Heartbeat(server.stdin)
                 else:
                     server = subprocess.Popen(backend["command"], env=env, cwd=out,
-                                              stdout=server_log, stderr=subprocess.STDOUT, **spawn_options())
+                                              stdout=server_log, stderr=subprocess.STDOUT,
+                                              stdin=subprocess.PIPE if stand["backend"] == "renode" else None, **spawn_options())
                 if stand["backend"] == "st-util":
                     idle_state = IdleLog(port_on_stand if remote else port, server_from)
                 deadline = time.monotonic() + limit + (10 if remote else 0)  # SSH connection and authentication
@@ -388,7 +399,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
         report["status_before_cleanup"] = report["status"]
         try:
             stop_tree(client)
-            if (ready and report.get("connection_attempted", True)
+            if (stand and stand["backend"] != "renode" and ready and report.get("connection_attempted", True)
                     and report.get("teardown") != "reset_run"):
                 if idle_state is not None:
                     stutil_ready(idle_state, out, server, report, "recovery_wait")
@@ -418,7 +429,18 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                         server.wait(timeout=25)
                     except subprocess.TimeoutExpired:
                         pass
-                stop_tree(server)
+                if stand and stand['backend'] == 'renode':
+                    emulators.stop(server, stand['shutdown_timeout_s'])
+                    if server is not None and server.stdin is not None:
+                        server.stdin.close()
+                    if server is not None:
+                        with socket.socket() as check_port:
+                            check_port.settimeout(1)
+                            if check_port.connect_ex(('127.0.0.1', port)) == 0:
+                                raise RuntimeError('Renode GDB port remains open after cleanup')
+                    report['cleanup'] = 'VERIFIED'
+                else:
+                    stop_tree(server)
                 if remote and server is not None and ready:
                     text = (out / "server.log").read_bytes()[server_from:].decode(errors="replace")
                     remote_host.record_shutdown(report, text, server.returncode, stand["backend"])

@@ -613,3 +613,11 @@ Offline SUCCESS. Незакрытые отметки в исходном пла�
 - [ ] Подключить кандидата в основной репозиторий и выполнить интеграционную приёмку до финализации rc.2.
 
 - [x] `codex/reach-quoted-signatures` (от `codex/scenario-techniques`): исправлено сравнение reach с одинарными кавычками; host-регрессия и C++ Og/O2 на шести стендах — 12 HW PASS, recovery 12/12. Владелец согласовал последовательное включение обеих веток в локальный main; публикация — отдельный шаг. Коммиты пакетов: `e62c547`, `dd280ff`.
+
+## Renode backend для 0.5.0
+
+Ветка `codex/renode-backend`: target schema 3 и изолированный локальный Renode.
+Локально: Windows host 489 (16 skips), Linux docs/host/format 7/7; Renode 1.17
+Windows/Linux: prepare и шесть ожидаемых исходов, capture/cleanup. Не аппаратная
+приёмка; push/CI/land — владелец.
+QEMU, зависимости REPL и повторное использование процесса — следующие этапы.
