@@ -58,3 +58,5 @@ Logs, checks and input hashes go into build/memory-write/<unique-id>.
 Use `--module-root` to compare another local module revision with the same scenario.
 On 0.4.1 expect the original verification_failed ERROR caused by a second RHS call.
 Short GDB responses are injected in host tests, not reproduced by this Renode model.
+
+Existing STM32 platforms, custom models and offline dependencies: [skill resource](../../skills/stm32-gdbtest-renode/references/peripherals.en.md).

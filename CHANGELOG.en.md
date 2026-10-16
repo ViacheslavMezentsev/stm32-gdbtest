@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Renode skill: finding STM32 peripherals, building models, SVD tags and offline dependencies; platform loading is distinguished from device validation.
+
 - MMIO warnings in the API reference, techniques and checklist; Renode skill resource for access measurement followed by target-board validation. Known limitations are explicit; core and API unchanged.
 
 - C++ preflight: const at each pointer level and explicit this qualifiers; host and Renode regressions for methods and namespaces. Target.call() is unchanged; its reference card is corrected.
