@@ -8,10 +8,10 @@ every GDB/backend combination.
 
 | Scenario | Demonstrates | Expected outcome |
 | --- | --- | --- |
-| [HW_CI_040_RECORDS](../../tests/firmware/common/tests/board/test_release040_records.py) | MCU state, transition, measured counter increment and arbitrary diagnostics in one journal; independent copies | PASS, four records |
-| [HW_CI_040_SKIP](../../tests/firmware/common/tests/board/test_release040_skip.py) | Configuration applicability, a decision via records, whole-scenario termination and finally execution | PASS with true; SKIP with false |
-| [HW_CI_040_SKIP_VALIDATION](../../tests/firmware/common/tests/board/test_release040_skip_validation.py) | Refuses empty/non-string/invalid Unicode reasons and a limit overflow; subsequent navigation still works | PASS, six expected refusals |
-| [HW_CI_040_STRING_VIEWS](../../tests/firmware/common/tests/board/test_release040_string_views.py) | One RAM buffer as char[3], char[] and char*: bounded reading without changing memory | PASS |
+| [HW_CI_040_RECORDS](../../tests/firmware/common/tests/board/test_records.py) | MCU state, transition, measured counter increment and arbitrary diagnostics in one journal; independent copies | PASS, four records |
+| [HW_CI_040_SKIP](../../tests/firmware/common/tests/board/test_skip.py) | Configuration applicability, a decision via records, whole-scenario termination and finally execution | PASS with true; SKIP with false |
+| [HW_CI_040_SKIP_VALIDATION](../../tests/firmware/common/tests/board/test_skip_validation.py) | Refuses empty/non-string/invalid Unicode reasons and a limit overflow; subsequent navigation still works | PASS, six expected refusals |
+| [HW_CI_040_STRING_VIEWS](../../tests/firmware/common/tests/board/test_string_views.py) | One RAM buffer as char[3], char[] and char*: bounded reading without changing memory | PASS |
 
 ## Configuration and selection
 

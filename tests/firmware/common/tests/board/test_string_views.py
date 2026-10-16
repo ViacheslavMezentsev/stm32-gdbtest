@@ -1,4 +1,6 @@
 """
+RU: Добавлен при проверке API пакета 0.4.0; имя файла описывает проверяемую возможность.
+EN: Introduced for package 0.4.0 API validation; the filename describes the feature.
 RU: Ограниченные и неизвестные границы строк MCU: чтение представлений без изменения памяти.
 EN: Bounded and unknown MCU string extents: read views without modifying target memory.
 """

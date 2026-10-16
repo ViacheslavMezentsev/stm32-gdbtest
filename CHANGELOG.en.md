@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Four common scenario filenames describe features without release040; provenance is recorded in comments, while IDs and configuration remain unchanged.
+
 - Renode skill: finding STM32 peripherals, building models, SVD tags and offline dependencies; platform loading is distinguished from device validation.
 
 - MMIO warnings in the API reference, techniques and checklist; Renode skill resource for access measurement followed by target-board validation. Known limitations are explicit; core and API unchanged.

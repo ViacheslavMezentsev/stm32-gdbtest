@@ -1,4 +1,6 @@
 """
+RU: Добавлен при проверке API пакета 0.4.0; имя файла описывает проверяемую возможность.
+EN: Introduced for package 0.4.0 API validation; the filename describes the feature.
 RU: Разнородный журнал 0.4.0: состояние MCU, событие, измерение и копии записей.
 EN: Mixed 0.4.0 journal: MCU state, event, measurement and independent record snapshots.
 """

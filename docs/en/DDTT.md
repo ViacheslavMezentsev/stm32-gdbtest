@@ -388,7 +388,7 @@ calculations do not need a new Target method for every technique.
 Shipped examples: [events and intervals](../../tests/firmware/common/tests/board/test_event_intervals.py),
 [event injection](../../tests/firmware/common/tests/board/test_event_injection.py),
 [watchpoint](../../tests/firmware/common/tests/board/test_watch.py),
-[conditional SKIP](../../tests/firmware/common/tests/board/test_release040_skip.py).
+[conditional SKIP](../../tests/firmware/common/tests/board/test_skip.py).
 Their expectations belong to the CI firmware; an application needs its own requirements.
 
 ### 10.3. One run
@@ -588,7 +588,7 @@ of this route remain unverified. Normative IDs and DDTT version are unchanged.
 
 The example uses the common CI firmware and ci_app_api contract: app_loop, app_step and
 app_state. Two finish calls correspond to its producer and caller wrapper, specific to
-this firmware. Based on the [verified records scenario](../../tests/firmware/common/tests/board/test_release040_records.py).
+this firmware. Based on the [verified records scenario](../../tests/firmware/common/tests/board/test_records.py).
 Add a project requirement for HW_APP_STEP; other ELFs need their own symbols and contract.
 
 ```python

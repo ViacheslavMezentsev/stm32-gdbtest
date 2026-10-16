@@ -396,7 +396,7 @@ flowchart LR
 Практические образцы в модуле: [события и интервалы](../../tests/firmware/common/tests/board/test_event_intervals.py),
 [инъекция события](../../tests/firmware/common/tests/board/test_event_injection.py),
 [watchpoint](../../tests/firmware/common/tests/board/test_watch.py),
-[условный SKIP](../../tests/firmware/common/tests/board/test_release040_skip.py).
+[условный SKIP](../../tests/firmware/common/tests/board/test_skip.py).
 Их ожидания привязаны к CI-прошивке; перенос в приложение требует собственных требований.
 
 ### 10.3. Один прогон
@@ -599,7 +599,7 @@ FAIL/ERROR и соседние контроли. Наблюдение стано
 
 Пример использует общую CI-прошивку и контракт `ci_app_api`: `app_loop`, `app_step`,
 `app_state`. Два finish соответствуют производителю и вызывающей обёртке, это свойство
-этой прошивки. Основа — [проверенный сценарий records](../../tests/firmware/common/tests/board/test_release040_records.py).
+этой прошивки. Основа — [проверенный сценарий records](../../tests/firmware/common/tests/board/test_records.py).
 Для ID HW_APP_STEP добавьте требование проекта; для другого ELF замените символы и контракт.
 
 ```python

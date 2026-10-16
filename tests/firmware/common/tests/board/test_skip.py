@@ -1,4 +1,6 @@
 """
+RU: Добавлен при проверке API пакета 0.4.0; имя файла описывает проверяемую возможность.
+EN: Introduced for package 0.4.0 API validation; the filename describes the feature.
 RU: Условный SKIP 0.4.0 по конфигурации с сохранением причины и выполнением finally.
 EN: Configuration-driven 0.4.0 SKIP preserves its reason and executes finally.
 """

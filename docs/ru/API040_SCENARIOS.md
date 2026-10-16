@@ -8,10 +8,10 @@
 
 | Сценарий | Что показывает | Ожидаемый исход |
 | --- | --- | --- |
-| [HW_CI_040_RECORDS](../../tests/firmware/common/tests/board/test_release040_records.py) | Состояние MCU, переход, измеренный шаг счётчика и произвольная диагностика в одном журнале; независимость копий | PASS, четыре записи |
-| [HW_CI_040_SKIP](../../tests/firmware/common/tests/board/test_release040_skip.py) | Применимость по конфигурации, решение через records, завершение всего сценария и выполнение finally | PASS при true; SKIP при false |
-| [HW_CI_040_SKIP_VALIDATION](../../tests/firmware/common/tests/board/test_release040_skip_validation.py) | Отказ пустой/нестроковой/некорректной Unicode-причине и превышению лимита; последующая навигация работает | PASS, шесть ожидаемых отказов |
-| [HW_CI_040_STRING_VIEWS](../../tests/firmware/common/tests/board/test_release040_string_views.py) | Один RAM-буфер как char[3], char[] и char*: ограничение чтения размером без изменения памяти | PASS |
+| [HW_CI_040_RECORDS](../../tests/firmware/common/tests/board/test_records.py) | Состояние MCU, переход, измеренный шаг счётчика и произвольная диагностика в одном журнале; независимость копий | PASS, четыре записи |
+| [HW_CI_040_SKIP](../../tests/firmware/common/tests/board/test_skip.py) | Применимость по конфигурации, решение через records, завершение всего сценария и выполнение finally | PASS при true; SKIP при false |
+| [HW_CI_040_SKIP_VALIDATION](../../tests/firmware/common/tests/board/test_skip_validation.py) | Отказ пустой/нестроковой/некорректной Unicode-причине и превышению лимита; последующая навигация работает | PASS, шесть ожидаемых отказов |
+| [HW_CI_040_STRING_VIEWS](../../tests/firmware/common/tests/board/test_string_views.py) | Один RAM-буфер как char[3], char[] и char*: ограничение чтения размером без изменения памяти | PASS |
 
 ## Конфигурация и выбор
 

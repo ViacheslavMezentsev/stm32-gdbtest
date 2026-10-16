@@ -1,4 +1,6 @@
 """
+RU: Добавлен при проверке API пакета 0.4.0; имя файла описывает проверяемую возможность.
+EN: Introduced for package 0.4.0 API validation; the filename describes the feature.
 RU: Отказ неверным причинам SKIP 0.4.0 без завершения сценария и изменения журнала.
 EN: Refuse invalid 0.4.0 SKIP reasons without ending the scenario or changing its journal.
 """
