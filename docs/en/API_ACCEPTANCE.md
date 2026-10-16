@@ -320,3 +320,17 @@ GitHub Hardware #14 at `ba10b12`: AT32 — 4 PASS + 1 SKIP, 13 records; archive 
 
 AT32/Windows/J-Link 8.32 at `9747eab`: 4 PASS + 1 SKIP, 13 records, 15 files verified;
 the sixth board new scenarios are verified on Windows and Linux/GitHub. [API040](API040_SCENARIOS.md).
+
+## 2026-10-16 — 0.4.2 candidate: memory/write (P2)
+
+- Host: full suite of 481 tests; focused regressions cover short/oversized reads, no write on read,
+  single RHS evaluation, tables, MMIO without confirming readback and effect diagnostics.
+- Renode 1.17 Windows: GDB from xPack 13.3.1, 14.2.1, 15.2.1 — 38/38 each; Linux volume/xPack 14.2.1 — 38/38.
+- The same scenario with the unchanged previous core produced verification_failed ERROR: two RHS calls,
+  storing 2 instead of expected 1. The corrected core passes with one call. Original ERROR is retained locally.
+- Existing neutral startup/DDTT example: 3/3. Docs/host/format: 7/7 groups.
+
+Repeat with `tests/renode-startup/run_contracts.py`; arguments and revision comparison are documented in
+[Renode](RENODE_PROBES.md#memorywrite-regression). ELF -O0/-g3; ordinary RAM, Cortex-M3 model.
+This is not P5 hardware acceptance; an actual short GDB response was not reproduced. Signatures and
+API_VERSION=2 remain unchanged; normative contract: API specification 0.3.17.
