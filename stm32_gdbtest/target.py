@@ -680,10 +680,16 @@ class Target:
                        address=address, size=size)
         self._memory_window(address, size, writable=False)
         try:
-            return bytes(gdb.selected_inferior().read_memory(address, size))
+            data = bytes(gdb.selected_inferior().read_memory(address, size))
         except (gdb.error, getattr(gdb, "MemoryError", gdb.error), RuntimeError) as cause:
             self._fail("memory", "command", "none", "read_failed", f"cannot read {size} bytes at {address:#x}",
                        cause=cause, address=address, size=size)
+
+        if len(data) != size:
+            self._fail("memory", "readback", "none", "incomplete_read",
+                       f"requested {size} bytes, received {len(data)}", address=address,
+                       requested=size, actual=len(data))
+        return data
 
     def _write_memory(self, address, data, verify):
         if not 1 <= len(data) <= MEMORY_LIMIT:
@@ -852,20 +858,23 @@ class Target:
                        path=path, value=value)
         before = self._read_value(path, path)
         scoped, address = self._verify_scope(path)
-        # An expression value (an enum constant, a macro, a read-modify-write) is compared by what it
-        # evaluates to before the write: `x + 1` evaluated afterwards would already include the write.
-        expected = self._read_value(f"({literal})", literal) if (verify and scoped and type(value) is str) \
-            else value
-        self._write_expression(path, literal)
-        after = self._read_value(path, path) if (verify and scoped) else None
-        entry = dict(expression=path, value=value, before=before, after=after)
+        # GDB performs one assignment, including destination type conversion. Its result is
+        # the expected value, not a second evaluation of the original RHS (ТЗ API 4.6.4).
+        expected = self._write_expression(path, literal, observe=bool(verify and scoped))
+        entry = dict(expression=path, value=value, before=before, after=None)
+        self.report.setdefault("mutations", []).append(entry)
+        try:
+            after = self._read_value(path, path) if (verify and scoped) else None
+        except ApiError as cause:
+            self._fail("write", "readback", "applied", "read_failed",
+                       f"cannot read back {path}", cause=cause, path=path)
+        entry["after"] = after
         if verify and not scoped:
             # A peripheral register keeps its own meaning on read, so the write is recorded without
             # claiming a verification that this address cannot support.
             entry["verified"] = False
             entry["verify_scope"] = "outside"
             entry["address"] = address
-        self.report.setdefault("mutations", []).append(entry)
         if verify and scoped and after != expected:
             values.verification_failed(path, value, after)
         return dict(operation="write", path=path, value=value, before=before, after=after,
@@ -904,13 +913,22 @@ class Target:
         address = int(address)
         return SRAM_WINDOW[0] <= address < SRAM_WINDOW[1], address
 
-    def _write_expression(self, path, literal):
-        """Apply one write through GDB; the caller decides about verification."""
+    def _write_expression(self, path, literal, *, observe=False):
+        """Assign once; only materialize the converted result when readback is requested."""
         try:
-            gdb.execute(f"set variable {path} = {literal}", to_string=True)
+            assigned = gdb.parse_and_eval(f"({path}) = ({literal})")
         except gdb.error as cause:
-            self._fail("write", "command", "none", "command_failed",
+            # A failing RHS or LHS can already have changed target state.
+            self._fail("write", "command", "unknown", "command_failed",
                        f"write failed for {path}", cause=cause, path=path, value=literal)
+        if observe:
+            try:
+                assigned.fetch_lazy()
+                return values.value_to_plain(assigned, path, gdb)
+            except (ApiError, *conversion_errors(gdb)) as cause:
+                self._fail("write", "readback", "applied", "conversion_failed",
+                           f"cannot observe assigned value for {path}", cause=cause, path=path)
+        return None
 
     def breakpoint(self, location, temporary=False, *, condition=None, ignore_count=0, when=None):
         """Set a point and return it (ТЗ API 4.4).

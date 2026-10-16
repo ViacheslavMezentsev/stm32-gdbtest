@@ -51,3 +51,11 @@ initial_sp = int.from_bytes(vectors[:4], "little")  # A stack-top pointer, not a
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.4, п. 4.16.1–4.16.4, 6.8.
 - [symbol](symbol.md), [write](write.md).
+
+## Полнота чтения — кандидат 0.4.2
+
+`memory(address, size)` возвращает ровно size байтов. Иная длина ответа вызывает ApiError
+с code=incomplete_read, operation=memory, stage=readback, effect=none и полями address,
+requested, actual. Частичный снимок не возвращается; проверка не пишет в память.
+Это не проверяет, правильно ли сценарий определил размер объекта: размер из DWARF остаётся
+предусловием. Короткий ответ транспорта воспроизведён только host-инъекцией.

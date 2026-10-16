@@ -51,3 +51,11 @@ Initial SP and readable-block bounds require different checks: [TECH-017](../TES
 
 - [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.3.4, items 4.16.1–4.16.4, 6.8.
 - [symbol](symbol.md), [write](write.md).
+
+## Complete reads — 0.4.2 candidate
+
+`memory(address, size)` returns exactly size bytes. A different response length raises ApiError
+with code=incomplete_read, operation=memory, stage=readback, effect=none and address,
+requested, actual fields. No partial snapshot is returned and validation never writes memory.
+This cannot validate the scenario's object-size choice: the independent DWARF size remains a
+precondition. Short transport responses were reproduced only through host fault injection.

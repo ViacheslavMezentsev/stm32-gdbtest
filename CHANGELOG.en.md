@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- P2: memory requires complete responses (incomplete_read); write evaluates RHS once with GDB conversions and explicit error effects. Host and neutral Renode regressions, API specification 0.3.17; hardware acceptance remains separate.
+
 - P1: portable DDTT HTML/Cobertura/annotations, sealed campaigns, separate environments, Renode/GDB launcher and two skills. Target API unchanged.
 
 - External DDTT-to-LCOV exporter, BluePill/BlackPill maps and VS Code guide; stale evidence protection and separate UNKNOWN states. Candidate 0.4.2, no core/API changes.

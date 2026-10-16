@@ -353,7 +353,7 @@ to `bool` yields `True`, not a size.
 
 ### Evaluate once before writing
 
-In the current `write()` implementation, a string RHS with `verify=True` for an addressable SRAM
+In the published 0.4.1 `write()` implementation, a string RHS with `verify=True` for an addressable SRAM
 object is evaluated for the expected value and again during GDB assignment. A changing result can
 produce `verification_failed` after the write; a constant result can conceal duplicate side effects.
 For such expressions, obtain a plain number first:
@@ -641,7 +641,7 @@ do not remove qualifiers just to pass preflight.
 Before changing ordinary memory, compare an independently known layout with DWARF, then check
 the returned byte count against the size. Equality of two equally short snapshots proves nothing.
 In a neutral example, guards before and after the object help: check them immediately after mutation
-and after restoration. `memory()` does not replace explicit length validation.
+and after restoration. The 0.4.2 candidate validates response length in `memory()`, but the scenario still owns the requested object size.
 
 After a body exception, restore in `finally`, then read back and compare the entire agreed region.
 Retain body and restoration failures separately; unconfirmed restoration prohibits further changes.
@@ -690,3 +690,5 @@ an independent criterion, the intervention, the recovery, the limits and a link 
 with MCU, HAL, GCC, GDB and backend. Separate "verified", "candidate" and "not verified"; the first errors
 are part of the experience too. Update RU and EN, scenario comments and the style test together. After a
 HAL or optimization change, repeat the affected preflight and hardware runs, not only the links.
+
+The 0.4.2 candidate removes repeated RHS evaluation: see the [write contract](api/write.md). Explicit pre-evaluation remains useful for older versions.

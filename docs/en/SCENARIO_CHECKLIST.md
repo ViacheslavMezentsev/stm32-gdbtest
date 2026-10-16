@@ -71,7 +71,7 @@ for persistence effects. These checks do not replace agreement on the hardware e
 ## Evidence review questions
 
 - Is snapshot size independently established and length checked before writing? Was `sizeof` converted to bool?
-- Was a side-effecting RHS evaluated once before `write()`? Successful readback does not exclude duplicate calls.
+- Was the write version checked? Pre-evaluate side-effecting RHS on 0.4.1; the 0.4.2 candidate evaluates it once. LHS must be stable.
 - Is preflight PASS being confused with a valid `call()` name or object readiness?
 - Were record names, counts, fields, types and units checked before numeric analysis? Empty `all()` is not evidence.
 - Are body failure, capture outcome, analysis verdict and restoration retained separately?

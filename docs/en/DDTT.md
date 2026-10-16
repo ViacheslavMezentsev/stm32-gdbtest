@@ -573,7 +573,7 @@ and boundary preservation. Verify recovery after a Python exception by readback;
 requires stopping. Byte copies do not automatically restore external resources or object invariants,
 and `finally` does not cover process death.
 
-Neutral host/GDB/Renode experiments clarified these limits: a string RHS in `write()` may execute
+Neutral host/GDB/Renode experiments clarified these limits: in 0.4.1 a string RHS in `write()` could execute
 twice with verification; ELF preflight can pass a name that `Target.call()` refuses. Evaluate values
 explicitly and choose the appropriate call path without weakening expectations. Repeat the same
 route after a correction, preserving original FAIL/ERROR evidence and neighboring controls.
@@ -644,3 +644,5 @@ claimed for this DDTT revision.
 
 
 Check-evidence colouring: [DDTT in VS Code](DDTT_COVERAGE.md); external exporter, no Target API changes.
+
+Feedback is incorporated into the 0.4.2 candidate: single RHS evaluation and complete memory reads; normative details are in API specification 0.3.17. Hardware acceptance remains separate from host/Renode.

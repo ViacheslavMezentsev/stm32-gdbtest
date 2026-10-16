@@ -5,10 +5,10 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.98 (переносимый DDTT и песочница Renode) |
+| **Ревизия** | 0.99 (контракты memory/write API 0.3.17) |
 | **Дата формирования** | 16.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
-| **Целевая версия** | Кандидат пакета stm32-gdbtest `0.4.2` (внешний инструментарий); API_VERSION=2, target schema 2, ТЗ API 0.3.16 без изменений (р.0.95). Публикация владельцем после CI итогового SHA. |
+| **Целевая версия** | Кандидат пакета stm32-gdbtest `0.4.2` (внешний инструментарий); API_VERSION=2, target schema 2, ТЗ API 0.3.17, контракты memory/write (р.0.99). Публикация владельцем после CI итогового SHA. |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
@@ -166,6 +166,14 @@
 | 0.97 | 15.10.2026 | Внешний экспортёр свидетельств DDTT в LCOV; TC-172. Ядро, API и схемы runner неизменны. |
 
 | 0.98 | 16.10.2026 | Переносимый отчёт, разделение сред, контроль происхождения, внешняя песочница Renode; TC-173/174. |
+
+| 0.99 | 16.10.2026 | Актуализирована ссылка целевой версии на ТЗ API 0.3.17; контракты runner не меняются. |
+
+### Изменения ревизии 0.99
+
+| Пункт | Вид | Изменение |
+| :--- | :--- | :--- |
+| Реквизиты | изм. | API 0.3.17 для кандидата 0.4.2; проверки описаны TC-28/29 в ТЗ API |
 
 ### Изменения ревизии 0.98
 

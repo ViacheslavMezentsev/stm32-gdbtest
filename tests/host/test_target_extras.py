@@ -432,8 +432,9 @@ class ExtrasTests(unittest.TestCase):
                         {}, {"x": state["x"], "ADC1_CR": state["ADC1->CR"]})
         target._read_value = read
         target._verify_scope = lambda path: (path == "x", 0x20000000 if path == "x" else 0x40012408)
-        def write_expression(path, literal):
+        def write_expression(path, literal, *, observe=False):
             state[path] = read(literal, literal)
+            return state[path] if observe else None
         target._write_expression = write_expression
         return target, state
 
@@ -460,6 +461,18 @@ class ExtrasTests(unittest.TestCase):
         self.assertEqual(state["x"], 5)
 
     # Raw memory: the type of the second argument decides.
+    def test_memory_requires_exact_length_without_writing(self):
+        target = self.target()
+        for actual in (0, 3, 5):
+            with self.subTest(actual=actual), patch.object(self.inferior, "read_memory", return_value=bytes(actual)), patch.object(self.inferior, "write_memory") as write:
+                with self.assertRaises(ApiError) as caught:
+                    target.memory(0x20000100, 4)
+                self.assertEqual(caught.exception.code, "incomplete_read")
+                self.assertEqual(caught.exception.details["requested"], 4)
+                self.assertEqual(caught.exception.details["actual"], actual)
+                self.assertEqual(caught.exception.details["effect"], "none")
+                write.assert_not_called()
+
     def test_memory_reads_with_a_size_and_writes_bytes(self):
         target = self.target()
         self.inferior.memory[0:4] = b"\x01\x02\x03\x04"

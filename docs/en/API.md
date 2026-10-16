@@ -456,3 +456,11 @@ Local board acceptance does not replace running the updated workflow on GitHub.
 Check-evidence colouring: [DDTT in VS Code](DDTT_COVERAGE.md); external exporter, no Target API changes.
 
 [Portable HTML/LCOV/Cobertura](PORTABLE_DDTT.md) and [Renode probes](RENODE_PROBES.md) are external tools, not new Target methods.
+
+## Migrating memory/write to 0.4.2
+
+Signatures and API_VERSION=2 remain unchanged. `memory(address, size)` now rejects incomplete
+responses with incomplete_read. `write()` evaluates RHS once and verifies the value converted
+to the destination type; the previous duplicate side effect is removed. GDB assignment failures
+use command_failed/effect=unknown; subsequent read failures use read_failed/effect=applied.
+See [memory](api/memory.md) and [write](api/write.md) for details and limits.

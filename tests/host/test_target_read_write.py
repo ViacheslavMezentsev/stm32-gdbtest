@@ -86,6 +86,14 @@ class ReadWriteTests(unittest.TestCase):
         self.memory = {"app_state.ticks": self.integer}
 
         def parse(expression):
+            if ") = (" in expression:
+                path, literal = expression[1:-1].split(") = (", 1)
+                try:
+                    value = self.memory["(" + literal + ")"]
+                except KeyError:
+                    value = FakeValue(float(literal) if "." in literal else int(literal))
+                self.gdb.execute(f"set variable {path} = {literal}", to_string=True)
+                return value
             # The memory map holds whole expressions; member reads are registered as dotted keys.
             return self.memory[expression]
 
@@ -251,7 +259,7 @@ class ReadWriteTests(unittest.TestCase):
         with self.assertRaises(ApiError) as caught:
             target.write("app_delay", 100)
         self.assertEqual(caught.exception.code, "command_failed")
-        self.assertEqual(caught.exception.details["effect"], "none")
+        self.assertEqual(caught.exception.details["effect"], "unknown")
 
     def test_write_passes_a_gdb_literal_and_not_a_python_repr(self):
         # A bool must reach GDB as 1/0: Python's `True` is not a C expression.
@@ -281,6 +289,69 @@ class ReadWriteTests(unittest.TestCase):
         result = target.write("app_state.ticks", "APP_MODE_BLINK")
         self.assertTrue(result["verified"])
         self.assertEqual(result["after"], 3)
+
+    def test_readback_failure_reports_applied_write(self):
+        target = self.target()
+        with patch.object(target, "_read_value", side_effect=[41, ApiError("unreadable")]):
+            with self.assertRaises(ApiError) as caught:
+                target.write("app_state.ticks", 42)
+        self.assertEqual(caught.exception.code, "read_failed")
+        self.assertEqual(caught.exception.details["effect"], "applied")
+        self.assertEqual(target.report["mutations"][0]["before"], 41)
+        self.assertIsNone(target.report["mutations"][0]["after"])
+
+    def test_rhs_side_effect_occurs_once_for_each_row_and_verify_mode(self):
+        for verify in (True, False):
+            for constant in (False, True):
+                with self.subTest(verify=verify, constant=constant):
+                    calls = []
+                    def parse(expression):
+                        if expression == "app_state.ticks":
+                            return self.integer
+                        if expression == "(app_state.ticks) = (next_sample())":
+                            calls.append(expression)
+                            number = 42 if constant else len(calls)
+                            self.integer._plain = number
+                            return FakeValue(number)
+                        raise AssertionError(expression)
+                    self.gdb.parse_and_eval = parse
+                    target = self.target()
+                    rows = target.write([("app_state.ticks", "next_sample()"), ("app_state.ticks", "next_sample()")], verify=verify)
+                    self.assertEqual(len(calls), 2)
+                    self.assertEqual(self.integer._plain, 42 if constant else 2)
+                    self.assertEqual(len(target.report["mutations"]), 2)
+                    self.assertEqual(rows[-1]["verified"], verify)
+
+    def test_mmio_rhs_once_without_confirming_read(self):
+        calls = []
+        self.integer.address = 0x40000000
+        def parse(expression):
+            calls.append(expression)
+            if expression == "app_state.ticks":return self.integer
+            if expression == "(app_state.ticks) = (next_sample())":return FakeValue(7)
+            raise AssertionError(expression)
+        self.gdb.parse_and_eval = parse
+        result = self.target().write("app_state.ticks", "next_sample()")
+        self.assertFalse(result["verified"])
+        self.assertEqual(result["verify_scope"], "outside")
+        self.assertIsNone(result["after"])
+        self.assertEqual(calls, ["app_state.ticks", "app_state.ticks", "(app_state.ticks) = (next_sample())"])
+
+    def test_failed_rhs_preserves_unknown_effect_and_stops_rows(self):
+        calls = []
+        def parse(expression):
+            if expression == "app_state.ticks":return self.integer
+            calls.append(expression)
+            self.integer._plain = 99
+            raise FakeError("RHS failed after changing state")
+        self.gdb.parse_and_eval = parse
+        target = self.target()
+        with self.assertRaises(ApiError) as caught:
+            target.write([("app_state.ticks", "failing()"), ("app_state.ticks", 1)])
+        self.assertEqual(caught.exception.code, "command_failed")
+        self.assertEqual(caught.exception.details["effect"], "unknown")
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(self.integer._plain, 99)
 
     def test_write_refuses_a_value_without_a_gdb_literal(self):
         target = self.target()

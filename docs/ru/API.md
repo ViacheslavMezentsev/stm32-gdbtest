@@ -453,3 +453,11 @@ Prepare устанавливает закреплённый SDK через `tool
 Раскраска свидетельств проверок: [DDTT в VS Code](DDTT_COVERAGE.md); внешний экспортёр, без изменения Target API.
 
 [Переносимый HTML/LCOV/Cobertura](PORTABLE_DDTT.md) и [Renode-пробы](RENODE_PROBES.md) — внешние инструменты, не новые методы Target.
+
+## Миграция memory/write к 0.4.2
+
+Сигнатуры и API_VERSION=2 сохраняются. `memory(address, size)` теперь отвергает неполный ответ
+с incomplete_read. `write()` вычисляет RHS один раз и проверяет значение после преобразования
+к типу адресата; прежний побочный двойной вызов исчезает. Отказ GDB при присваивании имеет
+command_failed/effect=unknown, отказ последующего чтения — read_failed/effect=applied.
+Подробности и границы: [memory](api/memory.md), [write](api/write.md).
