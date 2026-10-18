@@ -1,5 +1,13 @@
 # Дорожная карта
 
+## 19.10.2026 — P3: живое окно
+
+Ветка `codex/live-execution-window`: async def, resume(sync=False), await wait/halt;
+обычные сценарии сохранены. Host и штатный Renode Windows/Linux проверены, без платы.
+ТЗ 0.106 / API 0.3.22. После CI/land владельцем — аппаратный пилот P3 по отдельному
+согласованию; P4/recovery, общая P5/P6 и inspect остаются открыты. Debugpy — отдельно.
+Подробности: docs/ru/LIVE_EXECUTION.md и API_ACCEPTANCE.md. Записи ниже исторические.
+
 ## 16.10.2026 — текущий статус 0.5.0: MMIO на шести MCU
 
 Ветка `codex/mmio-hardware-acceptance`: документальная приёмка реализации aa2362c.

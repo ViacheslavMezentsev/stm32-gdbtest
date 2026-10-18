@@ -480,3 +480,7 @@ Schema 1 и API_VERSION=2 сохраняются. Контракт может я
 
 
 Аппаратная приёмка 16.10.2026: шесть MCU, 141 проверка выбранного 32-битного GPIO/DMA маршрута, recovery VERIFIED. Границы и матрица — [API_ACCEPTANCE](API_ACCEPTANCE.md).
+
+
+Живое окно 0.5.0: обычные сценарии сохраняются; `async def`, `resume(sync=False)`,
+`await wait()` и `await halt()` — [контракт и миграция](LIVE_EXECUTION.md).

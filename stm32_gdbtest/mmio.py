@@ -14,13 +14,16 @@ class MMIOError(ApiError):
 class GdbTransport:
     """One send_packet call; GDB transport and server internals remain outside this guarantee."""
 
-    def __init__(self, gdb, profile):
+    def __init__(self, gdb, profile, state_check=None):
         self.gdb, self.profile = (gdb, profile)
+        self.state_check = state_check
 
     def prepare(self):
         g = self.gdb
         if threading.current_thread() is not threading.main_thread():
             raise ValueError('main_thread_required')
+        if self.state_check is not None and not self.state_check():
+            raise ValueError("not_stopped")
         if self.profile.get('architecture', 'cortex-m') != 'cortex-m':
             raise ValueError('unsupported_architecture')
         thread = g.selected_thread()

@@ -10,7 +10,7 @@ EN: Operation failures are separated from check mismatches: `ApiError` describes
 OPERATIONS = (
     "read", "write", "eval", "registers", "frames", "breakpoint", "watch", "resume", "reach",
     "step", "until", "finish", "ret", "call", "reset", "execute", "record", "records", "config",
-    "check", "symbol", "memory", "locals", "arguments", "point", "skip", "mmio.read", "mmio.write"
+    "wait", "halt", "check", "symbol", "memory", "locals", "arguments", "point", "skip", "mmio.read", "mmio.write"
 )
 
 # Where the operation stopped: input validation, the backend command, or observing the result.

@@ -4,7 +4,7 @@
 
 ## 0.5.0 candidate — 2026-10-16
 
-SVD and MMIO read/write are implemented; host/Renode Windows/Linux and the six-MCU hardware matrix are confirmed within the stated scope. API_VERSION=2, target schema 3; specifications 0.105 / API 0.3.21. Renode and minimal QEMU are implemented. Next is P3 contract agreement (live execution window); P4/recovery, full P5, inspect, board qualification/DDTT and release P6 remain open. Manual debugpy requires separate paired acceptance. Version 0.5.0 is not yet published.
+SVD and MMIO read/write are implemented; host/Renode Windows/Linux and the six-MCU hardware matrix are confirmed within the stated scope. API_VERSION=2, target schema 3; specifications 0.106 / API 0.3.22. Renode and minimal QEMU are implemented. P3 is implemented and checked on host/Renode Windows/Linux without boards; P4/recovery, full P5, inspect, board qualification/DDTT and release P6 remain open. Manual debugpy requires separate paired acceptance. Version 0.5.0 is not yet published.
 
 Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](API_ACCEPTANCE.md).
 
@@ -66,3 +66,5 @@ Process placement: [run layouts](RUN_LAYOUTS.md); MCU/backend: [profiles](MCU_PR
 
 [Earlier verification history](STATUS_ARCHIVE.md) is retained separately.
 Further work and branch preparation: [TODO](../../TODO.md).
+
+[P3 contract and limitations](LIVE_EXECUTION.md), [evidence](API_ACCEPTANCE.md).

@@ -483,3 +483,7 @@ name and numeric arguments. Contract PASS does not authorize an unsafe call.
 
 
 Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](API_ACCEPTANCE.md).
+
+
+Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
+`resume(sync=False)`, `await wait()` and `await halt()` — [contract and migration](LIVE_EXECUTION.md).

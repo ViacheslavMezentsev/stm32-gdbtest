@@ -65,3 +65,12 @@ firewall. При необходимости изоляцию задаёт окр
 Опция keep сейчас отклоняется; сохранение состояния машины потребует отдельного контракта.
 
 [QEMU](QEMU.md) — отдельный минимальный backend.
+
+
+## Проверка живого окна P3
+
+`python tests/renode-backend/run.py --toolchain <каталог-xPack> --renode <Renode>`
+проверяет также async-сценарии [test_live.py](../../tests/renode-backend/test_live.py):
+ранний breakpoint, пассивный timeout, два окна, повтор, FAIL/ERROR/SKIP и halt при
+завершении. Fault guard моделируется точкой на нейтральной функции, а не физическим
+исключением Cortex-M. [Контракт](LIVE_EXECUTION.md).

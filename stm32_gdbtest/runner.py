@@ -399,8 +399,8 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
             if not ready:
                 raise TimeoutError(f"GDB server startup timed out after {limit} s; see server.log "
                                    "(a slow probe connection may need startup_timeout_s in the stand)")
-            client = subprocess.Popen(gdb_base + [str(elf), "-x", str(ROOT / "stm32_gdbtest/agent.py")],
-                                      env=env, cwd=project_root, stdout=gdb_log, stderr=subprocess.STDOUT,
+            client = subprocess.Popen([arg for arg in gdb_base if arg != "-batch"] + [str(elf), "-x", str(ROOT / "stm32_gdbtest/agent.py")],
+                                      env=env, cwd=project_root, stdin=subprocess.PIPE, stdout=gdb_log, stderr=subprocess.STDOUT,
                                       **spawn_options())
             returncode = client.wait(timeout=timeout)
         if not agent_result.exists():
@@ -418,6 +418,8 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
         report["status_before_cleanup"] = report["status"]
         try:
             stop_tree(client)
+            if client is not None and client.stdin is not None:
+                client.stdin.close()
             if (stand and stand.get("environment") != "emulator" and ready and report.get("connection_attempted", True)
                     and report.get("teardown") != "reset_run"):
                 if idle_state is not None:

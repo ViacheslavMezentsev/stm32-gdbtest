@@ -1,5 +1,6 @@
 """Scenario completion shared by GDB execution and host regression tests."""
 import sys
+import inspect
 
 from stm32_gdbtest.errors import CheckFailed, fail
 
@@ -37,7 +38,19 @@ def reject_failed_checks(target):
 
 def invoke(function, target):
     """Return only on successful completion; keep failures and intercepted skips visible."""
-    function(target)
+    result = function(target)
+    if inspect.isawaitable(result):
+        if inspect.iscoroutine(result):
+            result.close()
+        fail('resume', 'validation', 'none', 'async_required', 'Declare the scenario with async def')
+    reject_failed_checks(target)
+    if getattr(target, '_skip_reason', None) is not None:
+        fail('skip', 'command', 'none', 'intercepted_skip', 'scenario caught skip and returned')
+
+
+async def invoke_async(function, target):
+    """Await a scenario and retain the same verdict rules as synchronous invocation."""
+    await function(target)
     reject_failed_checks(target)
     if getattr(target, '_skip_reason', None) is not None:
         fail('skip', 'command', 'none', 'intercepted_skip', 'scenario caught skip and returned')

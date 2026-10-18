@@ -24,7 +24,7 @@ def collect(directories):
     for path in paths:
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
         for node in tree.body:
-            if not isinstance(node, ast.FunctionDef):
+            if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 continue
             for decorator in node.decorator_list:
                 if not (isinstance(decorator, ast.Call) and isinstance(decorator.func, ast.Name)

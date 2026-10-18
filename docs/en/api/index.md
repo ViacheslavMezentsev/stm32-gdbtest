@@ -29,7 +29,7 @@ The baseline was checked against v0.1.0-rc.1 and v0.1.0-rc.2; extension commit
 | [registers](registers.md) | `registers(*names, frame=None) -> dict` | 0.3.0.dev0 (core) | 0.3.0 (design) |
 | [frames](frames.md) | `frames(limit=16) -> dict` | 0.3.0.dev0 (core) | 0.3.0 (design) |
 | [watch](watch.md) | `watch(path) -> Point` | 0.3.0.dev0 (core) | 0.3.0 (design) |
-| [resume](resume.md) | `resume() -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
+| [resume](resume.md) | `resume(*, sync=True) -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
 | [step](step.md) | `step(count=1, *, unit="source", mode="into") -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
 | [until](until.md) | `until(location=None) -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
 | [finish](finish.md) | `finish() -> dict` | 0.3.0.dev0 (core) | 0.2.9 (design) |
@@ -72,3 +72,6 @@ they are not universal across boards.
 ## SVD migration for 0.5.0
 
 [Loading, capture and compatibility](../SVD.md). Public [mmio.read/write](mmio.md) are available in the 0.5.0 candidate.
+
+
+[Live window](../LIVE_EXECUTION.md): [wait](wait.md), [halt](halt.md); optional async scenarios.

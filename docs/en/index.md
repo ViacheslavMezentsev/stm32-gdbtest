@@ -133,3 +133,7 @@ Check-evidence colouring: [DDTT in VS Code](DDTT_COVERAGE.md); external exporter
 
 - [Portable DDTT / Переносимый DDTT](PORTABLE_DDTT.md)
 - [Renode probes / Проверки Renode](RENODE_PROBES.md)
+
+
+Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
+`resume(sync=False)`, `await wait()` and `await halt()` — [contract and migration](LIVE_EXECUTION.md).

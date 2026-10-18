@@ -29,7 +29,7 @@
 | [registers](registers.md) | `registers(*names, frame=None) -> dict` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
 | [frames](frames.md) | `frames(limit=16) -> dict` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
 | [watch](watch.md) | `watch(path) -> Point` | 0.3.0.dev0 (ядро) | 0.3.0 (проект) |
-| [resume](resume.md) | `resume() -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
+| [resume](resume.md) | `resume(*, sync=True) -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
 | [step](step.md) | `step(count=1, *, unit="source", mode="into") -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
 | [until](until.md) | `until(location=None) -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
 | [finish](finish.md) | `finish() -> dict` | 0.3.0.dev0 (ядро) | 0.2.9 (проект) |
@@ -71,3 +71,6 @@ Target передаётся агентом; создавать его самос
 ## SVD к 0.5.0: миграция
 
 [Загрузка, захват и совместимость](../SVD.md). Публичные [mmio.read/write](mmio.md) доступны в кандидате 0.5.0.
+
+
+[Живое окно](../LIVE_EXECUTION.md): [wait](wait.md), [halt](halt.md); опциональные async-сценарии.

@@ -1,5 +1,6 @@
 """Explicit GDB entry point; never auto-loaded from ELF."""
 
+import inspect
 import hashlib
 import importlib.util
 import json
@@ -21,11 +22,11 @@ from stm32_gdbtest.full_image import compare_full, validate_image
 from stm32_gdbtest.config_transport import loads
 from stm32_gdbtest.configuration import thaw
 from stm32_gdbtest.result_capture import save as save_records
-from stm32_gdbtest.scenario import ScenarioSkipped, invoke
+from stm32_gdbtest.scenario import ScenarioSkipped, invoke, invoke_async
 from stm32_gdbtest.reports import CODES
 
 
-def main():
+async def main():
     session = json.loads(Path(os.environ["STM32_GDBTEST_RUN"]).read_text(encoding="utf-8"))
     sys.path.insert(1, str(Path(session.get("root", ROOT)).resolve()))
     profile = session["profile"]
@@ -114,7 +115,13 @@ def main():
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         completion = "interrupted"
-        invoke(getattr(module, session["test"]["function"]), target)
+        function = getattr(module, session["test"]["function"])
+        if inspect.iscoroutinefunction(function):
+            from stm32_gdbtest.execution import LiveExecution
+            target._execution = LiveExecution(target, gdb)
+            await invoke_async(function, target)
+        else:
+            invoke(function, target)
         completion = "normal"
         report["status"] = "PASS"
     except ScenarioSkipped as exc:
@@ -124,6 +131,16 @@ def main():
     except BaseException:
         report.update(status="ERROR", error=traceback.format_exc())
     finally:
+        # Stop before diagnostics/capture/teardown; preserve the body error independently.
+        execution = getattr(target, '_execution', None)
+        if execution is not None:
+            try:
+                if execution.state() not in ('stopped', 'exited'):
+                    await target.halt(timeout=2.0)
+                report['execution_cleanup'] = 'VERIFIED'
+            except BaseException:
+                report.update(status_before_execution_cleanup=report['status'], status='ERROR',
+                              execution_cleanup='ERROR', execution_cleanup_error=traceback.format_exc())
         if configuration and configuration.capture_results:
             save_records(Path(session["result"]).parent, report, target, completion)
         if report["status"] != "PASS" and connected:
@@ -149,7 +166,7 @@ def main():
         try:
             if target:
                 target.close()
-            if connected:
+            if connected and report.get("execution_cleanup") != "ERROR":
                 for command in session["finish"]:
                     gdb.execute(command)
                 report["teardown"] = "disconnected" if emulator else "reset_run"
@@ -161,4 +178,10 @@ def main():
     gdb.execute("quit " + str(CODES[report["status"]]))
 
 
-main()
+from stm32_gdbtest.execution import CoroutineRunner
+
+def scheduler_failed(error):
+    traceback.print_exception(type(error), error, error.__traceback__)
+    gdb.execute('quit 2')
+
+CoroutineRunner(main(), gdb, scheduler_failed).start()

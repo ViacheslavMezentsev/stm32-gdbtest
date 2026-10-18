@@ -593,3 +593,10 @@ that probe's USB cable. This restored communication in the accepted experiment.
 Do not increase the timeout or classify this as an MCU failure; retain the original log.
 If communication was lost after MCU writes, state restoration must be checked separately;
 reconnecting alone is insufficient.
+
+
+## GDB events in a live window
+
+`continue &` plus Python sleep does not service stop events. Use an async scenario
+and await wait/halt; the runner yields to GDB event processing. Do not use asyncio.run.
+[Example and limitations](LIVE_EXECUTION.md).

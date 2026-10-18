@@ -4,7 +4,7 @@
 
 ## Кандидат 0.5.0 — 16.10.2026
 
-SVD и MMIO read/write реализованы, host/Renode Windows/Linux и аппаратная матрица шести MCU подтверждены в указанной области. API_VERSION=2, target schema 3; ТЗ 0.105 / API 0.3.21. Renode и минимальный QEMU реализованы. Следующий пакет — согласование P3 (живое окно); P4/recovery, полная P5, inspect, квалификация платы/DDTT и выпускная P6 не закрыты. Ручная debugpy-отладка требует отдельной парной приёмки. Выпуск 0.5.0 ещё не опубликован.
+SVD и MMIO read/write реализованы, host/Renode Windows/Linux и аппаратная матрица шести MCU подтверждены в указанной области. API_VERSION=2, target schema 3; ТЗ 0.106 / API 0.3.22. Renode и минимальный QEMU реализованы. P3 реализован и проверен на host/Renode Windows/Linux без платы; P4/recovery, полная P5, inspect, квалификация платы/DDTT и выпускная P6 не закрыты. Ручная debugpy-отладка требует отдельной парной приёмки. Выпуск 0.5.0 ещё не опубликован.
 
 Аппаратная приёмка 16.10.2026: шесть MCU, 141 проверка выбранного 32-битного GPIO/DMA маршрута, recovery VERIFIED. Границы и матрица — [API_ACCEPTANCE](API_ACCEPTANCE.md).
 
@@ -66,3 +66,5 @@ OpenOCD, ST-LINK GDB Server, st-util и J-Link. API содержит навиг�
 
 [История прежних проверок](STATUS_ARCHIVE.md) сохранена отдельно.
 Дальнейшие работы и подготовка веток — [TODO](../../TODO.md).
+
+[P3: контракт и ограничения](LIVE_EXECUTION.md), [свидетельства](API_ACCEPTANCE.md).

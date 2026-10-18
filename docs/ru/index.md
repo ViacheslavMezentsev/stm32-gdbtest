@@ -133,3 +133,7 @@ F030: RTC deadline через инъекцию аргумента, API без и
 
 - [Portable DDTT / Переносимый DDTT](PORTABLE_DDTT.md)
 - [Renode probes / Проверки Renode](RENODE_PROBES.md)
+
+
+Живое окно 0.5.0: обычные сценарии сохраняются; `async def`, `resume(sync=False)`,
+`await wait()` и `await halt()` — [контракт и миграция](LIVE_EXECUTION.md).

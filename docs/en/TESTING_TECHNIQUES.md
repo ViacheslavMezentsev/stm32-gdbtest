@@ -705,3 +705,7 @@ Check positive and negative cases in Renode first, then repeat the minimal segme
 target with the specific server and safe recovery. This is an investigation recommendation,
 not a new scenario syntax rule or proof of exact physical transaction count.
 WO/W1C/FIFO cannot be handled using a generic RAM snapshot.
+
+
+Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
+`resume(sync=False)`, `await wait()` and `await halt()` — [contract and migration](LIVE_EXECUTION.md).

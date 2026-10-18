@@ -31,11 +31,12 @@ cases = {t['id']:t for t in collect([b])}
 results = []
 if run(session, cases['HW_EMU_STARTUP'], prepare_only=True) != 0:
     raise SystemExit('Preparation failed')
-for name, expected in [('HW_EMU_STARTUP','PASS'),('HW_EMU_FAIL','FAIL'),('HW_EMU_RESET','PASS'),('HW_EMU_TIMEOUT','ERROR'),('HW_EMU_STARTUP','PASS')]:
+for name, expected in [('HW_EMU_STARTUP','PASS'),('HW_EMU_FAIL','FAIL'),('HW_EMU_RESET','PASS'),('HW_EMU_TIMEOUT','ERROR'),('HW_EMU_STARTUP','PASS'),('HW_EMU_LIVE','PASS'),('HW_EMU_LIVE_ERROR','ERROR'),('HW_EMU_LIVE_FAULT','ERROR'),('HW_EMU_LIVE_SKIP','SKIP'),('HW_EMU_LIVE_FAIL','FAIL'),('HW_EMU_LIVE_RETURN','PASS'),('HW_EMU_SYNC_REFUSAL','PASS'),('HW_EMU_LIVE','PASS')]:
     code = run(session,cases[name])
     latest = sorted((out/'runs').glob('*/result.json'))[-1]
     result = json.loads(latest.read_text())
     ok = result['status']==expected and result.get('cleanup')=='VERIFIED' and result['mode']=='emulator'
+    if name.startswith('HW_EMU_LIVE'):ok = ok and result.get('execution_cleanup')=='VERIFIED'
     if expected=='PASS':ok = ok and code==0 and result.get('image_verified') is True and result.get('capture',{}).get('status')=='saved'
     results.append(dict(case=name,expected=expected,status=result['status'],ok=ok,result=str(latest.relative_to(ROOT))))
 # Invalid platform must time out before any scenario; owned process is still reaped.

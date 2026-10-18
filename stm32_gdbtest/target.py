@@ -127,6 +127,8 @@ class Point:
     @condition.setter
     def condition(self, condition):
         """Replace the stop condition of the live point; None removes it (ТЗ API 4.4.3)."""
+        if self._owner is not None:
+            self._owner._require_stopped('point')
         if condition is not None and (type(condition) is not str or not condition.strip()):
             fail("point", "validation", "none", "invalid_condition",
                  "condition must be a non-empty string or None", point=self._number, condition=condition)
@@ -140,6 +142,8 @@ class Point:
 
     def enable(self):
         """Activate a disabled point; the hardware budget counts only active points (ТЗ API 4.4.3)."""
+        if self._owner is not None:
+            self._owner._require_stopped('point')
         self._require_valid("enable")
         if self.active:
             return self
@@ -154,6 +158,8 @@ class Point:
 
     def disable(self):
         """Keep the point and its counter but stop it from halting the target (ТЗ API 4.4.3)."""
+        if self._owner is not None:
+            self._owner._require_stopped('point')
         self._require_valid("disable")
         self._native.enabled = False
         return self
@@ -169,6 +175,8 @@ class Point:
 
     def remove(self):
         """Delete the point and forget it; a repeated removal is not an error."""
+        if self._owner is not None:
+            self._owner._require_stopped('point')
         self._removed = True
         try:
             valid = self._native.is_valid()
@@ -239,7 +247,8 @@ class Target:
         self._journal = Journal(**{key: limits[key] for key in DEFAULTS})
         from stm32_gdbtest.mmio import MMIO, GdbTransport
         self.mmio = MMIO(configuration.svd_catalog if configuration else None,
-                         GdbTransport(gdb, profile), self.record)
+                         GdbTransport(gdb, profile, lambda: getattr(self, '_execution', None) is None
+                                      or self._execution.state() == 'stopped'), self.record)
         self.owned = []
         self.stops = []
         # Fault guard functions; the architecture adapter may replace them at boot (portability P1-7).
@@ -357,6 +366,7 @@ class Target:
                        cause=error, row=name, cell=cell, expression=expression)
 
     def _integer(self, expression):
+        self._require_stopped('eval')
         value = gdb.parse_and_eval(expression)
         if value.is_optimized_out:
             raise RuntimeError(f"Value optimized out: {expression}")
@@ -369,6 +379,7 @@ class Target:
         Each entry carries its depth, function name, program counter and method; without an explicit
         `limit` the value from `api.toml` is used, then the agreed default.
         """
+        self._require_stopped('frames')
         if limit is None:
             limit = self._frames_limit()
         if type(limit) is not int or limit < 1:
@@ -435,6 +446,7 @@ class Target:
         conversion happens after the expression executed, so a wrong type is reported as a failure of
         the result, not of the expression.
         """
+        self._require_stopped('eval')
         if type(expression) is not str or not expression.strip():
             self._fail("eval", "validation", "none", "invalid_expression",
                        "expression must be a non-empty string", expression=expression)
@@ -555,6 +567,7 @@ class Target:
         `pc` prefers the frame accessor because a forced return can leave the register stale; other
         names are read by name and masked by the declared width of the register.
         """
+        self._require_stopped('registers')
         if not names:
             self._fail("registers", "validation", "none", "invalid_names",
                        "at least one register name is required")
@@ -593,6 +606,7 @@ class Target:
 
     def symbol(self, name):
         """Address, size, type and section of a global or static symbol (ТЗ API 4.15)."""
+        self._require_stopped('symbol')
         if type(name) is not str or not name.strip():
             self._fail("symbol", "validation", "none", "invalid_name",
                        "symbol name must be a non-empty string", name=name)
@@ -661,6 +675,7 @@ class Target:
           logged in mutations, and a result dict is returned.
         Anything else is refused before the memory is touched.
         """
+        self._require_stopped('memory')
         if type(address) is not int or address < 0:
             self._fail("memory", "validation", "none", "invalid_block", "address must be a non-negative integer",
                        address=address)
@@ -718,10 +733,12 @@ class Target:
 
     def locals(self, frame=None):
         """Local variables of a frame: inner blocks shadow outer ones (ТЗ API 4.17)."""
+        self._require_stopped('locals')
         return self._frame_symbols("locals", frame, arguments=False)
 
     def arguments(self, frame=None):
         """Arguments of the function of a frame (ТЗ API 4.17)."""
+        self._require_stopped('arguments')
         return self._frame_symbols("arguments", frame, arguments=True)
 
     def _select_frame(self, operation, frame):
@@ -781,6 +798,7 @@ class Target:
         a dict of plain values, and `fields` returns a dict of the requested members. Slices apply to
         arrays only and are bounded by the declared range.
         """
+        self._require_stopped('read')
         if type(path) is not str or not path:
             values.invalid_path(path)
         if fields is not None:
@@ -841,6 +859,7 @@ class Target:
         order and returns their results. A string value is a GDB expression evaluated before the write,
         so `("ADC1->CR", "ADC1->CR | ADC_CR_ADSTART")` is a read-modify-write.
         """
+        self._require_stopped('write')
         if isinstance(path, (list, tuple)):
             if value is not _OMITTED:
                 self._fail("write", "validation", "none", "invalid_rows",
@@ -940,6 +959,7 @@ class Target:
         point or different parameters always create a new one, so a condition is never dropped.
         `when` is the 0.1/0.2 name of `condition`.
         """
+        self._require_stopped('breakpoint')
         if type(location) is not str or not location.strip():
             self._fail("breakpoint", "validation", "none", "invalid_location",
                        "location must be a non-empty string", location=location)
@@ -983,6 +1003,7 @@ class Target:
         watchpoints fails here, and the failure names the operation instead of leaving the scenario
         without stops. The returned point is a regular Point with `with` support.
         """
+        self._require_stopped('watch')
         if type(path) is not str or not path.strip():
             self._fail("watch", "validation", "none", "invalid_path",
                        "a non-empty object path is required", path=path)
@@ -1047,6 +1068,7 @@ class Target:
         The point is always created by this call and only that point is removed afterwards; a point
         the scenario set at the same location stays. `when` is the 0.1/0.2 name of `condition`.
         """
+        self._require_stopped('reach')
         condition = self._condition("reach", condition, when)
         point = self.breakpoint(location, temporary=True, condition=condition)
         # Resolve the addresses while the point exists: a temporary point is gone after the stop.
@@ -1073,15 +1095,41 @@ class Target:
         return dict(operation="reach", outcome="reached", location=location, point=point.number,
                     addresses=addresses, stop=stop)
 
-    def resume(self):
+    def resume(self, *, sync=True):
         """Continue execution and return the stop result (ТЗ API 4.5)."""
+        if type(sync) is not bool:
+            self._fail("resume", "validation", "none", "invalid_sync", "sync must be bool")
+        if not sync:
+            return self._live().resume()
+        self._require_stopped("resume")
         self.stops.clear()
         stop = self._advance("resume")
         self.report.setdefault("stops", []).append(stop)
         return dict(operation="resume", outcome="stopped", stop=stop)
 
+    def _live(self):
+        execution = getattr(self, '_execution', None)
+        if execution is None:
+            self._fail('resume', 'validation', 'none', 'async_required',
+                       'Live execution requires an async def scenario')
+        return execution
+
+    async def wait(self, *, timeout):
+        """Passively await stop/exit or timeout; never interrupts the target."""
+        return await self._live().wait(timeout)
+
+    async def halt(self, *, timeout):
+        """Request interrupt when running and await confirmed stop."""
+        return await self._live().wait(timeout, 'halt')
+
+    def _require_stopped(self, operation):
+        execution = getattr(self, '_execution', None)
+        if execution is not None:
+            execution.require_stopped(operation)
+
     def step(self, count=1, *, unit="source", mode="into"):
         """Step `count` times by source line or instruction (ТЗ API 4.5)."""
+        self._require_stopped('step')
         if type(count) is not int or count < 1:
             self._fail("step", "validation", "none", "invalid_count",
                        "count must be a positive integer", count=count)
@@ -1108,6 +1156,7 @@ class Target:
 
     def until(self, location=None):
         """Run to a location in the current frame, or leave the current line (ТЗ API 4.5)."""
+        self._require_stopped('until')
         if location is not None and (type(location) is not str or not location.strip()):
             self._fail("until", "validation", "none", "invalid_location",
                        "location must be a non-empty string", location=location)
@@ -1151,6 +1200,7 @@ class Target:
         which every supported GDB has; `gdb.Frame` carries no return value. A void function is told
         apart by the declared type, so `None` never stands for both.
         """
+        self._require_stopped('finish')
         origin = gdb.newest_frame()
         returned_from = function_name(origin.name()) if origin is not None else None
         kind = self._return_type(origin) if origin is not None else None
@@ -1197,6 +1247,7 @@ class Target:
         when the command returns. Some GDB versions report no native reason for `finish`; in that case
         a changed frame is what proves the function returned.
         """
+        self._require_stopped('resume')
         before = self._frame_identity()
         self.stops.clear()
         try:
@@ -1321,6 +1372,7 @@ class Target:
         The value is encoded by the declared return type of the frame: the width and signedness come
         from the type, and a value outside the declared range is refused before anything is executed.
         """
+        self._require_stopped('ret')
         frame = gdb.newest_frame()
         if frame is None or not frame.is_valid():
             self._fail("ret", "validation", "none", "no_frame",
@@ -1407,6 +1459,7 @@ class Target:
         session override wins over both. Active points are refused because a reset makes their state
         meaningless; the invalidation runs after any attempt, including a failed one.
         """
+        self._require_stopped('reset')
         if self.profile.get('environment') == 'emulator':
             self._fail('reset', 'validation', 'none', 'unsupported_backend',
                        'reset is not yet qualified for this emulator; start a new run')
@@ -1460,6 +1513,7 @@ class Target:
         flag; on truncation it also keeps the SHA-256 of the full output. A debugger error is
         propagated as a failure and the command is never repeated.
         """
+        self._require_stopped('execute')
         if type(command) is not str or not command.strip():
             self._fail("execute", "validation", "none", "invalid_command",
                        "command must be a non-empty string", command=command)
@@ -1503,6 +1557,7 @@ class Target:
         Arguments are passed by value; the function runs, so its side effects are kept and the halt
         state is whatever the call produced. The scenario timeout is the only bound on the call.
         """
+        self._require_stopped('call')
         if type(function) is not str or not _FUNCTION_NAME.fullmatch(function):
             self._fail("call", "validation", "none", "invalid_function",
                        "a plain function name is required", function=function)
@@ -1565,10 +1620,17 @@ class Target:
 
     def clear(self):
         # remove() rewrites self.owned, so iterate over a snapshot (ТЗ API 4.8).
+        self._require_stopped('point')
         for point in list(self.owned):
             point.remove()
         self.owned.clear()
 
     def close(self):
+        if getattr(self, '_execution', None) is not None:
+            self._execution.close()
         gdb.events.stop.disconnect(self.on_stop)
-        self.clear()
+        if getattr(self, '_execution', None) is not None and self._execution.exited:
+            # The process is gone; no target access is needed before GDB itself exits.
+            self.owned.clear()
+        else:
+            self.clear()

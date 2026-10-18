@@ -395,3 +395,23 @@ core was not changed for these experiments.
 reads, arbitrary registers/backends, physical APB/AHB transaction counts, automatic
 recovery after losing GDB. Host/Renode fault injection is not hardware fault acceptance.
 This closes the selected MMIO matrix, not the entire release P5 campaign.
+
+
+## P3 — live window, 2026-10-19
+
+Branch codex/live-execution-window, 0.5.0 candidate: ordinary def and async def through
+the real runner, xPack 14.2.1-1.1 / GDB-Python 15.2.90, Renode 1.17.0, Windows/Linux.
+Each OS: 14 expected outcomes including intentional FAIL/ERROR/SKIP, timeout and model
+refusal; prepare is checked separately. Live cleanup VERIFIED, owned processes/ports
+released. Windows host: 554 tests, 14 expected skips; Linux docs/host checked separately.
+
+Checks cover early breakpoint, two windows, passive timeout, repeated halt/run,
+read/write/repeated-resume refusal while running, normal return and exception while
+running, preserved FAIL/SKIP, a guard on a neutral function and compatible sync scenarios.
+Host also covers unknown state/transport loss, halt_timeout, races, stale timer callbacks,
+timer/journal errors and early Event.wait wakeup. The initial Windows timer failure is
+retained; the final repeat passed without increasing timeout.
+
+Host injections are not hardware faults. Physical MCU exceptions, USB loss, FPB/VTOR
+restoration and debugpy are not accepted by this package. No boards were used.
+Commands and semantics: [live execution](LIVE_EXECUTION.md), [Renode](RENODE.md).

@@ -99,3 +99,7 @@ The 0.4.2 candidate supports pointer qualifiers; see [details](CONTRACTS.md).
 - Define semantic recovery, not generic snapshot restoration; do not retry blindly after errors.
 
 [MMIO limitations and skill](MMIO.md). For the 0.5.0 candidate use [mmio.read/write](api/mmio.md); SVD and ACK do not establish physical effects.
+
+
+Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
+`resume(sync=False)`, `await wait()` and `await halt()` — [contract and migration](LIVE_EXECUTION.md).

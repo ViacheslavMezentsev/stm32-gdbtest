@@ -65,3 +65,12 @@ owned process while recreating its machine, with explicit isolation tests. keep 
 currently rejected; preserving machine state needs a separate contract.
 
 [QEMU](QEMU.md) — a separate minimal backend.
+
+
+## P3 live-window verification
+
+`python tests/renode-backend/run.py --toolchain <xPack-directory> --renode <Renode>`
+also checks async scenarios in [test_live.py](../../tests/renode-backend/test_live.py):
+early breakpoint, passive timeout, two windows, repeat, FAIL/ERROR/SKIP and halt on
+completion. A breakpoint on a neutral function represents a fault guard; it does not
+claim a physical Cortex-M exception. See the [contract](LIVE_EXECUTION.md).
