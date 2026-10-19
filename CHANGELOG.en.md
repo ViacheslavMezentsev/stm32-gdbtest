@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Renode qualification example: independent receiver journal, dropped word and nominal repeat; raw PASS results are retained and only the dependent DDTT assertion is blocked. No core changes or hardware acceptance.
+
 - First DDTT applicability package: map schema 2, admission snapshot, raw/state and UNKNOWN, sealed admission hash, neutral host example. Runner/Target unchanged. [Contract](docs/en/DDTT_QUALIFICATION.md).
 
 - Public inspect CLI: offline HIL/backend/SVD links, AST, captured configuration, JSON schema 1 and redacted diagnostics. No tools or hardware are started. [Guide](docs/en/HIL_INSPECT.md).

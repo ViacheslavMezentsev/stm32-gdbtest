@@ -4,8 +4,8 @@
 
 The first 0.5.0 package checks assertion applicability in the external exporter.
 It neither qualifies the entire board nor rewrites result.json. The neutral
-[example](../../examples/ddtt-qualification/README.en.md) uses **synthetic host data**,
-not measurements from a board or Renode.
+[example](../../examples/ddtt-qualification/README.en.md) includes **synthetic host data**
+and a separate Renode route with a modeled receiver journal. No hardware measurements.
 
 ## Separate outcomes
 
@@ -101,6 +101,14 @@ IDs, reason codes and snapshot hash. Condition identifiers must be suitable for 
 
 Runner and Target are unchanged. No automatic qualification, skip/scheduler or JSON injection
 into [data] is provided. A consumer may prepare a corresponding TOML snapshot for existing
-[data]; that integration still needs a separate example. Next: Renode with an independent
-reference, then a hardware pilot and measurement-chain validation. reach(main), HSE_VALUE
+[data]; that integration still needs a separate example. Next: consumer integration,
+a hardware pilot and measurement-chain validation. reach(main), HSE_VALUE
 and virtual button injection do not prove physical characteristics.
+
+## Renode check
+
+The [executable example](../../examples/ddtt-qualification/README.en.md#renode-independent-receiver-journal)
+uses a separate peripheral journal as the delivery reference. One ELF and scenario:
+nominal, dropped word, nominal repeated; raw PASS is retained, and only the dependent
+point is blocked when the condition is violated. This validates a deterministic model,
+not physical MCU properties. The first package contract and schemas are unchanged.
