@@ -188,3 +188,9 @@ Before a long run, use the linked checklist. Validate rig prerequisites separate
 behavior; prepare does not execute the hardware scenario body. Define required records and capture
 before evidence analysis. Classify unexpected outcomes as application, scenario, rig, API or
 assumption errors before changing expectations. A heuristic hint is not a contract violation.
+
+
+API_VERSION=3: use ordinary calls in def and await navigation/call in async def.
+Keep data methods and resume(sync=False) immediate. Never use arbitrary execute
+in async or hidden inferior calls in data expressions. See docs/ru/LIVE_EXECUTION.md
+and docs/en/LIVE_EXECUTION.md for migration, deadlines and incomplete-call cleanup.

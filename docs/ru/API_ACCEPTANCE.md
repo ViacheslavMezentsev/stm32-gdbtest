@@ -457,3 +457,8 @@ MCU оставлен halted после reset. Это отдельная пров
 поля server_shutdown. Не приняты USB-loss recovery, SSH и другие модели J-Link.
 Предшествовавшие принудительные завершения вызывали USB timeout/исчерпание регистраций;
 требовалось переподключение и отдельное восстановление. Эти ошибки не скрыты повтором.
+
+
+## Диспетчер API_VERSION=3 — 19.10.2026
+
+Host: Windows 594 теста (14 пропусков), Linux 594 (4 пропуска); docs/host Linux 6/6. Renode 1.17 Windows/Linux: по 21 ожидаемому исходу, включая намеренные FAIL/ERROR/SKIP, пропущенный await, timeout/halt, ret, bounded call и незавершённый dummy frame. Воспроизведение: `tests/renode-backend/run.py`, host: `tests/host/test_execution_dispatch.py`. Проверки без платы; прежняя аппаратная матрица P3 не является приёмкой API_VERSION=3.

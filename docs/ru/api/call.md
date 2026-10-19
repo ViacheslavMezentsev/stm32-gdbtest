@@ -39,3 +39,6 @@ t.check("call returned a value", result["return_state"], "available")
 ## Ссылки
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), раздел 4.8; текущий контракт не расширен в 0.4.2.
+
+
+Кандидат 0.5.0, API_VERSION=3: правила sync/async, таймауты, запрет скрытых вызовов и миграция — [живое исполнение](../LIVE_EXECUTION.md#исполнение-в-api_version3-кандидат-050).

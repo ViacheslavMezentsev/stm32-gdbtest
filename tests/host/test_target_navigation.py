@@ -113,6 +113,8 @@ class NavigationTests(unittest.TestCase):
         )
 
     def target(self, profile=None):
+        from gdb_parameters import install
+        install(self.gdb)
         import builtins
         real_import = builtins.__import__
 
@@ -165,6 +167,8 @@ class NavigationTests(unittest.TestCase):
             return ""
 
         self.gdb.execute = execute
+        from gdb_parameters import install
+        install(self.gdb)
         target.reach("app_loop")
         self.assertTrue(persistent.active)
         self.assertEqual([p.id for p in target.owned], [persistent.id])
@@ -405,6 +409,8 @@ class NavigationTests(unittest.TestCase):
             return result
 
         self.gdb.execute = execute
+        from gdb_parameters import install
+        install(self.gdb)
         return stored
 
     def test_finish_reports_the_returned_value_from_the_history(self):
@@ -452,6 +458,8 @@ class NavigationTests(unittest.TestCase):
             return result
 
         self.gdb.execute = execute
+        from gdb_parameters import install
+        install(self.gdb)
         self.raw_events = [FakeBreakpointEvent([], None)]
         result = target.finish()
         self.assertEqual(result["stop"]["kind"], "function_return")
@@ -475,6 +483,8 @@ class NavigationTests(unittest.TestCase):
             return result
 
         self.gdb.execute = execute
+        from gdb_parameters import install
+        install(self.gdb)
         self.raw_events = [FakeBreakpointEvent([], None)]
         result = target.step(1, unit="source", mode="into")
         self.assertEqual(result["completed"], 1)
@@ -493,6 +503,8 @@ class NavigationTests(unittest.TestCase):
             return result
 
         self.gdb.execute = execute
+        from gdb_parameters import install
+        install(self.gdb)
         self.raw_events = [FakeBreakpointEvent([], None)]
         result = target.until()
         self.assertEqual(result["outcome"], "completed")
@@ -511,6 +523,8 @@ class NavigationTests(unittest.TestCase):
             return result
 
         self.gdb.execute = execute
+        from gdb_parameters import install
+        install(self.gdb)
         self.stop(reason="location-reached")
         reached = target.until("app.c:20")
         self.assertEqual((reached["outcome"], reached["targets"]), ("reached", [0x8000400]))

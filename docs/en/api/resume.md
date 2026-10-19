@@ -9,3 +9,6 @@
 [Semantics, errors, example and limitations](../LIVE_EXECUTION.md).
 
 Blocking resume has been available since 0.3.0; sync and asynchronous launch are added in the 0.5.0 candidate.
+
+
+0.5.0 candidate, API_VERSION=3: sync/async rules, timeouts, hidden-call restrictions and migration — [live execution](../LIVE_EXECUTION.md#execution-in-api_version3-050-candidate).

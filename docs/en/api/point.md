@@ -42,3 +42,6 @@ After removal, accessing point properties reports a failure instead of stale dat
 ## References
 
 - [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5; `enable`, `disable`, writable `condition`: revision 0.3.3, item 4.4.3.
+
+
+0.5.0 candidate, API_VERSION=3: sync/async rules, timeouts, hidden-call restrictions and migration — [live execution](../LIVE_EXECUTION.md#execution-in-api_version3-050-candidate).

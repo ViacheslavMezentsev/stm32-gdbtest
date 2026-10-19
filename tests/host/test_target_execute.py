@@ -46,6 +46,8 @@ class ExecuteTests(unittest.TestCase):
         )
 
     def target(self, limit=None):
+        from gdb_parameters import install
+        install(self.gdb)
         import builtins
         real_import = builtins.__import__
 

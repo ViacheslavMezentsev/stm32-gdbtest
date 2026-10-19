@@ -31,11 +31,13 @@ cases = {t['id']:t for t in collect([b])}
 results = []
 if run(session, cases['HW_EMU_STARTUP'], prepare_only=True) != 0:
     raise SystemExit('Preparation failed')
-for name, expected in [('HW_EMU_STARTUP','PASS'),('HW_EMU_FAIL','FAIL'),('HW_EMU_RESET','PASS'),('HW_EMU_TIMEOUT','ERROR'),('HW_EMU_STARTUP','PASS'),('HW_EMU_LIVE','PASS'),('HW_EMU_LIVE_ERROR','ERROR'),('HW_EMU_LIVE_FAULT','ERROR'),('HW_EMU_LIVE_SKIP','SKIP'),('HW_EMU_LIVE_FAIL','FAIL'),('HW_EMU_LIVE_RETURN','PASS'),('HW_EMU_SYNC_REFUSAL','PASS'),('HW_EMU_LIVE','PASS')]:
+for name, expected in [('HW_EMU_DROPPED_WAIT','ERROR'),('HW_EMU_RET_ASYNC','PASS'),('HW_EMU_REACH_TIMEOUT','PASS'),('HW_EMU_DISPATCH','PASS'),('HW_EMU_DROPPED','ERROR'),('HW_EMU_CALL_BREAK','ERROR'),('HW_EMU_NAV_TIMEOUT','PASS'),('HW_EMU_STARTUP','PASS'),('HW_EMU_FAIL','FAIL'),('HW_EMU_RESET','PASS'),('HW_EMU_TIMEOUT','ERROR'),('HW_EMU_STARTUP','PASS'),('HW_EMU_LIVE','PASS'),('HW_EMU_LIVE_ERROR','ERROR'),('HW_EMU_LIVE_FAULT','ERROR'),('HW_EMU_LIVE_SKIP','SKIP'),('HW_EMU_LIVE_FAIL','FAIL'),('HW_EMU_LIVE_RETURN','PASS'),('HW_EMU_SYNC_REFUSAL','PASS'),('HW_EMU_LIVE','PASS')]:
     code = run(session,cases[name])
     latest = sorted((out/'runs').glob('*/result.json'))[-1]
     result = json.loads(latest.read_text())
     ok = result['status']==expected and result.get('cleanup')=='VERIFIED' and result['mode']=='emulator'
+    if name in ('HW_EMU_DROPPED','HW_EMU_DROPPED_WAIT'): ok = ok and 'Await the preceding' in result.get('error','')
+    if name=='HW_EMU_CALL_BREAK': ok = ok and result.get('execution_cleanup')=='ERROR' and 'context not restored' in result.get('execution_cleanup_error','')
     if name.startswith('HW_EMU_LIVE'):ok = ok and result.get('execution_cleanup')=='VERIFIED'
     if expected=='PASS':ok = ok and code==0 and result.get('image_verified') is True and result.get('capture',{}).get('status')=='saved'
     results.append(dict(case=name,expected=expected,status=result['status'],ok=ok,result=str(latest.relative_to(ROOT))))

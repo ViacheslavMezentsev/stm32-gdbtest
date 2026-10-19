@@ -50,3 +50,6 @@ t.reach("main")
 С v0.4.0 backend `st-util` использует `monitor reset`; необязательная секция `[st-util]` принадлежит schema 2. Контракт метода не изменён.
 
 Renode / [QEMU](../QEMU.md): `reset()` пока отклоняется до команды (`unsupported_backend`, `validation`, `none`). Чистый запуск — новый процесс; [контракт backend](../RENODE.md).
+
+
+Кандидат 0.5.0, API_VERSION=3: правила sync/async, таймауты, запрет скрытых вызовов и миграция — [живое исполнение](../LIVE_EXECUTION.md#исполнение-в-api_version3-кандидат-050).

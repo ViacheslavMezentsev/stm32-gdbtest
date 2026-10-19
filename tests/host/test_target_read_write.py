@@ -124,6 +124,8 @@ class ReadWriteTests(unittest.TestCase):
         A full host run imports the real modules earlier, and `import gdb` resolves through the import
         machinery, so the substitute is installed at the import level for the duration of the call.
         """
+        from gdb_parameters import install
+        install(self.gdb)
         import builtins
         real_import = builtins.__import__
 
@@ -209,6 +211,8 @@ class ReadWriteTests(unittest.TestCase):
             return ""
 
         self.gdb.execute = execute
+        from gdb_parameters import install
+        install(self.gdb)
         result = target.write("app_state.ticks", 42)
         self.assertEqual(result["before"], 41)
         self.assertEqual(result["after"], 42)
@@ -272,6 +276,8 @@ class ReadWriteTests(unittest.TestCase):
             return ""
 
         self.gdb.execute = execute
+        from gdb_parameters import install
+        install(self.gdb)
         result = target.write("app_state.ticks", True)
         self.assertEqual(commands[-1], "set variable app_state.ticks = 1")
         self.assertTrue(result["verified"])
@@ -286,6 +292,8 @@ class ReadWriteTests(unittest.TestCase):
             return ""
 
         self.gdb.execute = execute
+        from gdb_parameters import install
+        install(self.gdb)
         result = target.write("app_state.ticks", "APP_MODE_BLINK")
         self.assertTrue(result["verified"])
         self.assertEqual(result["after"], 3)

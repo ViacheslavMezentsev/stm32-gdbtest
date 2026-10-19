@@ -43,3 +43,6 @@ and returned in `location`; `stop.frame` retains GDB's name. This is not a gener
 parser: point-number and normalized-frame checks remain mandatory.
 API_VERSION=1 and the method signature are unchanged. With 0.3.0 use the unquoted form.
 [Example](../../../tests/cpp-context/profile/tests/board/test_cpp_context.py).
+
+
+0.5.0 candidate, API_VERSION=3: sync/async rules, timeouts, hidden-call restrictions and migration — [live execution](../LIVE_EXECUTION.md#execution-in-api_version3-050-candidate).

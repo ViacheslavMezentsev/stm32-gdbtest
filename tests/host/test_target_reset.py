@@ -87,6 +87,8 @@ class ResetTests(unittest.TestCase):
         )
 
     def target(self, command=None, profile=None, reset=None):
+        from gdb_parameters import install
+        install(self.gdb)
         import builtins
         real_import = builtins.__import__
 

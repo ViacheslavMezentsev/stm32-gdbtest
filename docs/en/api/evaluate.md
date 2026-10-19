@@ -54,3 +54,6 @@ A GDB error while parsing or evaluating the expression is kept as the failure ca
 - [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5; `as_type=str`: revision 0.3.5, items 4.18.1–4.18.2.
 
 New selective campaign: [API 0.4.0 scenarios](../API040_SCENARIOS.md), five STM32 boards including expected SKIP.
+
+
+0.5.0 candidate, API_VERSION=3: sync/async rules, timeouts, hidden-call restrictions and migration — [live execution](../LIVE_EXECUTION.md#execution-in-api_version3-050-candidate).

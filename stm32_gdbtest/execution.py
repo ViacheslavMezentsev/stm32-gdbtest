@@ -54,7 +54,7 @@ class CoroutineRunner:
             request = self.coroutine.throw(error) if error is not None else self.coroutine.send(value)
             if not isinstance(request, Request):
                 self.gdb.post_event(lambda: self.step(error=ApiError(
-                    'Only Target wait/halt awaitables are supported', operation='wait',
+                    'Only Target execution awaitables are supported', operation='wait',
                     stage='validation', effect='none', code='unsupported_awaitable')))
                 return
             request.controller.arm(request, self.step)
@@ -117,6 +117,8 @@ class LiveExecution:
             return 'unknown'
 
     def require_stopped(self, operation):
+        if getattr(self.target, '_call_incomplete', False):
+            fail(operation, 'validation', 'none', 'call_incomplete', 'Inferior call context not restored')
         state = self.state()
         if state != 'stopped':
             fail(operation, 'validation', 'none', 'not_stopped', 'Target is not confirmed stopped', state=state)
@@ -145,6 +147,8 @@ class LiveExecution:
             self.gdb.post_event(lambda: self.poll(request))
 
     def resume(self):
+        if hasattr(self.target, '_assert_awaited'):
+            self.target._assert_awaited()
         self.require_stopped('resume')
         self.route()
         self.generation += 1
@@ -166,6 +170,14 @@ class LiveExecution:
         # The single-thread route was checked before continue; await only cached stop state.
         return await Request(self, operation, timeout)
 
+    async def command(self, command, operation, timeout):
+        request = Request(self, operation, timeout)
+        request.command = command
+        result = await request
+        if result['outcome'] != 'stopped':
+            fail(operation, 'observe', 'unknown', 'operation_timeout', 'Operation did not stop')
+        return result
+
     def arm(self, request, done):
         if self.pending is not None:
             self.gdb.post_event(lambda: done(error=ApiError('Concurrent wait', operation=request.operation,
@@ -175,6 +187,14 @@ class LiveExecution:
         request.deadline = time.monotonic() + request.timeout
         self.pending = request
         try:
+            if hasattr(request, 'command'):
+                self.require_stopped(request.operation)
+                self.route()
+                self.generation += 1
+                self.stop = None
+                self.target.stops.clear()
+                self.interrupt_requested = False
+                self.gdb.execute(request.command, to_string=True)
             if request.operation == 'halt' and self.state() == 'running':
                 self.interrupt_requested = True
                 self.gdb.execute('interrupt', to_string=True)
@@ -182,7 +202,7 @@ class LiveExecution:
         except BaseException as cause:
             self.unknown = True
             self.complete(request, error=ApiError(str(cause), operation=request.operation,
-                stage='command', effect='unknown', code='interrupt_failed'))
+                stage='command', effect='unknown', code=('execution_failed' if hasattr(request, 'command') else 'interrupt_failed')))
             return
         if self.pending is request:
             def wake():
@@ -216,7 +236,7 @@ class LiveExecution:
             self.complete(request, error=ApiError('Target state unknown', operation=request.operation,
                 stage='observe', effect='unknown', code='state_unknown'))
         elif time.monotonic() >= request.deadline:
-            if request.operation == 'wait':
+            if request.operation == 'wait' or hasattr(request, 'command'):
                 self.complete(request, dict(operation='wait', outcome='timeout', generation=self.generation))
             else:
                 self.unknown = True

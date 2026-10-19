@@ -40,3 +40,6 @@ t.check("the caller received the value", t.read("app_received.produced"), result
 ## Ссылки
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.0.
+
+
+Кандидат 0.5.0, API_VERSION=3: правила sync/async, таймауты, запрет скрытых вызовов и миграция — [живое исполнение](../LIVE_EXECUTION.md#исполнение-в-api_version3-кандидат-050).

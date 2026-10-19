@@ -170,6 +170,8 @@ class ExtrasTests(unittest.TestCase):
         )
 
     def target(self, limit=2):
+        from gdb_parameters import install
+        install(self.gdb)
         import builtins
         real_import = builtins.__import__
 

@@ -2,6 +2,9 @@
 
 import hashlib
 import re
+import time
+
+from stm32_gdbtest.dispatch import Command, execution_method, AtomicRequest, WaitOperation
 
 import gdb
 from stm32_gdbtest.errors import ApiError, CheckFailed, fail  # noqa: F401
@@ -9,6 +12,7 @@ from stm32_gdbtest.records import Journal
 from stm32_gdbtest.configuration import (DEFAULTS, EXECUTE_OUTPUT_LIMIT, FRAMES_LIMIT,
                                            MEMORY_LIMIT, RESET_COMMAND, STRING_LIMIT, freeze)
 from stm32_gdbtest import values
+from stm32_gdbtest.expression import evaluate as guarded_expression
 from stm32_gdbtest.run_profile import Profile
 from stm32_gdbtest.matchers import Matcher
 
@@ -199,7 +203,13 @@ class Point:
         return self
 
     def __exit__(self, kind, value, traceback):
-        self.remove()
+        try:
+            self.remove()
+        except BaseException as cleanup:
+            if value is None:
+                raise
+            if hasattr(value, 'add_note'):
+                value.add_note('Point cleanup deferred: ' + str(cleanup))
         return False
 
     def __repr__(self):
@@ -247,8 +257,7 @@ class Target:
         self._journal = Journal(**{key: limits[key] for key in DEFAULTS})
         from stm32_gdbtest.mmio import MMIO, GdbTransport
         self.mmio = MMIO(configuration.svd_catalog if configuration else None,
-                         GdbTransport(gdb, profile, lambda: getattr(self, '_execution', None) is None
-                                      or self._execution.state() == 'stopped'), self.record)
+                         GdbTransport(gdb, profile, self._mmio_ready), self.record)
         self.owned = []
         self.stops = []
         # Fault guard functions; the architecture adapter may replace them at boot (portability P1-7).
@@ -265,6 +274,7 @@ class Target:
                     type_is_signed=kind is not None and hasattr(kind, "is_signed"))
 
     def record(self, name, data):
+        self._assert_awaited()
         """Keep evidence in the run journal; the run profile is recorded as its snapshot (ТЗ API 4.9)."""
         if isinstance(data, Profile):
             data = data.snapshot()
@@ -367,7 +377,7 @@ class Target:
 
     def _integer(self, expression):
         self._require_stopped('eval')
-        value = gdb.parse_and_eval(expression)
+        value = guarded_expression(gdb, expression)
         if value.is_optimized_out:
             raise RuntimeError(f"Value optimized out: {expression}")
         value.fetch_lazy()
@@ -452,7 +462,7 @@ class Target:
                        "expression must be a non-empty string", expression=expression)
         requested = self._as_type(as_type)
         try:
-            value = gdb.parse_and_eval(expression)
+            value = guarded_expression(gdb, expression)
         except gdb.error as cause:
             self._fail("eval", "command", "unknown", "command_failed",
                        f"{expression} failed", cause=cause, expression=expression)
@@ -805,7 +815,7 @@ class Target:
             return self._read_fields(path, fields)
         if start or count is not None:
             try:
-                value = gdb.parse_and_eval(path)
+                value = guarded_expression(gdb, path)
             except gdb.error as cause:
                 values.conversion_failed(path, path, cause)
             if values.type_code(value, gdb) != values.type_constant("TYPE_CODE_ARRAY", gdb):
@@ -837,7 +847,7 @@ class Target:
     def _read_value(self, expression, path):
         """Parse one expression and convert it; GDB refusals become ApiError diagnostics."""
         try:
-            value = gdb.parse_and_eval(expression)
+            value = guarded_expression(gdb, expression)
         except gdb.error as cause:
             values.conversion_failed(path, expression, cause)
         if getattr(value, "is_optimized_out", False):
@@ -926,7 +936,7 @@ class Target:
     def _verify_scope(self, path):
         """Whether a read-compare is meaningful here: an addressable object in the SRAM window."""
         try:
-            value = gdb.parse_and_eval(path)
+            value = guarded_expression(gdb, path)
         except gdb.error:
             return False, None
         address = getattr(value, "address", None)
@@ -938,7 +948,7 @@ class Target:
     def _write_expression(self, path, literal, *, observe=False):
         """Assign once; only materialize the converted result when readback is requested."""
         try:
-            assigned = gdb.parse_and_eval(f"({path}) = ({literal})")
+            assigned = guarded_expression(gdb, f"({path}) = ({literal})")
         except gdb.error as cause:
             # A failing RHS or LHS can already have changed target state.
             self._fail("write", "command", "unknown", "command_failed",
@@ -1008,7 +1018,7 @@ class Target:
             self._fail("watch", "validation", "none", "invalid_path",
                        "a non-empty object path is required", path=path)
         try:
-            value = gdb.parse_and_eval(path)
+            value = guarded_expression(gdb, path)
         except gdb.error as cause:
             self._fail("watch", "validation", "none", "invalid_path",
                        f"{path} is not a valid object path", cause=cause, path=path)
@@ -1049,7 +1059,7 @@ class Target:
     def _watch_value(self, path):
         """Current plain value of a watched object, or None when it cannot be read."""
         try:
-            value = gdb.parse_and_eval(path)
+            value = guarded_expression(gdb, path)
             value.fetch_lazy()
             return values.value_to_plain(value, path, gdb)
         except conversion_errors(gdb):
@@ -1062,6 +1072,7 @@ class Target:
                        "condition and when differ", condition=condition, when=when)
         return condition if condition is not None else when
 
+    @execution_method
     def reach(self, location, condition=None, *, when=None):
         """Run to a location and return the stop result; the point is temporary (ТЗ API 4.5).
 
@@ -1075,9 +1086,12 @@ class Target:
         addresses = list(point.addresses)
         self.stops.clear()
         try:
-            stop = self._advance("reach")
+            stop = yield from self._advance("reach")
         finally:
-            point.remove()
+            execution = getattr(self, '_execution', None)
+            if execution is None or execution.state() == 'stopped':
+                point.remove()
+            # Otherwise the runner removes the owned point after confirmed halt.
         if not addresses and stop.get("pc") is not None:
             addresses = [stop["pc"]]
         self.report.setdefault("stops", []).append(stop)
@@ -1095,6 +1109,7 @@ class Target:
         return dict(operation="reach", outcome="reached", location=location, point=point.number,
                     addresses=addresses, stop=stop)
 
+    @execution_method
     def resume(self, *, sync=True):
         """Continue execution and return the stop result (ТЗ API 4.5)."""
         if type(sync) is not bool:
@@ -1103,7 +1118,7 @@ class Target:
             return self._live().resume()
         self._require_stopped("resume")
         self.stops.clear()
-        stop = self._advance("resume")
+        stop = yield from self._advance("resume")
         self.report.setdefault("stops", []).append(stop)
         return dict(operation="resume", outcome="stopped", stop=stop)
 
@@ -1114,19 +1129,43 @@ class Target:
                        'Live execution requires an async def scenario')
         return execution
 
-    async def wait(self, *, timeout):
+    def wait(self, *, timeout):
         """Passively await stop/exit or timeout; never interrupts the target."""
-        return await self._live().wait(timeout)
+        return self._wait_operation('wait', timeout)
 
-    async def halt(self, *, timeout):
+    def halt(self, *, timeout):
         """Request interrupt when running and await confirmed stop."""
-        return await self._live().wait(timeout, 'halt')
+        return self._wait_operation('halt', timeout)
+
+    def _wait_operation(self, name, timeout):
+        self._assert_awaited()
+        self._live()
+        operation = WaitOperation(self, name, None, timeout)
+        self._unawaited = operation
+        return operation
+
+    def _mmio_ready(self):
+        self._require_stopped('mmio.read')
+        return True
+
+    def _assert_awaited(self):
+        pending = getattr(self, '_unawaited', None)
+        if pending is not None:
+            self._unawaited = None
+            pending.used = True
+            self._fail(pending.name if hasattr(pending, 'name') else 'call', 'validation', 'none',
+                       'unawaited_operation', 'Await the preceding execution operation')
 
     def _require_stopped(self, operation):
+        self._assert_awaited()
+        if getattr(self, '_call_incomplete', False):
+            self._fail(operation, 'validation', 'none', 'call_incomplete',
+                       'Interrupted inferior call: context is not restored')
         execution = getattr(self, '_execution', None)
         if execution is not None:
             execution.require_stopped(operation)
 
+    @execution_method
     def step(self, count=1, *, unit="source", mode="into"):
         """Step `count` times by source line or instruction (ТЗ API 4.5)."""
         self._require_stopped('step')
@@ -1140,7 +1179,7 @@ class Target:
                        f"unsupported step mode {unit}/{mode}", unit=unit, mode=mode)
         completed, outcome, stop = 0, "completed", {}
         for _ in range(count):
-            stop = self._advance("step", commands[(unit, mode)])
+            stop = yield from self._advance("step", commands[(unit, mode)])
             if stop.get("kind") in ("breakpoint", "watchpoint"):
                 outcome = "interrupted"
                 break
@@ -1154,6 +1193,7 @@ class Target:
         return dict(operation="step", outcome=outcome, requested=count, completed=completed,
                     unit=unit, mode=mode, stop=stop)
 
+    @execution_method
     def until(self, location=None):
         """Run to a location in the current frame, or leave the current line (ТЗ API 4.5)."""
         self._require_stopped('until')
@@ -1163,7 +1203,7 @@ class Target:
         command = "until" if location is None else "until " + location
         before = self._frame_identity()
         targets = self._line_addresses(location) if location is not None else []
-        stop = self._advance("until", command, targets=targets)
+        stop = yield from self._advance("until", command, targets=targets)
         self.report.setdefault("stops", []).append(stop)
         if location is None:
             outcome = "completed"
@@ -1193,6 +1233,7 @@ class Target:
                 addresses.append(int(pc))
         return addresses
 
+    @execution_method
     def finish(self):
         """Run the rest of the current function and report the returned value (ТЗ API 4.5).
 
@@ -1205,7 +1246,7 @@ class Target:
         returned_from = function_name(origin.name()) if origin is not None else None
         kind = self._return_type(origin) if origin is not None else None
         history = self._history_count()
-        stop = self._advance("finish", "finish")
+        stop = yield from self._advance("finish", "finish")
         self.report.setdefault("stops", []).append(stop)
         frame = gdb.newest_frame()
         value, state = self._finish_value(kind, history)
@@ -1251,7 +1292,9 @@ class Target:
         before = self._frame_identity()
         self.stops.clear()
         try:
-            gdb.execute(command, to_string=True)
+            from stm32_gdbtest.expression import parameters
+            with parameters(gdb, {'may-call-functions': False}):
+                yield Command(command)
         except gdb.error as cause:
             self._fail(operation, "command", "unknown", "execution_failed",
                        f"{command} failed", cause=cause, command=command)
@@ -1409,7 +1452,9 @@ class Target:
             literal = hex(value) if value >= 0 else "-" + hex(-value)
             command = f"return ({type_name}){literal}"
         try:
-            output = gdb.execute(command, to_string=True)
+            from stm32_gdbtest.expression import parameters
+            with parameters(gdb, {'may-call-functions': False}):
+                output = gdb.execute(command, to_string=True)
         except gdb.error as cause:
             self._fail("ret", "command", "unknown", "command_failed",
                        f"{command} failed", cause=cause, command=command, function=function)
@@ -1438,7 +1483,7 @@ class Target:
         if not name:
             return None
         try:
-            symbol = gdb.parse_and_eval(name)
+            symbol = guarded_expression(gdb, name)
         except gdb.error:
             return None
         kind = getattr(symbol, "type", None)
@@ -1452,6 +1497,7 @@ class Target:
                 return None
         return None
 
+    @execution_method
     def reset(self):
         """Reset the target, leave it halted and invalidate the debugger caches (ТЗ API 4.10).
 
@@ -1471,7 +1517,7 @@ class Target:
         command = self._reset_command()
         invalidation = []
         try:
-            gdb.execute(command, to_string=True)
+            yield Command(command)
         except gdb.error as cause:
             self._invalidate(invalidation)
             self._fail("reset", "command", "unknown", "command_failed",
@@ -1513,6 +1559,9 @@ class Target:
         flag; on truncation it also keeps the SHA-256 of the full output. A debugger error is
         propagated as a failure and the command is never repeated.
         """
+        if getattr(self, '_execution', None) is not None:
+            self._fail('execute', 'validation', 'none', 'unsupported_async_command',
+                       'Arbitrary execute is unavailable in async scenarios')
         self._require_stopped('execute')
         if type(command) is not str or not command.strip():
             self._fail("execute", "validation", "none", "invalid_command",
@@ -1551,7 +1600,42 @@ class Target:
                        "output_limit_chars must be a positive integer", limit=limit)
         return limit
 
-    def call(self, function, *args):
+    def call(self, function, *args, timeout=None):
+        """Call now in def, or return a lazy bounded awaitable in async def (ТЗ API 4.23)."""
+        self._assert_awaited()
+        if getattr(self, '_execution', None) is None:
+            if timeout is not None:
+                return self._bounded_call(function, args, timeout)
+            return self._call(function, *args)
+        request = AtomicRequest(self, lambda seconds: self._bounded_call(function, args, seconds),
+                                max(0.001, getattr(self, '_deadline', time.monotonic() + 30.0) - time.monotonic()) if timeout is None else timeout)
+        self._unawaited = request
+        return request
+
+    def _bounded_call(self, function, args, timeout):
+        from stm32_gdbtest.execution import timeout_value
+        from stm32_gdbtest.expression import parameters
+        seconds = timeout_value(timeout, 'call')
+        seconds = int(min(seconds, getattr(self, '_deadline', float('inf')) - time.monotonic()))
+        if seconds < 1:
+            self._fail('call', 'validation', 'none', 'operation_timeout', 'Insufficient call deadline')
+        with parameters(gdb, {'direct-call-timeout': seconds, 'unwind-on-timeout': True}):
+            try:
+                return self._call(function, *args)
+            except BaseException:
+                # A breakpoint can leave the GDB dummy frame behind. Halt is not unwind.
+                try:
+                    frame = gdb.newest_frame()
+                    while frame is not None:
+                        if frame.type() == gdb.DUMMY_FRAME:
+                            self._call_incomplete = True
+                            break
+                        frame = frame.older()
+                except Exception:
+                    self._call_incomplete = True
+                raise
+
+    def _call(self, function, *args):
         """Call a function of the debugged program on the halted core (ТЗ API 4.8).
 
         Arguments are passed by value; the function runs, so its side effects are kept and the halt
@@ -1572,7 +1656,9 @@ class Target:
         expression = f"{function}({', '.join(literals)})"
         kind = self._function_return_type(function)
         try:
-            value = gdb.parse_and_eval(expression)
+            from stm32_gdbtest.expression import parameters
+            with parameters(gdb, {'may-call-functions': True}):
+                value = gdb.parse_and_eval(expression)
         except gdb.error as cause:
             self._fail("call", "command", "unknown", "command_failed",
                        f"{expression} failed", cause=cause, function=function,
@@ -1606,7 +1692,7 @@ class Target:
     def _function_return_type(self, function):
         """Declared return type of a named function, or None when the symbol is unknown."""
         try:
-            symbol = gdb.parse_and_eval(function)
+            symbol = guarded_expression(gdb, function)
         except gdb.error:
             return None
         kind = getattr(symbol, "type", None)

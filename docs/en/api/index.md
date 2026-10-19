@@ -2,6 +2,8 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [Русский](../../ru/api/index.md)
 
+The 0.5.0 candidate uses API_VERSION=3: explicit await in async, synchronous def retained. [Migration and limits](../LIVE_EXECUTION.md). Historical 0.4.0 information below is retained.
+
 **Peripheral registers:** [known MMIO limitations and recommended validation route](../MMIO.md).
 
 Accepted public methods, properties and decorator. Current contract: [API specification](../../TECHNICAL_SPECIFICATION_API.md).

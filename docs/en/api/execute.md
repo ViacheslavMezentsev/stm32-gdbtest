@@ -37,3 +37,6 @@ A command that changes debugger state is executed as given; no rollback is perfo
 ## References
 
 - [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5.
+
+
+0.5.0 candidate, API_VERSION=3: sync/async rules, timeouts, hidden-call restrictions and migration — [live execution](../LIVE_EXECUTION.md#execution-in-api_version3-050-candidate).

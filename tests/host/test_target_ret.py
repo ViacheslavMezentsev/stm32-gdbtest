@@ -63,6 +63,8 @@ class RetTests(unittest.TestCase):
         )
 
     def target(self):
+        from gdb_parameters import install
+        install(self.gdb)
         import builtins
         real_import = builtins.__import__
 

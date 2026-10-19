@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import sys
+import time
 import traceback
 
 import gdb
@@ -27,6 +28,7 @@ from stm32_gdbtest.reports import CODES
 
 
 async def main():
+    started = time.monotonic()
     session = json.loads(Path(os.environ["STM32_GDBTEST_RUN"]).read_text(encoding="utf-8"))
     sys.path.insert(1, str(Path(session.get("root", ROOT)).resolve()))
     profile = session["profile"]
@@ -119,7 +121,9 @@ async def main():
         if inspect.iscoroutinefunction(function):
             from stm32_gdbtest.execution import LiveExecution
             target._execution = LiveExecution(target, gdb)
+            target._deadline = started + max(0, case["timeout_s"] - 2.0)
             await invoke_async(function, target)
+            target._assert_awaited()
         else:
             invoke(function, target)
         completion = "normal"
@@ -133,17 +137,25 @@ async def main():
     finally:
         # Stop before diagnostics/capture/teardown; preserve the body error independently.
         execution = getattr(target, '_execution', None)
+        if target is not None:
+            target._unawaited = None
         if execution is not None:
             try:
                 if execution.state() not in ('stopped', 'exited'):
                     await target.halt(timeout=2.0)
+                if getattr(target, '_call_incomplete', False):
+                    raise RuntimeError('Inferior call context not restored')
                 report['execution_cleanup'] = 'VERIFIED'
             except BaseException:
                 report.update(status_before_execution_cleanup=report['status'], status='ERROR',
                               execution_cleanup='ERROR', execution_cleanup_error=traceback.format_exc())
+        parameter_errors = getattr(gdb, '_stm32_parameter_cleanup_errors', [])
+        if parameter_errors:
+            report.update(status_before_parameter_cleanup=report['status'], status='ERROR',
+                          parameter_cleanup_errors=parameter_errors)
         if configuration and configuration.capture_results:
             save_records(Path(session["result"]).parent, report, target, completion)
-        if report["status"] != "PASS" and connected:
+        if report["status"] != "PASS" and connected and (execution is None or execution.state() == "stopped"):
             diagnostics = report["diagnostics"] = {}
             diagnostic_errors = {}
             for name in adapter.diagnostic_registers(profile):

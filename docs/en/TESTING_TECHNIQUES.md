@@ -709,3 +709,6 @@ WO/W1C/FIFO cannot be handled using a generic RAM snapshot.
 
 Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
 `resume(sync=False)`, `await wait()` and `await halt()` — [contract and migration](LIVE_EXECUTION.md).
+
+
+API_VERSION=3 preserves synchronous navigation in ordinary def. In async def, await reach/step/until/finish/resume()/reset/call; resume(sync=False), ret and data methods remain immediate. Do not hide inferior calls in data expressions. See [LIVE_EXECUTION](LIVE_EXECUTION.md) for migration and limits.

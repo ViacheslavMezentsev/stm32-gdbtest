@@ -79,3 +79,6 @@ Command errors: command_failed / command / unknown (RHS may already have changed
 Post-write read failures: read_failed / readback / applied; mutations retains after=None.
 Assignment-result conversion failures: conversion_failed / readback / applied.
 Readback mismatches retain verification_failed. No retries or rollback.
+
+
+0.5.0 candidate, API_VERSION=3: sync/async rules, timeouts, hidden-call restrictions and migration — [live execution](../LIVE_EXECUTION.md#execution-in-api_version3-050-candidate).

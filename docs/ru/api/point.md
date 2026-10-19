@@ -42,3 +42,6 @@ point.remove()
 ## Ссылки
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.2.5; `enable`, `disable`, запись `condition`: ревизия 0.3.3, п. 4.4.3.
+
+
+Кандидат 0.5.0, API_VERSION=3: правила sync/async, таймауты, запрет скрытых вызовов и миграция — [живое исполнение](../LIVE_EXECUTION.md#исполнение-в-api_version3-кандидат-050).

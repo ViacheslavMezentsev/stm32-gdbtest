@@ -454,3 +454,8 @@ MCU left halted after reset. This is separate restoration evidence, not the mean
 of server_shutdown. USB-loss recovery, SSH and other J-Link models are not accepted here.
 Earlier forced terminations caused USB timeouts/exhausted registrations, requiring
 reconnection and separate restoration. Those errors are retained, not hidden by the rerun.
+
+
+## API_VERSION=3 dispatcher — 2026-10-19
+
+Host: Windows 594 tests (14 skips), Linux 594 (4 skips); Linux docs/host 6/6. Renode 1.17 Windows/Linux: 21 expected outcomes each, including intentional FAIL/ERROR/SKIP, missing await, timeout/halt, ret, bounded call and a retained dummy frame. Reproduce with `tests/renode-backend/run.py`; host: `tests/host/test_execution_dispatch.py`. No hardware used; previous P3 hardware results do not qualify API_VERSION=3.

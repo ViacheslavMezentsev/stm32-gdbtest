@@ -708,3 +708,6 @@ HAL- и CMSIS-варианты связывать, не объявляя экв�
 
 Живое окно 0.5.0: обычные сценарии сохраняются; `async def`, `resume(sync=False)`,
 `await wait()` и `await halt()` — [контракт и миграция](LIVE_EXECUTION.md).
+
+
+В API_VERSION=3 обычные def сохраняют синхронную навигацию. В async def используйте await для reach/step/until/finish/resume()/reset/call; resume(sync=False), ret и методы данных остаются немедленными. Не помещайте inferior calls в выражения методов данных. Ограничения и миграция: [LIVE_EXECUTION](LIVE_EXECUTION.md).

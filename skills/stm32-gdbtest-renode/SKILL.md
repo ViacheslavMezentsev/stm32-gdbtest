@@ -45,3 +45,9 @@ FAIL/ERROR и входы. Для карты DDTT используйте отде
 Для выбора готовой STM32-периферии или создания модели прочитайте
 [ресурс периферии](references/peripherals.md) ([English](references/peripherals.en.md)):
 REPL/IRQ/DMA, локальные зависимости, PythonPeripheral/C# и границы проверки.
+
+
+API_VERSION=3: use ordinary calls in def and await navigation/call in async def.
+Keep data methods and resume(sync=False) immediate. Never use arbitrary execute
+in async or hidden inferior calls in data expressions. See docs/ru/LIVE_EXECUTION.md
+and docs/en/LIVE_EXECUTION.md for migration, deadlines and incomplete-call cleanup.

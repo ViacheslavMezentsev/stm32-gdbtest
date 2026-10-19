@@ -60,6 +60,8 @@ class FramesTests(unittest.TestCase):
         )
 
     def target(self, api=None):
+        from gdb_parameters import install
+        install(self.gdb)
         import builtins
         real_import = builtins.__import__
 
