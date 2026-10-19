@@ -26,6 +26,45 @@
 
 Перед аппаратной серией используйте [шпаргалку сценариста](../docs/ru/SCENARIO_CHECKLIST.md): она дополняет навыки scenarios/develop и не заменяет prepare или проверку на плате.
 
+## TTDD: разработку ведёт проверка на цели
+
+Модуль предлагает придерживаться методологии **TTDD** (testing-on-target-driven development — разработка,
+которую ведёт проверка на целевом устройстве): требование подтверждается или опровергается наблюдением за
+работающей прошивкой на реальном MCU, а не только сборкой, host-тестом или эмулятором. DDTT — метод этого
+модуля — её главный, но не единственный инструмент:
+
+> **TTDD = DDTT + другие свидетели цели.**
+> Судит требование, отвечает плата, а спрашивать её можно не только отладчиком.
+
+Буквы зеркальны: D²T² (DDTT) отвечает на вопрос «как спросить плату через отладчик», T²D² (TTDD) — «как вести
+разработку по ответам платы» любыми средствами. Остальные свидетели — навыки дружественного репозитория
+[demo-stm32-skills](https://github.com/ViacheslavMezentsev/demo-stm32-skills). Они могут не использовать отладчик
+явно, но так же работают с целевым устройством на низком уровне и закрывают то, чего DDTT не видит.
+
+| Свидетель | Что видит | Влияние на прошивку | Навыки |
+| --- | --- | --- | --- |
+| GDB и SWD с остановками (DDTT) | состояние в точке остановки: переменные, регистры, MMIO, возвраты; подмена данных и отказов | ядро стоит в точках останова, время цели отстаёт от часов хоста | `stm32-gdbtest-*` этого набора |
+| SWD без остановки ядра | значения переменных, полей и регистров во времени, пока прошивка работает | только чтение памяти по шине | [stm32-diag-record](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-diag-record) (mcap/bag без ROS), [stm32-ros-alt-channel](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-ros-alt-channel) (ROS1) |
+| Собственный вывод прошивки | лог, телеметрия и события, которые прошивка публикует сама | нужен канал в прошивке (RTT, ITM, UART) | [stm32-rtt-console](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-rtt-console), [stm32-swo-trace](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-swo-trace), [stm32-ros-alt-channel](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-ros-alt-channel) (rosserial) |
+| Выводы MCU снаружи | реальное время: фронты, ШИМ, джиттер ISR, UART/I2C/SPI на проводе, старт | нет, пассивный щуп | [weact-logic-analyzer](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/weact-logic-analyzer) |
+| Модель без платы | ход ELF на модели, обращения к периферии | нет; это подготовка, а не проверка на цели | `stm32-gdbtest-renode`, [stm32-renode-emulator](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-renode-emulator) |
+| Требования | что проверять: ID требований и тест-кейсов, допуски | — | [embedded-tech-spec](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/embedded-tech-spec) |
+
+Правила сочетания:
+
+- Ожидание берётся из требования, каждый свидетель только подтверждает или опровергает его. Если свидетели
+  расходятся, это находка: разберите, кто из них что видел, а не выбирайте удобный результат.
+- DDTT останавливает ядро. Время, частоты, джиттер и долгие процессы измеряйте свидетелем, который ядро не
+  трогает (анализатор, SWD без остановок, RTT/SWO); DDTT оставьте конфигурацию, ветвления, отказы и подмены.
+  Запись, идущая одновременно со сценарием DDTT, покажет его остановки как паузы — это свойство метода, а не
+  дефект платы.
+- У SWD-отладчика один хозяин: не запускайте два GDB-сервера на один ST-Link. Сценарий DDTT и запись по SWD
+  идут по очереди (или через общий сервер, если навык это прямо поддерживает); анализатор и UART-канал можно
+  вести параллельно.
+- Свидетельства одного опыта связываются по ID сценария или требования и лежат рядом: попытка DDTT
+  (`result.json`), запись mcap/bag, захват анализатора, лог RTT. Часы (хост, стенд, тики RTOS) указываются явно.
+- Эмулятор сокращает число попыток на плате, но вывод «проверено на цели» даёт только плата.
+
 ## Как выбирать и сочетать навыки
 
 Начинайте с задачи, а не с загрузки всего набора. Агенту нужны путь к проекту, версия модуля
@@ -41,11 +80,23 @@
 | `develop` | Для изменения прошивки с обратной связью от схемы. Дайте требование, исходники, описание стенда и бюджет итераций; фиксируйте план и исходный FAIL до исправления | Цепочка требование → проверка → исправление → регрессия, сохранённые неудачные попытки и границы результата |
 | `hse-qualify` | Дайте номинал, допуск, плату и разрешённые воздействия; обоснуйте точность часов до аппаратного измерения | Интервал частоты, IN_TOLERANCE/OUT_OF_TOLERANCE/UNKNOWN, отдельный исход восстановления и границы epoch |
 
-Типовые маршруты:
+## Типовые маршруты
 
-- Новый проект: `integrate` → `scenarios` → `run` → `results`.
-- Доработка прошивки: `develop` использует `scenarios`, `run` и `results` на каждом шаге.
-- Автономный стенд: `stand-loop` → `results`; найденная проблема передаётся в отдельный цикл `develop`.
+1. **Новый проект.** [embedded-tech-spec](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/embedded-tech-spec) (требования и тест-кейсы) → `integrate` → `scenarios` → `run` →
+   `results`.
+2. **Доработка прошивки.** `develop` на каждом шаге использует `scenarios`, `run` и `results`; исходный FAIL
+   фиксируется до исправления, после — регрессия.
+3. **Временно́е требование** (период, джиттер ISR, тайминги шины). `scenarios`/`run` проверяют настройку
+   периферии через MMIO и SVD → [weact-logic-analyzer](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/weact-logic-analyzer) измеряет вывод без остановки ядра → `results` сводит
+   оба свидетельства к требованию. Частота кварца — отдельный маршрут `hse-qualify` с независимой опорой времени.
+4. **Поведение в работе** (телеметрия, циклы питания, долгий прогон). Сценарий DDTT подводит плату к состоянию
+   и проверяет переходы, [stm32-diag-record](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-diag-record) или [stm32-ros-alt-channel](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-ros-alt-channel) пишет поток; запись кладётся
+   рядом с `result.json` под тем же ID.
+5. **Без платы → на плату.** `stm32-gdbtest-renode` или [stm32-renode-emulator](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-renode-emulator) — короткий опыт и границы
+   модели, затем тот же сценарий через `run` на стенде.
+6. **Диагностический канал.** [stm32-rtt-console](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-rtt-console) или [stm32-swo-trace](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-swo-trace) показывают, что прошивка делает
+   между остановками; сценарий DDTT они не заменяют, но помогают объяснить FAIL.
+7. **Автономный стенд.** `stand-loop` → `results`; найденная проблема передаётся в отдельный цикл `develop`.
 
 На OrangePi для разбора результатов достаточно артефактов и соответствующей версии модуля;
 для запуска — комплекта, GDB/backend и стенда; для разработки дополнительно нужны исходники

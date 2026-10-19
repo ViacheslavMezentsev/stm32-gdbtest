@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- The skills README describes the TTDD methodology (testing-on-target-driven development): "TTDD = DDTT + other witnesses of the target". Added a witness table with demo-stm32-skills skills (logic analyzer, non-halting SWD, RTT/SWO, ROS1, emulator, specification), combination rules and seven typical routes. Core and skills unchanged.
+
 - Skills follow the [demo-stm32-skills](https://github.com/ViacheslavMezentsev/demo-stm32-skills) format of the Agent Skills specification: the header adds `license: MIT`, `compatibility` and `metadata` (author, version 0.5.0, api_version 3). A host test checks the format offline, the Docs CI runs the pinned `skills-ref validate`. Skill texts are unchanged.
 
 - P5a: pinned the 0.5.0 technical baseline and release acceptance matrix, including consumer MMIO/SVD migration, six MCUs and restoration. Corrected the outdated VERSIONING matrix. No hardware runs or core changes.

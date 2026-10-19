@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- В README навыков описана методология TTDD (testing-on-target-driven development): «TTDD = DDTT + другие свидетели цели». Добавлены таблица свидетелей с навыками demo-stm32-skills (анализатор, SWD без остановок, RTT/SWO, ROS1, эмулятор, ТЗ), правила их сочетания и семь типовых маршрутов. Ядро и навыки без изменений.
+
 - Навыки приведены к формату [demo-stm32-skills](https://github.com/ViacheslavMezentsev/demo-stm32-skills) по спецификации Agent Skills: в заголовке `license: MIT`, `compatibility` и `metadata` (author, version 0.5.0, api_version 3). Host-тест проверяет формат офлайн, CI Docs запускает закреплённый `skills-ref validate`. Текст навыков не менялся.
 
 - P5a: зафиксирована техническая база 0.5.0 и матрица выпускной приёмки, включая миграцию потребителей на MMIO/SVD, шесть MCU и восстановление. Исправлена устаревшая матрица VERSIONING. Без запусков на платах и изменения ядра.

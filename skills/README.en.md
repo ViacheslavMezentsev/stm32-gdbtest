@@ -27,6 +27,45 @@ same module version as the submodule and link to its documentation.
 
 Before a hardware series, use the [scenario checklist](../docs/en/SCENARIO_CHECKLIST.md): it complements scenarios/develop and replaces neither prepare nor board testing.
 
+## TTDD: development driven by testing on target
+
+The module recommends **TTDD** (testing-on-target-driven development): a requirement is confirmed or refuted
+by observing the running firmware on the real MCU, not only by a build, a host test or an emulator. DDTT, the
+method of this module, is its main tool but not the only one:
+
+> **TTDD = DDTT + other witnesses of the target.**
+> The requirement judges, the board answers, and the debugger is only one way to ask.
+
+The letters mirror each other: D²T² (DDTT) answers "how to ask the board through a debugger", T²D² (TTDD)
+answers "how to drive development by the board's answers" with any means. The other witnesses are skills of the
+companion repository [demo-stm32-skills](https://github.com/ViacheslavMezentsev/demo-stm32-skills). They may not
+use a debugger explicitly, but they also work with the target at a low level and cover what DDTT cannot see.
+
+| Witness | What it sees | Effect on the firmware | Skills |
+| --- | --- | --- | --- |
+| GDB and SWD with stops (DDTT) | state at a stop point: variables, registers, MMIO, returns; injected data and faults | the core halts at breakpoints, target time lags host time | `stm32-gdbtest-*` in this set |
+| SWD without halting the core | variables, fields and registers over time while the firmware runs | bus memory reads only | [stm32-diag-record](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-diag-record) (mcap/bag without ROS), [stm32-ros-alt-channel](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-ros-alt-channel) (ROS1) |
+| The firmware's own output | log, telemetry and events published by the firmware itself | needs a channel in the firmware (RTT, ITM, UART) | [stm32-rtt-console](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-rtt-console), [stm32-swo-trace](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-swo-trace), [stm32-ros-alt-channel](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-ros-alt-channel) (rosserial) |
+| MCU pins from outside | real time: edges, PWM, ISR jitter, UART/I2C/SPI on the wire, start-up | none, a passive probe | [weact-logic-analyzer](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/weact-logic-analyzer) |
+| A model without a board | ELF execution on a model, peripheral accesses | none; preparation, not a test on target | `stm32-gdbtest-renode`, [stm32-renode-emulator](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-renode-emulator) |
+| Requirements | what to check: requirement and test case IDs, tolerances | — | [embedded-tech-spec](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/embedded-tech-spec) |
+
+Combination rules:
+
+- The expectation comes from the requirement; each witness only confirms or refutes it. Disagreeing witnesses
+  are a finding: work out what each of them saw instead of picking the convenient result.
+- DDTT halts the core. Measure time, frequencies, jitter and long processes with a witness that leaves the core
+  running (analyzer, non-halting SWD, RTT/SWO); keep DDTT for configuration, branches, faults and injection.
+  A recording taken during a DDTT scenario shows its stops as gaps; that is a property of the method, not a
+  board defect.
+- An SWD debugger has one owner: never start two GDB servers on one ST-Link. A DDTT scenario and an SWD
+  recording take turns (or share one server when the skill explicitly supports it); the analyzer and a UART
+  channel may run in parallel.
+- Evidence of one experiment is linked by the scenario or requirement ID and kept together: the DDTT attempt
+  (`result.json`), the mcap/bag recording, the analyzer capture, the RTT log. Clocks (host, stand, RTOS ticks)
+  are named explicitly.
+- An emulator saves attempts on the board, but only the board supports a "verified on target" conclusion.
+
 ## Choosing and combining skills
 
 Start with the task instead of loading every skill. Give the agent the project path, module version
@@ -42,11 +81,24 @@ and permitted scope; hardware work also needs an up-to-date stand description.
 | `develop` | Change firmware with feedback from the circuit. Supply requirements, sources, stand description and an iteration budget; retain the plan and baseline FAIL before fixing | Requirement → check → fix → regression, preserved failures and explicit evidence boundaries |
 | `hse-qualify` | Supply nominal frequency, tolerance, board and allowed operations; establish clock accuracy before hardware measurement | Frequency interval, IN_TOLERANCE/OUT_OF_TOLERANCE/UNKNOWN, separate recovery verdict and epoch scope |
 
-Typical routes:
+## Typical routes
 
-- New project: `integrate` → `scenarios` → `run` → `results`.
-- Firmware change: `develop` uses `scenarios`, `run` and `results` at each iteration.
-- Autonomous stand: `stand-loop` → `results`; a discovered issue becomes a separate `develop` cycle.
+1. **New project.** [embedded-tech-spec](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/embedded-tech-spec) (requirements and test cases) → `integrate` → `scenarios` → `run` →
+   `results`.
+2. **Firmware change.** `develop` uses `scenarios`, `run` and `results` at each step; the baseline FAIL is
+   recorded before the fix, the regression after it.
+3. **Timing requirement** (period, ISR jitter, bus timing). `scenarios`/`run` check the peripheral setup through
+   MMIO and SVD → [weact-logic-analyzer](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/weact-logic-analyzer) measures the pin without halting the core → `results` relates both
+   witnesses to the requirement. Crystal frequency is the separate `hse-qualify` route with an independent time
+   reference.
+4. **Behaviour in operation** (telemetry, power cycles, long runs). A DDTT scenario brings the board to a state
+   and checks transitions, [stm32-diag-record](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-diag-record) or [stm32-ros-alt-channel](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-ros-alt-channel) records the stream; the
+   recording is stored next to `result.json` under the same ID.
+5. **No board → board.** `stm32-gdbtest-renode` or [stm32-renode-emulator](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-renode-emulator) for a short experiment and the
+   model limits, then the same scenario through `run` on the stand.
+6. **Diagnostic channel.** [stm32-rtt-console](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-rtt-console) or [stm32-swo-trace](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-swo-trace) show what the firmware does between
+   stops; they do not replace a DDTT scenario but help explain a FAIL.
+7. **Autonomous stand.** `stand-loop` → `results`; a discovered issue becomes a separate `develop` cycle.
 
 On OrangePi, result review needs evidence and the matching module version; execution needs a bundle,
 GDB/backend and the stand; development additionally needs sources and a compiler.
