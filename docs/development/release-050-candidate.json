@@ -31,7 +31,9 @@
       "profiles": [
         "F103CB",
         "F103C8"
-      ]
+      ],
+      "migration_commit": "c9f118aaf5b7cd82129cc9b8f22d214a4d7cf247",
+      "migration_gitlink": "cb03e86616417a7f0f24202137fe751624cf043e"
     },
     {
       "repository": "stm32-hwtest-blackpill",
@@ -41,8 +43,20 @@
       "profiles": [
         "F411CE",
         "F401CC"
-      ]
+      ],
+      "migration_commit": "72e70bcf489e23074e9f0cf902d6f468e0efdf88",
+      "migration_gitlink": "cb03e86616417a7f0f24202137fe751624cf043e"
     }
   ],
-  "final_candidate_commit": null
+  "final_candidate_commit": null,
+  "final_candidate": {
+    "stage": "P6b-pre",
+    "package_version": "0.5.0",
+    "api_version": 3,
+    "general_spec_revision": "0.113",
+    "api_spec_revision": "0.3.23",
+    "commit_rule": "the main commit that sets package_version 0.5.0; its SHA cannot be written into itself and is recorded by consumer acceptance commits and the P5b campaign",
+    "github_ci": "pending",
+    "consumer_acceptance": "acceptance_commit moves the gitlink to the final candidate; one per consumer"
+  }
 }

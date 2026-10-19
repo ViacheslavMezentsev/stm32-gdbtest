@@ -9,9 +9,10 @@
 The format is MAJOR.MINOR.PATCH per [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html);
 Git tags have the `v` prefix. **v0.4.0** is published at `9c3ff2d`.
 Documentation [release v0.4.1](../releases/v0.4.1.md) retains API_VERSION=2 and the 0.4.0 schemas.
-The next planned release is 0.5.0 / API_VERSION=3, expanding the former 0.4.2 scope.
-[Candidate and P5 matrix](../development/release-050-acceptance.md) (Russian):
-the baseline SHA is pinned; final version metadata and release acceptance remain pending.
+The next release is 0.5.0 / API_VERSION=3, expanding the former 0.4.2 scope. Since P6b-pre
+(2026-10-20) `__version__` on main is 0.5.0: this is the release candidate, not the release;
+P5b acceptance and the tag are pending ([candidate and P5 matrix](../development/release-050-acceptance.md), Russian).
+Consumer migration: [from 0.4.x to 0.5.0](MIGRATION_050.md).
 Candidates v0.2.0-rc.1 and v0.3.0-rc.1 were never published. The previous published candidate is `v0.1.0-rc.2`.
 The initial export from the stand project is not a release.
 
@@ -85,6 +86,7 @@ Branch and commit rules — [maintenance](maintenance.md).
 
 ## Moving to 0.5.0: emulators
 
+The general consumer migration is described in [MIGRATION_050](MIGRATION_050.md).
 Existing hardware target schemas 1/2 and stands need no migration. For a new local
 emulator route, create a separate schema 3 target with environment=emulator and
 a stand with [emulator] and [qemu] or [renode]. Do not carry over hardware identity

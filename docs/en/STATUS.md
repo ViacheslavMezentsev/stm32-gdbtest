@@ -15,6 +15,10 @@ and P3 78/78 on six MCUs remain evidence for their respective revisions. Unified
 on a new API 3 candidate is pending, as are inspect/HIL, board qualification/DDTT and P6.
 Paired debugpy work is deferred. The release is not published yet.
 
+P6b-pre, 2026-10-20: `__version__` = 0.5.0 (API_VERSION=3, schemas unchanged); the BluePill and
+BlackPill consumers are migrated to MMIO/SVD and the [migration steps](MIGRATION_050.md) are documented.
+This is the release candidate: its SHA is pinned after CI, followed by the P5b campaign.
+
 ## Historical 0.4.x status
 
 **As of 2026-10-10.** **v0.4.0** is published; its tag points to `9c3ff2d`.

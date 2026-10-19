@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- P6b-pre: package version 0.5.0 (`--version`, package manifest) ahead of release acceptance; API_VERSION=3 and schemas unchanged. Added the [0.4.x migration guide](docs/en/MIGRATION_050.md) based on BluePill/BlackPill, specification 0.113, and the candidate passport now records consumer migration and the final-SHA rule. Release and tag follow P5b/P6b.
+
 - The skills README describes the TTDD methodology (testing-on-target-driven development): "TTDD = DDTT + other witnesses of the target". Added a witness table with demo-stm32-skills skills (logic analyzer, non-halting SWD, RTT/SWO, ROS1, emulator, specification), combination rules and seven typical routes. Core and skills unchanged.
 
 - Skills follow the [demo-stm32-skills](https://github.com/ViacheslavMezentsev/demo-stm32-skills) format of the Agent Skills specification: the header adds `license: MIT`, `compatibility` and `metadata` (author, version 0.5.0, api_version 3). A host test checks the format offline, the Docs CI runs the pinned `skills-ref validate`. Skill texts are unchanged.

@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- P6b-pre: версия пакета 0.5.0 (`--version`, манифест пакета) до выпускной приёмки; API_VERSION=3 и схемы без изменений. Добавлен [порядок перехода с 0.4.x](docs/ru/MIGRATION_050.md) по опыту BluePill/BlackPill, ТЗ 0.113, паспорт кандидата дополнен миграцией потребителей и правилом финального SHA. Выпуск и тег — после P5b/P6b.
+
 - В README навыков описана методология TTDD (testing-on-target-driven development): «TTDD = DDTT + другие свидетели цели». Добавлены таблица свидетелей с навыками demo-stm32-skills (анализатор, SWD без остановок, RTT/SWO, ROS1, эмулятор, ТЗ), правила их сочетания и семь типовых маршрутов. Ядро и навыки без изменений.
 
 - Навыки приведены к формату [demo-stm32-skills](https://github.com/ViacheslavMezentsev/demo-stm32-skills) по спецификации Agent Skills: в заголовке `license: MIT`, `compatibility` и `metadata` (author, version 0.5.0, api_version 3). Host-тест проверяет формат офлайн, CI Docs запускает закреплённый `skills-ref validate`. Текст навыков не менялся.
