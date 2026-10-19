@@ -541,3 +541,7 @@ must be performed separately.
 ## Offline inspector in 0.5.0
 
 The [inspect](HIL_INSPECT.md) command checks configuration without running scenarios. Target API and API_VERSION=3 are unchanged; existing commands remain compatible.
+
+## Evidence applicability in 0.5.0
+
+[Condition qualification](DDTT_QUALIFICATION.md) separates raw outcomes, admission and final coloring. The first package is an external exporter and synthetic host example, with no Target API changes. Map schema 1 remains compatible; qualification requires schema 2. Measurement-chain and hardware validation are pending.

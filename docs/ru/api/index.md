@@ -78,3 +78,5 @@ Target передаётся агентом; создавать его самос
 [Живое окно](../LIVE_EXECUTION.md): [wait](wait.md), [halt](halt.md); опциональные async-сценарии.
 
 Проверка файловых связей до запуска — [CLI inspect](../HIL_INSPECT.md), не метод Target.
+
+[Допуск свидетельств DDTT](../DDTT_QUALIFICATION.md) проверяет внешний экспортёр; новых методов Target нет.

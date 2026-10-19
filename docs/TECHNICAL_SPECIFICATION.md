@@ -5,13 +5,23 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.109 (офлайн-инспектор HIL для 0.5.0) |
+| **Ревизия** | 0.110 (применимость свидетельств DDTT) |
 | **Дата формирования** | 19.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | Кандидат пакета stm32-gdbtest `0.5.0`; API_VERSION=3, target schema 3 (schema 1/2 совместимы), ТЗ API 0.3.23; MMIO/SVD (р.0.104), контракты memory/write (р.0.99), Renode и QEMU (р.0.102). Публикация владельцем после CI итогового SHA. |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
+
+### Изменения ревизии 0.110
+
+Первый внешний пакет квалификации: снимок условий, привязка к попытке и проверка
+применимости в экспортёре; runner/Target без изменения (р.0.110).
+
+| Раздел | Изменение |
+| --- | --- |
+| 5.28 | Карта schema 2, снимок schema 1, интерпретация исходов и приватность |
+| 9, 10 | TC-183 и прослеживаемость |
 
 ### Изменения ревизии 0.109
 
@@ -200,6 +210,7 @@ Runner задаёт режим до сценария и резервирует 2
 | 0.107 | 19.10.2026 | Штатное завершение локального OpenOCD/J-Link и отдельный статус выхода сервера. |
 | 0.108 | 19.10.2026 | Диспетчер await и bounded call; связь с ТЗ API 0.3.23, новая аппаратная приёмка отдельно. |
 | 0.109 | 19.10.2026 | Публичный inspect: офлайн-связи HIL/backend/SVD, JSON schema 1 и диагностика; TC-182. |
+| 0.110 | 19.10.2026 | Квалификация условий DDTT во внешнем экспортёре; нейтральный host-пример, TC-183. |
 
 ### Изменения ревизии 0.107
 
@@ -2139,6 +2150,40 @@ configuration_valid; backend добавляется после успешной 
 ошибка записи даёт exit 2. Успех не означает HW PASS, применимость сценариев или
 квалификацию платы. Выбор стенда: CLI, затем окружение, затем runtime. `[N]` (р.0.109)
 
+### 5.28. Применимость свидетельств DDTT (р.0.110)
+
+5.28.1. Карта schema 2 ДОЛЖНА задавать контекст (экземпляр, environment, ELF,
+inputs_sha256) и числовые условия с единицами, диапазоном и max_age_s. Каждая точка
+ДОЛЖНА явно указывать requires, включая пустой список независимого утверждения;
+required по умолчанию true. Schema 1 ДОЛЖНА сохранять прежнюю семантику, отвергая
+новые поля квалификации, которые иначе были бы проигнорированы. `[N]` (р.0.110)
+
+5.28.2. Снимок schema 1 ДОЛЖЕН содержать context и measurements: ID условия,
+value/uncertainty/unit, observed_utc/valid_until/invalidated_utc, method, evidence_sha256.
+Организатор ДОЛЖЕН связывать точные байты result.json с каноническим хешем снимка
+в новом admission.json без перезаписи. Хеши НЕ ДОЛЖНЫ объявляться доказательством
+правильности измерения, идентичности физической платы или времени создания снимка.
+Форматы и канонизация — docs/ru/DDTT_QUALIFICATION.md. `[N]` (р.0.110)
+
+5.28.3. Экспортёр ДОЛЖЕН требовать совпадения контекста и допуска на весь интервал
+попытки. Неизвестность, устаревание, конфликт, декларация вместо измерения или утрата
+пригодности ДОЛЖНЫ исключать подтверждение. Интервал с неопределённостью целиком
+в норме означает APPLICABLE, вне нормы VIOLATED, на границе UNKNOWN. Доказанное
+отсутствие optional capability у необязательной точки означает NOT_APPLICABLE,
+но неизвестность НЕ ДОЛЖНА преобразовываться в SKIP. `[N]` (р.0.110)
+
+5.28.4. Исходный результат ДОЛЖЕН сохраняться; raw_state ДОЛЖЕН отделяться от
+applicability и итогового state. Неприменимые PASS и FAIL ДОЛЖНЫ давать UNKNOWN,
+не DA=0/1; независимые утверждения продолжают обрабатываться. Приёмка ДОЛЖНА
+требовать непустого обязательного набора CONFIRMED, не подменяя exit-код экспорта.
+Число blocked и причины ДОЛЖНЫ оставаться в sidecar. `[N]` (р.0.110)
+
+5.28.5. Seal кампании ДОЛЖЕН сохранять хеш допуска или факт его отсутствия;
+изменение после seal ДОЛЖНО отвергаться переносимым экспортом с очисткой прежнего
+вывода. Публичная панель ДОЛЖНА показывать сырой исход, применимость и причины,
+не публикуя context, сырые измерения и персональные данные. Первый host-пример
+НЕ ДОЛЖЕН объявляться аппаратной или эмуляторной квалификацией. `[N]` (р.0.110)
+
 ## 6. Требования к интерфейсам
 
 ### 6.1. GDB и GDB-Python
@@ -2741,6 +2786,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-176 | tests/host/test_renode_backend.py, test_target_reset.py; tests/renode-backend/run.py Windows/Linux | Schema/отказы до транспорта, prepare, PASS/FAIL/reset refusal/timeout/repeat PASS, capture и cleanup |
 | TC-177 | tests/host/test_qemu_backend.py; tests/qemu-backend/run.py Windows/Linux | Конфигурация/отказы, prepare, PASS/FAIL/reset/timeout/repeat, ранний выход, semihosting и cleanup (р.0.102) |
 | TC-178 | tests/host/test_svd.py; Windows/Linux, без MCU | SVD: права, массивы/наследование, бюджеты, захват и перенос (р.0.103) |
+| TC-183 | T: tests/host/test_ddtt_qualification.py, test_ddtt_portable.py; examples/ddtt-qualification | Применимость, сохранение raw, UNKNOWN, optional capability, seal и приватность (р.0.110) |
 | TC-182 | T: tests/host/test_hil_inspect.py; CLI Windows/Linux | Связи, SVD/capsule, backend, отказы, AST, cwd/junction/symlink, приватность и коды завершения (р.0.109) |
 | TC-181 | T: tests/host/test_openocd_shutdown.py | Порядок finish, exit 0/ошибка/таймаут и освобождение процесса (р.0.107) |
 | TC-180 | T: tests/host/test_live_execution.py; D: tests/renode-backend/run.py | Collector, coroutine lifecycle, прежние исходы и cleanup (р.0.106) |
@@ -2940,6 +2986,7 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | 5.22.1, 5.22.2, 5.22.3, 5.22.4, 5.22.5, 5.22.6 | `results`, `result_index`, `result_export`, `result_files`, `cli` | TC-160 |
 | 5.23.1, 5.23.2, 5.23.3, 5.23.4 | `result_report`, `report_style`, `results` | TC-161 |
 | 5.24.1, 5.24.2, 5.24.3 | `agent`, `runner`, `reports`, `result_index`, `run_hw` | TC-162 |
+| 5.28.1, 5.28.2, 5.28.3, 5.28.4, 5.28.5 | tools/ddtt_qualification.py, ddtt_coverage.py, ddtt_provenance.py, ddtt_report.py, ddtt_view.py | TC-183 (р.0.110) |
 | 5.27.1, 5.27.2, 5.27.3, 5.27.4, 5.27.5 | hil_inspect.py, cli.py; tests/host/test_hil_inspect.py | TC-182 (р.0.109) |
 | 5.26.1, 5.26.2, 5.26.3 | tools/ddtt_coverage.py, tools/ddtt_guard.py; tests/host/test_ddtt_coverage.py, test_ddtt_portable.py | TC-172, TC-173 (р.0.98) |
 | 5.26.4 | tools/ddtt_provenance.py, tools/ddtt_report.py, tools/ddtt_view.py | TC-173 (р.0.98) |

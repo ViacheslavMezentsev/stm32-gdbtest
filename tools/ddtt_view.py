@@ -71,8 +71,13 @@ def render(public, sources):
             for p in points:
                 link = (f'<a href="{escape(p["scenario_url"], quote=True)}">{escape(p["scenario"])}</a>'
                         if p["scenario_url"] else escape(p["scenario"]))
+                admission = ''
+                if 'applicability' in p:
+                    a = p['applicability']
+                    reasons = ', '.join(c['condition'] + ': ' + c['reason'] for c in a['conditions'])
+                    admission = '<p>Raw: ' + escape(p['raw_state']) + ' · Applicability: ' + escape(a['status']) + '</p><small>' + escape(a['reason'] + ' ' + reasons) + '</small>'
                 evidence.append(f'<article><strong class="{p["state"]}">{p["state"]}</strong><p>{escape(p["check"])}</p>'
-                                f'<p>{link}</p><small>{p["checks_passed"]}/{p["checks_total"]} assertions · '
+                                f'<p>{link}</p>{admission}<small>{p["checks_passed"]}/{p["checks_total"]} assertions · '
                                 f'{escape(p["started_utc"] or "no evidence")}</small></article>')
             url = github(public["repository"], public["revision"], source, number)
             panels.append(f'<section id="{key}" hidden><h2>{escape(source)}:{number}</h2>'

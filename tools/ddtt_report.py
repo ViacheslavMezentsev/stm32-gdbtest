@@ -43,6 +43,11 @@ def prepare(root, mapping, runs, campaign, repository):
         path = (runs / path_name(name)).resolve()
         if not path.is_relative_to(runs) or digest(path.read_bytes()) != item['sha256']:
             raise ValueError('Result changed')
+        if mapping.get('schema', 1) == 2:
+            admission = path.with_name('admission.json')
+            actual = digest(admission.read_bytes()) if admission.is_file() else None
+            if actual != item.get('admission_sha256'):
+                raise ValueError('Admission changed after campaign seal')
         paths.append(path)
     if set(paths) != {p.resolve() for p in runs.glob('*/result.json')}:
         raise ValueError('Result inventory changed')
@@ -70,11 +75,17 @@ def prepare(root, mapping, runs, campaign, repository):
                 raise ValueError('Invalid scenario line')
             point['scenario_url'] = github(repository,sha,scenario,line)
             point['started_utc'] = core.load(path)['started_utc']
+        if mapping.get('schema', 1) == 2:
+            point.update(raw_state=row['raw_state'], applicability=row['applicability'], required=row.get('required', True))
         points.append(point)
-    return dict(schema=1, interpretation='DDTT selected assertions; not execution coverage',
+    public = dict(schema=1, interpretation='DDTT selected assertions; not execution coverage',
                 environment=mapping.get('environment','hardware'), repository=repository,revision=sha,
                 elf_sha256=mapping['elf_sha256'],campaign_attempts=len(paths),points=points,
-                summary=dict(Counter(p['state'] for p in points))), sources
+                summary=dict(Counter(p['state'] for p in points)))
+    if mapping.get('schema', 1) == 2:
+        public['schema'] = 2
+        public['acceptance'] = core.qualification.summary(rows)
+    return public, sources
 
 
 def export(root, mapping, runs, campaign, repository, out):

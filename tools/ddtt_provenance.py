@@ -76,7 +76,9 @@ def seal(root, runs, out):
         stamp = datetime.fromisoformat(result["started_utc"].replace("Z", "+00:00"))
         if not datetime.fromisoformat(data["started"]) <= stamp <= datetime.now(timezone.utc):
             raise ValueError("Result outside campaign time window")
-        results[path.relative_to(runs).as_posix()] = dict(sha256=digest(path.read_bytes()),
+        admission = path.with_name("admission.json")
+        results[path.relative_to(runs).as_posix()] = dict(admission_sha256=digest(admission.read_bytes()) if admission.is_file() else None,
+                                                       sha256=digest(path.read_bytes()),
                                                        scenario=scenario, case=result["id"])
     if not results:
         raise ValueError("Campaign has no results")

@@ -9,8 +9,10 @@ import re
 import sys
 try:
     from .ddtt_guard import validate_point
+    from . import ddtt_qualification as qualification
 except ImportError:
     from ddtt_guard import validate_point
+    import ddtt_qualification as qualification
 
 
 def digest(path):
@@ -22,8 +24,8 @@ def load(path):
 
 
 def validate(mapping):
-    if mapping.get("schema", 1) != 1 or not isinstance(mapping.get("points"), list):
-        raise ValueError("Expected map schema 1 and points array")
+    if type(mapping.get("schema", 1)) is not int or mapping.get("schema", 1) not in (1, 2) or not isinstance(mapping.get("points"), list):
+        raise ValueError("Expected map schema 1/2 and points array")
     if mapping.get("environment", "hardware") not in ("hardware", "emulator", "host"):
         raise ValueError("Invalid evidence environment")
     for entry in [mapping, *mapping["points"]]:
@@ -39,6 +41,7 @@ def validate(mapping):
         if path.is_absolute() or ".." in path.parts or "\\" in point["source"] or ":" in point["source"]:
             raise ValueError("source must be a project-relative POSIX path")
 
+    qualification.validate(mapping)
 
 def project(root, mapping, results):
     """Latest selected automated attempt wins, including incompatible/error attempts."""
@@ -85,6 +88,8 @@ def project(root, mapping, results):
             else:
                 row.update(state="CONFIRMED" if all(c["passed"] for c in checks) else "FAILED",
                            reason="executed check", verdicts=[c["passed"] for c in checks])
+        if mapping.get("schema", 1) == 2:
+            qualification.apply(mapping, point, data if candidates else {}, path if candidates else None, row)
         rows.append(row)
     return rows
 
@@ -116,6 +121,9 @@ def export(root, mapping, results, out):
     rows = project(root, mapping, results)
     report = dict(schema=1, status="EXPORTED", interpretation="DDTT check evidence; DA is a Boolean verdict",
                   elf_sha256=mapping["elf_sha256"], summary=dict(Counter(r["state"] for r in rows)), points=rows)
+    if mapping.get("schema", 1) == 2:
+        report["schema"] = 2
+        report["acceptance"] = qualification.summary(rows)
     sidecar.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (out / "lcov.info").write_text(render(rows), encoding="utf-8", newline="\n")
     return rows

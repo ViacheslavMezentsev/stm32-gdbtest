@@ -79,3 +79,5 @@ they are not universal across boards.
 [Live window](../LIVE_EXECUTION.md): [wait](wait.md), [halt](halt.md); optional async scenarios.
 
 Check file links before execution with [CLI inspect](../HIL_INSPECT.md), not a Target method.
+
+[DDTT evidence admission](../DDTT_QUALIFICATION.md) is checked by the external exporter; no new Target methods.

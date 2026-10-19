@@ -141,3 +141,7 @@ Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
 `resume(sync=False)`, `await wait()` and `await halt()` — [contract and migration](LIVE_EXECUTION.md).
 
 [Inspect HIL/backend/SVD links without execution](HIL_INSPECT.md).
+
+## Evidence applicability in 0.5.0
+
+[Condition qualification](DDTT_QUALIFICATION.md) separates raw outcomes, admission and final coloring. The first package is an external exporter and synthetic host example, with no Target API changes. Map schema 1 remains compatible; qualification requires schema 2. Measurement-chain and hardware validation are pending.

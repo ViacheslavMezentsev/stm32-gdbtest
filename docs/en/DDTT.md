@@ -649,3 +649,7 @@ Feedback is incorporated into the 0.4.2 candidate: single RHS evaluation and com
 
 
 Practical DDTT composition: [neutral VTOR/FPB example](LIVE_OBSERVER.md). A completed window and independent oracle distinguish valid zero from missing observations. The map author links checks to code; function/ISR entry does not prove every line or branch. Cleanup and recovery are assessed separately from behavior.
+
+## Evidence applicability in 0.5.0
+
+[Condition qualification](DDTT_QUALIFICATION.md) separates raw outcomes, admission and final coloring. The first package is an external exporter and synthetic host example, with no Target API changes. Map schema 1 remains compatible; qualification requires schema 2. Measurement-chain and hardware validation are pending.

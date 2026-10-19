@@ -36,6 +36,39 @@ class PortableTests(unittest.TestCase):
     def export(self):
         return report.export(self.root,self.mapping,self.runs,self.campaign,'owner/project',self.out)
 
+    def qualify(self):
+        from datetime import timedelta
+        from tools import ddtt_qualification as q
+        self.mapping['schema']=2
+        self.mapping['points'][0]['requires']=['clock']
+        context=dict(instance='private-instance',environment='emulator',elf_sha256='a'*64,inputs_sha256='b'*64)
+        self.mapping['qualification']=dict(context=context,conditions=dict(clock=dict(unit='Hz',min=24,max=26,max_age_s=60)))
+        self.path.unlink()
+        self.campaign=self.root/'build/qualified-campaign.json'
+        provenance.begin(self.root,self.sha,self.runs,self.campaign,['app.cpp','test.py'],self.mapping)
+        now=datetime.now(timezone.utc)
+        self.result.update(started_utc=now.isoformat(),duration_s=0)
+        self.save()
+        snapshot=dict(schema=1,context=context,measurements=[dict(condition='clock',value=16,uncertainty=0,unit='Hz',observed_utc=now.isoformat(),valid_until=(now+timedelta(seconds=30)).isoformat(),invalidated_utc=None,method='measured',evidence_sha256='c'*64)])
+        q.bind(self.path,snapshot)
+        provenance.seal(self.root,self.runs,self.campaign)
+
+    def test_qualified_portable_raw_visible_and_private(self):
+        self.qualify()
+        data=self.export()
+        self.assertEqual(data['points'][0]['raw_state'],'CONFIRMED')
+        self.assertEqual(data['points'][0]['state'],'UNKNOWN')
+        self.assertFalse(data['acceptance']['accepted'])
+        self.assertNotIn('DA:',(self.out/'lcov.info').read_text())
+        self.assertIn('VIOLATED',(self.out/'index.html').read_text(encoding='utf-8'))
+        self.assertNotIn('private-instance',(self.out/'public-data.json').read_text())
+
+    def test_qualified_sidecar_sealed(self):
+        self.qualify();self.export()
+        self.path.with_name('admission.json').write_text('{}')
+        with self.assertRaises(ValueError):self.export()
+        self.assertEqual((self.out/'lcov.info').read_text(),'')
+
     def test_portable_allowlist_and_links(self):
         provenance.seal(self.root,self.runs,self.campaign)
         data=self.export()
