@@ -2,9 +2,9 @@
 
 [Documentation](index.md) → Current status · [Русский](../ru/STATUS.md)
 
-## 0.5.0 candidate — 2026-10-16
+## 0.5.0 candidate — 2026-10-19
 
-SVD and MMIO read/write are implemented; host/Renode Windows/Linux and the six-MCU hardware matrix are confirmed within the stated scope. API_VERSION=2, target schema 3; specifications 0.106 / API 0.3.22. Renode and minimal QEMU are implemented. P3 is implemented and checked on host/Renode Windows/Linux without boards; P4/recovery, full P5, inspect, board qualification/DDTT and release P6 remain open. Manual debugpy requires separate paired acceptance. Version 0.5.0 is not yet published.
+SVD and MMIO read/write are implemented; host/Renode Windows/Linux and the six-MCU hardware matrix are confirmed within the stated scope. API_VERSION=2, target schema 3; specifications 0.107 / API 0.3.22. Renode and minimal QEMU are implemented. P3 is checked on host/Renode Windows/Linux and six boards: 78/78 expected outcomes, audit 222/222, Flash/SRAM restored and verified; P4/recovery, full P5, inspect, board qualification/DDTT and release P6 remain open. Manual debugpy requires separate paired acceptance. Version 0.5.0 is not yet published.
 
 Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](API_ACCEPTANCE.md).
 

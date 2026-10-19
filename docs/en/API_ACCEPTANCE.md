@@ -5,6 +5,33 @@
 This is a public summary of accepted behavior and acceptance, not a development diary.
 Contract: [API specification](../TECHNICAL_SPECIFICATION_API.md); guide: [API](API.md).
 
+## P3: six-board summary — 2026-10-19
+
+Hardware live-window acceptance is complete: **78/78 expected outcomes**, artifact
+audit **222/222**. These are six campaigns of 13 outcomes, not 78 unique scenarios
+or 78 PASS verdicts. Each board produced 9 PASS, 1 intentional FAIL, 2 ERROR and 1 SKIP.
+
+| MCU | Transport | Expected outcomes | Audit | Flash/SRAM |
+| --- | --- | --- | --- | --- |
+| F030 | OpenOCD / ST-Link | 13/13 | 37/37 | restored, verified |
+| F103 | OpenOCD / ST-Link | 13/13 | 37/37 | restored, verified |
+| F401 | OpenOCD / ST-Link | 13/13 | 37/37 | restored, verified |
+| F411 | OpenOCD / ST-Link | 13/13 | 37/37 | restored, verified |
+| F429 | OpenOCD / ST-Link | 13/13 | 37/37 | restored, verified |
+| AT32F403A | Artery OpenOCD / J-Link WinUSB | 13/13 | 37/37 | restored, verified |
+
+Checks cover synchronous compatibility, asynchronous resume, passive wait and its
+timeout, halt, repeated windows, rejected operations while running, and cleanup
+for different scenario outcomes. The neutral ELF uses neither RTOS nor peripherals.
+After restoration, cores remain halted after reset: prior live execution is not resumed.
+
+AT32 initially required USB reconnects and recovery; those ERROR results remain
+preserved. A separate 13/13 repeat used fix `c5452b6` and the original vendor target:
+all OpenOCD exits were zero without forced kill. This repeat is not added to the 78
+as new capability coverage. The other five campaigns preceded this fix; their ST-Link
+route was unchanged. Full acceptance on one release SHA remains pending. USB loss
+and universal recovery are not claimed to be solved.
+
 ## Current summary — 2026-10-10
 
 The candidate is unpublished. Current versions: stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2,
