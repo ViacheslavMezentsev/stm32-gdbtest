@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "purpose": "acceptance-planning",
+  "candidate_id": "0.5.0-p5-baseline-01",
+  "module_commit": "f751fd1dee3c66959d2ec02620bf8439c343dabf",
+  "release_goal": "0.5.0",
+  "package_version_at_commit": "0.4.1",
+  "api_version": 3,
+  "target_schema": 3,
+  "compatible_hardware_target_schemas": [
+    1,
+    2,
+    3
+  ],
+  "configuration_capsule_schemas": [
+    1,
+    2
+  ],
+  "general_spec_revision": "0.112",
+  "api_spec_revision": "0.3.23",
+  "github_ci": "pending-owner-confirmation",
+  "release_ready": false,
+  "hardware_authorized_by_this_plan": false,
+  "dependency_lock_sha256": "3ebd51c09d6741bca962157e590e9fe26216fac94555a3ba7a878c67747ec656",
+  "consumers": [
+    {
+      "repository": "stm32-hwtest-bluepill",
+      "source_commit": "d1ecb33bc8cccd1d857643a13a4fe2f36369bda3",
+      "current_gitlink": "eb085b3e69b775d27085350cb9c6892177b317f4",
+      "acceptance_commit": null,
+      "profiles": [
+        "F103CB",
+        "F103C8"
+      ]
+    },
+    {
+      "repository": "stm32-hwtest-blackpill",
+      "source_commit": "5270270f1f04838544927edf290ad2a0bb4993a2",
+      "current_gitlink": "e9017ab71febafcc32ab2a55f9180b93d51a2ef2",
+      "acceptance_commit": null,
+      "profiles": [
+        "F411CE",
+        "F401CC"
+      ]
+    }
+  ],
+  "final_candidate_commit": null
+}

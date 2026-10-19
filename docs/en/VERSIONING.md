@@ -9,7 +9,9 @@
 The format is MAJOR.MINOR.PATCH per [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html);
 Git tags have the `v` prefix. **v0.4.0** is published at `9c3ff2d`.
 Documentation [release v0.4.1](../releases/v0.4.1.md) retains API_VERSION=2 and the 0.4.0 schemas.
-Further documentation fixes are being prepared for 0.4.2; that version is not released yet.
+The next planned release is 0.5.0 / API_VERSION=3, expanding the former 0.4.2 scope.
+[Candidate and P5 matrix](../development/release-050-acceptance.md) (Russian):
+the baseline SHA is pinned; final version metadata and release acceptance remain pending.
 Candidates v0.2.0-rc.1 and v0.3.0-rc.1 were never published. The previous published candidate is `v0.1.0-rc.2`.
 The initial export from the stand project is not a release.
 
@@ -37,10 +39,11 @@ Interpreter versions are listed separately for host Python and Python embedded i
 ## Before a release
 
 1. Host and offline checks: CI is green on the final commit ([checks and CI](testing.md)).
-2. Hardware check of the CI firmware with `run_hw.py` on the final commit on six stands:
-   F030R8/OpenOCD, F401CC/OpenOCD, F411CE/OpenOCD, F411CE/ST-LINK GDB Server,
-   F429ZI/OpenOCD and AT32F403A/J-Link. The set is agreed with the owner: the bench has
-   one J-Link, so the AT32 board replaces F103C8.
+2. Hardware acceptance on the final SHA: F030R8, F103, F401CC, F411CE and
+   F429ZI with ST-Link/OpenOCD, plus AT32F403A with OpenOCD/J-Link WinUSB.
+   A second F411 backend does not replace F103. Scope, authorization and restoration
+   are defined in the [P5 matrix](../development/release-050-acceptance.md) (Russian).
+   Other backends and SSH need separate checks; a local PASS does not cover them.
 3. Consumer integration through a real Git submodule; if needed, agreed hardware and
    recovery checks of the consumer.
 4. Documentation and migration match the code; LICENSE is present; no local artifacts

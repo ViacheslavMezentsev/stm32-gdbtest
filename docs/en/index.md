@@ -148,3 +148,5 @@ Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
 ## Evidence applicability in 0.5.0
 
 [Condition qualification](DDTT_QUALIFICATION.md) separates raw outcomes, admission and final coloring. The first package is an external exporter and synthetic host example, with no Target API changes. Map schema 1 remains compatible; qualification requires schema 2. Measurement-chain and hardware validation are pending.
+
+[0.5.0 release acceptance and consumer migration plan (Russian)](../development/release-050-acceptance.md).
