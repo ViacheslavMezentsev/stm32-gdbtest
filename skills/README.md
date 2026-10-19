@@ -3,8 +3,13 @@
 [English](README.en.md)
 
 Навыки объясняют ИИ-агенту, как применять stm32-gdbtest в проекте прошивки. Каждый навык — каталог
-с файлом `SKILL.md`: заголовок YAML (`name`, `description`) и инструкция на русском. Навыки
-относятся к той же версии модуля, что и подмодуль, и ссылаются на его документацию.
+с файлом `SKILL.md` по [спецификации Agent Skills](https://agentskills.io/specification), в том же формате, что
+в [demo-stm32-skills](https://github.com/ViacheslavMezentsev/demo-stm32-skills): заголовок YAML с полями `name`
+(совпадает с каталогом), `description` (что делает и когда применять), `license: MIT`, `compatibility`
+(версия модуля, API_VERSION и нужные инструменты) и `metadata` (`author`, `version` — версия модуля, которую
+описывает навык, и `api_version`, все значения строками). Текст — на русском, до 500 строк; подробности — в
+`references/`. Формат проверяют host-тест `tests/host/test_skills.py` и `skills-ref validate` в CI Docs.
+Навыки относятся к той же версии модуля, что и подмодуль, и ссылаются на его документацию.
 
 | Навык | Когда нужен |
 | --- | --- |

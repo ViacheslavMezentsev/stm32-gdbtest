@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+- Навыки приведены к формату [demo-stm32-skills](https://github.com/ViacheslavMezentsev/demo-stm32-skills) по спецификации Agent Skills: в заголовке `license: MIT`, `compatibility` и `metadata` (author, version 0.5.0, api_version 3). Host-тест проверяет формат офлайн, CI Docs запускает закреплённый `skills-ref validate`. Текст навыков не менялся.
+
 - P5a: зафиксирована техническая база 0.5.0 и матрица выпускной приёмки, включая миграцию потребителей на MMIO/SVD, шесть MCU и восстановление. Исправлена устаревшая матрица VERSIONING. Без запусков на платах и изменения ядра.
 
 - P6a: обновлены навыки и маршруты потребителей для API 3, MMIO/SVD, inspect, эмуляторов и условий DDTT. Исторические SOURCE, EXPORT_MANIFEST и TODO_ARCHIVE перенесены в docs/archive; ядро без изменений.

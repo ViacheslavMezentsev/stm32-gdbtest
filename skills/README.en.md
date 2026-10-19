@@ -3,9 +3,14 @@
 [Русский](README.md)
 
 The skills explain to an AI agent how to apply stm32-gdbtest in a firmware project. Each skill is a
-directory with a `SKILL.md` file: a YAML header (`name`, `description`) and instructions in Russian;
-the descriptions carry English keywords as well. The skills belong to the same module version as the
-submodule and link to its documentation.
+directory with a `SKILL.md` file following the [Agent Skills specification](https://agentskills.io/specification),
+in the same format as [demo-stm32-skills](https://github.com/ViacheslavMezentsev/demo-stm32-skills): a YAML
+header with `name` (equal to the directory), `description` (what it does and when to use it), `license: MIT`,
+`compatibility` (module version, API_VERSION and the tools needed) and `metadata` (`author`, `version` — the module
+version the skill describes — and `api_version`, all values as strings). The text is in Russian, up to 500 lines,
+with details in `references/`; the descriptions carry English keywords as well. The host test
+`tests/host/test_skills.py` and `skills-ref validate` in the Docs CI check the format. The skills belong to the
+same module version as the submodule and link to its documentation.
 
 | Skill | When |
 | --- | --- |
