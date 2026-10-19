@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- DDTT example: admission snapshot through [data], records receipt and binding verification before bind; intentional FAIL and raw results are retained. No core changes.
+
 - Renode qualification example: independent receiver journal, dropped word and nominal repeat; raw PASS results are retained and only the dependent DDTT assertion is blocked. No core changes or hardware acceptance.
 
 - First DDTT applicability package: map schema 2, admission snapshot, raw/state and UNKNOWN, sealed admission hash, neutral host example. Runner/Target unchanged. [Contract](docs/en/DDTT_QUALIFICATION.md).

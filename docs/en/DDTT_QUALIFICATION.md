@@ -101,8 +101,7 @@ IDs, reason codes and snapshot hash. Condition identifiers must be suitable for 
 
 Runner and Target are unchanged. No automatic qualification, skip/scheduler or JSON injection
 into [data] is provided. A consumer may prepare a corresponding TOML snapshot for existing
-[data]; that integration still needs a separate example. Next: consumer integration,
-a hardware pilot and measurement-chain validation. reach(main), HSE_VALUE
+[data]; the neutral example now demonstrates that route. Next: a hardware pilot and measurement-chain validation. reach(main), HSE_VALUE
 and virtual button injection do not prove physical characteristics.
 
 ## Renode check
@@ -112,3 +111,7 @@ uses a separate peripheral journal as the delivery reference. One ELF and scenar
 nominal, dropped word, nominal repeated; raw PASS is retained, and only the dependent
 point is blocked when the condition is violated. This validates a deterministic model,
 not physical MCU properties. The first package contract and schemas are unchanged.
+
+The consumer example carries the JSON snapshot as a TOML string, records a
+qualification_input receipt and verifies it before bind. This is a consumer convention
+over existing APIs; raw PASS/FAIL and records remain unmodified.

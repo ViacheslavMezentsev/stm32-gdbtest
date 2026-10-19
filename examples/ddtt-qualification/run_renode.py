@@ -13,6 +13,8 @@ sys.path.insert(0, str(ROOT))
 from stm32_gdbtest.collect import collect
 from stm32_gdbtest.runner import run
 from tools import ddtt_coverage as coverage, ddtt_qualification as qualification
+sys.path.insert(0, str(B))
+from snapshot_data import write_data, verify_records
 
 
 def save(path, data):
@@ -51,7 +53,7 @@ def main():
     versions = {name: subprocess.check_output([exe, '--version'], text=True, timeout=20)
                 for name, exe in [('cxx', a.cxx), ('gdb', a.gdb)]}
     save(out/'versions.json', versions)
-    inputs = [B/'firmware.cpp', B/'test_receiver.py', B/'receiver.py', B/'run_renode.py',
+    inputs = [B/'firmware.cpp', B/'test_receiver.py', B/'receiver.py', B/'run_renode.py', B/'snapshot_data.py',
               base/'startup.ld', base/'target.toml', base/'platform.repl', elf]
     manifest = dict(schema=1, evidence='neutral single-source compiler invocation',
                     elf_sha256=coverage.digest(elf), profile_sha256=coverage.digest(base/'target.toml'),
@@ -63,9 +65,11 @@ def main():
                     limitations=['Toolchain headers and binary installation are not hashed'])
     save(out/'build-manifest.json', manifest)
     cases = collect([B])
-    case = next(c for c in cases if c['id'] == 'HW_QUALIFICATION')
+    cases = {c['id']: c for c in cases}
     summaries = []
-    for name, drop in [('nominal', 0), ('dropped-word', 2), ('nominal-repeat', 0)]:
+    for name, drop in [('nominal', 0), ('dropped-word', 2), ('nominal-repeat', 0), ('raw-fail', 0)]:
+        case = cases['HW_QUALIFICATION_FAIL' if name == 'raw-fail' else 'HW_QUALIFICATION']
+        raw_expected = 'FAIL' if name == 'raw-fail' else 'PASS'
         folder = out/name
         folder.mkdir()
         trace = folder/'receiver.jsonl'
@@ -99,15 +103,15 @@ def main():
                        session_config=str(base/'session.toml'), gdb=a.gdb, out=str(folder/'preflight'),
                        stand=str(stand), tests=str(B), build_manifest=str(out/'build-manifest.json'))
 
-        def execute():
-            code = run(session, case)
+        def execute(selected_case, expected='PASS'):
+            code = run(session, selected_case)
             path = next(Path(session['out']).glob('*/result.json'))
             result = coverage.load(path)
-            if code != 0 or result['status'] != 'PASS' or result.get('cleanup') != 'VERIFIED':
+            if (code == 0) != (expected == 'PASS') or result['status'] != expected or result.get('cleanup') != 'VERIFIED':
                 raise RuntimeError('Probe failed: ' + str(path))
             return path
 
-        execute()
+        execute(cases['HW_QUALIFICATION_PREFLIGHT'])
         measured = receipt(trace)
         preflight_trace = folder/'preflight-receiver.jsonl'
         trace.rename(preflight_trace)
@@ -118,23 +122,34 @@ def main():
             method='measured', evidence_sha256=coverage.digest(preflight_trace))])
         # Снимок сохранён до основной попытки. Обе машины используют неизменную модель.
         save(folder/'snapshot.json', snapshot)
+        data_path = folder/'qualification.toml'
+        data_sha = write_data(data_path, snapshot)
+        config = folder/'session.toml'
+        config.write_text('[config]\ntarget = ' + json.dumps((base/'target.toml').as_posix()) +
+                          '\n[results]\ncapture = true\n[data]\nqualification = "qualification.toml"\n', encoding='utf-8')
+        session['session_config'] = str(config)
         session['out'] = str(folder/'runs')
-        result_path = execute()
+        result_path = execute(case, raw_expected)
         raw_hash = coverage.digest(result_path)
+        records_hash = verify_records(result_path, snapshot, data_sha)
+        if coverage.digest(data_path) != data_sha:
+            raise RuntimeError('Data changed during run')
         if receipt(trace) != measured or trace.read_bytes() != preflight_trace.read_bytes():
             raise RuntimeError('Receiver changed between qualification and run')
         if any(coverage.digest(f) != checksum for f, checksum in fingerprint.items()):
             raise RuntimeError('Inputs changed')
-        qualification.bind(result_path, coverage.load(folder/'snapshot.json'))
+        qualification.bind(result_path, snapshot)
         rows = coverage.export(ROOT, mapping, [result_path], folder/'view')
-        expected = 'UNKNOWN' if drop else 'CONFIRMED'
-        if ([r['raw_state'] for r in rows] != ['CONFIRMED', 'CONFIRMED'] or
+        expected = 'UNKNOWN' if drop else 'FAILED' if name == 'raw-fail' else 'CONFIRMED'
+        if ([r['raw_state'] for r in rows] != ['FAILED' if name == 'raw-fail' else 'CONFIRMED', 'CONFIRMED'] or
                 [r['state'] for r in rows] != [expected, 'CONFIRMED'] or
-                coverage.digest(result_path) != raw_hash):
+                coverage.digest(result_path) != raw_hash or
+                coverage.digest(result_path.with_name('records.json')) != records_hash):
             raise RuntimeError('Qualification projection differs from expectation')
-        summaries.append(dict(case=name, received=measured, raw='PASS',
+        summaries.append(dict(case=name, received=measured, raw=raw_expected,
             states=[r['state'] for r in rows], applicability=rows[0]['applicability']['status'],
-            result_sha256=raw_hash, result_unchanged=True, cleanup='VERIFIED'))
+            result_sha256=raw_hash, result_unchanged=True, records_sha256=records_hash,
+            data_sha256=data_sha, records_unchanged=True, cleanup='VERIFIED'))
         save(out/'summary.json', summaries)
     print(json.dumps(summaries, indent=2))
     return 0

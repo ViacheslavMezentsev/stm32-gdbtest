@@ -54,3 +54,36 @@ afterward. Missing/corrupt journals or changed model inputs stop the experiment 
 granting admission. No physical crystal, supply or wire delivery is measured; receiver
 firmware, IRQ and DMA are not modeled. This is neither continuous physical monitoring
 nor hardware qualification.
+
+
+## Consumer route: records / [data]
+
+The same command now runs four preflight/main pairs: nominal, dropped word, nominal
+repeat and intentional FAIL. The first three main runs PASS; the fourth retains FAIL,
+a dependent FAILED point and an independent CONFIRMED point. check() stops on FAIL,
+so independent checks and records precede the negative control.
+
+Flow: preflight journal → snapshot.json → qualification.toml → session.toml with
+`[data] qualification = "qualification.toml"` → t.profile.data → records.json →
+binding verification → admission.json → export. `[results] capture = true` is required.
+The generated session.toml sits beside its data; relative data paths are based on it.
+
+`snapshot_data.py` belongs to the consumer example, not Target. Its TOML holds schema=1,
+snapshot_sha256 and snapshot_json (canonical JSON as a string). This preserves null,
+nested tables and numbers without changing snapshot schema 1. Existing files are not
+overwritten. The scenario reads the captured copy through
+`t.profile.data['qualification']`, verifies the JSON hash and records `qualification_input`:
+the full snapshot, snapshot_sha256 and the TOML SHA-256 from
+`t.profile.files['data.qualification']`. This acknowledges receipt, not a new measurement.
+
+Before bind, the organizer checks capture=saved, run_id, case_id, exactly one record,
+full snapshot equality and both hashes. Missing, foreign or conflicting records stop
+the route before admission creation. Raw result.json and records.json are not edited;
+both hashes are checked after export and retained in summary.json. A violated condition
+does not rewrite scenario PASS; intentional FAIL under valid conditions stays FAILED.
+
+This is an extra consumer check: invoking the exporter alone does not automatically run
+verify_records. Hashes establish consistency, not resistance to deliberate replacement
+of all inputs. JSON-in-TOML is an example convention, not a mandatory new [data] schema.
+Physical qualification remains separate; this experiment does not validate real MCU,
+sensors or boards.
