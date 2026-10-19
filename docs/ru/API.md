@@ -484,3 +484,7 @@ Schema 1 и API_VERSION=2 сохраняются. Контракт может я
 
 Живое окно 0.5.0: обычные сценарии сохраняются; `async def`, `resume(sync=False)`,
 `await wait()` и `await halt()` — [контракт и миграция](LIVE_EXECUTION.md).
+
+## Миграция завершения OpenOCD/J-Link к 0.5.0
+
+Локальный OpenOCD/J-Link теперь освобождает сервер штатно; ошибка его завершения даёт ERROR при неизменном API сценария. TOML менять не нужно. Подробности: [OpenOCD](backends/openocd.md#штатное-завершение-локального-openocdj-link).

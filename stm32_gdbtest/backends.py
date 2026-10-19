@@ -99,7 +99,9 @@ def server_spec(stand, port, profile, out):
         return dict(command=openocd.server_command(stand, port, profile),
                     ready=f"Listening on port {port} for gdb connections",
                     reset_halt=reset_halt,
-                    finish=[*reset_run, "disconnect"])
+                    finish=[*reset_run,
+                            *([openocd.SHUTDOWN_ON_DETACH] if openocd.managed_jlink(stand) else []),
+                            "disconnect"])
     if stand["backend"] == "st-util":
         # ТЗ 6.11.1: --multi retains the server for host recovery after a client failure.
         # No CubeProgrammer, shared mode, remote st-server or reset-on-connect.

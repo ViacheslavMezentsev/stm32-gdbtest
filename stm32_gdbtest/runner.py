@@ -26,7 +26,7 @@ from stm32_gdbtest.image import BFD_MACHINES, elf_format, parse_sections, valida
 from stm32_gdbtest.full_image import load_policy, canonical_image
 from stm32_gdbtest.toolchain import binutil
 from stm32_gdbtest.probes import family as probe_family
-from stm32_gdbtest import arch, emulators
+from stm32_gdbtest import arch, emulators, openocd
 from stm32_gdbtest.stutil_lifecycle import IdleLog, wait_idle
 from stm32_gdbtest.result_capture import finalize as finalize_capture
 
@@ -460,6 +460,8 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                             if check_port.connect_ex(('127.0.0.1', port)) == 0:
                                 raise RuntimeError('Emulator GDB port remains open after cleanup')
                     report['cleanup'] = 'VERIFIED'
+                elif stand and openocd.managed_jlink(stand) and server is not None:
+                    openocd.stop_managed(server, report)
                 else:
                     stop_tree(server)
                 if remote and server is not None and ready:

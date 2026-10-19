@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Local OpenOCD/J-Link: graceful shutdown after finish, bounded exit wait and explicit cleanup failure instead of silent forced termination; no TOML or scenario API changes.
+
 - P3: optional async scenarios, resume(sync=False), await wait/halt, completion halt and access guards for running/unknown; ordinary scenarios remain compatible. No hardware acceptance.
 
 - Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](docs/en/API_ACCEPTANCE.md).

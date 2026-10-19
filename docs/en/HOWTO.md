@@ -600,3 +600,7 @@ reconnecting alone is insufficient.
 `continue &` plus Python sleep does not service stop events. Use an async scenario
 and await wait/halt; the runner yields to GDB event processing. Do not use asyncio.run.
 [Example and limitations](LIVE_EXECUTION.md).
+
+## J-Link: exhausted OpenOCD registrations
+
+`maximum number of connections on the device reached` can follow forced OpenOCD termination. Local OpenOCD/J-Link now requests shutdown and checks the exit code. If the refusal already occurred, reconnect only that probe; if memory was changed, first restore and verify the saved snapshots. Reconnecting does not restore firmware.

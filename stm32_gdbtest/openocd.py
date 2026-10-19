@@ -5,6 +5,8 @@ import re
 import shutil
 import tomllib
 
+from stm32_gdbtest.processes import stop_tree
+
 from stm32_gdbtest.probes import OPENOCD_INTERFACE, validate_stand
 from stm32_gdbtest.toolchain import expand_path
 
@@ -55,3 +57,30 @@ def server_command(stand, port, profile):
             "-c", f"adapter serial {stand['serial']}", "-c", f"adapter speed {stand['speed_khz']}",
             "-c", "bindto 127.0.0.1", "-c", f"gdb_port {port}",
             "-c", "tcl_port disabled", "-c", "telnet_port disabled"]
+
+
+# Arm only during finish, so a failed client can still be recovered by the host.
+SHUTDOWN_ON_DETACH = "monitor [target current] configure -event gdb-detach {shutdown}"
+SHUTDOWN_TIMEOUT_S = 3
+
+
+def managed_jlink(stand):
+    return (stand.get("backend") == "openocd" and not stand.get("remote")
+            and stand.get("interface") == "interface/jlink.cfg")
+
+
+def stop_managed(process, report):
+    """Wait for OpenOCD to release J-Link; forced cleanup never becomes success."""
+    outcome = dict(status="ERROR", forced=False, timeout_s=SHUTDOWN_TIMEOUT_S)
+    report["server_shutdown"] = outcome
+    try:
+        code = process.wait(timeout=SHUTDOWN_TIMEOUT_S)
+        outcome["exit_code"] = code
+        if code != 0:
+            raise RuntimeError(f"OpenOCD exited {code} instead of graceful shutdown")
+        outcome["status"] = "VERIFIED"
+    except BaseException:
+        if process.poll() is None:
+            outcome["forced"] = True
+            stop_tree(process)
+        raise

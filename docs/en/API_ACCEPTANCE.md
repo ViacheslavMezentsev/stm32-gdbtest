@@ -415,3 +415,15 @@ retained; the final repeat passed without increasing timeout.
 Host injections are not hardware faults. Physical MCU exceptions, USB loss, FPB/VTOR
 restoration and debugpy are not accepted by this package. No boards were used.
 Commands and semantics: [live execution](LIVE_EXECUTION.md), [Renode](RENODE.md).
+
+## 2026-10-19 — local OpenOCD/J-Link graceful shutdown
+
+AT32F403A, Artery OpenOCD 0.11.0+dev (2026-07-10), J-Link/WinUSB, Windows,
+xPack 14.2.1-1.1 / GDB 15.2.90: 13/13 expected neutral P3 outcomes
+(9 PASS, 1 intentional FAIL, 2 ERROR, 1 SKIP). Standard vendor target, no wrapper cfg.
+All 13 server_shutdown statuses VERIFIED, exit 0, forced=false; artifact audit 37/37.
+Original full 1 MiB Flash and 96 KiB SRAM restored and independently compared;
+MCU left halted after reset. This is separate restoration evidence, not the meaning
+of server_shutdown. USB-loss recovery, SSH and other J-Link models are not accepted here.
+Earlier forced terminations caused USB timeouts/exhausted registrations, requiring
+reconnection and separate restoration. Those errors are retained, not hidden by the rerun.

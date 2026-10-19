@@ -1,5 +1,9 @@
 # Дорожная карта
 
+## 19.10.2026 — штатное завершение OpenOCD/J-Link
+
+Ветка `codex/openocd-jlink-shutdown`: shutdown включается только в finish локального OpenOCD/J-Link; runner ждёт exit 0, при отказе сохраняет ERROR. AT32: 13/13 ожидаемых исходов, восстановление и независимая сверка Flash/SRAM VERIFIED. Host Windows 560 тестов (14 пропусков); Linux docs/host — 6/6 PASS. Далее push/CI/land владельцем; SSH и другие backend без изменения жизненного цикла.
+
 ## 19.10.2026 — P3: живое окно
 
 Ветка `codex/live-execution-window`: async def, resume(sync=False), await wait/halt;

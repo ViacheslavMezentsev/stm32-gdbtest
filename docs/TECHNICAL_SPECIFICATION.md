@@ -5,7 +5,7 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.106 (SVD и публичный MMIO для 0.5.0) |
+| **Ревизия** | 0.107 (завершение OpenOCD/J-Link для 0.5.0) |
 | **Дата формирования** | 19.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | Кандидат пакета stm32-gdbtest `0.5.0`; API_VERSION=2, target schema 3 (schema 1/2 совместимы), ТЗ API 0.3.22; MMIO/SVD (р.0.104), контракты memory/write (р.0.99), Renode и QEMU (р.0.102). Публикация владельцем после CI итогового SHA. |
@@ -182,6 +182,14 @@
 | 0.105 | 16.10.2026 | Аппаратные свидетельства MMIO и независимость статуса выпуска; без изменения ядра. |
 
 | 0.106 | 19.10.2026 | P3: обнаружение async-сценариев, цикл GDB и отдельный исход очистки. |
+
+| 0.107 | 19.10.2026 | Штатное завершение локального OpenOCD/J-Link и отдельный статус выхода сервера. |
+
+### Изменения ревизии 0.107
+
+| Пункт | Тип | Содержание |
+| --- | --- | --- |
+| 6.3.3 | нов. | Shutdown только при finish, ограниченное ожидание и ERROR при отказе |
 
 ### Изменения ревизии 0.106
 
@@ -2103,6 +2111,8 @@ Prepare и явно ручные попытки НЕ ДОЛЖНЫ давать �
 
 6.3.2. Маркер готовности — `Listening on port <port> for gdb connections`; `reset_halt` — из профиля; `finish` — `[reset_run профиля, disconnect]`. `[R]`
 
+6.3.3. Для локального OpenOCD с `interface/jlink.cfg` runner ДОЛЖЕН после reset_run включить `gdb-detach {shutdown}`, затем disconnect; до finish событие НЕ ДОЛЖНО переопределяться, чтобы сохранить host recovery раннего отказа GDB. Host recovery ДОЛЖЕН использовать тот же finish. Runner ДОЛЖЕН ожидать завершения собственного сервера не более 3 с; exit 0 фиксируется как `server_shutdown.status=VERIFIED`. Ненулевой exit или таймаут ДОЛЖНЫ дать ERROR/cleanup_error с сохранением status_before_cleanup; оставшийся процесс принудительно завершается с forced=true. Статус сервера НЕ ДОЛЖЕН трактоваться как восстановление Flash/SRAM. SSH и другие интерфейсы этим требованием не изменяются. Проверки: tests/host/test_openocd_shutdown.py. `[R]` (р.0.107)
+
 ### 6.4. Backend ST-LINK GDB Server
 
 6.4.1. Команда: `<server> -d -e -g -p <port> -i <serial> --frequency <speed_khz> -cp <programmer_dir> --temp-path <каталог запуска> -f <каталог запуска>/stlink.log -l 31 -s`. Shared mode (`-t`) и полное стирание НЕ ДОЛЖНЫ использоваться. `[R]`
@@ -2681,6 +2691,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-176 | tests/host/test_renode_backend.py, test_target_reset.py; tests/renode-backend/run.py Windows/Linux | Schema/отказы до транспорта, prepare, PASS/FAIL/reset refusal/timeout/repeat PASS, capture и cleanup |
 | TC-177 | tests/host/test_qemu_backend.py; tests/qemu-backend/run.py Windows/Linux | Конфигурация/отказы, prepare, PASS/FAIL/reset/timeout/repeat, ранний выход, semihosting и cleanup (р.0.102) |
 | TC-178 | tests/host/test_svd.py; Windows/Linux, без MCU | SVD: права, массивы/наследование, бюджеты, захват и перенос (р.0.103) |
+| TC-181 | T: tests/host/test_openocd_shutdown.py | Порядок finish, exit 0/ошибка/таймаут и освобождение процесса (р.0.107) |
 | TC-180 | T: tests/host/test_live_execution.py; D: tests/renode-backend/run.py | Collector, coroutine lifecycle, прежние исходы и cleanup (р.0.106) |
 | TC-179 | D/I: docs/ru/API_ACCEPTANCE.md | Обезличенная приёмка MMIO, 6 MCU, восстановление; выпускные ограничения сохранены (р.0.105) |
 | TC-174 | `ProbeTests`; `tests/renode-startup/run.py` (T/D) | Отказ готовности и очистка; реальный startup, вызов C++-метода, отрицательный контроль и повторный запуск (р.0.98) |
@@ -2901,6 +2912,7 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | 6.1.3 | TG; AG (без потоков) | I |
 | 6.1.4 | RU: `execute` (`env`, `gdb_base`) | I |
 | 6.2.1 | RU: `tool` | TC-72, TC-78, TC-79 |
+| 6.3.3 | OC: stop_managed; BE: server_spec; RU: execute | TC-181 (р.0.107) |
 | 6.3.1, 6.3.2 | OC: `server_command`; BE: `server_spec` | TC-32, TC-35 |
 | 6.4.1–6.4.3 | BE: `server_spec` (stlink) | TC-32, TC-72 |
 | 6.5.1–6.5.3 | BE: `server_spec` (jlink) | TC-33, TC-72 |

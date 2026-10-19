@@ -57,3 +57,22 @@ reset/halt overrides do not change that sequence.
 
 OpenOCD restored BOOT/GPIO after other servers failed. Inaccessible USB first requires restored access
 to the debugger itself. [Matrix and limits](../API_ACCEPTANCE.md).
+
+## Graceful local OpenOCD/J-Link shutdown
+
+For `backend = "openocd"`, `interface = "interface/jlink.cfg"` without SSH, the runner
+arms `gdb-detach {shutdown}` after `reset_run`, then executes `disconnect`.
+OpenOCD exits normally and releases its J-Link registration instead of being killed
+immediately. The detach event is not overridden before finish, retaining the existing
+host recovery route after an early GDB failure. Host recovery uses the same finish sequence.
+
+The runner waits up to 3 seconds for its server to exit. `server_shutdown.status = VERIFIED`
+means exit 0; a nonzero exit or timeout produces ERROR and `cleanup_error`. On timeout,
+the remaining owned process is forcibly terminated, recorded in `server_shutdown.forced`.
+The original verdict remains in `status_before_cleanup`. Server shutdown does not prove
+MCU memory restoration. USB loss may require reconnecting the probe and separate recovery.
+
+No TOML or scenario migration is required; a shutdown wrapper target is no longer needed.
+ST-Link, SEGGER GDB Server and SSH keep their existing lifecycle. This route overrides the
+selected target's gdb-detach event only during finish; do not put required custom actions
+in that event in your target script.

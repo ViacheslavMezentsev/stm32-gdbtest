@@ -487,3 +487,7 @@ Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-
 
 Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
 `resume(sync=False)`, `await wait()` and `await halt()` — [contract and migration](LIVE_EXECUTION.md).
+
+## OpenOCD/J-Link shutdown migration for 0.5.0
+
+Local OpenOCD/J-Link now releases its server gracefully; shutdown failure produces ERROR without changing the scenario API. No TOML migration is needed. See [OpenOCD](backends/openocd.md#graceful-local-openocdj-link-shutdown).
