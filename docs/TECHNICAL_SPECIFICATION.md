@@ -5,13 +5,22 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.108 (диспетчер исполнения для 0.5.0) |
+| **Ревизия** | 0.109 (офлайн-инспектор HIL для 0.5.0) |
 | **Дата формирования** | 19.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | Кандидат пакета stm32-gdbtest `0.5.0`; API_VERSION=3, target schema 3 (schema 1/2 совместимы), ТЗ API 0.3.23; MMIO/SVD (р.0.104), контракты memory/write (р.0.99), Renode и QEMU (р.0.102). Публикация владельцем после CI итогового SHA. |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
+
+### Изменения ревизии 0.109
+
+Публичная команда inspect проверяет связи HIL/backend/SVD без запуска инструментов (р.0.109).
+
+| Раздел | Изменение |
+| --- | --- |
+| 5.27 | Входные режимы, JSON schema 1, диагностика, снимки и границы офлайн-проверки |
+| 9, 10 | TC-182 и прослеживаемость inspect |
 
 ### Изменения ревизии 0.108
 
@@ -190,6 +199,7 @@ Runner задаёт режим до сценария и резервирует 2
 
 | 0.107 | 19.10.2026 | Штатное завершение локального OpenOCD/J-Link и отдельный статус выхода сервера. |
 | 0.108 | 19.10.2026 | Диспетчер await и bounded call; связь с ТЗ API 0.3.23, новая аппаратная приёмка отдельно. |
+| 0.109 | 19.10.2026 | Публичный inspect: офлайн-связи HIL/backend/SVD, JSON schema 1 и диагностика; TC-182. |
 
 ### Изменения ревизии 0.107
 
@@ -2095,6 +2105,40 @@ Prepare и явно ручные попытки НЕ ДОЛЖНЫ давать �
 ошибке очистки. Результат ДОЛЖЕН обозначать emulator; он НЕ ДОЛЖЕН считаться аппаратной
 приёмкой или расширением схемы штатного runner/Target. `[N]` (р.0.98)
 
+### 5.27. Офлайн-проверка связей HIL (р.0.109)
+
+5.27.1. Команда `inspect` ДОЛЖНА принимать взаимоисключающие --session и --config.
+Для config обязателен --profile-dir, --test-dir повторяемый; session использует наборы
+из JSON без этих переопределений. Пути разрешаются как у runner: CLI/runtime от cwd,
+TOML config/data/mmio.svd от session.toml, Renode platform от stand. --project-root
+задаёт представление, не базу ссылок. Компактные и разнесённые каталоги равноправны. `[N]` (р.0.109)
+
+5.27.2. Проверки ДОЛЖНЫ переиспользовать загрузчики configuration/SVD/backend и
+AST collector/trace, не импортировать сценарии, не запускать процессы, серверы,
+эмуляторы, CMake, GDB, SSH и не обращаться к сети/плате. Повторные ID/canonical корни,
+отсутствующие файлы/наборы, неверные схемы и stale selection — ошибки. Executable
+проверяется только на наличие; OpenOCD/удалённые ресурсы — DEFERRED. `[N]` (р.0.109)
+
+5.27.3. SVD ДОЛЖЕН проверяться штатным bounded parser. Захваченная конфигурация
+_config_capsule проверяется с хешами без повторного открытия исходников. Legacy runtime
+без session и прямой ZIP явно отклоняются. contracts.json проверяется как JSON,
+ELF — на наличие; выполнение и ELF-preflight не подтверждаются. Отсутствие SVD
+не запрещает конфигурацию без MMIO. FOUND и семантическая VALID различаются. `[N]` (р.0.109)
+
+5.27.4. Вывод text либо JSON schema=1 ДОЛЖЕН содержать scope=structure,
+runtime_checked=false, selection, nodes, edges, scenarios, svd, diagnostics, summary,
+configuration_valid; backend добавляется после успешной проверки стенда. Формат полей
+и стабильные коды закреплены в docs/ru/HIL_INSPECT.md. После ошибки граф может быть
+частичным. Вывод по умолчанию скрывает внешние абсолютные пути; --local-details
+раскрывает пути, но не содержимое ключей/параметры serial и hostname. Исключения
+не печатаются как сырой текст. Конфигурационные SHA относятся к проверенным снимкам. `[N]` (р.0.109)
+
+5.27.5. Exit 0 означает отсутствие ERROR, exit 2 — ERROR либо WARN при явном
+--warnings-as-errors; DEFERRED не становится ошибкой. Без выбранного стенда WARN.
+Без --output вывод только stdout; отчёт пишется в существующий родительский каталог,
+ошибка записи даёт exit 2. Успех не означает HW PASS, применимость сценариев или
+квалификацию платы. Выбор стенда: CLI, затем окружение, затем runtime. `[N]` (р.0.109)
+
 ## 6. Требования к интерфейсам
 
 ### 6.1. GDB и GDB-Python
@@ -2697,6 +2741,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-176 | tests/host/test_renode_backend.py, test_target_reset.py; tests/renode-backend/run.py Windows/Linux | Schema/отказы до транспорта, prepare, PASS/FAIL/reset refusal/timeout/repeat PASS, capture и cleanup |
 | TC-177 | tests/host/test_qemu_backend.py; tests/qemu-backend/run.py Windows/Linux | Конфигурация/отказы, prepare, PASS/FAIL/reset/timeout/repeat, ранний выход, semihosting и cleanup (р.0.102) |
 | TC-178 | tests/host/test_svd.py; Windows/Linux, без MCU | SVD: права, массивы/наследование, бюджеты, захват и перенос (р.0.103) |
+| TC-182 | T: tests/host/test_hil_inspect.py; CLI Windows/Linux | Связи, SVD/capsule, backend, отказы, AST, cwd/junction/symlink, приватность и коды завершения (р.0.109) |
 | TC-181 | T: tests/host/test_openocd_shutdown.py | Порядок finish, exit 0/ошибка/таймаут и освобождение процесса (р.0.107) |
 | TC-180 | T: tests/host/test_live_execution.py; D: tests/renode-backend/run.py | Collector, coroutine lifecycle, прежние исходы и cleanup (р.0.106) |
 | TC-179 | D/I: docs/ru/API_ACCEPTANCE.md | Обезличенная приёмка MMIO, 6 MCU, восстановление; выпускные ограничения сохранены (р.0.105) |
@@ -2895,6 +2940,7 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | 5.22.1, 5.22.2, 5.22.3, 5.22.4, 5.22.5, 5.22.6 | `results`, `result_index`, `result_export`, `result_files`, `cli` | TC-160 |
 | 5.23.1, 5.23.2, 5.23.3, 5.23.4 | `result_report`, `report_style`, `results` | TC-161 |
 | 5.24.1, 5.24.2, 5.24.3 | `agent`, `runner`, `reports`, `result_index`, `run_hw` | TC-162 |
+| 5.27.1, 5.27.2, 5.27.3, 5.27.4, 5.27.5 | hil_inspect.py, cli.py; tests/host/test_hil_inspect.py | TC-182 (р.0.109) |
 | 5.26.1, 5.26.2, 5.26.3 | tools/ddtt_coverage.py, tools/ddtt_guard.py; tests/host/test_ddtt_coverage.py, test_ddtt_portable.py | TC-172, TC-173 (р.0.98) |
 | 5.26.4 | tools/ddtt_provenance.py, tools/ddtt_report.py, tools/ddtt_view.py | TC-173 (р.0.98) |
 | 5.26.5 | tools/renode_probe.py; tests/renode-startup | TC-174 (р.0.98) |

@@ -139,3 +139,5 @@ F030: RTC deadline через инъекцию аргумента, API без и
 
 Живое окно 0.5.0: обычные сценарии сохраняются; `async def`, `resume(sync=False)`,
 `await wait()` и `await halt()` — [контракт и миграция](LIVE_EXECUTION.md).
+
+[Проверка связей HIL/backend/SVD без запуска](HIL_INSPECT.md).

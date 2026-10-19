@@ -537,3 +537,7 @@ Migration: keep ordinary def unless async is needed. In async, await navigation 
 remove execute, retain finally/halt and distinguish a stopped target from restored resources.
 Previous API_VERSION=2 hardware results do not qualify this migration. Hardware acceptance
 must be performed separately.
+
+## Offline inspector in 0.5.0
+
+The [inspect](HIL_INSPECT.md) command checks configuration without running scenarios. Target API and API_VERSION=3 are unchanged; existing commands remain compatible.

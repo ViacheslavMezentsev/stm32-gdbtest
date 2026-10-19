@@ -76,3 +76,5 @@ Target передаётся агентом; создавать его самос
 
 
 [Живое окно](../LIVE_EXECUTION.md): [wait](wait.md), [halt](halt.md); опциональные async-сценарии.
+
+Проверка файловых связей до запуска — [CLI inspect](../HIL_INSPECT.md), не метод Target.

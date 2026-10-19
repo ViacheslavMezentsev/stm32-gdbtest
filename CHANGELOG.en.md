@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Public inspect CLI: offline HIL/backend/SVD links, AST, captured configuration, JSON schema 1 and redacted diagnostics. No tools or hardware are started. [Guide](docs/en/HIL_INSPECT.md).
+
 - Public neutral VTOR/FPB example for API 3: oracle, bounded live window, negative checks and recovery; no core changes. [Guide](docs/en/LIVE_OBSERVER.md).
 
 - API_VERSION=3: unified navigation dispatcher with explicit await in async scenarios, bounded call adapter, hidden inferior-call guard and migration. Ordinary def retains synchronous calls; new hardware acceptance is pending.

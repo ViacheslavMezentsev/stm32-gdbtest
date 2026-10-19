@@ -20,6 +20,8 @@ def main():
     parser = argparse.ArgumentParser(prog="stm32-gdbtest")
     parser.add_argument("--version", action="version", version="%(prog)s " + __version__)
     subs = parser.add_subparsers(dest="command", required=True)
+    from stm32_gdbtest import hil_inspect
+    hil_inspect.configure_parser(subs.add_parser("inspect", help="inspect HIL links without running tools or scenarios"))
     gather = subs.add_parser("collect")
     gather.add_argument("--tests", type=Path, action="append", required=True,
                         help="scenario directory; repeat for extra search directories")
@@ -55,6 +57,8 @@ def main():
     from stm32_gdbtest import results
     results.configure_cli(subs)
     args = parser.parse_args()
+    if args.command == 'inspect':
+        return hil_inspect.main(args)
     if args.command == 'results':
         return results.main(args)
     if args.command == "doctor":

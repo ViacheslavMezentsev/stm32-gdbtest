@@ -613,3 +613,7 @@ clears RAM in hardware: server sequencing or firmware execution may be responsib
 the agreed reset-halt state first, then obtain two stable snapshots without repeating reset
 and compare them fully. Reject partial snapshots. After Flash programming, whose algorithm
 may use SRAM, restore SRAM last. [Neutral example and recovery limits](LIVE_OBSERVER.md).
+
+## Check HIL before building or connecting
+
+Use [inspect](HIL_INSPECT.md) with --config/--profile-dir or an existing --session. DEFERRED for OpenOCD/SSH does not mean a missing file. Regenerate the CMake session on stale_selection; do not guess a different path base.
