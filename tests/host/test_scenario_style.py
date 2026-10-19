@@ -1,4 +1,4 @@
-"""Style of the bundled scenarios, as described in docs/ru/TESTING_TECHNIQUES.md ("Стиль штатных сценариев").
+"""Style of the bundled scenarios, as described in docs/ru/TESTING_TECHNIQUES.md ("РЎС‚РёР»СЊ С€С‚Р°С‚РЅС‹С… СЃС†РµРЅР°СЂРёРµРІ").
 
 Run directly to list every finding: python tests/host/test_scenario_style.py
 A consumer project audits its own scenarios by passing them: python <module>/tests/host/test_scenario_style.py hil/tests/board/*.py
@@ -12,7 +12,7 @@ import tokenize
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
-SCENARIOS = ("tests/cpp-context/profile/tests/board/*.py", "tests/firmware/common/tests/board/*.py", "tests/firmware/profiles/*/tests/board/*.py",
+SCENARIOS = ("tests/live-observer/test_observer.py", "tests/cpp-context/profile/tests/board/*.py", "tests/firmware/common/tests/board/*.py", "tests/firmware/profiles/*/tests/board/*.py",
              "tests/hal-f030/profile/tests/board/*.py", "tests/hal-f030/hal_scenarios/*.py",
              "examples/minimal-consumer/profile/tests/board/*.py")
 LIMIT = 120
@@ -86,7 +86,7 @@ def joined(lines, first, last):
 def needless_breaks(tree, lines):
     """A simple statement broken over lines although it fits the limit on one line."""
     found = []
-    compound = (ast.FunctionDef, ast.ClassDef, ast.For, ast.While, ast.If, ast.With, ast.Try)
+    compound = (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.For, ast.While, ast.If, ast.With, ast.Try)
     for node in ast.walk(tree):
         if not isinstance(node, ast.stmt) or isinstance(node, compound) or node.end_lineno == node.lineno:
             continue
@@ -157,7 +157,7 @@ def comments_and_blank_lines(tree, lines):
             found.append((node.lineno, "table or loop without a comment above"))
     # Two blank lines between top-level definitions and after the imports.
     for previous, current in zip(tree.body, tree.body[1:]):
-        definition = (ast.FunctionDef, ast.ClassDef)
+        definition = (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
         after_imports = isinstance(previous, (ast.Import, ast.ImportFrom)) and not isinstance(
             current, (ast.Import, ast.ImportFrom))
         if not (after_imports or isinstance(previous, definition) or isinstance(current, definition)):
@@ -224,6 +224,10 @@ class ScenarioStyleTests(unittest.TestCase):
         self.assertGreater(len(files), 40)
         report = [f"{path.relative_to(ROOT)}:{number}: {text}" for path in files for number, text in audit(path)]
         self.assertEqual(report, [], "\n".join(report))
+
+    def test_async_compound_is_not_collapsed(self):
+        source = 'async def scenario(t):\n    await t.reach("main")\n'
+        self.assertEqual(needless_breaks(ast.parse(source), source.splitlines()), [])
 
     def test_the_audit_sees_each_rule(self):
         sample = ('"""\nRU: x\n"""\nimport os\n\ndef f(target):\n    t.check("a", t.read("x"), 1,)\n'

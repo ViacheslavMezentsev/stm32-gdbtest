@@ -2,6 +2,8 @@
 
 [Documentation](index.md) → Scenarios · [Русский](../ru/SCENARIO_CHECKLIST.md)
 
+
+For an observer, separately check window completion, SRAM/IRQ ownership, removal before restoring bytes, and an original repeat after removal. [Example and limits](LIVE_OBSERVER.md).
 A short review before a long run. Complements the [API reference](api/index.md),
 [techniques](TESTING_TECHNIQUES.md) and [DDTT](DDTT.md); it does not establish board readiness.
 

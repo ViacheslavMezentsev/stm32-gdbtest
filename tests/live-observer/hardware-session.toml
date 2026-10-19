@@ -1,0 +1,4 @@
+[config]
+target = "hardware-target.toml"
+[results]
+capture = true

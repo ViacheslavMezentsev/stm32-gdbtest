@@ -646,3 +646,6 @@ claimed for this DDTT revision.
 Check-evidence colouring: [DDTT in VS Code](DDTT_COVERAGE.md); external exporter, no Target API changes.
 
 Feedback is incorporated into the 0.4.2 candidate: single RHS evaluation and complete memory reads; normative details are in API specification 0.3.17. Hardware acceptance remains separate from host/Renode.
+
+
+Practical DDTT composition: [neutral VTOR/FPB example](LIVE_OBSERVER.md). A completed window and independent oracle distinguish valid zero from missing observations. The map author links checks to code; function/ISR entry does not prove every line or branch. Cleanup and recovery are assessed separately from behavior.

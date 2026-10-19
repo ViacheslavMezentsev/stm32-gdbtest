@@ -604,3 +604,12 @@ and await wait/halt; the runner yields to GDB event processing. Do not use async
 ## J-Link: exhausted OpenOCD registrations
 
 `maximum number of connections on the device reached` can follow forced OpenOCD termination. Local OpenOCD/J-Link now requests shutdown and checks the exit code. If the refusal already occurred, reconnect only that probe; if memory was changed, first restore and verify the saved snapshots. Reconnecting does not restore firmware.
+
+
+## SRAM snapshots around reset
+
+Repeating reset between two reads can change observed SRAM. This does not prove that reset
+clears RAM in hardware: server sequencing or firmware execution may be responsible. Establish
+the agreed reset-halt state first, then obtain two stable snapshots without repeating reset
+and compare them fully. Reject partial snapshots. After Flash programming, whose algorithm
+may use SRAM, restore SRAM last. [Neutral example and recovery limits](LIVE_OBSERVER.md).

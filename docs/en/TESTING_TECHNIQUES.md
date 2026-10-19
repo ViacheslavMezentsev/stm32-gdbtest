@@ -2,6 +2,8 @@
 
 [Documentation](index.md) · [Русский](../ru/TESTING_TECHNIQUES.md)
 
+
+A complete composition of techniques: [neutral live observation](LIVE_OBSERVER.md). Separate admission, complete snapshot, independent oracle, records before check, verified removal and repeat without reset; also covers C++/MMIO migration limits of older scenarios.
 A practical companion to [test authoring](TEST_AUTHORING.md) and the [API reference](api/index.md).
 The cards describe techniques verified by the bundled scenarios of the module: the shared ones
 (`tests/firmware/common/tests`), the scenarios of the five CMSIS profiles (`tests/firmware/profiles`)

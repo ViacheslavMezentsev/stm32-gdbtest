@@ -2,6 +2,8 @@
 
 [Documentation](index.md) · [API](api/index.md) · [Русский](../ru/LIVE_EXECUTION.md)
 
+
+Practical API 3 example: [VTOR/FPB observer](LIVE_OBSERVER.md), including negative outcomes and recovery.
 0.5.0 candidate, API_VERSION=3. Ordinary `def` scenarios and blocking `resume()` remain
 supported. Live windows use `async def`: the runner resumes the coroutine on GDB's main
 thread, not inside asyncio or a worker thread.

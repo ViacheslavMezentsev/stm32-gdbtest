@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Public neutral VTOR/FPB example for API 3: oracle, bounded live window, negative checks and recovery; no core changes. [Guide](docs/en/LIVE_OBSERVER.md).
+
 - API_VERSION=3: unified navigation dispatcher with explicit await in async scenarios, bounded call adapter, hidden inferior-call guard and migration. Ordinary def retains synchronous calls; new hardware acceptance is pending.
 
 - Local OpenOCD/J-Link: graceful shutdown after finish, bounded exit wait and explicit cleanup failure instead of silent forced termination; no TOML or scenario API changes.

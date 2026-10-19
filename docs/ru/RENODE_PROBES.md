@@ -2,6 +2,8 @@
 
 [Документация](index.md) · [English](../en/RENODE_PROBES.md)
 
+
+Для живого окна API 3 используйте [tests/live-observer](LIVE_OBSERVER.md): штатный Renode backend, восемь ожидаемых исходов, четыре FPB-случая явно NOT_SUPPORTED. Прямой trampoline не подтверждает аппаратный remap.
 `tools/renode_probe.py` — внешний launcher собственной Renode/GDB-сессии, не backend
 штатного runner. Нужны Renode 1.17, GDB с Python и ARM GCC. Плата не используется.
 Нейтральная модель `tests/renode-startup` содержит Cortex-M3, NVIC, Flash/RAM, без ADC/DMA.

@@ -2,13 +2,18 @@
 
 [Documentation](index.md) → Current status · [Русский](../ru/STATUS.md)
 
-API_VERSION=3 candidate: await dispatcher, bounded call and expression guard; API specification 0.3.23. New hardware acceptance is pending; P3 results below cover the previous contract.
+API_VERSION=3 is in main: await dispatcher, bounded call and expression guard; specifications 0.108 / API 0.3.23.
+The public [neutral VTOR/FPB example](LIVE_OBSERVER.md) is prepared without core changes.
+Renode Windows/Linux: 8 expected outcomes and 3 confirmed DDTT links per OS.
+The research F411 hardware pilot produced 12/12 expected outcomes with independently
+verified recovery. The public package has not been rerun on a board.
 
 ## 0.5.0 candidate — 2026-10-19
 
-SVD and MMIO read/write are implemented; host/Renode Windows/Linux and the six-MCU hardware matrix are confirmed within the stated scope. API_VERSION=2, target schema 3; specifications 0.107 / API 0.3.22. Renode and minimal QEMU are implemented. P3 is checked on host/Renode Windows/Linux and six boards: 78/78 expected outcomes, audit 222/222, Flash/SRAM restored and verified; P4/recovery, full P5, inspect, board qualification/DDTT and release P6 remain open. Manual debugpy requires separate paired acceptance. Version 0.5.0 is not yet published.
-
-Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](API_ACCEPTANCE.md).
+SVD/MMIO, Renode/QEMU and the live window are implemented. Previous MMIO 141 assertions
+and P3 78/78 on six MCUs remain evidence for their respective revisions. Unified P5
+on a new API 3 candidate is pending, as are inspect/HIL, board qualification/DDTT and P6.
+Paired debugpy work is deferred. The release is not published yet.
 
 ## Historical 0.4.x status
 

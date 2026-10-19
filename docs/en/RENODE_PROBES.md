@@ -2,6 +2,8 @@
 
 [Documentation](index.md) · [Русский](../ru/RENODE_PROBES.md)
 
+
+For an API 3 live window use [tests/live-observer](LIVE_OBSERVER.md): standard Renode backend, eight expected outcomes, four FPB cases explicitly NOT_SUPPORTED. A direct trampoline does not prove hardware remap.
 `tools/renode_probe.py` owns a separate Renode/GDB session; it is not a module runner backend.
 Requires Renode 1.17, Python-enabled GDB and ARM GCC. No board is used. The neutral
 `tests/renode-startup` model has Cortex-M3, NVIC, Flash/RAM, no ADC/DMA.

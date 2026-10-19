@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "environment": "emulator",
+  "points": [
+    {
+      "source": "tests/live-observer/neutral.c",
+      "anchor": "calls++;",
+      "scenario": "HW_OBSERVER_SEVEN",
+      "check": "original function"
+    },
+    {
+      "source": "tests/live-observer/neutral.c",
+      "anchor": "return x * 3 + 1;",
+      "scenario": "HW_OBSERVER_SEVEN",
+      "check": "result ABI"
+    },
+    {
+      "source": "tests/live-observer/neutral.c",
+      "anchor": "delivered++;",
+      "scenario": "HW_OBSERVER_SEVEN",
+      "check": "original ISR"
+    }
+  ]
+}

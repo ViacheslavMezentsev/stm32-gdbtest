@@ -5,6 +5,17 @@
 This is a public summary of accepted behavior and acceptance, not a development diary.
 Contract: [API specification](../TECHNICAL_SPECIFICATION_API.md); guide: [API](API.md).
 
+## P4: neutral API 3 example — 2026-10-19
+
+[Package and limits](LIVE_OBSERVER.md): Renode 1.17 Windows/Linux — 8 expected outcomes
+per OS (5 PASS, 2 intentional ERROR, 1 intentional FAIL), cleanup VERIFIED and three
+confirmed DDTT links. Four remap cases are NOT_SUPPORTED in the model.
+The research F411/OpenOCD pilot on 085f089 produced 12/12 expected outcomes
+(8 PASS, 3 intentional ERROR, 1 intentional FAIL). Flash/SRAM, PC/SP/xPSR/PRIMASK,
+FPB/VTOR and saved NVIC blocks were independently compared. The MCU remained halted
+after reset; its live context and all peripherals were not restored. Public transfer
+was verified without a board and does not replace hardware acceptance of the release SHA.
+
 ## P3: six-board summary — 2026-10-19
 
 Hardware live-window acceptance is complete: **78/78 expected outcomes**, artifact
