@@ -193,3 +193,5 @@ the [skill recommendations](skills/README.en.md): integration, scenarios, execut
 License — [MIT](LICENSE). [Origin](SOURCE.md), [rules for developers and agents](AGENTS.md), [maintenance](docs/en/maintenance.md).
 
 [v0.4.1 preparation](docs/releases/v0.4.1.md), [v0.4.0 release](docs/releases/v0.4.0.md), [v0.2.0-rc.1 preparation and migration](docs/en/RC020_READINESS.md).
+
+[Current actions](TODO.md) · [Roadmap](ROADMAP.md) · [History](TODO_ARCHIVE.md) (Russian)

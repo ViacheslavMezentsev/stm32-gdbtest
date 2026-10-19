@@ -115,3 +115,19 @@ not physical MCU properties. The first package contract and schemas are unchange
 The consumer example carries the JSON snapshot as a TOML string, records a
 qualification_input receipt and verifies it before bind. This is a consumer convention
 over existing APIs; raw PASS/FAIL and records remain unmodified.
+
+## Reanalysing saved HSE evidence
+
+Keep interpretation separate from the original hardware result: verify input
+hashes, create a derived host projection and change map expectations, not the
+measurement. Interval 24.987985–25.015135 MHz is APPLICABLE for 25 MHz ±1%, but
+VIOLATED for 16 MHz ±1%; only the dependent assertion becomes UNKNOWN. Independent
+memory comparison remains CONFIRMED. Boundary overlap or ended epoch yields
+UNKNOWN, which LCOV must not turn red or retain as an old green point.
+
+If the hardware protocol is not a runner result.json, do not replace its format.
+Preserve it and create a mode=host analysis record containing its hash. Host
+analysis timestamps describe import, not invented physical measurement times.
+This tests exporter interpretation; it cannot admit hardware after restoration
+or ELF changes. An actual subsequent scenario needs a prior snapshot within its
+valid epoch.

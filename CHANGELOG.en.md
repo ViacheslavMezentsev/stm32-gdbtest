@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Planning split into ROADMAP, tactical TODO and TODO_ARCHIVE; required translations narrowed to six units including the complete API tree, with CI regressions. Saved HSE/DDTT analysis clarified; no core changes.
+
 - Added the HSE qualification skill: independent clock reference, interval tolerance decisions, F411 pilot limits and verified recovery; no core changes.
 
 - DDTT example: admission snapshot through [data], records receipt and binding verification before bind; intentional FAIL and raw results are retained. No core changes.

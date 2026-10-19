@@ -87,26 +87,11 @@ def check_links():
 
 
 def check_pairs():
-    groups = [ROOT / "docs"]
-    missing = []
-    for group in groups:
-        ru = {p.relative_to(group / "ru") for p in (group / "ru").rglob("*.md")}
-        en = {p.relative_to(group / "en") for p in (group / "en").rglob("*.md")}
-        missing.extend(str((group / "en" / n).relative_to(ROOT)) for n in sorted(ru - en))
-        missing.extend(str((group / "ru" / n).relative_to(ROOT)) for n in sorted(en - ru))
-        # Each localized group has its own map and matching translated pages.
-        for lang, other in (("ru", "en"), ("en", "ru")):
-            for page in sorted((group / lang).rglob("*.md")):
-                head = "\n".join(page.read_text(encoding="utf-8").splitlines()[:4])
-                translation = group / other / page.relative_to(group / lang)
-                link = Path(os.path.relpath(translation, page.parent)).as_posix()
-                if f"({link})" not in head or (page.name != "index.md" and "(index.md)" not in head):
-                    missing.append(f"navigation line in {page.relative_to(ROOT)}")
-    for base in ("README", "CHANGELOG"):
-        if not ((ROOT / f"{base}.md").exists() and (ROOT / f"{base}.en.md").exists()):
-            missing.append(f"{base}.md / {base}.en.md")
-    if missing:
-        raise CheckError("Missing RU/EN pair: " + ", ".join(missing))
+    from ci.doc_policy import check
+    try:
+        check(ROOT)
+    except ValueError as error:
+        raise CheckError(str(error)) from error
 
 
 def level_docs(record):

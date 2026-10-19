@@ -652,4 +652,7 @@ Practical DDTT composition: [neutral VTOR/FPB example](LIVE_OBSERVER.md). A comp
 
 ## Evidence applicability in 0.5.0
 
-[Condition qualification](DDTT_QUALIFICATION.md) separates raw outcomes, admission and final coloring. The first package is an external exporter and synthetic host example, with no Target API changes. Map schema 1 remains compatible; qualification requires schema 2. Measurement-chain and hardware validation are pending.
+[Condition qualification](DDTT_QUALIFICATION.md) separates raw outcomes, admission and final coloring. The first package is an external exporter and synthetic host example, with no Target API changes. Map schema 1 remains compatible; qualification requires schema 2. The HSE method has been checked in a separate F411 pilot; this does not admit the current board/application state. See the stm32-gdbtest-hse-qualify skill.
+
+
+Saved HSE evidence can be analysed offline against alternative nominal frequencies. This is a host analysis, not a new hardware run or admission of a restarted application. Keep original results immutable; clock-dependent assertions become UNKNOWN when admission is violated, while independent assertions remain valid. See the [HSE skill](../../skills/stm32-gdbtest-hse-qualify/SKILL.md).

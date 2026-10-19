@@ -15,7 +15,7 @@ current revision is stated in its header.
    module, approach and limits.
 2. This page: work cycle, branches, commits, bilingual documentation.
 3. [TODO.md](../../TODO.md) — "Текущее состояние" (current state) and "Ближайшие шаги" (next steps); the
-   history sections below them are not current tasks. [CHANGELOG](../../CHANGELOG.en.md): `[Unreleased]` and the
+   history is kept separately in [TODO_ARCHIVE](../../TODO_ARCHIVE.md). [CHANGELOG](../../CHANGELOG.en.md): `[Unreleased]` and the
    latest release.
 4. [Technical specification](../TECHNICAL_SPECIFICATION.md): revision history, the
    latest revision's change block, open questions (section 11) and code
@@ -39,7 +39,8 @@ current revision is stated in its header.
    branch and runs `git land` after GitHub CI for the latest SHA is checked. Local checks do not
    replace CI. The agent does not merge or delete branches without a separate explicit request;
    “continue” means further preparation, not permission to merge.
-5. Record the branch, commit and status in TODO.md.
+5. Update the existing TODO row; archive completed details in TODO_ARCHIVE and
+   keep direction in ROADMAP rather than appending another current-status section.
 
 **Release** (spec 8.9, [versioning rules](VERSIONING.md)):
 
@@ -100,23 +101,19 @@ CI workflows run for any branch, so a new prefix needs no workflow change.
 - Push, tags and releases are done by the owner, or by an agent explicitly granted
   that right, at an agreed stage. A roadmap entry is not a permission.
 
-## Bilingual documentation
+## Documentation and translations
 
-- User documentation is kept in Russian and English (except the specification): `README.md` ↔ `README.en.md`,
-  `CHANGELOG.md` ↔ `CHANGELOG.en.md`, `docs/ru/<page>.md` ↔ `docs/en/<page>.md`.
-  File names are the same in both languages.
-- The Russian version is the source. The English version is updated in the same
-  commit; a difference in content is a documentation defect.
-- Every page starts with a navigation line and a link to the other language.
-  Links to sections of the other language use that page's own anchors.
-- Single-language items: the specification (Russian only, not translated), commit
-  messages (English), code and code comments (English, except `# ТЗ …` references).
-- The documentation map is [docs/en/index.md](index.md); a new page is added to both
-  languages and both maps.
-- Russian texts use the term «отладчик». The README is a short introduction (why,
-  what, how, dependencies, links); exact results and limits go to STATUS, history
-  to the CHANGELOG and protocols.
+Required RU/EN units: README, CHANGELOG, index, DDTT, API and the entire api
+reference tree. Russian is the source; update required translations together.
+Required pages retain navigation and translation links. Other development material
+may be Russian-only; specifications remain Russian. Existing optional translations
+are retained but may lag the Russian source. Code/commit language rules are unchanged.
 
+The [documentation policy](../development/README.md) (Russian) defines exact paths
+and incremental directory migration. New Russian-only pages need no placeholder
+translation. Public API contracts/migration still belong in the bilingual reference.
+Current actions: [TODO](../../TODO.md); direction: [ROADMAP](../../ROADMAP.md);
+historical records: [TODO_ARCHIVE](../../TODO_ARCHIVE.md).
 
 ### Local development and public documentation
 
@@ -130,7 +127,7 @@ New research uses local `docs/research/NN-short-name/` for documents and
    The repository root is not an experimental workspace.
 3. A short study needs only a README with its goal, plan, result and next step.
    Add plan.md and results.md as it grows. Separate languages, matrices and debt files
-   are optional for local studies; public documentation remains bilingual.
+   are optional for local studies; required public translations follow the policy above.
 4. Record conditions and expected outcomes before an experiment, then commands, facts,
    limitations and log links. Keep hardware identity, tool versions and input SHA-256 locally.
    Preserve original FAIL/ERROR evidence and update HISTORY with newest entries first.

@@ -35,6 +35,22 @@ class QualificationTests(unittest.TestCase):
         self.assertEqual([p['state'] for p in rows], ['CONFIRMED','CONFIRMED'])
         self.assertTrue(coverage.load(self.out/'ddtt-evidence.json')['acceptance']['accepted'])
 
+    def test_changed_nominal_keeps_result_and_measurement(self):
+        self.snapshot['measurements'][0].update(value=25001560.17, uncertainty=13575.13)
+        self.mapping['qualification']['conditions']['clock'].update(min=24750000, max=25250000)
+        rows = self.run_case()
+        self.assertEqual([r['state'] for r in rows], ['CONFIRMED', 'CONFIRMED'])
+        original = self.path.read_bytes()
+        admission = self.path.with_name('admission.json').read_bytes()
+        self.mapping['qualification']['conditions']['clock'].update(min=15840000, max=16160000)
+        rows = coverage.export(self.root, self.mapping, [self.path], self.out)
+        self.assertEqual((rows[0]['raw_state'], rows[0]['state'], rows[0]['applicability']['status']),
+                         ('CONFIRMED', 'UNKNOWN', 'VIOLATED'))
+        self.assertEqual(rows[1]['state'], 'CONFIRMED')
+        self.assertEqual(original, self.path.read_bytes())
+        self.assertEqual(admission, self.path.with_name('admission.json').read_bytes())
+        self.assertNotIn('DA:5,', (self.out/'lcov.info').read_text())
+
     def test_wrong_clock_pass_not_accepted(self):
         self.snapshot['measurements'][0]['value'] = 16000000
         row = self.run_case()[0]

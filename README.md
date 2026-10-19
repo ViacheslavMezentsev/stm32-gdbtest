@@ -189,3 +189,5 @@ tools в модуль не входят. GDB-Python — отдельный ин�
 Лицензия — [MIT](LICENSE). [Происхождение](SOURCE.md), [правила для разработчиков и агентов](AGENTS.md), [сопровождение](docs/ru/maintenance.md).
 
 [Подготовка v0.4.1](docs/releases/v0.4.1.md), [выпуск v0.4.0](docs/releases/v0.4.0.md), [подготовка и миграция v0.2.0-rc.1](docs/ru/RC020_READINESS.md).
+
+[Памятка](TODO.md) · [Дорожная карта](ROADMAP.md) · [История памятки](TODO_ARCHIVE.md)
