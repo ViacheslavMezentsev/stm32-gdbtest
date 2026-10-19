@@ -7,7 +7,9 @@ description: Проверить небольшую гипотезу C++, GDB и�
 
 Найдите путь модуля и прочитайте `docs/ru/RENODE_PROBES.md`. Начинайте с готового примера
 `tests/renode-startup`; для отложенной записи и ограниченной модели Flash — `tests/renode-cache`.
-Это внешний инструмент, не новый backend Target и не ручная отладка Python через debugpy.
+Выбери маршрут: [штатный backend](../../docs/ru/RENODE.md) и `tests/renode-backend`
+для обычных @case либо tools/renode_probe.py для экспертной модели. Это разные
+запуски; probe не является приёмкой backend. debugpy в этот навык не входит.
 
 1. Сформулируйте короткое утверждение и независимое ожидание: вход функции, изменение поля
    готового объекта, сохранение соседних байтов, отказ API/проверки. Запишите границу опыта.
@@ -19,7 +21,10 @@ description: Проверить небольшую гипотезу C++, GDB и�
 4. Выполните команду нейтрального примера из руководства. Для своей задачи скопируйте минимум
    модели/ELF-сборки/сценария в согласованное место проекта. Проверьте стартовые SP/PC и Thumb,
    готовность объекта и наличие тела метода в ELF. Inline/оптимизация могут убрать вызов.
-5. Используйте tools/renode_probe.py с отдельными runs, явным ELF/model/scenario/map. GDB API
+5. В штатном маршруте используй session/stand, target schema 3 и обычный runner.
+   Самодостаточный REPL обязателен; внешние PythonPeripheral/includes не поддержаны
+   первым backend. Для таких моделей используй tools/renode_probe.py с отдельными
+   runs, явным ELF/model/scenario/map. GDB API
    вызывается только в основном потоке GDB. Произвольный call исполняет код и может зависнуть;
    его область воздействия должна быть известна, ожидания периферии в заглушке недопустимы.
 6. Сначала короткий позитивный опыт, затем неверное ожидание или вход для отрицательного
@@ -47,7 +52,14 @@ FAIL/ERROR и входы. Для карты DDTT используйте отде
 REPL/IRQ/DMA, локальные зависимости, PythonPeripheral/C# и границы проверки.
 
 
-API_VERSION=3: use ordinary calls in def and await navigation/call in async def.
-Keep data methods and resume(sync=False) immediate. Never use arbitrary execute
-in async or hidden inferior calls in data expressions. See docs/ru/LIVE_EXECUTION.md
-and docs/en/LIVE_EXECUTION.md for migration, deadlines and incomplete-call cleanup.
+## Исполнение API 3
+
+В обычном def навигация и call блокируют до результата. В async def используй await
+для reach/step/until/finish/reset/resume(sync=True)/call с первого вызова, включая
+помощники. resume(sync=False), данные, точки, record/check и ret остаются немедленными.
+wait и halt требуют await и конечного timeout; timeout wait не останавливает цель.
+Доступ к цели возможен только после подтверждённой остановки. finally с await halt
+не заменяет восстановление памяти/регистров и не завершает прерванный call.
+Не используй execute в async и скрытые inferior calls в выражениях данных; вынеси
+их в явный call. Обычный def не нужно превращать в async без живого окна.
+[Контракт и миграция](../../docs/ru/LIVE_EXECUTION.md) описывают отказные пути.

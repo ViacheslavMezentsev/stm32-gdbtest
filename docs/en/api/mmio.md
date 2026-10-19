@@ -2,7 +2,7 @@
 
 [API](index.md) · [Русский](../../ru/api/mmio.md)
 
-Available in the 0.5.0 candidate; API specification 0.3.21 §4.21; API_VERSION=2.
+Available in the 0.5.0 candidate; API specification 0.3.21 §4.21; API_VERSION=3.
 
 ```python
 value = target.mmio.read("GPIOA.IDR")

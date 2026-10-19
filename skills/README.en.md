@@ -9,7 +9,7 @@ submodule and link to its documentation.
 
 | Skill | When |
 | --- | --- |
-| [stm32-gdbtest-integrate](stm32-gdbtest-integrate/SKILL.md) | attach the module to a project: submodule, `hil/` directory, MCU description, `session.toml`, CMake, presets, stand, first run; migrate an older consumer to released 0.4.0 |
+| [stm32-gdbtest-integrate](stm32-gdbtest-integrate/SKILL.md) | attach the module to a project: submodule, `hil/` directory, MCU description, `session.toml`, CMake, presets, stand, first run; migrate a consumer to candidate 0.5.0 / API 3 |
 | [stm32-gdbtest-scenarios](stm32-gdbtest-scenarios/SKILL.md) | write or rewrite a scenario: requirement and contract, stop location, `check(rows)`, `write(rows)`, `ret`, `refused`, `watch`, `skip`, profile, style, techniques TECH-001…019 |
 | [stm32-gdbtest-run](stm32-gdbtest-run/SKILL.md) | run and read the result: `doctor`, host and hw, CLI, remote server, package, CI, `result.json` and logs, common failures |
 | [stm32-gdbtest-results](stm32-gdbtest-results/SKILL.md) | audit saved evidence without a board: artifact order, scenario source, records, JUnit, integrity, export/HTML and justified conclusions; including a pi agent on OrangePi |
@@ -81,3 +81,6 @@ to SKILL.md in project instructions; no integration with a specific pi shell is 
 Use documentation matching the result producer; missing fields in old formats remain unknown.
 
 For peripheral investigations use the Renode skill [MMIO resource](stm32-gdbtest-renode/references/mmio.en.md): model access logs, followed by authorized target-board validation. Copy the complete skill directory, including references.
+
+
+[API 3 skill and consumer audit](../docs/development/api3-skills-audit.md) (Russian, P6a, no hardware).

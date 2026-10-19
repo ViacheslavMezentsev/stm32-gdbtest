@@ -2,7 +2,7 @@
 
 Documentation · [Русский](../ru/index.md)
 
-Planning (Russian): [TODO](../../TODO.md), [ROADMAP](../../ROADMAP.md), [archive](../../TODO_ARCHIVE.md).
+Planning (Russian): [TODO](../../TODO.md), [ROADMAP](../../ROADMAP.md), [archive](../archive/TODO_ARCHIVE.md).
 [Translation policy](../development/README.md): the required bilingual subset is maintained; optional translations may lag Russian sources.
 
 

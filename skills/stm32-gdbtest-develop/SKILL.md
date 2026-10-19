@@ -12,7 +12,7 @@ description: Разработать или изменить прошивку ч�
 Пути документации ниже считаются от корня stm32-gdbtest, обычно `modules/stm32-gdbtest/`.
 Прочитай [DDTT](../../docs/ru/DDTT.md), справочник и правила сценариев закреплённой версии.
 Для подключения используй `stm32-gdbtest-integrate`, для интерпретации артефактов —
-`stm32-gdbtest-results`. Этот цикл рассчитан на модуль 0.4.0 и его формат результатов.
+`stm32-gdbtest-results`. Для кандидата 0.5.0 используй API 3 и формат результатов закреплённого SHA.
 
 ## План перед изменением
 
@@ -95,7 +95,9 @@ Watchpoint ставь после инициализации наблюдаемо
 ошибку приложения, сценария, обвязки, API и исходного предположения; не ослабляй ожидание
 до установления причины. Эвристическое замечание не объявляй нарушением контракта.
 
-Before a long run, use the linked checklist. Validate rig prerequisites separately from application
-behavior; prepare does not execute the hardware scenario body. Define required records and capture
-before evidence analysis. Classify unexpected outcomes as application, scenario, rig, API or
-assumption errors before changing expectations. A heuristic hint is not a contract violation.
+Перед изменением прошивки отдели квалификацию платы от проверки приложения: неверный кварц,
+питание или разводка могут сделать утверждение неприменимым. Сохрани исходный FAIL/PASS;
+[снимок допуска](../../docs/ru/DDTT_QUALIFICATION.md) блокирует только зависимые утверждения.
+Renode пригоден для первого опыта, но не подтверждает физические условия.
+Для async def соблюдай [API 3](../../docs/ru/LIVE_EXECUTION.md); halt не восстанавливает
+память, DMA, FPB/VTOR или незавершённый call.

@@ -5,13 +5,24 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.111 (планирование и обязательные переводы) |
+| **Ревизия** | 0.112 (аудит навыков API 3 и архив документации) |
 | **Дата формирования** | 19.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | Кандидат пакета stm32-gdbtest `0.5.0`; API_VERSION=3, target schema 3 (schema 1/2 совместимы), ТЗ API 0.3.23; MMIO/SVD (р.0.104), контракты memory/write (р.0.99), Renode и QEMU (р.0.102). Публикация владельцем после CI итогового SHA. |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
-| **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
+| **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; docs/archive/SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
+
+### Изменения ревизии 0.112
+
+P6a: уточнены инструкции навыков для существующего API 3, MMIO/SVD, inspect,
+эмуляторов и применимости DDTT. Контракты ядра не меняются; аппаратная приёмка
+потребителей остаётся отдельным этапом P5. История и происхождение — docs/archive.
+
+| Раздел | Изменение |
+| --- | --- |
+| 2.1.3, 7.7.12 | Пути архивных материалов уточнены, манифест экспорта неизменен |
+| 10 | Ссылка на архив и сводку P6a; новые аппаратные результаты не заявлены |
 
 ### Изменения ревизии 0.111
 
@@ -223,6 +234,7 @@ Runner задаёт режим до сценария и резервирует 2
 | 0.109 | 19.10.2026 | Публичный inspect: офлайн-связи HIL/backend/SVD, JSON schema 1 и диагностика; TC-182. |
 | 0.110 | 19.10.2026 | Квалификация условий DDTT во внешнем экспортёре; нейтральный host-пример, TC-183. |
 | 0.111 | 19.10.2026 | ROADMAP/TODO/TODO_ARCHIVE, ограниченный обязательный перевод и полный API, политика CI и TC-83/TC-89. |
+| 0.112 | 19.10.2026 | P6a: инструкции API 3, маршруты потребителей без платы; архив docs/archive, без изменения ядра. |
 
 ### Изменения ревизии 0.107
 
@@ -1285,7 +1297,7 @@ run_hw по умолчанию не принимает пропуски, --allow
 
 2.1.2. Сценарии выполняются в GDB на компьютере, а не внутри прошивки: тестовая логика в ELF не добавляется, используются символы, типы и макросы отладочной информации собранного ELF.
 
-2.1.3. Модуль выделен из стендового проекта stm32-hwtest-blackpill (базовый коммит `285152020ee4cef516fb74d96d81193c01fccfab`, SOURCE.md) и подключается к потребителям Git-подмодулем. Стендовый проект остаётся основным потребителем и площадкой аппаратной проверки модуля.
+2.1.3. Модуль выделен из стендового проекта stm32-hwtest-blackpill (базовый коммит `285152020ee4cef516fb74d96d81193c01fccfab`, docs/archive/SOURCE.md) и подключается к потребителям Git-подмодулем. Стендовый проект остаётся основным потребителем и площадкой аппаратной проверки модуля.
 
 2.1.4. Развитие модуля ведётся по профилям сборки потребителя: каждый новый профиль (новый MCU, плата, отладчик или сервер) выявляет пробелы модуля, которые закрываются доработкой и аппаратной проверкой на этом профиле (п. 8.7, приложение G). Так появились проверка ELF load sections (опыт К1921ВГ015), полный образ с CRC, J-Link mapping и профиль Cortex-M0 (F030R8).
 
@@ -2435,7 +2447,7 @@ Full image policy и reset не поддерживаются; reset отклон
 
 7.7.11. Порядок сопровождения ДОЛЖЕН описываться в docs/ru/maintenance.md и docs/development/README.md; AGENTS.md — краткая точка входа. Существующая английская maintenance.md является дополнительным переводом по п. 7.7.10. `[N]` (р.0.111)
 
-7.7.12. Роли документов ДОЛЖНЫ разделяться: ТЗ — требования; README — введение; STATUS — проверенный объём и ограничения; CHANGELOG — история версий; ROADMAP.md — направления и крупные вехи; TODO.md — компактная памятка текущих действий с ID, статусом и критерием завершения; TODO_ARCHIVE.md — исторические записи. Текущая строка TODO обновляется на месте; завершённые подробности переносятся в архив. Архивные статусы НЕ ДОЛЖНЫ трактоваться как текущие поручения. `[N]` (р.0.111)
+7.7.12. Роли документов ДОЛЖНЫ разделяться: ТЗ — требования; README — введение; STATUS — проверенный объём и ограничения; CHANGELOG — история версий; ROADMAP.md — направления и крупные вехи; TODO.md — компактная памятка текущих действий с ID, статусом и критерием завершения; docs/archive/TODO_ARCHIVE.md — исторические записи. Текущая строка TODO обновляется на месте; завершённые подробности переносятся в архив. Архивные статусы НЕ ДОЛЖНЫ трактоваться как текущие поручения. `[N]` (р.0.112)
 
 7.7.13. Обязательные локализованные страницы по п. 7.7.10 ДОЛЖНЫ начинаться навигацией со ссылкой на карту и перевод. Новые страницы ДОЛЖНЫ включаться в подходящий раздел карты; русскоязычное сопровождение не требует английской копии. Перед выпуском документация сверяется с функционалом; при переносе страниц обновляются внутренние ссылки, для внешних сохраняются страницы-переходы. `[N]` (р.0.111)
 
@@ -3061,7 +3073,7 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | 7.7.5 | `tests/host` | T |
 | 7.7.6–7.7.9 | AGENTS.md; docs/ru/maintenance.md, docs/en/maintenance.md; история Git (`git log --show-signature`) | I |
 | 7.7.10, 7.7.11 | AGENTS.md; ci/doc_policy.py; docs/development/README.md; tests/host/test_doc_policy.py | I, TC-83, TC-89 (р.0.111) |
-| 7.7.12, 7.7.13 | ROADMAP.md, TODO.md, TODO_ARCHIVE.md; docs/development/README.md; docs/ru, docs/en | I, TC-89 (р.0.111) |
+| 7.7.12, 7.7.13 | ROADMAP.md, TODO.md, docs/archive/TODO_ARCHIVE.md; docs/development/README.md; docs/development/api3-skills-audit.md; docs/ru, docs/en | I, TC-89 (р.0.111) |
 | 7.7.14 | docs/ru/HOWTO.md, docs/en/HOWTO.md; AGENTS.md | I, TC-83 |
 | 8.1–8.3, 8.6, 8.9 | DOC: VERSIONING.md; IN | I |
 | 8.4 | PR; CT; BM; CM; FI | TC-13, TC-29, TC-36 |

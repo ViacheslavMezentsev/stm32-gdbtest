@@ -11,16 +11,16 @@ Instructions for AI agents and new contributors ([English](docs/en/maintenance.m
 Кратко:
 
 1. Прочитайте [README](README.md), затем текущую [Памятку](TODO.md).
-   Направления — [ROADMAP](ROADMAP.md), прежние записи — [TODO_ARCHIVE](TODO_ARCHIVE.md).
+   Направления — [ROADMAP](ROADMAP.md), прежние записи — [TODO_ARCHIVE](docs/archive/TODO_ARCHIVE.md).
    Последние изменения — раздел `[Unreleased]` и последний выпуск в [CHANGELOG](CHANGELOG.md).
 2. Метод, который реализует модуль, — [спецификация DDTT](docs/ru/DDTT.md) ([English](docs/en/DDTT.md)).
    Требования — два ТЗ, только на русском: [общее](docs/TECHNICAL_SPECIFICATION.md) (runner, стенды,
    образы, CMake, CI) и [ТЗ API сценариев](docs/TECHNICAL_SPECIFICATION_API.md) (методы `Target`).
    В каждом смотрите реквизиты (текущая ревизия), блок изменений последней ревизии и раздел вопросов
    и решений владельца. Копии ТЗ вне репозитория не ведутся.
-3. Сценарии пишутся по API 0.3.0: [справочник методов](docs/ru/api/index.md) и
+3. Сценарии пишутся по API_VERSION=3 кандидата 0.5.0: [справочник методов](docs/ru/api/index.md) и
    [каталог техник со стилем сценариев](docs/ru/TESTING_TECHNIQUES.md). Стиль проверяет тест
-   `tests/host/test_scenario_style.py`; образцы — `tests/firmware/common/tests` (девять сценариев-примеров)
+   `tests/host/test_scenario_style.py`; образцы — `tests/firmware/common/tests` (общие сценарии-примеры)
    и `tests/firmware/profiles/*/tests`. Что и на каких стендах принято — [API_ACCEPTANCE](docs/ru/API_ACCEPTANCE.md).
    Навыки для агентов проектов-потребителей — [skills](skills/README.md); правило сценариев меняется сначала
    в каталоге техник и тесте стиля, затем в навыке.

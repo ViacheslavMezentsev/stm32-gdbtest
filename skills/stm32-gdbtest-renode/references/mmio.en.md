@@ -8,7 +8,8 @@ Read docs/en/MMIO.md and docs/en/RENODE_PROBES.md before experimenting.
 
 Choose one register/operation, expected read/write counts and effects from the MCU manual.
 Record ELF and SHA-256, scenario, model, GDB/Renode versions and connection method.
-Use a separate results directory and your own Renode process. The examples
+Use a separate results directory and your own Renode process. The effect model in
+`tests/mmio-renode` uses the external probe route. The examples
 `tests/renode-startup` and `tests/renode-cache` provide startup/ELF scaffolding, not a
 universal MMIO model. Prepare and validate the required register model separately.
 

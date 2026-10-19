@@ -2,7 +2,7 @@
 
 [API](index.md) · [English](../../en/api/mmio.md)
 
-Поддержка: кандидат 0.5.0; ТЗ API 0.3.21, п. 4.21; API_VERSION=2.
+Поддержка: кандидат 0.5.0; ТЗ API 0.3.21, п. 4.21; API_VERSION=3.
 
 ```python
 value = target.mmio.read("GPIOA.IDR")

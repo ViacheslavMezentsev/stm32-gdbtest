@@ -8,7 +8,7 @@
 
 | Навык | Когда нужен |
 | --- | --- |
-| [stm32-gdbtest-integrate](stm32-gdbtest-integrate/SKILL.md) | подключить модуль к проекту: подмодуль, каталог `hil/`, описание MCU, `session.toml`, CMake, пресеты, стенд, первый прогон; перевод старого потребителя на опубликованную 0.4.0 |
+| [stm32-gdbtest-integrate](stm32-gdbtest-integrate/SKILL.md) | подключить модуль к проекту: подмодуль, каталог `hil/`, описание MCU, `session.toml`, CMake, пресеты, стенд, первый прогон; миграция потребителя на кандидат 0.5.0 / API 3 |
 | [stm32-gdbtest-scenarios](stm32-gdbtest-scenarios/SKILL.md) | написать или переписать сценарий: требование и контракт, место остановки, `check(rows)`, `write(rows)`, `ret`, `refused`, `watch`, `skip`, профиль, стиль, техники TECH-001…019 |
 | [stm32-gdbtest-run](stm32-gdbtest-run/SKILL.md) | запустить и разобрать результат: `doctor`, host и hw, CLI, удалённый сервер, пакет, CI, `result.json` и журналы, частые отказы |
 | [stm32-gdbtest-results](stm32-gdbtest-results/SKILL.md) | разобрать сохранённые свидетельства без платы: порядок файлов, код сценария, records, JUnit, целостность, экспорт/HTML и обоснованный вывод; в том числе агентом pi на OrangePi |
@@ -81,3 +81,6 @@
 не заполняются предположениями.
 
 Для исследования периферии используйте ресурс [MMIO](stm32-gdbtest-renode/references/mmio.md) навыка Renode: журнал обращений в модели, затем согласованная проверка на целевой плате. Копируйте каталог навыка целиком, включая references.
+
+
+[Аудит API 3 и маршруты потребителей](../docs/development/api3-skills-audit.md) (P6a, без платы).

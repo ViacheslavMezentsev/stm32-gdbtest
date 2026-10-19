@@ -186,8 +186,8 @@ tools в модуль не входят. GDB-Python — отдельный ин�
 - [stm32-hwtest-blackpill](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill) — прошивки, аппаратные проверки, общая архитектура и практика применения.
 - [stm32-cmake-yml](https://github.com/ViacheslavMezentsev/stm32-cmake-yml) — связанный проект сборки STM32; для работы модуля он не обязателен.
 
-Лицензия — [MIT](LICENSE). [Происхождение](SOURCE.md), [правила для разработчиков и агентов](AGENTS.md), [сопровождение](docs/ru/maintenance.md).
+Лицензия — [MIT](LICENSE). [Происхождение](docs/archive/SOURCE.md), [правила для разработчиков и агентов](AGENTS.md), [сопровождение](docs/ru/maintenance.md).
 
 [Подготовка v0.4.1](docs/releases/v0.4.1.md), [выпуск v0.4.0](docs/releases/v0.4.0.md), [подготовка и миграция v0.2.0-rc.1](docs/ru/RC020_READINESS.md).
 
-[Памятка](TODO.md) · [Дорожная карта](ROADMAP.md) · [История памятки](TODO_ARCHIVE.md)
+[Памятка](TODO.md) · [Дорожная карта](ROADMAP.md) · [История памятки](docs/archive/TODO_ARCHIVE.md)

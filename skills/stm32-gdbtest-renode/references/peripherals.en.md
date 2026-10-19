@@ -70,3 +70,6 @@ subsequent board validation use [MMIO](mmio.en.md).
 Evidence boundary: model → tested operation → independent criterion → original
 PASS/FAIL/ERROR → limitations → repeat on an authorized board. A class being available,
 a REPL loading or a UART banner does not establish DMA/ADC/Flash behavior.
+
+For self-contained REPL and ordinary @case scenarios, use the native backend in
+docs/en/RENODE.md. Models with external resources still need the probe route.

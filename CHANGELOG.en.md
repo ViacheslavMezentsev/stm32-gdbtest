@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- P6a: audited skills and consumer routes for API 3, MMIO/SVD, inspect, emulators and DDTT applicability. Historical SOURCE, EXPORT_MANIFEST and TODO_ARCHIVE moved to docs/archive; no core changes.
+
 - Planning split into ROADMAP, tactical TODO and TODO_ARCHIVE; required translations narrowed to six units including the complete API tree, with CI regressions. Saved HSE/DDTT analysis clarified; no core changes.
 
 - Added the HSE qualification skill: independent clock reference, interval tolerance decisions, F411 pilot limits and verified recovery; no core changes.

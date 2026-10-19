@@ -15,7 +15,7 @@ current revision is stated in its header.
    module, approach and limits.
 2. This page: work cycle, branches, commits, bilingual documentation.
 3. [TODO.md](../../TODO.md) — "Текущее состояние" (current state) and "Ближайшие шаги" (next steps); the
-   history is kept separately in [TODO_ARCHIVE](../../TODO_ARCHIVE.md). [CHANGELOG](../../CHANGELOG.en.md): `[Unreleased]` and the
+   history is kept separately in [TODO_ARCHIVE](../archive/TODO_ARCHIVE.md). [CHANGELOG](../../CHANGELOG.en.md): `[Unreleased]` and the
    latest release.
 4. [Technical specification](../TECHNICAL_SPECIFICATION.md): revision history, the
    latest revision's change block, open questions (section 11) and code
@@ -113,7 +113,7 @@ The [documentation policy](../development/README.md) (Russian) defines exact pat
 and incremental directory migration. New Russian-only pages need no placeholder
 translation. Public API contracts/migration still belong in the bilingual reference.
 Current actions: [TODO](../../TODO.md); direction: [ROADMAP](../../ROADMAP.md);
-historical records: [TODO_ARCHIVE](../../TODO_ARCHIVE.md).
+historical records: [TODO_ARCHIVE](../archive/TODO_ARCHIVE.md).
 
 ### Local development and public documentation
 

@@ -1,6 +1,6 @@
 # История памятки
 
-[Памятка](TODO.md) · [Дорожная карта](ROADMAP.md)
+[Памятка](../../TODO.md) · [Дорожная карта](../../ROADMAP.md)
 
 Архив прежнего TODO на 19.10.2026. Статусы и формулировки сохранены как
 исторические свидетельства, а не действующие поручения. «Текущая ветка»,
@@ -77,12 +77,12 @@
   608 этапов; Linux-пакеты F411/F429 на Windows и независимый потребитель проверены.
   Это свидетельства разных срезов, не итоговый CI последнего SHA.
 - После remote lifecycle: Docker docs+host 6/6, 426 host-тестов. Длительной ADC-матрице
-  F4 выделено 120 с; исходный ERROR сохранён. [Матрица и ограничения](docs/ru/API_ACCEPTANCE.md).
+  F4 выделено 120 с; исходный ERROR сохранён. [Матрица и ограничения](../ru/API_ACCEPTANCE.md).
 
 - В `codex/release-040` подготовлены отдельные страницы четырёх backend с TOML и рецептом st-util 1.9.0;
   Docker docs 5/5, синтаксис 20 TOML/bash-фрагментов проверен. Новых аппаратных запусков для этой правки нет.
 
-- Новые [сценарии API 0.4.0](docs/ru/API040_SCENARIOS.md): 25 prepare PASS, 20 HW PASS, 5 ожидаемых SKIP
+- Новые [сценарии API 0.4.0](../ru/API040_SCENARIOS.md): 25 prepare PASS, 20 HW PASS, 5 ожидаемых SKIP
   на пяти STM32/SSH/st-util; 65 записей, экспорт/целостность/JSON/JUnit/HTML проверены. Ядро не менялось.
 
 - Hardware CI: подготовлен выбор `suite=api040` и сохранение JSON/JUnit/records/HTML.
@@ -123,7 +123,7 @@
 
 - [x] Состав пакета, очистка API и перенос принятого функционала в выпускную ветку.
 - [x] Полные SSH/st-util наборы пяти STM32 и восстановление.
-- [x] Сверка выпускной документации; [граница выпуска](docs/ru/RELEASE040_SCOPE.md).
+- [x] Сверка выпускной документации; [граница выпуска](../ru/RELEASE040_SCOPE.md).
 - [x] 10.10.2026 владелец принял выпуск с ограничением F411/F030/ST-LINK GDB Server; USB ERROR остаётся долгом 11.2.27, проверенные альтернативы — OpenOCD/st-util.
 - [x] Сверен diff после `c156db5`: ядро, сценарии, CMake и CI не менялись; добавлен отдельный stand_loop, проверенный на F411. Docker docs+host 6/6 на рабочем дереве от `31b66df`; публикационный CI последнего SHA остаётся обязательным.
 - [ ] Владелец пушит ветку, проверяет GitHub CI последнего SHA и выполняет land. Тег и публикация — после приёмки.
@@ -202,7 +202,7 @@
 ## Кандидаты 0.4.0
 
 - [x] Удалить устаревшие `value`, `fields`, `set_value`, `force_return` (ТЗ API 6.7);
-  миграция и критерии проверки — в [составе v0.4.0](docs/ru/RELEASE040_SCOPE.md).
+  миграция и критерии проверки — в [составе v0.4.0](../ru/RELEASE040_SCOPE.md).
 - [ ] `fault`, `cycles()`, `snapshot`/`diff` (решение Q3 от 05.10.2026) и измерение HSE (Q9)
   оставить кандидатами после v0.4.0, без включения в текущий выпуск.
 - [ ] RTOS-осведомлённость — отдельная задача после v0.4.0.
@@ -223,8 +223,8 @@
 
 ## План 0.3.0: аудит и проектирование API (выполнен)
 
-Решение владельца от 04.10.2026. [Согласованный набор для проектирования и этапы](docs/ru/API030_PLAN.md)
-([English](docs/en/API030_PLAN.md)). Текущая версия runtime не меняется.
+Решение владельца от 04.10.2026. [Согласованный набор для проектирования и этапы](../ru/API030_PLAN.md)
+([English](../en/API030_PLAN.md)). Текущая версия runtime не меняется.
 
 - [x] Зафиксировать цель 0.3.0 и имена: @test, reach, settings, sources; добавить until.
 - [x] Рассмотреть reset как отдельную операцию сценария: режим сброса, конечное состояние, ресурсы и история; проверено на пяти стендах, включая отказ backend-команды; формулировка в карточке ожидает согласования.
@@ -237,7 +237,7 @@
 
 Итоги проектирования и границы — в локальном исследовании `api030-package` (материалы разработки
 исключены из поставки). Публичные возможности проверки: сценарии
-`HW_CI_RET_RECEIVER` и `HW_CI_MEASUREMENT_SERIES` в [прошивке CI](tests/firmware/README.md).
+`HW_CI_RET_RECEIVER` и `HW_CI_MEASUREMENT_SERIES` в [прошивке CI](../../tests/firmware/README.md).
 
 ## Предыдущая группа HAL GPIO/RCC
 
@@ -406,7 +406,7 @@ Offline SUCCESS. Незакрытые отметки в исходном пла�
   Сначала land плана, затем руководства; fixture/CI/HW остаются следующими этапами.
 
 - Предыдущая ветка `codex/f030-hal-regression-plan` от `cea01f9`: подготовлен
-  [план HAL fixture](docs/ru/F030_HAL_REGRESSION.md), исходная база потребителя
+  [план HAL fixture](../ru/F030_HAL_REGRESSION.md), исходная база потребителя
   `0c8c966`, полный начальный набор 17 сценариев. Только документация;
   новые HW-проверки не выполнялись. Windows/Linux docs 3/3 PASS.
   Далее зависимые ветки fixture → CI →
@@ -418,7 +418,7 @@ Offline SUCCESS. Незакрытые отметки в исходном пла�
   Прежние16 +2 новых HW-сценария выполнены на одном ELF, HAL восстановлен.
 
 - `codex/f030-cmsis-rtc` от `f494ab1`: RTC Alarm A/LSI и два сценария;
-  16/16 HW PASS на новом ELF, HAL восстановлен. [Протокол](docs/ru/F030_CMSIS_RTC.md).
+  16/16 HW PASS на новом ELF, HAL восстановлен. [Протокол](../ru/F030_CMSIS_RTC.md).
   Далее отказные ветви и итоговая приёмка HAL→CMSIS для F030.
   API ядра без изменений; ТЗ 0.33. F030 CTest 17/17, Windows host 96
   (8 skips), Linux docs/host/9 firmware pairs 13/13 PASS; strict ТЗ и формат PASS.
@@ -427,18 +427,18 @@ Offline SUCCESS. Незакрытые отметки в исходном пла�
   2/2 HW PASS; прежние 12 не повторялись, ELF тот же. HAL восстановлен.
   Проверки: F030 CTest 15/15, Windows host 96 (8 skips), Linux docs/host/
   9 пар firmware 13/13 PASS; strict ТЗ PASS.
-  [Протокол](docs/ru/F030_CMSIS_SLEEP.md). Далее RTC и оставшиеся отказы.
+  [Протокол](../ru/F030_CMSIS_SLEEP.md). Далее RTC и оставшиеся отказы.
 
 
 - `codex/f030-cmsis-adc-units` от `a6c0426`: преобразование F030 ADC и
   7 численных/14 невалидных наборов; 12/12 HW PASS, HAL восстановлен.
   Проверки: F030 CTest 13/13, Windows host 96 (8 skips), Linux docs/host/
   9 пар firmware 13/13 PASS; strict ТЗ и формат PASS.
-  [Протокол](docs/ru/F030_CMSIS_ADC_UNITS.md). Далее RTC/Sleep и отказы.
+  [Протокол](../ru/F030_CMSIS_ADC_UNITS.md). Далее RTC/Sleep и отказы.
 
 
 - `codex/f030-cmsis-adc-dma` от `5883316`: ADC/DMA raw и timeout F030,
-  9/9 HW PASS, HAL восстановлен. [Протокол](docs/ru/F030_CMSIS_ADC_DMA.md).
+  9/9 HW PASS, HAL восстановлен. [Протокол](../ru/F030_CMSIS_ADC_DMA.md).
   Проверки: host Windows 96 (8 skips), F030 CTest 10/10; Linux три профиля
   × GCC13/14/15 подтверждены первоначальным и исправленным F030-прогонами.
   Далее преобразование в физические единицы и численные векторы, RTC/Sleep.
@@ -448,19 +448,19 @@ Offline SUCCESS. Незакрытые отметки в исходном пла�
   6/6 HW PASS на Nucleo/ST-Link/OpenOCD; HAL восстановлен.
   Offline: Windows host 96 (8 skips), Linux docs/host/9 firmware pairs 13/13 PASS,
   F030 CTest 7/7; strict ТЗ и формат PASS.
-  [Протокол](docs/ru/F030_CMSIS_TIMER.md). Далее ADC/DMA/арифметика, RTC, Sleep.
+  [Протокол](../ru/F030_CMSIS_TIMER.md). Далее ADC/DMA/арифметика, RTC, Sleep.
 
 
 - `codex/f030-cmsis-baseline` от `4601888`: первый этап CMSIS F030,
   boot/clock/GPIO/blink — 4/4 HW PASS (ST-Link/OpenOCD), HAL восстановлен.
   Windows host: 96 тестов, 8 skips; Linux docs/host/firmware: 13/13 PASS,
   F030/F103/F411 × GCC13/14/15; strict ТЗ: 0 ошибок/предупреждений.
-  [Протокол](docs/ru/F030_CMSIS_BASELINE.md). Следующий этап — таймер/IRQ,
+  [Протокол](../ru/F030_CMSIS_BASELINE.md). Следующий этап — таймер/IRQ,
   далее ADC/DMA/RTC. Оптимизация CI остаётся после переноса примеров.
 
 
-- `codex/cmsis-migration-inventory` от `bc07625` — [миграция примеров](docs/ru/CMSIS_MIGRATION.md)
-  ([English](docs/en/CMSIS_MIGRATION.md)): сопоставлены 17 HAL-сценариев F030
+- `codex/cmsis-migration-inventory` от `bc07625` — [миграция примеров](../ru/CMSIS_MIGRATION.md)
+  ([English](../en/CMSIS_MIGRATION.md)): сопоставлены 17 HAL-сценариев F030
   с двумя CMSIS-сценариями. Build/offline 3/3 PASS, без HW. Далее F030
   boot/clock/GPIO/blink, затем периферия и другие профили. Оптимизация CI — после переноса.
   Также переименован корневой Tests → tests; вложенные каталоги потребителей
@@ -626,7 +626,7 @@ Host Windows/Linux: 596 тестов; отдельные проверки при
 Исследовательский пилот P4 F411 на API 3: 12/12 ожидаемых исходов, Flash/SRAM и
 сохранённые регистры независимо сверены. Это происхождение публичного примера,
 не аппаратная приёмка его нового коммита. Новых запусков плат при переносе нет.
-Границы — [пример](docs/ru/LIVE_OBSERVER.md) и [приёмка](docs/ru/API_ACCEPTANCE.md).
+Границы — [пример](../ru/LIVE_OBSERVER.md) и [приёмка](../ru/API_ACCEPTANCE.md).
 
 Далее inspect/HIL и квалификация платы/условия свидетельств DDTT; P5 на одном
 кандидате (Windows/Linux, Renode/QEMU, шесть стендов по возможностям, потребители);
