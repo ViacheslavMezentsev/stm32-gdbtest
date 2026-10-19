@@ -17,6 +17,7 @@ submodule and link to its documentation.
 | [stm32-gdbtest-develop](stm32-gdbtest-develop/SKILL.md) | develop firmware through DDTT: plan, scenario before the fix, baseline FAIL, correction, regression and target evidence review |
 | [stm32-gdbtest-coverage](stm32-gdbtest-coverage/SKILL.md) | map integration, portable reports, provenance and unknown outcomes. |
 | [stm32-gdbtest-renode](stm32-gdbtest-renode/SKILL.md) | short ELF/GDB probes without a board, model limitations and resource cleanup. |
+| [stm32-gdbtest-hse-qualify](stm32-gdbtest-hse-qualify/SKILL.md) | qualify physical crystal frequency against tolerance: independent time reference, uncertainty, recovery and DDTT applicability. |
 
 
 Before a hardware series, use the [scenario checklist](../docs/en/SCENARIO_CHECKLIST.md): it complements scenarios/develop and replaces neither prepare nor board testing.
@@ -34,6 +35,7 @@ and permitted scope; hardware work also needs an up-to-date stand description.
 | `results` | Evidence already exists. Supply the complete attempt/campaign and matching sources; check provenance and integrity before interpreting records | Evidence-backed conclusions; arbitrary journal entries are not automatically treated as measurements |
 | `stand-loop` | Repeat an accepted immutable bundle. Define finite cycles, FAIL/SKIP policy and STOP; rebuild the bundle when the ELF/scenario changes | Separate attempts, cycle summary and review.json handoff; application sources are not required on the stand |
 | `develop` | Change firmware with feedback from the circuit. Supply requirements, sources, stand description and an iteration budget; retain the plan and baseline FAIL before fixing | Requirement → check → fix → regression, preserved failures and explicit evidence boundaries |
+| `hse-qualify` | Supply nominal frequency, tolerance, board and allowed operations; establish clock accuracy before hardware measurement | Frequency interval, IN_TOLERANCE/OUT_OF_TOLERANCE/UNKNOWN, separate recovery verdict and epoch scope |
 
 Typical routes:
 

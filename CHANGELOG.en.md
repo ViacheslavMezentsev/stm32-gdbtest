@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Added the HSE qualification skill: independent clock reference, interval tolerance decisions, F411 pilot limits and verified recovery; no core changes.
+
 - DDTT example: admission snapshot through [data], records receipt and binding verification before bind; intentional FAIL and raw results are retained. No core changes.
 
 - Renode qualification example: independent receiver journal, dropped word and nominal repeat; raw PASS results are retained and only the dependent DDTT assertion is blocked. No core changes or hardware acceptance.

@@ -2,6 +2,11 @@
 
 ## Текущее состояние и ближайшие шаги — 19.10.2026
 
+Ветка codex/hse-qualification-skill: отдельный навык проверки допуска частоты HSE,
+методика RU/EN, интервальная погрешность и границы применимости DDTT.
+Только документация; новых аппаратных прогонов нет. Skill validator PASS,
+Linux docs 5/5; подписанный коммит этой ветки готовится для push владельцем.
+
 Ветка codex/ddtt-qualification-data: снимок через [data], квитанция в records,
 проверка связи до bind; сохранены исходные PASS/FAIL, result.json и records.json.
 Host Windows/Linux: по 676 тестов (14/6 пропусков), Linux docs/host 6/6.
