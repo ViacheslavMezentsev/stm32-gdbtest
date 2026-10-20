@@ -1,0 +1,112 @@
+name: Ошибка / Bug report
+description: Модуль, runner или метод API работает не так, как описано. The module, runner or an API method does not behave as documented.
+title: "[Ошибка / Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо за сообщение! Перед отправкой / Before submitting:
+        1. Найдите метод в [справочнике API](https://viacheslavmezentsev.github.io/stm32-gdbtest/api/) и проверьте [памятку](https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/HOWTO.md) и [текущее состояние](https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/STATUS.md): отказ API с кодом (`ApiError`) часто описан там. Check the API reference, HOWTO and status first: an `ApiError` code is often documented there.
+        2. Запустите `python -m stm32_gdbtest doctor` для того же стенда. Run `doctor` for the same stand.
+        3. **Замените серийные номера отладчиков, адреса хостов и личные пути** на `XXXX`, `stand-host` и `C:\project`. **Mask probe serial numbers, host addresses and personal paths.**
+        4. Не прикладывайте ELF, закрытые исходники и локальные `*.local.toml` / `*.remote.toml`. Do not attach ELF files, private sources or local stand files.
+  - type: input
+    id: version
+    attributes:
+      label: Версия модуля / Module version
+      description: "`python -m stm32_gdbtest --version` или SHA подмодуля / or the submodule SHA"
+      placeholder: "0.5.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Область / Area
+      options:
+        - метод Target API в сценарии / Target API method in a scenario
+        - async-сценарий, живое окно / async scenario, live window
+        - MMIO / SVD
+        - запуск, runner, CTest / run, runner, CTest
+        - doctor, inspect, prepare, pack
+        - результаты, экспорт DDTT / results, DDTT export
+        - Renode / QEMU
+        - CMake, интеграция / CMake, integration
+        - другое / other
+    validations:
+      required: true
+  - type: dropdown
+    id: server
+    attributes:
+      label: GDB-сервер / GDB server
+      options:
+        - OpenOCD
+        - ST-LINK GDB Server
+        - SEGGER J-Link GDB Server
+        - st-util
+        - Renode / QEMU
+        - не используется / none (offline)
+    validations:
+      required: true
+  - type: dropdown
+    id: layout
+    attributes:
+      label: Где работает сервер / Server placement
+      options:
+        - рядом с ПК / next to the PC
+        - Linux-стенд по SSH / Linux stand over SSH
+        - пакет на стенде / package on a stand
+        - CI
+        - не применимо / not applicable
+  - type: input
+    id: target
+    attributes:
+      label: MCU, плата, отладчик / MCU, board, probe
+      placeholder: "STM32F411CE, WeAct BlackPill, ST-Link V2"
+    validations:
+      required: true
+  - type: input
+    id: host
+    attributes:
+      label: ОС, GDB, Python / OS, GDB, Python
+      placeholder: "Windows 11, arm-none-eabi-gdb 14.2 (Python 3.11), Python 3.13"
+    validations:
+      required: true
+  - type: textarea
+    id: scenario
+    attributes:
+      label: Минимальный сценарий / Minimal scenario
+      description: Наименьший фрагмент сценария или команда, на которой воспроизводится. The smallest scenario fragment or command that reproduces it.
+      render: python
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Что произошло / What happened
+      description: Исход (FAIL/ERROR/SKIP), код и детали ApiError, что осталось на плате. Outcome, ApiError code and details, board state.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Что ожидали / Expected behavior
+      description: Со ссылкой на карточку справочника или раздел документации, если есть. With a link to the reference card or doc section, if any.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: result.json, журнал или вывод doctor / result.json, log or doctor output
+      description: Фрагмент без серийных номеров и путей; каталог попытки можно приложить в ZIP. An excerpt without serials and paths; the attempt directory may be attached as ZIP.
+      render: text
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Проверка / Checklist
+      options:
+        - label: Ответа нет в справочнике API, памятке и текущем состоянии. The answer is not in the API reference, HOWTO or status.
+          required: true
+        - label: Серийные номера, адреса хостов и личные пути заменены. Serial numbers, host addresses and personal paths are masked.
+          required: true
+        - label: Похожего issue нет или он указан выше. No similar issue exists, or it is linked above.

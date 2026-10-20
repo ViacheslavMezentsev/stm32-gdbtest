@@ -1,0 +1,46 @@
+name: Предложение / Feature request
+description: Новая возможность API, runner или документации. A new API, runner or documentation capability.
+title: "[Предложение / Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Сначала проверьте [справочник API](https://viacheslavmezentsev.github.io/stm32-gdbtest/api/) и [каталог техник](https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/TESTING_TECHNIQUES.md): задача может решаться существующими методами. Check the API reference and the technique catalogue first: existing methods may already cover the task.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Задача / Problem
+      description: Какое требование к прошивке нужно проверить и что мешает сейчас. Which firmware requirement you need to check and what gets in the way today.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Предложение / Proposal
+      description: Как это могло бы выглядеть в сценарии или командой. How it could look in a scenario or as a command.
+      render: python
+    validations:
+      required: true
+  - type: dropdown
+    id: effect
+    attributes:
+      label: Воздействие на цель / Effect on the target
+      description: Помогает оценить меры безопасности. Helps judge the required safeguards.
+      options:
+        - без платы / no board
+        - только чтение при остановленном ядре / read only, core halted
+        - работа без остановки ядра / runs without halting the core
+        - запись памяти или регистров / writes memory or registers
+        - управление исполнением / execution control
+        - не знаю / not sure
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Как обходитесь сейчас / Current workaround
+  - type: textarea
+    id: context
+    attributes:
+      label: Дополнительно / Additional context

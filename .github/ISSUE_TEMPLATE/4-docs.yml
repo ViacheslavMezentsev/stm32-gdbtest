@@ -1,0 +1,32 @@
+name: Документация / Documentation
+description: Ошибка, неточность или пробел в документации, справочнике или на сайте. An error, inaccuracy or gap in the docs, reference or site.
+title: "[Документация / Docs]: "
+labels: ["documentation"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Страница / Page
+      description: Ссылка на карточку, раздел или страницу сайта. Link to the card, section or site page.
+      placeholder: "https://viacheslavmezentsev.github.io/stm32-gdbtest/api/live-window/"
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Что не так / What is wrong
+      options:
+        - пример не работает / example does not work
+        - описание расходится с поведением / description differs from behavior
+        - не хватает сведений / information is missing
+        - перевод RU/EN / RU/EN translation
+        - ссылка или оформление / link or layout
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Подробности / Details
+      description: Что написано, что на самом деле и, если известно, как исправить. What is written, what actually happens and, if known, how to fix it.
+    validations:
+      required: true

@@ -1,0 +1,89 @@
+name: Стенд и совместимость / Stand and compatibility report
+description: Результат на конкретном MCU, отладчике и GDB-сервере. Results on a specific MCU, probe and GDB server.
+title: "[Стенд / Stand]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Помогает расширить [список проверенных сочетаний](https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/API_ACCEPTANCE.md); полезны и удачные, и неудачные результаты. Helps extend the list of verified combinations; both successful and failed results are useful.
+
+        Подключение и профиль MCU — [первый прогон](https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/GETTING_STARTED.md), [профили MCU](https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/MCU_PROFILES.md), [совместимые МК](https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/COMPATIBLE_MCU.md). Не снимайте защиту и не меняйте option bytes ради проверки. Do not remove protection or change option bytes for a test.
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Итог / Outcome
+      options:
+        - работает / works
+        - частично / partially
+        - не работает / does not work
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Версия модуля / Module version
+      placeholder: "0.5.0"
+    validations:
+      required: true
+  - type: input
+    id: mcu
+    attributes:
+      label: MCU
+      description: Точная модель с маркировки. Exact part number.
+      placeholder: "STM32G474RE"
+    validations:
+      required: true
+  - type: input
+    id: board
+    attributes:
+      label: Плата / Board
+      placeholder: "NUCLEO-G474RE, своя плата / custom board"
+  - type: dropdown
+    id: server
+    attributes:
+      label: GDB-сервер / GDB server
+      options:
+        - OpenOCD
+        - ST-LINK GDB Server
+        - SEGGER J-Link GDB Server
+        - st-util
+    validations:
+      required: true
+  - type: input
+    id: tools
+    attributes:
+      label: Версии GDB, сервера, отладчика / GDB, server and probe versions
+      placeholder: "arm-none-eabi-gdb 14.2, OpenOCD 0.12.0, ST-Link V2-1 V2J45M31"
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Что проверено / What was checked
+      options:
+        - label: doctor
+        - label: host (prepare, контракты ELF / ELF contracts)
+        - label: синхронные сценарии / synchronous scenarios
+        - label: async, resume/wait/halt
+        - label: call с timeout / call with timeout
+        - label: t.mmio с SVD / t.mmio with SVD
+        - label: удалённый сервер по SSH / remote server over SSH
+  - type: textarea
+    id: details
+    attributes:
+      label: Подробности / Details
+      description: Число PASS/FAIL/ERROR, что не сработало, особенности подключения. PASS/FAIL/ERROR counts, what failed, wiring notes.
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Вывод doctor / doctor output
+      render: text
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Проверка / Checklist
+      options:
+        - label: Серийные номера, адреса хостов и личные пути заменены. Serial numbers, host addresses and personal paths are masked.
+          required: true

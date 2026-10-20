@@ -190,7 +190,7 @@ def shell(lang, title, description, body, depth, page):
   <div class="inner">
     <span>stm32-gdbtest · {t['license']} · {VERSION} · API_VERSION={API_VERSION}</span>
     <a href="{REPO}">{t['sources']}</a>
-    <a href="{REPO}/issues">{t['issue']}</a>
+    <a href="{REPO}/issues/new/choose">{t['issue']}</a>
     <a href="{FAMILY}">{t['family']}</a>
   </div>
 </footer>

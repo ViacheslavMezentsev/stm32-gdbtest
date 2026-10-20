@@ -1,0 +1,15 @@
+# Issue chooser: only the forms below, plus links to look for an answer first.
+blank_issues_enabled: false
+contact_links:
+  - name: "Справочник API и маршруты навыков / API reference and skill routes"
+    url: https://viacheslavmezentsev.github.io/stm32-gdbtest/
+    about: Методы Target API 3 с примерами «правильно» и «не рекомендуется», выбор навыка. Target API 3 methods with recommended and discouraged examples, choosing a skill.
+  - name: "Карта документации / Documentation map"
+    url: https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/index.md
+    about: Подключение, первый прогон, GDB-серверы, стенды, результаты. Integration, first run, GDB servers, stands, results. English — docs/en/index.md.
+  - name: "Памятка: частые проблемы / HOWTO: common problems"
+    url: https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/HOWTO.md
+    about: Стенд, отладчики, удалённый сервер, Docker, CMake. Stand, probes, remote server, Docker, CMake. English — docs/en/HOWTO.md.
+  - name: "Текущее состояние и ограничения / Current status and limitations"
+    url: https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/STATUS.md
+    about: Что проверено на каких MCU, серверах и стендах, известные границы. What is verified on which MCUs, servers and stands; known limits.

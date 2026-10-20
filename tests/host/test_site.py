@@ -73,7 +73,7 @@ class SiteContentTests(unittest.TestCase):
 class SiteBuildTests(unittest.TestCase):
     def test_build_links_and_determinism(self):
         with tempfile.TemporaryDirectory(prefix='stm32-gdbtest-pages-') as temp:
-            output = build(Path(temp))
+            output = build(Path(temp).resolve())   # Windows: 8.3 temp names differ from resolved ones
             docs = {p: Document(p.read_text(encoding='utf-8')) for p in output.rglob('*.html')}
             self.assertEqual(len(docs), 2 * (3 + len(content.API)))
             for path, doc in docs.items():
@@ -87,8 +87,8 @@ class SiteBuildTests(unittest.TestCase):
                         self.assertEqual(url.scheme, 'https', link)
                         continue
                     self.assertFalse(url.netloc)
-                    target = (path.parent / unquote(url.path)).resolve() if url.path else path
-                    self.assertTrue(target.is_relative_to(output.resolve()), link)
+                    target = (path.parent / unquote(url.path)).resolve() if url.path else path.resolve()
+                    self.assertTrue(target.is_relative_to(output), link)
                     self.assertTrue(target.exists(), f'{path}: missing {link}')
                     if url.fragment:
                         self.assertIn(unquote(url.fragment), docs[target].ids, f'{path}: {link}')

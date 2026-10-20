@@ -10,7 +10,7 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 API_VERSION=3 release: live window and async scenarios, bounded `call`, MMIO/SVD, Renode/QEMU, `inspect`, DDTT export and qualification; P5b acceptance on the final commit `a7b0951` — [release notes](docs/releases/v0.5.0.md), [moving from 0.4.x](docs/en/MIGRATION_050.md).
 
-- The API reference is reworked for 0.5.0: cards carry one "Available since / API 3 (0.5.0)" block instead of support and revision tables, full `resume`/`wait`/`halt` cards, `call(timeout=)`, short cards for removed names; the index is grouped. GitHub Pages site (`site/`, `ci/build_site.py`, Pages workflow, `tests/host/test_site.py` test): TTDD skill routes and the API reference by group with "recommended" and "avoid" examples. README links to the reference and the site. Runtime unchanged.
+- The API reference is reworked for 0.5.0: cards carry one "Available since / API 3 (0.5.0)" block instead of support and revision tables, full `resume`/`wait`/`halt` cards, `call(timeout=)`, short cards for removed names; the index is grouped. GitHub Pages site (`site/`, `ci/build_site.py`, Pages workflow, `tests/host/test_site.py` test): TTDD skill routes and the API reference by group with "recommended" and "avoid" examples. Issue forms (bug, stand, feature, documentation) link to the reference, documentation, HOWTO and status. README links to the reference and the site. Runtime unchanged.
 
 - P6b: the P5b result in the matrix and passport, release notes, specification 0.114. The README is shortened under layout rules (checked by ci/doc_policy.py): two sync/async examples, live badges only; origin and videos moved to docs/archive/SOURCE.md. Added a stands page with board drawings at one scale and an SVG generator.
 
