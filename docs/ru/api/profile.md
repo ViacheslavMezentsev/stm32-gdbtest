@@ -2,15 +2,9 @@
 
 [API](index.md) · [English](../../en/api/profile.md)
 
-`profile: Profile` — отображение `target.toml` только для чтения с разделами прогона
+**Доступен с:** 0.1.0-rc.1; разделы, `get`, `origin`, `snapshot` — 0.3.0 · **API 3 (0.5.0):** без изменений, `await` не нужен.
 
-| Свойство | Значение |
-| --- | --- |
-| Поддержка в модуле | индексация: 0.1.0rc1 / v0.1.0-rc.1; разделы, `get`, `origin`, `snapshot`: 0.3.0.dev0 (ядро) |
-| Контракт принят в ТЗ API | индексация: 0.1.0; разделы: 0.3.3 |
-| API_VERSION | 1 (индексация сохраняет опубликованный контракт) |
-| Заменяет | `config`, `config_props`, `settings`, `sources` (удалены в 0.3.0 без алиасов) |
-| Основание | проверочная прошивка `tests/firmware`, сценарии `HW_CI_PROFILE`, `HW_CI_ADC_SERIES`, `HW_CI_RESET` |
+`profile: Profile` — отображение `target.toml` только для чтения с разделами прогона
 
 ## Назначение
 
@@ -73,7 +67,7 @@ t.record("run", t.profile)
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.4, п. 4.14.1–4.14.8.
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), п. 4.14.1–4.14.8.
 - [record](record.md), [reset](reset.md).
 
 С v0.4.0 `stand.backend` также принимает `st-util`; его настройка описана в [backend](../BACKENDS.md#st-util-v040).

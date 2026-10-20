@@ -2,11 +2,13 @@
 
 [API](index.md) · [English](../../en/api/mmio.md)
 
-Поддержка: кандидат 0.5.0; ТЗ API 0.3.21, п. 4.21; API_VERSION=3.
+`t.mmio.read(name, *, allow_effects=False, override=None, reason=None) -> int`; `t.mmio.write(name, value, *, allow_effects=False, override=None, reason=None) -> dict`
+
+**Доступен с:** 0.5.0 · **API 3 (0.5.0):** новое в 0.5.0; `await` не нужен; нужен SVD в `session.toml` (`[mmio] svd`).
 
 ```python
-value = target.mmio.read("GPIOA.IDR")
-ack = target.mmio.write("GPIOA.BSRR", 1)
+value = t.mmio.read("GPIOA.IDR")
+ack = t.mmio.write("GPIOA.BSRR", 1)
 ```
 
 Имена — точные имена регистров из [снимка SVD](../SVD.md), не выражения GDB.
@@ -63,7 +65,7 @@ SHA-256 SVD, причиной override и значением записи; по�
 ```python
 from stm32_gdbtest import MMIORegister
 reg = MMIORegister("MODEL.WO", 0x40000004, 32, "write-only")
-target.mmio.write("MODEL.WO", 7, override=reg,
+t.mmio.write("MODEL.WO", 7, override=reg,
                   reason="Учебная модель поддерживает запись; ошибка исходного SVD")
 ```
 

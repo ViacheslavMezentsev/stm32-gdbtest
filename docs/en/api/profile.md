@@ -2,15 +2,9 @@
 
 [API](index.md) · [Русский](../../ru/api/profile.md)
 
-`profile: Profile` — a read-only `Mapping` over `target.toml` with run sections
+**Available since:** 0.1.0-rc.1; sections, `get`, `origin`, `snapshot` since 0.3.0 · **API 3 (0.5.0):** unchanged, no `await`.
 
-| Property | Value |
-| --- | --- |
-| Module support | indexing: 0.1.0rc1 / v0.1.0-rc.1; sections, `get`, `origin`, `snapshot`: 0.3.0.dev0 (core) |
-| API specification contract | indexing: 0.1.0; sections: 0.3.3 |
-| API_VERSION | 1 (indexing keeps the published contract) |
-| Replaces | `config`, `config_props`, `settings`, `sources` (removed in 0.3.0 without aliases) |
-| Basis | the verification firmware `tests/firmware`, scenarios `HW_CI_PROFILE`, `HW_CI_ADC_SERIES`, `HW_CI_RESET` |
+`profile: Profile` — a read-only `Mapping` over `target.toml` with run sections
 
 ## Purpose
 
@@ -73,7 +67,7 @@ t.record("run", t.profile)
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.3.4, items 4.14.1–4.14.8.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), items 4.14.1–4.14.8.
 - [record](record.md), [reset](reset.md).
 
 Since v0.4.0, `stand.backend` also accepts `st-util`; see its [backend configuration](../BACKENDS.md#st-util-v040).

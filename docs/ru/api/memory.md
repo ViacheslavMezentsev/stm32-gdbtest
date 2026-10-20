@@ -6,12 +6,7 @@
 
 `memory(address, size | data, *, verify=None) -> bytes | dict`
 
-| Свойство | Значение |
-| --- | --- |
-| Поддержка в модуле | 0.3.0.dev0 (ядро) |
-| Контракт принят в ТЗ API | ревизия 0.3.4, п. 4.16.1–4.16.4, 6.8 |
-| API_VERSION | 1 (действующий контракт не изменяется) |
-| Основание | проверочная прошивка `tests/firmware`, сценарии `HW_CI_PROFILE`, `HW_CI_CALL_PREDICATE` |
+**Доступен с:** 0.3.0 · **API 3 (0.5.0):** без изменений, `await` не нужен.
 
 ## Назначение
 
@@ -51,10 +46,10 @@ initial_sp = int.from_bytes(vectors[:4], "little")  # A stack-top pointer, not a
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.4, п. 4.16.1–4.16.4, 6.8.
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), п. 4.16.1–4.16.4, 6.8.
 - [symbol](symbol.md), [write](write.md).
 
-## Полнота чтения — кандидат 0.4.2
+## Полнота чтения (0.5.0)
 
 `memory(address, size)` возвращает ровно size байтов. Иная длина ответа вызывает ApiError
 с code=incomplete_read, operation=memory, stage=readback, effect=none и полями address,

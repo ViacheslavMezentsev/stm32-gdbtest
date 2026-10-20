@@ -4,7 +4,7 @@
 
 `skip(reason) -> NoReturn`
 
-Поддержка: Unreleased после 0.3.0; ТЗ API 0.3.9; API_VERSION=1.
+**Доступен с:** 0.4.0 · **API 3 (0.5.0):** без изменений, `await` не нужен; в `async def` runner после SKIP выполняет очистку живого окна.
 
 Завершает неприменимый сценарий со статусом SKIP. reason — точный str, непустой после strip,
 корректный Unicode; размер UTF-8 не больше api.records.max_text_bytes. Превышение даёт ApiError

@@ -4,12 +4,7 @@
 
 `Point: id, location, addresses, active, hit_count, condition; enable(); disable(); remove(); with`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.3.0.dev0 (core) |
-| API specification contract | not accepted; designed revision 0.2.9 |
-| API_VERSION | 1 (the effective contract does not change) |
-| Basis | the agreed verification firmware `tests/firmware` and its scenarios (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+**Available since:** 0.3.0 · **API 3 (0.5.0):** unchanged, no `await`; a point condition is evaluated without function calls.
 
 ## Purpose
 
@@ -41,7 +36,4 @@ After removal, accessing point properties reports a failure instead of stale dat
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5; `enable`, `disable`, writable `condition`: revision 0.3.3, item 4.4.3.
-
-
-0.5.0 candidate, API_VERSION=3: sync/async rules, timeouts, hidden-call restrictions and migration — [live execution](../LIVE_EXECUTION.md#execution-in-api_version3-050-candidate).
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md); `enable`, `disable`, writable `condition`: item 4.4.3.

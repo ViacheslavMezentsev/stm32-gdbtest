@@ -4,12 +4,7 @@
 
 `symbol(name) -> dict`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.3.0.dev0 (core) |
-| API specification contract | revision 0.3.3 |
-| API_VERSION | 1 (the effective contract does not change) |
-| Basis | the verification firmware `tests/firmware`, scenarios HW_CI_PROFILE, HW_CI_POINT_BUDGET |
+**Available since:** 0.3.0 · **API 3 (0.5.0):** unchanged, no `await`.
 
 ## Purpose
 
@@ -33,4 +28,4 @@ t.check("app_state size", state["size"], t.evaluate("sizeof(app_state)"))
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.3.3, items 4.15.1.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), items 4.15.1.

@@ -4,12 +4,7 @@
 
 `watch(path) -> Point`
 
-| Свойство | Значение |
-| --- | --- |
-| Поддержка в модуле | 0.3.0.dev0 (ядро) |
-| Контракт принят в ТЗ API | не принят; проектируемая ревизия 0.3.0 |
-| API_VERSION | 1 (действующий контракт не изменяется) |
-| Основание | согласованная проверочная прошивка `tests/firmware` и её сценарии (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+**Доступен с:** 0.3.0 · **API 3 (0.5.0):** без изменений, `await` не нужен; условие точки вычисляется без вызовов функций.
 
 ## Назначение
 
@@ -39,4 +34,4 @@ PC / frames: [TECH-013](../TESTING_TECHNIQUES.md#tech-013).
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.0.
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md).

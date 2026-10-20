@@ -96,7 +96,8 @@ ctest --preset <profile>-hil-hw       # на плате, стенд задаёт
 
 ## Документация
 
-[Карта документации](docs/ru/index.md) · [DDTT](docs/ru/DDTT.md) · [навыки и TTDD](skills/README.md) ·
+[Карта документации](docs/ru/index.md) · [справочник API](docs/ru/api/index.md) · [DDTT](docs/ru/DDTT.md) ·
+[навыки и TTDD](skills/README.md) · [сайт: маршруты и API](https://viacheslavmezentsev.github.io/stm32-gdbtest/) ·
 [стенды](docs/ru/STANDS.md) · [текущее состояние](docs/ru/STATUS.md) · [версии](docs/ru/VERSIONING.md) ·
 [изменения](CHANGELOG.md) · [ТЗ](docs/TECHNICAL_SPECIFICATION.md)
 

@@ -2,14 +2,9 @@
 
 [API](index.md) · [Русский](../../ru/api/call.md)
 
-`call(function, *args) -> dict`
+`call(function, *args, timeout=None) -> dict`; in `async def` use `await t.call(…)`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.3.0 |
-| API specification contract | accepted, section 4.8 |
-| API_VERSION | 2 (package 0.4.x) |
-| Basis | the agreed verification firmware `tests/firmware` and its scenarios (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+**Available since:** 0.3.0 · **API 3 (0.5.0):** in `async def` use `await t.call(…)`; the new `timeout=` parameter bounds the call; a call inside expressions of other methods is refused. [Sync/async rules](../LIVE_EXECUTION.md).
 
 ## Purpose
 
@@ -24,7 +19,7 @@ and `object.method` produce `invalid_function`; a string argument produces
 `unsupported_argument`. Successful [C++ preflight](../CONTRACTS.md) does not extend this interface.
 
 Limitations: the call runs on the halted core and changes its state — the function's side effects
-are kept; a long call is bounded by the scenario timeout; pointers, floating-point numbers and
+are kept; without `timeout=` the call is bounded only by the scenario timeout; pointers, floating-point numbers and
 variadic arguments are outside the verified scope.
 
 ## Example
@@ -37,9 +32,24 @@ t.check("call returned a value", result["return_state"], "available")
 An error inside the called function is reported as an operation failure, not as a debugger
 exception.
 
+## Timeout and async (0.5.0)
+
+`timeout=` is host seconds; its integer part must be at least 1 and within the remaining scenario
+deadline, otherwise the call is refused before it starts (`operation_timeout`). The module enables GDB
+`direct-call-timeout` and `unwind-on-timeout`. An interrupted call with a dummy frame blocks further
+execution (`call_incomplete`); cleanup does not restore the context and there is no retry.
+
+```python
+@case("HW_CALL")
+async def checksum(t):
+    await t.reach("app_loop")
+    result = await t.call("app_checksum", 7, timeout=2)
+    t.check("checksum(7)", result["return_value"], 22)
+```
+
+Avoid: a function call inside a `read`, `evaluate` or `write` expression or a navigation condition is
+refused (`expression_call_forbidden`); call the function explicitly through `call`.
+
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), section 4.8; the current contract is not extended in 0.4.2.
-
-
-0.5.0 candidate, API_VERSION=3: sync/async rules, timeouts, hidden-call restrictions and migration — [live execution](../LIVE_EXECUTION.md#execution-in-api_version3-050-candidate).
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), sections 4.8 and 4.23.

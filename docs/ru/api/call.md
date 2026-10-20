@@ -2,14 +2,9 @@
 
 [API](index.md) · [English](../../en/api/call.md)
 
-`call(function, *args) -> dict`
+`call(function, *args, timeout=None) -> dict`; в `async def` — `await t.call(…)`
 
-| Свойство | Значение |
-| --- | --- |
-| Поддержка в модуле | 0.3.0 |
-| Контракт принят в ТЗ API | принят, раздел 4.8 |
-| API_VERSION | 2 (пакет 0.4.x) |
-| Основание | согласованная проверочная прошивка `tests/firmware` и её сценарии (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+**Доступен с:** 0.3.0 · **API 3 (0.5.0):** в `async def` — `await t.call(…)`; новый параметр `timeout=` ограничивает вызов; вызов внутри выражений других методов отклоняется. [Правила sync/async](../LIVE_EXECUTION.md).
 
 ## Назначение
 
@@ -24,7 +19,7 @@
 Успешный [C++ preflight](../CONTRACTS.md) не расширяет этот интерфейс.
 
 Ограничения: вызов выполняется на остановленном ядре и меняет его состояние — побочные эффекты
-функции сохраняются; длительный вызов ограничен таймаутом сценария; указатели, числа с плавающей
+функции сохраняются; без `timeout=` вызов ограничен только таймаутом сценария; указатели, числа с плавающей
 точкой и переменное число аргументов в проверенный объём не входят.
 
 ## Пример
@@ -36,9 +31,24 @@ t.check("call returned a value", result["return_state"], "available")
 
 Ошибка внутри вызванной функции возвращается как отказ операции, а не как исключение отладчика.
 
+## Таймаут и async (0.5.0)
+
+`timeout=` — секунды хоста, целая часть не меньше 1 и не больше остатка срока сценария; недостаточный
+бюджет отклоняется до вызова (`operation_timeout`). Модуль включает `direct-call-timeout` и
+`unwind-on-timeout` GDB. Прерванный вызов с dummy frame блокирует дальнейшее продолжение
+(`call_incomplete`); очистка не восстанавливает контекст, повтора нет.
+
+```python
+@case("HW_CALL")
+async def checksum(t):
+    await t.reach("app_loop")
+    result = await t.call("app_checksum", 7, timeout=2)
+    t.check("checksum(7)", result["return_value"], 22)
+```
+
+Не рекомендуется: вызов функции внутри выражения `read`, `evaluate`, `write` или условия навигации —
+он отклоняется (`expression_call_forbidden`); вызывайте функцию явно через `call`.
+
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), раздел 4.8; текущий контракт не расширен в 0.4.2.
-
-
-Кандидат 0.5.0, API_VERSION=3: правила sync/async, таймауты, запрет скрытых вызовов и миграция — [живое исполнение](../LIVE_EXECUTION.md#исполнение-в-api_version3-кандидат-050).
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), разделы 4.8 и 4.23.

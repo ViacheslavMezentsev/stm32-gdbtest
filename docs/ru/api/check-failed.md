@@ -4,12 +4,7 @@
 
 `CheckFailed(ApiError, AssertionError): error.name; error.details`
 
-| Свойство | Значение |
-| --- | --- |
-| Поддержка в модуле | 0.3.0.dev0 (ядро) |
-| Контракт принят в ТЗ API | не принят; проектируемая ревизия 0.2.8 |
-| API_VERSION | 1 (действующий контракт не изменяется) |
-| Основание | согласованная проверочная прошивка `tests/firmware` и её сценарии |
+**Доступен с:** 0.1.0-rc.1; публичный импорт — 0.3.0 · **API 3 (0.5.0):** без изменений, `await` не нужен.
 
 ## Назначение
 
@@ -33,4 +28,4 @@ t.check("ticks advanced", t.read("app_state.ticks") > 0, True)
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.2.7.
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md).

@@ -4,12 +4,7 @@
 
 `ApiError(Exception): error.details; error.code; error.__cause__`
 
-| Свойство | Значение |
-| --- | --- |
-| Поддержка в модуле | 0.3.0.dev0 (ядро) |
-| Контракт принят в ТЗ API | не принят; проектируемая ревизия 0.2.8 |
-| API_VERSION | 1 (действующий контракт не изменяется) |
-| Основание | согласованная проверочная прошивка `tests/firmware` и её сценарии |
+**Доступен с:** 0.3.0 · **API 3 (0.5.0):** добавлены коды `unawaited_operation`, `already_awaited`, `operation_timeout`, `halt_timeout`, `expression_call_forbidden`, `unsupported_async_command`, `call_incomplete`.
 
 ## Назначение
 
@@ -41,6 +36,6 @@ except ApiError as error:
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.2.7.
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md).
 
 [MMIOError](mmio.md) уточняет границу effect=none/unknown и ошибки журнала.

@@ -4,12 +4,7 @@
 
 `until(location=None) -> dict`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.3.0.dev0 (core) |
-| API specification contract | not accepted; designed revision 0.2.9 |
-| API_VERSION | 1 (the effective contract does not change) |
-| Basis | the agreed verification firmware `tests/firmware` and its scenarios (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+**Available since:** 0.3.0 · **API 3 (0.5.0):** in `async def` use `await t.until(…)`, in `def` the synchronous form is unchanged; a condition is evaluated without function calls. [Sync/async rules](../LIVE_EXECUTION.md).
 
 ## Purpose
 
@@ -36,7 +31,4 @@ Leaving the frame bounds is reported as a failure, not as a silent continuation.
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5.
-
-
-0.5.0 candidate, API_VERSION=3: sync/async rules, timeouts, hidden-call restrictions and migration — [live execution](../LIVE_EXECUTION.md#execution-in-api_version3-050-candidate).
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md).

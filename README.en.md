@@ -97,7 +97,8 @@ ctest --preset <profile>-hil-hw       # on the board; the stand is set in hil/<M
 
 ## Documentation
 
-[Documentation map](docs/en/index.md) · [DDTT](docs/en/DDTT.md) · [skills and TTDD](skills/README.en.md) ·
+[Documentation map](docs/en/index.md) · [API reference](docs/en/api/index.md) · [DDTT](docs/en/DDTT.md) ·
+[skills and TTDD](skills/README.en.md) · [site: routes and API](https://viacheslavmezentsev.github.io/stm32-gdbtest/index.en.html) ·
 [stands](docs/en/STANDS.md) · [current status](docs/en/STATUS.md) · [versions](docs/en/VERSIONING.md) ·
 [changes](CHANGELOG.en.md) · [specification (Russian)](docs/TECHNICAL_SPECIFICATION.md)
 

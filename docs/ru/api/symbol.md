@@ -4,12 +4,7 @@
 
 `symbol(name) -> dict`
 
-| Свойство | Значение |
-| --- | --- |
-| Поддержка в модуле | 0.3.0.dev0 (ядро) |
-| Контракт принят в ТЗ API | ревизия 0.3.3 |
-| API_VERSION | 1 (действующий контракт не изменяется) |
-| Основание | проверочная прошивка `tests/firmware`, сценарии HW_CI_PROFILE, HW_CI_POINT_BUDGET |
+**Доступен с:** 0.3.0 · **API 3 (0.5.0):** без изменений, `await` не нужен.
 
 ## Назначение
 
@@ -33,4 +28,4 @@ t.check("app_state size", state["size"], t.evaluate("sizeof(app_state)"))
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.3, п. 4.15.1.
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), п. 4.15.1.

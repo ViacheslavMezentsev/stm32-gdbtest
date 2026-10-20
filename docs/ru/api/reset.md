@@ -4,12 +4,7 @@
 
 `reset() -> dict`
 
-| Свойство | Значение |
-| --- | --- |
-| Поддержка в модуле | 0.3.0.dev0 (ядро) |
-| Контракт принят в ТЗ API | 0.3.0; выбор диалекта уточнён в 0.3.14 |
-| API_VERSION | 2 в кандидате v0.4.0 |
-| Основание | согласованная проверочная прошивка `tests/firmware` и её сценарии (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+**Доступен с:** 0.3.0 · **API 3 (0.5.0):** в `async def` — `await t.reset()`; в эмуляторе отклоняется (`unsupported_backend`). [Правила sync/async](../LIVE_EXECUTION.md).
 
 ## Назначение
 
@@ -45,11 +40,8 @@ t.reach("main")
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.14.
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md).
 
 С v0.4.0 backend `st-util` использует `monitor reset`; необязательная секция `[st-util]` принадлежит schema 2. Контракт метода не изменён.
 
 Renode / [QEMU](../QEMU.md): `reset()` пока отклоняется до команды (`unsupported_backend`, `validation`, `none`). Чистый запуск — новый процесс; [контракт backend](../RENODE.md).
-
-
-Кандидат 0.5.0, API_VERSION=3: правила sync/async, таймауты, запрет скрытых вызовов и миграция — [живое исполнение](../LIVE_EXECUTION.md#исполнение-в-api_version3-кандидат-050).

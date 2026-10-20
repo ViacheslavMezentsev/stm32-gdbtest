@@ -1,39 +1,24 @@
-# force_return — removed name
+# force_return — removed in 0.4.0
 
 [API](index.md) · [Русский](../../ru/api/force_return.md)
 
 `force_return(expression) -> dict`
 
-Historical behavior before 0.4.0; use the migration example below in new scenarios.
+**Was available:** 0.1.0-rc.1 – 0.3.0 · **Removed:** 0.4.0 · **Replacement:** [ret(value=None)](ret.md): returns the operation result; check the return type and the selected frame.
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.1.0rc1 / v0.1.0-rc.1 |
-| API specification contract | 0.1.0; §4.7 |
-| API_VERSION | 1 |
-| Status | Available through 0.3.0; removed from the 0.4.0 candidate (`API_VERSION=2`) |
-| Migration | `ret(value=None)` returns an operation result; check the type and selected frame |
+In 0.3.0 the call warned `deprecated`; since 0.4.0 it raises `AttributeError`. The card is kept to migrate old scenarios.
 
-## Purpose
-
-Executes GDB return with expression and records the operation, function name and expression in mutations. Use an empty string for void.
-
-## Contract and limitations
-
-Return affects the selected frame; the log takes the newest_frame name. Keep the frame selection unchanged for consistent naming. Skips remaining code without undoing prior effects. GDB must support the type/ABI; this is not finish.
-
-## Migration example
+## Migration
 
 ```python
 t.reach("HAL_ADC_Start_DMA")
 t.ret("(HAL_StatusTypeDef)1")
 ```
 
-Scenario-body fragment (case shows a complete declaration). Symbols/macros must exist in the ELF and the MCU must be stopped in the appropriate context.
+Before 0.4.0:
 
-## References
+```python
+t.force_return("(HAL_StatusTypeDef)1")
+```
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), §4.7.
-- [Implementation](../../../stm32_gdbtest/target.py).
-- [Scenario or implementation check](../../../tests/hal-f030/profile/tests/board/test_hal_methods.py).
-- [reach](reach.md), [set_value](set_value.md).
+[API reference](index.md) · [Rename table](../API.md#030-package-numbers-migration-and-aliases)

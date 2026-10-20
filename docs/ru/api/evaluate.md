@@ -6,12 +6,7 @@
 
 `evaluate(expression, *, as_type=None) -> int | float | bool | str`
 
-| Свойство | Значение |
-| --- | --- |
-| Поддержка в модуле | 0.3.0; исправление char[] — Unreleased |
-| Контракт принят в ТЗ API | 4.3, 4.18; уточнение char[] в ревизии 0.3.8 |
-| API_VERSION | 1 (действующий контракт не изменяется) |
-| Основание | согласованная проверочная прошивка `tests/firmware` и её сценарии (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+**Доступен с:** 0.3.0 · **API 3 (0.5.0):** без изменений, `await` не нужен; выражение не может вызывать функции цели (`expression_call_forbidden`).
 
 ## Назначение
 
@@ -51,9 +46,6 @@ t.check("version", version, matches(r"^v1\.\d+\.\d+"))
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.2.5; `as_type=str`: ревизия 0.3.5, п. 4.18.1–4.18.2.
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md); `as_type=str`: п. 4.18.1–4.18.2.
 
 Новый выборочный прогон: [сценарии API 0.4.0](../API040_SCENARIOS.md), пять STM32, включая ожидаемый SKIP.
-
-
-Кандидат 0.5.0, API_VERSION=3: правила sync/async, таймауты, запрет скрытых вызовов и миграция — [живое исполнение](../LIVE_EXECUTION.md#исполнение-в-api_version3-кандидат-050).

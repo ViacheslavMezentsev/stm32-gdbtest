@@ -4,12 +4,7 @@
 
 `frames(limit=16) -> dict`
 
-| Свойство | Значение |
-| --- | --- |
-| Поддержка в модуле | 0.3.0.dev0 (ядро) |
-| Контракт принят в ТЗ API | не принят; проектируемая ревизия 0.3.0 |
-| API_VERSION | 1 (действующий контракт не изменяется) |
-| Основание | согласованная проверочная прошивка `tests/firmware` и её сценарии (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+**Доступен с:** 0.3.0 · **API 3 (0.5.0):** без изменений, `await` не нужен.
 
 ## Назначение
 
@@ -38,4 +33,4 @@ t.check("top frame", chain["frames"][0]["function"], "app_step")
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.2.5.
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md).

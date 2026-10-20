@@ -4,12 +4,7 @@
 
 `breakpoint(location, temporary=False, *, condition=None, ignore_count=0) -> Point`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.1.0rc1 / v0.1.0-rc.1 |
-| API specification contract | 0.1.0; §4.4 |
-| API_VERSION | 1 |
-| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
+**Available since:** 0.1.0-rc.1 · **API 3 (0.5.0):** unchanged, no `await`; a point condition is evaluated without function calls.
 
 ## Purpose
 

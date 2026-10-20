@@ -4,12 +4,7 @@
 
 `with t.refused(code, *, name=None, **details) as refusal: ...`
 
-| Свойство | Значение |
-| --- | --- |
-| Поддержка в модуле | 0.3.0.dev0 (ядро) |
-| Контракт принят в ТЗ API | ревизия 0.3.6, п. 4.19.1–4.19.3 |
-| API_VERSION | 1 |
-| Основание | проверочная прошивка `tests/firmware`, сценарии `HW_CI_CALL`, `HW_CI_EVALUATE`, `HW_CI_EXECUTE`, `HW_CI_FRAMES`, `HW_CI_REGISTERS`, `HW_CI_RESET`, `HW_CI_RET_VALUE`, `HW_CI_WATCH`, `HW_CI_POINT_BUDGET` |
+**Доступен с:** 0.3.0 · **API 3 (0.5.0):** без изменений, `await` не нужен.
 
 ## Назначение
 
@@ -57,5 +52,5 @@ else:
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.6, п. 4.19.1–4.19.3.
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), п. 4.19.1–4.19.3.
 - [api-error](api-error.md), [check](check.md).

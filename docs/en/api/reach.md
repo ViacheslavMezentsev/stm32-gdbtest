@@ -4,12 +4,7 @@
 
 `reach(location, condition=None) -> dict`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.1.0rc1 / v0.1.0-rc.1 |
-| API specification contract | 0.1.0; §4.5; the result was added by designed revision 0.2.9 |
-| API_VERSION | 1 |
-| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
+**Available since:** 0.1.0-rc.1; waiting and `condition` since 0.3.0 · **API 3 (0.5.0):** in `async def` use `await t.reach(…)`, in `def` the synchronous form is unchanged; a condition is evaluated without function calls. [Sync/async rules](../LIVE_EXECUTION.md).
 
 ## Purpose
 
@@ -35,14 +30,11 @@ Scenario-body fragment (case shows a complete declaration). Symbols/macros must 
 - [Scenario or implementation check](../../../tests/firmware/common/tests/board/test_measurements.py).
 - [breakpoint](breakpoint.md), [case](case.md).
 
-## Unreleased fix
+## C++ names in GDB quotes (0.4.0)
 
 One outer pair of GDB single quotes is ignored when comparing the frame name:
 `t.reach("'Converter::apply(float) const'")`. The original string is passed unchanged to GDB
 and returned in `location`; `stop.frame` retains GDB's name. This is not a general linespec
 parser: point-number and normalized-frame checks remain mandatory.
-API_VERSION=1 and the method signature are unchanged. With 0.3.0 use the unquoted form.
+With 0.3.0 use the unquoted form.
 [Example](../../../tests/cpp-context/profile/tests/board/test_cpp_context.py).
-
-
-0.5.0 candidate, API_VERSION=3: sync/async rules, timeouts, hidden-call restrictions and migration — [live execution](../LIVE_EXECUTION.md#execution-in-api_version3-050-candidate).

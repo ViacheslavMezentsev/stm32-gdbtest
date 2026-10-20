@@ -4,12 +4,7 @@
 
 `ApiError(Exception): error.details; error.code; error.__cause__`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.3.0.dev0 (core) |
-| API specification contract | not accepted; designed revision 0.2.8 |
-| API_VERSION | 1 (the effective contract does not change) |
-| Basis | the agreed verification firmware `tests/firmware` and its scenarios |
+**Available since:** 0.3.0 · **API 3 (0.5.0):** new codes `unawaited_operation`, `already_awaited`, `operation_timeout`, `halt_timeout`, `expression_call_forbidden`, `unsupported_async_command`, `call_incomplete`.
 
 ## Purpose
 
@@ -43,6 +38,6 @@ An operation failure differs from a check mismatch: the former is `ApiError`, th
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.7.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md).
 
 [MMIOError](mmio.md) defines the effect=none/unknown boundary and journal failures.

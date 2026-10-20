@@ -6,12 +6,7 @@
 
 `read(path, *, fields=None, start=0, count=None) -> scalar | list | dict`
 
-| Свойство | Значение |
-| --- | --- |
-| Поддержка в модуле | 0.3.0.dev0 (ядро) |
-| Контракт принят в ТЗ API | не принят; проектируемая ревизия 0.2.8 |
-| API_VERSION | 1 (действующий контракт не изменяется) |
-| Основание | согласованная проверочная прошивка `tests/firmware` и её сценарии (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+**Доступен с:** 0.3.0 · **API 3 (0.5.0):** без изменений, `await` не нужен; выражение не может вызывать функции цели (`expression_call_forbidden`).
 
 ## Назначение
 
@@ -45,7 +40,4 @@ temperature = t.read("board_adc_reading.temperature_mdeg_c")
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.2.5.
-
-
-Кандидат 0.5.0, API_VERSION=3: правила sync/async, таймауты, запрет скрытых вызовов и миграция — [живое исполнение](../LIVE_EXECUTION.md#исполнение-в-api_version3-кандидат-050).
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md).

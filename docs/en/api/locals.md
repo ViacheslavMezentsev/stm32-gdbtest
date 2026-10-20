@@ -4,12 +4,7 @@
 
 `locals(frame=None) -> dict; arguments(frame=None) -> dict`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.3.0.dev0 (core) |
-| API specification contract | revision 0.3.3 |
-| API_VERSION | 1 (the effective contract does not change) |
-| Basis | the verification firmware `tests/firmware`, scenarios HW_CI_RETURN_VALUE, HW_CI_STEP_SOURCE |
+**Available since:** 0.3.0 · **API 3 (0.5.0):** unchanged, no `await`.
 
 ## Purpose
 
@@ -33,4 +28,4 @@ t.check("mode argument", arguments["mode"], t.evaluate("APP_MODE_BLINK"))
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.3.3, items 4.17.1, 4.17.2.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), items 4.17.1, 4.17.2.

@@ -4,12 +4,7 @@
 
 `reset() -> dict`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.3.0.dev0 (core) |
-| API specification contract | 0.3.0; dialect selection clarified in 0.3.14 |
-| API_VERSION | 2 in candidate v0.4.0 |
-| Basis | the agreed verification firmware `tests/firmware` and its scenarios (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+**Available since:** 0.3.0 · **API 3 (0.5.0):** in `async def` use `await t.reset()`; emulators refuse it (`unsupported_backend`). [Sync/async rules](../LIVE_EXECUTION.md).
 
 ## Purpose
 
@@ -46,11 +41,8 @@ invalidation steps; link state after a failure is not guaranteed.
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.3.14.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md).
 
 Since v0.4.0, backend `st-util` uses `monitor reset`; the optional `[st-util]` section belongs to schema 2. The method contract is unchanged.
 
 Renode / [QEMU](../QEMU.md): `reset()` currently refuses before a command (`unsupported_backend`, `validation`, `none`). A fresh run uses a new process; [backend contract](../RENODE.md).
-
-
-0.5.0 candidate, API_VERSION=3: sync/async rules, timeouts, hidden-call restrictions and migration — [live execution](../LIVE_EXECUTION.md#execution-in-api_version3-050-candidate).

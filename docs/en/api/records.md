@@ -4,14 +4,7 @@
 
 `records(name=None) -> list[dict]`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.2.0.dev0 → 0.2.0rc1 |
-| API specification contract | 0.2.0; §4.10 |
-| API_VERSION | 1 |
-| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
-
-Available in 0.4.1. The 0.2.0 entries above retain introduction history; candidate `0.2.0rc1` was not published separately.
+**Available since:** 0.3.0 · **API 3 (0.5.0):** unchanged, no `await`; allowed while the target runs. `t.mmio` operations add their own records.
 
 ## Purpose
 

@@ -4,13 +4,7 @@
 
 `test(identifier, *, timeout_s=20, labels=(), contracts=())`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.3.0 (core) |
-| API specification contract | not accepted; designed revision 0.3.0 |
-| API_VERSION | 1 (the effective contract does not change) |
-| Former-name alias | `case`; the alias works without warnings until 1.0, removal in 0.4.0 |
-| Basis | the agreed verification firmware `tests/firmware` and its scenarios (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+**Available since:** 0.3.0 · **API 3 (0.5.0):** the function form selects the mode: `def` is synchronous, `async def` awaits navigation, `call`, `wait` and `halt`. [Sync/async rules](../LIVE_EXECUTION.md).
 
 ## Purpose
 
@@ -37,4 +31,4 @@ A scenario without a declaration is not part of the collection.
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md).

@@ -4,7 +4,7 @@
 
 `skip(reason) -> NoReturn`
 
-Available: Unreleased after0.3.0; API specification0.3.9; API_VERSION=1.
+**Available since:** 0.4.0 · **API 3 (0.5.0):** unchanged, no `await`; in `async def` the runner cleans up the live window after SKIP.
 
 Ends an inapplicable scenario with SKIP. reason must be an exact nonblank str containing valid
 Unicode; UTF-8 size must not exceed api.records.max_text_bytes. Excess raises ApiError

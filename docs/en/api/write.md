@@ -6,12 +6,7 @@
 
 `write(path, value, *, verify=True) -> dict`; `write(rows, *, verify=True) -> list[dict]`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.3.0; refined in the 0.4.2 candidate |
-| API specification contract | accepted, revision 0.3.17 |
-| API_VERSION | 2 (signatures unchanged) |
-| Basis | the agreed verification firmware `tests/firmware` and its scenarios (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+**Available since:** 0.3.0 · **API 3 (0.5.0):** unchanged, no `await`; the expression cannot call target functions (`expression_call_forbidden`).
 
 ## Purpose
 
@@ -60,9 +55,9 @@ success.
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5; expressions and the table of writes: revision 0.3.6, items 4.6.2, 4.6.3.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md); expressions and the table of writes: items 4.6.2, 4.6.3.
 
-## 0.4.2 refinement and migration
+## RHS evaluated once (0.5.0)
 
 A successful assignment evaluates the RHS once regardless of `verify`, including table rows.
 Verification uses GDB's assignment result converted to the destination type: for example,
@@ -79,6 +74,3 @@ Command errors: command_failed / command / unknown (RHS may already have changed
 Post-write read failures: read_failed / readback / applied; mutations retains after=None.
 Assignment-result conversion failures: conversion_failed / readback / applied.
 Readback mismatches retain verification_failed. No retries or rollback.
-
-
-0.5.0 candidate, API_VERSION=3: sync/async rules, timeouts, hidden-call restrictions and migration — [live execution](../LIVE_EXECUTION.md#execution-in-api_version3-050-candidate).

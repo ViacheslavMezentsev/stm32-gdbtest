@@ -4,12 +4,7 @@
 
 `ret(value=None) -> dict`
 
-| Свойство | Значение |
-| --- | --- |
-| Поддержка в модуле | 0.3.0.dev0 (ядро) |
-| Контракт принят в ТЗ API | не принят; проектируемая ревизия 0.3.0 |
-| API_VERSION | 1 (действующий контракт не изменяется) |
-| Основание | согласованная проверочная прошивка `tests/firmware` и её сценарии |
+**Доступен с:** 0.3.0 · **API 3 (0.5.0):** без изменений, `await` не нужен.
 
 ## Назначение
 
@@ -39,7 +34,4 @@ t.check("the caller received the value", t.read("app_received.produced"), result
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.3.0.
-
-
-Кандидат 0.5.0, API_VERSION=3: правила sync/async, таймауты, запрет скрытых вызовов и миграция — [живое исполнение](../LIVE_EXECUTION.md#исполнение-в-api_version3-кандидат-050).
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md).

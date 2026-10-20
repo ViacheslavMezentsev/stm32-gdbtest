@@ -6,12 +6,7 @@
 
 `memory(address, size | data, *, verify=None) -> bytes | dict`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.3.0.dev0 (core) |
-| API specification contract | revision 0.3.4, items 4.16.1–4.16.4, 6.8 |
-| API_VERSION | 1 (the effective contract does not change) |
-| Basis | the verification firmware `tests/firmware`, scenarios `HW_CI_PROFILE`, `HW_CI_CALL_PREDICATE` |
+**Available since:** 0.3.0 · **API 3 (0.5.0):** unchanged, no `await`.
 
 ## Purpose
 
@@ -51,10 +46,10 @@ Initial SP and readable-block bounds require different checks: [TECH-017](../TES
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.3.4, items 4.16.1–4.16.4, 6.8.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), items 4.16.1–4.16.4, 6.8.
 - [symbol](symbol.md), [write](write.md).
 
-## Complete reads — 0.4.2 candidate
+## Complete reads (0.5.0)
 
 `memory(address, size)` returns exactly size bytes. A different response length raises ApiError
 with code=incomplete_read, operation=memory, stage=readback, effect=none and address,

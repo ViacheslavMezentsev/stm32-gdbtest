@@ -4,14 +4,7 @@
 
 `case(identifier, *, timeout_s=20, labels=(), contracts=())`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.1.0rc1 / v0.1.0-rc.1 |
-| API specification contract | 0.1.0; §5.1 |
-| API_VERSION | 1 |
-| Basis | the effective 0.1.0/0.2.0 contract and the scenarios of the verification firmware `tests/firmware` |
-| Alias of the new name | `test`; the alias works without warnings until 1.0, removal in 0.4.0 |
-| Former-name alias | `test(...)`; the alias works without warnings until 1.0, removal in 0.4.0 |
+**Available since:** 0.1.0-rc.1 · **API 3 (0.5.0):** the function form selects the mode: `def` is synchronous, `async def` awaits navigation, `call`, `wait` and `halt`. [Sync/async rules](../LIVE_EXECUTION.md).
 
 ## Purpose
 
@@ -25,7 +18,6 @@ Collection reads AST without executing scenarios: arguments must be literals and
 
 ```python
 from stm32_gdbtest import case
-
 
 # Check the initial publication count at main.
 @case("HW_EXAMPLE", timeout_s=20, labels=("adc",))

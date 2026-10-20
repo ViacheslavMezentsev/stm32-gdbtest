@@ -4,12 +4,7 @@
 
 `within(low, high)`, `near(value, tolerance)`, `one_of(*options)`, `matches(pattern)` — `from stm32_gdbtest import within, near, one_of, matches`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.3.0.dev0 (core); imported without GDB |
-| API specification contract | revision 0.3.4, item 4.1.2 |
-| API_VERSION | 1 |
-| Basis | the verification firmware `tests/firmware`, scenarios `HW_CI_PROFILE`, `HW_CI_ADC_SERIES`, `HW_CI_ADC_UNITS` |
+**Available since:** 0.3.0 · **API 3 (0.5.0):** unchanged, no `await`.
 
 ## Purpose
 
@@ -44,5 +39,5 @@ t.check("version", t.evaluate("app_info.version", as_type=str), matches(r"^v1\.\
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.3.5, item 4.1.2.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), item 4.1.2.
 - [check](check.md).

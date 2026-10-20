@@ -4,12 +4,7 @@
 
 `with t.refused(code, *, name=None, **details) as refusal: ...`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.3.0.dev0 (core) |
-| API specification contract | revision 0.3.6, items 4.19.1–4.19.3 |
-| API_VERSION | 1 |
-| Basis | the verification firmware `tests/firmware`, scenarios `HW_CI_CALL`, `HW_CI_EVALUATE`, `HW_CI_EXECUTE`, `HW_CI_FRAMES`, `HW_CI_REGISTERS`, `HW_CI_RESET`, `HW_CI_RET_VALUE`, `HW_CI_WATCH`, `HW_CI_POINT_BUDGET` |
+**Available since:** 0.3.0 · **API 3 (0.5.0):** unchanged, no `await`.
 
 ## Purpose
 
@@ -57,5 +52,5 @@ else:
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.3.6, items 4.19.1–4.19.3.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), items 4.19.1–4.19.3.
 - [api-error](api-error.md), [check](check.md).

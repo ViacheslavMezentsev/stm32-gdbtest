@@ -2,11 +2,13 @@
 
 [API](index.md) · [Русский](../../ru/api/mmio.md)
 
-Available in the 0.5.0 candidate; API specification 0.3.21 §4.21; API_VERSION=3.
+`t.mmio.read(name, *, allow_effects=False, override=None, reason=None) -> int`; `t.mmio.write(name, value, *, allow_effects=False, override=None, reason=None) -> dict`
+
+**Available since:** 0.5.0 · **API 3 (0.5.0):** new in 0.5.0; no `await`; needs an SVD in `session.toml` (`[mmio] svd`).
 
 ```python
-value = target.mmio.read("GPIOA.IDR")
-ack = target.mmio.write("GPIOA.BSRR", 1)
+value = t.mmio.read("GPIOA.IDR")
+ack = t.mmio.write("GPIOA.BSRR", 1)
 ```
 
 Names are exact register names from the [SVD snapshot](../SVD.md), not GDB expressions.
@@ -63,7 +65,7 @@ only. Budget exhaustion is never hidden.
 ```python
 from stm32_gdbtest import MMIORegister
 reg = MMIORegister("MODEL.WO", 0x40000004, 32, "write-only")
-target.mmio.write("MODEL.WO", 7, override=reg,
+t.mmio.write("MODEL.WO", 7, override=reg,
                   reason="Teaching model supports writes; source SVD is incorrect")
 ```
 

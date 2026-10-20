@@ -4,13 +4,7 @@
 
 `test(identifier, *, timeout_s=20, labels=(), contracts=())`
 
-| Свойство | Значение |
-| --- | --- |
-| Поддержка в модуле | 0.3.0 (ядро) |
-| Контракт принят в ТЗ API | не принят; проектируемая ревизия 0.3.0 |
-| API_VERSION | 1 (действующий контракт не изменяется) |
-| Синоним прежнего имени | `case`; алиас действует без предупреждений до 1.0, удаление в 0.4.0 |
-| Основание | согласованная проверочная прошивка `tests/firmware` и её сценарии (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+**Доступен с:** 0.3.0 · **API 3 (0.5.0):** форма функции выбирает режим: `def` — синхронный, `async def` — с `await` для навигации, `call`, `wait` и `halt`. [Правила sync/async](../LIVE_EXECUTION.md).
 
 ## Назначение
 
@@ -37,4 +31,4 @@ def app_step_scenario(t):
 
 ## Ссылки
 
-- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), ревизия 0.2.5.
+- [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md).

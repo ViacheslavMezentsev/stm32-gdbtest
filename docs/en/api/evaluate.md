@@ -6,12 +6,7 @@
 
 `evaluate(expression, *, as_type=None) -> int | float | bool | str`
 
-| Property | Value |
-| --- | --- |
-| Module support | 0.3.0; char[] fix — Unreleased |
-| API specification contract | §4.3, §4.18; char[] clarified in revision 0.3.8 |
-| API_VERSION | 1 (the effective contract does not change) |
-| Basis | the agreed verification firmware `tests/firmware` and its scenarios (`HW_CI_RET_RECEIVER`, `HW_CI_MEASUREMENT_SERIES`) |
+**Available since:** 0.3.0 · **API 3 (0.5.0):** unchanged, no `await`; the expression cannot call target functions (`expression_call_forbidden`).
 
 ## Purpose
 
@@ -51,9 +46,6 @@ A GDB error while parsing or evaluating the expression is kept as the failure ca
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.2.5; `as_type=str`: revision 0.3.5, items 4.18.1–4.18.2.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md); `as_type=str`: items 4.18.1–4.18.2.
 
 New selective campaign: [API 0.4.0 scenarios](../API040_SCENARIOS.md), five STM32 boards including expected SKIP.
-
-
-0.5.0 candidate, API_VERSION=3: sync/async rules, timeouts, hidden-call restrictions and migration — [live execution](../LIVE_EXECUTION.md#execution-in-api_version3-050-candidate).

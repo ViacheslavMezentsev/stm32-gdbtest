@@ -6,12 +6,7 @@
 
 `check(name, actual, expected=<truth>) -> None`; `check(rows) -> int`
 
-| Property | Value |
-| --- | --- |
-| Module support | comparison: 0.1.0rc1 / v0.1.0-rc.1; matchers, truth check and table: 0.3.0.dev0 (core) |
-| API specification contract | 0.1.0, item 4.1.1; revision 0.3.4, items 4.1.2–4.1.4 |
-| API_VERSION | 1 |
-| Basis | the verification firmware `tests/firmware`, every scenario |
+**Available since:** 0.1.0-rc.1; matchers, truth and table since 0.3.0 · **API 3 (0.5.0):** unchanged, no `await`; the expression cannot call target functions (`expression_call_forbidden`).
 
 ## Purpose
 
@@ -128,5 +123,5 @@ scenario independently (TECH-001).
 
 ## References
 
-- [API specification](../../TECHNICAL_SPECIFICATION_API.md), revision 0.3.5, items 4.1.1–4.1.4.
+- [API specification](../../TECHNICAL_SPECIFICATION_API.md), items 4.1.1–4.1.4.
 - [Matchers](matchers.md), [read](read.md), [evaluate](evaluate.md).
