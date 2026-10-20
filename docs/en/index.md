@@ -24,6 +24,7 @@ the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 
 - [Run layouts](RUN_LAYOUTS.md) — placement of runner, GDB and probe, verified combinations.
 - [MCU profiles](MCU_PROFILES.md) — target.toml and verified boards.
+- [Stands](STANDS.md) — stand boards: summary and schematic top views.
 - [Current status](STATUS.md) — versions, evidence and limits.
 
 - [DDTT specification](DDTT.md) — the debugger-driven testing on target method: terms, principles, requirements for scenarios, stands and tools.

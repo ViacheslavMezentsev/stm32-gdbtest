@@ -6,6 +6,12 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-20
+
+API_VERSION=3 release: live window and async scenarios, bounded `call`, MMIO/SVD, Renode/QEMU, `inspect`, DDTT export and qualification; P5b acceptance on the final commit `a7b0951` — [release notes](docs/releases/v0.5.0.md), [moving from 0.4.x](docs/en/MIGRATION_050.md).
+
+- P6b: the P5b result in the matrix and passport, release notes, specification 0.114. The README is shortened under layout rules (checked by ci/doc_policy.py): two sync/async examples, live badges only; origin and videos moved to docs/archive/SOURCE.md. Added a stands page with board drawings at one scale and an SVG generator.
+
 - live-observer example: the F411 hardware campaign assesses outcomes by `execution_cleanup`, the verified image and `reset_run` instead of the emulator result's `cleanup` field; a stand without an `interface` key is accepted as the default ST-Link. Found on the example's first hardware run in P5b; core unchanged.
 
 - P6b-pre: package version 0.5.0 (`--version`, package manifest) ahead of release acceptance; API_VERSION=3 and schemas unchanged. Added the [0.4.x migration guide](docs/en/MIGRATION_050.md) based on BluePill/BlackPill, specification 0.113, and the candidate passport now records consumer migration and the final-SHA rule. Release and tag follow P5b/P6b.

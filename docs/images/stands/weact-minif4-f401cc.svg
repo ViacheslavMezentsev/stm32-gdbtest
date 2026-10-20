@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="428" height="234" viewBox="-4 -10 71.4 39.0" font-family="Segoe UI, Arial, sans-serif">
+<title>WeAct MiniF4 (STM32F401CCU6), ранняя ревизия</title>
+<rect x="-4" y="-10" width="71.4" height="39.0" fill="#ffffff"/>
+<text x="0" y="-5.4" font-size="2.2" font-weight="bold" fill="#24292f">WeAct MiniF4 (STM32F401CCU6), ранняя ревизия</text>
+<text x="0" y="-2.4" font-size="1.8" fill="#57606a">≈ 63.4 × 25 мм, вид сверху</text>
+<rect x="0" y="0" width="63.4" height="25.0" rx="1.2" fill="#2b2f36" stroke="#1b1f24" stroke-width="0.3"/>
+<circle cx="2.3" cy="2.3" r="1.6" fill="none" stroke="#c9a227" stroke-width="0.6"/>
+<circle cx="61.1" cy="2.3" r="1.6" fill="none" stroke="#c9a227" stroke-width="0.6"/>
+<circle cx="2.3" cy="22.7" r="1.6" fill="none" stroke="#c9a227" stroke-width="0.6"/>
+<circle cx="61.1" cy="22.7" r="1.6" fill="none" stroke="#c9a227" stroke-width="0.6"/>
+<circle cx="7.70" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="10.24" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="12.78" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="15.32" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="17.86" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="20.40" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="22.94" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="25.48" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="28.02" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="30.56" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="33.10" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="35.64" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="38.18" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="40.72" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="43.26" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="45.80" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="48.34" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="50.88" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="53.42" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="55.96" cy="2.80" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="7.70" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="10.24" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="12.78" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="15.32" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="17.86" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="20.40" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="22.94" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="25.48" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="28.02" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="30.56" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="33.10" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="35.64" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="38.18" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="40.72" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="43.26" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="45.80" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="48.34" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="50.88" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="53.42" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<circle cx="55.96" cy="21.40" r="0.75" fill="none" stroke="#c9a227" stroke-width="0.45"/>
+<rect x="-1.0" y="8.0" width="6.6" height="6.9" rx="0.8" fill="#b8bcc4" stroke="#7d828a" stroke-width="0.25"/>
+<text x="2.3" y="16.9" font-size="1.6" text-anchor="middle" font-weight="normal" fill="#e6edf3"></text>
+<text x="0.8" y="17.4" font-size="1.5" text-anchor="start" font-weight="normal" fill="#e6edf3">micro-USB</text>
+<rect x="14.0" y="9.0" width="2.8" height="5.9" rx="0.4" fill="#d9dce1" stroke="none" stroke-width="0.25"/>
+<circle cx="15.4" cy="11.95" r="0.84" fill="#3a3d42"/>
+<text x="15.4" y="8.4" font-size="1.9" text-anchor="middle" font-weight="normal" fill="#e6edf3">UKEY</text>
+<rect x="20.1" y="8.0" width="5.2" height="2.2" rx="0.4" fill="#d9dce1" stroke="none" stroke-width="0.25"/>
+<circle cx="22.700000000000003" cy="9.1" r="0.66" fill="#3a3d42"/>
+<text x="22.700000000000003" y="7.4" font-size="1.9" text-anchor="middle" font-weight="normal" fill="#e6edf3">RST</text>
+<rect x="20.1" y="13.4" width="5.2" height="2.2" rx="0.4" fill="#d9dce1" stroke="none" stroke-width="0.25"/>
+<circle cx="22.700000000000003" cy="14.5" r="0.66" fill="#3a3d42"/>
+<text x="22.700000000000003" y="17.6" font-size="1.9" text-anchor="middle" font-weight="normal" fill="#e6edf3">BOOT0</text>
+<g transform="rotate(45 38.1 12.4)"><rect x="34.6" y="8.9" width="7.0" height="7.0" rx="0.4" fill="#15171a" stroke="#555" stroke-width="0.2"/><circle cx="35.5" cy="9.8" r="0.35" fill="#666"/></g>
+<text x="38.1" y="12.0" font-size="1.6" text-anchor="middle" font-weight="normal" fill="#ffffff">F401CCU6</text>
+<text x="38.1" y="14.0" font-size="1.6" text-anchor="middle" font-weight="normal" fill="#ffffff">QFN48</text>
+<rect x="48.0" y="7.7" width="2.8" height="2.4" rx="0.4" fill="#cfd3d9" stroke="#8a9099" stroke-width="0.25"/>
+<rect x="48.8" y="12.6" width="2.0" height="3.6" rx="0.4" fill="#cfd3d9" stroke="#8a9099" stroke-width="0.25"/>
+<rect x="57.6" y="7.5" width="1.6" height="0.9" rx="0.15" fill="#e5484d" stroke="none" stroke-width="0.25"/>
+<text x="57.1" y="8.3" font-size="1.7" text-anchor="end" font-weight="normal" fill="#e6edf3">D2</text>
+<rect x="57.6" y="13.6" width="1.6" height="0.9" rx="0.15" fill="#4f8fff" stroke="none" stroke-width="0.25"/>
+<text x="57.1" y="14.4" font-size="1.7" text-anchor="end" font-weight="normal" fill="#e6edf3">D3</text>
+</svg>

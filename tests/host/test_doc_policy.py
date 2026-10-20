@@ -53,3 +53,17 @@ class DocumentationPolicyTests(unittest.TestCase):
     def test_root_translation(self):
         (self.root / "README.en.md").unlink()
         with self.assertRaises(ValueError):check(self.root)
+
+    def test_readme_rules(self):
+        live = ("[![Docs](https://img.shields.io/github/actions/workflow/status/o/r/docs.yml)](x)\n"
+                "[![Release](https://img.shields.io/github/v/release/o/r)](y)\n\n## A\n\n## B\n")
+        for name in ("README.md", "README.en.md"):
+            (self.root / name).write_text(live, encoding="utf-8")
+        check(self.root)
+        stale = live + "[![HW cases](https://img.shields.io/badge/HW%20cases-233-blue)](z)\n"
+        (self.root / "README.md").write_text(stale, encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "badge"):check(self.root)
+        (self.root / "README.md").write_text(live + "\n## C\n", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "sections"):check(self.root)
+        (self.root / "README.md").write_text(live + "line\n" * 120, encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "longer"):check(self.root)

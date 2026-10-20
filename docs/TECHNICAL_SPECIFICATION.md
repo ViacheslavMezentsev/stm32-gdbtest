@@ -5,13 +5,23 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.113 (P6b-pre: версия пакета 0.5.0 до выпускной приёмки) |
+| **Ревизия** | 0.114 (P6b: выпуск 0.5.0 по итогам приёмки P5b) |
 | **Дата формирования** | 20.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
-| **Целевая версия** | Кандидат пакета stm32-gdbtest `0.5.0`; API_VERSION=3, target schema 3 (schema 1/2 совместимы), ТЗ API 0.3.23; MMIO/SVD (р.0.104), контракты memory/write (р.0.99), Renode и QEMU (р.0.102). Публикация владельцем после CI итогового SHA. |
+| **Целевая версия** | Выпуск пакета stm32-gdbtest `0.5.0` (итоговый коммит приёмки `a7b0951`, р.0.114); API_VERSION=3, target schema 3 (schema 1/2 совместимы), ТЗ API 0.3.23; MMIO/SVD (р.0.104), контракты memory/write (р.0.99), Renode и QEMU (р.0.102). Публикация владельцем после CI итогового SHA. |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; docs/archive/SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
+
+### Изменения ревизии 0.114
+
+P6b: выпуск 0.5.0 по итогам кампании P5b на итоговом коммите `a7b0951`; ограничения выпуска
+зафиксированы в матрице приёмки и release notes. Требования и интерфейсы не меняются.
+
+| Раздел | Изменение |
+| --- | --- |
+| Реквизиты | Целевая версия — выпуск 0.5.0 вместо кандидата |
+| 10 (8.1–8.9) | Ссылка на итог приёмки P5b и описание выпуска 0.5.0 |
 
 ### Изменения ревизии 0.113
 
@@ -246,6 +256,7 @@ Runner задаёт режим до сценария и резервирует 2
 | 0.111 | 19.10.2026 | ROADMAP/TODO/TODO_ARCHIVE, ограниченный обязательный перевод и полный API, политика CI и TC-83/TC-89. |
 | 0.112 | 19.10.2026 | P6a: инструкции API 3, маршруты потребителей без платы; архив docs/archive, без изменения ядра. |
 | 0.113 | 20.10.2026 | P6b-pre: `__version__` 0.5.0 до кампании P5b; API и схемы без изменений. |
+| 0.114 | 20.10.2026 | P6b: выпуск 0.5.0 по итогам P5b; ограничения в матрице приёмки, требования без изменений. |
 
 ### Изменения ревизии 0.107
 
@@ -3086,7 +3097,7 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | 7.7.10, 7.7.11 | AGENTS.md; ci/doc_policy.py; docs/development/README.md; tests/host/test_doc_policy.py | I, TC-83, TC-89 (р.0.111) |
 | 7.7.12, 7.7.13 | ROADMAP.md, TODO.md, docs/archive/TODO_ARCHIVE.md; docs/development/README.md; docs/development/api3-skills-audit.md; docs/ru, docs/en | I, TC-89 (р.0.111) |
 | 7.7.14 | docs/ru/HOWTO.md, docs/en/HOWTO.md; AGENTS.md | I, TC-83 |
-| 8.1–8.3, 8.6, 8.9 | DOC: VERSIONING.md; IN | I |
+| 8.1–8.3, 8.6, 8.9 | DOC: VERSIONING.md; docs/development/release-050-acceptance.md (итог P5b); docs/releases/v0.5.0.md; IN | I (р.0.114) |
 | 8.4 | PR; CT; BM; CM; FI | TC-13, TC-29, TC-36 |
 | 8.5 | RU: legacy env; DOC: API.md | TC-25 |
 | 8.7 | Приложение G | I |

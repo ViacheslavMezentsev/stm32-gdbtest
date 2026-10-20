@@ -19,7 +19,7 @@
   "general_spec_revision": "0.112",
   "api_spec_revision": "0.3.23",
   "github_ci": "pending-owner-confirmation",
-  "release_ready": false,
+  "release_ready": true,
   "hardware_authorized_by_this_plan": false,
   "dependency_lock_sha256": "3ebd51c09d6741bca962157e590e9fe26216fac94555a3ba7a878c67747ec656",
   "consumers": [
@@ -27,36 +27,39 @@
       "repository": "stm32-hwtest-bluepill",
       "source_commit": "d1ecb33bc8cccd1d857643a13a4fe2f36369bda3",
       "current_gitlink": "eb085b3e69b775d27085350cb9c6892177b317f4",
-      "acceptance_commit": null,
+      "acceptance_commit": "e8de1a3f4e4557f07a66e398874617b329b418c1",
       "profiles": [
         "F103CB",
         "F103C8"
       ],
       "migration_commit": "c9f118aaf5b7cd82129cc9b8f22d214a4d7cf247",
-      "migration_gitlink": "cb03e86616417a7f0f24202137fe751624cf043e"
+      "migration_gitlink": "cb03e86616417a7f0f24202137fe751624cf043e",
+      "acceptance_gitlink": "a7b09516abac467839ee9efc8ee286835c6001e0"
     },
     {
       "repository": "stm32-hwtest-blackpill",
       "source_commit": "5270270f1f04838544927edf290ad2a0bb4993a2",
       "current_gitlink": "e9017ab71febafcc32ab2a55f9180b93d51a2ef2",
-      "acceptance_commit": null,
+      "acceptance_commit": "a4cc03261e25c3ed60d671a2b0c166842f67febf",
       "profiles": [
         "F411CE",
         "F401CC"
       ],
       "migration_commit": "72e70bcf489e23074e9f0cf902d6f468e0efdf88",
-      "migration_gitlink": "cb03e86616417a7f0f24202137fe751624cf043e"
+      "migration_gitlink": "cb03e86616417a7f0f24202137fe751624cf043e",
+      "acceptance_gitlink": "a7b09516abac467839ee9efc8ee286835c6001e0"
     }
   ],
-  "final_candidate_commit": null,
+  "final_candidate_commit": "a7b09516abac467839ee9efc8ee286835c6001e0",
   "final_candidate": {
     "stage": "P6b-pre",
     "package_version": "0.5.0",
     "api_version": 3,
-    "general_spec_revision": "0.113",
+    "general_spec_revision": "0.114",
     "api_spec_revision": "0.3.23",
     "commit_rule": "the main commit that sets package_version 0.5.0; its SHA cannot be written into itself and is recorded by consumer acceptance commits and the P5b campaign",
-    "github_ci": "pending",
-    "consumer_acceptance": "acceptance_commit moves the gitlink to the final candidate; one per consumer"
+    "github_ci": "PASS",
+    "consumer_acceptance": "acceptance_commit moves the gitlink to the final candidate; one per consumer",
+    "campaign": "P5b PASS with recorded limitations (2026-10-20)"
   }
 }

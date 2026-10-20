@@ -250,6 +250,11 @@ ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -i <�
 
 ## Docker и CI
 
+Скрипты с `docker`/`git` запускайте через PowerShell 7 (`pwsh -File script.ps1`). Встроенный
+Windows PowerShell 5.1 (`powershell`) при `$ErrorActionPreference = 'Stop'` превращает вывод внешней
+команды в stderr (например, ход `docker build`) в прерывающую ошибку `NativeCommandError`. Если 5.1 нужен,
+оставьте `Continue` и проверяйте `$LASTEXITCODE` после каждой внешней команды.
+
 [Диагностика Docker, прав доступа и CI](local-ci.md#docker-и-ci) собрана в едином руководстве.
 
 ## Для агентов

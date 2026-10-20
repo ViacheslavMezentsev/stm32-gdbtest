@@ -9,9 +9,8 @@
 The format is MAJOR.MINOR.PATCH per [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html);
 Git tags have the `v` prefix. **v0.4.0** is published at `9c3ff2d`.
 Documentation [release v0.4.1](../releases/v0.4.1.md) retains API_VERSION=2 and the 0.4.0 schemas.
-The next release is 0.5.0 / API_VERSION=3, expanding the former 0.4.2 scope. Since P6b-pre
-(2026-10-20) `__version__` on main is 0.5.0: this is the release candidate, not the release;
-P5b acceptance and the tag are pending ([candidate and P5 matrix](../development/release-050-acceptance.md), Russian).
+[Release 0.5.0](../releases/v0.5.0.md) / API_VERSION=3: P5b acceptance passed on the final commit
+`a7b0951` ([result and limitations](../development/release-050-acceptance.md), Russian); the owner sets the tag.
 Consumer migration: [from 0.4.x to 0.5.0](MIGRATION_050.md).
 Candidates v0.2.0-rc.1 and v0.3.0-rc.1 were never published. The previous published candidate is `v0.1.0-rc.2`.
 The initial export from the stand project is not a release.
