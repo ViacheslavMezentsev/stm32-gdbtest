@@ -26,8 +26,11 @@ def main():
     m = validate(bundle)
     sys.path.insert(0, str(ROOT))
     from stm32_gdbtest.backends import load_stand
+    from stm32_gdbtest.probes import OPENOCD_INTERFACE
     stand = load_stand(a.stand)
-    if stand['backend'] != 'openocd' or stand.get('remote') or stand.get('serial') != a.serial or 'stlink' not in stand.get('interface', ''):
+    # An omitted interface means the module default (ST-Link), as in ordinary OpenOCD stand files.
+    interface = stand.get('interface', OPENOCD_INTERFACE)
+    if stand['backend'] != 'openocd' or stand.get('remote') or stand.get('serial') != a.serial or 'stlink' not in interface:
         raise ValueError('exact local ST-Link/OpenOCD required')
     profile = tomllib.loads((B / 'hardware-target.toml').read_text())
     if not a.allow_hardware:
@@ -67,7 +70,7 @@ def main():
             path = sorted((attempt / 'runs').glob('*/result.json'))[-1]
             result = json.loads(path.read_text())
             records = json.loads((path.parent / 'records.json').read_text())['records']
-            row = assess(c['id'], result, records, code)
+            row = assess(c['id'], result, records, code, 'hardware')
             row['result'] = str(path)
             ok = row['ok']
             rows.append(row)

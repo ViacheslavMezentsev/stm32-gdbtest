@@ -61,6 +61,17 @@ class Contract(unittest.TestCase):
             self.assertFalse(assess('HW_OBSERVER_EXCEPTION', dict(result, **changes), records, 2)['ok'])
         self.assertFalse(assess('HW_OBSERVER_EXCEPTION', result, [], 2)['ok'])
 
+    def test_hardware_result_uses_execution_cleanup(self):
+        records = [dict(name='observer_cleanup', data={'status': 'VERIFIED'})]
+        result = dict(status='PASS', execution_cleanup='VERIFIED', image_verified=True, teardown='reset_run')
+        self.assertTrue(assess('HW_OBSERVER_BASELINE', result, records, 0, 'hardware')['ok'])
+        self.assertFalse(assess('HW_OBSERVER_BASELINE', result, records, 0)['ok'])
+        for changes in (dict(execution_cleanup='ERROR'), dict(image_verified=False), dict(teardown='disconnected'),
+                        dict(teardown_error='lost')):
+            self.assertFalse(assess('HW_OBSERVER_BASELINE', dict(result, **changes), records, 0, 'hardware')['ok'])
+        error = dict(result, status='ERROR', error='intentional before resume')
+        self.assertTrue(assess('HW_OBSERVER_EXCEPTION', error, records, 2, 'hardware')['ok'])
+
     def test_negative_is_specific(self):
         result = dict(status='FAIL', cleanup='VERIFIED', checks=[dict(name='ISR count', passed=False)])
         records = [dict(name='observer_cleanup', data={'status': 'VERIFIED'})]

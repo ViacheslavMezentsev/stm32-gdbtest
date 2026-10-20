@@ -17,8 +17,12 @@ from stm32_gdbtest.runner import run
 UNSUPPORTED = {'HW_OBSERVER_FPB_ZERO', 'HW_OBSERVER_FPB_SEVEN', 'HW_OBSERVER_COMBINED', 'HW_OBSERVER_FPB_EXCEPTION'}
 
 
-def assess(case_id, result, records, code):
-    """Expected failures must have the intended cause and verified cleanup."""
+def assess(case_id, result, records, code, environment='emulator'):
+    """Expected failures must have the intended cause and verified cleanup.
+
+    The emulator route reports its own process cleanup in `cleanup`; a hardware result has no such field and
+    instead needs a verified execution cleanup, the verified image and the reset_run teardown.
+    """
     expected = ('ERROR' if case_id in ('HW_OBSERVER_EXCEPTION', 'HW_OBSERVER_ACTIVE', 'HW_OBSERVER_FPB_EXCEPTION') else
                 'FAIL' if case_id == 'HW_OBSERVER_NEGATIVE' else 'PASS')
     clean = any(row.get('name') == 'observer_cleanup' and
@@ -30,8 +34,15 @@ def assess(case_id, result, records, code):
         reason = any(row.get('name') == 'ISR count' and row.get('passed') is False for row in checks)
     return {'case': case_id, 'expected': expected, 'status': result.get('status'),
             'ok': result.get('status') == expected and code == {'PASS': 0, 'FAIL': 1, 'ERROR': 2}[expected]
-            and clean and reason and result.get('cleanup') == 'VERIFIED'
+            and clean and reason and teardown_ok(result, environment)
             and not result.get('cleanup_error') and not result.get('teardown_error')}
+
+
+def teardown_ok(result, environment):
+    if environment == 'hardware':
+        return (result.get('execution_cleanup') == 'VERIFIED' and result.get('image_verified') is True
+                and result.get('teardown') == 'reset_run')
+    return result.get('cleanup') == 'VERIFIED'
 
 
 def save(path, value):
