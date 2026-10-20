@@ -54,3 +54,4 @@ desktop.ini
 
 # Local executable research artifacts (legacy manual paths remain ignored).
 /tests/sandbox/
+_site/
