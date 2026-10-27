@@ -153,3 +153,5 @@ Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
 [State machine with logical time](../../tests/logical-time/README.en.md).
 
 [Counters and observation cost](../../tests/counter-cost/README.en.md).
+
+[Joint capture and analysis](../../tests/external-capture/README.en.md).

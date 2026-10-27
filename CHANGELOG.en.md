@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Neutral external-capture host example: separate source, READY/drain, completeness, clock eligibility, separate analysis and hash-checked reanalysis. Raw scenario results preserved; Pages guidance updated without redesign. No core or board changes.
+
 - Neutral counter-cost example: wrap, independent eligibility, empty baseline and total observation cost; separate GDB transport timings, three mutations and a repeated fix. Pages guidance updated without design changes.
 
 - Neutral logical-time example: thresholds, wrap, retry after failure and state preservation on rejected starts; three mutations and a repeated fix on host/Renode. Pages and the reference clarify call results without changing site design or core.

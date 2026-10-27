@@ -394,13 +394,13 @@ t.clear()                               # also removes fault guards'''),
          ru=dict(title='Журнал и SKIP: record, records, skip',
                  summary='Произвольные данные в отчёт; выборка своих записей; завершение неприменимого сценария.',
                  api3='Без изменений. Записи на диск — при [results] capture = true; MMIO добавляет записи журнала.',
-                 good='Сначала record, затем check: сохраняйте сырые выборки, единицы, прогрев и пригодность. В counter-cost время запроса GDB отделено от учебных тиков; максимум выборки — не WCET.',
-                 bad='print не попадает в отчёт. Неполные данные нельзя заменять нулём; расход внутри интервала не равен полному возмущению. SKIP не скрывает ошибки API.'),
+                 good='Сначала record, затем check: сохраняйте сырые выборки, единицы, прогрев и пригодность. В counter-cost время запроса GDB отделено от учебных тиков; максимум выборки — не WCET. В external-capture отдельно проверяются READY/drain, полнота и временные опоры; анализ не переписывает исход сценария.',
+                 bad='print не попадает в отчёт. Неполные данные нельзя заменять нулём; расход внутри интервала не равен полному возмущению. SKIP не скрывает ошибки API; exit 0 источника не гарантирует полноту записи.'),
          en=dict(title='Journal and SKIP: record, records, skip',
                  summary='Arbitrary data into the report; selecting your records; ending a non-applicable scenario.',
                  api3='Unchanged. Records reach disk with [results] capture = true; MMIO adds journal records.',
-                 good='Record before check: keep raw samples, units, warmup and eligibility. In counter-cost GDB request time is separate from model ticks; a sample maximum is not WCET.',
-                 bad='print does not reach the report. Missing data is not zero; in-interval cost is not total perturbation. SKIP must not hide API errors.'),
+                 good='Record before check: keep raw samples, units, warmup and eligibility. In counter-cost GDB request time is separate from model ticks; a sample maximum is not WCET. external-capture checks READY/drain, completeness and clock anchors separately; analysis never rewrites the scenario outcome.',
+                 bad='print does not reach the report. Missing data is not zero; in-interval cost is not total perturbation. SKIP must not hide API errors; source exit 0 does not establish capture completeness.'),
          good='''t.record("adc.sample", {"vdda_mv": t.read("board_adc_reading.vdda_mv")})
 samples = [row["data"]["vdda_mv"] for row in t.records("adc.sample")]
 t.check("enough samples", len(samples) >= 2, True)

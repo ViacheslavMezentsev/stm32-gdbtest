@@ -810,6 +810,11 @@ analysis and restoration outcomes separately ([TECH-011](#tech-011)).
 
 **Limit:** reading the same value via GDB and telemetry checks delivery/consistency, not
 independent sensor accuracy. Process PASS does not imply a valid capture.
+**Executable host example:** [external-capture](../../tests/external-capture/README.en.md):
+READY before the window, drain through EOF, sequences/channels/identity, fixture clock
+anchors and a separate analysis verdict. Complete contradictory evidence yields FAIL,
+ineligible evidence UNKNOWN; the scenario is unchanged. No GDB/hardware claim.
+
 
 ## Extending the catalogue
 

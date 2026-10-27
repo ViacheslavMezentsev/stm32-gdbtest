@@ -153,3 +153,5 @@ F030: RTC deadline через инъекцию аргумента, API без и
 [Автомат с логическим временем](../../tests/logical-time/README.md).
 
 [Счётчики и стоимость наблюдения](../../tests/counter-cost/README.md).
+
+[Совместный захват и анализ](../../tests/external-capture/README.md).

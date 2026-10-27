@@ -696,3 +696,9 @@ Practical DDTT composition: [neutral VTOR/FPB example](LIVE_OBSERVER.md). A comp
 
 
 Saved HSE evidence can be analysed offline against alternative nominal frequencies. This is a host analysis, not a new hardware run or admission of a restarted application. Keep original results immutable; clock-dependent assertions become UNKNOWN when admission is violated, while independent assertions remain valid. See the [HSE skill](../../skills/stm32-gdbtest-hse-qualify/SKILL.md).
+
+[Joint capture](../../tests/external-capture/README.en.md) demonstrates separate scenario,
+transport, analysis and cleanup outcomes using a host fixture. Missing or ineligible
+records block dependent claims as UNKNOWN; complete eligible contradictory evidence
+yields analysis FAIL while preserving the scenario PASS. Fixture clock anchors are
+not a calibration of physical clocks.

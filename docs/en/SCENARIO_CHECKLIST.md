@@ -148,3 +148,13 @@ These are manual review questions; current automated checks do not establish the
 - Sample maximum is not WCET; host time is not MCU cycles?
 
 [Example](../../tests/counter-cost/README.en.md).
+
+## Joint external capture
+
+- READY before window, then drain/EOF and owned-process cleanup?
+- Run/revision, channels, units, sequence and end marker checked, beyond exit 0?
+- Clock anchors independent of desired results; full uncertainty interval considered?
+- Missing-data UNKNOWN distinct from contradictory-evidence FAIL; raw scenario preserved?
+- Raw data/hashes retained; offline reanalysis possible without another experiment?
+
+[Example](../../tests/external-capture/README.en.md).
