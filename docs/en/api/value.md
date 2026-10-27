@@ -21,4 +21,4 @@ Before 0.4.0:
 t.check("nonnegative sequence", t.value("board_adc_sequences") >= 0, True)
 ```
 
-[API reference](index.md) · [Rename table](../API.md#030-package-numbers-migration-and-aliases)
+[API reference](index.md) · [Rename table](../RELEASE_CHANGES.md)

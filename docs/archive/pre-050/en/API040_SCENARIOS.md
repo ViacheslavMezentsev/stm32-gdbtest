@@ -1,6 +1,6 @@
 # API 0.4.0 acceptance scenarios
 
-[Documentation](index.md) · [Русский](../ru/API040_SCENARIOS.md)
+[Documentation](../../../en/index.md) · [Русский](../ru/API040_SCENARIOS.md)
 
 Four additional scenarios labelled `api040`, shared by the five STM32 profiles. They use the existing
 CMSIS firmware without new test hooks. This checks new package capabilities, not the entire API or
@@ -8,10 +8,10 @@ every GDB/backend combination.
 
 | Scenario | Demonstrates | Expected outcome |
 | --- | --- | --- |
-| [HW_CI_040_RECORDS](../../tests/firmware/common/tests/board/test_records.py) | MCU state, transition, measured counter increment and arbitrary diagnostics in one journal; independent copies | PASS, four records |
-| [HW_CI_040_SKIP](../../tests/firmware/common/tests/board/test_skip.py) | Configuration applicability, a decision via records, whole-scenario termination and finally execution | PASS with true; SKIP with false |
-| [HW_CI_040_SKIP_VALIDATION](../../tests/firmware/common/tests/board/test_skip_validation.py) | Refuses empty/non-string/invalid Unicode reasons and a limit overflow; subsequent navigation still works | PASS, six expected refusals |
-| [HW_CI_040_STRING_VIEWS](../../tests/firmware/common/tests/board/test_string_views.py) | One RAM buffer as char[3], char[] and char*: bounded reading without changing memory | PASS |
+| [HW_CI_040_RECORDS](../../../../tests/firmware/common/tests/board/test_records.py) | MCU state, transition, measured counter increment and arbitrary diagnostics in one journal; independent copies | PASS, four records |
+| [HW_CI_040_SKIP](../../../../tests/firmware/common/tests/board/test_skip.py) | Configuration applicability, a decision via records, whole-scenario termination and finally execution | PASS with true; SKIP with false |
+| [HW_CI_040_SKIP_VALIDATION](../../../../tests/firmware/common/tests/board/test_skip_validation.py) | Refuses empty/non-string/invalid Unicode reasons and a limit overflow; subsequent navigation still works | PASS, six expected refusals |
+| [HW_CI_040_STRING_VIEWS](../../../../tests/firmware/common/tests/board/test_string_views.py) | One RAM buffer as char[3], char[] and char*: bounded reading without changing memory | PASS |
 
 ## Configuration and selection
 
@@ -44,7 +44,7 @@ python -m stm32_gdbtest run --session <session.json> --test HW_CI_040_RECORDS --
 Repeat for all four IDs; run SKIP with true and false (five hardware runs per board).
 Use the normal CMake/session configuration so the descriptor references the selected session.toml.
 The expected SKIP exit code is **77**, not 0. The general `run_suite.py` expects PASS: this campaign
-uses explicit CLI selection instead of running the entire suite. [skip contract](api/skip.md).
+uses explicit CLI selection instead of running the entire suite. [skip contract](../../../en/api/skip.md).
 
 ## Artifact checks
 
@@ -56,7 +56,7 @@ uses explicit CLI selection instead of running the entire suite. [skip contract]
 - Generic export keeps **all** records. A measurement projection is explicit; record names do not define types.
 
 Build selection.json from only the new hardware runs, then use
-[results export, verify and report](RESULTS.md). Check file-processing outcomes separately from scenario verdicts:
+[results export, verify and report](../../../en/RESULTS.md). Check file-processing outcomes separately from scenario verdicts:
 successful HTML generation does not turn SKIP into PASS. Preserve original errors and subsequent attempts.
 
 ## Results
@@ -85,7 +85,7 @@ This fixes campaign setup without relaxing validation or changing the core. Exis
 were not run in this campaign; it does not close ST-LINK GDB Server or AT32 limitations.
 
 
-GitHub and prepared packages use [Hardware api040 mode](HARDWARE_CI.md#selecting-the-new-api-040-suite).
+GitHub and prepared packages use [Hardware api040 mode](../../../en/HARDWARE_CI.md#selecting-the-new-api-040-suite).
 
 ## GitHub Hardware: the new 0.4.0 suite
 
@@ -135,7 +135,7 @@ no st-util processes remain after the campaign. No USB failures occurred. Inferr
 The first attempt is retained separately: 10 PASS and 5 contract preflight ERRORs before MCU connection.
 GDB's embedded Python could not open an existing contract-request.json with a path longer than 260 characters;
 shortening the results directory made the same packages pass completely. Original ERRORs and unavailable capture
-were not relabelled PASS. [Path limitation workaround](HOWTO.md). This campaign does not establish arbitrary
+were not relabelled PASS. [Path limitation workaround](../../../en/HOWTO.md). This campaign does not establish arbitrary
 long-path support; automatic early diagnostics remain a proposal.
 Core and scenarios were unchanged; this is a selected new-scenario campaign, not the entire API.
 
@@ -161,7 +161,7 @@ the corrected path built successfully. Shell CRLF was corrected before hardware 
 The new scenarios are therefore verified on **six models**, across different layouts:
 five STM32 in earlier campaigns, AT32 in a separate local Linux/J-Link campaign.
 This is not a six-board GitHub Hardware result. AT32 was subsequently added to its profile list;
-the first updated workflow result is recorded below. [Operation](HARDWARE_CI.md).
+the first updated workflow result is recorded below. [Operation](../../../en/HARDWARE_CI.md).
 
 ## GitHub Hardware: AT32
 

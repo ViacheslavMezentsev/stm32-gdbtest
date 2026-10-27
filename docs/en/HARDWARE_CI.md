@@ -121,7 +121,7 @@ required evidence and completing all runs that use those directories.
 Previously, reopening a package removed the entire hash directory, including runs.
 Lost JSON reports cannot be recovered from summary: verification must be repeated.
 
-## Selecting the new API 0.4.0 suite
+## Selecting a scenario suite
 
 Hardware → Run workflow: choose the release branch, `suite=api040`, profiles
 `f030r8 f103c8 f401cc f411ce f429zi`, and leave `steps` empty.
@@ -150,7 +150,7 @@ python tests/firmware/api040.py run --enabled-package <enabled.zip> --disabled-p
 OrangePi CI stands use local `[probe]` without `[remote]`: runner and GDB execute on that host.
 For the accepted st-util configuration, specify an absolute path to the 1.9.0 build,
 the currently attached ST-Link serial, speed_khz=1000 and flash=if-different.
-[st-util installation](backends/st-util.md) · [Scenarios and acceptance boundaries](API040_SCENARIOS.md).
+[st-util installation](backends/st-util.md) · [Scenarios and acceptance boundaries](../archive/pre-050/en/API040_SCENARIOS.md).
 
 Preparation check on 2026-10-10: F411 packages from Windows ran locally on OrangePi
 with st-util 1.9.0 — 4 PASS + 1 expected SKIP; export/verify/report succeeded. Doctor passed

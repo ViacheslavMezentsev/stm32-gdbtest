@@ -3,7 +3,7 @@
 [Documentation](index.md) · [Русский](../ru/F030_CMSIS_SLEEP.md)
 
 Stage record: case counts and plans below refer to the stated revision.
-Current scope: [STATUS](STATUS.md); release preparation: [rc.2](RC2_READINESS.md).
+Current scope: [STATUS](STATUS.md); release preparation: [rc.2](../archive/pre-050/en/RC2_READINESS.md).
 
 2026-09-30, codex/f030-cmsis-sleep based on a84b742. NUCLEO-F030R8,
 native ST-Link V2J45M31/SWD 1 MHz, OpenOCD0.12.0, Windows,

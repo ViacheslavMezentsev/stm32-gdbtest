@@ -24,4 +24,4 @@ t.check([
 t.fields("*GPIO_Init", {"Pin": 1 << 5, "Mode": "GPIO_MODE_OUTPUT_PP"})
 ```
 
-[Справочник API](index.md) · [Таблица переименований](../API.md#пакет-030-числа-миграция-и-алиасы)
+[Справочник API](index.md) · [Таблица переименований](../RELEASE_CHANGES.md)

@@ -46,6 +46,6 @@ Scenario-body fragment (case shows a complete declaration). Symbols/macros must 
 - [Scenario or implementation check](../../../tests/firmware/common/tests/board/test_measurements.py).
 - [records](records.md), [record_error](record-error.md), [profile](profile.md).
 
-Opt-in runner persistence: [description](../API.md#result-journal-capture-unreleased). The method contract is unchanged.
+Opt-in runner persistence: [description](../API.md). The method contract is unchanged.
 
 Record data is arbitrary; name does not define a measurement type. [Generic export and separate projections](../RESULTS.md).

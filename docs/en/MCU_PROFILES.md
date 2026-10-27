@@ -21,7 +21,7 @@ F103C8, F401CC, F411CE, F429ZI — Cortex-M0, M3, M4; AT32F403A — a compatible
 | STM32F411CE | ST-Link / OpenOCD; ST-LINK GDB Server; st-util | CI firmware, example, stand project |
 | STM32F429ZI | ST-Link / OpenOCD; ST-LINK GDB Server; st-util | CI firmware, stand project |
 | STM32G474CE | ST-Link / OpenOCD on Orange Pi 5 | consumer project (Arduino Core STM32) |
-| AT32F403ACGU7 (Artery) | J-Link / J-Link GDB Server; ST-Link / st-util | CI firmware, after 0.3.0 |
+| AT32F403ACGU7 (Artery) | J-Link / J-Link GDB Server; ST-Link / st-util | CI firmware |
 
 OpenOCD, ST-LINK GDB Server and st-util need only the profile. J-Link GDB Server requires a
 device name: the profile sets it (`jlink_device`), and the module knows it for STM32F103C8T6,
@@ -31,7 +31,5 @@ of MCU, HAL, GDB and backend, not by the family: [current status](STATUS.md).
 **Compatible MCUs from other vendors.** The module is not tied to ST: it needs a Cortex-M core and a
 GDB server that connects to the chip. Such an MCU (Artery AT32, GigaDevice GD32, Geehy APM32, etc.) is
 attached with its own profile and the vendor CMSIS, without module changes. One is verified so far —
-AT32F403ACGU7 on the WeAct AT32F4 Core Board via J-Link; it is not part of the 0.3.0 hardware campaign
-but is included in the six 0.4.0 models. The profile, the SDK, scenario specifics and the procedure for your own MCU are in
+AT32F403ACGU7 on WeAct AT32F4 Core Board: see API_ACCEPTANCE for current acceptance. The profile, SDK and integration procedure are in
 [compatible MCUs](COMPATIBLE_MCU.md). Every new chip needs its own acceptance on a board.
-

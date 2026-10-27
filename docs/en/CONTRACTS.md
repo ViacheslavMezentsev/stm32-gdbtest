@@ -72,7 +72,7 @@ variants ([checks and CI](testing.md)).
 [Profile contracts and offline regression](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/HAL_CONTRACTS.md)
 (Russian) stay with the stand project.
 
-## C++: qualified names and `this` (0.4.2)
+## C++: qualified names and `this`
 
 `functions` and `type_context` accept `Probe::add`, `Probe::twice` and
 `demo::increment` when `lookup_global_symbol` finds the function in the selected ELF.

@@ -3,7 +3,7 @@
 [Документация](index.md) → HAL F030 · [English](../en/F030_HAL_VALIDATION.md)
 
 Протокол этапа: числа тестов и планы ниже относятся к указанной ревизии.
-Текущий состав — [STATUS](STATUS.md), подготовка выпуска — [rc.2](RC2_READINESS.md).
+Текущий состав — [STATUS](STATUS.md), подготовка выпуска — [rc.2](../archive/pre-050/ru/RC2_READINESS.md).
 
 Автономный [fixture](../../tests/hal-f030/README.md) прошёл аппаратную проверку
 на NUCLEO-F030R8 через родной ST-Link V2J45M31, SWD 1 МГц и OpenOCD 0.12.0.

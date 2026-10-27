@@ -18,7 +18,7 @@ metadata:
 GitHub-коннектора или доступа к USB: агент pi на OrangePi может читать файлы и выполнять host CLI.
 
 Источники: [результаты](../../docs/ru/RESULTS.md), [захват и CLI](../../docs/ru/API.md),
-[контракт SKIP](../../docs/ru/api/skip.md), [сценарии 0.4.0](../../docs/ru/API040_SCENARIOS.md).
+[контракт SKIP](../../docs/ru/api/skip.md), [сценарии 0.4.0](../../docs/archive/pre-050/ru/API040_SCENARIOS.md).
 Подробная карта файлов и примеры выводов — [artifacts.md](references/artifacts.md).
 
 ## Порядок разбора

@@ -43,7 +43,7 @@ access. Hardware scenarios run separately on an agreed stand
 The CI firmware lives in [tests/firmware](../../tests/firmware/README.md): CMSIS without
 HAL and without stm32-cmake-yml, one profile each for Cortex-M0, M3 and M4. The
 scenarios check register state and are not evidence of HAL behaviour. The hardware
-run of 2026-09-28 is recorded in the [status page](STATUS_ARCHIVE.md#hardware-check-of-the-ci-firmware-2026-09-28).
+run of 2026-09-28 is recorded in the [status page](../archive/pre-050/en/STATUS_ARCHIVE.md#hardware-check-of-the-ci-firmware-2026-09-28).
 
 Results go to `build/ci/<run>/summary.json`; logs to `tests/firmware/build/ci/<run>/<profile>-gcc<version>/ci.log`.
 On GitHub they are kept as the `offline-results` artifact.

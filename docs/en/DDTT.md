@@ -327,11 +327,11 @@ to it is then an authenticated channel (section 6.3).
 The abbreviation DDTT should not be confused with DDT — data-driven testing, the Python
 `ddt` library and the Linaro DDT debugger.
 
-## 10. Implementation in stm32-gdbtest 0.4.1 (informative)
+## 10. Implementation in stm32-gdbtest 0.5.x (informative)
 
-Baseline: published package **0.4.1**, `API_VERSION=2`, `target.toml` schema 2;
-general specification 0.95, API specification 0.3.16. **This DDTT specification 0.3.0**
-has an independent version. Evidence is v0.4.1 source and accepted reports, not new hardware runs.
+This map describes **0.5.x / API_VERSION=3**, target schema 3 (hardware schema 1/2
+remain compatible). The DDTT specification version is independent of the package version.
+The basis is released code and accepted reports, not a new hardware run.
 
 The module provides Core, Image, Preflight, Remote and Skip mechanisms. This is an implementation
 map, **not a claim that every MUST is fully satisfied**; gaps are listed in 10.6.
@@ -357,7 +357,7 @@ on OrangePi without the project; changing firmware needs sources and a compiler.
 
 ### 10.2. Requirements and tools
 
-| Requirements | 0.4.1 mechanisms | Evidence to inspect |
+| Requirements | 0.5.x mechanisms | Evidence to inspect |
 | --- | --- | --- |
 | 6.1 | `@case`, collect, traceability, contracts | Requirement ID, selected scenario and ELF |
 | 6.2 | Target and GDB-Python; [reference](api/index.md) | Stop reason/location, values, current frame and MCU resources |
@@ -390,6 +390,10 @@ Shipped examples: [events and intervals](../../tests/firmware/common/tests/board
 [watchpoint](../../tests/firmware/common/tests/board/test_watch.py),
 [conditional SKIP](../../tests/firmware/common/tests/board/test_skip.py).
 Their expectations belong to the CI firmware; an application needs its own requirements.
+
+API 3 uses MMIO/SVD for peripherals; ordinary write does not replace that contract.
+In async def, navigation and call require await and execute is forbidden; wait/halt manage
+bounded live windows. [Execution](LIVE_EXECUTION.md), [MMIO](MMIO.md).
 
 ### 10.3. One run
 
@@ -443,7 +447,7 @@ Hard interruption can prevent capture; unavailable/error does not mean an empty 
 
 stand_loop.py executes a finite TOML plan of accepted packages, retains attempts, handles STOP
 and expected SKIP. This operates an immutable package, not an agent editing firmware.
-All-SKIP does not establish device testing. Version 0.4.1 has no dynamic dependency tree or
+All-SKIP does not establish device testing. Version 0.5.x has no dynamic dependency tree or
 automatic disabling of other branches based on records; scenarios have no automatically shared journal.
 
 Power supplies, loads, telemetry and instruments use external tools under an agreed plan.
@@ -453,7 +457,7 @@ testing. [Stand cycles](STAND_LOOP.md).
 
 ### 10.6. Open conformance boundaries
 
-| Requirement | 0.4.1 evidence and further checks |
+| Requirement | 0.5.x evidence and further checks |
 | --- | --- |
 | 6.2-4, 6.5-3: all injections before/after | write/memory and mutations provide partial data; ret, call, side-effecting evaluate and raw GDB do not snapshot every effect. Completeness needs an audit; scenarios explicitly record relevant values meanwhile |
 | 6.5-4: no personal paths | Local tracebacks, configuration and logs can contain paths/addresses. Full sanitization is not guaranteed; inspect before publication. This is a draft gap, not permission to delete original evidence |
@@ -463,7 +467,7 @@ testing. [Stand cycles](STAND_LOOP.md).
 | Complete hardware acceptance | Specific combinations are accepted; extended F411/F030/ST-LINK GDB Server suites are limited by USB ERROR |
 
 These are audit tasks, not new API promises or proof that all other MUSTs have been met.
-[Acceptance](API_ACCEPTANCE.md), [0.4.0 scenarios](API040_SCENARIOS.md) and [metrics](HARDWARE_METRICS.md)
+[Acceptance](API_ACCEPTANCE.md), [release history](RELEASE_CHANGES.md) and [metrics](HARDWARE_METRICS.md)
 retain versions, configurations and limitations.
 
 ## 11. Development with target feedback (informative)
@@ -573,17 +577,11 @@ and boundary preservation. Verify recovery after a Python exception by readback;
 requires stopping. Byte copies do not automatically restore external resources or object invariants,
 and `finally` does not cover process death.
 
-Neutral host/GDB/Renode experiments clarified these limits: in 0.4.1 a string RHS in `write()` could execute
-twice with verification; ELF preflight can pass a name that `Target.call()` refuses. Evaluate values
-explicitly and choose the appropriate call path without weakening expectations. Repeat the same
-route after a correction, preserving original FAIL/ERROR evidence and neighboring controls.
-An observation becomes a technique/contract improvement proposal, not an automatic new API guarantee.
-
-Scope: selected Windows/GDB 14.2.90/Renode 1.17, neutral ELF `-O0 -g3`; individual Target methods
-executed directly in GDB. Full standard-runner integration, debugpy, DMA and hardware acceptance
-of this route remain unverified. Normative IDs and DDTT version are unchanged.
-
-
+Match techniques to the current contract: RHS is evaluated once, hidden calls in data
+expressions are forbidden, and C++ preflight does not extend call. Repeat the same route
+after a fix, preserving the original FAIL/ERROR and neighboring controls. Contract history:
+[release transitions](RELEASE_CHANGES.md). Host, Renode and hardware evidence have separate
+limits; normative DDTT IDs remain unchanged.
 
 <a id="consumer-feedback"></a>
 ### 11.4. Feedback from application scenarios (informative)
@@ -688,7 +686,6 @@ claimed for this DDTT revision.
 
 Check-evidence colouring: [DDTT in VS Code](DDTT_COVERAGE.md); external exporter, no Target API changes.
 
-Feedback is incorporated into the 0.4.2 candidate: single RHS evaluation and complete memory reads; normative details are in API specification 0.3.17. Hardware acceptance remains separate from host/Renode.
 
 
 Practical DDTT composition: [neutral VTOR/FPB example](LIVE_OBSERVER.md). A completed window and independent oracle distinguish valid zero from missing observations. The map author links checks to code; function/ISR entry does not prove every line or branch. Cleanup and recovery are assessed separately from behavior.

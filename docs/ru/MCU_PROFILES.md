@@ -21,7 +21,7 @@ F411CE, F429ZI — Cortex-M0, M3, M4; AT32F403A — совместимый Corte
 | STM32F411CE | ST-Link / OpenOCD; ST-LINK GDB Server; st-util | CI-прошивка, пример, стендовый проект |
 | STM32F429ZI | ST-Link / OpenOCD; ST-LINK GDB Server; st-util | CI-прошивка, стендовый проект |
 | STM32G474CE | ST-Link / OpenOCD на Orange Pi 5 | проект потребителя (Arduino Core STM32) |
-| AT32F403ACGU7 (Artery) | J-Link / J-Link GDB Server; ST-Link / st-util | CI-прошивка, после 0.3.0 |
+| AT32F403ACGU7 (Artery) | J-Link / J-Link GDB Server; ST-Link / st-util | CI-прошивка |
 
 Для OpenOCD, ST-LINK GDB Server и st-util достаточно профиля. J-Link GDB Server требует
 имени устройства: оно задаётся в профиле (`jlink_device`), а для STM32F103C8T6,
@@ -31,7 +31,5 @@ STM32F030R8T6 и STM32F103CBT6 известно модулю. H503 не подд
 **Совместимые МК других производителей.** Модуль не привязан к ST: нужны ядро Cortex-M и
 GDB-сервер, который подключается к кристаллу. Такой МК (Artery AT32, GigaDevice GD32, Geehy APM32
 и т. п.) подключается своим профилем и CMSIS производителя, без изменений модуля. Проверен пока один —
-AT32F403ACGU7 на WeAct AT32F4 Core Board через J-Link; он не входит в аппаратную кампанию 0.3.0;
-он учитывается в шести моделях 0.4.0. Профиль, SDK, особенности сценариев и порядок подключения своего МК —
+AT32F403ACGU7 на WeAct AT32F4 Core Board: текущую приёмку смотрите в API_ACCEPTANCE. Профиль, SDK и подключение своего МК —
 в [совместимых МК](COMPATIBLE_MCU.md). Каждый новый кристалл требует своей приёмки на плате.
-

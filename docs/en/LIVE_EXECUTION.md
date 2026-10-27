@@ -4,7 +4,7 @@
 
 
 Practical API 3 example: [VTOR/FPB observer](LIVE_OBSERVER.md), including negative outcomes and recovery.
-0.5.0 candidate, API_VERSION=3. Ordinary `def` scenarios and blocking `resume()` remain
+0.5.x, API_VERSION=3. Ordinary `def` scenarios and blocking `resume()` remain
 supported. Live windows use `async def`: the runner resumes the coroutine on GDB's main
 thread, not inside asyncio or a worker thread.
 
@@ -64,7 +64,7 @@ Example and real-runner validation: [Renode fixture](../../tests/renode-backend/
 Emulator results do not qualify hardware: P3 has not yet been accepted on boards.
 
 
-## Execution in API_VERSION=3 (0.5.0 candidate)
+## Execution in API_VERSION=3 (0.5.x)
 
 In ordinary `def` scenarios, `reach`, `step`, `until`, `finish`, `resume()` and `reset()`
 return completed results. In `async def`, await these operations from the first call:

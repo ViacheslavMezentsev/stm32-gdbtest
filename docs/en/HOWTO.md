@@ -514,11 +514,9 @@ locations. Select direct calls by argument type and separately verify this.
 
 ## Unsized char[] in GDB
 
-If 0.3.0 `evaluate(name, as_type=str)` raises `ValueError: Argument 'count' should be greater than zero`
-or unexpectedly returns an empty string, inspect `ptype name`: an `extern const char name[]` declaration
-may have zero size in GDB. The 0.3.0 workaround is `evaluate("(const char *)name", as_type=str)`.
-The Unreleased fix reads that array from its address with the 256-byte limit, preserving known `char[N]`
-bounds. `HW_CI_STRINGS` covers both Flash and RAM.
+For unsized char[], `evaluate(path, as_type=str)` reads by address up to NUL with
+a 256-byte limit, retaining the known char[N] boundary. `HW_CI_STRINGS` covers Flash
+and RAM. See the [contract](api/evaluate.md).
 
 ## Three-component API specification revision
 
@@ -528,9 +526,9 @@ The adapter widens only revision patterns and refuses a changed upstream pattern
 structure. The installed skill is unchanged. Docker CI includes this in the docs
 level; the overall specification still uses the upstream checker directly.
 
-### reach and C++ quotes (Unreleased)
+### reach and C++ quotes
 
-Use the full signature for an overload. Fixed a false frame-name FAIL with one outer pair of GDB single quotes; unquoted strings work as before. No migration is required; the workaround for 0.3.0 is to omit outer quotes. [Contract](api/reach.md).
+Use the full signature for an overload; one outer pair of GDB quotes is supported. [Contract](api/reach.md).
 
 ## st-util: F4 factory registers
 

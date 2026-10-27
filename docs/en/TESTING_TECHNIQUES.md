@@ -5,7 +5,7 @@
 
 A complete composition of techniques: [neutral live observation](LIVE_OBSERVER.md). Separate admission, complete snapshot, independent oracle, records before check, verified removal and repeat without reset; also covers C++/MMIO migration limits of older scenarios.
 A practical companion to [test authoring](TEST_AUTHORING.md) and the [API reference](api/index.md).
-The cards describe techniques verified by the bundled scenarios of the module: the shared ones
+The cards describe techniques from bundled scenarios and consumer practice: the shared ones
 (`tests/firmware/common/tests`), the scenarios of the five CMSIS profiles (`tests/firmware/profiles`)
 and the F030 HAL fixture (`tests/hal-f030`). These are method cards, not new specification
 requirements, API operations or coverage metrics.
@@ -13,7 +13,7 @@ requirements, API operations or coverage metrics.
 Before a run, use the [scenario checklist](SCENARIO_CHECKLIST.md).
 
 Cards TECH-021–026 separately describe recommendations from consumer practice;
-transfer to neutral executable examples remains future work.
+TECH-021 includes a neutral executable example; the others remain recommendations.
 
 ## Bundled scenario style
 
@@ -220,35 +220,22 @@ Temporarily change inputs through a context manager restoring them in `finally`.
 <a id="tech-006"></a>
 ## TECH-006 — Controlled peripheral state through MMIO
 
-**API 3 (0.5.0):** use [mmio.read/write](api/mmio.md) for new scenarios.
-The ordinary `write` experiment below is historical, not the recommended register
-interface. `verify=False` does not remove its initial read. SVD/RM determine whether
-reading and RMW are valid at all; MMIO performs no hidden readback.
+**Goal:** establish a specific peripheral state and check the application guard.
 
-**Goal:** create a particular peripheral state and check the application guard.
+Select the exact SVD register, permitted width and reference-manual semantics. For an
+ordinary RW register without side effects, explicit read → Python computation → write
+may be appropriate. For command, W1C or FIFO registers use a separately justified value
+and `allow_effects=True` when SVD requires it; generic RMW is unsafe there.
+[MMIO contract](api/mmio.md): no hidden reads or write verification; ACK does not prove effect.
 
-A read-modify-write is an expression as the value; several writes in a row form a `t.write(rows)`
-table. The expression is evaluated before the write, assignments are refused, the rows run in order
-and their structure is validated before the first write:
+The technique was applied to ADC/DMA busy state, ADC disable and IRQ masking. Reusing the
+word "busy" across F0 and F1/F4 does not transfer ADSTART or DMA EN semantics. Check initial
+state, make one intervention, then independently check the guard and absence of publication.
+Finish planned restoration with a normal acquisition repeat. Unknown restoration stops the series.
 
-```python
-# Start continuous conversions while the core is halted: ADSTART stays asserted.
-t.write([
-    ("ADC1->CFGR1", "ADC1->CFGR1 | ADC_CFGR1_CONT"),
-    ("ADC1->CR", "ADC1->CR | ADC_CR_ADSTART")
-])
-```
-
-Experiments: F030 `HW_CI_ADC_BUSY` — an active conversion (ADSTART) before the application starts;
-F103/F4 — the busy DMA guard (`DMA_CCR_EN`/`DMA_SxCR_EN`), a disabled ADC
-(`t.write("ADC1->CR2", "ADC1->CR2 & ~ADC_CR2_ADON")`), a timeout by masking the DMA IRQ in the NVIC
-rather than stopping the DMA. Carrying the name "busy" over does not carry the F0 ADSTART meaning to F1.
-**Environment:** the RM of the particular MCU, RW/W1C/rc_w0 semantics, ADC/DMA behavior while the core
-is halted. Peripheral registers are written without a read-back confirmation (`verify_scope=outside`).
-**Boundary:** one state is created, not the whole set of ADC/DMA failures. Recovery is `reset_run`,
-then a normal `HW_CI_ADC_DMA`; a failed recovery stops the series.
-[ADC_BUSY](F030_ADC_BUSY.md), [adc_faults F030](../../tests/firmware/profiles/f030r8/tests/board/test_adc_faults.py),
-[ADC/DMA F103](F103_CMSIS_ADC_DMA.md), [ADC/DMA F411](F411_CMSIS_ADC_DMA.md), [write](api/write.md).
+Older ADC scenarios use ordinary write; they are historical implementations, not examples
+of the API 3 MMIO contract. For new code use [MMIO/SVD](MMIO.md),
+[driver consistency](#tech-023) and [acceptance limits](API_ACCEPTANCE.md).
 
 **Check the model before using it.** Establish which peripheral properties are modeled:
 register access, side effects, protection, completion and errors. A limited Flash model used with
@@ -364,21 +351,18 @@ to `bool` yields `True`, not a size.
 
 ### Evaluate once before writing
 
-In the published 0.4.1 `write()` implementation, a string RHS with `verify=True` for an addressable SRAM
-object is evaluated for the expected value and again during GDB assignment. A changing result can
-produce `verification_failed` after the write; a constant result can conceal duplicate side effects.
-For such expressions, obtain a plain number first:
+API 3 evaluates RHS once, but function calls in data expressions are forbidden.
+If executing code is required to obtain a sample, invoke it explicitly and check the result:
 
 ```python
-# The function executes target code; its prerequisites must already hold.
-value = t.evaluate("next_sample()", as_type=int)
-t.write("sample_copy", value, verify=True)
+# next_sample is a placeholder no-argument function returning a number.
+result = t.call("next_sample")
+t.check("sample returned", result["return_state"], "available")
+t.write("sample_copy", result["return_value"], verify=True)
 ```
 
-Here `write()` does not call `next_sample()` again. This is not atomic; `verify=False` removes
-write verification and is not a general fix. Observation scope: ordinary SRAM, selected GDB and
-neutral ELF; MMIO has different semantics.
-
+This is ordinary def; async def requires await call. Call and write are not atomic.
+LHS must be stable; MMIO requires its dedicated interface.
 
 <a id="tech-011"></a>
 ## TECH-011 — Collecting measurements and calculating from records
@@ -483,7 +467,7 @@ original.
 ```python
 state = t.symbol("app_state")
 snapshot = t.memory(state["address"], state["size"])
-result = t.call("app_step", "&app_state", "APP_MODE_BLINK")
+result = t.call("app_step")  # placeholder no-argument function
 t.memory(state["address"], snapshot)
 ```
 
@@ -598,7 +582,7 @@ returned = t.finish()
 ```
 
 Import `gdb` in the scenario; run its calls on the main GDB thread. A full signature distinguishes
-overloads. Unreleased reach accepts one outer pair of GDB single quotes
+overloads. API 3 reach accepts one outer pair of GDB single quotes
 (`t.reach("'Converter::apply(float) const'")`); the previous release required the unquoted form. Snapshot values before changing frames. `is_optimized_out`
 differs from a missing symbol and from actual zero; lazy fetching may fail. Store plain Python
 data in records, not live gdb.Value objects. Check a return when available, and independently
@@ -699,12 +683,15 @@ not a new storage API or hardware acceptance of EEPROM/Flash.
 ## Techniques from consumer practice
 
 TECH-021–026 generalize mcu_power_board bridge, charging state machine, statistics and
-telemetry scenarios. They are transfer recommendations, not new bundled examples or
+telemetry scenarios. They are transfer recommendations with a neutral TECH-021 example, not
 repeated hardware acceptance. Application thresholds, addresses, protocols and wiring
 are not transferred. Every application needs its own oracle and admission conditions.
 
 <a id="tech-021"></a>
 ## TECH-021 — Event ordering and the next operation
+
+[Executable host/Renode example](../../tests/stateful-buffer/README.en.md): two defects,
+fix, repeat and restoration; peripherals are not modeled.
 
 **Goal:** detect residual state and handler interaction defects. Use owned objects and
 buffers, known head/tail and completed initialization; save state as in [TECH-019](#tech-019).

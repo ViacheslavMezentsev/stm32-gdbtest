@@ -3,7 +3,7 @@
 [Documentation](index.md) · [Русский](../ru/MMIO.md)
 
 **Known limitation: the existing general memory methods are not an MMIO interface
-without hidden accesses.** The 0.5.0 candidate provides a separate [mmio interface](api/mmio.md). The warnings below about general methods still apply.
+without hidden accesses.** 0.5.x provides a separate [mmio interface](api/mmio.md). The warnings below about general methods still apply.
 
 ## What scenario authors need to know
 
@@ -13,7 +13,7 @@ without hidden accesses.** The 0.5.0 candidate provides a separate [mmio interfa
 | `check(rows)` | String actual and expected cells are evaluated; both sides may read peripherals. |
 | `check(name, actual, expected)` | Ready Python values are compared without MCU reads; evaluating the arguments may already have read the MCU. |
 | `write`, including `verify=False` | The before read remains. MMIO outside scope has no confirming readback, but disabling verify does not remove before. This is not a universal safe write for WO/read-to-clear/FIFO. |
-| `write` with expressions/bitfields | Single RHS evaluation in the 0.4.2 candidate does not remove before, repeated LHS evaluation, or possible GDB read-modify-write for bitfields. |
+| `write` with expressions/bitfields | Single RHS evaluation in API 3 does not remove before, repeated LHS evaluation, or possible GDB read-modify-write for bitfields. |
 | `memory` | Access is restricted to SRAM/Flash windows; peripherals outside those windows are rejected. Do not declare MMIO as ordinary profile memory to bypass validation. |
 
 RO means read-only, WO write-only, W1C clears a bit by writing one, and read-to-clear

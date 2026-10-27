@@ -1,40 +1,14 @@
 # Versions and releases
 
-[Documentation](index.md) → Versions · [Русский](../ru/VERSIONING.md)
+[Documentation](index.md) · [Русский](../ru/VERSIONING.md)
 
-[Release v0.3.0](../releases/v0.3.0.md): package version 0.3.0; the extended API is accepted on five boards in six run layouts; the owner publishes the tag.
+Current line: **0.5.x / API_VERSION=3**. [Release transitions](RELEASE_CHANGES.md).
+Use SemVer MAJOR.MINOR.PATCH with a v-prefixed tag. Before 1.0, compatible fixes and docs
+change PATCH; new features or incompatible APIs change MINOR with migration. Published tags
+are never moved. Package version comes from `__version__`; API and configuration schemas
+are independent. Python/GDB versions and specification revisions are separate quantities.
 
-[rc.2 plan](RC2_READINESS.md): tag `v0.1.0-rc.2`, stm32-gdbtest `0.1.0rc2`; published at a0d6547.
-
-The format is MAJOR.MINOR.PATCH per [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html);
-Git tags have the `v` prefix. **v0.4.0** is published at `9c3ff2d`.
-Documentation [release v0.4.1](../releases/v0.4.1.md) retains API_VERSION=2 and the 0.4.0 schemas.
-[Release 0.5.0](../releases/v0.5.0.md) / API_VERSION=3: P5b acceptance passed on the final commit
-`a7b0951` ([result and limitations](../development/release-050-acceptance.md), Russian); the owner sets the tag.
-Consumer migration: [from 0.4.x to 0.5.0](MIGRATION_050.md).
-Candidates v0.2.0-rc.1 and v0.3.0-rc.1 were never published. The previous published candidate is `v0.1.0-rc.2`.
-The initial export from the stand project is not a release.
-
-Before 1.0: compatible fixes → 0.1.1; new features or API changes → 0.2.0 with an
-explicit migration. PATCH never breaks the API. After 1.0: incompatible API → MAJOR,
-compatible features → MINOR, fixes → PATCH. 0.x versions do not promise 1.0
-stability. A published tag is never moved: a fix gets a new version. The consumer's
-gitlink pins the SHA; a tag makes selecting that SHA easier.
-
-The version source is `__version__` in `stm32_gdbtest/__init__.py`. For future Python
-packaging the tag `v0.1.0-rc.1` maps to package version `0.1.0rc1` and `v0.1.0` to
-`0.1.0`. `API_VERSION` and the JSON/TOML schema numbers are independent of the release
-version and change only when the corresponding contract changes.
-
-The API 0.3.0 design is the [API audit and redesign](API030_PLAN.md). The 0.4.0
-scope and migration are in the [release map](RELEASE040_SCOPE.md); final acceptance
-and publication are tracked in [TODO](../../TODO.md).
-
-
-The `stm32-gdbtest` package version is `__version__`, not the Python interpreter version.
-`API_VERSION` is the scenario API compatibility number; the general and API specification
-revisions version the documents. For example, release 0.4.1 has package version 0.4.1 with `API_VERSION=2`.
-Interpreter versions are listed separately for host Python and Python embedded in GDB.
+Commands below are templates for a future accepted release, not authorization to publish a tag.
 
 ## Before a release
 
@@ -59,14 +33,14 @@ Interpreter versions are listed separately for host Python and Python embedded i
 The tag is annotated and signed; its message is the release notes file:
 
 ```powershell
-git tag -s v0.1.0 -F docs/releases/v0.1.0.md --cleanup=verbatim
-git push origin v0.1.0
+git tag -s v0.5.1 -F docs/releases/v0.5.1.md --cleanup=verbatim
+git push origin v0.5.1
 ```
 
 `--cleanup=verbatim` keeps the text as is: without it git drops lines starting with
 `#`. The same file is the GitHub release text (Releases → Draft a new release; for
-`-rc` tick "Set as a pre-release") or `gh release create v0.1.0 -F
-docs/releases/v0.1.0.md` (`--prerelease` for candidates).
+`-rc` tick "Set as a pre-release") or `gh release create v0.5.1 -F
+docs/releases/v0.5.1.md` (`--prerelease` for candidates).
 
 The notes have no Markdown headings (lines starting with `#` vanish from the tag message under normal
 cleanup and render large on GitHub). Russian text first; English is the same text in a collapsed
@@ -79,7 +53,6 @@ and the result matrix; "Limits"; links to CHANGELOG and STATUS.
 GitHub turns `@name` into a user mention (the user appears among the release
 contributors) and `#number` into an issue link, so write such fragments only in
 backticks: `` `@case` ``.
-Example — [v0.3.0](../releases/v0.3.0.md); the former `---` format — [v0.1.0-rc.1](../releases/v0.1.0-rc.1.md).
 
 Branch and commit rules — [maintenance](maintenance.md).
 

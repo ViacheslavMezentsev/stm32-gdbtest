@@ -25,4 +25,4 @@ finally:
 t.set_value("board_adc_sequences", 0)
 ```
 
-[Справочник API](index.md) · [Таблица переименований](../API.md#пакет-030-числа-миграция-и-алиасы)
+[Справочник API](index.md) · [Таблица переименований](../RELEASE_CHANGES.md)

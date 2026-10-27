@@ -1,6 +1,6 @@
 # Архив состояния и проверок до 0.4.1
 
-[Документация](index.md) → История · [English](../en/STATUS_ARCHIVE.md)
+[Документация](../../../ru/index.md) → История · [English](../en/STATUS_ARCHIVE.md)
 
 Исторический снимок: формулировки «текущий», «готовится» и прежние ограничения ниже относятся
 к датам исходных этапов. Актуальные сведения — [STATUS](STATUS.md).
@@ -29,21 +29,21 @@ stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2; общее ТЗ 0.94, ТЗ 
 Выборочные API040 проверки GitHub/WSL/Windows: по 20 PASS + 5 SKIP; подробности —
 [API040_SCENARIOS](API040_SCENARIOS.md). GitHub CI последнего SHA ещё ожидается.
 
-[API_ACCEPTANCE](API_ACCEPTANCE.md) · [RELEASE040_SCOPE](RELEASE040_SCOPE.md) · [TODO](../../TODO.md).
+[API_ACCEPTANCE](API_ACCEPTANCE.md) · [RELEASE040_SCOPE](RELEASE040_SCOPE.md) · [TODO](../../../../TODO.md).
 
 Ниже — история предыдущих этапов; [подготовка v0.2.0-rc.1](RC020_READINESS.md) сохраняется для справки.
 
-[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.](F429_CMSIS_RTC_SLEEP.md)
+[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.](../../../ru/F429_CMSIS_RTC_SLEEP.md)
 
-[F429 ADC/DMA/units/failures:15/15 HW +3 повтора, HAL восстановлена; ТЗ0.56.](F429_CMSIS_ADC_DMA.md)
+[F429 ADC/DMA/units/failures:15/15 HW +3 повтора, HAL восстановлена; ТЗ0.56.](../../../ru/F429_CMSIS_ADC_DMA.md)
 
-[F429 CMSIS baseline:7/7 HW, HAL восстановлена; ТЗ0.55. Пятый профиль в CI, ADC/RTC ещё впереди.](F429_CMSIS_BASELINE.md)
+[F429 CMSIS baseline:7/7 HW, HAL восстановлена; ТЗ0.55. Пятый профиль в CI, ADC/RTC ещё впереди.](../../../ru/F429_CMSIS_BASELINE.md)
 
-[F401 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.54.](F401_CMSIS_RTC_SLEEP.md)
+[F401 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.54.](../../../ru/F401_CMSIS_RTC_SLEEP.md)
 
-[F401 ADC/DMA/units/failures:15/15 HW и три положительных повтора, HAL восстановлен; ТЗ0.53.](F401_CMSIS_ADC_DMA.md)
+[F401 ADC/DMA/units/failures:15/15 HW и три положительных повтора, HAL восстановлен; ТЗ0.53.](../../../ru/F401_CMSIS_ADC_DMA.md)
 
-[F401 CMSIS baseline: 7/7 HW через ST-Link/OpenOCD, HAL boot/blink восстановлены. Flash256/RAM64; ADC/RTC ещё не перенесены.](F401_CMSIS_BASELINE.md)
+[F401 CMSIS baseline: 7/7 HW через ST-Link/OpenOCD, HAL boot/blink восстановлены. Flash256/RAM64; ADC/RTC ещё не перенесены.](../../../ru/F401_CMSIS_BASELINE.md)
 
 Срез rc.2: 5b7b466. Docs/Offline/Hardware SUCCESS; все 27 JSON из GitHub проверены.
 Windows: F030 CMSIS 18/18, HAL 17/17 с повторами/recovery; циклы F030/OpenOCD,
@@ -52,7 +52,7 @@ F103/J-Link, F411/OpenOCD — по 10/10. ST server завершён после 
 восстановлены. [Подробный протокол и оставшиеся условия](RC2_READINESS.md).
 
 Опубликован rc.2 на a0d6547. После тега приняты группы F103 baseline (352417c)
-и ADC/DMA (3e123ad). Новая [RTC/Sleep](F103_CMSIS_RTC_SLEEP.md):
+и ADC/DMA (3e123ad). Новая [RTC/Sleep](../../../ru/F103_CMSIS_RTC_SLEEP.md):
 20/20 HW, пять положительных повторов, timeout/recovery и HAL restore PASS.
 Первоначальные ошибки ACL при восстановлении сохранены в протоколе.
 
@@ -68,8 +68,8 @@ F103/J-Link, F411/OpenOCD — по 10/10. ST server завершён после 
 | minimal-consumer F411 | Отдельный пример подключения CMake без YAML; проверяет подключение модуля, не полную периферию платы |
 | Потребитель BlackPill | fb2d186 / модуль 67b7431: Offline SUCCESS, пять профилей/120 CTest; Windows 25/25, F411/OpenOCD 22/22 + timeout/recovery/restore. Итоговый gitlink обновляется после land модуля |
 
-Источники: [HAL→CMSIS](F030_CMSIS_ACCEPTANCE.md), [HAL-протокол](F030_HAL_VALIDATION.md),
-[техники](TESTING_TECHNIQUES.md), [CI](testing.md).
+Источники: [HAL→CMSIS](../../../ru/F030_CMSIS_ACCEPTANCE.md), [HAL-протокол](../../../ru/F030_HAL_VALIDATION.md),
+[техники](../../../ru/TESTING_TECHNIQUES.md), [CI](../../../ru/testing.md).
 Текущий Nucleo-стенд — родной ST-Link/OpenOCD; результаты J-Link STLink ниже исторические.
 F103 — WeAct BluePill-Plus/J-Link; F411 — BlackPill/ST-Link с OpenOCD и ST server.
 Удалённые запуски, пакеты и Hardware workflow повторены при приёмке rc.2;
@@ -119,7 +119,7 @@ verify-only без записи, восстановление 0xFF, timeout 0,2 
 компоновщика исправлены, CI проверяет выравнивание — это пример ошибки выполнения,
 которую не видят проверки без оборудования. После `fbc103d` изменено формирование
 BIN (только выбранные секции); перед выпуском аппаратная проверка повторена на
-итоговом коммите (п. 8.19 [ТЗ](../TECHNICAL_SPECIFICATION.md), раздел выше). Стендовый набор
+итоговом коммите (п. 8.19 [ТЗ](../../../TECHNICAL_SPECIFICATION.md), раздел выше). Стендовый набор
 stm32-hwtest-blackpill на этих коммитах не повторялся.
 
 ## Ограничения реализации
@@ -154,7 +154,7 @@ stm32-hwtest-blackpill на этих коммитах не повторялся.
 ## Следующие этапы
 
 Подготовка [rc.2](RC2_READINESS.md), затем продолжение CMSIS-миграции и работа
-по [TODO](../../TODO.md). RISC-V, внешнее управление стендом и Python-упаковка
+по [TODO](../../../../TODO.md). RISC-V, внешнее управление стендом и Python-упаковка
 остаются планами.
 
 
@@ -162,12 +162,12 @@ stm32-hwtest-blackpill на этих коммитах не повторялся.
 
 | Область | Доказанный объём |
 | --- | --- |
-| CI (GitHub Actions, Docker) | Docs, format, host на Windows и Linux; CI-прошивки F030R8/F103C8/F411CE на GCC 13.3.1, 14.2.1, 15.2.1 с CMake 3.28.3: build manifest, `prepare`, полный образ, 10 отрицательных контрактов, выравнивание секций загрузки, пустая секция в RAM; окружение Linux-стенда в `ubuntu:20.04` на x86_64 и aarch64 ([проверки и CI](testing.md)) |
+| CI (GitHub Actions, Docker) | Docs, format, host на Windows и Linux; CI-прошивки F030R8/F103C8/F411CE на GCC 13.3.1, 14.2.1, 15.2.1 с CMake 3.28.3: build manifest, `prepare`, полный образ, 10 отрицательных контрактов, выравнивание секций загрузки, пустая секция в RAM; окружение Linux-стенда в `ubuntu:20.04` на x86_64 и aarch64 ([проверки и CI](../../../ru/testing.md)) |
 | CI-прошивки на оборудовании | Итоговая проверка на `2143665`: 4 стенда на Windows, 3 стенда с Windows на Orange Pi 5, 3 стенда в workflow Hardware — по 10/10 шагов; ранее 4 стенда на `fbc103d` (разделы ниже) |
 | Linux-стенд без оборудования | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) в контейнере: установка окружения, host-тесты (79 на ревизии 0.7), `doctor`, `build` и `prepare` CI-прошивок; аппаратный путь без отладчика — блокировка, запуск OpenOCD, ERROR «exited before ready», процессы остановлены |
 | Удалённый GDB-сервер на оборудовании | Runner и GDB на Windows 10, GDB-серверы на Orange Pi 5 по SSH: F411CE / OpenOCD, F103C8 / J-Link CE, F030R8 / J-Link STLink — по 10/10 (`run_hw.py`) |
 | Удалённый GDB-сервер без оборудования | Петля SSH (OpenSSH, ключ, `known_hosts`) и фиктивный J-Link сервер: проброс порта, подключение GDB через туннель, recovery, остановка сервера и передача журнала, отказ при занятой блокировке хоста стенда, очистка после обрыва сессии |
-| Linux-стенд на оборудовании | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 / J-Link GDB Server 9.80 arm64 — 10/10 после подтверждения окна условий J-Link STLink в графическом сеансе; без этого подключение ждёт около 10 с, первый прогон — 2/10 ([Linux-стенд](LINUX_STAND.md)) |
+| Linux-стенд на оборудовании | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 / J-Link GDB Server 9.80 arm64 — 10/10 после подтверждения окна условий J-Link STLink в графическом сеансе; без этого подключение ждёт около 10 с, первый прогон — 2/10 ([Linux-стенд](../../../ru/LINUX_STAND.md)) |
 | ELF/HAL preflight | Положительный случай и 11 отрицательных вариантов на ELF F103C8/F401CC/F411CE стендового проекта |
 | Стендовый проект, F411CE / ST-Link / OpenOCD | 24/24 CTest (22 HW + 2 host) после отделения модуля |
 | Стендовый проект, F103C8 / J-Link | 24/24 CTest (22 HW + 2 host) |
@@ -196,7 +196,7 @@ GDB Python API; совпадение версии HAL не доказывает 
 промежутков, LMA, границ и ошибок чтения с отказом до сервера. Стендовый проект:
 F411CE/ST-Link/OpenOCD 22/22, F103C8/J-Link 22/22; прошивки оставлены в reset/run.
 Случай незагруженного промежутка проверен host-fixture и offline-разбором
-сохранённого ELF К1921 без подключения стенда. Политика — [образы и CRC](IMAGES.md).
+сохранённого ELF К1921 без подключения стенда. Политика — [образы и CRC](../../../ru/IMAGES.md).
 
 **Полный образ и CRC, 2026-09-25.** Host 65/65. На F411CE/ST-Link/OpenOCD и
 F103C8/J-Link проверены полные 16 KiB: запись хвоста 0xA5, повтор без записи,
@@ -212,15 +212,15 @@ F103C8/J-Link проверены полные 16 KiB: запись хвоста 
 комбинаций backend для F0.
 [Протокол потребителя](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/F030_JLINK_VALIDATION.md).
 
-[F411 CMSIS baseline](F411_CMSIS_BASELINE.md): HSI16, PC13, SysTick, TIM2; post-rc.2.
+[F411 CMSIS baseline](../../../ru/F411_CMSIS_BASELINE.md): HSI16, PC13, SysTick, TIM2; post-rc.2.
 
-[F411 ADC/DMA](F411_CMSIS_ADC_DMA.md): factory calibration, numerical vectors and state faults.
+[F411 ADC/DMA](../../../ru/F411_CMSIS_ADC_DMA.md): factory calibration, numerical vectors and state faults.
 
-[F411 RTC/Sleep](F411_CMSIS_RTC_SLEEP.md): calendar Alarm A, WFI and recovery.
+[F411 RTC/Sleep](../../../ru/F411_CMSIS_RTC_SLEEP.md): calendar Alarm A, WFI and recovery.
 
-[Итоговая сверка пяти профилей и оставшиеся HAL-проверки](CMSIS_ACCEPTANCE.md).
+[Итоговая сверка пяти профилей и оставшиеся HAL-проверки](../../../ru/CMSIS_ACCEPTANCE.md).
 
-[HAL F030: пять GPIO/RCC-техник и варианты исходников](F030_HAL_GPIO_RCC.md).
+[HAL F030: пять GPIO/RCC-техник и варианты исходников](../../../ru/F030_HAL_GPIO_RCC.md).
 
 ## Финальная передача выпуска
 

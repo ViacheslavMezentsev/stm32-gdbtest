@@ -1,6 +1,6 @@
 # Preparing stm32-gdbtest 0.1.0-rc.2
 
-[Documentation](index.md) → rc.2 readiness · [Русский](../ru/RC2_READINESS.md)
+[Documentation](../../../en/index.md) → rc.2 readiness · [Русский](../ru/RC2_READINESS.md)
 
 Agreed candidate scope, 2026-10-01. Base main `7f3c65b`; this is an acceptance plan,
 not a claim that rc.2 is released. The documentation audit is in main `eaf31ea`; release branch

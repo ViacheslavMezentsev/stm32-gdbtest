@@ -1,130 +1,14 @@
-# Hardware validation metrics
+# Reading verification metrics
 
 [Documentation](index.md) · [Русский](../ru/HARDWARE_METRICS.md)
 
-## Model count and campaign scope
+For 0.5.x use the [release matrix](../development/release-050-acceptance.md) and
+[API_ACCEPTANCE](API_ACCEPTANCE.md). Scenario counts are not coverage percentages.
+Compare expected/actual outcomes at one SHA and configuration. Prepare, hardware PASS,
+intentional FAIL/ERROR and verified restoration are distinct metrics. Repetition does not
+increase unique requirements. SKIP and missing data are not PASS; evidence transfers
+require the matrix rules.
 
-Six models have been tested: five STM32 and AT32F403A. The `Models tested: 6` badge
-describes this fleet; `SSH campaign boards: 5` and 233 describe only the full STM32 campaign below.
-New 0.4.0 scenarios gained a separate AT32/J-Link run on OrangePi: 4 PASS + 1 SKIP.
-[Results and limits](API040_SCENARIOS.md). This does not change the 233 counter.
-
-## Candidate 0.4.0 snapshot — 2026-10-10
-
-README shows 233 profile/scenario combinations for five STM32 boards over Windows →
-OrangePi/st-util 1.9.0: F030 has 45, F103/F401/F411/F429 have 47 each. This combines completed
-suites with unchanged remote lifecycle runtime and a separate F4 ADC_INVALID budget change
-(final state `a6b6dbd`); it is not an all-layout campaign on the final SHA.
-516 stages comprise 243 prepare, 268 HW PASS and 5 expected timeout ERROR outcomes; the F401
-budget recheck and restoration are counted separately. See the [matrix](API_ACCEPTANCE.md).
-The blue candidate badge does not establish a published release, current CI or ST-LINK GDB Server acceptance.
-The previous multi-layout 0.3.0 campaign is retained below.
-
-## Previous snapshot — full campaign of the 0.3.0 package, 2026-10-05/06
-
-For the first time the whole CMSIS scenario set ran in one campaign on one code base (main `782798f`, the
-code matches the verified revisions of branch `claude/api030-profile`). Distinct profile/scenario
-combinations: **218** — F030R8 42, F103C8/F401CC/F411CE/F429ZI 44 each (the shared directory
-`tests/firmware/common/tests` plus the profile scenarios). Each one passed:
-
-| Layout | Environment | Outcome |
-| --- | --- | --- |
-| Local on Windows | xPack GCC 13.3.1; GDB 14.2.90, 15.2.90, 16.3.90 | 15 of 15 suites (5 boards × 3 GDBs) |
-| Local on a Linux stand | Orange Pi 5, aarch64 | 5 of 5 |
-| Remote server from Windows | Windows → Orange Pi 5 over SSH | 5 of 5 |
-| Remote server from WSL2 | WSL2 → Orange Pi 5 over SSH | 5 of 5 |
-
-The prepared-run package and the GitHub hardware CI check the `run_hw.py` lifecycle (10 steps): 5 of 5 in
-each. The only non-PASS of every suite is the intended `timeout` check with its expected ERROR. At that time README showed
-218 and 2026-10-06; the `Hardware: full campaign 0.3.0` badge describes this snapshot, not the status of
-later commits. The 218 exclude the HAL F030 fixture, the example, repeats and recovery. Details —
-[accepted results](API_ACCEPTANCE.md).
-
-## Previous snapshot — 2026-10-03
-
-[accepted results](API_ACCEPTANCE.md)
-on a working tree based on `7ed6d0a`: F030R8 19/19, F103C8 21/21, F401CC 21/21,
-F411CE 21/21, F429ZI 21/21. Total: **103 CMSIS cases, five board models**.
-Windows/GCC13/GDB14; all five complete suites ran. The public summary lists the scope and limits of this historical result.
-
-README showed 103 and 2026-10-03. `Hardware: historical snapshot` denotes recorded
-working-tree evidence, not current main or CI status. The total excludes HAL
-F030 22/22, minimal consumer 1/1, repeats and restoration. See the report for
-limits and warnings. Unique counts use profile/fixture/ID, not algorithms or
-assertions. Hardware workflow still does not automatically run this full set.
-
-## Snapshot of 2026-10-01 (retained history)
-
-
-Snapshot dated 2026-10-01, with F030/F103/F411 sources in main `591c096`; F401 accepted at `9d22410`; F429 RTC/Sleep added in a dependent branch from `52c49fd`. README
-badges are currently static and updated with this table after reviewing evidence.
-The blue `Hardware: historical snapshot` describes the evidence category, not
-the health of current CI. Docs and Offline retain their independent statuses.
-
-## Results of the 2026-10-01 snapshot
-
-Only the `tests/firmware` CMSIS fixtures for these five board models are counted.
-This is a bounded historical set, not every board or execution in project history.
-
-| Board model / MCU | Debugger and backend | Cases with evidence | Report and accepted stage revision |
-| --- | --- | ---: | --- |
-| NUCLEO-F030R8 / STM32F030R8T6 | Onboard ST-Link, OpenOCD/SWD | 18 | [HAL → CMSIS](F030_CMSIS_ACCEPTANCE.md), batch accepted at `cea01f9`; 16 + 1 + 1 on one ELF, not one 18/18 series |
-| WeAct BluePill-Plus / STM32F103C8T6 | J-Link, SWD | 20 | [RTC/Sleep and preceding groups](F103_CMSIS_RTC_SLEEP.md), `d97903c`, 2026-10-01 |
-| WeAct BlackPill V3.1 / STM32F411CEU6 | ST-Link, OpenOCD/SWD | 20 | [RTC/Sleep and preceding groups](F411_CMSIS_RTC_SLEEP.md), `91a7cd4`, 2026-10-01 |
-| WeAct BlackPill v3.0 / STM32F401CCU6 | ST-Link, OpenOCD/SWD | 20 | [RTC/Sleep/recovery](F401_CMSIS_RTC_SLEEP.md), working tree from `87a23be`, 2026-10-01 |
-| STM32F429I-DISCO / STM32F429ZIT6 | ST-Link/V2, OpenOCD/SWD | 20 | [RTC/Sleep/recovery](F429_CMSIS_RTC_SLEEP.md), working tree from `52c49fd`, 2026-10-01 |
-| **Total** | **5 board models** | **98** | **Historical snapshot across revisions** |
-
-All rows refer to Windows, xPack GCC13.3.1-1.1/GDB14.2.90. Reports provide
-exact ELF hashes, local artifacts, original errors and experiment boundaries.
-An accepted stage revision locates the history; it does not claim every run
-used a clean checkout of that commit. F030 includes separate scenario fixes;
-the original RTC error remains in the history after the successful repeat.
-
-## Badge definitions
-
-The badges now show the 0.3.0 campaign: `Boards tested: 5`, `HW cases (recorded): 218`,
-`HW verified (latest): 2026-10-06`, `Hardware: full campaign 0.3.0`. The definitions below are kept from the
-2026-10-01 snapshot and apply the same way; the numbers in them belong to that snapshot.
-
-- `Boards tested: 5` counts distinct board models with a specific MCU in the table.
-  Two physical specimens of one model or two backends do not increase it.
-  A debugger identifier is not a board identifier.
-- `HW cases (recorded): 98` sums distinct profile/fixture/scenario-ID combinations
-  with confirmed results in these reports. It is not 98 different test algorithms,
-  an assertion count or a coverage percentage.
-- `HW verified (latest): 2026-10-01` is the newest included experiment date,
-  not the verification date of all rows or current main.
-- `Hardware: historical snapshot` means there is no single complete campaign
-  at one SHA from which to derive a current aggregate PASS/FAIL.
-
-Post-injection repeats, original HAL restoration, the 17 `tests/hal-f030` cases,
-consumer checks, builds/prepare and old PoCs are excluded from this total.
-They retain their own results. An expected failure counts as a successful
-contract check only when verified by its outer scenario; an inner ERROR
-alone is not a successful test.
-
-## Updating and next stage
-
-When updating the snapshot, review evidence and the table total, then update
-both README languages, this page and CHANGELOG together. Static badges do
-not change automatically when a GitHub workflow is rerun. The current
-[Hardware workflow](../../.github/workflows/hardware.yml) uses `run_hw.py`
-steps (boot/GPIO, images, recovery); it does not automatically run all 98
-peripheral cases. Its success does not validate this entire snapshot.
-
-Next comes a separate automated campaign with an expected matrix and an
-aggregator for local/CI reports. Preserve module, firmware and scenario SHAs,
-ELF hash, tool versions, selected MCU/backend/OS, time, expected outcome and
-evidence links. Missing reports and SKIP cannot yield PASS; count repeats
-separately. Exclude serial numbers and personal paths from published data.
-
-The latest attempt status and the last complete successful campaign count
-can then be published separately in `ci-badges`, following
-[stm32-cmake-yml](https://github.com/ViacheslavMezentsev/stm32-cmake-yml/blob/main/docs/ru/status.md).
-Display the date and SHA; do not present old success as verification of new main.
-A partial run must not replace the full result; a new failure must not be hidden
-behind an old green count. Automation remains in [TODO](../../TODO.md).
-
-AT32/Windows/J-Link 8.32 at `9747eab`: 4 PASS + 1 SKIP, 13 records, 15 files verified;
-the sixth board new scenarios are verified on Windows and Linux/GitHub. [API040](API040_SCENARIOS.md).
+DDTT views show assertions chosen by the map author, not automatically every executed line.
+[Map and limits](DDTT_COVERAGE.md). Historical campaigns are linked from
+[release transitions](RELEASE_CHANGES.md); their counts do not establish 0.5.x acceptance.

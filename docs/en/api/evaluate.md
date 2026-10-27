@@ -48,4 +48,4 @@ A GDB error while parsing or evaluating the expression is kept as the failure ca
 
 - [API specification](../../TECHNICAL_SPECIFICATION_API.md); `as_type=str`: items 4.18.1–4.18.2.
 
-New selective campaign: [API 0.4.0 scenarios](../API040_SCENARIOS.md), five STM32 boards including expected SKIP.
+New selective campaign: [API 0.4.0 scenarios](../../archive/pre-050/en/API040_SCENARIOS.md), five STM32 boards including expected SKIP.

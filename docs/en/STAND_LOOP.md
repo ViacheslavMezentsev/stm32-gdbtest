@@ -2,7 +2,7 @@
 
 [Documentation](index.md) · [Русский](../ru/STAND_LOOP.md)
 
-`tools/stand_loop.py` is an external 0.4.0 candidate tool. It executes an agreed finite plan through
+`tools/stand_loop.py` is an external tool. It executes an agreed finite plan through
 existing CLI commands without changing Target, firmware or scenario expectations. The application
 repository is not required on the stand: use this module checkout, ZIP packages, GDB-Python/binutils,
 a server and a local stand TOML. No firmware build occurs on the stand.
@@ -14,7 +14,7 @@ before packing. Add firmware sources with `--include` when needed for code analy
 requirements and contracts are already packaged. This does not imply a full source repository.
 Package configuration is fixed; a different configuration requires a new package.
 
-The [example plan](../../examples/stand-loop/plan.example.toml) uses our 0.4.0 scenarios.
+The [example plan](../../examples/stand-loop/plan.example.toml) uses bundled scenarios.
 Replace IDs and ZIP files for your application. Paths are relative to the plan; output is separate.
 
 | Field | Value |
@@ -119,29 +119,5 @@ hangs, orderly STOP also waits; an external automatic watchdog is not implemente
 before steps do not reserve disk space or replace quotas. A manual hardware run does not verify
 the service or model integration.
 
-## Initial verification — 2026-10-10
 
-StandLoopTests: 20 host checks covering doctor/prepare gates, FAIL stop/continue, permitted and
-unexpected SKIP, all-SKIP cycles, corrupt records/JUnit, wrong package/mode/code, cleanup/capture,
-changed inputs, occupied locks, STOP, low disk space and evidence processing failure.
-
-Hardware: F411CE/ST-Link, local OrangePi 5/Ubuntu 20.04 aarch64, Python 3.11.16,
-xPack 13.3.1-1.1/GDB 14.2.90 and st-util 1.9.0. Unchanged 0.4.0 scenario packages were used:
-
-| Plan | Actual result |
-| --- | --- |
-| 2 RECORDS + permitted-SKIP cycles | COMPLETED/code0, 2 PASS + 2 SKIP, two separate reviews |
-| 3 cycles, STOP after first review | STOPPED/code130, 1 PASS + 1 SKIP; no second cycle directory |
-| 2 cycles without SKIP permission | ERROR/code2 after the first SKIP; no repeat |
-
-Total: 7 hardware runs, 3 PASS + 4 SKIP, 20 records. In the last plan SKIP remains the scenario
-outcome while ERROR is the dispatcher decision. All 7 images/teardown/shutdown_wait are confirmed;
-export/verify/report succeeded for 4 cycles, fresh copied-evidence verification 4/4.
-Input/runtime hashes matched; no st-util processes or dispatcher locks remained.
-The finish inferred_stop warning was retained. No hardware fault was deliberately induced.
-
-The first SSH shell wrapper received a trailing CR after Python completed successfully and returned
-an error; its summary and evidence were retained. Later checks ran from a transferred LF script
-and checked actual exits 130/2. This is not an MCU error or a reason to rewrite the original record.
-The systemd template passed `systemd-analyze --user verify` but was not installed or started.
-pi/Qwen were not invoked; this stage does not accept model integration, long-duration runs or other boards.
+[Accepted results](API_ACCEPTANCE.md).

@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- For 0.5.1: user guides aligned with 0.5.x; release transitions separated from current guidance and earlier plans/snapshots archived. Added a neutral C++/host/Renode residual-state and ring-order example with deliberate defects, raw FAIL results and verified restoration. Core unchanged.
+
 - Documentation package for 0.5.1: consumer-practice TECH-021–026 (event order, residual state, state-machine time, DMA/driver, counters, filters and external capture), checklist questions and DDTT feedback cycle. RU/EN; no core changes or new hardware acceptance.
 
 ## [0.5.0] - 2026-10-20
@@ -342,7 +344,7 @@ Extended scenario API. Candidate 0.3.0-rc.1 was never published; the owner sets 
 
 - Local research and prototypes are excluded from the published tree while retained in the developer workspace. Accepted results are documented separately; docs.public checks files and links against .gitignore filters. Main specification 0.65 defines L0–L6; API specification 0.2.3 clarifies public criteria without method changes.
 
-Candidate agreed; local preparation, not published. [Acceptance and migration](docs/en/RC020_READINESS.md).
+Candidate agreed; local preparation, not published. [Acceptance and migration](docs/archive/pre-050/en/RC020_READINESS.md).
 
 - Standardized the teaching style of 35 production scenario/helper files: RU/EN headers, English explanations, 120-character lines and no optional trailing commas. Executable ASTs match the previous revision.
 
@@ -437,7 +439,7 @@ Candidate agreed; local preparation, not published. [Acceptance and migration](d
 ## [0.1.0-rc.2] — 2026-10-01
 
 The candidate completed the agreed hardware and integration checks with an ST
-server limitation: manual USB reconnection was required. Signed tag published at a0d6547, final CI accepted: [evidence](docs/en/RC2_READINESS.md).
+server limitation: manual USB reconnection was required. Signed tag published at a0d6547, final CI accepted: [evidence](docs/archive/pre-050/en/RC2_READINESS.md).
 
 ### Fixed
 

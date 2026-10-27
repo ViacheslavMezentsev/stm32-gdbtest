@@ -2,11 +2,10 @@
 
 [Documentation](index.md) → Results · [Русский](../ru/RESULTS.md)
 
-Available since 0.4.0. These are external host commands: they read saved files, never start GDB or
+These are external host commands: they read saved files, never start GDB or
 access the MCU, and add no Target methods. Existing scenarios need no migration. Enable
-[journal capture](API.md#result-journal-capture-unreleased) when running scenarios.
+[journal capture](API.md) when running scenarios.
 
-Sections retaining the historical `Unreleased` label below describe features included in 0.4.0 and available in 0.4.1; headings are retained for link compatibility.
 
 
 ## What is exported
@@ -154,7 +153,7 @@ no partial direct write into the final destination. Commands use <output>.lock w
 to that destination are unsupported. A crash may leave the lock; confirm its process exited before
 removing that specific lock. Another writer's lock is never auto-removed. No power-loss durability guarantee.
 
-## JSON/HTML summary (Unreleased)
+## JSON/HTML summary
 
 ```text
 python -m stm32_gdbtest results report --root build/evidence --index build/export-001/index.json --output build/report-001 --theme auto

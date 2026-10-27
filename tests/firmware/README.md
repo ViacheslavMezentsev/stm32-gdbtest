@@ -33,7 +33,7 @@ The separate [HAL F030 fixture](../hal-f030/README.en.md) preserves HAL-specific
 contracts, handles/callbacks and force_return checks.
 
 `run_hw.py` exercises the runner lifecycle using boot/GPIO, not all F030 cases.
-Use the explicit hardware suite described in the [rc.2 plan](../../docs/en/RC2_READINESS.md)
+Use the explicit hardware suite described in the [rc.2 plan](../../docs/archive/pre-050/en/RC2_READINESS.md)
 for candidate acceptance. The [status](../../docs/en/STATUS.md) distinguishes
 historical results from checks of the current candidate.
 

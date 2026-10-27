@@ -24,4 +24,4 @@ Before 0.4.0:
 t.fields("*GPIO_Init", {"Pin": 1 << 5, "Mode": "GPIO_MODE_OUTPUT_PP"})
 ```
 
-[API reference](index.md) · [Rename table](../API.md#030-package-numbers-migration-and-aliases)
+[API reference](index.md) · [Rename table](../RELEASE_CHANGES.md)

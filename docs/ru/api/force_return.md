@@ -21,4 +21,4 @@ t.ret("(HAL_StatusTypeDef)1")
 t.force_return("(HAL_StatusTypeDef)1")
 ```
 
-[Справочник API](index.md) · [Таблица переименований](../API.md#пакет-030-числа-миграция-и-алиасы)
+[Справочник API](index.md) · [Таблица переименований](../RELEASE_CHANGES.md)

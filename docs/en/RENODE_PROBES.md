@@ -50,15 +50,9 @@ Negative control: repeat with `--negative-control`. Expect FAIL, exit 1 and a re
 
 Renode 1.17 was checked on Windows and Linux: startup and a method call, 3/3. On Windows the negative control produced two confirmations and one failure (exit 1), followed by another 3/3 ordinary run. The existing C++/RAM/cache example also passed. Host regressions cover readiness failure and GDB timeout with cleanup. This does not validate UART, ADC/DMA or the six physical stands.
 
-## memory/write regression
+## Current contract examples
 
-From the module root, run `python tests/renode-startup/run_contracts.py` with the same
-`--gdb`, `--cxx`, `--renode` arguments as above. This exercises real Target API: complete
-snapshots, counter-bearing RHS functions (verify on/off, table rows), signed/unsigned
-narrowing, bool, float, 64-bit value, enum, pointer, RHS rejection and preserved PC/SP.
-Logs, checks and input hashes go into build/memory-write/<unique-id>.
-Use `--module-root` to compare another local module revision with the same scenario.
-On 0.4.1 expect the original verification_failed ERROR caused by a second RHS call.
-Short GDB responses are injected in host tests, not reproduced by this Renode model.
-
-Existing STM32 platforms, custom models and offline dependencies: [skill resource](../../skills/stm32-gdbtest-renode/references/peripherals.en.md).
+For API 3 use `tests/renode-backend` and the [state/ring-buffer example](../../tests/stateful-buffer/README.en.md).
+They use the standard runner, preserve raw FAIL outcomes and check cleanup.
+`tests/renode-startup/run_contracts.py` is a historical expert experiment, not a current
+acceptance route: expressions containing hidden inferior calls are now forbidden.

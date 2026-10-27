@@ -1,6 +1,6 @@
 # Proposed v0.4.0 scope
 
-[Documentation](index.md) · [Русский](../ru/RELEASE040_SCOPE.md) · [Release policy](VERSIONING.md) · [Roadmap](../../TODO.md)
+[Documentation](../../../en/index.md) · [Русский](../ru/RELEASE040_SCOPE.md) · [Release policy](VERSIONING.md) · [Roadmap](../../../../TODO.md)
 
 Scope agreed on 2026-10-09 and reconciled with `main` at `44c795d`: `codex/check-techniques`,
 `codex/api040-cleanup`, and `codex/api030-feedback` have landed. This defines the release boundary,
@@ -12,7 +12,7 @@ stm32-gdbtest 0.4.0, `API_VERSION=2`. The local matrix below does not replace la
 | Group | v0.4.0 decision | Evidence and gate |
 | --- | --- | --- |
 | Journal/results | Include opt-in `records.json` capture, `results export/verify`, campaign index and standalone JSON/HTML report with themes and normal/expert controls | Already implemented in `[0.4.0]`; verify them together at the release SHA, including capture failure |
-| `skip(reason)` | Include minimal imperative SKIP, code 77, JUnit/CTest and explicit `run_hw` allowance | Host/docs and hardware studies completed; retain the [method limits](api/skip.md) |
+| `skip(reason)` | Include minimal imperative SKIP, code 77, JUnit/CTest and explicit `run_hw` allowance | Host/docs and hardware studies completed; retain the [method limits](../../../en/api/skip.md) |
 | `reach` correction | Include GDB single-quoted C++ signature handling | Host/hardware regression exists; repeat at the release SHA |
 | Compatible MCUs/infrastructure | Include AT32 profile, stand naming and architecture adapters | Already in `[0.4.0]`; verify available backend/build paths at the release SHA |
 | Techniques/examples | Include event/interval, watchpoint wait, injection, standalone C++ Og/O2 and TECH-019 | Examples built on existing API, without new `Target` methods |
@@ -99,7 +99,7 @@ Historical protocols and exact boundaries: [matrix](API_ACCEPTANCE.md).
 
 This scope does not declare the release ready or transfer experimental methods into core.
 
-External finite package dispatcher: [stand_loop](STAND_LOOP.md). Target API and existing run/pack commands are unchanged.
+External finite package dispatcher: [stand_loop](../../../en/STAND_LOOP.md). Target API and existing run/pack commands are unchanged.
 
 ## Owner decision — 2026-10-10
 

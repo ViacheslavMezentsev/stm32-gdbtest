@@ -21,4 +21,4 @@ t.check("nonnegative sequence", sequence >= 0, True)
 t.check("nonnegative sequence", t.value("board_adc_sequences") >= 0, True)
 ```
 
-[Справочник API](index.md) · [Таблица переименований](../API.md#пакет-030-числа-миграция-и-алиасы)
+[Справочник API](index.md) · [Таблица переименований](../RELEASE_CHANGES.md)

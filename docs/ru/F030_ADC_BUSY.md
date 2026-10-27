@@ -3,7 +3,7 @@
 [Документация](index.md) · [English](../en/F030_ADC_BUSY.md)
 
 Протокол этапа: числа тестов и планы ниже относятся к указанной ревизии.
-Текущий состав — [STATUS](STATUS.md), подготовка выпуска — [rc.2](RC2_READINESS.md).
+Текущий состав — [STATUS](STATUS.md), подготовка выпуска — [rc.2](../archive/pre-050/ru/RC2_READINESS.md).
 
 Ветка codex/f030-adc-busy от 5d09823, первая в пакете из трёх.
 Firmware и ядро не изменены. Тест HW_CI_ADC_BUSY включает CONT и ADSTART

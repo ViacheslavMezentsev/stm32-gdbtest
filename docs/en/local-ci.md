@@ -199,10 +199,7 @@ Retain Python/CMake versions and PASS/SKIP/ERROR counts; Linux does not check Wi
 
 ## Timing, stalls and concurrency
 
-File placement provides the main benefit, not additional containers. During 0.4.1 preparation,
-host took about 39 s for 451 tests (4 expected skips) on this machine. An earlier snapshot took
-26 s; a bind-mounted run reached 600 s. These are separate observations, not a controlled
-benchmark or a guaranteed deadline.
+File placement provides the main benefit, not additional containers. Use the same volume for source and build; timing depends on the suite and environment.
 
 - Start sequentially. Each `ci/run_checks.py` call creates unique output directories;
   independent snapshots need separate volumes. Never extract a new snapshot over an old one:
@@ -313,7 +310,7 @@ Retain JSON/JUnit, GDB/server/host logs and the original failure before another 
 
 Raw logs and personal configuration stay in ignored build/local storage. Publish sanitized
 accepted results without links to unavailable local files. A completed campaign is in
-[rc.1 acceptance](RC020_READINESS.md); the volume recipe adds no hardware coverage.
+[rc.1 acceptance](../archive/pre-050/en/RC020_READINESS.md); the volume recipe adds no hardware coverage.
 This documentation change checks docs and the Docker recipe smoke only; it claims no new hardware runs.
 
 ## Environment
@@ -351,7 +348,7 @@ matrix. For HAL use ARM_TOOLCHAIN_ROOT pointing to GCC13 and STM32CUBE_REPOSITOR
 otherwise the Windows/Linux GCC13 default is used. HAL GCC14/15 and hardware
 regression remain separate tasks.
 
-For rc.2 acceptance see the [matrix](RC2_READINESS.md). `tests/firmware/run_hw.py`
+For rc.2 acceptance see the [matrix](../archive/pre-050/en/RC2_READINESS.md). `tests/firmware/run_hw.py`
 uses boot/GPIO to exercise the runner; the full F030 suite is run separately.
 
 ## Docker and CI

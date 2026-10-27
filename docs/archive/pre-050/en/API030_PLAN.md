@@ -1,13 +1,13 @@
 # 0.3.0 plan: scenario API audit and redesign
 
-[Documentation](index.md) · [Русский](../ru/API030_PLAN.md)
+[Documentation](../../../en/index.md) · [Русский](../ru/API030_PLAN.md)
 
 Owner decision, 2026-10-04: audit the API and design a new operation set for **0.3.0**.
 The direction and names below are agreed for design. Signatures, result models, errors,
 support boundaries and migration still require agreement. This is a plan, not the current reference.
 
 The current candidate remains 0.2.0rc1; this document does not change the
-[current API](api/index.md) or [API specification](../TECHNICAL_SPECIFICATION_API.md).
+[current API](../../../en/api/index.md) or [API specification](../../../TECHNICAL_SPECIFICATION_API.md).
 The 0.3.0 target does not automatically assign API_VERSION, specification revision,
 schema numbers or a prerelease tag. Implementation and publication are separate later stages.
 
@@ -106,6 +106,6 @@ resources, predictable errors, no hidden resume/retry and sufficient positive/ne
 coverage. Shorter names or fewer lines alone do not justify replacement. Explicitly agree
 any lost capability.
 
-Research plans, prototypes and raw results stay local under [maintenance](maintenance.md).
+Research plans, prototypes and raw results stay local under [maintenance](../../../en/maintenance.md).
 This public plan records the accepted target and design surface; public contracts and
 accepted conclusions must not link to local research material.

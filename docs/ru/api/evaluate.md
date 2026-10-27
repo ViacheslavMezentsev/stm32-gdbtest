@@ -48,4 +48,4 @@ t.check("version", version, matches(r"^v1\.\d+\.\d+"))
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md); `as_type=str`: п. 4.18.1–4.18.2.
 
-Новый выборочный прогон: [сценарии API 0.4.0](../API040_SCENARIOS.md), пять STM32, включая ожидаемый SKIP.
+Новый выборочный прогон: [сценарии API 0.4.0](../../archive/pre-050/ru/API040_SCENARIOS.md), пять STM32, включая ожидаемый SKIP.

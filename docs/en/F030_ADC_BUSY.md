@@ -3,7 +3,7 @@
 [Documentation](index.md) · [Русский](../ru/F030_ADC_BUSY.md)
 
 Stage record: case counts and plans below refer to the stated revision.
-Current scope: [STATUS](STATUS.md); release preparation: [rc.2](RC2_READINESS.md).
+Current scope: [STATUS](STATUS.md); release preparation: [rc.2](../archive/pre-050/en/RC2_READINESS.md).
 
 Branch codex/f030-adc-busy based on 5d09823, first in a three-branch batch.
 Firmware and core unchanged. HW_CI_ADC_BUSY enables CONT and ADSTART before

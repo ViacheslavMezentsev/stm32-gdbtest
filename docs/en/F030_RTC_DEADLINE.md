@@ -3,7 +3,7 @@
 [Documentation](index.md) · [Русский](../ru/F030_RTC_DEADLINE.md)
 
 Stage record: case counts and plans below refer to the stated revision.
-Current scope: [STATUS](STATUS.md); release preparation: [rc.2](RC2_READINESS.md).
+Current scope: [STATUS](STATUS.md); release preparation: [rc.2](../archive/pre-050/en/RC2_READINESS.md).
 
 Second batch branch: codex/f030-rtc-deadline based on codex/f030-adc-busy (`3ba9c26`).
 Firmware/API unchanged. HW_CI_RTC_DEADLINE reaches rtc_wait at error=3 and sets

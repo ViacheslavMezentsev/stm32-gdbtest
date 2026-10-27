@@ -101,7 +101,7 @@ Mass erase, option bytes, firmware отладчика и shared mode автом�
 Наблюдение без остановки, SWV, external loaders, multicore и authentication не входят в проверенный общий API.
 [Владение отладчиком](DEBUGGER_OWNERSHIP.md) · [Linux/SSH](LINUX_STAND.md) · [Памятка](HOWTO.md).
 
-## st-util (v0.4.0)
+## st-util
 
 Подробности перенесены на [страницу st-util](backends/st-util.md), включая различия версий,
 сборку Ubuntu 20.04, ожидание Listening/idle и фактический код завершения.

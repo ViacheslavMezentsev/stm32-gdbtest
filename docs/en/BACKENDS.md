@@ -101,7 +101,7 @@ by analogy. Mass erase, option bytes, debugger firmware updates and shared mode 
 Observation without halt, SWV, external loaders, multicore and authentication are outside the verified common API.
 [Ownership](DEBUGGER_OWNERSHIP.md) · [Linux/SSH](LINUX_STAND.md) · [HOWTO](HOWTO.md).
 
-## st-util (v0.4.0)
+## st-util
 
 Details moved to the [st-util page](backends/st-util.md), including version differences, Ubuntu 20.04
 build, Listening/idle waits and actual server exit.

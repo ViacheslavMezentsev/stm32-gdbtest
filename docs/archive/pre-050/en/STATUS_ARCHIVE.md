@@ -1,6 +1,6 @@
 # Status and verification archive before 0.4.1
 
-[Documentation](index.md) → History · [Русский](../ru/STATUS_ARCHIVE.md)
+[Documentation](../../../en/index.md) → History · [Русский](../ru/STATUS_ARCHIVE.md)
 
 Historical snapshot: “current”, “in preparation” and old limitations below refer to their original
 stages and dates. Current information is in [STATUS](STATUS.md).
@@ -29,21 +29,21 @@ Core and scenario code have not changed since `c156db5`; the separate stand_loop
 Selected API040 GitHub/WSL/Windows checks each yielded 20 PASS + 5 SKIP; details:
 [API040_SCENARIOS](API040_SCENARIOS.md). Latest-SHA GitHub CI remains pending.
 
-[API_ACCEPTANCE](API_ACCEPTANCE.md) · [RELEASE040_SCOPE](RELEASE040_SCOPE.md) · [TODO](../../TODO.md).
+[API_ACCEPTANCE](API_ACCEPTANCE.md) · [RELEASE040_SCOPE](RELEASE040_SCOPE.md) · [TODO](../../../../TODO.md).
 
 Historical stages follow; [v0.2.0-rc.1 preparation](RC020_READINESS.md) is kept for reference.
 
-[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](F429_CMSIS_RTC_SLEEP.md)
+[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](../../../en/F429_CMSIS_RTC_SLEEP.md)
 
-[F429 ADC/DMA/units/failures:15/15 HW +3 repeats, HAL restored; specification0.56.](F429_CMSIS_ADC_DMA.md)
+[F429 ADC/DMA/units/failures:15/15 HW +3 repeats, HAL restored; specification0.56.](../../../en/F429_CMSIS_ADC_DMA.md)
 
-[F429 CMSIS baseline:7/7 HW, HAL restored; specification0.55. Fifth CI profile; ADC/RTC remain pending.](F429_CMSIS_BASELINE.md)
+[F429 CMSIS baseline:7/7 HW, HAL restored; specification0.55. Fifth CI profile; ADC/RTC remain pending.](../../../en/F429_CMSIS_BASELINE.md)
 
-[F401 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.54.](F401_CMSIS_RTC_SLEEP.md)
+[F401 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.54.](../../../en/F401_CMSIS_RTC_SLEEP.md)
 
-[F401 ADC/DMA/units/failures:15/15 HW and three positive repeats, HAL restored; specification0.53.](F401_CMSIS_ADC_DMA.md)
+[F401 ADC/DMA/units/failures:15/15 HW and three positive repeats, HAL restored; specification0.53.](../../../en/F401_CMSIS_ADC_DMA.md)
 
-[F401 CMSIS baseline: 7/7 HW through ST-Link/OpenOCD, HAL boot/blink restored. Flash256/RAM64; ADC/RTC are not migrated yet.](F401_CMSIS_BASELINE.md)
+[F401 CMSIS baseline: 7/7 HW through ST-Link/OpenOCD, HAL boot/blink restored. Flash256/RAM64; ADC/RTC are not migrated yet.](../../../en/F401_CMSIS_BASELINE.md)
 
 rc.2 snapshot: 5b7b466. Docs/Offline/Hardware SUCCESS; all 27 GitHub JSON reports verified.
 Windows: F030 CMSIS 18/18, HAL 17/17 with repeats/recovery; F030/OpenOCD,
@@ -52,7 +52,7 @@ USB reconnect, not an uninterrupted 10/10; the USB failure cause is unknown.
 All original HAL images restored. [Evidence and remaining gates](RC2_READINESS.md).
 
 rc.2 published at a0d6547. Post-tag F103 baseline (352417c) and ADC/DMA
-(3e123ad) landed. New [RTC/Sleep](F103_CMSIS_RTC_SLEEP.md):
+(3e123ad) landed. New [RTC/Sleep](../../../en/F103_CMSIS_RTC_SLEEP.md):
 20/20 HW, five positive repeats, timeout/recovery and HAL restore PASS.
 Initial restore ACL errors are preserved in the evidence.
 
@@ -68,8 +68,8 @@ Initial restore ACL errors are preserved in the evidence.
 | minimal-consumer F411 | Separate CMake integration example without YAML; demonstrates module integration, not complete board peripherals |
 | BlackPill consumer | fb2d186 / module 67b7431: Offline SUCCESS, five profiles/120 CTest; Windows 25/25, F411/OpenOCD 22/22 + timeout/recovery/restore. Final gitlink follows module land |
 
-Sources: [HAL→CMSIS](F030_CMSIS_ACCEPTANCE.md), [HAL protocol](F030_HAL_VALIDATION.md),
-[techniques](TESTING_TECHNIQUES.md), [CI](testing.md).
+Sources: [HAL→CMSIS](../../../en/F030_CMSIS_ACCEPTANCE.md), [HAL protocol](../../../en/F030_HAL_VALIDATION.md),
+[techniques](../../../en/TESTING_TECHNIQUES.md), [CI](../../../en/testing.md).
 The current Nucleo stand uses native ST-Link/OpenOCD; J-Link STLink results below are historical.
 F103 is WeAct BluePill-Plus/J-Link; F411 is BlackPill/ST-Link with OpenOCD and ST server.
 Remote runs, packages and the Hardware workflow were repeated for rc.2;
@@ -119,7 +119,7 @@ was unaligned, and Cortex-M0 does not allow unaligned word reads. The linker scr
 were fixed and CI checks the alignment — an example of a run-time defect that checks
 without hardware cannot see. After `fbc103d` the BIN is built from the selected
 sections only; before the release the hardware check was repeated on the final commit
-(item 8.19 of the [specification](../TECHNICAL_SPECIFICATION.md), section above). The
+(item 8.19 of the [specification](../../../TECHNICAL_SPECIFICATION.md), section above). The
 stm32-hwtest-blackpill suite was not repeated on these commits.
 
 ## Implementation limits
@@ -154,7 +154,7 @@ test and may replace Flash, while `ctest --preset offline` does not connect to a
 ## Next steps
 
 Prepare [rc.2](RC2_READINESS.md), then continue CMSIS migration and the
-[roadmap](../../TODO.md). RISC-V, external stand control and Python packaging
+[roadmap](../../../../TODO.md). RISC-V, external stand control and Python packaging
 remain planned work.
 
 
@@ -162,12 +162,12 @@ remain planned work.
 
 | Area | Verified scope |
 | --- | --- |
-| CI (GitHub Actions, Docker) | Docs, format, host on Windows and Linux; F030R8/F103C8/F411CE CI firmware with GCC 13.3.1, 14.2.1, 15.2.1 and CMake 3.28.3: build manifest, `prepare`, full image, 10 negative contracts, load section alignment, empty RAM section; the Linux stand environment in `ubuntu:20.04` on x86_64 and aarch64 ([checks and CI](testing.md)) |
+| CI (GitHub Actions, Docker) | Docs, format, host on Windows and Linux; F030R8/F103C8/F411CE CI firmware with GCC 13.3.1, 14.2.1, 15.2.1 and CMake 3.28.3: build manifest, `prepare`, full image, 10 negative contracts, load section alignment, empty RAM section; the Linux stand environment in `ubuntu:20.04` on x86_64 and aarch64 ([checks and CI](../../../en/testing.md)) |
 | CI firmware on hardware | Final check at `2143665`: 4 stands on Windows, 3 stands from Windows to Orange Pi 5, 3 stands in the Hardware workflow — 10/10 steps each; earlier 4 stands at `fbc103d` (sections below) |
 | Linux stand without hardware | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) in a container: environment installation, host tests (79 at revision 0.7), `doctor`, `build` and `prepare` of the CI firmware; the hardware path without a debugger — lock, OpenOCD start, ERROR "exited before ready", processes stopped |
 | Remote GDB server on hardware | Runner and GDB on Windows 10, GDB servers on Orange Pi 5 over SSH: F411CE / OpenOCD, F103C8 / J-Link CE, F030R8 / J-Link STLink — 10/10 each (`run_hw.py`) |
 | Remote GDB server without hardware | SSH loopback (OpenSSH, key, `known_hosts`) and a fake J-Link server: port forwarding, GDB connecting through the tunnel, recovery, stopping the server and returning its log, refusal on a busy stand host lock, cleanup after a broken session |
-| Linux stand on hardware | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 / J-Link GDB Server 9.80 arm64 — 10/10 after confirming the J-Link STLink terms window in a graphical session; without it the connection waits about 10 s, the first run gave 2/10 ([Linux stand](LINUX_STAND.md)) |
+| Linux stand on hardware | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 / J-Link GDB Server 9.80 arm64 — 10/10 after confirming the J-Link STLink terms window in a graphical session; without it the connection waits about 10 s, the first run gave 2/10 ([Linux stand](../../../en/LINUX_STAND.md)) |
 | ELF/HAL preflight | Positive case and 11 negative variants on F103C8/F401CC/F411CE ELF files of the stand project |
 | Stand project, F411CE / ST-Link / OpenOCD | 24/24 CTest (22 HW + 2 host) after the module split |
 | Stand project, F103C8 / J-Link | 24/24 CTest (22 HW + 2 host) |
@@ -196,7 +196,7 @@ API contents; a matching HAL version does not prove matching behaviour.
 gaps, LMA, bounds and read errors with a refusal before the server. Stand project:
 F411CE/ST-Link/OpenOCD 22/22, F103C8/J-Link 22/22; firmware left in reset/run. The
 non-loaded gap case was checked with a host fixture and an offline analysis of a saved
-K1921 ELF without connecting a stand. Policy — [images and CRC](IMAGES.md).
+K1921 ELF without connecting a stand. Policy — [images and CRC](../../../en/IMAGES.md).
 
 **Full image and CRC, 2026-09-25.** Host 65/65. The full 16 KiB was verified on
 F411CE/ST-Link/OpenOCD and F103C8/J-Link: programming an 0xA5 tail, a repeat without
@@ -212,15 +212,15 @@ diagnostic registers available on M0, without CFSR/HFSR. This does not check eve
 Cortex-M0 or every F0 backend combination.
 [Consumer protocol](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/F030_JLINK_VALIDATION.md) (Russian).
 
-[F411 CMSIS baseline](F411_CMSIS_BASELINE.md): HSI16, PC13, SysTick, TIM2; post-rc.2.
+[F411 CMSIS baseline](../../../en/F411_CMSIS_BASELINE.md): HSI16, PC13, SysTick, TIM2; post-rc.2.
 
-[F411 ADC/DMA](F411_CMSIS_ADC_DMA.md): factory calibration, numerical vectors and state faults.
+[F411 ADC/DMA](../../../en/F411_CMSIS_ADC_DMA.md): factory calibration, numerical vectors and state faults.
 
-[F411 RTC/Sleep](F411_CMSIS_RTC_SLEEP.md): calendar Alarm A, WFI and recovery.
+[F411 RTC/Sleep](../../../en/F411_CMSIS_RTC_SLEEP.md): calendar Alarm A, WFI and recovery.
 
-[Five-profile acceptance review and remaining HAL checks](CMSIS_ACCEPTANCE.md).
+[Five-profile acceptance review and remaining HAL checks](../../../en/CMSIS_ACCEPTANCE.md).
 
-[HAL F030: five GPIO/RCC techniques and source variants](F030_HAL_GPIO_RCC.md).
+[HAL F030: five GPIO/RCC techniques and source variants](../../../en/F030_HAL_GPIO_RCC.md).
 
 ## Final release handoff
 

@@ -69,7 +69,7 @@ CI проверяет механизм на CI-прошивках, включа�
 [Профильные контракты и offline-регрессия](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/HAL_CONTRACTS.md)
 остаются у стенда.
 
-## C++: квалифицированные имена и `this` (0.4.2)
+## C++: квалифицированные имена и `this`
 
 В `functions` и `type_context` допустимы `Probe::add`, `Probe::twice` и
 `demo::increment`, если `lookup_global_symbol` находит функцию в выбранном ELF.

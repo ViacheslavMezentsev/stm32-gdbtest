@@ -24,7 +24,7 @@ TIM2 PSC=15999/ARR=99: nominal 100 ms, IRQ28/vector44.
 Startup copies .data and clears BSS; pending/UIF is cleared before enabling IRQ.
 
 board.c and startup.c have separate F429 branches; ADC/RTC are neither called
-nor included in this build. Core API, schemas and version 0.1.0rc2 are unchanged.
+nor included in this build. These limits concern this build, not all MCU capabilities.
 
 ## Checks and limits
 

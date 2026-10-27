@@ -1,6 +1,6 @@
 # Candidate v0.2.0-rc.1: scope and acceptance
 
-[Documentation](index.md) · [Русский](../ru/RC020_READINESS.md)
+[Documentation](../../../en/index.md) · [Русский](../ru/RC020_READINESS.md)
 
 Agreed on 2026-10-03. stm32-gdbtest `0.2.0rc1`, API specification **0.2.3**, API_VERSION=1,
 api.toml schema=1, main specification **0.65**. Prepared locally; no tag or publication yet.
@@ -28,14 +28,14 @@ api.toml schema=1, main specification **0.65**. Prepared locally; no tag or publ
 6. record/records belong to one scenario invocation and do not export automatically.
    Run new configuration-capsule packages with the new module version.
 
-Examples and limits: [API](API.md), [techniques](TESTING_TECHNIQUES.md),
+Examples and limits: [API](API.md), [techniques](../../../en/TESTING_TECHNIQUES.md),
 [accepted results](API_ACCEPTANCE.md).
 
 ## Candidate verification
 
 Candidate code: **972af7c**. Executable code has not changed since this SHA;
 final preparation only corrected the obsolete version expectation in a host test.
-[Machine-readable results](../releases/v0.2.0-rc.1-results.json) include runtime,
+[Machine-readable results](../../../releases/v0.2.0-rc.1-results.json) include runtime,
 ELF, package and raw-report hashes, with individual stage statuses.
 
 | Check | Result |

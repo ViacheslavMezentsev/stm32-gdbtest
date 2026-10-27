@@ -9,7 +9,6 @@ Planning (Russian): [TODO](../../TODO.md), [ROADMAP](../../ROADMAP.md), [archive
 [Neutral VTOR/FPB example](LIVE_OBSERVER.md) — live window, oracle, cleanup and application techniques migrated to API 3.
 **Peripheral registers:** [known MMIO limitations and recommended validation route](MMIO.md).
 
-[Published v0.4.0](../releases/v0.4.0.md); [Release v0.4.1](../releases/v0.4.1.md). See [STATUS](STATUS.md) for the current summary; historical acceptance reports are listed at the end.
 
 Introduction — [README](../../README.en.md): an implementation of [DDTT](DDTT.md) for
 STM32 — checks of running firmware on a real board through GDB and an SWD debugger,
@@ -79,7 +78,7 @@ F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_D
 
 - [F030 HAL regression: migration plan and acceptance](F030_HAL_REGRESSION.md).
 
-[Techniques catalogue TECH-001…008](TESTING_TECHNIQUES.md) — stable scenario references, build prerequisites, limits and restoration. Preserve TECH-001/003/004 references when migrating HAL scenarios.
+[Techniques catalogue TECH-001…026](TESTING_TECHNIQUES.md) — stable scenario references, build prerequisites, limits and restoration. Preserve TECH-001/003/004 references when migrating HAL scenarios.
 
 [Standalone F030 HAL regression](F030_HAL_REGRESSION.md): test consumer, no API changes.
 
@@ -104,11 +103,9 @@ F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_D
 
 [Methods and properties reference](api/index.md).
 
-[0.3.0 plan: API audit and redesign](API030_PLAN.md).
 
 [Result export and evidence index](RESULTS.md).
 
-New package scenarios: [API 0.4.0](API040_SCENARIOS.md).
 
 - External finite package dispatcher: [stand_loop](STAND_LOOP.md). Target API and existing run/pack commands are unchanged.
 
@@ -128,7 +125,6 @@ New package scenarios: [API 0.4.0](API040_SCENARIOS.md).
 
 [Hardware metrics and results table](HARDWARE_METRICS.md).
 
-[rc.2 readiness and acceptance matrix](RC2_READINESS.md).
 
 [HAL F030 hardware acceptance](F030_HAL_VALIDATION.md): 17/17, six repeats, timeout/recovery and original firmware restoration verified on Windows/ST-Link/OpenOCD; specification 0.40. API unchanged.
 
@@ -151,3 +147,5 @@ Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
 [Condition qualification](DDTT_QUALIFICATION.md) separates raw outcomes, admission and final coloring. The first package is an external exporter and synthetic host example, with no Target API changes. Map schema 1 remains compatible; qualification requires schema 2. Measurement-chain and hardware validation are pending.
 
 [0.5.0 release acceptance and consumer migration plan (Russian)](../development/release-050-acceptance.md).
+
+[Release transitions](RELEASE_CHANGES.md) · [Neutral state and ring example](../../tests/stateful-buffer/README.en.md).

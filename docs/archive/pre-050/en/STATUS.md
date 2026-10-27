@@ -1,0 +1,82 @@
+# Current stm32-gdbtest status
+
+[Documentation](../../../en/index.md) → Current status · [Русский](../ru/STATUS.md)
+
+API_VERSION=3 is in main: await dispatcher, bounded call and expression guard; specifications 0.108 / API 0.3.23.
+The public [neutral VTOR/FPB example](../../../en/LIVE_OBSERVER.md) is prepared without core changes.
+Renode Windows/Linux: 8 expected outcomes and 3 confirmed DDTT links per OS.
+The research F411 hardware pilot produced 12/12 expected outcomes with independently
+verified recovery. The public package has not been rerun on a board.
+
+## 0.5.0 candidate — 2026-10-19
+
+SVD/MMIO, Renode/QEMU and the live window are implemented. Previous MMIO 141 assertions
+and P3 78/78 on six MCUs remain evidence for their respective revisions. Unified P5
+on a new API 3 candidate is pending, as are inspect/HIL, board qualification/DDTT and P6.
+Paired debugpy work is deferred. The release is not published yet.
+
+Release 0.5.0, 2026-10-20: P5b acceptance passed on the final commit `a7b0951` — offline Windows/Linux,
+Renode/QEMU, six MCUs, a remote SSH stand and the BluePill/BlackPill consumers on boards.
+[Result and limitations](../../../development/release-050-acceptance.md) (Russian), [release notes](../../../releases/v0.5.0.md),
+[stands](../../../en/STANDS.md), [migration steps](../../../en/MIGRATION_050.md).
+
+## Historical 0.4.x status
+
+**As of 2026-10-10.** **v0.4.0** is published; its tag points to `9c3ff2d`.
+Branch `codex/docs-041` prepares **0.4.1**: documentation and skills, with no API behaviour change.
+0.4.1 is not published yet; CI of the final SHA and owner actions remain required.
+
+| Versioned item | In preparation for 0.4.1 |
+| --- | --- |
+| `stm32-gdbtest` package | 0.4.1 |
+| Scenario API compatibility | `API_VERSION=2` (unchanged) |
+| target.toml schema | 2 (unchanged) |
+| General / API specification | 0.95 / 0.3.16 |
+
+These are not Python interpreter versions. See [version policy](VERSIONING.md),
+[0.4.1 scope](../../../releases/v0.4.1.md), [migration from 0.3.0](API.md).
+
+## Capabilities
+
+Local and SSH runs, CMake/CTest, packages, Hardware CI and finite autonomous loops;
+OpenOCD, ST-LINK GDB Server, st-util and J-Link. The API provides navigation, data observation,
+injection, check tables and matchers, `profile`, arbitrary `record`/`records`, and `skip(reason)`.
+Configuration enables capture to disk; export, integrity checking and HTML run separately.
+PASS/FAIL/ERROR/SKIP are distinct outcomes.
+
+[API reference](../../../en/api/index.md) · [results](../../../en/RESULTS.md) · [autonomous stand](../../../en/STAND_LOOP.md) ·
+[agent skills](../../../../skills/README.en.md).
+
+## Recorded verification
+
+| Snapshot | Evidence and scope |
+| --- | --- |
+| 0.4.1 preparation, 2026-10-10 | Docker docs + host: 6/6 groups; 451 host tests (4 expected skips); README example style PASS. No new hardware run; final-SHA GitHub CI is still pending |
+| Full matrix `b1264c1` | Docker 26/26; six Windows OpenOCD/J-Link stands, 280 scenarios / 608 steps; minimal-consumer offline 3/3 and F411 GPIO PASS |
+| Remote lifecycle `4cb5e0a`, scenarios through `a6b6dbd` | Windows → OrangePi/st-util 1.9.0; five STM32 boards, 233 combinations, 516 steps; 268 HW PASS and 5 expected timeout ERROR; OpenOCD BOOT/GPIO recovery 10/10 |
+| Selected 0.4.0 scenarios | Six models on Windows and Linux/GitHub: separate runs totalling 24 PASS + 6 expected SKIP per layout; Windows/WSL → SSH: five boards, 20 PASS + 5 SKIP each |
+| v0.4.0 CI | Docs, Offline and Hardware #14 successful at `ba10b12`; later documentation changes are not new hardware runs |
+| DDTT skill, 2026-10-10 | Local consumer branches: F103CB — 12 scenarios with a passing rerun of a corrected injection; F411/F401 — 22/22 each; baseline FAIL, fixes and recovery verified. This is not CI of published consumer branches |
+
+Do not add snapshots together. Linux-local and Hardware CI share evidence.
+Scenario counts are not coverage percentages. Versions, SHAs and original failures:
+[acceptance](API_ACCEPTANCE.md), [0.4.0 scenarios](API040_SCENARIOS.md), [metrics](HARDWARE_METRICS.md).
+Process placement: [run layouts](RUN_LAYOUTS.md); MCU/backend: [profiles](../../../en/MCU_PROFILES.md).
+
+## Known limits and debt
+
+- Long F411/F030 runs with ST-LINK GDB Server remain unaccepted due to repeated USB ERROR.
+  The owner accepted v0.4.0 with this limit; passing OpenOCD/st-util does not resolve it.
+- st-util 1.6.0 and 1.9.0 have different verified limits; see [st-util backend](../../../en/backends/st-util.md).
+- Linux x86_64 with local USB and WSL2/usbipd are not hardware-accepted. Each new board needs
+  verification of the actual MCU, GDB, build and backend combination. H503 is not accepted.
+- Binary USB serial diagnostics, the former F429 SP/SRAM anomaly and forced cleanup boundaries
+  remain open. One consumer DDTT Windows prepare with `-j 2` rejected its output directory;
+  sequential repetition passed, but the cause has not been isolated.
+- Halt affects timing and IRQs; injection does not reproduce the physical failure cause. Recovery
+  cannot guarantee reconnection. External instruments and power control remain separate tools.
+
+[Earlier verification history](STATUS_ARCHIVE.md) is retained separately.
+Further work and branch preparation: [TODO](../../../../TODO.md).
+
+[P3 contract and limitations](../../../en/LIVE_EXECUTION.md), [evidence](API_ACCEPTANCE.md).
