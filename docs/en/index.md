@@ -149,3 +149,5 @@ Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
 [0.5.0 release acceptance and consumer migration plan (Russian)](../development/release-050-acceptance.md).
 
 [Release transitions](RELEASE_CHANGES.md) · [Neutral state and ring example](../../tests/stateful-buffer/README.en.md).
+
+[State machine with logical time](../../tests/logical-time/README.en.md).

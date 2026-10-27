@@ -53,3 +53,18 @@ refused (`expression_call_forbidden`); call the function explicitly through `cal
 ## References
 
 - [API specification](../../TECHNICAL_SPECIFICATION_API.md), sections 4.8 and 4.23.
+
+## Correct and incorrect: return values
+
+```python
+result = t.call("poll", 110, timeout=2)  # async def: await t.call(...)
+t.check("returned", result["outcome"], "returned")
+t.check("value available", result["return_state"], "available")
+t.check("DONE", result["return_value"], 2)
+```
+
+Incorrect: `t.check("DONE", t.call("poll", 110), 2)` compares a dictionary to a number.
+Do not repeat call merely to inspect its return: every call executes target code again.
+Timeout uses host seconds; argument 110 is a logical tick in the teaching model.
+An application's zero return is not ApiError: use check, not refused.
+[Example with mutations and restoration](../../../tests/logical-time/README.en.md).

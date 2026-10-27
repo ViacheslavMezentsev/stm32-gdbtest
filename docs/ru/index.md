@@ -149,3 +149,5 @@ F030: RTC deadline через инъекцию аргумента, API без и
 [План выпускной приёмки 0.5.0 и миграции потребителей](../development/release-050-acceptance.md).
 
 [Изменения между выпусками](RELEASE_CHANGES.md) · [Нейтральный пример состояний и кольца](../../tests/stateful-buffer/README.md).
+
+[Автомат с логическим временем](../../tests/logical-time/README.md).

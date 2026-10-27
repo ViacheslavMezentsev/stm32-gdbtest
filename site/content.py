@@ -339,20 +339,32 @@ t.check("mode", t.read("GPIOA->MODER") & 0xC00, 0x400)    # magic numbers'''),
          ru=dict(title='Инъекции: ret и call',
                  summary='Подменить возврат текущей функции; вызвать функцию прошивки и получить результат.',
                  api3='call в async — await; timeout= ограничивает вызов (0.5.0). ret не исполняет тело функции.',
-                 good='ret проверяет реакцию вызывающего кода; call — с явным таймаутом.',
+                 good='ret проверяет реакцию вызывающего кода; call — с явным таймаутом. Сначала outcome/return_state, затем return_value; логическое время задаётся аргументом.',
                  bad='Вызов внутри выражения отклоняется; вызов без таймаута ограничен только лимитом сценария. ret не восстанавливает прерванный call.'),
          en=dict(title='Injection: ret and call',
                  summary='Replace the return of the current function; call a firmware function and get its result.',
                  api3='call is awaited in async; timeout= bounds the call (0.5.0). ret does not execute the function body.',
-                 good='ret checks the reaction of the calling code; call with an explicit timeout.',
+                 good='ret checks the caller; call uses an explicit timeout. Check outcome/return_state before return_value; pass logical time as an argument.',
                  bad='A call inside an expression is refused; a call without a timeout is bounded only by the scenario limit. ret does not restore an interrupted call.'),
          good='''t.reach("app_step")
 result = t.ret(42)
 t.check("caller got the value", t.read("app_received.produced"), result["applied"])
 
 value = t.call("app_checksum", 7, timeout=2)       # async def: await t.call(...)
-t.check("checksum(7)", value["return_value"], 22)''',
-         bad='''t.read("app_checksum(7)")   # refused: expression_call_forbidden
+t.check("returned", value["outcome"], "returned")
+t.check("value available", value["return_state"], "available")
+t.check("checksum(7)", value["return_value"], 22)
+
+# Separate tests/logical-time ELF: ticks are not host seconds.
+t.reach("ready")
+t.call("start", 100, 10, timeout=2)
+result = t.call("poll", 110, timeout=2)
+t.check("returned", result["outcome"], "returned")
+t.check("value available", result["return_state"], "available")
+t.check("DONE", result["return_value"], 2)''',
+         bad='''t.check("DONE", t.call("poll", 110), 2)   # dict is not the returned number
+
+t.read("app_checksum(7)")   # refused: expression_call_forbidden
 t.call("app_wait_forever")   # no timeout: only the scenario limit stops it
 t.call("app_log", "text")   # string argument: unsupported_argument'''),
     dict(id='points', methods=[('breakpoint', '0.1.0-rc.1'), ('watch', '0.3.0'), ('Point', '0.3.0'), ('clear', '0.1.0-rc.1')],

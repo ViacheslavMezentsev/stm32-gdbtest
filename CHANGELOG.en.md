@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Neutral logical-time example: thresholds, wrap, retry after failure and state preservation on rejected starts; three mutations and a repeated fix on host/Renode. Pages and the reference clarify call results without changing site design or core.
+
 - Reports: linked method/evidence tables, method/evidence/remark codes, automatic numbering and an explanation of the DDTT route. Audited changes against v0.5.0 and skill resource portability; refreshed outdated guidance.
 
 - Reports: engineering layout, descriptive footers, coloured tables/callouts and categorical charts; a sanitised example using actual 0.5.0 acceptance evidence and host/Renode repeats. Remaining 0.5.1 acceptance plan.

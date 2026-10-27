@@ -52,3 +52,18 @@ async def checksum(t):
 ## Ссылки
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), разделы 4.8 и 4.23.
+
+## Правильно и неправильно: возвращаемое значение
+
+```python
+result = t.call("poll", 110, timeout=2)  # async def: await t.call(...)
+t.check("returned", result["outcome"], "returned")
+t.check("value available", result["return_state"], "available")
+t.check("DONE", result["return_value"], 2)
+```
+
+Неправильно: `t.check("DONE", t.call("poll", 110), 2)` сравнивает словарь с числом.
+Не повторяйте call ради проверки значения: каждый вызов заново исполняет код цели.
+`timeout` измеряется в секундах хоста; аргумент 110 — логические тики учебной модели.
+Возврат 0 прикладной функции — не ApiError: применяйте check, а не refused.
+[Пример с дефектами и восстановлением](../../../tests/logical-time/README.md).

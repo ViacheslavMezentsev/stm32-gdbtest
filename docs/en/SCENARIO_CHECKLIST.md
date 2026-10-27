@@ -128,3 +128,13 @@ Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
   external sources according to actual interventions? Is irreversible output accounted for?
 
 These are manual review questions; current automated checks do not establish these properties.
+
+## Logical time and call results
+
+- Compare return_value, not the call dictionary; verify outcome and return_state.
+- Separate model ticks from API timeout and host time; no hidden calls in read.
+- Cover threshold −1/exact/+1, wrap and a fresh epoch after failure without reset.
+- Define counter width, allowed interval and the no-missed-full-wrap condition.
+- Distinguish application return codes from API refusals (refused).
+
+[Executable example](../../tests/logical-time/README.en.md).

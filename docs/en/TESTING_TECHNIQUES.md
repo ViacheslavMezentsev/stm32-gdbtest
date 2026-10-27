@@ -727,6 +727,13 @@ held locks may make GDB invocation unsuitable.
 watchdog behavior or load safety. Check those with a live window and a separate timing witness.
 Halting the CPU does not freeze all peripherals.
 
+**Executable example:** [logical-time](../../tests/logical-time/README.en.md): thresholds,
+uint32_t wrap, retry after failure without reset, and rejected starts preserving the POD.
+Three independent mutations, the same scenarios on the fix and a repeat. Call returns
+an operation dictionary: check outcome/return_state, then compare return_value rather
+than the dictionary. Pass ticks explicitly; no hidden calls in read or host sleep.
+A start return value of zero is checked with check, not refused.
+
 <a id="tech-023"></a>
 ## TECH-023 — Driver and peripheral consistency
 
