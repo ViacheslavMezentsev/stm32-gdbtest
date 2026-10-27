@@ -768,6 +768,11 @@ and debug enables if modified.
 Host time includes transport; comparing two derivatives of the same MCU clock does not
 establish its absolute frequency.
 
+**Executable example:** [counter-cost](../../tests/counter-cost/README.en.md): an independent
+increment bound, valid zero versus unknown, empty baseline and total observation cost.
+Model ticks and measured host GDB-request durations are recorded separately. Three
+mutations use the same scenarios as the fix; no physical WCET claim is made.
+
 <a id="tech-025"></a>
 ## TECH-025 — Irregular samples and filter quality
 

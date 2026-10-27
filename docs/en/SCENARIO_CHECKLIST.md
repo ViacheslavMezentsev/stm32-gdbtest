@@ -138,3 +138,13 @@ These are manual review questions; current automated checks do not establish the
 - Distinguish application return codes from API refusals (refused).
 
 [Executable example](../../tests/logical-time/README.en.md).
+
+## Counters and observation cost
+
+- Independent increment bound strictly below one full wrap?
+- Completeness, epoch and valid checked before interpreting zero?
+- Empty baseline distinguished from total observer cost?
+- All samples retained with predeclared warmup, units and measurement scope?
+- Sample maximum is not WCET; host time is not MCU cycles?
+
+[Example](../../tests/counter-cost/README.en.md).

@@ -151,3 +151,5 @@ Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
 [Release transitions](RELEASE_CHANGES.md) · [Neutral state and ring example](../../tests/stateful-buffer/README.en.md).
 
 [State machine with logical time](../../tests/logical-time/README.en.md).
+
+[Counters and observation cost](../../tests/counter-cost/README.en.md).

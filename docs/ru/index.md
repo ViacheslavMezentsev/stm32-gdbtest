@@ -151,3 +151,5 @@ F030: RTC deadline через инъекцию аргумента, API без и
 [Изменения между выпусками](RELEASE_CHANGES.md) · [Нейтральный пример состояний и кольца](../../tests/stateful-buffer/README.md).
 
 [Автомат с логическим временем](../../tests/logical-time/README.md).
+
+[Счётчики и стоимость наблюдения](../../tests/counter-cost/README.md).
