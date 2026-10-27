@@ -85,3 +85,14 @@ W1C, 8/16/32 bits, inheritance, lost ACK and incorrect SVD. Host regression:
 The connection must serve exactly one inferior: raw packets do not select a process on a multiprocess remote server.
 
 Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](../API_ACCEPTANCE.md).
+
+## Reason and combined failures (0.6.0 candidate)
+
+`reason` is allowed without `override`: a nonblank string is captured in
+`mmio.attempt` without changing SVD permissions or effect consent. Invalid values
+without override yield `invalid_reason` before transport; override still requires a reason.
+If transport and result auditing both fail, the caller receives `transport_failed`
+(transport/unknown), the transport cause in `__cause__`, and the audit failure in
+`details.audit_error`. No retry occurs. Otherwise the existing `journal_unavailable`
+with effect=none/unknown before/after transport is preserved. ACK does not prove a
+physical effect.

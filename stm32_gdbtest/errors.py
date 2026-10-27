@@ -60,6 +60,24 @@ class RecordError(ApiError, ValueError):
         self.details["limit"] = limit
 
 
+def error_summary(error):
+    """Bounded, JSON-safe diagnostic; never serialize user payloads or traceback locals."""
+    try:
+        message = str(error)[:512]
+    except Exception:
+        message = '<exception message unavailable>'
+    result = dict(type=type(error).__name__[:128], message=message)
+    details = getattr(error, 'details', {})
+    if type(details) is not dict:
+        details = {}
+    for key in ('operation', 'stage', 'effect', 'code', 'limit', 'record_name',
+                'path', 'maximum', 'used', 'attempted', 'attempted_lower_bound'):
+        value = details.get(key)
+        if type(value) in (str, int, bool) or value is None:
+            result[key] = value[:256] if type(value) is str else value
+    return result
+
+
 def fail(operation, stage, effect, code, message, cause=None, **details):
     """Raise `ApiError` with validated vocabulary, keeping an explicit cause when given.
 

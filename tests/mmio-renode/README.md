@@ -34,3 +34,9 @@ The simulated lost ACK occurs after a real write; exactly one callback is requir
 допустим ровно один callback.
 
 See [RU contract](../../docs/ru/api/mmio.md) / [EN contract](../../docs/en/api/mmio.md).
+
+
+A1 также проверяет reason без override (один доступ), сохранность прав и двойной
+отказ: запись выполнена моделью, ACK намеренно потерян, результат не помещается
+в журнал. Ожидается transport_failed с отдельным audit_error и ровно одним callback.
+Это модель транспорта и периферии, а не аппаратная приёмка.

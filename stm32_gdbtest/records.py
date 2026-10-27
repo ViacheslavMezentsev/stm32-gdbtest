@@ -20,30 +20,36 @@ class Journal:
         self._nodes = 0
         self._text_bytes = 0
 
-    def _copy(self, value, depth, ancestors, budget):
+    def _copy(self, value, depth, ancestors, budget, path):
         _, node_limit, depth_limit, text_limit, integer_bits = self._limits
+        def exceeded(limit, maximum, used, attempted, lower_bound=False):
+            error = RecordError("limit_exceeded", f"{limit} limit exceeded", limit=limit)
+            error.details.update(path=path, maximum=maximum, used=used,
+                                 attempted=attempted, attempted_lower_bound=lower_bound)
+            raise error
+
         budget[0] += 1
         if budget[0] > node_limit:
-            raise RecordError("limit_exceeded", "node limit exceeded", limit="nodes")
+            exceeded("nodes", node_limit, self._nodes, budget[0])
         if depth > depth_limit:
-            raise RecordError("limit_exceeded", "depth limit exceeded", limit="depth")
+            exceeded("depth", depth_limit, 0, depth)
         kind = type(value)
         if kind is str:
             # Bound allocation before UTF-8 encoding; reject lone surrogates.
             if len(value) > text_limit - budget[1]:
-                raise RecordError("limit_exceeded", "text limit exceeded", limit="text_bytes")
+                exceeded("text_bytes", text_limit, self._text_bytes, budget[1] + len(value), True)
             try:
                 budget[1] += len(value.encode("utf-8"))
             except UnicodeEncodeError as exc:
                 raise RecordError("invalid_text", "invalid Unicode text") from exc
             if budget[1] > text_limit:
-                raise RecordError("limit_exceeded", "text limit exceeded", limit="text_bytes")
+                exceeded("text_bytes", text_limit, self._text_bytes, budget[1])
             return value
         if value is None or kind is bool:
             return value
         if kind is int:
             if value.bit_length() > integer_bits:
-                raise RecordError("limit_exceeded", "integer limit exceeded", limit="integer_bits")
+                exceeded("integer_bits", integer_bits, 0, value.bit_length())
             return value
         if kind is float:
             if not math.isfinite(value):
@@ -57,13 +63,15 @@ class Journal:
         ancestors.add(identity)
         try:
             if kind is list:
-                return [self._copy(item, depth + 1, ancestors, budget) for item in value]
+                return [self._copy(item, depth + 1, ancestors, budget, (path + f"[{i}]")[:256])
+                        for i, item in enumerate(value)]
             result = {}
             for key, item in value.items():
                 if type(key) is not str:
                     raise RecordError("unsupported_type", "dictionary keys must be strings")
-                copied_key = self._copy(key, depth + 1, ancestors, budget)
-                result[copied_key] = self._copy(item, depth + 1, ancestors, budget)
+                child = (path + "[" + repr(key[:48]) + "]")[:256]
+                copied_key = self._copy(key, depth + 1, ancestors, budget, (child + ".key")[:256])
+                result[copied_key] = self._copy(item, depth + 1, ancestors, budget, child)
             return result
         finally:
             ancestors.remove(identity)
@@ -71,11 +79,23 @@ class Journal:
     def record(self, name, data):
         if type(name) is not str or not name:
             raise RecordError("invalid_name", "name must be a non-empty string")
-        if len(self._entries) >= self._limits[0]:
-            raise RecordError("limit_exceeded", "record limit exceeded", limit="records")
         budget = [self._nodes, self._text_bytes]
-        copied_name = self._copy(name, 0, set(), budget)
-        snapshot = self._copy(data, 0, set(), budget)
+        try:
+            if len(self._entries) >= self._limits[0]:
+                error = RecordError("limit_exceeded", "record limit exceeded", limit="records")
+                error.details.update(path="$", maximum=self._limits[0], used=len(self._entries),
+                                     attempted=len(self._entries) + 1, attempted_lower_bound=False)
+                raise error
+            copied_name = self._copy(name, 0, set(), budget, "$name")
+            snapshot = self._copy(data, 0, set(), budget, "$data")
+        except RecordError as error:
+            error.details['record_name'] = name[:128]
+            if error.code == 'limit_exceeded':
+                d = error.details
+                error.args = (f"{d['limit']} limit exceeded in {name[:128]!r} at {d['path']}: "
+                              f"maximum={d['maximum']}, used={d['used']}, "
+                              f"attempted{' at least' if d['attempted_lower_bound'] else ''}={d['attempted']}",)
+            raise
         # Commit only after the entire value has passed validation.
         self._entries.append({"sequence": len(self._entries) + 1,
                               "name": copied_name, "data": snapshot})

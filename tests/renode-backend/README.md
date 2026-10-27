@@ -12,3 +12,8 @@ Renode processes. Results and separate attempts are saved under build/renode-bac
 Intentional FAIL/ERROR/SKIP are checked against expectations; summary.json must contain
 only ok=true. The live scenarios use the public runner, not a separate probe launcher.
 See [RU](../../docs/ru/LIVE_EXECUTION.md) / [EN](../../docs/en/LIVE_EXECUTION.md).
+
+A1 regressions intentionally exhaust the journal before resume, at a fault guard,
+a passive wait, and normal scenario return. They require ERROR with separate audit
+diagnostics and VERIFIED execution cleanup. A fault guard is an ordinary neutral
+symbol, not a hardware exception. No journal limits are raised to make these pass.

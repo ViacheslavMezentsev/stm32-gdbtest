@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from stm32_gdbtest import arch
 from stm32_gdbtest.target import Target, CheckFailed
+from stm32_gdbtest.errors import error_summary
 from stm32_gdbtest.compatibility import inspect_gdb_api, require_gdb_api
 from stm32_gdbtest.identity import check_target
 from stm32_gdbtest.image import compare_regions, validate_regions
@@ -130,10 +131,14 @@ async def main():
         report["status"] = "PASS"
     except ScenarioSkipped as exc:
         report.update(status="SKIP", skip_reason=str(exc))
-    except CheckFailed:
-        report.update(status="FAIL", error=traceback.format_exc())
-    except BaseException:
-        report.update(status="ERROR", error=traceback.format_exc())
+    except CheckFailed as exc:
+        report.update(status="FAIL", error=traceback.format_exc(), primary_error=error_summary(exc))
+    except BaseException as exc:
+        report.update(status="ERROR", error=traceback.format_exc(), primary_error=error_summary(exc))
+        if getattr(exc, 'details', {}).get('audit_error') is not None:
+            report['audit_error'] = exc.details['audit_error']
+        if exc.__cause__ is not None:
+            report['primary_cause'] = error_summary(exc.__cause__)
     finally:
         # Stop before diagnostics/capture/teardown; preserve the body error independently.
         execution = getattr(target, '_execution', None)
@@ -141,10 +146,7 @@ async def main():
             target._unawaited = None
         if execution is not None:
             try:
-                if execution.state() not in ('stopped', 'exited'):
-                    await target.halt(timeout=2.0)
-                if getattr(target, '_call_incomplete', False):
-                    raise RuntimeError('Inferior call context not restored')
+                await execution.cleanup()
                 report['execution_cleanup'] = 'VERIFIED'
             except BaseException:
                 report.update(status_before_execution_cleanup=report['status'], status='ERROR',

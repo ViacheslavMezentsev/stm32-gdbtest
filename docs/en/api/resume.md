@@ -54,3 +54,21 @@ value = t.read("counter")            # refused: the target is running
 - [Live execution window](../LIVE_EXECUTION.md), [VTOR/FPB observer](../LIVE_OBSERVER.md).
 - [API specification](../../TECHNICAL_SPECIFICATION_API.md) (Russian), items 4.5, 4.22.
 - [resume](resume.md), [wait](wait.md), [halt](halt.md).
+
+## Execution versus audit errors (0.6.0 candidate)
+
+Failure to record `execution` does not replace `fault_stop`, `signal_stop`,
+`state_unknown` or a halt failure. The primary exception retains its type/code and
+receives `details.audit_error`. Without a primary failure, audit raises
+`ApiError(code="journal_unavailable", stage="audit")`: effect is `applied` after
+continue and `completed` after an observed outcome, never an assertion of no effect.
+`result.json` separates `primary_error`, `audit_error`, `primary_cause` (when present)
+and `execution_audit_errors` (first 16 diagnostics with state and outcome/primary error).
+`execution_audit_error_count` counts all failures without recursively using Journal.
+Further details are omitted after 16; this is not a journal truncation policy.
+
+Runner stops independently of Journal capacity. A confirmed stop with restored call
+context yields `execution_cleanup=VERIFIED`; failed halt audit is separately reported
+as `execution_cleanup_audit_error`, with overall ERROR. Unknown state or incomplete
+call context still fails cleanup. An explicit `await halt()` in your own finally can
+also raise: preserve both errors, or leave emergency stopping to runner.

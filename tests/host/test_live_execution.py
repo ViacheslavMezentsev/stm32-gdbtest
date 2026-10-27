@@ -179,7 +179,7 @@ class LiveTests(unittest.TestCase):
         self.live.resume();self.run_wait()
         self.target.record=lambda *args:(_ for _ in ()).throw(ValueError('journal full'))
         self.stop()
-        self.assertIsInstance(self.errors[-1],ValueError)
+        self.assertEqual(self.errors[-1].code, 'journal_unavailable')
         self.assertIsNone(self.live.pending)
 
     def test_timer_failure_resumes_with_error(self):
@@ -208,3 +208,56 @@ class LiveTests(unittest.TestCase):
         with patch('stm32_gdbtest.mmio.threading.current_thread',return_value=object()):
             with self.assertRaisesRegex(ValueError,'main_thread_required'):transport.prepare()
         self.assertEqual(calls,[])
+
+    def full_journal(self):
+        from stm32_gdbtest.records import Journal
+        journal = Journal(max_records=1)
+        journal.record('full', 1)
+        self.target.record = journal.record
+
+    def test_primary_errors_survive_full_journal(self):
+        for kind in ('fault', 'signal'):
+            with self.subTest(kind=kind):
+                self.target.record = lambda *args: None
+                self.live.resume(); self.run_wait(); self.full_journal()
+                self.stop(kind, 'SIGSEGV' if kind == 'signal' else None)
+                error = self.errors[-1]
+                self.assertEqual(error.code, kind + '_stop')
+                self.assertEqual(error.details['audit_error']['limit'], 'records')
+                self.assertEqual(self.target.report['execution_audit_errors'][-1]['state'], 'stopped')
+
+    def test_resume_audit_error_reports_applied_effect(self):
+        self.full_journal()
+        with self.assertRaises(ApiError) as cm: self.live.resume()
+        self.assertEqual(cm.exception.details['effect'], 'applied')
+        self.assertEqual(cm.exception.details['state'], 'running')
+        self.assertEqual(self.commands, ['continue &'])
+
+    def test_cleanup_confirmed_even_when_audit_full(self):
+        self.live.resume(); self.full_journal()
+        self.target.halt = lambda timeout: self.live.wait(timeout, 'halt')
+        runner = CoroutineRunner(self.live.cleanup(), self.g, self.errors.append)
+        runner.start(); self.drain(); self.stop('signal', 'SIGINT')
+        self.assertTrue(runner.finished)
+        self.assertFalse(self.errors)
+        self.assertEqual(self.live.state(), 'stopped')
+        self.assertIn('execution_cleanup_audit_error', self.target.report)
+        self.assertEqual(self.target.report['status'], 'ERROR')
+
+    def test_halt_timeout_and_disconnect_survive_audit_failure(self):
+        self.live.resume(); self.full_journal(); self.run_wait('halt')
+        self.live.pending.deadline = 0
+        self.live.poll(self.live.pending); self.drain()
+        self.assertEqual(self.errors[-1].code, 'halt_timeout')
+        self.assertIn('audit_error', self.errors[-1].details)
+        self.live.unknown = False; self.valid = False
+        self.run_wait()
+        self.assertEqual(self.errors[-1].code, 'state_unknown')
+
+    def test_audit_diagnostics_are_bounded(self):
+        self.full_journal()
+        for _ in range(20):
+            with self.assertRaises(ApiError):
+                self.live.audit('wait', dict(outcome='timeout'))
+        self.assertEqual(len(self.target.report['execution_audit_errors']), 16)
+        self.assertEqual(self.target.report['execution_audit_error_count'], 20)

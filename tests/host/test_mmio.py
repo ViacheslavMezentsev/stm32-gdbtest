@@ -165,7 +165,7 @@ class Tests(unittest.TestCase):
         self.assertEqual(cm.exception.details, dict(operation='mmio.write', code='invalid_value', stage='validation', effect='none'))
 
     def test_invalid_name_and_consent(self):
-        for name, options in [(None, {}), ('', {}), ('P.UNKNOWN', {}), ('P.R', {'allow_effects': 1}), ('P.R', {'reason': 'no override'})]:
+        for name, options in [(None, {}), ('', {}), ('P.UNKNOWN', {}), ('P.R', {'allow_effects': 1}), ('P.R', {'reason': '   '})]:
             with self.assertRaises(MMIOError):
                 self.mmio.read(name, **options)
         self.transport.prepare.assert_not_called()
@@ -203,3 +203,34 @@ class Tests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+    def test_reason_without_override_preserves_policy(self):
+        self.mmio.write('P.R', 3, reason='restore saved state')
+        row = self.journal.records()[0]['data']
+        self.assertEqual(row['reason'], 'restore saved state')
+        self.assertFalse(row['override'])
+        self.catalog.registers['P.R'] = replace(self.reg, access='read-only')
+        with self.assertRaises(MMIOError) as cm:
+            self.mmio.write('P.R', 1, reason='not permission')
+        self.assertEqual(cm.exception.code, 'write_denied')
+        self.assertEqual(self.transport.write.call_count, 1)
+
+    def test_transport_error_survives_audit_failure(self):
+        primary = TimeoutError('lost ACK')
+        self.transport.write.side_effect = primary
+        audit = ValueError('journal full')
+        m = MMIO(self.catalog, self.transport, Mock(side_effect=[None, audit]))
+        with self.assertRaises(MMIOError) as cm:
+            m.write('P.R', 1)
+        self.assertEqual(cm.exception.code, 'transport_failed')
+        self.assertIs(cm.exception.__cause__, primary)
+        self.assertEqual(cm.exception.details['audit_error']['message'], 'journal full')
+        self.transport.write.assert_called_once()
+        self.transport.read.assert_not_called()
+
+    def test_invalid_reason_no_transport(self):
+        for reason in ('', '  ', 1, False, []):
+            with self.assertRaises(MMIOError) as cm:
+                self.mmio.read('P.R', reason=reason)
+            self.assertEqual(cm.exception.code, 'invalid_reason')
+        self.transport.prepare.assert_not_called()

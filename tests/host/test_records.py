@@ -126,3 +126,40 @@ class RecordTests(unittest.TestCase):
         for limit in (0, -1, True, 1.5):
             with self.assertRaises(ValueError):
                 Journal(max_records=limit)
+
+    def test_limit_diagnostics_and_atomicity(self):
+        j = Journal(max_nodes=7)
+        j.record('ok', 1)
+        with self.assertRaises(RecordError) as cm:
+            j.record('sample', {'values': [1, 2]})
+        d = cm.exception.details
+        self.assertEqual((d['record_name'], d['path']), ('sample', "$data['values'][1]"))
+        self.assertEqual((d['maximum'], d['used'], d['attempted']), (7, 2, 8))
+        self.assertEqual(j.records(), [{'sequence': 1, 'name': 'ok', 'data': 1}])
+        j.record('next', 2)
+
+    def test_text_lower_bound_and_bounded_labels(self):
+        j = Journal(max_text_bytes=3)
+        with self.assertRaises(RecordError) as cm: j.record('x' * 10000, '\u044f' * 10000)
+        self.assertLessEqual(len(cm.exception.details['record_name']), 128)
+        self.assertTrue(cm.exception.details['attempted_lower_bound'])
+        self.assertEqual(j.records(), [])
+
+    def test_each_limit_has_numeric_context(self):
+        for options, data, limit in [({'max_depth': 1}, [[1]], 'depth'),
+                                     ({'max_integer_bits': 3}, 8, 'integer_bits'),
+                                     ({'max_text_bytes': 2}, '\u044f', 'text_bytes')]:
+            with self.subTest(limit=limit):
+                j = Journal(**options)
+                with self.assertRaises(RecordError) as cm: j.record('a', data)
+                d = cm.exception.details
+                self.assertEqual(d['limit'], limit)
+                self.assertGreater(d['attempted'], d['maximum'])
+                self.assertEqual(d['used'], 0)
+                self.assertEqual(j.records(), [])
+
+    def test_error_summary_handles_bad_exception_text(self):
+        from stm32_gdbtest.errors import error_summary
+        class Bad(Exception):
+            def __str__(self): raise ValueError('cannot format')
+        self.assertEqual(error_summary(Bad())['message'], '<exception message unavailable>')

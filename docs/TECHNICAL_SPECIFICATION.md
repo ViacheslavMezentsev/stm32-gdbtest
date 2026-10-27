@@ -5,13 +5,19 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.114 (P6b: выпуск 0.5.0 по итогам приёмки P5b) |
-| **Дата формирования** | 20.10.2026 |
+| **Ревизия** | 0.115 (A1: ошибки и очистка) |
+| **Дата формирования** | 27.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | Выпуск пакета stm32-gdbtest `0.5.0` (итоговый коммит приёмки `a7b0951`, р.0.114); API_VERSION=3, target schema 3 (schema 1/2 совместимы), ТЗ API 0.3.23; MMIO/SVD (р.0.104), контракты memory/write (р.0.99), Renode и QEMU (р.0.102). Публикация владельцем после CI итогового SHA. |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; docs/archive/SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
+
+### Изменения ревизии 0.115
+
+| Раздел | Изменение |
+| --- | --- |
+| 5.3.11, TC-184 | Раздельные первичные ошибки, ошибки аудита и подтверждение очистки |
 
 ### Изменения ревизии 0.114
 
@@ -257,6 +263,7 @@ Runner задаёт режим до сценария и резервирует 2
 | 0.112 | 19.10.2026 | P6a: инструкции API 3, маршруты потребителей без платы; архив docs/archive, без изменения ядра. |
 | 0.113 | 20.10.2026 | P6b-pre: `__version__` 0.5.0 до кампании P5b; API и схемы без изменений. |
 | 0.114 | 20.10.2026 | P6b: выпуск 0.5.0 по итогам P5b; ограничения в матрице приёмки, требования без изменений. |
+| 0.115 | 27.10.2026 | A1: раздельная диагностика ошибок и очистки. |
 
 ### Изменения ревизии 0.107
 
@@ -1673,6 +1680,11 @@ GDB-сервера. Override НЕ ДОЛЖЕН подменять команды
 
 5.3.10. В stdout ДОЛЖНЫ выводиться предупреждения `WARNING: …`, итоговая строка `<STATUS> <ID>: <путь result.json>` и при не-PASS — текст ошибки. `[R]`
 
+5.3.11. [U] Агент ДОЛЖЕН сохранять исходный traceback и отдельную ограниченную
+сводку primary_error; при наличии — audit_error и primary_cause. Ошибка аудита
+исполнения НЕ ДОЛЖНА означать неподтверждённую остановку: состояние, call-контекст
+и execution_cleanup ДОЛЖНЫ проверяться отдельно по ТЗ API 4.22.7. (р.0.115)
+
 ### 5.4. Владение отладчиком
 
 5.4.1. Блокировка ДОЛЖНА захватываться после чтения стенда и профиля, до снимка ELF, preflight, `objcopy` и сервера, и удерживаться на всём выполнении, включая recovery и остановку процессов сервера. `[R]`
@@ -2833,6 +2845,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-177 | tests/host/test_qemu_backend.py; tests/qemu-backend/run.py Windows/Linux | Конфигурация/отказы, prepare, PASS/FAIL/reset/timeout/repeat, ранний выход, semihosting и cleanup (р.0.102) |
 | TC-178 | tests/host/test_svd.py; Windows/Linux, без MCU | SVD: права, массивы/наследование, бюджеты, захват и перенос (р.0.103) |
 | TC-183 | T: tests/host/test_ddtt_qualification.py, test_ddtt_portable.py; examples/ddtt-qualification | Применимость, сохранение raw, UNKNOWN, optional capability, seal и приватность (р.0.110) |
+| TC-184 | T: tests/host/test_live_execution.py; D: tests/renode-backend/run.py | Раздельные причины и cleanup с полным журналом (р.0.115) |
 | TC-182 | T: tests/host/test_hil_inspect.py; CLI Windows/Linux | Связи, SVD/capsule, backend, отказы, AST, cwd/junction/symlink, приватность и коды завершения (р.0.109) |
 | TC-181 | T: tests/host/test_openocd_shutdown.py | Порядок finish, exit 0/ошибка/таймаут и освобождение процесса (р.0.107) |
 | TC-180 | T: tests/host/test_live_execution.py; D: tests/renode-backend/run.py | Collector, coroutine lifecycle, прежние исходы и cleanup (р.0.106) |
@@ -2983,6 +2996,7 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | 5.3.6 | RU: `run` (`path`) | TC-24, TC-41 |
 | 5.3.7 | RU: `local_directory` | TC-24, TC-66 |
 | 5.3.8 | RU: `run`; RP: `write_reports` | TC-24, TC-41 |
+| 5.3.11 | agent.py, execution.py | TC-184 (р.0.115) |
 | 5.3.9, 5.3.10 | CL; MA; RU: `run` | TC-25, I |
 | 5.4.1 | RU: `run` (`with probe_lock`) | TC-60 |
 | 5.4.2 | PS: `probe_identity`, `probe_mutex_name` | TC-63, TC-90 |
@@ -3571,3 +3585,8 @@ QEMU, keep, SSH, multicore, зависимости REPL и внутрисцен�
 | --- | --- | --- |
 | 6.13.1–6.13.4 | T | TC-177: host и Windows/Linux QEMU; не HW-приёмка |
 | 5.20.13 | T | TC-178: host Windows/Linux, SVD capture/package |
+
+### Дополнение F: A1 (р.0.115)
+
+Первичные ошибки, аудит и cleanup разделены по 5.3.11 и ТЗ API 4.22.7.
+Проверка TC-184 — host и Renode Windows/Linux, без новой аппаратной приёмки.

@@ -184,3 +184,11 @@ wins) selects an `[image]` schema 1 range. The canonical BIN, transport ELF,
 CRC-32/ISO-HDLC over the readback, report fields and limits are described in
 [images and CRC](IMAGES.md). The mode adds no code or CRC field to the firmware; the
 CRC is computed on the host, not by the MCU peripheral.
+
+## A1 migration towards 0.6.0
+
+API_VERSION remains 3. MMIO accepts reason without override. Primary execution/transport
+errors survive audit failure; separate diagnostics and cleanup confirmation are described
+in [resume](api/resume.md), [MMIO](api/mmio.md), and [RecordError](api/record-error.md).
+Failed execution auditing after a successful operation now raises ApiError/journal_unavailable
+instead of bare RecordError. Limits, capture and record format are unchanged.

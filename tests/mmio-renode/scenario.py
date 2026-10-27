@@ -31,7 +31,7 @@ def run(name, action):
         result, error = action(), None
     except Exception as exc:
         result, error = None, dict(code=getattr(exc, 'code', None),
-                                  effect=getattr(exc, 'effect', None), message=str(exc))
+                                  effect=getattr(exc, 'effect', None), message=str(exc), details=getattr(exc, 'details', {}))
     row = dict(case=name, result=result, error=error, accesses=events()[start:])
     observations.append(row)
     return row
@@ -76,6 +76,24 @@ try:
     for name, offset in [('MODEL.SLOTS.DATA1', 4), ('MIRROR.PORT.DATA1', 4)]:
         row = run(name, lambda n=name: t.mmio.write(n, 42))
         check(name, row['error'] is None and len(row['accesses']) == 1 and row['accesses'][0]['offset'] == offset)
+    row = run('reason', lambda: t.mmio.write('MODEL.WO', 43, reason='restore model state'))
+    check('reason without override one write', row['error'] is None and len(row['accesses']) == 1)
+    check('reason captured', t.records('mmio.attempt')[-1]['data']['reason'] == 'restore model state'
+          and t.records('mmio.attempt')[-1]['data']['override'] is False)
+    row = run('reason cannot grant access', lambda: t.mmio.write('MODEL.RTC', 1, reason='not permission'))
+    check('reason preserves policy', row['error']['code'] == 'write_denied' and not row['accesses'])
+    # Реальная запись плюс потерянный ACK и отказ журнала: первичен transport_failed.
+    from stm32_gdbtest.records import Journal
+    tiny = Journal(max_records=1)
+    broken = MMIO(config.svd_catalog, GdbTransport(gdb, dict(config.config['target'])), tiny.record)
+    actual_write = broken._transport.write
+    def fail_ack(*args):
+        actual_write(*args)
+        raise TimeoutError('injected ACK loss with full audit')
+    broken._transport.write = fail_ack
+    row = run('transport and audit', lambda: broken.write('MODEL.WO', 44))
+    check('primary transport preserved', row['error']['code'] == 'transport_failed'
+          and row['error']['details']['audit_error']['limit'] == 'records' and len(row['accesses']) == 1)
     status = 'PASS' if all(c['passed'] for c in checks) else 'FAIL'
 finally:
     out = Path(os.environ['DDTT_PROBE_RESULT'])

@@ -35,3 +35,13 @@ Scenario-body fragment (case shows a complete declaration). Symbols/macros must 
 - [Implementation](../../../stm32_gdbtest/records.py).
 - [Scenario or implementation check](../../../tests/host/test_record_errors.py).
 - [record](record.md), [records](records.md).
+
+## Limit diagnostics (0.6.0 candidate)
+
+For `limit_exceeded`, `details` includes `record_name` (up to 128 characters),
+`path` (up to 256), `maximum`, `used`, `attempted`, `attempted_lower_bound`.
+Paths start with `$name` or `$data`; key labels are shortened. `used` is the committed
+cumulative records/nodes/text_bytes budget; it is 0 for per-value depth/integer limits.
+`attempted` describes the first excess, not the full rejected object's size.
+An early text check may report a UTF-8 lower bound, explicitly marked by the flag.
+Failure consumes no budget. Match structured fields, not traceback message text.

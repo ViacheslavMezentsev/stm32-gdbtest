@@ -3,7 +3,7 @@ import math
 import threading
 import time
 
-from stm32_gdbtest.errors import ApiError, fail
+from stm32_gdbtest.errors import ApiError, fail, error_summary
 
 
 def timeout_value(value, operation):
@@ -161,8 +161,49 @@ class LiveExecution:
             self.unknown = True
             fail('resume', 'command', 'unknown', 'execution_failed', 'Asynchronous continue failed', cause=cause)
         result = dict(operation='resume', outcome='started', generation=self.generation)
-        self.target.record('execution', result)
+        self.audit('resume', result)
         return result
+
+    def audit(self, operation, result=None, primary=None):
+        try:
+            self.target.record('execution', result if primary is None else dict(error=primary.details))
+        except Exception as cause:
+            diagnostic = dict(operation=operation, state=self.state(),
+                              audit_error=error_summary(cause))
+            if primary is not None:
+                diagnostic['primary_error'] = error_summary(primary)
+            elif result is not None:
+                diagnostic['outcome'] = result.get('outcome')
+            # Independent bounded diagnostics: recording their failure must not recurse.
+            report = self.target.report
+            report['execution_audit_error_count'] = report.get('execution_audit_error_count', 0) + 1
+            errors = report.setdefault('execution_audit_errors', [])
+            if len(errors) < 16:
+                errors.append(diagnostic)
+            if primary is not None:
+                primary.details['audit_error'] = diagnostic['audit_error']
+                return
+            effect = 'completed' if diagnostic.get('outcome') in ('stopped', 'exited', 'timeout') else 'applied'
+            fail(operation, 'audit', effect, 'journal_unavailable',
+                 'Execution outcome could not be recorded', cause=cause,
+                 state=diagnostic['state'], outcome=diagnostic.get('outcome'),
+                 audit_error=diagnostic['audit_error'])
+
+    async def cleanup(self):
+        """Confirm stop independently of audit capacity; keep the audit failure visible."""
+        try:
+            if self.state() not in ('stopped', 'exited'):
+                await self.target.halt(timeout=2.0)
+        except ApiError as error:
+            if not (error.code == 'journal_unavailable' and error.details.get('stage') == 'audit'
+                    and self.state() in ('stopped', 'exited')):
+                raise
+            self.target.report['execution_cleanup_audit_error'] = error_summary(error)
+            self.target.report['status'] = 'ERROR'
+        if self.state() not in ('stopped', 'exited'):
+            raise RuntimeError('Cleanup did not confirm target stop')
+        if getattr(self.target, '_call_incomplete', False):
+            raise RuntimeError('Inferior call context not restored')
 
     async def wait(self, timeout, operation='wait'):
         timeout = timeout_value(timeout, operation)
@@ -249,8 +290,8 @@ class LiveExecution:
         self.pending = None
         request.cancelled.set()
         try:
-            self.target.record('execution', result if error is None else dict(error=error.details))
-        except BaseException as cause:
+            self.audit(request.operation, result, error)
+        except Exception as cause:
             error = cause
         self.gdb.post_event(lambda: request.done(result, error))
 

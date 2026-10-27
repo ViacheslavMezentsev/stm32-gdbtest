@@ -140,3 +140,45 @@ async def reach_timeout(t):
 @case('HW_EMU_DROPPED_WAIT', timeout_s=10, labels=('emulator',))
 async def dropped_wait(t):
     t.wait(timeout=1)
+
+
+def fill_audit(t):
+    # Заполнить узлы журнала, оставив один: следующая execution уже не помещается.
+    def nodes(v):
+        if type(v) is dict:
+            return 1 + sum(nodes(k) + nodes(x) for k, x in v.items())
+        if type(v) is list:
+            return 1 + sum(map(nodes, v))
+        return 1
+    used = sum(nodes(r['name']) + nodes(r['data']) for r in t.records())
+    t.record('fill', [0] * (4093 - used))
+
+
+@case('HW_EMU_AUDIT_RESUME', timeout_s=15, labels=('emulator',))
+async def audit_resume(t):
+    fill_audit(t)
+    t.resume(sync=False)
+
+
+@case('HW_EMU_AUDIT_FAULT', timeout_s=15, labels=('emulator',))
+async def audit_fault(t):
+    t.fault_guards.append('observe')
+    t.breakpoint('observe', temporary=True)
+    t.resume(sync=False)
+    fill_audit(t)
+    await t.wait(timeout=2)
+
+
+@case('HW_EMU_AUDIT_RETURN', timeout_s=15, labels=('emulator',))
+async def audit_return(t):
+    t.resume(sync=False)
+    fill_audit(t)
+    # Нормальное завершение тела; runner обязан остановить цель даже без места в журнале.
+
+
+@case('HW_EMU_AUDIT_WAIT', timeout_s=15, labels=('emulator',))
+async def audit_wait(t):
+    await t.reach('observe')
+    t.resume(sync=False)
+    fill_audit(t)
+    await t.wait(timeout=0.01)

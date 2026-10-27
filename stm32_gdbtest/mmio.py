@@ -2,7 +2,7 @@
 from dataclasses import asdict
 import re
 import threading
-from stm32_gdbtest.errors import ApiError
+from stm32_gdbtest.errors import ApiError, error_summary
 from stm32_gdbtest.svd import Register, ACCESS, READ, WRITE
 
 class MMIOError(ApiError):
@@ -85,8 +85,8 @@ class MMIO:
             if type(override) is not Register or type(reason) is not str or (not reason.strip()):
                 reject('invalid_override')
             reg = override
-        elif reason is not None:
-            reject('reason_without_override')
+        elif reason is not None and (type(reason) is not str or not reason.strip()):
+            reject('invalid_reason')
         if reg is None:
             reject('missing_svd' if self._catalog is None else 'unknown_register')
         if reg.name != name:
@@ -169,11 +169,12 @@ class MMIO:
                     raise ValueError('invalid_ack')
                 result = dict(address=reg.address, width=reg.width, value=value, acknowledged=True, verified=False)
         except Exception as exc:
+            error = MMIOError('transport_failed', op, 'transport', 'unknown')
             try:
                 self._record('mmio.result', dict(operation=op, name=name, status='ERROR', effect='unknown'))
             except Exception as audit:
-                raise MMIOError('journal_unavailable', op, 'audit', 'unknown') from audit
-            raise MMIOError('transport_failed', op, 'transport', 'unknown') from exc
+                error.details['audit_error'] = error_summary(audit)
+            raise error from exc
         try:
             self._record('mmio.result', dict(operation=op, name=name, status='completed', result=result))
         except Exception as exc:
