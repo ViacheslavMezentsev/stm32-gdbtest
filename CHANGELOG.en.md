@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Reports: linked method/evidence tables, method/evidence/remark codes, automatic numbering and an explanation of the DDTT route. Audited changes against v0.5.0 and skill resource portability; refreshed outdated guidance.
+
 - Reports: engineering layout, descriptive footers, coloured tables/callouts and categorical charts; a sanitised example using actual 0.5.0 acceptance evidence and host/Renode repeats. Remaining 0.5.1 acceptance plan.
 
 - For 0.5.1: stm32-gdbtest-report skill with compact and technical formats, provenance checks, privacy review and a neutral PDF generator; TECH-021–026 and stateful-buffer linked into skill workflows. No core changes or hardware runs.

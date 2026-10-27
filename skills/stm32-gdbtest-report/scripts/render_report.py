@@ -25,12 +25,20 @@ def validate(data):
         raise ValueError('demonstration must be explicit')
     if not data.get('methods') or not data.get('evidence') or not data.get('excluded'):
         raise ValueError('methods, evidence and excluded are required')
+    method_ids = [item.get('id') for item in data['methods']]
+    evidence_ids = [item.get('id') for item in data['evidence']]
+    for ids in (method_ids, evidence_ids):
+        if any(not isinstance(v, str) or not v.strip() for v in ids) or len(set(ids)) != len(ids):
+            raise ValueError('missing or duplicate method/evidence ID')
     for item in data['methods']:
         for key in ('name', 'description', 'accuracy'):
             if not isinstance(item.get(key), str) or not item[key].strip():
                 raise ValueError(f'method needs {key}')
     for item in data['evidence']:
-        for key in ('title', 'requirement', 'scenario', 'conditions', 'conclusion', 'remarks', 'source'):
+        refs = item.get('method_ids')
+        if not isinstance(refs, list) or not refs or any(v not in method_ids for v in refs):
+            raise ValueError('unknown or missing evidence method')
+        for key in ('title', 'requirement', 'scenario', 'conditions', 'conclusion', 'remarks', 'source', 'shows', 'period'):
             if not isinstance(item.get(key), str) or not item[key].strip():
                 raise ValueError(f'evidence needs {key}')
         if item.get('status') not in ('PASS', 'FAIL', 'ERROR', 'SKIP', 'UNKNOWN'):
@@ -77,10 +85,10 @@ def render(data, destination, technical):
     def add(value, style='TextRu'):
         story.append(paragraph(value, style))
 
-    def table(rows):
-        width = 174 * mm / len(rows[0])
+    def table(rows, fractions=None):
+        widths = [174 * mm * v for v in fractions] if fractions else [174 * mm / len(rows[0])] * len(rows[0])
         value = Table([[paragraph(cell, 'CellHead' if i == 0 else 'Cell') for cell in row] for i, row in enumerate(rows)],
-                      colWidths=[width] * len(rows[0]), repeatRows=1, hAlign='LEFT')
+                      colWidths=widths, repeatRows=1, hAlign='LEFT')
         value.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), blue),
             ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.HexColor('#EFF4F9'), colors.white]),
@@ -107,32 +115,54 @@ def render(data, destination, technical):
     add('DDTT / СВИДЕТЕЛЬСТВА ПРОВЕРОК', 'Source')
     add(data['title'], 'Title')
     add('Технический отчёт' if technical else 'Компактный обзор проверок', 'Heading1')
+    if technical:
+        add('Маршрут «Требование → сценарий → измерения → график → вывод» связывает '
+            'ожидания разработчика с проверяемыми свидетельствами host и эмулятора Renode. '
+            'Каждый вывод ограничен указанными условиями и способом наблюдения.')
     if data['demonstration']:
         add('ДЕМОНСТРАЦИЯ — условные данные, не результат испытаний.')
     add(f"Объект: {data['release']}. Место: {data['location']}. Время: {data['period']}.")
     box(data['scope'])
+    first_section = 4 if technical else 2
+    remark_section = first_section + len(data['evidence'])
+    excluded_section = remark_section + 1
     if technical:
         add('1. Как читать отчёт', 'Heading1')
-        add('Требование → сценарий → измерения → график → вывод. Исход сценария, '
-            'применимость и восстановление оцениваются отдельно. UNKNOWN не означает ноль.')
+        add('Каждое свидетельство отвечает на требования API или пункты матрицы приёмки '
+            'данными host-проверок и сценариев DDTT в Renode. В нём: формулировка требования '
+            '(синяя плашка), условия и способ съёма, таблица ключевых чисел, график ожидания '
+            'и наблюдения там, где он нужен, вывод и то, что не проверено, строка «Данные» '
+            'со временем прогонов. Замечание для разработчика стоит сразу под свидетельством '
+            f'в оранжевой рамке с кодом З-NN; сводка — в разделе {remark_section}, '
+            'контрольные суммы файлов — в приложении A. Коды М-N связывают методы со '
+            'свидетельствами С-NN и разделами. Исход сценария, применимость и восстановление '
+            'оцениваются отдельно: ожидаемый FAIL/ERROR не переименовывается в PASS, '
+            'UNKNOWN не означает ноль. Аппаратные измерения в эту выборку не входят.')
         add('2. Способы съёма и их точность', 'Heading1')
-        table([['Способ', 'Что снимается', 'Точность и ограничения']] +
-              [[m['name'], m['description'], m['accuracy']] for m in data['methods']])
+        table([['Код', 'Способ', 'Что даёт', 'Точность и ограничения', 'Где применён']] +
+              [[m['id'], m['name'], m['description'], m['accuracy'],
+                ', '.join(e['id'] for e in data['evidence'] if m['id'] in e['method_ids']) or 'Не применён']
+               for m in data['methods']], [.08, .17, .25, .32, .18])
+        story.append(CondPageBreak(115 * mm))
         add('3. Перечень свидетельств', 'Heading1')
-        table([['Свидетельство', 'Требование', 'Сценарий']] +
-              [[e['title'], e['requirement'], e['scenario']] for e in data['evidence']])
-    if not technical:
-        add('Объекты и результаты', 'Heading1')
-        table([['Объект проверки', 'Наблюдение']] +
-              [[item['title'], item['conclusion']] for item in data['evidence']])
-    for number, item in enumerate(data['evidence'], 4):
+        table([['№', 'Требование', 'Сценарии', 'Что показывает', 'Способ', 'Раздел']] +
+              [[e['id'], e['requirement'], e['scenario'], e['shows'],
+                ', '.join(e['method_ids']), str(i)]
+               for i, e in enumerate(data['evidence'], first_section)], [.08, .18, .25, .24, .13, .12])
+    else:
+        add('1. Объекты и результаты', 'Heading1')
+        table([['№', 'Объект проверки', 'Наблюдение', 'Раздел']] +
+              [[item['id'], item['title'], item['conclusion'], str(i)]
+               for i, item in enumerate(data['evidence'], first_section)], [.08, .28, .52, .12])
+    for number, item in enumerate(data['evidence'], first_section):
+        remark_id = f'З-{number - first_section + 1:02}'
         if technical:
             story.append(CondPageBreak(100 * mm))
-        add(f"{number}. {item['title']}" if technical else item['title'], 'Heading1')
+        add(f"{number}. {item['id']}. {item['title']}", 'Heading1')
         add(f"Сценарий: {item['scenario']}. Исход: {item.get('status_label', item['status'])}.")
         if technical:
             box('Требование: ' + item['requirement'])
-            add('Условия и способ: ' + item['conditions'])
+            add('Условия и способ (' + ', '.join(item['method_ids']) + '): ' + item['conditions'])
             table([item['columns']] + item['rows'])
             if item.get('chart'):
                 chart = item['chart']
@@ -163,14 +193,13 @@ def render(data, destination, technical):
                     drawing.add(String(x, y, text, fontName='Body', fontSize=8))
                 story.append(drawing)
         add('Вывод: ' + item['conclusion'])
-        box('Замечания: ' + item['remarks'], warning=True)
         if technical:
-            add('Данные: ' + item['source'], 'Source')
-    if technical:
-        add('Сводка замечаний', 'Heading1')
-        for item in data['evidence']:
-            add(item['title'] + ': ' + item['remarks'])
-    add('Что не вошло', 'Heading1')
+            box(remark_id + '. Замечания: ' + item['remarks'], warning=True)
+            add('Данные: ' + item['period'] + '. ' + item['source'], 'Source')
+    add(f'{remark_section}. Сводка замечаний', 'Heading1')
+    for i, item in enumerate(data['evidence'], 1):
+        add(f"З-{i:02} · {item['id']} · раздел {first_section+i-1}: " + item['remarks'])
+    add(f'{excluded_section}. Что не вошло', 'Heading1')
     for value in data['excluded']:
         add(value)
     add('Восстановление: ' + data['recovery'])

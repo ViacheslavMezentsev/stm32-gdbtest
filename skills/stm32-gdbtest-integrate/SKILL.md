@@ -44,7 +44,7 @@ git -C modules/stm32-gdbtest checkout <agreed-tag-or-commit>
 git add .gitmodules modules/stm32-gdbtest
 ```
 
-Выбери согласованный тег/коммит и закрепи gitlink. Для кандидата 0.5.0 проверяй API_VERSION=3;
+Выбери согласованный тег/коммит и закрепи gitlink. Для линии 0.5.x проверяй API_VERSION=3;
 не выдавай рабочую ветку за опубликованный выпуск.
 Gitlink фиксирует проверенный коммит; configure его не обновляет. Обновление версии — отдельный
 коммит: новый gitlink, чтение раздела CHANGELOG модуля (миграция), прогон host и hw.
@@ -215,7 +215,7 @@ ctest --preset HIL_F411CE-hw -R HW_BOOT
 получают предупреждения `deprecated`. В 0.4.0 эти четыре метода удалены;
 `config`/`config_props`/`settings`/`sources` ранее заменены `t.profile`. Порядок:
 поднять gitlink до выбранного опубликованного тега, добавить `session.toml`/`api.toml`, если нужны
-лимиты и параметры, переписать сценарии по таблице миграции из [API](../../docs/ru/API.md) и навыку
+лимиты и параметры, переписать сценарии по [руководству миграции](../../docs/ru/MIGRATION_050.md) и навыку
 `stm32-gdbtest-scenarios`, прогнать host и hw.
 
 
