@@ -1,0 +1,367 @@
+{
+  "title": "stm32-gdbtest\nHost и Renode: свидетельства",
+  "release": "0.5.0 и база подготовки 0.5.1",
+  "period": "20 и 27 октября 2026, UTC+5",
+  "location": "локальный host и эмулятор Renode",
+  "demonstration": false,
+  "scope": "Реальные сохранённые свидетельства приёмки 0.5.0 и выборочные повторы без плат. Исторические и свежие результаты разделены; полнота аппаратной приёмки этим документом не заявляется.",
+  "footer": "stm32-gdbtest, выпуск 0.5.0 и база 2f34dbc, 27.10.2026: практические свидетельства host / Renode",
+  "methods": [
+    {
+      "name": "Host",
+      "description": "unittest и сводка CI; число тестов, пропуски, код процесса.",
+      "accuracy": "Логические исходы; без измерения физического времени MCU."
+    },
+    {
+      "name": "MMIO-модель",
+      "description": "Callbacks периферии Renode, количество обращений и отказные пути.",
+      "accuracy": "Дискретный счётчик; модель не гарантирует поведение физической шины."
+    },
+    {
+      "name": "Живое окно",
+      "description": "Эталонный счётчик нейтрального ELF и независимый журнал наблюдателя.",
+      "accuracy": "Точное число событий в данной нагрузке; не метрологическая оценка частоты."
+    }
+  ],
+  "evidence": [
+    {
+      "title": "Host-регрессии приёмки 0.5.0",
+      "requirement": "Матрица приёмки 0.5.0, O1; contracts API 3",
+      "scenario": "unittest tests/host",
+      "status": "PASS",
+      "conditions": "Архив приёмки, Windows, 20.10.2026 01:32 UTC+5. Ревизия 8fdbb58. Подмены GDB и проверки до сервера.",
+      "columns": [
+        "Проверка / выборка",
+        "Ожидание",
+        "Наблюдение"
+      ],
+      "rows": [
+        [
+          "Выполнено unittest",
+          "Завершённый набор",
+          "684"
+        ],
+        [
+          "Штатные пропуски",
+          "Учитывать отдельно",
+          "14"
+        ],
+        [
+          "Код процесса",
+          "0",
+          "0"
+        ]
+      ],
+      "conclusion": "Host-набор: 684 теста, 14 штатных пропусков, код 0. Пропуски не считаются аппаратными PASS.",
+      "remarks": "Число тестов не является покрытием строк. Встроенные отрицательные проверки могут печатать FAIL при успешном unittest.",
+      "source": "Архив host; первичный журнал и маршрут, контрольные суммы в приложении.",
+      "provenance": [
+        {
+          "label": "Архив host: маршрут",
+          "sha256": "45a8cf4bcd2210a055d6924f133eb87d7244de40a08996055060c76e70b9cefc"
+        },
+        {
+          "label": "Архив host: журнал",
+          "sha256": "9a48188ec79d0da7017c59a9f7e99ebf9d9d466d46356fcf5dff2235ea8f854d"
+        }
+      ]
+    },
+    {
+      "title": "Жизненный цикл Renode и async API",
+      "requirement": "Матрица 0.5.0, E1; LIVE_EXECUTION",
+      "scenario": "tests/renode-backend",
+      "status": "PASS",
+      "conditions": "Архив Windows, Renode 1.17, 20.10.2026 01:33–01:36 UTC+5; ревизия 8fdbb58. Два последовательных запуска.",
+      "columns": [
+        "Проверка / выборка",
+        "Ожидание",
+        "Наблюдение"
+      ],
+      "rows": [
+        [
+          "Повтор 1",
+          "21 ожидаемый исход",
+          "21/21; ERROR 7, PASS 11, FAIL 2, SKIP 1"
+        ],
+        [
+          "Повтор 2",
+          "21 ожидаемый исход",
+          "21/21; ERROR 7, PASS 11, FAIL 2, SKIP 1"
+        ]
+      ],
+      "conclusion": "В обоих повторах сводки подтверждают все ожидаемые исходы.",
+      "remarks": "Это сверка сохранённых сводок кампании, не новый запуск E1. ERROR отрицательного случая не превращается в PASS сценария.",
+      "source": "Архив backend, две summary; без переноса локальных путей.",
+      "provenance": [
+        {
+          "label": "Архив backend: повтор 1",
+          "sha256": "b79e30ea07b62a07c508742632dd2fc7d76995d4a303ddd0d187e9c769f65d3c"
+        },
+        {
+          "label": "Архив backend: повтор 2",
+          "sha256": "3f4f6665f903ccec7aa25ac004fbeec39fb9c6585e9252301b8ebfb8d2d81d9b"
+        }
+      ]
+    },
+    {
+      "title": "MMIO: количество обращений и неверный SVD",
+      "requirement": "Матрица 0.5.0, E3; API mmio.read/write",
+      "scenario": "tests/mmio-renode",
+      "status": "PASS",
+      "conditions": "Renode: callbacks модели сверяются с операциями. WO/W1C, чтения с эффектом, ширины 8/16/32 и потеря ACK. Архив и свежий повтор Windows.",
+      "columns": [
+        "Проверка / выборка",
+        "Ожидание",
+        "Наблюдение"
+      ],
+      "rows": [
+        [
+          "Приёмка 20.10",
+          "16 проверок",
+          "16 PASS"
+        ],
+        [
+          "Приёмка 20.10 неверный SVD",
+          "[15, 15]",
+          "[15, 0] → FAIL"
+        ],
+        [
+          "Повтор 27.10",
+          "16 проверок",
+          "16 PASS"
+        ],
+        [
+          "Повтор 27.10 неверный SVD",
+          "[15, 15]",
+          "[15, 0] → FAIL"
+        ]
+      ],
+      "conclusion": "Обе серии прошли 16 проверок; неверное описание регистра обнаружено независимым контролем.",
+      "remarks": "Callback модели подтверждает путь эмулятора. Это не измерение числа транзакций на шине реального MCU. Ожидаемый FAIL сохранён.",
+      "source": "Архив MMIO и свежие checks/negative-control; отдельные контрольные суммы.",
+      "provenance": [
+        {
+          "label": "Приёмка 20.10 MMIO checks",
+          "sha256": "dcfa3f5e741eed77d25fe0d828f917c7a6fbb04e512ec2827370b178e7081292"
+        },
+        {
+          "label": "Приёмка 20.10 MMIO отрицательный контроль",
+          "sha256": "8e0e54bc3be1113e74b3d6c51d134fe509a745a0b148ee652b4945cf878e5772"
+        },
+        {
+          "label": "Повтор 27.10 MMIO checks",
+          "sha256": "dcfa3f5e741eed77d25fe0d828f917c7a6fbb04e512ec2827370b178e7081292"
+        },
+        {
+          "label": "Повтор 27.10 MMIO отрицательный контроль",
+          "sha256": "8e0e54bc3be1113e74b3d6c51d134fe509a745a0b148ee652b4945cf878e5772"
+        }
+      ]
+    },
+    {
+      "title": "Наблюдатель: валидный ноль и семь событий",
+      "requirement": "Матрица 0.5.0, E4; LIVE_OBSERVER",
+      "scenario": "HW_OBSERVER_ZERO / SEVEN / HALT / TRAMPOLINE",
+      "status": "PASS",
+      "conditions": "Свежий повтор Windows, Renode 1.17, 27.10.2026. Нейтральный ELF, эталонный счётчик, VTOR и прямая SRAM-обёртка. Одинаковые checks и сохранённые records.",
+      "columns": [
+        "Проверка / выборка",
+        "Ожидание",
+        "Наблюдение"
+      ],
+      "rows": [
+        [
+          "ZERO",
+          0,
+          0
+        ],
+        [
+          "SEVEN",
+          7,
+          7
+        ],
+        [
+          "HALT",
+          7,
+          7
+        ],
+        [
+          "TRAMPOLINE",
+          7,
+          7
+        ]
+      ],
+      "conclusion": "Число наблюдений совпало с эталоном, включая валидный ноль. После снятия проверен повтор без reset.",
+      "remarks": "FPB remap этой моделью не поддерживается: четыре FPB-случая исключены явно. SRAM-trampoline здесь вызывается напрямую, аппаратный перехват не доказан.",
+      "source": "Свежие result/records: проверены SHA-256, идентификаторы попытки, sequence и cleanup.",
+      "chart": {
+        "kind": "bar",
+        "labels": [
+          "ZERO",
+          "SEVEN",
+          "HALT",
+          "TRAMP"
+        ],
+        "x_label": "Сценарий",
+        "y_label": "Число входов ISR",
+        "expected": [
+          0,
+          7,
+          7,
+          7
+        ],
+        "observed": [
+          0,
+          7,
+          7,
+          7
+        ]
+      },
+      "provenance": [
+        {
+          "label": "Наблюдатель HW_OBSERVER_BASELINE: records",
+          "sha256": "1f4569c76b45367490c21a64a935e034d5be030946cbcf85886bfb4b144c91f2"
+        },
+        {
+          "label": "Наблюдатель HW_OBSERVER_SEVEN: records",
+          "sha256": "8c330acacce29b13dfd7bdcfe007fcf2ea13f8be6093171086de20d2b6cf37fe"
+        },
+        {
+          "label": "Наблюдатель HW_OBSERVER_ZERO: records",
+          "sha256": "ba1150e21118c09a24e36247ff73250a5d56cf26ca8a0d55836a8c3551b1fcb6"
+        },
+        {
+          "label": "Наблюдатель HW_OBSERVER_EXCEPTION: records",
+          "sha256": "e0a5f01576ff607ae240592acdcddbf14c0603701db3132c7ba1eb5605ec3305"
+        },
+        {
+          "label": "Наблюдатель HW_OBSERVER_HALT: records",
+          "sha256": "b818468ddbc676190ef14d01f278fbd4e76878ff34802cb05fb261375965a389"
+        },
+        {
+          "label": "Наблюдатель HW_OBSERVER_ACTIVE: records",
+          "sha256": "7db4ab1a147267ccc7eca75783e0e10f8c38b0d927a35566fa60bbf4573432d9"
+        },
+        {
+          "label": "Наблюдатель HW_OBSERVER_NEGATIVE: records",
+          "sha256": "cc536b431bbe4843d7546b865598b317c8e9a1d9dd7d9fef7fdf44e69bc5ccb4"
+        },
+        {
+          "label": "Наблюдатель HW_OBSERVER_TRAMPOLINE: records",
+          "sha256": "81f757b2ca9a1617b10d9ec39b8864e8a8291d6767fc6879b0ce9688fc845173"
+        }
+      ]
+    },
+    {
+      "title": "Отрицательные исходы и очистка",
+      "requirement": "Матрица 0.5.0, E4; восстановление observer",
+      "scenario": "HW_OBSERVER_EXCEPTION / ACTIVE / NEGATIVE",
+      "status": "FAIL",
+      "conditions": "Исключение до resume, исключение при активном обработчике и намеренно неверное ожидание счётчика.",
+      "columns": [
+        "Проверка / выборка",
+        "Ожидание",
+        "Наблюдение"
+      ],
+      "rows": [
+        [
+          "EXCEPTION",
+          "ERROR",
+          "ERROR"
+        ],
+        [
+          "ACTIVE",
+          "ERROR",
+          "ERROR"
+        ],
+        [
+          "NEGATIVE",
+          "FAIL",
+          "FAIL"
+        ]
+      ],
+      "conclusion": "Кампания 8/8 ожидаемых исходов: 5 PASS, 2 ERROR, 1 FAIL. Во всех восьми запусках запись observer_cleanup подтверждает восстановление.",
+      "remarks": "Успех кампании означает совпадение ожидаемых исходов и очистку, а не восемь успешных сценариев. Первый запуск в ограниченной среде дал startup ERROR и сохранён отдельно.",
+      "source": "Свежие result/records и summary; отрицательный контроль ISR: ожидание 8, наблюдение 7.",
+      "provenance": [
+        {
+          "label": "Наблюдатель HW_OBSERVER_BASELINE: result",
+          "sha256": "cda26dc10a8f128e017d624432b78df2410e2d65865186446f39bd31c4bee9f0"
+        },
+        {
+          "label": "Наблюдатель HW_OBSERVER_SEVEN: result",
+          "sha256": "13e829a5d5360a18b698e3d64750daccb89a4f4e0b2c6967705400b9ddee5c60"
+        },
+        {
+          "label": "Наблюдатель HW_OBSERVER_ZERO: result",
+          "sha256": "321bdc53d097bea9e7baf00d4bd8f4797ff80595498ee481dd4cdcd4cbef7a96"
+        },
+        {
+          "label": "Наблюдатель HW_OBSERVER_EXCEPTION: result",
+          "sha256": "19a83b5f2c479bc2c57e76ebb9586971158e776f7cd06bf842dbf198ff2da1d1"
+        },
+        {
+          "label": "Наблюдатель HW_OBSERVER_HALT: result",
+          "sha256": "5983d9888ced5d328e77f9404945126eae2c958c164f876b2937fd35d8c3d01f"
+        },
+        {
+          "label": "Наблюдатель HW_OBSERVER_ACTIVE: result",
+          "sha256": "6a1849da6321e60fb8516c4d4f0dfa855497071af947a37ce618fc79b4572d10"
+        },
+        {
+          "label": "Наблюдатель HW_OBSERVER_NEGATIVE: result",
+          "sha256": "fa84b7dc579ad71cef54e6a959eb8aba9f63f85eff5368b53541bdf711948569"
+        },
+        {
+          "label": "Наблюдатель HW_OBSERVER_TRAMPOLINE: result",
+          "sha256": "bf8144a10deb8c4493b39e11787a1176fc86f7be4e186f442338b71729858acc"
+        }
+      ],
+      "status_label": "ожидаемые ERROR / FAIL (см. таблицу)"
+    },
+    {
+      "title": "Повтор host на базе подготовки 0.5.1",
+      "requirement": "Текущее сопровождение: регрессия до GDB-сервера",
+      "scenario": "ci/run_checks.py docs host",
+      "status": "PASS",
+      "conditions": "27.10.2026; Linux Docker, source/build в одном volume, сеть отключена. База 2f34dbc, изменения оформления в этот запуск не входят.",
+      "columns": [
+        "Проверка / выборка",
+        "Ожидание",
+        "Наблюдение"
+      ],
+      "rows": [
+        [
+          "Host-набор",
+          "Завершённый unittest",
+          "692; пропущено 5"
+        ],
+        [
+          "Группы CI",
+          "Все выбранные",
+          "6/6"
+        ]
+      ],
+      "conclusion": "Host: 692 теста, 5 пропусков; docs+host — 6/6. Выбранный набор завершён успешно.",
+      "remarks": "Это не финальная приёмка 0.5.1: она должна ссылаться на итоговый SHA после накопления изменений.",
+      "source": "Свежие summary и host.log; время тестов зависит от машины и не является производительностью MCU.",
+      "provenance": [
+        {
+          "label": "Свежий host и docs: сводка",
+          "sha256": "d05f6d5e3f7ce0a0398a7f918690bd11a91f1d4e3a0bcbfa26cf097974a174f4"
+        },
+        {
+          "label": "Свежий host: журнал",
+          "sha256": "82d965eba2e9f369ee59d7ce62000f664e092127687e0d20f949842aa7d8b342"
+        }
+      ]
+    }
+  ],
+  "excluded": [
+    "Новые аппаратные прогоны и повтор приёмки шести MCU.",
+    "FPB remap в Renode; свойства реальной DMA/RTOS и электрические параметры.",
+    "Повтор всей GCC/HAL-матрицы и Linux Renode в текущем пакете.",
+    "Первый свежий запуск observer в sandbox: запрет записи истории Renode; все исходные ERROR сохранены, не приняты вместо ожидаемых отказов."
+  ],
+  "recovery": "В восьми свежих запусках observer — проверенное восстановление выделенной SRAM, Flash/VTOR и IRQ по records, cleanup собственного сервера VERIFIED; это восстановление модели, не платы."
+}

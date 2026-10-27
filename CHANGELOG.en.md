@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Reports: engineering layout, descriptive footers, coloured tables/callouts and categorical charts; a sanitised example using actual 0.5.0 acceptance evidence and host/Renode repeats. Remaining 0.5.1 acceptance plan.
+
 - For 0.5.1: stm32-gdbtest-report skill with compact and technical formats, provenance checks, privacy review and a neutral PDF generator; TECH-021–026 and stateful-buffer linked into skill workflows. No core changes or hardware runs.
 
 - For 0.5.1: user guides aligned with 0.5.x; release transitions separated from current guidance and earlier plans/snapshots archived. Added a neutral C++/host/Renode residual-state and ring-order example with deliberate defects, raw FAIL results and verified restoration. Core unchanged.
