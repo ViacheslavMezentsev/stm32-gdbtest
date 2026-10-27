@@ -28,7 +28,7 @@ A short review before a long run. Complements the [API reference](api/index.md),
 | Value conversion fails | Check declared type, expression and GDB version; pointers are not universally forbidden | [evaluate](api/evaluate.md), [read](api/read.md) |
 | A method cannot be called | Check context, signature and available callable code; inline alone does not forbid a call | [C++](TESTING_TECHNIQUES.md#tech-019) |
 | Snapshots match but are too short | Compare length with the expected debug-information size before modifying memory | [memory](api/memory.md) |
-| An expression write has unexpected effects | Evaluation may occur when preparing verification and when writing; account for side effects or pass a previously computed number | [write](api/write.md) |
+| An expression write has unexpected effects | API 3 evaluates RHS once; LHS must be stable and hidden function calls are forbidden | [write](api/write.md) |
 | A write is not verified | Inspect verified and verification scope; MMIO is not ordinary RAM | [write](api/write.md) |
 | record rejects data | Dictionary keys must be strings; convert gdb.Value and bytes to supported Python values | [record](api/record.md) |
 | Analysis finds no measurements | Distinguish disabled capture, an empty journal and a missing selection; none of these should be interpreted as a measured zero | [Results](RESULTS.md) |
@@ -73,7 +73,7 @@ for persistence effects. These checks do not replace agreement on the hardware e
 ## Evidence review questions
 
 - Is snapshot size independently established and length checked before writing? Was `sizeof` converted to bool?
-- Was the write version checked? Pre-evaluate side-effecting RHS on 0.4.1; the 0.4.2 candidate evaluates it once. LHS must be stable.
+- Was the write version checked? Pre-evaluate side-effecting RHS on 0.4.1; API 3 (0.5.0) evaluates it once. LHS must be stable.
 - Is preflight PASS being confused with a valid `call()` name or object readiness?
 - Were record names, counts, fields, types and units checked before numeric analysis? Empty `all()` is not evidence.
 - Are body failure, capture outcome, analysis verdict and restoration retained separately?
@@ -90,18 +90,41 @@ replace semantic review and may be wrong. This page introduces no new automated 
 Preflight is not a hardware test and does not prove that the scenario body is error-free.
 
 For a C++ contract, inspect DWARF for `this`: `T * const` and `const T *` differ.
-The 0.4.2 candidate supports pointer qualifiers; see [details](CONTRACTS.md).
+API 3 (0.5.0) supports pointer qualifiers; see [details](CONTRACTS.md).
 
 ## Before accessing MMIO
 
 - Establish register semantics: RO/WO/RW, W1C, read-to-clear, FIFO; allowed width and order.
-- Check hidden accesses: before remains with verify=False; check tables evaluate strings; bitfields may cause RMW.
+- For ordinary write, check hidden accesses: before remains with verify=False; check tables evaluate strings; bitfields may cause RMW.
 - Disable unrelated IDE register refresh during measurement. Halt does not freeze DMA.
 - Run Renode with an access log, then the same segment on an authorized target board/backend.
 - Define semantic recovery, not generic snapshot restoration; do not retry blindly after errors.
 
-[MMIO limitations and skill](MMIO.md). For the 0.5.0 candidate use [mmio.read/write](api/mmio.md); SVD and ACK do not establish physical effects.
+[MMIO limitations and skill](MMIO.md). For 0.5.0 use [mmio.read/write](api/mmio.md); SVD and ACK do not establish physical effects.
 
 
 Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
 `resume(sync=False)`, `await wait()` and `await halt()` — [contract and migration](LIVE_EXECUTION.md).
+
+
+## Before a stateful, timed or externally captured series
+
+- Does the next operation after failure run without reset, with different data and length?
+  Are both callback orders and ring wrap covered? [TECH-021](TESTING_TECHNIQUES.md#tech-021).
+- Is virtual tick separated from physical delay? Are before/at/after threshold, wrap and
+  the maximum interval checked? [TECH-022](TESTING_TECHNIQUES.md#tech-022).
+- Are driver and DMA states consistent, including the other direction? Does SVD match
+  the MCU, without treating W1C/FIFO recovery as RAM restoration? [TECH-023](TESTING_TECHNIQUES.md#tech-023).
+- Are counter frequency/mode, overhead and absence of missed wraps established?
+  Is the measured maximum distinguished from WCET? [TECH-024](TESTING_TECHNIQUES.md#tech-024).
+- Is freshness established by publication sequence, not just tick? Are steady noise,
+  transients and outliers separate experiments? [TECH-025](TESTING_TECHNIQUES.md#tech-025).
+- Is the receiver ready before resume, with owned processes, deadline and partial-startup
+  cleanup? Are source, units, clocks and gaps known? [TECH-026](TESTING_TECHNIQUES.md#tech-026).
+- Is the C++ method checked against ELF and current API? Passing preflight does not permit
+  `Class::method` in `Target.call()`; parsing `execute("call ...")` text is not a portable
+  contract. Do not hide calls in read/write expressions.
+- Does restoration cover objects, pointed-to memory, arguments, clocks, peripherals and
+  external sources according to actual interventions? Is irreversible output accounted for?
+
+These are manual review questions; current automated checks do not establish these properties.

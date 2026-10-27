@@ -584,6 +584,49 @@ executed directly in GDB. Full standard-runner integration, debugpy, DMA and har
 of this route remain unverified. Normative IDs and DDTT version are unchanged.
 
 
+
+<a id="consumer-feedback"></a>
+### 11.4. Feedback from application scenarios (informative)
+
+mcu_power_board practice suggests a transferable chain: **admission conditions → invariant →
+intervention → independent expectation → observation → restoration → applicability**.
+[TECH-021–026](TESTING_TECHNIQUES.md#tech-021) describe the method, not new module acceptance,
+changes to normative DDTT IDs or ready-to-run neutral examples.
+
+Start with an assertion rather than an API-call list: for example, "a receive error does not
+disturb the current transmission" or "the next packet after timeout is processed completely".
+Choose event order, independent inputs and corruption indicators. Reproduce the defect with
+the same scenario on original code first; repeat after the fix under equal conditions, retaining
+the original failure and neighboring controls. A negative measurement control should additionally
+detect an intentionally wrong expectation; it does not replace defect reproduction.
+
+| Experiment | Supported conclusion | Requires another witness |
+| --- | --- | --- |
+| Callback invocation and prepared buffer | Response to selected state and event order | Actual IRQ delivery, all races and DMA latency |
+| Logical-time substitution | State transitions, boundaries and retries | Physical time, scheduler and load safety |
+| Registers and HAL state | Selected driver/peripheral consistency | Physical fault cause and whole-board operation |
+| Cycle counter and sample series | Measured cost under stated conditions | WCET and absolute accuracy without independent clocks |
+| GDB and telemetry of the same variable | Value consistency and delivery | Independent accuracy of the original measurement |
+
+The mcu_gcs_board radio simulator supplies controlled interventions; the hwlivetest-android
+engineering tool can retain MCAP. Both roles are useful, but a file format or a separate
+device alone does not make an oracle independent: check the origins of values, clocks and
+expectations. Correlate messages by sequence/time with known uncertainty; asynchronous reads
+are not an exact comparison of the same sample.
+
+Map a specific verified assertion to DDTT with conditions, a selected run and intervention
+limits. One successful sequence does not establish every branch of a function. Missing required
+capture or admission leaves dependent assertions unknown while preserving the original scenario
+PASS/FAIL; unrelated assertions are not blocked. Keep analysis and restoration outcomes separate.
+This is guidance for the [existing exporter](DDTT_QUALIFICATION.md), not a new records format
+or MCAP importer.
+
+Transfer techniques first to a host fault model and then to a neutral ELF/Renode experiment;
+perform hardware checks separately on an agreed stand. Include model conditions and unsupported
+properties in the result. A contradicted expectation should refine the scenario, admission or
+implementation, then the technique and checklist; weakening a check to obtain PASS does not
+complete the DDTT cycle.
+
 ## Appendix A. Example scenario (informative)
 
 The example uses the common CI firmware and ci_app_api contract: app_loop, app_step and

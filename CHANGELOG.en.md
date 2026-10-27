@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Documentation package for 0.5.1: consumer-practice TECH-021–026 (event order, residual state, state-machine time, DMA/driver, counters, filters and external capture), checklist questions and DDTT feedback cycle. RU/EN; no core changes or new hardware acceptance.
+
 ## [0.5.0] - 2026-10-20
 
 API_VERSION=3 release: live window and async scenarios, bounded `call`, MMIO/SVD, Renode/QEMU, `inspect`, DDTT export and qualification; P5b acceptance on the final commit `a7b0951` — [release notes](docs/releases/v0.5.0.md), [moving from 0.4.x](docs/en/MIGRATION_050.md).

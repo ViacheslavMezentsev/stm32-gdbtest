@@ -12,6 +12,9 @@ requirements, API operations or coverage metrics.
 
 Before a run, use the [scenario checklist](SCENARIO_CHECKLIST.md).
 
+Cards TECH-021–026 separately describe recommendations from consumer practice;
+transfer to neutral executable examples remains future work.
+
 ## Bundled scenario style
 
 The host test [`tests/host/test_scenario_style.py`](../../tests/host/test_scenario_style.py) checks
@@ -46,9 +49,9 @@ these rules; `python tests/host/test_scenario_style.py` lists every finding by f
   constants ([TECH-001](#tech-001)).
 - An expected refusal is checked with `with t.refused(code, …)`, not with `try/except ApiError`
   ([TECH-012](#tech-012)).
-- A register read-modify-write is an expression as the value, `t.write(path, "REG | BIT")`; several
-  writes in a row form a `t.write(rows)` table ([TECH-006](#tech-006)). A series of reads uses the
-  built-in `map()`.
+- Use `t.mmio.read/write` with SVD for peripherals ([TECH-006](#tech-006)).
+  RMW is appropriate only when reads and writes are allowed without unsafe effects;
+  ordinary RAM values can be written using `t.write(rows)`.
 - A stop location is named by a function (`reach`, `finish`, `until(function)`). A `file:line` location
   breaks with any edit of the source and is allowed only in the scenario that checks line locations
   themselves ([TECH-016](#tech-016)).
@@ -82,6 +85,7 @@ ELF contract nor requirement traceability.
 | Measurement series | [011 collection and calculation](#tech-011) |
 | C++ | [019 this, overloads, types](#tech-019) |
 | Storage | [020 deferred writes](#tech-020) |
+| Consumer practice | [021 events and next cycle](#tech-021), [022 state-machine time](#tech-022), [023 driver/DMA](#tech-023), [024 cost and counters](#tech-024), [025 filters](#tech-025), [026 external witness](#tech-026) |
 
 Moving a card to another MCU, HAL, GCC or backend needs a new verification: the links point to code
 and protocols, they do not promise the same result in every environment.
@@ -215,6 +219,11 @@ Temporarily change inputs through a context manager restoring them in `finally`.
 
 <a id="tech-006"></a>
 ## TECH-006 — Controlled peripheral state through MMIO
+
+**API 3 (0.5.0):** use [mmio.read/write](api/mmio.md) for new scenarios.
+The ordinary `write` experiment below is historical, not the recommended register
+interface. `verify=False` does not remove its initial read. SVD/RM determine whether
+reading and RMW are valid at all; MMIO performs no hidden readback.
 
 **Goal:** create a particular peripheral state and check the application guard.
 
@@ -639,13 +648,13 @@ that interface. `Object::method` and `object.method` do not become valid names m
 and evidence the scenario must retain. An inline declaration does not guarantee a callable body.
 Hidden `this` may have type `Object * const`, distinct from `Object *` and `const Object *`;
 do not remove qualifiers just to pass preflight.
-The 0.4.2 candidate accepts `Object * const` in an explicit this contract;
+API 3 (0.5.0) accepts `Object * const` in an explicit this contract;
 `tests/renode-startup/run_cpp.py` separates offline inspection from a real call in Renode.
 
 Before changing ordinary memory, compare an independently known layout with DWARF, then check
 the returned byte count against the size. Equality of two equally short snapshots proves nothing.
 In a neutral example, guards before and after the object help: check them immediately after mutation
-and after restoration. The 0.4.2 candidate validates response length in `memory()`, but the scenario still owns the requested object size.
+and after restoration. API 3 (0.5.0) validates response length in `memory()`, but the scenario still owns the requested object size.
 
 After a body exception, restore in `finally`, then read back and compare the entire agreed region.
 Retain body and restoration failures separately; unconfirmed restoration prohibits further changes.
@@ -686,6 +695,123 @@ physical programming, endurance and power loss are not established. This is a sc
 not a new storage API or hardware acceptance of EEPROM/Flash.
 
 
+
+## Techniques from consumer practice
+
+TECH-021–026 generalize mcu_power_board bridge, charging state machine, statistics and
+telemetry scenarios. They are transfer recommendations, not new bundled examples or
+repeated hardware acceptance. Application thresholds, addresses, protocols and wiring
+are not transferred. Every application needs its own oracle and admission conditions.
+
+<a id="tech-021"></a>
+## TECH-021 — Event ordering and the next operation
+
+**Goal:** detect residual state and handler interaction defects. Use owned objects and
+buffers, known head/tail and completed initialization; save state as in [TECH-019](#tech-019).
+
+| Intervention | Independent expectation |
+| --- | --- |
+| Partial packet, then completion or timeout | Only a complete valid packet is published; defined state after timeout |
+| Next packet with different length and contents | Exact bytes and length, no previous tail; independent CRC |
+| RX error while TX is busy | No cancellation, duplicate transmission or current TX modification if required by the contract |
+| TX completion before/after queue inspection | No loss/duplication, tail advances by exactly the transmitted data |
+| Ring buffer wraps | Next segment is transmitted in order, guards remain intact |
+
+Check intermediate states and the next cycle without reset. Start independent cases from
+equal preconditions; restore objects, buffers and resources after the series. An explicit
+callback invocation checks the chosen ordering, not all races or actual IRQ/DMA delivery.
+Restoring bytes does not undo data already sent over UART.
+
+<a id="tech-022"></a>
+## TECH-022 — Logical time of a state machine
+
+**Goal:** quickly check debounce, backoff, retry and state duration limits. Define a
+transition table first: state, input, duration, expected state and permitted action.
+Check threshold −1, threshold and threshold +1, repeated input and counter wrap, accounting
+for counter width and the maximum interval.
+
+Change only a controlled time source and inputs, then execute one step. Use an isolated
+state machine without physical outputs in a neutral example. Writing the system tick on
+a board affects other tasks; an object snapshot is insufficient: require agreed isolation,
+an inventory of affected clocks/arguments/outputs and restoration. Delays, IRQ waits and
+held locks may make GDB invocation unsuitable.
+
+**Limit:** virtual time establishes transition logic, not actual latency, scheduler behavior,
+watchdog behavior or load safety. Check those with a live window and a separate timing witness.
+Halting the CPU does not freeze all peripherals.
+
+<a id="tech-023"></a>
+## TECH-023 — Driver and peripheral consistency
+
+**Goal:** check error recovery on both sides. Define valid combinations of driver state,
+counters, flags and DMA state using the specific MCU/HAL documentation. For example,
+READY with an active receive DMA may be inconsistent; this is not a universal driver rule.
+
+Match Instance/channel and SVD to the target before access. Save RAM separately from registers;
+use [MMIO](api/mmio.md) according to register access rights and effects. Before changing a
+buffer/counter, disable the owned stream and confirm it stopped. After error injection check
+consistent state, preservation of the other direction, restart and receipt of the next block.
+Restore in reference-manual order, without copying a generic snapshot into W1C/FIFO registers.
+A restoration failure terminates the series.
+
+**Limit:** SVD and a server response do not establish physical effects. State injection does
+not establish the hardware fault mechanism; Renode establishes only model behavior.
+
+<a id="tech-024"></a>
+## TECH-024 — Diagnostic cost and counter wrap
+
+**Goal:** ensure diagnostics do not cause unacceptable load and counters survive wrap.
+Record frequency, width, halt/sleep counting behavior and measured boundaries; DWT is not
+available on every Cortex-M. Check measurement overhead with a separate control. Retain
+all samples, the warm-up exclusion rule, median and maximum; define the limit beforehand.
+
+For an n-bit counter use modulo 2**n subtraction only when the increment between
+reads is strictly below 2**n, established from an upper bound on counter rate. Run across a wrap boundary and compare increments against an independent
+time reference; missing samples make the conclusion unknown. Restore counter configuration
+and debug enables if modified.
+
+**Limit:** measured GDB-call duration is neither WCET nor free-running duration under IRQ/RTOS.
+Host time includes transport; comparing two derivatives of the same MCU clock does not
+establish its absolute frequency.
+
+<a id="tech-025"></a>
+## TECH-025 — Irregular samples and filter quality
+
+**Goal:** separate calculation errors from noise, outliers and transient response. For an
+event rate, supply equal intensity at different intervals, zero increments, counter wrap
+and invalid dt. Compute expectations independently; for an agreed exponential filter,
+for example, alpha = 1 − exp(−dt/tau), not a copy of MCU implementation code.
+
+Use separate experiments for steady-state noise, input steps, isolated outliers and convergence.
+Retain raw/filtered values, units, publication time and sample sequence. A new system tick
+does not imply a new measurement. Check unique sample count before analysis; do not include
+transients in stationary variance. Restore the input source and filter state.
+
+**Limit:** lower variance does not prove accuracy. An independent input reference is required;
+a physical source, allowed levels and restoration require separate agreement.
+
+<a id="tech-026"></a>
+## TECH-026 — Live window and external witness
+
+**Goal:** relate internal state to another stand participant's observation. The mcu_gcs_board
+radio simulator provides controlled input to mcu_power_board; the hwlivetest-android
+engineering tool can record MCAP. These are stand roles, not automatically supported module
+backends or importers.
+
+Prepare capture and cleanup of all owned processes before resume; confirm receiver readiness.
+Use a bounded [API 3 live window](LIVE_EXECUTION.md), without blocking the GDB thread waiting
+synchronously for an external process. Stop the target after the window, finish and flush
+capture, and verify restoration. Handle timeout and partial startup; finally alone does not
+cover process death, and a remote process needs separate ownership.
+
+Bind records to run ID, revision/ELF, source, units, message sequence and a time base with
+known uncertainty. Detect gaps and duplicates. MCAP/rosbag are containers: define required
+channels and fields beforehand; missing data are not zero. Preserve scenario, capture,
+analysis and restoration outcomes separately ([TECH-011](#tech-011)).
+
+**Limit:** reading the same value via GDB and telemetry checks delivery/consistency, not
+independent sensor accuracy. Process PASS does not imply a valid capture.
+
 ## Extending the catalogue
 
 On new experience, first look for an existing card; a new ID only for a distinct technique. Link HAL and
@@ -695,7 +821,7 @@ with MCU, HAL, GCC, GDB and backend. Separate "verified", "candidate" and "not v
 are part of the experience too. Update RU and EN, scenario comments and the style test together. After a
 HAL or optimization change, repeat the affected preflight and hardware runs, not only the links.
 
-The 0.4.2 candidate removes repeated RHS evaluation: see the [write contract](api/write.md). Explicit pre-evaluation remains useful for older versions.
+API 3 (0.5.0) removes repeated RHS evaluation: see the [write contract](api/write.md). Explicit pre-evaluation remains useful for older versions.
 
 ## Investigating peripheral accesses
 
