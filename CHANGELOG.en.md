@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Verified logical-time/counter-cost/external-capture workflows added to six skills through a shared resource covering commands, negative controls and limits; Pages routing and the 0.5.1 plan updated. No core or design changes.
+
 - Neutral external-capture host example: separate source, READY/drain, completeness, clock eligibility, separate analysis and hash-checked reanalysis. Raw scenario results preserved; Pages guidance updated without redesign. No core or board changes.
 
 - Neutral counter-cost example: wrap, independent eligibility, empty baseline and total observation cost; separate GDB transport timings, three mutations and a repeated fix. Pages guidance updated without design changes.

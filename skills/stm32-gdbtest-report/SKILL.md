@@ -89,3 +89,11 @@ python skills/stm32-gdbtest-report/scripts/render_report.py --input skills/stm32
 `python scripts/test_report.py` из папки навыка (нужен ReportLab). После переноса
 генератор запускается из любого cwd с абсолютными путями; docs/tests требуют checkout
 модуля, внутренние references/scripts — только полной копии каталога навыка.
+
+## Нейтральные примеры 0.5.x
+
+Для отчёта по logical-time/counter-cost/external-capture проверь [область доказательств](../stm32-gdbtest-scenarios/references/neutral-workflows.md).
+Покажи отдельно дефектный исход, исправление/повтор, захват, анализ и восстановление.
+Подпиши единицы: модельные тики, длительность запроса ПК или синтетическая временная
+привязка. Не называй их WCET/физической калибровкой и не подавай учебные JSON напрямую
+PDF-генератору: сначала results и проверенный ввод по формату навыка report.
