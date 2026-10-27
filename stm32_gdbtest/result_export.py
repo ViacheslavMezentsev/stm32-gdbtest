@@ -7,7 +7,9 @@ import math
 from pathlib import Path
 import tomllib
 
-from stm32_gdbtest.result_capture import MAX_BYTES, read
+from stm32_gdbtest.result_capture import read
+
+MAX_BYTES = 16 * 1024 * 1024  # Report input; records.json has its separate 64 MiB bound.
 from stm32_gdbtest.errors import RecordError
 from stm32_gdbtest.result_files import Budget, output_stream, write_json
 

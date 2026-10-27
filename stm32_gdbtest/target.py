@@ -254,10 +254,13 @@ class Target:
         self._config = configuration.config if configuration else freeze(dict(
             target=profile, api=dict(schema=1, records=dict(DEFAULTS)), image=None))
         limits = self._config['api']['records']
-        self._journal = Journal(**{key: limits[key] for key in DEFAULTS})
+        from stm32_gdbtest.compact_records import CompactJournal
+        journal_type = (CompactJournal if self._config['api'].get('journal', {}).get(
+            'representation', 'full') == 'compact' else Journal)
+        self._journal = journal_type(**{key: limits[key] for key in DEFAULTS})
         from stm32_gdbtest.mmio import MMIO, GdbTransport
         self.mmio = MMIO(configuration.svd_catalog if configuration else None,
-                         GdbTransport(gdb, profile, self._mmio_ready), self.record)
+                         GdbTransport(gdb, profile, self._mmio_ready), self._record_mmio)
         self.owned = []
         self.stops = []
         # Fault guard functions; the architecture adapter may replace them at boot (portability P1-7).
@@ -279,6 +282,10 @@ class Target:
         if isinstance(data, Profile):
             data = data.snapshot()
         return self._journal.record(name, data)
+
+    def _record_mmio(self, name, data):
+        self._assert_awaited()
+        return self._journal.mmio_record(name, data)
 
     def records(self, name=None):
         return self._journal.records(name)

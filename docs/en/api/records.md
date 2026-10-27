@@ -39,3 +39,7 @@ Requires at least two previously collected adc.sample records; stdev uses N−1.
 Opt-in runner persistence: [description](../API.md). The method contract is unchanged.
 
 Record data is arbitrary; name does not define a measurement type. [Generic export and separate projections](../RESULTS.md).
+
+## A2.1 candidate
+
+API schema 2 adds compact MMIO and larger budgets; schema 1 keeps its limits. Logical rows stay unchanged; compact materialization has a separate bound. [Configuration, migration and common reader](../API.md#a21-compact-journal-060-candidate).

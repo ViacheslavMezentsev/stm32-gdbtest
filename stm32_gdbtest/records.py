@@ -101,6 +101,9 @@ class Journal:
                               "name": copied_name, "data": snapshot})
         self._nodes, self._text_bytes = budget
 
+    def mmio_record(self, name, data):
+        return self.record(name, data)
+
     def records(self, name=None):
         if name is not None and (type(name) is not str or not name):
             raise RecordError("invalid_name", "filter must be None or a non-empty string")

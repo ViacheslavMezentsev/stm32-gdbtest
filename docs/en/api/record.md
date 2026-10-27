@@ -16,7 +16,7 @@ Accepts exact None/bool/int, finite float, Unicode str, list and dict with strin
 
 Configure limits in api.toml `[records]`. Integers from 1 to the maximum, excluding bool:
 
-| Parameter | Default | Maximum |
+| Parameter (schema 1) | Default | Maximum |
 | --- | ---: | ---: |
 | max_records | 128 | 1024 |
 | max_nodes | 4096 | 32768 |
@@ -49,3 +49,7 @@ Scenario-body fragment (case shows a complete declaration). Symbols/macros must 
 Opt-in runner persistence: [description](../API.md). The method contract is unchanged.
 
 Record data is arbitrary; name does not define a measurement type. [Generic export and separate projections](../RESULTS.md).
+
+## A2.1 candidate
+
+API schema 2 adds compact MMIO and larger budgets; schema 1 keeps its limits. Logical rows stay unchanged; compact materialization has a separate bound. [Configuration, migration and common reader](../API.md#a21-compact-journal-060-candidate).

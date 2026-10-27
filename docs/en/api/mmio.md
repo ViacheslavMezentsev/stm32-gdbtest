@@ -96,3 +96,7 @@ If transport and result auditing both fail, the caller receives `transport_faile
 `details.audit_error`. No retry occurs. Otherwise the existing `journal_unavailable`
 with effect=none/unknown before/after transport is preserved. ACK does not prove a
 physical effect.
+
+## A2.1 candidate
+
+API schema 2 adds compact MMIO and larger budgets; schema 1 keeps its limits. Logical rows stay unchanged; compact materialization has a separate bound. [Configuration, migration and common reader](../API.md#a21-compact-journal-060-candidate).

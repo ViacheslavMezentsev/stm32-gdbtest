@@ -151,7 +151,7 @@ class SessionConfigTests(unittest.TestCase):
             self.assertEqual(api["custom"]["max_records"], -1)
 
     def test_schema_and_known_table_shape(self):
-        for text in ('[custom]\nx=1', 'schema=true', 'schema=2', 'schema="1"',
+        for text in ('[custom]\nx=1', 'schema=true', 'schema=3', 'schema="1"',
                      'schema=1\nrecords=2'):
             with self.subTest(text=text), self.assertRaises(ConfigError):
                 self.write("api.toml", text)

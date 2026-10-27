@@ -139,7 +139,7 @@ historical index/scenario errors. unverified alone is not an error.
 | --max-output-bytes | 67108864 (64 MiB) |
 | --max-series | 32 |
 
-All limits are positive integers. Input JSON: 16 MiB; export.toml: 64 KiB. Streaming counters bound
+All limits are positive integers. Input JSON: 16 MiB (records.json separately: 64 MiB); export.toml: 64 KiB. Streaming counters bound
 file reads; verify counts each artifact entry, including duplicates. The conservative pre-projection
 estimate `bytes(records) * (4 + 3 * series_count)` can refuse before actual output reaches the limit.
 Actual written bytes are also bounded. These are utility limits, not scenario API limits. Data is
@@ -192,3 +192,7 @@ every attempt and status, including capture/integrity errors; expert view adds I
 individual processing codes and JSON details. Data and JSON remain unchanged. Static embedded
 JavaScript works locally without network or preference storage. Reload restores normal view and
 the --theme default. Without JavaScript all details remain available in the initial theme.
+
+## Compact MMIO
+
+A2.1 candidate: the common reader accepts records schema 2 and schema 1. Records have a separate 64 MiB file cap; other exporter JSON inputs remain limited to 16 MiB. [Configuration, expansion limits and migration](API.md#a21-compact-journal-060-candidate).

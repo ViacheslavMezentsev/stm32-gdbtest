@@ -192,3 +192,60 @@ errors survive audit failure; separate diagnostics and cleanup confirmation are 
 in [resume](api/resume.md), [MMIO](api/mmio.md), and [RecordError](api/record-error.md).
 Failed execution auditing after a successful operation now raises ApiError/journal_unavailable
 instead of bare RecordError. Limits, capture and record format are unchanged.
+
+## A2.1: compact journal (0.6.0 candidate)
+
+Select API schema 2 in `api.toml`; schema 1 keeps its previous defaults and limits.
+The default representation is `full`; compact MMIO is explicitly enabled:
+
+```toml
+schema = 2
+[journal]
+representation = "compact"
+[records]
+max_records = 65536
+max_nodes = 2097152
+max_text_bytes = 16777216
+```
+
+These three values are maxima for long series, not defaults.
+
+| Parameter | Schema 2 default | Schema 2 maximum |
+| --- | ---: | ---: |
+| max_records | 4096 | 65536 |
+| max_nodes | 131072 | 2097152 |
+| max_text_bytes | 1048576 | 16777216 |
+| max_depth | 16 | 32 |
+| max_integer_bits | 256 | 1024 |
+
+Compact MMIO stores original/effective/SVD SHA-256 once in a definition table;
+events carry a reference and an operation ID. Order, values, reason, override,
+attempt and result are preserved without aggregation. A missing result is not
+success. User `record("mmio.attempt", ...)` remains a user record. Node/text
+budgets count encoded storage, including references and definitions; encoding
+does not increase logical data depth. These are not RSS, latency or retained-copy limits.
+
+`records()` returns detached logical sequence/name/data rows as before.
+Compact materialization is bounded by 2097152 nodes, 16 MiB text, depth 32 and
+1024 integer bits. Exceeding a budget raises RecordError with
+`details.scope="materialization"`, without a partial list. Encoded storage may
+fit while expanded rows do not: filter by name and avoid querying on every iteration.
+
+With `[results] capture=true`, full writes `records.json` schema 1, compact writes
+schema 2 with definitions. Capture serializes chunks without expanding the whole
+journal. The common `stm32_gdbtest.result_capture.read(directory, report)` reader
+validates both formats and returns logical rows; `materialize=False` expands one
+row at a time. Encoded JSON is still loaded into memory: this is not a streaming
+JSON parser or a constant-RSS guarantee. Validation covers hashes, run identity,
+sequence, references, operation pairs and event fields. The independent records
+file cap is 64 MiB; an oversized artifact causes capture failure without changing
+the scenario verdict. Other exporter JSON input limits remain 16 MiB. Older
+consumers need an updated reader for schema 2.
+
+Migration is opt-in. API_VERSION stays 3; API configuration, records and capsule
+schemas are distinct. Runner/packages validate the schema-specific defaults and
+maxima fingerprint. Execution, timeouts and MMIO transport counts do not change;
+summary/truncate are outside this package.
+
+[Reproducible benchmark](../../tests/mmio-renode/README.md) and
+[A2.1 measurements](../development/journal-a21-measurements.md).

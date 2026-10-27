@@ -32,6 +32,14 @@ MAXIMUMS = MappingProxyType(dict(max_records=1024, max_nodes=32768,
                                 max_integer_bits=1024))
 
 
+# Schema 2 budgets; schema 1 retains its historical defaults and bounds.
+DEFAULTS_V2 = dict(max_records=4096, max_nodes=131072, max_text_bytes=1048576,
+                   max_depth=16, max_integer_bits=256)
+MAXIMUMS_V2 = dict(max_records=65536, max_nodes=2097152, max_text_bytes=16777216,
+                   max_depth=32, max_integer_bits=1024)
+QUERY_NODES = 2097152
+
+
 class ConfigError(ValueError):
     """Internal configuration diagnostic; not a scenario API exception."""
 
@@ -161,16 +169,23 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
     api = documents["api"]
     if api is None:
         api = {"schema": 1}
-    if type(api.get("schema")) is not int or api["schema"] != 1:
-        raise ConfigError("api_schema", "expected integer schema=1")
+    if type(api.get("schema")) is not int or api["schema"] not in (1, 2):
+        raise ConfigError("api_schema", "expected integer schema=1 or 2")
     records = api.get("records", {})
     if type(records) is not dict:
         raise ConfigError("api_parameter", "records must be a table")
+    defaults, maxima = (DEFAULTS, MAXIMUMS) if api['schema'] == 1 else (DEFAULTS_V2, MAXIMUMS_V2)
+    policy = api.get('journal', {})
+    if (type(policy) is not dict or set(policy) - {'representation'}
+            or policy.get('representation', 'full') not in ('full', 'compact')):
+        raise ConfigError('api_parameter', 'journal.representation must be full or compact')
+    if api['schema'] == 1 and policy:
+        raise ConfigError('api_schema', 'journal requires schema=2')
     for name in DEFAULTS:
         if name in records and (type(records[name]) is not int or
-                                not 1 <= records[name] <= MAXIMUMS[name]):
-            raise ConfigError("api_parameter", f"records.{name}: expected integer 1..{MAXIMUMS[name]}")
-    effective_api = dict(api, records={**DEFAULTS, **records})
+                                not 1 <= records[name] <= maxima[name]):
+            raise ConfigError("api_parameter", f"records.{name}: expected integer 1..{maxima[name]}")
+    effective_api = dict(api, records={**defaults, **records})
     effective = dict(target=target, api=effective_api, image=image, data=data)
     return Configuration(freeze(effective), freeze(props), session_sha,
                          MappingProxyType(dict(raw_documents, session=session_raw)), results.get("capture", False), catalog)

@@ -45,3 +45,7 @@ cumulative records/nodes/text_bytes budget; it is 0 for per-value depth/integer 
 `attempted` describes the first excess, not the full rejected object's size.
 An early text check may report a UTF-8 lower bound, explicitly marked by the flag.
 Failure consumes no budget. Match structured fields, not traceback message text.
+
+A2.1: compact storage may report `$definition`/`$definitions` paths.
+A `records()` expansion failure has `details.operation="records"` and
+`details.scope="materialization"`; it does not discard the journal.

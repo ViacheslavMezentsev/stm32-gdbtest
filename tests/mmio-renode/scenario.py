@@ -14,7 +14,7 @@ from stm32_gdbtest.mmio import MMIO, GdbTransport
 
 checks, observations = [], []
 log = Path(os.environ['MMIO_LOG'])
-config = load_session(ROOT / 'tests/mmio-renode/session.toml')
+config = load_session(Path(os.environ.get('MMIO_SESSION', ROOT / 'tests/mmio-renode/session.toml')))
 t = Target({'checks': []}, dict(config.config['target']), config)
 
 def events():
@@ -94,6 +94,15 @@ try:
     row = run('transport and audit', lambda: broken.write('MODEL.WO', 44))
     check('primary transport preserved', row['error']['code'] == 'transport_failed'
           and row['error']['details']['audit_error']['limit'] == 'records' and len(row['accesses']) == 1)
+    from stm32_gdbtest.result_capture import save, read, finalize
+    capture_dir = Path(os.environ['DDTT_PROBE_RESULT']).parent / 'capture'
+    capture_dir.mkdir()
+    capture_report = dict(run_id='mmio', id='MMIO_AUDIT', status='PASS')
+    save(capture_dir, capture_report, t, 'normal')
+    finalize(capture_dir, capture_report, True)
+    check('capture common reader', capture_report['command_code'] == 0
+          and read(capture_dir, capture_report)['records'] == t.records())
+    (capture_dir/'result.json').write_text(json.dumps(capture_report), encoding='utf-8')
     status = 'PASS' if all(c['passed'] for c in checks) else 'FAIL'
 finally:
     out = Path(os.environ['DDTT_PROBE_RESULT'])

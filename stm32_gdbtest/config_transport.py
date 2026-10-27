@@ -5,11 +5,12 @@ import hashlib
 import json
 from pathlib import Path
 
-from stm32_gdbtest.configuration import ConfigError, DEFAULTS, load_session, load_legacy
+from stm32_gdbtest.configuration import ConfigError, DEFAULTS, DEFAULTS_V2, MAXIMUMS_V2, load_session, load_legacy
 
 
-def fingerprint():
-    return hashlib.sha256(json.dumps(dict(DEFAULTS), sort_keys=True).encode()).hexdigest()
+def fingerprint(schema=1):
+    limits = dict(DEFAULTS) if schema == 1 else dict(current=DEFAULTS_V2, maximum=MAXIMUMS_V2)
+    return hashlib.sha256(json.dumps(limits, sort_keys=True).encode()).hexdigest()
 
 
 def dumps(snapshot):
@@ -17,7 +18,7 @@ def dumps(snapshot):
                     "sha256": hashlib.sha256(raw).hexdigest()}
              for name, raw in snapshot._source_bytes.items()}
     return json.dumps(dict(format="stm32-gdbtest-config", schema=2 if "svd" in snapshot._source_bytes else 1,
-                           defaults=fingerprint(), files=files,
+                           defaults=fingerprint(snapshot.config["api"]["schema"]), files=files,
                            references={k: v["reference"] for k, v in snapshot.config_props.items() if v is not None}), allow_nan=False)
 
 
@@ -33,7 +34,7 @@ def loads(text):
         data = json.loads(text, object_pairs_hook=unique)
         if (set(data) != {"format", "schema", "defaults", "files", "references"}
                 or data["format"] != "stm32-gdbtest-config" or type(data["schema"]) is not int
-                or data["schema"] not in (1, 2) or data["defaults"] != fingerprint()):
+                or data["schema"] not in (1, 2) or data["defaults"] not in (fingerprint(), fingerprint(2))):
             raise ValueError("incompatible capsule or defaults")
         files = data["files"]
         if not {"target"} <= set(files) or {name for name in set(files) - {"session", "target", "api", "image", "svd"}
@@ -83,8 +84,13 @@ def loads(text):
                 raise ValueError("conflicting source aliases")
             sources[path] = raw[name]
         if is_new:
-            return load_session(entry, environ={}, reader=sources.__getitem__)
+            loaded = load_session(entry, environ={}, reader=sources.__getitem__)
+            if data['defaults'] != fingerprint(loaded.config['api']['schema']):
+                raise ValueError('incompatible defaults for API schema')
+            return loaded
         # Keep legacy references verbatim; no session.toml is invented.
+        if data['defaults'] != fingerprint():
+            raise ValueError('incompatible legacy defaults')
         legacy_sources = {Path(v).resolve(): raw[k] for k, v in links.items()}
         return load_legacy({"profile": links["target"]}, image_policy=links.get("image"),
                            environ={}, reader=legacy_sources.__getitem__)

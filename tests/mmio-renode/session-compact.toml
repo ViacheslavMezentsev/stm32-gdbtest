@@ -1,0 +1,7 @@
+[config]
+api = "api-compact.toml"
+target = "../renode-backend/target.toml"
+[results]
+capture = true
+[mmio]
+svd = "teaching-expanded.svd"
