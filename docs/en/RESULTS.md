@@ -196,3 +196,8 @@ the --theme default. Without JavaScript all details remain available in the init
 ## Compact MMIO
 
 A2.1 candidate: the common reader accepts records schema 2 and schema 1. Records have a separate 64 MiB file cap; other exporter JSON inputs remain limited to 16 MiB. [Configuration, expansion limits and migration](API.md#a21-compact-journal-060-candidate).
+
+## Compact results
+
+Use `stm32_gdbtest.report_data.read` instead of plain json.load.
+See [API](API.md#result-journal-and-output-060-candidate-a22) for schemas, output policies and budgets.

@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- A2.2: lossless result schema 2, shared reader, completed events and failures output without dropping checks; independent storage diagnostics.
+
 - A2.1: opt-in compact MMIO (API schema 2), common records 1/2 reader, larger budgets and capture up to 64 MiB; host/Renode 1000/10000-operation benchmark without hardware.
 
 

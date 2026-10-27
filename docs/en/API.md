@@ -249,3 +249,64 @@ summary/truncate are outside this package.
 
 [Reproducible benchmark](../../tests/mmio-renode/README.md) and
 [A2.1 measurements](../development/journal-a21-measurements.md).
+
+## Result journal and output (0.6.0 candidate, A2.2)
+
+An API schema 2 file can independently select result storage and console output.
+Both options default to `full`:
+
+```toml
+schema = 2
+[report]
+representation = "compact"
+console = "failures"
+```
+
+Compact storage retains **every** check, stop, mutation, evaluation, execution and
+reset in order. `report_schema=2` is separate from the records.json schema.
+Checks still execute; catching CheckFailed does not turn failure into success.
+`failures` suppresses PASS lines and the full stdout/JUnit JSON copy, retaining
+errors, warnings and a summary linking to result. It does not filter checks.
+The derived `execution_summary` is not independent evidence: a wait timeout neither
+closes a live window nor proves the target stopped.
+
+The shared reader validates block hashes, references, logical counts and completeness:
+
+```python
+from stm32_gdbtest.report_data import read
+report = read("result.json")  # schema 1/2 validation, then ordinary lists
+report = read("result.json", materialize=False)  # sequential collection traversal
+for check in report.get("checks", []):
+    print(check["name"], check["passed"])
+```
+
+Export to a new full-format file for older consumers:
+
+```console
+python -m stm32_gdbtest.report_data result.json result-full.json
+```
+
+Using plain json.load on compact results and evaluating only status is **incorrect**:
+it bypasses collection decoding and integrity validation. The runner, coverage,
+result-index, export and stand-loop use the shared reader. report_storage_error or
+report_audit_error_count makes evidence ineligible; the scenario verdict remains
+separate from artifact failure and command exit status.
+
+Compact mode spools completed events at 128 rows or 1 MiB of accumulated JSON
+bytes per block; a single larger row is allowed separately. reach commits
+its stop after frame completion; write commits after readback, including failure.
+Changing a returned dictionary does not rewrite compact history. Accumulation adds
+no GDB/MMIO reads or repr calls. Opaque Python/GDB values retain late repr semantics
+at final serialization, with at most 128 deferred rows per collection. Prefer plain
+JSON values for predictable snapshots; user-defined repr is not guaranteed pure.
+
+Compact budgets: 65536 rows per collection, 16 MiB file, 64 MiB expanded rows,
+64 MiB spool per collection, document depth 40 and 2097152 encoded JSON nodes.
+The plain pending buffer holds at most 128 rows, but row size, deferred objects and
+final serialization also consume memory; constant RSS is not promised. Budget or
+I/O/integrity failures are explicit, never truncation. Result publication is atomic.
+Primary and audit failures remain separate; incomplete history cannot produce PASS.
+
+Tests: `tests/host/test_report_data.py`, `tests/renode-backend/run_report.py`.
+The shared reader and full publication also enforce the 16 MiB file limit.
+Full mode retains its structure; JSON whitespace is not part of the contract.

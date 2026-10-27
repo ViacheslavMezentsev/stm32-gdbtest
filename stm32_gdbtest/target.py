@@ -9,6 +9,7 @@ from stm32_gdbtest.dispatch import Command, execution_method, AtomicRequest, Wai
 import gdb
 from stm32_gdbtest.errors import ApiError, CheckFailed, fail  # noqa: F401
 from stm32_gdbtest.records import Journal
+from stm32_gdbtest import report_data
 from stm32_gdbtest.configuration import (DEFAULTS, EXECUTE_OUTPUT_LIMIT, FRAMES_LIMIT,
                                            MEMORY_LIMIT, RESET_COMMAND, STRING_LIMIT, freeze)
 from stm32_gdbtest import values
@@ -253,6 +254,7 @@ class Target:
         self._reset = context.get("reset_halt")
         self._config = configuration.config if configuration else freeze(dict(
             target=profile, api=dict(schema=1, records=dict(DEFAULTS)), image=None))
+        report_data.configure(self.report, self._config['api'])
         limits = self._config['api']['records']
         from stm32_gdbtest.compact_records import CompactJournal
         journal_type = (CompactJournal if self._config['api'].get('journal', {}).get(
@@ -341,10 +343,15 @@ class Target:
         entry = dict(name=name, actual=actual, expected=expected, passed=passed)
         if kind is not None:
             entry["kind"] = kind
-        self.report["checks"].append(entry)
-        print(f"{'PASS' if passed else 'FAIL'} {name}: {actual!r}, {wanted}")
         if not passed:
-            raise CheckFailed(name, actual=actual, expected=expected)
+            try:
+                raise CheckFailed(name, actual=actual, expected=expected)
+            finally:
+                report_data.append(self.report, "checks", entry)
+                print(f"FAIL {name}: {actual!r}, {wanted}")
+        report_data.append(self.report, "checks", entry)
+        if self.report.get('report_policy', {}).get('console', 'full') == 'full':
+            print(f"PASS {name}: {actual!r}, {wanted}")
 
     def _check_name(self, name):
         if type(name) is not str or not name:
@@ -481,7 +488,7 @@ class Target:
             entry = dict(operation="eval", expression=expression, value=text, value_type="str")
             if truncated:
                 entry["truncated"] = True
-            self.report.setdefault("evaluations", []).append(entry)
+            report_data.append(self.report, "evaluations", entry)
             return text
         try:
             value.fetch_lazy()
@@ -498,7 +505,7 @@ class Target:
             self._fail("eval", "readback", "none", "unsupported_type",
                        f"cannot convert the result of {expression} to {requested.__name__}",
                        cause=cause, expression=expression, value=plain)
-        self.report.setdefault("evaluations", []).append(
+        report_data.append(self.report, "evaluations",
             dict(operation="eval", expression=expression, value=converted,
                  value_type=requested.__name__, declared=kind))
         return converted
@@ -739,7 +746,7 @@ class Target:
             self._fail("memory", "command", "unknown", "write_failed",
                        f"cannot write {len(data)} bytes at {address:#x}", cause=cause, address=address)
         after = bytes(inferior.read_memory(address, len(data))) if verify else None
-        self.report.setdefault("mutations", []).append(
+        report_data.append(self.report, "mutations",
             dict(expression=f"memory[{address:#x}:{address + len(data):#x}]", value=data.hex(),
                  before=before.hex(), after=after.hex() if after is not None else None))
         if verify and after != data:
@@ -901,21 +908,23 @@ class Target:
         # the expected value, not a second evaluation of the original RHS (ТЗ API 4.6.4).
         expected = self._write_expression(path, literal, observe=bool(verify and scoped))
         entry = dict(expression=path, value=value, before=before, after=None)
-        self.report.setdefault("mutations", []).append(entry)
         try:
-            after = self._read_value(path, path) if (verify and scoped) else None
-        except ApiError as cause:
-            self._fail("write", "readback", "applied", "read_failed",
-                       f"cannot read back {path}", cause=cause, path=path)
-        entry["after"] = after
-        if verify and not scoped:
-            # A peripheral register keeps its own meaning on read, so the write is recorded without
-            # claiming a verification that this address cannot support.
-            entry["verified"] = False
-            entry["verify_scope"] = "outside"
-            entry["address"] = address
-        if verify and scoped and after != expected:
-            values.verification_failed(path, value, after)
+            try:
+                after = self._read_value(path, path) if (verify and scoped) else None
+            except ApiError as cause:
+                self._fail("write", "readback", "applied", "read_failed",
+                           f"cannot read back {path}", cause=cause, path=path)
+            entry["after"] = after
+            if verify and not scoped:
+                # A peripheral register keeps its own meaning on read, so the write is recorded without
+                # claiming a verification that this address cannot support.
+                entry["verified"] = False
+                entry["verify_scope"] = "outside"
+                entry["address"] = address
+            if verify and scoped and after != expected:
+                values.verification_failed(path, value, after)
+        finally:
+            report_data.append(self.report, "mutations", entry)
         return dict(operation="write", path=path, value=value, before=before, after=after,
                     verified=bool(verify and scoped), verify_scope="declared" if scoped else "outside")
 
@@ -1101,18 +1110,20 @@ class Target:
             # Otherwise the runner removes the owned point after confirmed halt.
         if not addresses and stop.get("pc") is not None:
             addresses = [stop["pc"]]
-        self.report.setdefault("stops", []).append(stop)
-        self.check(f"breakpoint reached: {location}", point.number in stop.get("breakpoints", []), True)
-        frame = gdb.newest_frame().name()
-        stop["frame"] = frame
-        # GDB linespec quotes are syntax, not part of the frame name (ТЗ API 4.5.2).
-        expected_frame = location.strip()
-        if len(expected_frame) >= 2 and expected_frame[0] == expected_frame[-1] == "'":
-            expected_frame = expected_frame[1:-1]
-        self.check(f"frame: {location}", function_name(frame), function_name(expected_frame))
-        if condition is not None:
-            # Never accept a stop that happened after a condition evaluation error.
-            self.check(f"condition: {condition}", bool(self._integer(condition)), True)
+        try:
+            self.check(f"breakpoint reached: {location}", point.number in stop.get("breakpoints", []), True)
+            frame = gdb.newest_frame().name()
+            stop["frame"] = frame
+            # GDB linespec quotes are syntax, not part of the frame name (ТЗ API 4.5.2).
+            expected_frame = location.strip()
+            if len(expected_frame) >= 2 and expected_frame[0] == expected_frame[-1] == "'":
+                expected_frame = expected_frame[1:-1]
+            self.check(f"frame: {location}", function_name(frame), function_name(expected_frame))
+            if condition is not None:
+                # Never accept a stop that happened after a condition evaluation error.
+                self.check(f"condition: {condition}", bool(self._integer(condition)), True)
+        finally:
+            report_data.append(self.report, "stops", stop)
         return dict(operation="reach", outcome="reached", location=location, point=point.number,
                     addresses=addresses, stop=stop)
 
@@ -1126,7 +1137,7 @@ class Target:
         self._require_stopped("resume")
         self.stops.clear()
         stop = yield from self._advance("resume")
-        self.report.setdefault("stops", []).append(stop)
+        report_data.append(self.report, "stops", stop)
         return dict(operation="resume", outcome="stopped", stop=stop)
 
     def _live(self):
@@ -1196,7 +1207,7 @@ class Target:
                            unit=unit, mode=mode)
             completed += 1
         if stop:
-            self.report.setdefault("stops", []).append(stop)
+            report_data.append(self.report, "stops", stop)
         return dict(operation="step", outcome=outcome, requested=count, completed=completed,
                     unit=unit, mode=mode, stop=stop)
 
@@ -1211,7 +1222,7 @@ class Target:
         before = self._frame_identity()
         targets = self._line_addresses(location) if location is not None else []
         stop = yield from self._advance("until", command, targets=targets)
-        self.report.setdefault("stops", []).append(stop)
+        report_data.append(self.report, "stops", stop)
         if location is None:
             outcome = "completed"
         elif stop.get("pc") in targets or (not targets and stop.get("kind") == "location"):
@@ -1254,7 +1265,7 @@ class Target:
         kind = self._return_type(origin) if origin is not None else None
         history = self._history_count()
         stop = yield from self._advance("finish", "finish")
-        self.report.setdefault("stops", []).append(stop)
+        report_data.append(self.report, "stops", stop)
         frame = gdb.newest_frame()
         value, state = self._finish_value(kind, history)
         return dict(operation="finish", outcome="completed", stop=stop, returned_from=returned_from,
@@ -1468,7 +1479,7 @@ class Target:
         result = dict(operation="ret", function=function, caller=caller_name, supplied=value,
                       outcome="forced", command=command, applied=applied, type_name=type_name,
                       output=output or "")
-        self.report.setdefault("mutations", []).append(
+        report_data.append(self.report, "mutations",
             dict(operation="ret", function=function, value=value, command=command))
         return result
 
@@ -1535,7 +1546,7 @@ class Target:
         registers = {"pc": int(frame.pc()) if frame is not None and frame.is_valid() else None}
         entry = dict(operation="reset", outcome="halted", command=command, registers=registers,
                      invalidation=invalidation)
-        self.report.setdefault("resets", []).append(entry)
+        report_data.append(self.report, "resets", entry)
         return dict(entry)
 
     def _reset_command(self):
@@ -1579,7 +1590,7 @@ class Target:
         try:
             text = gdb.execute(command, to_string=True)
         except gdb.error as cause:
-            self.report.setdefault("executions", []).append(
+            report_data.append(self.report, "executions",
                 dict(operation="execute", command=command, stage="dispatch", result="failed",
                      output_length=0, truncated=False))
             self._fail("execute", "command", "unknown", "command_failed",
@@ -1593,7 +1604,7 @@ class Target:
                      output_length=len(text), truncated=truncated, limit=limit)
         if truncated:
             entry["output_sha256"] = hashlib.sha256(text.encode("utf-8")).hexdigest()
-        self.report.setdefault("executions", []).append(entry)
+        report_data.append(self.report, "executions", entry)
         return text
 
     def _execute_limit(self):
@@ -1679,7 +1690,7 @@ class Target:
             result = dict(operation="call", function=function, arguments=list(args),
                           expression=expression, outcome="returned", return_value=None,
                           return_state="void")
-            self.report.setdefault("mutations", []).append(
+            report_data.append(self.report, "mutations",
                 dict(operation="call", function=function, expression=expression, value=None))
             return result
         try:
@@ -1692,7 +1703,7 @@ class Target:
         result = dict(operation="call", function=function, arguments=list(args),
                       expression=expression, outcome="returned", return_value=plain,
                       return_state=state)
-        self.report.setdefault("mutations", []).append(
+        report_data.append(self.report, "mutations",
             dict(operation="call", function=function, expression=expression, value=plain))
         return result
 

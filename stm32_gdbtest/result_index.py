@@ -5,6 +5,7 @@ import json
 from pathlib import Path, PurePosixPath
 import re
 import uuid
+from stm32_gdbtest.report_data import decode as decode_report
 
 LIMIT = 16 * 1024 * 1024
 
@@ -29,7 +30,7 @@ def load(path):
         raise ValueError('JSON nesting or numeric limit') from exc
     if type(data) is not dict:
         raise ValueError('expected JSON object')
-    return data, hashlib.sha256(raw).hexdigest()
+    return decode_report(data), hashlib.sha256(raw).hexdigest()
 
 
 def text(value):

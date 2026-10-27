@@ -38,3 +38,5 @@ and returned in `location`; `stop.frame` retains GDB's name. This is not a gener
 parser: point-number and normalized-frame checks remain mandatory.
 With 0.3.0 use the unquoted form.
 [Example](../../../tests/cpp-context/profile/tests/board/test_cpp_context.py).
+
+Compact result storage and console control do not remove checks; see [result journal](../API.md#result-journal-and-output-060-candidate-a22).

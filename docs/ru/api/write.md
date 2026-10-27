@@ -75,3 +75,5 @@ verify_scope=outside и отсутствие подтверждающего чт
 Ошибка чтения после записи: read_failed / readback / applied; запись остаётся в mutations с after=None.
 Ошибка преобразования результата присваивания: conversion_failed / readback / applied.
 Несовпадение readback сохраняет verification_failed. Повторов и отката нет.
+
+Компактный result и управление выводом не сокращают проверки; см. [журнал отчёта](../API.md#журнал-отчёта-и-вывод-кандидат-060-a22).

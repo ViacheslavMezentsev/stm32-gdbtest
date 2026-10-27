@@ -74,3 +74,5 @@ Command errors: command_failed / command / unknown (RHS may already have changed
 Post-write read failures: read_failed / readback / applied; mutations retains after=None.
 Assignment-result conversion failures: conversion_failed / readback / applied.
 Readback mismatches retain verification_failed. No retries or rollback.
+
+Compact result storage and console control do not remove checks; see [result journal](../API.md#result-journal-and-output-060-candidate-a22).

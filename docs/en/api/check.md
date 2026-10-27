@@ -125,3 +125,5 @@ scenario independently (TECH-001).
 
 - [API specification](../../TECHNICAL_SPECIFICATION_API.md), items 4.1.1–4.1.4.
 - [Matchers](matchers.md), [read](read.md), [evaluate](evaluate.md).
+
+Compact result storage and console control do not remove checks; see [result journal](../API.md#result-journal-and-output-060-candidate-a22).

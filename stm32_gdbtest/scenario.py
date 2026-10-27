@@ -35,6 +35,9 @@ def reject_failed_checks(target):
         if check.get('passed') is False:
             raise CheckFailed(check.get('name', 'previous check'), check.get('actual'), check.get('expected'))
 
+    if target.report.get('report_audit_error_count'):
+        fail('report', 'audit', 'unknown', 'report_unavailable', 'Report event audit failed')
+
 
 def invoke(function, target):
     """Return only on successful completion; keep failures and intercepted skips visible."""

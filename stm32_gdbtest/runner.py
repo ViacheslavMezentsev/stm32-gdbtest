@@ -19,6 +19,7 @@ from stm32_gdbtest.config_transport import dumps
 from stm32_gdbtest.processes import FLAGS, probe_identity, probe_lock, spawn_options, stop_tree
 from stm32_gdbtest import remote as remote_host
 from stm32_gdbtest.reports import CODES, write_reports
+from stm32_gdbtest.report_data import read as read_report
 from stm32_gdbtest.compatibility import runtime_manifest
 from stm32_gdbtest.build_manifest import load_verified, summary as build_summary
 from stm32_gdbtest.contracts import select_contracts, select_contracts_from
@@ -140,6 +141,8 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
     report["compatibility"] = runtime_manifest(report, server_log)
     report["duration_s"] = round(time.monotonic() - started, 3)
     finalize_capture(out, report, capture_enabled)
+    if report.get("report_storage_error") or report.get("report_audit_error_count"):
+        report["command_code"] = 2
     write_reports(out, report)
     for warning in report.get("warnings", []):
         print("WARNING: " + warning)
@@ -405,7 +408,7 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
             returncode = client.wait(timeout=timeout)
         if not agent_result.exists():
             raise RuntimeError(f"GDB exited {returncode} without report; see gdb.log")
-        result = json.loads(agent_result.read_text(encoding="utf-8"))
+        result = read_report(agent_result, materialize=False)
         if (result.get("id") != test["id"] or result.get("elf_sha256") != report["elf_sha256"]
                 or result.get("bin_sha256") != report["bin_sha256"]
                 or ("run_id" in report and result.get("run_id") != report["run_id"])

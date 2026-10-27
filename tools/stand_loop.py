@@ -24,6 +24,7 @@ from stm32_gdbtest.config_transport import loads as load_capsule
 from stm32_gdbtest.probes import family
 from stm32_gdbtest.processes import probe_identity
 from stm32_gdbtest.result_capture import read as read_records
+from stm32_gdbtest.report_data import read as read_report
 
 
 def stamp():
@@ -129,7 +130,9 @@ def command(args, log):
 
 
 def validate(path, code, case, package_hash, backend):
-    report = json.loads(path.read_text(encoding='utf-8'))
+    report = read_report(path)
+    if report.get('report_storage_error') or report.get('report_audit_error_count'):
+        raise ValueError('report evidence unavailable')
     status = report.get('status')
     codes = {'PASS': 0, 'FAIL': 1, 'ERROR': 2, 'SKIP': 77}
     if (report.get('id') != case['id'] or report.get('mode') != 'hardware'
@@ -252,7 +255,7 @@ def run(plan_path, output, stop=None, invoke=command):
                 reports = list(prep.rglob('result.json'))
                 if code or len(reports) != 1:
                     raise ValueError('Preparation failed; no hardware started')
-                evidence = json.loads(reports[0].read_text(encoding='utf-8'))
+                evidence = read_report(reports[0])
                 if evidence.get('status') != 'PASS' or evidence.get('mode') != 'prepare':
                     raise ValueError('Preparation outcome not confirmed')
             for number in range(1, plan['cycles'] + 1):
@@ -281,7 +284,7 @@ def run(plan_path, output, stop=None, invoke=command):
                         if len(reports) != 1:
                             raise ValueError('Missing unique result; no retry')
                         path = reports[0]
-                        report = json.loads(path.read_text(encoding='utf-8'))
+                        report = read_report(path)
                         row.update(status=report.get('status', 'UNKNOWN'), result=path.relative_to(folder).as_posix())
                         artifacts = {'junit': path.with_name('junit.xml').relative_to(folder).as_posix()}
                         selection['runs'].append(dict(result=row['result'], stand=family(stand), artifacts=artifacts))

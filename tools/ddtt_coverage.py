@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import re
 import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 try:
     from .ddtt_guard import validate_point
     from . import ddtt_qualification as qualification
@@ -49,7 +50,9 @@ def project(root, mapping, results):
     root = Path(root).resolve()
     by_case = defaultdict(list)
     for path in sorted(set(Path(p).resolve() for p in results)):
-        data = load(path)
+        # Import after project bootstrap; report schemas are separate from map schemas.
+        from stm32_gdbtest.report_data import read as read_report
+        data = read_report(path)
         if data.get("mode") != mapping.get("environment", "hardware") or data.get("purpose", "automated") != "automated":
             continue
         stamp = datetime.fromisoformat(data["started_utc"].replace("Z", "+00:00"))
@@ -81,6 +84,8 @@ def project(root, mapping, results):
                 row["reason"] = "ELF mismatch"
             elif [i.get("sha256") for i in inputs if i.get("file") == point["source"]] != [point["source_sha256"]]:
                 row["reason"] = "source manifest mismatch"
+            elif data.get('report_storage_error') or data.get('report_audit_error_count'):
+                row['reason'] = 'report evidence unavailable'
             elif data.get("status") not in ("PASS", "FAIL"):
                 row["reason"] = "scenario is not PASS/FAIL"
             elif not checks or any(type(c.get("passed")) is not bool for c in checks):

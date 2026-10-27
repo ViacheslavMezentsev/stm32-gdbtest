@@ -26,6 +26,7 @@ from stm32_gdbtest.configuration import thaw
 from stm32_gdbtest.result_capture import save as save_records
 from stm32_gdbtest.scenario import ScenarioSkipped, invoke, invoke_async
 from stm32_gdbtest.reports import CODES
+from stm32_gdbtest import report_data
 
 
 async def main():
@@ -151,6 +152,8 @@ async def main():
             except BaseException:
                 report.update(status_before_execution_cleanup=report['status'], status='ERROR',
                               execution_cleanup='ERROR', execution_cleanup_error=traceback.format_exc())
+        if report.get('report_audit_error_count') and report['status'] == 'PASS':
+            report.update(status_before_report_audit='PASS', status='ERROR')
         parameter_errors = getattr(gdb, '_stm32_parameter_cleanup_errors', [])
         if parameter_errors:
             report.update(status_before_parameter_cleanup=report['status'], status='ERROR',
@@ -187,8 +190,18 @@ async def main():
         except BaseException:
             report.update(status="ERROR", teardown_error=traceback.format_exc())
         # A value a scenario put into its checks must not cost the whole report: it is kept as its repr.
-        Path(session["result"]).write_text(json.dumps(report, indent=2, default=repr) + "\n", encoding="utf-8")
-        print(json.dumps(report, default=repr))
+        try:
+            report_data.write(session['result'], report)
+            output = (report_data.summary(report) if report.get('report_policy', {}).get('console') == 'failures'
+                      else report_data.payload(report, False))
+            print(json.dumps(output, default=repr))
+        except Exception as cause:
+            fallback = {k:v for k,v in report.items() if k not in report_data.COLLECTIONS}
+            fallback.update(report_storage_error=error_summary(cause), checks=[])
+            report_data.write(session['result'], fallback, compact=False)
+            print(json.dumps(report_data.summary(fallback), default=repr))
+        finally:
+            report_data.close(report)
     gdb.execute("quit " + str(CODES[report["status"]]))
 
 

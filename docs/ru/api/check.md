@@ -127,3 +127,5 @@ t.check([
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), п. 4.1.1–4.1.4.
 - [Сопоставители](matchers.md), [read](read.md), [evaluate](evaluate.md).
+
+Компактный result и управление выводом не сокращают проверки; см. [журнал отчёта](../API.md#журнал-отчёта-и-вывод-кандидат-060-a22).

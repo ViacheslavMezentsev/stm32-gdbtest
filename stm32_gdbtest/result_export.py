@@ -8,6 +8,7 @@ from pathlib import Path
 import tomllib
 
 from stm32_gdbtest.result_capture import read
+from stm32_gdbtest.report_data import decode as decode_report
 
 MAX_BYTES = 16 * 1024 * 1024  # Report input; records.json has its separate 64 MiB bound.
 from stm32_gdbtest.errors import RecordError
@@ -34,6 +35,7 @@ def load_report(path):
 
     report = json.loads(raw, object_pairs_hook=unique)
     encoded(report)
+    report = decode_report(report)
     if type(report) is not dict:
         raise ValueError('report must be an object')
     for key in ('id', 'run_id'):

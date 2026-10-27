@@ -181,6 +181,13 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
         raise ConfigError('api_parameter', 'journal.representation must be full or compact')
     if api['schema'] == 1 and policy:
         raise ConfigError('api_schema', 'journal requires schema=2')
+    report_policy = api.get('report', {})
+    if (type(report_policy) is not dict or set(report_policy) - {'representation', 'console'}
+            or report_policy.get('representation', 'full') not in ('full', 'compact')
+            or report_policy.get('console', 'full') not in ('full', 'failures')):
+        raise ConfigError('api_parameter', 'invalid report representation/console')
+    if api['schema'] == 1 and report_policy:
+        raise ConfigError('api_schema', 'report policy requires schema=2')
     for name in DEFAULTS:
         if name in records and (type(records[name]) is not int or
                                 not 1 <= records[name] <= maxima[name]):

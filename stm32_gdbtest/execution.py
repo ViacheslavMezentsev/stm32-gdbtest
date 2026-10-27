@@ -4,6 +4,7 @@ import threading
 import time
 
 from stm32_gdbtest.errors import ApiError, fail, error_summary
+from stm32_gdbtest import report_data
 
 
 def timeout_value(value, operation):
@@ -165,6 +166,7 @@ class LiveExecution:
         return result
 
     def audit(self, operation, result=None, primary=None):
+        report_data.observe_execution(self.target.report, operation, result, primary)
         try:
             self.target.record('execution', result if primary is None else dict(error=primary.details))
         except Exception as cause:
@@ -195,7 +197,7 @@ class LiveExecution:
             if self.state() not in ('stopped', 'exited'):
                 await self.target.halt(timeout=2.0)
         except ApiError as error:
-            if not (error.code == 'journal_unavailable' and error.details.get('stage') == 'audit'
+            if not (error.code in ('journal_unavailable', 'report_unavailable') and error.details.get('stage') == 'audit'
                     and self.state() in ('stopped', 'exited')):
                 raise
             self.target.report['execution_cleanup_audit_error'] = error_summary(error)
@@ -267,7 +269,17 @@ class LiveExecution:
             if self.interrupt_requested and stop.get('signal') == 'SIGINT':
                 stop['kind'] = 'interrupt'
             result = dict(operation=request.operation, outcome=state, generation=self.generation, stop=stop)
-            self.target.report.setdefault('stops', []).append(stop)
+            try:
+                report_data.append(self.target.report, 'stops', stop)
+            except ApiError as audit:
+                if stop['kind'] in ('fault', 'signal'):
+                    primary = ApiError('Unexpected target stop', operation=request.operation,
+                        stage='observe', effect='completed', code=stop['kind']+'_stop', stop=stop,
+                        report_audit_error=audit.details)
+                    self.complete(request, error=primary)
+                else:
+                    self.complete(request, error=audit)
+                return
             if stop['kind'] in ('fault', 'signal'):
                 self.complete(request, error=ApiError('Unexpected target stop', operation=request.operation,
                     stage='observe', effect='completed', code=stop['kind']+'_stop', stop=stop))
