@@ -1,0 +1,6 @@
+[config]
+target = "../renode-backend/target.toml"
+[results]
+capture = true
+[mmio]
+svd = "gpio.svd"

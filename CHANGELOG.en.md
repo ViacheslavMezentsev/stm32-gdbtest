@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- A5.2: teaching GPIO with external input, firmware consumption and override negative control; host/Renode, no core changes or hardware.
+
 - A5.1: neutral SRAM/ret example with consumption checks, negative controls and full restoration; host/Renode, no core changes or hardware.
 
 - A4.3b (0.6.0 candidate): unambiguous non-virtual bases for this/Pointer/Reference, checked offsets and subobject audit; host/Renode, no hardware.

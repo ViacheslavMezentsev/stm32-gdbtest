@@ -852,3 +852,12 @@ Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
 
 
 API_VERSION=3 preserves synchronous navigation in ordinary def. In async def, await reach/step/until/finish/resume()/reset/call; resume(sync=False), ret and data methods remain immediate. Do not hide inferior calls in data expressions. See [LIVE_EXECUTION](LIVE_EXECUTION.md) for migration and limits.
+
+## Modeled GPIO input and override (A5.2)
+
+The [executable example](../../tests/modeled-gpio/README.en.md) separates external
+model input from SRAM/return substitution. Check source → register → firmware
+consumption, the next input and an unaffected neighbour. `override` replaces the
+SVD description, not device behavior: an ignored IDR write may receive an ACK.
+Preserve the false claim as FAIL; separate analysis checks the expected lack of effect.
+Restore both firmware state and external input. The model proves no electrical/timing properties.

@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<device schemaVersion="1.3"><name>TeachingGPIO</name><version>1</version><description>Two modeled inputs; not an STM32 electrical model</description><addressUnitBits>8</addressUnitBits><width>32</width><size>32</size><access>read-only</access><peripherals><peripheral><name>GPIO</name><description>Teaching input</description><baseAddress>0x40000000</baseAddress><registers><register><name>IDR</name><description>Input levels, writes ignored</description><addressOffset>0</addressOffset></register></registers></peripheral></peripherals></device>

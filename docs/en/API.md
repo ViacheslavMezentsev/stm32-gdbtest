@@ -673,3 +673,12 @@ SRAM readback and ret.applied do not confirm consumption: continue to processing
 check the consumed value, branch, skipped effects and next ordinary input. ret is
 not awaited; async navigation is. Include negative controls and explicit restoration.
 Model PASS does not establish physical input or peripheral acquisition.
+
+## Modeled GPIO input and override (A5.2)
+
+The [executable example](../../tests/modeled-gpio/README.en.md) separates external
+model input from SRAM/return substitution. Check source → register → firmware
+consumption, the next input and an unaffected neighbour. `override` replaces the
+SVD description, not device behavior: an ignored IDR write may receive an ACK.
+Preserve the false claim as FAIL; separate analysis checks the expected lack of effect.
+Restore both firmware state and external input. The model proves no electrical/timing properties.

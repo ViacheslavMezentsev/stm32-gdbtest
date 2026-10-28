@@ -288,13 +288,13 @@ t.evaluate("crc32(buffer, 16)")   # hidden call: refused'''),
          ru=dict(title='Регистры: mmio.read и mmio.write',
                  summary='Один прямой запрос к регистру по имени из снимка SVD с проверкой прав и эффектов.',
                  api3='Новое в 0.5.0, await не нужен. Нужен [mmio] svd в session.toml; эффекты чтения и записи — только с allow_effects=True.',
-                 good='Атомарная установка через BSRR; флаги W1C — явной маской только своих битов.',
-                 bad='RMW всего регистра теряет атомарность; чтение регистра с эффектом без согласия отклоняется. Повтор после потери ACK запрещён.'),
+                 good='Атомарная установка через BSRR; флаги W1C — явной маской своих битов. Для входа модели подтвердите источник → IDR → потребление прошивкой, соседний вход и восстановление (tests/modeled-gpio).',
+                 bad='RMW всего регистра теряет атомарность; чтение регистра с эффектом без согласия отклоняется. Повтор после потери ACK запрещён. override не делает IDR записываемым; ACK игнорируемой записи не доказывает воздействия.'),
          en=dict(title='Registers: mmio.read and mmio.write',
                  summary='One direct request to a register named in the SVD snapshot, with access-right and effect checks.',
                  api3='New in 0.5.0, no await. Needs [mmio] svd in session.toml; read and write effects require allow_effects=True.',
-                 good='Atomic set through BSRR; W1C flags with an explicit mask of your own bits.',
-                 bad='A whole-register RMW loses atomicity; reading a register with an effect without consent is refused. No retry after a lost ACK.'),
+                 good='Atomic set through BSRR; W1C flags with an explicit mask. For modeled input check source → IDR → firmware consumption, neighbour and restoration (tests/modeled-gpio).',
+                 bad='A whole-register RMW loses atomicity; reading a register with an effect without consent is refused. No retry after a lost ACK. Override cannot make IDR writable; an ACK for an ignored write is not evidence of stimulus.'),
          good='''idr = t.mmio.read("GPIOC.IDR")                  # int, one direct read
 ack = t.mmio.write("GPIOC.BSRR", 1 << 13)         # atomic set, no RMW
 t.check("acknowledged", ack["acknowledged"], True)

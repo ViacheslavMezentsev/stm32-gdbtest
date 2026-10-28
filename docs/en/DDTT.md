@@ -717,3 +717,12 @@ matrix and restoration, not a change to scenario outcomes. software-input eviden
 code-response claims, not physical signals or peripheral acquisition. Missing mandatory
 records cause analysis refusal. The host model does not test actual GDB ret; Renode on
 Windows/Linux does so separately.
+
+## Modeled GPIO input and override (A5.2)
+
+The [executable example](../../tests/modeled-gpio/README.en.md) separates external
+model input from SRAM/return substitution. Check source → register → firmware
+consumption, the next input and an unaffected neighbour. `override` replaces the
+SVD description, not device behavior: an ignored IDR write may receive an ACK.
+Preserve the false claim as FAIL; separate analysis checks the expected lack of effect.
+Restore both firmware state and external input. The model proves no electrical/timing properties.

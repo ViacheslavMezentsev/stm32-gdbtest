@@ -170,3 +170,12 @@ These are manual review questions; current automated checks do not establish the
 - Verify restoration on PASS, FAIL and exception.
 
 [Executable example](../../tests/controlled-input/README.en.md).
+
+## Modeled GPIO input and override (A5.2)
+
+The [executable example](../../tests/modeled-gpio/README.en.md) separates external
+model input from SRAM/return substitution. Check source → register → firmware
+consumption, the next input and an unaffected neighbour. `override` replaces the
+SVD description, not device behavior: an ignored IDR write may receive an ACK.
+Preserve the false claim as FAIL; separate analysis checks the expected lack of effect.
+Restore both firmware state and external input. The model proves no electrical/timing properties.
