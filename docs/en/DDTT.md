@@ -736,3 +736,16 @@ the next one, a nested call during ordinary processing and the next ordinary pac
 Writing the buffer without a call is not consumption: that control stays FAIL. A `Pointer`
 longer than the DWARF array is refused before the call (`argument_range`). Snapshot and
 restore the whole experiment section. DMA, interrupt context and peripheral reception are not tested.
+
+## Offline import of an external recording (A6)
+
+[The runnable example](../../tests/rosbag-import/README.md) reads a saved ROS1 bag v2
+strictly against its index and turns topics into channels with declared units. Record
+time is the receive time on the recording host, neither the MCU clock nor the GDB read
+moment. The analysis is separate and never changes the scenario outcome. Relating the
+bag to a debugger snapshot needs MCU counter anchors (transitions before and after the
+read in one segment) and a measured delivery-latency bound; otherwise the outcome is
+UNKNOWN. Truncation, an incomplete index, a foreign type, other units or NaN give
+UNKNOWN, not a zero measurement. ROS and GDB read the same firmware state, so they are
+not independent sensors; sequential rostopic samples are not treated as simultaneous.
+MCAP and the radio simulator are the next sources for the same neutral format.

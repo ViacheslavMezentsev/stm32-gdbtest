@@ -6,6 +6,7 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- A6: offline ROS1 bag v2 adapter (tests/rosbag-import) — strict reader with index cross-check, neutral channels and samples, separate analysis of clock anchors and the debugger snapshot, 23 synthetic experiments with corrupted copies; a real recording checked locally, no core changes.
 - A5.3: teaching packet buffer with a Pointer handler call, ordering, rejection, re-entry, early bound refusal and full restoration; host/Renode, no core changes or hardware.
 
 - A5.2: teaching GPIO with external input, firmware consumption and override negative control; host/Renode, no core changes or hardware.
