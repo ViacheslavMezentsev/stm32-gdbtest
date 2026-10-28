@@ -531,4 +531,43 @@ Preflight does not prove execution safety. Resolution uses `may-call-functions o
 then the selected linkage symbol is called; `expression` shows that symbol while
 `function` retains the caller's name. There is no automatic retry.
 
-Migration: replace string arguments with previously obtained numbers; execute additional calls explicitly and use return_value. this/signature are not implemented yet.
+Migration: replace string arguments with previously obtained numbers; execute additional calls explicitly and use return_value. this/signature were not implemented at A4.1; the current A4.2 contract follows below.
+
+## A4.2 — this / signature (0.6.0)
+
+`call(function, *args, this=None, signature=None, timeout=None)` supports an explicit
+object and exact overload selection in the 0.6.0 candidate. Use await in async def.
+`this="&probe"` takes the address of a named object; `this="probe_ptr"` uses a named pointer.
+Qualified variable names are allowed. Member/index paths, arithmetic, casts and calls
+in this are not supported yet. The pointer is read once; object address, size and
+alignment are checked. Both the object and pointer-variable storage must lie in the
+ordinary SRAM window 0x20000000–0x20100000 (exclusive upper bound).
+This routing restriction does not prove memory presence/ownership or object lifetime.
+The author must reach object initialization and choose a safe execution context.
+
+`signature="unsigned int(unsigned int) const"` specifies return type, explicit parameters
+and method qualifiers. Do not include this; use `()` for zero parameters.
+Named types/typedefs are resolved by GDB and compared against DWARF types. An overload
+without signature remains ambiguous_function; no match produces signature_mismatch;
+invalid syntax produces invalid_signature. Multiple exact matches are also refused.
+
+The object type must match exactly; const/volatile are never discarded. A different
+object type produces this_type_mismatch, dropping qualifiers produces this_qualifiers,
+null/MMIO/misaligned addresses produce invalid_this. this on static/free functions
+produces unexpected_this. Inheritance, polymorphic types, ref-qualified methods,
+constructors/destructors, operators and template names are outside this subset.
+A4.1 scalar argument/return restrictions remain; explicit pointer/reference arguments
+are not supported yet. const does not imply side-effect freedom; volatile does not
+provide MMIO transport guarantees.
+
+Resolution does not execute target code; the selected linkage symbol is called with
+the captured this value. Results and mutations retain this, this_address, this_type,
+requested_signature, resolved_function and resolved_signature where applicable.
+An unfinished dummy frame is not reported as restored context; side effects are not
+rolled back automatically. An async request remains lazy until await.
+
+```python
+result = await t.call("Probe::choose", 2, this="&probe",
+                      signature="unsigned int(int)", timeout=2)
+t.check("selected overload", result["return_value"], 5)
+```

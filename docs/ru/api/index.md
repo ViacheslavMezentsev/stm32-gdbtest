@@ -82,7 +82,7 @@
 | Элемент | Сигнатура | Доступен с | API 3 |
 | --- | --- | --- | --- |
 | [ret](ret.md) | `ret(value=None) -> dict` | 0.3.0 | без изменений |
-| [call](call.md) | `call(function, *args, timeout=None) -> dict` | 0.3.0 | await в async; timeout= |
+| [call](call.md) | `call(function, *args, this=None, signature=None, timeout=None) -> dict` | 0.3.0 | await в async; timeout= |
 
 ## Точки: breakpoint, watch, Point, clear
 

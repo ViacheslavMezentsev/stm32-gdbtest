@@ -43,7 +43,7 @@ class CppCallTests(unittest.TestCase):
         self.gdb.parse_and_eval.assert_not_called()
 
     def test_bound_symbol_and_no_execution(self):
-        self.assertEqual(resolve(self.gdb, 'demo::f', (1,)), ('_Zf', self.scalar))
+        self.assertEqual(resolve(self.gdb, 'demo::f', (1,)), ('_Zf', self.scalar, [], {}))
         self.gdb.parse_and_eval.assert_not_called()
 
     def test_overloads(self):
@@ -51,6 +51,13 @@ class CppCallTests(unittest.TestCase):
         self.gdb.decode_line = lambda name: (None, [NS(pc=1), NS(pc=2)])
         self.gdb.block_for_pc = lambda pc: NS(function=self.symbol if pc == 1 else other)
         self.refuse('ambiguous_function')
+
+    def test_constructor_refused_before_symbol_lookup(self):
+        self.gdb.decode_line = Mock(side_effect=AssertionError('must refuse before lookup'))
+        with self.assertRaises(ApiError) as caught:
+            resolve(self.gdb, 'Probe::Probe', (), this='&probe')
+        self.assertEqual(caught.exception.code, 'unsupported_method')
+        self.gdb.decode_line.assert_not_called()
 
     def test_missing(self):
         self.gdb.decode_line = Mock(side_effect=RuntimeError('absent'))
@@ -78,3 +85,102 @@ class CppCallTests(unittest.TestCase):
         self.kind.name = 'int (unsigned int)'
         self.symbol.value = lambda: NS(is_optimized_out=True, address=None)
         self.refuse('function_unavailable')
+
+
+class ObjectKind:
+    alignof = 4
+    code = 10
+    sizeof = 4
+    def __init__(self, name='Probe', cv='', fields=()):
+        self.name, self.cv, self._fields = name, cv, fields
+    def strip_typedefs(self): return self
+    def unqualified(self): return ObjectKind(self.name, fields=self._fields)
+    def fields(self): return self._fields
+    def __str__(self): return (self.cv + ' ' + self.name).strip()
+    def __eq__(self, other): return isinstance(other, ObjectKind) and str(self) == str(other)
+
+
+class PointerKind:
+    code = 11
+    sizeof = 4
+    def __init__(self, target): self._target = target
+    def strip_typedefs(self): return self
+    def unqualified(self): return self
+    def target(self): return self._target
+    def __str__(self): return str(self._target) + ' *'
+
+
+class ObjectTests(unittest.TestCase):
+    def setUp(self):
+        from stm32_gdbtest.cpp_call import object_argument
+        self.operation = object_argument
+        self.obj = ObjectKind()
+        self.pointer = PointerKind(self.obj)
+        self.value = NS(type=self.obj, address=0x20000100)
+        self.symbol = NS(is_variable=True, value=lambda: self.value)
+        self.gdb = NS(TYPE_CODE_PTR=11, TYPE_CODE_STRUCT=10, lookup_symbol=lambda n: (self.symbol, False))
+        self.method = NS(name='Probe::add(unsigned int)')
+
+    def invoke(self, path='&probe'):
+        return self.operation(self.gdb, 'Probe::add', self.method, self.pointer, path)
+
+    def refuse(self, code, path='&probe'):
+        with self.assertRaises(ApiError) as caught: self.invoke(path)
+        self.assertEqual(caught.exception.code, code)
+        self.assertEqual(caught.exception.details['effect'], 'none')
+
+    def test_address_without_reading_contents(self):
+        expression, meta = self.invoke()
+        self.assertEqual(expression, ['(Probe *)536871168'])
+        self.assertEqual(meta['this_address'], 0x20000100)
+
+    def test_cv_never_dropped(self):
+        from stm32_gdbtest.cpp_call import qualifiers
+        for cv in ('const', 'volatile', 'const volatile'):
+            with self.subTest(cv=cv):
+                self.value.type = ObjectKind(cv=cv)
+                self.assertEqual(qualifiers(self.value.type), set(cv.split()))
+                self.refuse('this_qualifiers')
+                self.pointer = PointerKind(self.value.type)
+                self.invoke()
+                self.pointer = PointerKind(self.obj)
+
+    def test_sram_and_type(self):
+        for address in (0, 0x40000000, 0x200fffff, 0x20000101):
+            self.value.address = address
+            self.refuse('invalid_this')
+        self.value.address = 0x20000100
+        self.value.type = ObjectKind('Other')
+        self.refuse('this_type_mismatch')
+
+    def test_bases_virtual_and_reference_qualifier(self):
+        for field in (NS(is_base_class=True, name='Base'), NS(is_base_class=False, name='_vptr.Probe')):
+            self.pointer = PointerKind(ObjectKind(fields=[field]))
+            self.refuse('unsupported_method')
+        self.pointer = PointerKind(self.obj)
+        self.method.name = 'Probe::add(unsigned int) &'
+        self.refuse('unsupported_method')
+
+    def test_pointer_read_once_and_mmio_slot_not_read(self):
+        reads = []
+        class Value:
+            type = PointerKind(ObjectKind())
+            address = 0x20000020
+            def __int__(self): reads.append(1); return 0x20000100
+        self.value = Value()
+        self.invoke('probe_ptr')
+        self.assertEqual(len(reads), 1)
+        self.value.address = 0x40000000
+        self.refuse('invalid_this', 'probe_ptr')
+        self.assertEqual(len(reads), 1)
+
+    def test_signature_types_and_syntax(self):
+        from stm32_gdbtest.cpp_call import parse_signature
+        scalar = Kind(1)
+        gdb = NS(error=RuntimeError, lookup_type=lambda n: scalar)
+        result, args, cv = parse_signature(gdb, 'unsigned int(unsigned int) const volatile', 'Probe::f')
+        self.assertIs(result, scalar)
+        self.assertEqual(args, [scalar])
+        self.assertEqual(cv, {'const', 'volatile'})
+        for text in ('int(*)()', 'int(f())', 'int(int*)', 42, 'int() &'):
+            with self.assertRaises(ApiError): parse_signature(gdb, text, 'Probe::f')

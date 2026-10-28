@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- A4.2: explicit this, exact signature, object qualifiers, early refusals and selection audit; host/Renode Windows/Linux, no boards.
+
 - A4.1: unambiguous namespace/static calls, early C++ refusals and rejection of expression-string arguments; host and Renode, no boards.
 
 - A3.3: refuse incomplete-run CSV projections; index, HTML and summaries expose incompleteness without changing scenario verdicts. Offline DDTT/replay regressions.

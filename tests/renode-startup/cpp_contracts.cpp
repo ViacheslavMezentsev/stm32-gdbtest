@@ -1,8 +1,13 @@
 volatile unsigned calls;
+
 // Neutral C++ fixture: explicit startup, no peripherals or runtime library.
 struct Probe
 {
     unsigned value;
+    unsigned choose( int n );
+    unsigned choose( unsigned n ) const;
+    unsigned inspect() volatile;
+    unsigned inspect_cv() const volatile;
     __attribute__( ( noinline ) ) void add( unsigned n );
     __attribute__( ( noinline ) ) unsigned read() const;
     __attribute__( ( noinline ) ) static unsigned twice( unsigned n );
@@ -12,11 +17,13 @@ struct Probe
 
 void Probe::add( unsigned n )
 {
+    ++calls;
     value += n;
 }
 
 unsigned Probe::read() const
 {
+    ++calls;
     return value;
 }
 
@@ -36,6 +43,51 @@ namespace demo
 }
 
 Probe probe;
+Probe* probe_ptr;
+const Probe* const_probe;
+volatile Probe* volatile_probe;
+const volatile Probe* cv_probe;
+Probe* null_probe;
+
+struct Other
+{
+    unsigned value;
+} other;
+
+struct VirtualProbe
+{
+    virtual unsigned run();
+};
+
+unsigned VirtualProbe::run()
+{
+    ++calls;
+    return 9;
+}
+
+unsigned Probe::choose( int n )
+{
+    ++calls;
+    return value + n;
+}
+
+unsigned Probe::choose( unsigned n ) const
+{
+    ++calls;
+    return value + n + 100;
+}
+
+unsigned Probe::inspect() volatile
+{
+    ++calls;
+    return value;
+}
+
+unsigned Probe::inspect_cv() const volatile
+{
+    ++calls;
+    return value;
+}
 
 extern "C" __attribute__( ( noinline ) ) void ready()
 {
@@ -55,8 +107,13 @@ extern "C" __attribute__( ( noinline ) ) void set_value( unsigned n )
 
 extern "C" void main()
 {
-    calls = 0;
-    probe.value = 3;
+    probe_ptr      = &probe;
+    const_probe    = &probe;
+    volatile_probe = &probe;
+    cv_probe       = &probe;
+    null_probe     = nullptr;
+    calls          = 0;
+    probe.value    = 3;
     ready();
     while ( true )
     {
@@ -64,15 +121,41 @@ extern "C" void main()
     }
 }
 
-extern "C" void Reset_Handler() { main(); }
+extern "C" void Reset_Handler()
+{
+    main();
+}
 
 __attribute__( ( section( ".vectors" ), used ) ) const unsigned vectors[] = { 0x20010000, ( unsigned ) &Reset_Handler };
 
 namespace demo
 {
-    unsigned overloaded(unsigned n) { ++calls; return n; }
-    unsigned overloaded(int n) { ++calls; return n; }
-    unsigned pointer(unsigned *p) { ++calls; return *p; }
-    float floating(unsigned n) { ++calls; return 1.0f; }
-    void clear() { ++calls; }
+    unsigned overloaded( unsigned n )
+    {
+        ++calls;
+        return n;
+    }
+
+    unsigned overloaded( int n )
+    {
+        ++calls;
+        return n;
+    }
+
+    unsigned pointer( unsigned* p )
+    {
+        ++calls;
+        return *p;
+    }
+
+    float floating( unsigned n )
+    {
+        ++calls;
+        return 1.0f;
+    }
+
+    void clear()
+    {
+        ++calls;
+    }
 }

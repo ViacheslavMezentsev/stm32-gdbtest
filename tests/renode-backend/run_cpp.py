@@ -29,11 +29,13 @@ session = dict(root=str(ROOT), elf=str(elf), profile=str(b/'target.toml'), sessi
 (out/'session.json').write_text(json.dumps(session), encoding='utf-8')
 cases = {t['id']:t for t in collect([b])}
 results = []
-for name in ('HW_CPP_SYNC', 'HW_CPP_ASYNC'):
+for name in ('HW_CPP_SYNC', 'HW_CPP_ASYNC', 'HW_CPP_OBJECT_SYNC', 'HW_CPP_OBJECT_ASYNC', 'HW_CPP_OBJECT_BREAK'):
     code = run(session, cases[name])
     path = sorted((out/'runs').glob('*/result.json'))[-1]
     result = json.loads(path.read_text())
     ok = code == 0 and result['status'] == 'PASS' and result.get('cleanup') == 'VERIFIED'
+    if name == 'HW_CPP_OBJECT_BREAK':
+        ok = code != 0 and result['status'] == 'ERROR' and result.get('cleanup') == 'VERIFIED' and result.get('execution_cleanup') == 'ERROR' and 'context not restored' in result.get('execution_cleanup_error', '')
     results.append(dict(case=name, ok=ok, result=str(path)))
 (out/'summary.json').write_text(json.dumps(results,indent=2),encoding='utf-8')
 print(json.dumps(results,indent=2))

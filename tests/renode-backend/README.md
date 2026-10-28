@@ -110,3 +110,12 @@ python tests/renode-backend/run_cpp.py --toolchain <gcc-root> --renode <renode-e
 отказы: перегрузка, this, отсутствующий/inline-код, тип/диапазон/число аргументов,
 строки-выражения и guard read. Результаты и cleanup — build/cpp-call/<run>/.
 На Linux используются те же параметры и исходники. Плата не нужна.
+
+## A4.2: объект и перегрузка
+
+Тот же run_cpp.py проверяет this=&probe/probe_ptr, точный выбор signature,
+const/volatile/const volatile, возвращаемые значения, счётчик исполнений и восстановление
+значения объекта. Отказы охватывают null, другой тип, снятие квалификаторов,
+произвольное выражение, перегрузку без выбора, неверную signature и виртуальный метод.
+HW_CPP_OBJECT_BREAK намеренно получает ERROR с невосстановленным dummy frame;
+VERIFIED относится к завершению backend, не к восстановлению call-контекста.

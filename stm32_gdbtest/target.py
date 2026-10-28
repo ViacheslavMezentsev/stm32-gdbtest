@@ -1625,19 +1625,19 @@ class Target:
                        "output_limit_chars must be a positive integer", limit=limit)
         return limit
 
-    def call(self, function, *args, timeout=None):
+    def call(self, function, *args, this=None, signature=None, timeout=None):
         """Call now in def, or return a lazy bounded awaitable in async def (ТЗ API 4.23)."""
         self._assert_awaited()
         if getattr(self, '_execution', None) is None:
             if timeout is not None:
-                return self._bounded_call(function, args, timeout)
-            return self._call(function, *args)
-        request = AtomicRequest(self, lambda seconds: self._bounded_call(function, args, seconds),
+                return self._bounded_call(function, args, timeout, this=this, signature=signature)
+            return self._call(function, *args, this=this, signature=signature)
+        request = AtomicRequest(self, lambda seconds: self._bounded_call(function, args, seconds, this=this, signature=signature),
                                 max(0.001, getattr(self, '_deadline', time.monotonic() + 30.0) - time.monotonic()) if timeout is None else timeout)
         self._unawaited = request
         return request
 
-    def _bounded_call(self, function, args, timeout):
+    def _bounded_call(self, function, args, timeout, *, this=None, signature=None):
         from stm32_gdbtest.execution import timeout_value
         from stm32_gdbtest.expression import parameters
         seconds = timeout_value(timeout, 'call')
@@ -1646,7 +1646,7 @@ class Target:
             self._fail('call', 'validation', 'none', 'operation_timeout', 'Insufficient call deadline')
         with parameters(gdb, {'direct-call-timeout': seconds, 'unwind-on-timeout': True}):
             try:
-                return self._call(function, *args)
+                return self._call(function, *args, this=this, signature=signature)
             except BaseException:
                 # A breakpoint can leave the GDB dummy frame behind. Halt is not unwind.
                 try:
@@ -1660,8 +1660,8 @@ class Target:
                     self._call_incomplete = True
                 raise
 
-    def _call(self, function, *args):
-        """Call a function of the debugged program on the halted core (ТЗ API 4.8).
+    def _call(self, function, *args, this=None, signature=None):
+        """Call a function of the debugged program on the halted core (ТЗ API 4.23).
 
         Arguments are passed by value; the function runs, so its side effects are kept and the halt
         state is whatever the call produced. The scenario timeout is the only bound on the call.
@@ -1678,9 +1678,11 @@ class Target:
                            "arguments must be finite numbers", function=function,
                            arguments=list(args))
             literals.append(literal)
-        if '::' in function:
+        metadata = {}
+        if '::' in function or this is not None or signature is not None:
             from stm32_gdbtest.cpp_call import resolve
-            resolved, kind = resolve(gdb, function, args)
+            resolved, kind, implicit, metadata = resolve(gdb, function, args, this=this, signature=signature)
+            literals = implicit + literals
         else:
             resolved, kind = function, self._function_return_type(function)
         expression = f"{resolved}({', '.join(literals)})"
@@ -1700,9 +1702,9 @@ class Target:
             # A void call has no result to convert; the call itself still happened.
             result = dict(operation="call", function=function, arguments=list(args),
                           expression=expression, outcome="returned", return_value=None,
-                          return_state="void")
+                          return_state="void", **metadata)
             report_data.append(self.report, "mutations",
-                dict(operation="call", function=function, expression=expression, value=None))
+                dict(operation="call", function=function, expression=expression, value=None, **metadata))
             return result
         try:
             value.fetch_lazy()
@@ -1713,9 +1715,9 @@ class Target:
         state = "available"
         result = dict(operation="call", function=function, arguments=list(args),
                       expression=expression, outcome="returned", return_value=plain,
-                      return_state=state)
+                      return_state=state, **metadata)
         report_data.append(self.report, "mutations",
-            dict(operation="call", function=function, expression=expression, value=plain))
+            dict(operation="call", function=function, expression=expression, value=plain, **metadata))
         return result
 
     def _function_return_type(self, function):

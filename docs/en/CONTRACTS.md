@@ -76,7 +76,7 @@ variants ([checks and CI](testing.md)).
 
 `functions` and `type_context` accept `Probe::add`, `Probe::twice` and
 `demo::increment` when `lookup_global_symbol` finds the function in the selected ELF.
-The 0.6.0 candidate also supports namespace/static through [call](api/call.md); instance methods remain preflight-only.
+The 0.6.0 candidate also supports namespace/static through [call](api/call.md); A4.2 adds explicit this and exact signature for a restricted instance-method subset.
 
 Types retain qualifiers at each level: `Probe * const` is a const pointer to a mutable
 object; `const Probe *` points to a const object; `const Probe * const` has both
@@ -110,3 +110,5 @@ results, negative contracts and input hashes are in `build/cpp-preflight/<run>/`
 `--module-root` compares the same ELF fixture with an earlier core.
 
 [A4.1: current call restrictions](api/call.md). Earlier direct GDB object experiments do not imply Target.call instance-method support.
+
+[Current A4.2 contract](api/call.md): preflight and runtime calls differ; context suitability and object restoration remain the scenario author’s responsibility.

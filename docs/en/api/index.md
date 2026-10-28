@@ -82,7 +82,7 @@ Replace the return of the current function; call a firmware function and get its
 | Entry | Signature | Available since | API 3 |
 | --- | --- | --- | --- |
 | [ret](ret.md) | `ret(value=None) -> dict` | 0.3.0 | unchanged |
-| [call](call.md) | `call(function, *args, timeout=None) -> dict` | 0.3.0 | await in async; timeout= |
+| [call](call.md) | `call(function, *args, this=None, signature=None, timeout=None) -> dict` | 0.3.0 | await in async; timeout= |
 
 ## Points: breakpoint, watch, Point, clear
 
