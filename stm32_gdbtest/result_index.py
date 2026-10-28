@@ -6,6 +6,7 @@ from pathlib import Path, PurePosixPath
 import re
 import uuid
 from stm32_gdbtest.report_data import decode as decode_report
+from stm32_gdbtest import evidence
 
 LIMIT = 16 * 1024 * 1024
 
@@ -134,6 +135,8 @@ def build(root, selection):
         except (ValueError, OSError, RecursionError) as exc:
             report = {}
             entry['diagnostics'].append(str(exc))
+        if evidence.unavailable(report):
+            entry['diagnostics'].append('incomplete evidence: scenario verdict retained; not DDTT confirmation')
         run_id = report.get('run_id')
         assigned = run_id is None
         if assigned:

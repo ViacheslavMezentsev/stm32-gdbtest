@@ -207,3 +207,25 @@ See [API](API.md#result-journal-and-output-060-candidate-a22) for schemas, outpu
 [API: console="summary", offline build/verify](API.md#summaries-and-output-levels-a23-060-candidate).
 
 [Journaling](JOURNALING.md): sources, budgets, completeness, routes and schema 3 journal execution availability.
+
+## A3.3: consumers of incomplete evidence
+
+`results export` checks all stores before projection. Incomplete sources produce no
+records.csv/measurements.csv rows: diagnostics and command=2 explain the refusal.
+Original result/records and scenario PASS/FAIL/ERROR remain unchanged. Explicit prefix
+inspection uses shared records readers plus evidence metadata, not ordinary acceptance
+projections. A complete journal does not make a truncated report a complete run.
+
+The index retains verdicts and adds an incompleteness diagnostic; HTML displays it
+separately from integrity. Intact files and SAVED do not prove completeness. Summary
+collections show truncated/unavailable; groups count stored rows, check_accounting
+counts all outcomes. DDTT/LCOV retain UNKNOWN without DA, never a misleading zero.
+
+Rebuild derived summary/index/campaign after reader updates: old summaries may be stale.
+Pack transports configuration, not a guarantee of future evidence completeness. The PDF
+skill renderer consumes prepared evidence; authors must check completeness before
+transferring measurements into its input document.
+
+Offline replay: `python tests/renode-backend/replay_consumers.py --runs <campaign>/runs --output <new-directory>`.
+Host matrix: test_partial_consumers.py (full/compact, journal/report/both, PASS/FAIL,
+unchanged sources and a complete-source positive control).

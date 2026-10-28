@@ -7,6 +7,7 @@ import math
 from pathlib import Path
 import tomllib
 
+from stm32_gdbtest import evidence
 from stm32_gdbtest.result_capture import read
 from stm32_gdbtest.report_data import decode as decode_report
 
@@ -111,6 +112,8 @@ def export(paths, output, config=None, *, budget=None, selection_indices=None):
         try:
             report, digest = load_report(path)
             snapshot = read(path.parent, report)
+            if evidence.unavailable(report):
+                raise ValueError('incomplete evidence: partial source projection refused')
             if report['run_id'] in identities:
                 raise ValueError('duplicate run_id')
             identities.add(report['run_id'])

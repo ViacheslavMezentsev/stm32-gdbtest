@@ -273,7 +273,7 @@ def journal_page(lang):
                 ('def / async def', 'FAIL учитывается независимо от хранения; wait timeout не означает halt.'),
                 ('MMIO', 'Attempt без result не доказывает успех или отсутствие воздействия.'),
                 ('cleanup / DDTT', 'Проверить восстановление, полноту и применимость раздельно.')]
-        good, bad = 'Используйте общий читатель, проверяйте evidence и cleanup. Для префикса: records(require_complete=False). Все исходы проверок — check_accounting; группы сводки описывают сохранённые строки.', 'Не считайте пустой журнал нулём операций и не подменяйте свидетельства сводкой.'
+        good, bad = 'Используйте общий читатель, проверяйте evidence и cleanup. Для префикса: records(require_complete=False). Все исходы проверок — check_accounting; группы сводки описывают сохранённые строки. CSV-экспорт неполного прогона отклоняется.', 'Не считайте пустой журнал нулём операций и не подменяйте свидетельства сводкой.'
         reference = 'Полное руководство: настройки, квоты, форматы и отказы'
     else:
         status = '0.6.0 candidate: schema 3 enforces independent journal/report quotas and error/truncate policies. Incompleteness gives command=2 and partial analysis.'
@@ -283,7 +283,7 @@ def journal_page(lang):
                 ('def / async def', 'FAIL is independent of storage; wait timeout does not halt.'),
                 ('MMIO', 'Attempt without result proves neither success nor absence of effects.'),
                 ('cleanup / DDTT', 'Assess restoration, completeness and applicability separately.')]
-        good, bad = 'Use shared readers; inspect evidence and cleanup. Prefix inspection: records(require_complete=False). All outcomes: check_accounting; summary groups describe stored rows.', 'Do not treat empty records as zero operations or replace evidence with summaries.'
+        good, bad = 'Use shared readers; inspect evidence and cleanup. Prefix inspection: records(require_complete=False). All outcomes: check_accounting; summary groups describe stored rows. Incomplete-run CSV projection is refused.', 'Do not treat empty records as zero operations or replace evidence with summaries.'
         reference = 'Full guide: settings, budgets, formats and failures'
     body += f'<div class="callout view"><p>{esc(status)}</p></div>'
     body += f'<div class="box"><h2 id="routes">{title}</h2>{table(columns, rows)}</div>'

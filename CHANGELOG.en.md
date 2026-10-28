@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- A3.3: refuse incomplete-run CSV projections; index, HTML and summaries expose incompleteness without changing scenario verdicts. Offline DDTT/replay regressions.
+
 - Enforce schema 3 report quotas and error/truncate per collection; independent FAIL, diagnostic reserve, full/compact readers, journal combinations and updated journaling Pages.
 
 - Enforce schema 3 journal quotas and explicit prefix truncation: independent verdicts, explicit partial records reads and completeness-aware artifact readers; strict mode remains available.

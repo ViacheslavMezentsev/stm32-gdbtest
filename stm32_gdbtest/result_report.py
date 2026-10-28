@@ -150,6 +150,8 @@ def html_chunks(summary, theme):
             yield '<tr><td>' + text(row['stand']) + '</td><td>' + text(row['case_id']) + '<small class="expert">' + text(row['run_id']) + '</small></td>'
             yield '<td class="' + row['verdict'] + '">' + row['verdict'] + '</td><td>' + text(row['command_code']) + '</td>'
             yield '<td>' + text(capture.get('status', 'unknown')) + '<small class="expert">' + text(capture.get('completion')) + '</small></td>'
+            if any(d.startswith('incomplete evidence:') for d in row['diagnostics']):
+                data += ' · Неполные свидетельства / Incomplete evidence'
             yield '<td class="' + row['integrity'] + '">' + row['integrity'] + '</td><td>' + text(data) + '</td>'
             yield '<td class="expert"><details><summary>Открыть / Open</summary><pre>' + text(json.dumps(row, ensure_ascii=False, indent=2)) + '</pre></details></td></tr>'
         yield '</tbody></table></div>'

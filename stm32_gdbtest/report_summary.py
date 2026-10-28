@@ -147,7 +147,7 @@ def build(result_path):
         raise ValueError('source is not an identified scenario result')
     issues = []
     if report_data.evidence.unavailable(report):
-        issues.append("strict evidence incomplete")
+        issues.append("evidence incomplete")
     sources = [dict(path=path.name, sha256=before, state='verified')]
     collections = {}
     for name, keys in [('checks',('name','kind')),('stops',('kind','signal')),
@@ -156,6 +156,9 @@ def build(result_path):
                        ('resets',('operation',))]:
         collections[name] = grouped(report.get(name, []), keys, name, path.name)
         collections[name]['availability'] = 'recorded' if name in report else 'not_recorded'
+        state = report.get('evidence', {}).get('stores', {}).get(name, {}).get('state')
+        if state in ('truncated', 'unavailable'):
+            collections[name]['availability'] = state
         if collections[name]['unclassified']:
             issues.append(name + ': unclassified outcomes')
     if 'checks' not in report:
