@@ -84,7 +84,8 @@ def project(root, mapping, results):
                 row["reason"] = "ELF mismatch"
             elif [i.get("sha256") for i in inputs if i.get("file") == point["source"]] != [point["source_sha256"]]:
                 row["reason"] = "source manifest mismatch"
-            elif data.get('report_storage_error') or data.get('report_audit_error_count'):
+            elif (data.get('report_storage_error') or data.get('report_audit_error_count')
+                  or any(v.get('state') != 'complete' for v in data.get('evidence', {}).get('stores', {}).values())):
                 row['reason'] = 'report evidence unavailable'
             elif data.get("status") not in ("PASS", "FAIL"):
                 row["reason"] = "scenario is not PASS/FAIL"

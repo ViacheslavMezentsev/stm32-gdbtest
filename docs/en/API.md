@@ -374,3 +374,53 @@ integrity, not applicability; inspect analysis and issues. JSON types remain dis
 Counters describe stored rows, not physical events: one stop may appear in multiple
 diagnostic stop entries. No speculative deduplication is performed; physical event
 counts require a separate analysis.
+
+## Strict completeness (A3.1, 0.6.0 candidate)
+
+No new settings or truncation are enabled: `on_limit` is not supported yet. API
+schema 1/2, API_VERSION=3 and full/compact formats remain supported. Result gains
+`evidence` (schema=1, policy=error) and `check_accounting`, additive strict-mode
+metadata rather than the future A3.2 lossy-storage schema.
+
+Checks/stops/mutations/evaluations/executions/resets and the used records journal
+track attempted/saved/lost, state=complete/unavailable, and first/last lost attempt
+numbers. These are storage-attempt ordinals, not MCU time; the interval does not
+mean every event within it was lost. Serialization fallback retains executed check
+counts while setting saved=0 for discarded collections. Legacy metadata absence
+is not a new completeness claim; original files are not supplemented.
+
+`check_accounting` counts total/failed/unclassified before storing the detail row.
+A caught CheckFailed remains FAIL even if that row cannot be saved. A caught lost
+record prevents normal scenario completion from becoming PASS. Execution errors,
+capture, cleanup and command outcomes remain separate; incomplete evidence gives
+command code 2. SAVED means file publication, not complete observations. Invalid
+types/depth are validation refusals; cumulative records/nodes/text_bytes exhaustion
+is a lost record. A `records()` materialization limit is not a new journal event.
+
+The independent `evidence.diagnostics` reserve retains the first 16 bounded details,
+up to 64 KiB JSON, then only diagnostics_total/diagnostics_omitted. It does not retain
+user values. Existing A1 diagnostic fields remain for compatibility: this budget
+is not a whole-report or RSS limit. Cleanup does not depend on reserve capacity.
+Process loss, memory exhaustion or disk failure cannot guarantee fallback publication.
+
+Shared result/records readers validate counter types, sums, loss ranges, saved rows,
+check counts and reserve limits. Summaries expose execution counts separately from
+stored details and become partial on loss. DDTT export conservatively blocks
+confirmation from incomplete results. Correct: inspect completeness, source rows,
+conditions and cleanup. Incorrect: interpret empty checks as zero executed checks,
+code 2 solely as firmware FAIL, or SAVED as proof of completeness.
+
+### Configurable and fixed budgets
+
+`[records]` in api.toml configures max_records/max_nodes/max_text_bytes/max_depth/
+max_integer_bits within schema bounds. `[journal]` and `[report]` select storage;
+report.console selects output. Maximum bounds, file limits (records 64 MiB, result
+16 MiB), collection/materialization limits, reserve and summary limits are currently
+fixed in code. User accumulation budgets differ from defensive reader limits.
+A3.1 neither raises them nor adds unified quota configuration; this is a separate
+A3.2 decision. Patching limits inside a scenario is not a supported public API.
+
+A compact collection's `complete=true` confirms intact stored rows, not absence of
+lost observations; consult `evidence.stores` for that. Analyze records.json together
+with result.json, which carries completeness and outcomes. Check counts include
+runner checks as well as user checks.

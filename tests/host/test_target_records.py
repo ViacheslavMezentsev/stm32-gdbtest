@@ -31,7 +31,9 @@ class TargetRecordsTests(unittest.TestCase):
         source[0] = 2
         self.assertEqual(first.records()[0]['data'], [1])
         self.assertEqual(second.records(), [])
-        self.assertEqual(report, {'checks': []})
+        self.assertEqual(report['checks'], [])
+        self.assertEqual(report['check_accounting']['total'], 0)
+        self.assertEqual(report['evidence']['stores']['records']['saved'], 1)
         first.clear()
         self.assertEqual(first.records()[0]['data'], [1])
         with self.assertRaises(self.module.CheckFailed):

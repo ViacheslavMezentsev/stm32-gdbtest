@@ -9,6 +9,7 @@ import tempfile
 from collections.abc import Sequence
 from stm32_gdbtest.report_codec import pack, expand, canonical
 from stm32_gdbtest.errors import ApiError, error_summary
+from stm32_gdbtest import evidence
 
 COLLECTIONS = ('checks', 'stops', 'mutations', 'evaluations', 'executions', 'resets')
 BLOCK_ROWS = 128
@@ -162,6 +163,7 @@ class StoredCollection(Collection):
 
 
 def configure(report, api):
+    evidence.initialize(report)
     policy = dict(api.get('report', {}))
     if not policy:
         return
@@ -178,9 +180,14 @@ def configure(report, api):
 
 def append(report, name, row):
     """Preserve the primary exception when a completed event fails to persist."""
+    meta = evidence.begin(report, name)
+    if name == "checks":
+        evidence.check(report, row)
     try:
         report.setdefault(name, []).append(row)
+        meta["saved"] += 1
     except Exception as cause:
+        evidence.lost(report, name, meta, cause)
         detail = dict(collection=name, error=error_summary(cause))
         report['report_audit_error_count'] = report.get('report_audit_error_count', 0) + 1
         errors = report.setdefault('report_audit_errors', [])
@@ -251,7 +258,7 @@ def write(path, report, *, compact=None):
     if compact is None:
         compact = report.get('report_policy', {}).get('representation') == 'compact'
     data = payload(report, compact)
-    if compact:
+    if compact or "evidence" in data:
         decode(data, materialize=False)
     temporary = None
     try:
@@ -301,6 +308,7 @@ def decode(data, *, materialize=True):
     if type(schema) is not int or schema not in (1,2):
         raise ValueError('unsupported report schema')
     if schema == 1:
+        evidence.validate(data)
         return data
     bounded(data)
     collections = data.get('collections')
@@ -323,6 +331,7 @@ def decode(data, *, materialize=True):
         if count != section['count']:
             raise ValueError('report logical count mismatch')
         result[name] = list(collection) if materialize else collection
+    evidence.validate(result)
     return result
 
 

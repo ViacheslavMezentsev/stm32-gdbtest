@@ -54,3 +54,45 @@ def unavailable_storage(t):
         t.check('before storage failure', True, True)
     buffer.stream.close()
     t.check('primary storage control', False, True)
+
+
+@case('HW_REPORT_JOURNAL', timeout_s=15, labels=('emulator',))
+async def journal_limit(t):
+    # Инъекция лимита собственного журнала при работающем ядре; cleanup обязан остановить цель.
+    t.resume(sync=False)
+    original = t._journal._limits
+    t._journal._limits = (len(t._journal._entries), *original[1:])
+    try:
+        t.record('required sample', 1)
+    finally:
+        t._journal._limits = original
+
+
+@case('HW_REPORT_JOURNAL_CAUGHT', timeout_s=15, labels=('emulator',))
+def journal_caught(t):
+    # Перехваченная потеря обязательной записи всё равно делает результат непригодным.
+    from stm32_gdbtest import RecordError
+    original = t._journal._limits
+    t._journal._limits = (len(t._journal._entries), *original[1:])
+    try:
+        try:
+            t.record('required sample', 1)
+        except RecordError:
+            pass
+    finally:
+        t._journal._limits = original
+
+
+@case('HW_REPORT_LOST_FAIL', timeout_s=15, labels=('emulator',))
+def lost_fail(t):
+    # Подробная строка FAIL не помещается; перехваченный CheckFailed не должен стать PASS.
+    from stm32_gdbtest import report_data
+    original = report_data.MAX_ROWS
+    report_data.MAX_ROWS = len(t.report['checks'])
+    try:
+        try:
+            t.check('failed outside stored history', False, True)
+        except CheckFailed:
+            pass
+    finally:
+        report_data.MAX_ROWS = original

@@ -44,13 +44,22 @@ for representation, console in modes:
     config=out/(representation+'-'+console+'-session.toml')
     config.write_text('[config]\ntarget = '+json.dumps((b/'target.toml').as_posix())+'\napi = '+json.dumps(api.as_posix())+'\n[results]\ncapture = true\n',encoding='utf-8')
     session['session_config']=str(config)
-    for name, expected in [('HW_REPORT_1000','PASS'),('HW_REPORT_10000','PASS'),('HW_REPORT_SWALLOWED','FAIL'),('HW_REPORT_LIVE','PASS'),('HW_REPORT_UNEXPECTED','FAIL'),('HW_REPORT_1000','PASS')] + ([('HW_REPORT_STORAGE','FAIL')] if representation=='compact' else []):
+    for name, expected in [('HW_REPORT_1000','PASS'),('HW_REPORT_10000','PASS'),('HW_REPORT_SWALLOWED','FAIL'),('HW_REPORT_LIVE','PASS'),('HW_REPORT_UNEXPECTED','FAIL'),('HW_REPORT_1000','PASS'),('HW_REPORT_JOURNAL','ERROR'),('HW_REPORT_JOURNAL_CAUGHT','ERROR')] + ([('HW_REPORT_STORAGE','FAIL'),('HW_REPORT_LOST_FAIL','FAIL')] if representation=='compact' else []):
         if a.storage_only and name != 'HW_REPORT_STORAGE': continue
         start=time.perf_counter();code=run(session,cases[name]);elapsed=time.perf_counter()-start
         latest=sorted((out/'runs').glob('*/result.json'))[-1]
         result=read(latest)
         rows={key:result.get(key,[]) for key in COLLECTIONS}
-        ok=result['status']==expected and result.get('cleanup')=='VERIFIED' and code==(2 if name=='HW_REPORT_STORAGE' else dict(PASS=0,FAIL=1,ERROR=2)[expected])
+        ok=result['status']==expected and result.get('cleanup')=='VERIFIED' and code==(2 if name in ('HW_REPORT_STORAGE','HW_REPORT_LOST_FAIL') else dict(PASS=0,FAIL=1,ERROR=2)[expected])
+        from stm32_gdbtest.evidence import validate, unavailable
+        validate(result)
+        if name in ('HW_REPORT_JOURNAL','HW_REPORT_JOURNAL_CAUGHT'):
+            ok = ok and result['evidence']['stores']['records']['lost'] == 1 and unavailable(result)
+            if name == 'HW_REPORT_JOURNAL':
+                ok = ok and result.get('execution_cleanup') == 'VERIFIED'
+        if name == 'HW_REPORT_LOST_FAIL':
+            ok = ok and result['check_accounting']['failed'] == 1 and result['evidence']['stores']['checks']['lost'] == 1
+            ok = ok and not any(c.get('passed') is False for c in result['checks'])
         if name in ('HW_REPORT_1000','HW_REPORT_10000','HW_REPORT_SWALLOWED'):
             if representation=='full':reference[name]=rows
             else:ok=ok and rows==reference[name]

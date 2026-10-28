@@ -8,6 +8,7 @@ import tempfile
 
 from stm32_gdbtest.configuration import MAXIMUMS_V2 as MAXIMUMS
 from stm32_gdbtest.compact_records import CompactJournal, decode
+from stm32_gdbtest import evidence
 from stm32_gdbtest.records import Journal
 from stm32_gdbtest.reports import CODES
 
@@ -94,6 +95,7 @@ def read(directory, report, *, materialize=True):
     records = data.get('records')
     if type(records) is not list or type(meta.get('count')) is not int or len(records) != meta['count']:
         raise ValueError('capture count mismatch')
+    evidence.validate(report, records_count=len(records))
     if data['schema'] == 2:
         journal = decode(data)
         return dict(schema=1, source_schema=2, run_id=data['run_id'], case_id=data['case_id'],
@@ -111,7 +113,7 @@ def read(directory, report, *, materialize=True):
 
 def finalize(directory, report, enabled):
     """Add command outcome without hiding a scenario failure or infrastructure error."""
-    report['command_code'] = CODES[report['status']]
+    report['command_code'] = 2 if evidence.unavailable(report) else CODES[report['status']]
     if not enabled or report.get('mode') == 'prepare':
         return
     meta = report.setdefault('capture', dict(status='unavailable', completion='unknown'))

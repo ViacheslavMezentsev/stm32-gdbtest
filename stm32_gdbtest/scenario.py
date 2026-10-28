@@ -3,6 +3,7 @@ import sys
 import inspect
 
 from stm32_gdbtest.errors import CheckFailed, fail
+from stm32_gdbtest import evidence
 
 
 class ScenarioSkipped(BaseException):
@@ -31,11 +32,14 @@ def skip(target, reason):
 
 
 def reject_failed_checks(target):
+    counts = target.report.get('check_accounting')
+    if counts and counts['failed']:
+        raise CheckFailed('previous check (independent accounting)')
     for check in target.report.get('checks', []):
         if check.get('passed') is False:
             raise CheckFailed(check.get('name', 'previous check'), check.get('actual'), check.get('expected'))
 
-    if target.report.get('report_audit_error_count'):
+    if target.report.get('report_audit_error_count') or evidence.unavailable(target.report):
         fail('report', 'audit', 'unknown', 'report_unavailable', 'Report event audit failed')
 
 

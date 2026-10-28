@@ -10,6 +10,8 @@ CODES = {"PASS": 0, "FAIL": 1, "ERROR": 2, "SKIP": 77}
 
 def write_reports(directory, report):
     directory = Path(directory)
+    if report_data.evidence.unavailable(report):
+        report['command_code'] = 2
     try:
         report_data.write(directory / 'result.json', report)
     except Exception as cause:
@@ -17,6 +19,7 @@ def write_reports(directory, report):
         report['command_code'] = 2
         fallback = {k:v for k,v in report.items() if k not in report_data.COLLECTIONS}
         fallback['checks'] = []
+        report_data.evidence.discard_collections(fallback, cause)
         report_data.write(directory / 'result.json', fallback, compact=False)
     output_report = fallback if "fallback" in locals() else report
     derived = None
@@ -33,7 +36,7 @@ def write_reports(directory, report):
                            summary_error=report['summary_error'], status=report['status'], command_code=2)
     status = report["status"]
     artifact = report.get("artifact_error") or report.get("report_storage_error") or report.get("summary_error")
-    if not artifact and report.get("report_audit_error_count"):
+    if not artifact and (report.get("report_audit_error_count") or report_data.evidence.unavailable(output_report)):
         artifact = dict(type="ReportAuditError", message="Completed report evidence is incomplete")
     suite = ET.Element("testsuite", name="hwtest", tests=str(1 + int(bool(artifact))),
                        failures=str(int(status == "FAIL")), errors=str(int(status == "ERROR") + int(bool(artifact))),

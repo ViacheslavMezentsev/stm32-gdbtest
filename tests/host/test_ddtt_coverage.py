@@ -39,6 +39,19 @@ class DdttCoverageTests(unittest.TestCase):
         self.assertIn('DA:2,1', (self.out / 'lcov.info').read_text())
         self.assertEqual(coverage.load(self.out / 'ddtt-evidence.json')['summary'], {'CONFIRMED': 1})
 
+    def test_strict_evidence_loss_blocks_confirmation(self):
+        from stm32_gdbtest import evidence
+        from stm32_gdbtest.records import Journal, RecordError
+        evidence.initialize(self.result)
+        journal = Journal(max_records=1)
+        evidence.journal(self.result, journal.record, 'sample', 1)
+        with self.assertRaises(RecordError):
+            evidence.journal(self.result, journal.record, 'sample', 2)
+        rows = self.run_export(self.save(self.result))
+        self.assertEqual(rows[0]['state'], 'UNKNOWN')
+        self.assertEqual(rows[0]['reason'], 'report evidence unavailable')
+        self.assertNotIn('DA:', (self.out / 'lcov.info').read_text())
+
     def test_failed_check_is_zero(self):
         self.result['status'] = 'FAIL'
         self.result['checks'][0]['passed'] = False

@@ -146,6 +146,8 @@ def build(result_path):
     if type(report.get('id')) is not str or not report['id'] or report.get('status') not in ('PASS','FAIL','ERROR','SKIP'):
         raise ValueError('source is not an identified scenario result')
     issues = []
+    if report_data.evidence.unavailable(report):
+        issues.append("strict evidence incomplete")
     sources = [dict(path=path.name, sha256=before, state='verified')]
     collections = {}
     for name, keys in [('checks',('name','kind')),('stops',('kind','signal')),
@@ -194,6 +196,7 @@ def build(result_path):
                 issues=issues, sources=sources, verdicts={key: report.get(key) for key in
                 ('id','run_id','mode','status','command_code','capture','cleanup','execution_cleanup')},
                 collections=collections, execution=live, diagnostics=diagnostics,
+                evidence=report.get("evidence"), check_accounting=report.get("check_accounting"),
                 limits=dict(groups=MAX_GROUPS,references_per_group=MAX_REFERENCES),
                 meaning='Presentation only; completeness is not DDTT applicability')
 

@@ -283,11 +283,11 @@ class Target:
         """Keep evidence in the run journal; the run profile is recorded as its snapshot (ТЗ API 4.9)."""
         if isinstance(data, Profile):
             data = data.snapshot()
-        return self._journal.record(name, data)
+        return report_data.evidence.journal(self.report, self._journal.record, name, data)
 
     def _record_mmio(self, name, data):
         self._assert_awaited()
-        return self._journal.mmio_record(name, data)
+        return report_data.evidence.journal(self.report, self._journal.mmio_record, name, data)
 
     def records(self, name=None):
         return self._journal.records(name)

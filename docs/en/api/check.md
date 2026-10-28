@@ -129,3 +129,5 @@ scenario independently (TECH-001).
 Compact result storage and console control do not remove checks; see [result journal](../API.md#result-journal-and-output-060-candidate-a22).
 
 `console="summary"` never drops checks. Middle failures and differing expectations remain visible; summaries do not confirm DDTT claims.
+
+A3.1: see [API](../API.md#strict-completeness-a31-060-candidate) for completeness and independent check accounting. Truncation is not enabled.

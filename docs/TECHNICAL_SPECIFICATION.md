@@ -5,13 +5,20 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.118 (A2.3: сводки, кандидат 0.6.0) |
+| **Ревизия** | 0.119 (A3.1: строгая полнота, кандидат 0.6.0) |
 | **Дата формирования** | 28.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | Выпуск пакета stm32-gdbtest `0.5.0` (итоговый коммит приёмки `a7b0951`, р.0.114); API_VERSION=3, target schema 3 (schema 1/2 совместимы), ТЗ API 0.3.23; MMIO/SVD (р.0.104), контракты memory/write (р.0.99), Renode и QEMU (р.0.102). Публикация владельцем после CI итогового SHA. |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; docs/archive/SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
+
+### Изменения ревизии 0.119
+
+| Пункт | Изменение |
+| --- | --- |
+| 5.3.14 | Независимый вердикт, полнота и резерв диагностики |
+| Разделы проверок | TC-188: host/Renode Windows/Linux без плат |
 
 ### Изменения ревизии 0.118
 
@@ -289,6 +296,7 @@ Runner задаёт режим до сценария и резервирует 2
 | 0.116 | 27.10.2026 | A2.1: компактный журнал и перенос схемы API 2. |
 | 0.117 | 27.10.2026 | A2.2: общий result reader, завершённые события, вывод и пределы. |
 | 0.118 | 28.10.2026 | A2.3: проверяемые сводки без потери исходных событий. |
+| 0.119 | 28.10.2026 | A3.1: строгая полнота и независимые счётчики проверок. |
 
 ### Изменения ревизии 0.107
 
@@ -1735,6 +1743,17 @@ coverage НЕ ДОЛЖЕН подтверждать такое свидетел�
 скрытая часть ДОЛЖНА обозначаться счётчиком, все исходные данные сохраняются.
 Сводки НЕ ДОЛЖНЫ использоваться как самостоятельное подтверждение DDTT. (р.0.118)
 
+5.3.14. [U] В строгом режиме модуль ДОЛЖЕН учитывать выполненные проверки и отказы
+независимо от сохранения подробных строк. Перехваченный отказ НЕ ДОЛЖЕН превращаться
+в PASS при потере строки. Result ДОЛЖЕН содержать проверяемые attempted/saved/lost,
+state и границы потерь по хранилищам, отдельные счётчики проверок и резерв до 16
+диагностик/64 KiB с числом пропущенных диагностик. Отказ записи НЕ ДОЛЖЕН отменять
+очистку или скрывать исходную причину. Неполные свидетельства ДОЛЖНЫ давать код 2;
+сводка ДОЛЖНА обозначать partial, DDTT НЕ ДОЛЖЕН подтверждать неполный результат.
+Читатели ДОЛЖНЫ сверять метаданные с сохранёнными строками; отсутствие метаданных
+в старом файле НЕ ДОЛЖНО считаться новой гарантией полноты. Усечение и новые квоты
+этим требованием НЕ вводятся. `(р.0.119)`
+
 ### 5.4. Владение отладчиком
 
 5.4.1. Блокировка ДОЛЖНА захватываться после чтения стенда и профиля, до снимка ELF, preflight, `objcopy` и сервера, и удерживаться на всём выполнении, включая recovery и остановку процессов сервера. `[R]`
@@ -2915,6 +2934,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-185 | T: tests/host/test_compact_records.py; D: tests/mmio-renode/run.py --compact и --benchmark | Перенос schema 2, capture/read/export, пределы и равенство журналов (р.0.116) |
 | TC-186 | T: tests/host/test_report_data.py; D: tests/renode-backend/run_report.py | Result reader, журналы, вывод, сохранение отказов; Windows/Linux без плат (р.0.117) |
 | TC-187 | T: tests/host/test_report_summary.py; D: tests/renode-backend/run_report.py --summary | Источники, средний FAIL, поколения, неполнота и все уровни вывода (р.0.118) |
+| TC-188 | A3.1: потеря строки FAIL, строгий журнал, резерв, повреждение метаданных | Host и Renode Windows/Linux: ожидаемые FAIL/ERROR, cleanup, повтор |
 | TC-182 | T: tests/host/test_hil_inspect.py; CLI Windows/Linux | Связи, SVD/capsule, backend, отказы, AST, cwd/junction/symlink, приватность и коды завершения (р.0.109) |
 | TC-181 | T: tests/host/test_openocd_shutdown.py | Порядок finish, exit 0/ошибка/таймаут и освобождение процесса (р.0.107) |
 | TC-180 | T: tests/host/test_live_execution.py; D: tests/renode-backend/run.py | Collector, coroutine lifecycle, прежние исходы и cleanup (р.0.106) |
@@ -3067,6 +3087,7 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | 5.3.8 | RU: `run`; RP: `write_reports` | TC-24, TC-41 |
 | 5.3.12 | report_data.py, reports.py, runner.py, result_export.py, result_index.py | TC-186 (р.0.117) |
 | 5.3.13 | report_summary.py, reports.py, runner.py | TC-187 (T/D) (р.0.118) |
+| 5.3.14 | `stm32_gdbtest/evidence.py`, `report_data.py`, `scenario.py` | TC-188; `tests/host/test_evidence.py`, `tests/renode-backend/run_report.py` |
 | 5.3.11 | agent.py, execution.py | TC-184 (р.0.115) |
 | 5.20.15, 5.21.2, 5.21.5 | configuration.py, config_transport.py, result_capture.py, compact_records.py | TC-185 (р.0.116) |
 | 5.3.9, 5.3.10 | CL; MA; RU: `run` | TC-25, I |

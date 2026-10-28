@@ -198,6 +198,7 @@ async def main():
         except Exception as cause:
             fallback = {k:v for k,v in report.items() if k not in report_data.COLLECTIONS}
             fallback.update(report_storage_error=error_summary(cause), checks=[])
+            report_data.evidence.discard_collections(fallback, cause)
             report_data.write(session['result'], fallback, compact=False)
             print(json.dumps(report_data.summary(fallback), default=repr))
         finally:

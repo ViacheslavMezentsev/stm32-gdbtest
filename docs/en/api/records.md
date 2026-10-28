@@ -43,3 +43,5 @@ Record data is arbitrary; name does not define a measurement type. [Generic expo
 ## A2.1 candidate
 
 API schema 2 adds compact MMIO and larger budgets; schema 1 keeps its limits. Logical rows stay unchanged; compact materialization has a separate bound. [Configuration, migration and common reader](../API.md#a21-compact-journal-060-candidate).
+
+A3.1: see [API](../API.md#strict-completeness-a31-060-candidate) for completeness and independent check accounting. Truncation is not enabled.
