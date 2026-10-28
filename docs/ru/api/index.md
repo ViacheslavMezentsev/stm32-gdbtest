@@ -102,7 +102,7 @@
 | Элемент | Сигнатура | Доступен с | API 3 |
 | --- | --- | --- | --- |
 | [record](record.md) | `record(name, data) -> None` | 0.3.0 | без изменений |
-| [records](records.md) | `records(name=None) -> list[dict]` | 0.3.0 | без изменений |
+| [records](records.md) | `records(name=None, *, require_complete=True) -> list[dict]` | 0.3.0 | без изменений |
 | [skip](skip.md) | `skip(reason) -> NoReturn` | 0.4.0 | без изменений |
 
 ## Контекст: profile, registers, frames, locals

@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- Enforce schema 3 journal quotas and explicit prefix truncation: independent verdicts, explicit partial records reads and completeness-aware artifact readers; report remains strict.
+
 - A3.2 configuration: API schema 3 budgets/policies and runner/package transport; execution is gated until storage support lands. Dedicated journaling guide and Pages card.
 
 - A3.1: strict completeness, independent check accounting, bounded diagnostic reserve and reader validation; lost evidence blocks DDTT confirmation, without enabling truncation.

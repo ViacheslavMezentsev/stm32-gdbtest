@@ -46,9 +46,11 @@ REPORT_ROWS_MAX = 65536
 
 
 def require_execution_supported(configuration):
-    if configuration.config['api']['schema'] == 3:
+    api = configuration.config['api']
+    if api['schema'] == 3 and (api['report']['on_limit'] != 'error' or
+                              api['report']['max_rows_per_collection'] != REPORT_ROWS_MAX):
         raise ConfigError('api_execution_unsupported',
-                          'API schema 3 currently supports inspect/prepare/pack only; storage policies are not implemented')
+                          'Custom report quotas/truncation are not executable yet; journal policies are supported')
 
 
 

@@ -1,4 +1,4 @@
-"""Schema 3 configuration is portable, immutable and not yet executable."""
+"""Schema 3 configuration is portable; unsupported report policies fail closed."""
 import base64
 import hashlib
 import json
@@ -90,7 +90,7 @@ class PolicyConfigTests(unittest.TestCase):
         self.assertEqual(thaw(capture(opened).config),thaw(cfg.config))
 
     def test_runner_rejects_execution_before_lock_or_tools(self):
-        self.load('schema=3')
+        self.load('schema=3\n[report]\non_limit="truncate"')
         with patch('stm32_gdbtest.runner.load_stand',return_value=dict(backend='openocd',serial='fixture')), \
              patch('stm32_gdbtest.runner.probe_lock') as lock, \
              patch('stm32_gdbtest.runner.execute') as execute:

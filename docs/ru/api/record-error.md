@@ -50,3 +50,7 @@ else:
 A2.1: компактное хранение может указывать путь `$definition`/`$definitions`;
 отказ раскрытия `records()` имеет `details.operation="records"` и
 `details.scope="materialization"`. Он не удаляет накопленный журнал.
+
+## A3.2 (0.6.0 candidate)
+
+`records()` добавляет код `incomplete_evidence` при неполном журнале и `invalid_argument` для не-bool require_complete. Явный journal truncate подавляет только накопительный лимит records/nodes/text_bytes; остальные ошибки остаются ошибками. Полный контракт и форматы: [Журналирование](../JOURNALING.md#8-явное-усечение-journal).

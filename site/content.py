@@ -500,7 +500,7 @@ CARDS = {
  'point': ('Point: active, hit_count, condition; enable(), disable(), remove(), with', '0.3.0', 'без изменений', 'unchanged'),
  'clear': ('clear() -> None', '0.1.0-rc.1', 'без изменений', 'unchanged'),
  'record': ('record(name, data) -> None', '0.3.0', 'без изменений', 'unchanged'),
- 'records': ('records(name=None) -> list[dict]', '0.3.0', 'без изменений', 'unchanged'),
+ 'records': ('records(name=None, *, require_complete=True) -> list[dict]', '0.3.0', '0.6.0: явное частичное чтение', '0.6.0: explicit partial reads'),
  'skip': ('skip(reason) -> NoReturn', '0.4.0', 'без изменений', 'unchanged'),
  'profile': ('profile: Profile', '0.1.0-rc.1¹', 'без изменений', 'unchanged'),
  'registers': ('registers(*names, frame=None) -> dict', '0.3.0', 'без изменений', 'unchanged'),

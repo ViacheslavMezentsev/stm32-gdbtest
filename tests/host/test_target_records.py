@@ -43,7 +43,14 @@ class TargetRecordsTests(unittest.TestCase):
         with self.assertRaises(RecordError) as caught:
             first.record('c', 3)
         self.assertEqual(caught.exception.limit, 'records')
-        self.assertEqual(len(first.records()), 2)
+        with self.assertRaises(RecordError) as incomplete:
+            first.records()
+        self.assertEqual(incomplete.exception.code, 'incomplete_evidence')
+        self.assertEqual(len(first.records(require_complete=False)), 2)
+        with self.assertRaises(RecordError):
+            first.records(require_complete=0)
+        with self.assertRaises(RecordError):
+            first.records('a')
 
     def test_profile_is_read_only(self):
         target = self.module.Target({'checks': []}, {}, self.config)

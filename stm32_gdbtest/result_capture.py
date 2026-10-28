@@ -34,6 +34,9 @@ def save(directory, report, target, completion):
         else:
             records = journal._entries if isinstance(journal, Journal) else target.records()
             payload = dict(schema=1, run_id=report['run_id'], case_id=report['id'], records=records)
+        if report.get('evidence', {}).get('schema') == 2:
+            payload = dict(payload, schema=3, source_schema=payload['schema'],
+                           completeness=dict(report['evidence']['stores']['records']))
         digest, size = hashlib.sha256(), 0
         path = Path(directory) / 'records.json'
         if path.exists() or path.is_symlink():
@@ -56,6 +59,10 @@ def save(directory, report, target, completion):
                                  sha256=digest.hexdigest(), count=len(payload['records']))
     except Exception as exc:
         report['capture'] = dict(status='error', completion=completion, error=error(exc))
+        records_meta = report.get('evidence', {}).get('stores', {}).get('records', {})
+        if records_meta.get('state') == 'truncated':
+            records_meta['state'] = 'unavailable'
+            evidence.diagnostic(report, 'records', exc)
     finally:
         if temporary is not None:
             try:
@@ -89,13 +96,23 @@ def read(directory, report, *, materialize=True):
         return result
 
     data = json.loads(raw, object_pairs_hook=unique)
-    if (type(data) is not dict or type(data.get('schema')) is not int or data['schema'] not in (1, 2)
+    if (type(data) is not dict or type(data.get('schema')) is not int or data['schema'] not in (1, 2, 3)
             or data.get('run_id') != report['run_id'] or data.get('case_id') != report['id']):
         raise ValueError('capture schema or identity mismatch')
     records = data.get('records')
     if type(records) is not list or type(meta.get('count')) is not int or len(records) != meta['count']:
         raise ValueError('capture count mismatch')
     evidence.validate(report, records_count=len(records))
+    if data['schema'] == 3:
+        if (type(data.get('source_schema')) is not int or data['source_schema'] not in (1, 2)
+                or report.get('evidence', {}).get('schema') != 2
+                or json.dumps(data.get('completeness'), sort_keys=True) != json.dumps(report['evidence']['stores'].get('records'), sort_keys=True)):
+            raise ValueError('capture completeness mismatch')
+        data = dict(data)
+        data['schema'] = data.pop('source_schema')
+        data.pop('completeness')
+    elif report.get('evidence', {}).get('schema') == 2:
+        raise ValueError('policy journal requires capture schema 3')
     if data['schema'] == 2:
         journal = decode(data)
         return dict(schema=1, source_schema=2, run_id=data['run_id'], case_id=data['case_id'],

@@ -39,7 +39,7 @@ def reject_failed_checks(target):
         if check.get('passed') is False:
             raise CheckFailed(check.get('name', 'previous check'), check.get('actual'), check.get('expected'))
 
-    if target.report.get('report_audit_error_count') or evidence.unavailable(target.report):
+    if target.report.get('report_audit_error_count') or evidence.storage_failed(target.report):
         fail('report', 'audit', 'unknown', 'report_unavailable', 'Report event audit failed')
 
 

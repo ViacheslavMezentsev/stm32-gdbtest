@@ -206,4 +206,4 @@ See [API](API.md#result-journal-and-output-060-candidate-a22) for schemas, outpu
 
 [API: console="summary", offline build/verify](API.md#summaries-and-output-levels-a23-060-candidate).
 
-[Journaling](JOURNALING.md): sources, budgets, completeness, routes and schema 3 availability (configuration only for now).
+[Journaling](JOURNALING.md): sources, budgets, completeness, routes and schema 3 journal execution availability.

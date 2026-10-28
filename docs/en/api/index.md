@@ -102,7 +102,7 @@ Arbitrary data into the report; selecting your records; ending a non-applicable 
 | Entry | Signature | Available since | API 3 |
 | --- | --- | --- | --- |
 | [record](record.md) | `record(name, data) -> None` | 0.3.0 | unchanged |
-| [records](records.md) | `records(name=None) -> list[dict]` | 0.3.0 | unchanged |
+| [records](records.md) | `records(name=None, *, require_complete=True) -> list[dict]` | 0.3.0 | unchanged |
 | [skip](skip.md) | `skip(reason) -> NoReturn` | 0.4.0 | unchanged |
 
 ## Context: profile, registers, frames, locals

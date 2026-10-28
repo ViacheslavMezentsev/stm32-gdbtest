@@ -425,4 +425,30 @@ lost observations; consult `evidence.stores` for that. Analyze records.json toge
 with result.json, which carries completeness and outcomes. Check counts include
 runner checks as well as user checks.
 
-[Journaling](JOURNALING.md): sources, budgets, completeness, routes and schema 3 availability (configuration only for now).
+[Journaling](JOURNALING.md): sources, budgets, completeness, routes and schema 3 journal execution availability.
+
+## A3.2: journal quotas and truncation
+
+In the 0.6.0 candidate, API schema 3 executes `journal.on_limit="error"|"truncate"`.
+The `[records]` budgets bound accumulation. Exhausting records/nodes/text_bytes under
+truncate preserves whole prefix records and stops detailed storage until scenario end.
+Checks, MMIO, live execution and cleanup continue. Completeness becomes `truncated`,
+without changing the scenario outcome by itself: PASS with command=2, SAVED capture
+and partial analysis is possible. Incomplete runs cannot confirm DDTT claims.
+
+`records(name=None, *, require_complete=True)` raises `RecordError`/`incomplete_evidence`
+for an incomplete journal, including named queries. Explicit `require_complete=False`
+returns the stored prefix with original sequence numbers; it does not certify completeness.
+Invalid types, cycles, depth, integer width and hard validation resource ceilings are
+errors, not truncation. Inputs remain validated after detailed storage stops.
+
+MMIO descriptors and attempts commit atomically. An attempt whose result did not fit
+proves neither success nor absence of effects. Truncation adds no register reads/writes.
+Transport/storage errors are not suppressed. The first loss cause, attempted/saved/lost
+and first_lost/last_lost remain in evidence; diagnostic storage remains bounded.
+
+Truncate policy uses evidence schema 2, result schema 3 (full/compact), and records
+schema 3 with completeness checked against result. Old readers reject these formats.
+Use the module shared readers. `report.on_limit="truncate"` and non-default
+`report.max_rows_per_collection` remain inspect/prepare/pack-only and are refused
+before server startup when execution is requested.

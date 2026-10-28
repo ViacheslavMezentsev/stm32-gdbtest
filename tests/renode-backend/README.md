@@ -62,3 +62,21 @@ python -m stm32_gdbtest.report_summary build/run/result.json --verify
 без сохранённой строки (compact). Потеря не превращается в PASS, command=2.
 Fault injection меняет только лимиты собственного процесса GDB и возвращает их
 в finally; это регрессия ядра, а не способ настройки пользовательского сценария.
+
+## A3.2: квоты и явное усечение journal
+
+`run_journal.py` использует штатный runner, API schema 3 и нейтральный ELF.
+20 запусков: full/compact × error/truncate × префикс, перехваченный FAIL,
+невалидный payload, MMIO и async живое окно. Ожидаемые FAIL/ERROR — успешные
+проверки отказного контракта; прогоны не должны все иметь scenario=PASS.
+Проверяются command=2, SAVED, partial-анализ, VERIFIED cleanup и общий читатель.
+MMIO использует область MappedMemory Renode: это проверка интеграции и значений,
+не модель read-clear/W1C или DMA. Точное число транспортных обращений проверяет
+host `test_journal_truncate.py`; аппаратная применимость здесь не утверждается.
+
+```sh
+python tests/renode-backend/run_journal.py --toolchain /opt/xpack-arm-none-eabi-gcc-14.2.1-1.1 --renode /opt/renode-1.17.0/renode
+```
+
+Путь Windows задаётся теми же параметрами. Артефакты: build/journal-renode;
+summary.json кампании содержит ожидаемые исходы, не заменяет result/records.

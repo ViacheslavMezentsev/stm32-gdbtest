@@ -260,6 +260,7 @@ class Target:
         journal_type = (CompactJournal if self._config['api'].get('journal', {}).get(
             'representation', 'full') == 'compact' else Journal)
         self._journal = journal_type(**{key: limits[key] for key in DEFAULTS})
+        self._journal.on_limit = self._config['api'].get('journal', {}).get('on_limit', 'error')
         from stm32_gdbtest.mmio import MMIO, GdbTransport
         self.mmio = MMIO(configuration.svd_catalog if configuration else None,
                          GdbTransport(gdb, profile, self._mmio_ready), self._record_mmio)
@@ -289,7 +290,13 @@ class Target:
         self._assert_awaited()
         return report_data.evidence.journal(self.report, self._journal.mmio_record, name, data)
 
-    def records(self, name=None):
+    def records(self, name=None, *, require_complete=True):
+        from stm32_gdbtest.errors import RecordError
+        if type(require_complete) is not bool:
+            raise RecordError('invalid_argument', 'require_complete must be bool')
+        state = self.report.get('evidence', {}).get('stores', {}).get('records', {}).get('state', 'complete')
+        if require_complete and state != 'complete':
+            raise RecordError('incomplete_evidence', 'journal is incomplete; explicit partial reading is required')
         return self._journal.records(name)
 
     def skip(self, reason):

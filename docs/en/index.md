@@ -156,4 +156,4 @@ Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
 
 [Joint capture and analysis](../../tests/external-capture/README.en.md).
 
-[Journaling](JOURNALING.md): sources, budgets, completeness, routes and schema 3 availability (configuration only for now).
+[Journaling](JOURNALING.md): sources, budgets, completeness, routes and schema 3 journal execution availability.

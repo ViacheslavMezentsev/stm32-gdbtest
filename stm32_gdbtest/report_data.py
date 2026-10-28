@@ -250,6 +250,9 @@ def payload(report, compact):
         for name in COLLECTIONS:
             if isinstance(data.get(name), Collection):
                 data[name] = list(data[name])
+    if data.get('evidence', {}).get('schema') == 2:
+        data['report_schema'] = 3
+        data['report_representation'] = 'compact' if compact else 'full'
     return data
 
 
@@ -306,8 +309,16 @@ def decode(data, *, materialize=True):
     if type(data) is not dict:
         raise ValueError('report must be an object')
     schema = data.get('report_schema', 1)
-    if type(schema) is not int or schema not in (1,2):
+    if type(schema) is not int or schema not in (1,2,3):
         raise ValueError('unsupported report schema')
+    if schema != 3 and data.get('evidence', {}).get('schema') == 2:
+        raise ValueError('policy evidence requires report schema 3')
+    if schema == 3:
+        if data.get('evidence', {}).get('schema') != 2 or data.get('report_representation') not in ('full', 'compact'):
+            raise ValueError('invalid policy report envelope')
+        data = dict(data)
+        schema = 2 if data.pop('report_representation') == 'compact' else 1
+        data['report_schema'] = schema
     if schema == 1:
         evidence.validate(data)
         return data

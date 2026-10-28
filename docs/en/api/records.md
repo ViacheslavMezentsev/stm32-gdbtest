@@ -2,7 +2,7 @@
 
 [API](index.md) · [Русский](../../ru/api/records.md)
 
-`records(name=None) -> list[dict]`
+`records(name=None, *, require_complete=True) -> list[dict]`
 
 **Available since:** 0.3.0 · **API 3 (0.5.0):** unchanged, no `await`; allowed while the target runs. `t.mmio` operations add their own records.
 
@@ -44,4 +44,8 @@ Record data is arbitrary; name does not define a measurement type. [Generic expo
 
 API schema 2 adds compact MMIO and larger budgets; schema 1 keeps its limits. Logical rows stay unchanged; compact materialization has a separate bound. [Configuration, migration and common reader](../API.md#a21-compact-journal-060-candidate).
 
-A3.1: see [API](../API.md#strict-completeness-a31-060-candidate) for completeness and independent check accounting. Truncation is not enabled.
+A3.1: see [API](../API.md#strict-completeness-a31-060-candidate) for completeness and independent check accounting. Strict mode remains; see explicit truncation below.
+
+## A3.2 (0.6.0 candidate)
+
+In the 0.6.0 candidate, `records(name=None, *, require_complete=True)` refuses an incomplete journal with `incomplete_evidence`, including filtered queries. Explicit `require_complete=False` returns the prefix with original sequence numbers, without certifying completeness. The argument must be bool. Full contract and formats: [Journaling](../JOURNALING.md#explicit-journal-truncation).

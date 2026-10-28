@@ -19,6 +19,13 @@ class Journal:
         self._entries = []
         self._nodes = 0
         self._text_bytes = 0
+        self.on_limit = 'error'
+
+    def validate_record(self, name, data):
+        from stm32_gdbtest.configuration import MAXIMUMS_V2
+        validator = Journal(**dict(MAXIMUMS_V2, max_depth=self._limits[2],
+                                   max_integer_bits=self._limits[4]))
+        validator.record(name, data)
 
     def _copy(self, value, depth, ancestors, budget, path):
         _, node_limit, depth_limit, text_limit, integer_bits = self._limits

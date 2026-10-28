@@ -65,6 +65,17 @@ def lost(report, store, meta, error):
 
 def journal(report, callback, name, data):
     meta = initialize(report)["stores"].setdefault("records", state())
+    truncate = getattr(getattr(callback, '__self__', None), 'on_limit', 'error') == 'truncate'
+    if truncate:
+        # Validate logical values independently of exhausted cumulative storage.
+        # Hard resource ceilings still apply and are never silently suppressed.
+        callback.__self__.validate_record(name, data)
+        report['evidence'].update(schema=2, policy='journal-truncate')
+        if meta['state'] == 'truncated':
+            meta['attempted'] += 1
+            meta['lost'] += 1
+            meta['last_lost'] = meta['attempted']
+            return
     try:
         result = callback(name, data)
     except Exception as error:
@@ -73,6 +84,9 @@ def journal(report, callback, name, data):
                 getattr(error, 'limit', None) in ('records', 'nodes', 'text_bytes')) or not hasattr(error, 'code'):
             meta['attempted'] += 1
             lost(report, 'records', meta, error)
+            if truncate and getattr(error, 'code', None) == 'limit_exceeded' and meta['lost'] == 1:
+                meta['state'] = 'truncated'
+                return
         raise
     meta['attempted'] += 1
     meta['saved'] += 1
@@ -81,6 +95,10 @@ def journal(report, callback, name, data):
 
 def unavailable(report):
     return any(s['state'] != 'complete' for s in report.get('evidence', {}).get('stores', {}).values())
+
+
+def storage_failed(report):
+    return any(s['state'] == 'unavailable' for s in report.get('evidence', {}).get('stores', {}).values())
 
 
 def discard_collections(report, error):
@@ -103,7 +121,7 @@ def validate(report, records_count=None):
         return
     if (type(meta) is not dict or set(meta) != {'schema','policy','stores','diagnostics',
             'diagnostics_total','diagnostics_omitted'} or type(meta['schema']) is not int
-            or meta['schema'] != 1 or meta['policy'] != 'error'):
+            or (meta['schema'], meta['policy']) not in ((1, 'error'), (2, 'journal-truncate'))):
         raise ValueError('invalid strict evidence metadata')
     stores = meta['stores']
     if type(stores) is not dict or not set(COLLECTIONS) <= set(stores) or set(stores) - set(COLLECTIONS + ('records',)):
@@ -119,11 +137,14 @@ def validate(report, records_count=None):
         if item['lost'] == 0:
             if item['state'] != 'complete' or item['first_lost'] is not None or item['last_lost'] is not None:
                 raise ValueError('invalid complete evidence')
-        elif (item['state'] != 'unavailable' or type(item['first_lost']) is not int
+        elif (item['state'] not in ('unavailable', 'truncated') or type(item['first_lost']) is not int
               or type(item['last_lost']) is not int or not 1 <= item['first_lost'] <= item['last_lost'] <= item['attempted']
               or item['lost'] > item['last_lost'] - item['first_lost'] + 1
               or (item['lost'] == 1 and item['first_lost'] != item['last_lost'])):
             raise ValueError('invalid lost evidence range')
+        if item['state'] == 'truncated' and (meta['schema'] != 2 or name != 'records'
+                or item['first_lost'] != item['saved'] + 1 or item['last_lost'] != item['attempted']):
+            raise ValueError('invalid truncated prefix')
         count = records_count if name == 'records' else len(report.get(name, []))
         if count is not None and item['saved'] != count:
             raise ValueError('saved evidence count mismatch: ' + name)
