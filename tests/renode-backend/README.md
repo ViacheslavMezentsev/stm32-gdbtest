@@ -127,3 +127,14 @@ run_cpp.py дополнен HW_CPP_ARGUMENTS_SYNC/ASYNC: массив, пере�
 границы и квалификаторы, соседние элементы и восстановление, отсутствие исполнения
 после отказа. Длина из DWARF отделена от заявленного count переменной-указателя.
 Семь исходов: шесть PASS и прежний намеренный ERROR dummy frame; без платы.
+
+
+### A4.3b: non-virtual base subobjects
+
+The same run_cpp.py route now includes HW_CPP_INHERITANCE_SYNC/ASYNC: single,
+multi-level and second-base offsets for this/Pointer/Reference, compiler-computed
+address oracles, neighbouring guards, restoration and pre-execution refusals.
+Expected outcomes: eight PASS and one intentional HW_CPP_OBJECT_BREAK ERROR.
+The fixture uses -femit-class-debug-always to retain complete virtual-base DWARF
+for refusal checks; an incomplete type is separately refused. No virtual object is
+constructed or called. This is ARM GCC/DWARF evidence, not a general C++ ABI proof.

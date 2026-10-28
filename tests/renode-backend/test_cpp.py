@@ -166,3 +166,59 @@ async def cpp_arguments_async(t):
             t.check('buffer restored ' + str(i), t.read('samples[' + str(i) + ']'), value)
         t.check('scalar restored', t.read('scalar'), old_scalar)
         t.check('probe restored', t.read('probe.value'), old_probe)
+
+
+@case('HW_CPP_INHERITANCE_SYNC', timeout_s=20, labels=('emulator',))
+def cpp_inheritance_sync(t):
+    t.reach('ready')
+    saved = t.read('one.value')
+    try:
+        result = t.call('Base::step', 2, this='&one', timeout=2)
+        t.check('single inheritance result', result['return_value'], saved + 2)
+        t.check('single inheritance guard', t.read('one.tail'), 666)
+        t.check('zero base offset', result['this_offset_bytes'], 0)
+    finally:
+        t.write('one.value', saved)
+        t.check('single inheritance restored', t.read('one.value'), saved)
+
+
+@case('HW_CPP_INHERITANCE_ASYNC', timeout_s=30, labels=('emulator',))
+async def cpp_inheritance_async(t):
+    await t.reach('ready')
+    saved, old_deep = t.read('derived.value'), t.read('deep.value')
+    try:
+        result = await t.call('Base::step', 3, this='derived_ptr', timeout=2)
+        t.check('compiler base address', result['this_address'], t.read('base_oracle'))
+        t.check('second base has nonzero offset', result['this_offset_bytes'] > 0, True)
+        t.check('method result', result['return_value'], saved + 3)
+        result = await t.call('inherited_pointer', Pointer('&derived'), timeout=2)
+        t.check('pointer adjusted', result['argument_bindings'][0]['address'], t.read('base_oracle'))
+        t.check('pointer result', result['return_value'], saved + 8)
+        result = await t.call('inherited_reference', Reference('derived'), timeout=2)
+        t.check('reference adjusted', result['argument_bindings'][0]['address'], t.read('base_oracle'))
+        t.check('reference result', result['return_value'], saved + 15)
+        result = await t.call('inherited_const', Reference('derived'), timeout=2)
+        t.check('const may be added', result['return_value'], saved + 15)
+        result = await t.call('Base::step', 4, this='&deep', timeout=2)
+        t.check('compiler deep address', result['this_address'], t.read('deep_oracle'))
+        t.check('deep result', result['return_value'], old_deep + 4)
+        # Отказы не запускают код: счётчик остаётся равным пяти.
+        for function, args, obj, error in (
+            ('Base::step', (1,), '&diamond', 'ambiguous_base'),
+            ('Base::step', (1,), 'virtual_derived', 'unsupported_inheritance'),
+            ('Base::step', (1,), 'const_derived', 'this_qualifiers'),
+            ('inherited_pointer', (Pointer('&diamond'),), None, 'ambiguous_base'),
+            ('inherited_pointer', (Pointer('&derived', count=2),), None, 'argument_range'),
+            ('inherited_pointer', (Pointer('const_derived'),), None, 'argument_qualifiers'),
+        ):
+            with t.refused(error):
+                await t.call(function, *args, this=obj, timeout=2)
+            t.check('no execution after ' + error, t.read('calls'), 5)
+        for path, expected in (('derived.guard', 111), ('derived.tail', 222),
+                               ('deep.guard', 333), ('deep.tail', 444), ('deep.end', 555)):
+            t.check('neighbour unchanged ' + path, t.read(path), expected)
+    finally:
+        t.write('derived.value', saved)
+        t.write('deep.value', old_deep)
+        t.check('derived restored', t.read('derived.value'), saved)
+        t.check('deep restored', t.read('deep.value'), old_deep)

@@ -551,13 +551,12 @@ Named types/typedefs are resolved by GDB and compared against DWARF types. An ov
 without signature remains ambiguous_function; no match produces signature_mismatch;
 invalid syntax produces invalid_signature. Multiple exact matches are also refused.
 
-The object type must match exactly; const/volatile are never discarded. A different
+The object type must match exactly or select a base under A4.3b; const/volatile are never discarded. An incompatible
 object type produces this_type_mismatch, dropping qualifiers produces this_qualifiers,
 null/MMIO/misaligned addresses produce invalid_this. this on static/free functions
-produces unexpected_this. Inheritance, polymorphic types, ref-qualified methods,
+produces unexpected_this. Non-virtual inheritance is described in A4.3b. Polymorphic types, ref-qualified methods,
 constructors/destructors, operators and template names are outside this subset.
-A4.1 scalar argument/return restrictions remain; explicit pointer/reference arguments
-are not supported yet. const does not imply side-effect freedom; volatile does not
+A4.1 scalar returns remain; explicit Pointer/Reference arguments are described in A4.3a. const does not imply side-effect freedom; volatile does not
 provide MMIO transport guarantees.
 
 Resolution does not execute target code; the selected linkage symbol is called with
@@ -589,8 +588,7 @@ Explicit null uses count=0. Names are limited to 256 characters and may be quali
 Member/index paths, arithmetic, casts and calls are unsupported. Bad descriptors
 produce invalid_argument.
 
-One T*/T& level supports integer, bool and non-polymorphic class/struct types without
-inheritance. Types must match exactly; const/volatile may be added but never removed
+One T*/T& level supports integer, bool and non-polymorphic class/struct types with inheritance as specified by A4.3b below. Types must match exactly or select one unambiguous base; const/volatile may be added but never removed
 (argument_qualifiers). Signatures accept these types and typedefs; overload selection
 remains explicit. Descriptors also enable DWARF checking for plain C functions.
 T**, void*, function/member pointers, T&&, array references, by-value objects and
@@ -619,3 +617,50 @@ result = await t.call("demo::sum", Pointer("samples", count=4), 4,
 t.check("sum", result["return_value"], 10)
 await t.call("demo::bump", Reference("scalar"), signature="void(unsigned int &)", timeout=2)
 ```
+
+
+## A4.3b — non-virtual inheritance (0.6.0 candidate)
+
+`call("Base::step", ..., this="&derived")` explicitly selects Base::step.
+An exact non-polymorphic type or one unique path from the object's static type to
+its base is accepted: single, multi-level and multiple non-virtual inheritance.
+There is no inherited-name search for Derived::step: name the declaring class.
+Overloads still require an exact signature.
+
+The shared this/Pointer/Reference preflight reads DWARF layout, adds constant byte
+offsets and passes the base subobject address. Pointer conversion to a base requires
+count=1 even at offset zero: Derived[] is not Base[]. Exact types retain A4.3a rules.
+Pointer.null() needs no adjustment; const/volatile can be added, never removed.
+
+Both the source object and adjusted subobject are checked for SRAM range, size,
+alignment and containment. Traversal is bounded to 128 nodes and 16 types per path.
+Multiple paths produce ambiguous_base; missing, negative or non-byte offsets,
+incomplete types and traversal limits produce base_layout_unavailable. Virtual
+inheritance/polymorphic source objects produce unsupported_inheritance; existing
+unsupported parameter/method refusals remain. Type, qualifier and range errors keep
+their existing codes. All refusals precede execution (stage=validation, effect=none).
+
+Validated on ARM GCC/DWARF and GDB using a neutral ELF. No dynamic layout or vtable
+reads, downcasts, cross-casts, virtual dispatch or user conversions are supported.
+public/private/protected access is not checked: this is debugger layout access, not
+a compiler check of a C++ expression. Complete and trustworthy DWARF is a prerequisite;
+corrupt metadata cannot prove ABI compatibility. Object lifetime, construction and
+ownership remain the author's responsibility. Unknown layout is refused rather
+than computed from target object contents.
+
+Call results and audit add this_original_address, this_expected_type,
+this_offset_bytes and this_base_path; this_address is the adjusted address passed.
+argument_bindings adds original_address, offset_bytes and base_path; address/bytes
+describe the passed subobject. The path lists types from source to expected base.
+Explicit null has no path/original address.
+
+```python
+result = await t.call("Base::step", 3, this="&derived", timeout=2)
+t.check("selected subobject", result["this_address"], expected_base_address)
+await t.call("inspect_base", Reference("derived"), timeout=2)
+```
+
+Omit await in ordinary def. Do compare the address with an independent oracle,
+check neighbouring fields and restore changes explicitly. Do not assume a second
+base has offset zero, pass Derived[] as Base[], or bypass ambiguity with a cast
+expression. Examples/refusals: tests/renode-backend/test_cpp.py, HW_CPP_INHERITANCE_*.

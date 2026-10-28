@@ -173,11 +173,113 @@ extern "C" unsigned c_sum( const unsigned* p, unsigned n )
     return result;
 }
 
+// Нейтральная иерархия: вторая база имеет ненулевое смещение.
+struct Left
+{
+    unsigned guard;
+};
+
+struct Base
+{
+    unsigned value;
+    unsigned step( unsigned n );
+};
+
+unsigned Base::step( unsigned n )
+{
+    ++calls;
+    value += n;
+    return value;
+}
+
+struct Derived : Left, Base
+{
+    unsigned tail;
+};
+
+struct Deep : Derived
+{
+    unsigned end;
+};
+
+struct One : Base
+{
+    unsigned tail;
+};
+
+struct ArmA : Base
+{
+};
+
+struct ArmB : Base
+{
+};
+
+struct Diamond : ArmA, ArmB
+{
+};
+
+struct VirtualDerived : virtual Base
+{
+    unsigned tail;
+    unsigned layout_probe() const;
+};
+
+unsigned VirtualDerived::layout_probe() const
+{
+    return tail;
+}
+
+Derived derived;
+Deep deep;
+One one;
+Diamond diamond;
+Derived* derived_ptr;
+const Derived* const_derived;
+VirtualDerived* virtual_derived;
+unsigned base_oracle;
+unsigned deep_oracle;
+
+unsigned inherited_pointer( Base* p )
+{
+    ++calls;
+    p->value += 5;
+    return p->value;
+}
+
+unsigned inherited_reference( Base& p )
+{
+    ++calls;
+    p.value += 7;
+    return p.value;
+}
+
+unsigned inherited_const( const Base& p )
+{
+    ++calls;
+    return p.value;
+}
+
 extern "C" void main()
 {
-    mmio_ptr      = reinterpret_cast<unsigned*>( 0x40000000 );
-    unaligned_ptr = reinterpret_cast<unsigned*>( 0x20000101 );
-    null_samples  = nullptr;
+    derived.guard = 111;
+    derived.value = 10;
+    derived.tail  = 222;
+    derived_ptr   = &derived;
+    const_derived = &derived;
+    deep.guard    = 333;
+    deep.value    = 20;
+    deep.tail     = 444;
+    deep.end      = 555;
+    one.value     = 30;
+    one.tail      = 666;
+    // Эталон адреса вычисляет компилятор, независимо от Python-preflight.
+    base_oracle     = reinterpret_cast<unsigned>( static_cast<Base*>( &derived ) );
+    deep_oracle     = reinterpret_cast<unsigned>( static_cast<Base*>( &deep ) );
+    virtual_derived = nullptr;    // Тип нужен для отказа; объект не конструируем.
+    mmio_ptr        = reinterpret_cast<unsigned*>( 0x40000000 );
+    unaligned_ptr   = reinterpret_cast<unsigned*>( 0x20000101 );
+    null_samples    = nullptr;
     for ( unsigned i = 0; i < 6; ++i )
         samples[i] = i + 1;
     samples_ptr      = samples;

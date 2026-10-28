@@ -107,6 +107,127 @@ class ArgumentTests(unittest.TestCase):
     def test_no_nested_pointer_or_inheritance(self):
         self.parameter = Kind(11, 'unsigned int **', Kind(11, 'unsigned int *', self.element))
         self.refuse(Pointer.null(), 'unsupported_argument')
-        for field in (NS(is_base_class=True, name='Base'), NS(is_base_class=False, name='_vptr.Probe')):
+        for field, code in ((NS(is_base_class=True, name='Base'), 'base_layout_unavailable'),
+                            (NS(is_base_class=False, name='_vptr.Probe'), 'unsupported_argument')):
             self.parameter = Kind(11, 'Probe *', Kind(10, 'Probe', fields=[field]))
-            self.refuse(Pointer('&probe'), 'unsupported_argument')
+            self.refuse(Pointer('&probe'), code)
+
+
+class InheritanceTests(unittest.TestCase):
+    bind = ArgumentTests.bind
+    refuse = ArgumentTests.refuse
+    def setUp(self):
+        ArgumentTests.setUp(self)
+        self.base = Kind(10, 'Base')
+        self.left = Kind(10, 'Left')
+        self.derived = Kind(10, 'Derived', size=12, fields=[self.edge(self.left, 0), self.edge(self.base, 32)])
+        self.parameter = Kind(11, 'Base *', self.base)
+        self.value = NS(type=self.derived, address=0x20000100)
+
+    @staticmethod
+    def edge(kind, bits):
+        return NS(is_base_class=True, name=str(kind), type=kind, bitpos=bits)
+
+    # Do not inherit the scalar/array suite: this fixture is a class hierarchy.
+
+    def test_second_base_pointer_and_reference(self):
+        expression, audit = self.bind(Pointer('&derived'))
+        self.assertEqual(audit['address'], 0x20000104)
+        self.assertEqual(audit['original_address'], 0x20000100)
+        self.assertEqual(audit['offset_bytes'], 4)
+        self.assertEqual(audit['base_path'], ['Derived', 'Base'])
+        self.assertEqual(audit['bytes'], 4)
+        self.parameter = Kind(12, 'Base &', self.base)
+        self.assertEqual(self.bind(Reference('derived'))[1]['address'], 0x20000104)
+
+    def test_chain_and_exact_derived(self):
+        self.value.type = Kind(10, 'Deep', size=16, fields=[self.edge(self.derived, 32)])
+        self.assertEqual(self.bind(Pointer('&deep'))[1]['offset_bytes'], 8)
+        self.parameter = Kind(11, 'Deep *', self.value.type)
+        self.assertEqual(self.bind(Pointer('&deep'))[1]['offset_bytes'], 0)
+
+    def test_diamond_ambiguous_even_same_offset(self):
+        self.value.type = Kind(10, 'Diamond', size=24, fields=[self.edge(self.derived, 0), self.edge(self.derived, 0)])
+        self.refuse(Pointer('&diamond'), 'ambiguous_base')
+
+    def test_unknown_negative_nonbyte_and_outside_offsets(self):
+        for bits in (None, -32, 1, 96, True):
+            self.value.type = Kind(10, 'Bad', size=12, fields=[self.edge(self.base, bits)])
+            self.refuse(Pointer('&bad'), 'base_layout_unavailable')
+
+    def test_virtual_or_polymorphic_source(self):
+        edge = self.edge(self.base, 0); edge.is_virtual_base_class = True
+        self.value.type = Kind(10, 'Virtual', fields=[edge])
+        self.refuse(Pointer('&virtual'), 'unsupported_inheritance')
+        self.value.type = Kind(10, 'Virtual', fields=[NS(name='_vptr.Virtual', is_base_class=False)])
+        self.refuse(Pointer('&virtual'), 'unsupported_inheritance')
+
+    def test_count_and_qualifiers(self):
+        self.refuse(Pointer('&derived', count=2), 'argument_range')
+        self.value.type = Kind(10, 'Derived', size=12, cv='const', fields=self.derived.fields())
+        self.refuse(Pointer('&derived'), 'argument_qualifiers')
+        self.parameter = Kind(11, 'const Base *', Kind(10, 'Base', cv='const'))
+        self.assertEqual(self.bind(Pointer('&derived'))[1]['offset_bytes'], 4)
+
+    def test_source_extent_checked_not_only_base(self):
+        self.value.address = 0x200ffff8
+        self.refuse(Pointer('&derived'), 'argument_range')
+
+    def test_downcast_rejected(self):
+        self.value.type = self.base
+        self.parameter = Kind(11, 'Derived *', self.derived)
+        self.refuse(Pointer('&base'), 'argument_type_mismatch')
+
+    def test_cycle_and_depth_bound(self):
+        recursive = Kind(10, 'Cycle')
+        recursive._fields = [self.edge(recursive, 0)]
+        self.value.type = recursive
+        self.refuse(Pointer('&cycle'), 'base_layout_unavailable')
+        chain = self.base
+        for i in range(17):
+            chain = Kind(10, 'Level' + str(i), fields=[self.edge(chain, 0)])
+        self.value.type = chain
+        self.refuse(Pointer('&deep'), 'base_layout_unavailable')
+
+
+    def test_this_uses_same_adjustment(self):
+        from stm32_gdbtest.cpp_call import object_argument
+        expression, audit = object_argument(self.gdb, 'Base::step', NS(name='Base::step(unsigned int)'),
+                                             self.parameter, '&derived')
+        self.assertEqual(expression, ['(Base *)536871172'])
+        self.assertEqual(audit['this_original_address'], 0x20000100)
+        self.assertEqual(audit['this_address'], 0x20000104)
+        self.assertEqual(audit['this_base_path'], ['Derived', 'Base'])
+
+    def test_zero_offset_conversion_still_refuses_array(self):
+        self.value.type = Kind(10, 'One', size=8, fields=[self.edge(self.base, 0)])
+        self.refuse(Pointer('&one', count=2), 'argument_range')
+
+    def test_pointer_slot_read_once_with_adjustment(self):
+        reads = []
+        derived = self.derived
+        class Value:
+            type = Kind(11, 'Derived *', derived)
+            address = 0x20000040
+            def __int__(self): reads.append(1); return 0x20000100
+        self.value = Value()
+        self.assertEqual(self.bind(Pointer('p'))[1]['address'], 0x20000104)
+        self.assertEqual(reads, [1])
+
+    def test_graph_size_bound_and_incomplete_type(self):
+        self.value.type = Kind(10, 'Wide', size=512, fields=[self.edge(self.base, i*32) for i in range(128)])
+        self.refuse(Pointer('&wide'), 'base_layout_unavailable')
+        self.value.type = Kind(10, 'Incomplete', size=0)
+        self.refuse(Pointer('&incomplete'), 'base_layout_unavailable')
+
+
+    def test_unavailable_layout_metadata(self):
+        class MissingAlignment(Kind):
+            def unqualified(self): return self
+            @property
+            def alignof(self): raise RuntimeError('DWARF alignment unavailable')
+            @alignof.setter
+            def alignof(self, value): pass
+        self.gdb.error = RuntimeError
+        self.value.type = MissingAlignment(10, 'Missing')
+        self.refuse(Pointer('&missing'), 'base_layout_unavailable')

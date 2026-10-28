@@ -166,9 +166,7 @@ def object_argument(gdb, function, method, pointer_type, path):
     expected = pointer_type.target().strip_typedefs()
     if expected.code != gdb.TYPE_CODE_STRUCT or '&' in method.name.split(')', 1)[-1]:
         reject('unsupported_method', 'Only unqualified-by-reference class methods are supported', function)
-    if any(getattr(f, 'is_base_class', False) or (f.name or '').startswith('_vptr')
-           for f in expected.unqualified().fields()):
-        reject('unsupported_method', 'Inheritance and polymorphic objects are not supported', function)
+    class_layout(gdb, expected, function, virtual_error='unsupported_method')
     symbol = gdb.lookup_symbol(path.lstrip('&'))[0]
     if symbol is None or not symbol.is_variable:
         reject('invalid_this', 'Object/pointer variable is absent', function)
@@ -182,18 +180,24 @@ def object_argument(gdb, function, method, pointer_type, path):
         sram(int(value.address), value.type.sizeof, function)
         actual = value.type.strip_typedefs().target().strip_typedefs()
         address = int(value)  # Read the pointer once, never its object contents.
-    if actual.unqualified() != expected.unqualified():
-        reject('this_type_mismatch', 'Exact object type required; no base adjustment', function)
+    offset, base_path = base_adjustment(gdb, actual, expected, function, 'this_type_mismatch')
     if not qualifiers(actual) <= qualifiers(expected):
         reject('this_qualifiers', 'Cannot discard const/volatile from the object', function)
     sram(address, actual.sizeof, function)
     if actual.alignof <= 0 or address % actual.alignof:
         reject('invalid_this', 'Object pointer is not aligned for its type', function)
+    original_address = address
+    address += offset
+    sram(address, expected.sizeof, function)
+    if expected.alignof <= 0 or address % expected.alignof:
+        reject('invalid_this', 'Adjusted object pointer is not aligned', function)
     # Trusted DWARF type spelling, restricted to a named struct and cv qualifiers.
     spelling = str(pointer_type.unqualified())
     if not re.fullmatch(r'[A-Za-z_][A-Za-z_0-9: ]* \*', spelling):
         reject('unsupported_method', 'Unsupported this type spelling', function)
-    return [f'({spelling}){address}'], dict(this=path, this_address=address, this_type=str(actual))
+    return [f'({spelling}){address}'], dict(this=path, this_address=address, this_type=str(actual),
+        this_original_address=original_address, this_expected_type=str(expected),
+        this_offset_bytes=offset, this_base_path=base_path)
 
 
 @dataclass(frozen=True)
@@ -254,10 +258,8 @@ def bind_argument(gdb, function, parameter, descriptor):
     expected = parameter.target().strip_typedefs()
     if expected.code not in (gdb.TYPE_CODE_INT, gdb.TYPE_CODE_BOOL, gdb.TYPE_CODE_STRUCT):
         reject('unsupported_argument', 'Unsupported pointee/referent type', function)
-    if expected.code == gdb.TYPE_CODE_STRUCT and any(
-            getattr(f, 'is_base_class', False) or (f.name or '').startswith('_vptr')
-            for f in expected.unqualified().fields()):
-        reject('unsupported_argument', 'Inheritance and polymorphic arguments are not supported', function)
+    if expected.code == gdb.TYPE_CODE_STRUCT:
+        class_layout(gdb, expected, function, virtual_error='unsupported_argument')
     spelling = str(expected)
     if not re.fullmatch(TYPE, spelling):
         reject('unsupported_argument', 'Unsupported pointee spelling', function)
@@ -290,17 +292,74 @@ def bind_argument(gdb, function, parameter, descriptor):
             reject('invalid_argument', 'Use &object, a named array, or a named pointer', function)
         known = 1
         address = int(value.address) if value.address is not None else 0
-    if actual.unqualified() != expected.unqualified():
-        reject('argument_type_mismatch', 'Exact pointee/referent type required', function)
+    offset, base_path = base_adjustment(gdb, actual, expected, function, 'argument_type_mismatch')
+    if len(base_path) > 1 and count != 1:
+        reject('argument_range', 'Base conversion requires count=1', function)
     if not qualifiers(actual) <= qualifiers(expected):
         reject('argument_qualifiers', 'Cannot discard const/volatile', function)
     if known is not None and count > known:
         reject('argument_range', 'Count exceeds the named object/array extent', function)
     size = actual.sizeof * count
     argument_sram(address, size, actual.alignof, function)
+    original_address = address
+    address += offset
+    size = expected.sizeof * count
+    argument_sram(address, size, expected.alignof, function)
     expression = f'({spelling} *){address}'
     if reference:
         expression = '*(' + expression + ')'
     return expression, dict(kind='reference' if reference else 'pointer', path=path,
                             actual_type=str(actual), expected_type=str(parameter), address=address,
-                            count=count, bytes=size, extent='known' if known is not None else 'declared')
+                            count=count, bytes=size, extent='known' if known is not None else 'declared',
+                            original_address=original_address, offset_bytes=offset, base_path=base_path)
+
+
+def class_layout(gdb, kind, function, *, virtual_error='unsupported_inheritance'):
+    """Read static DWARF layout only; never cast a target value or inspect its vtable."""
+    entries = []
+    def visit(current, offset, path, ancestors):
+        current = current.strip_typedefs().unqualified()
+        if len(entries) >= 128 or len(path) > 16 or any(current == a for a in ancestors):
+            reject('base_layout_unavailable', 'Inheritance graph exceeds limits or contains a cycle', function)
+        if (current.code != gdb.TYPE_CODE_STRUCT or type(current.sizeof) is not int
+                or current.sizeof <= 0 or current.alignof <= 0):
+            reject('base_layout_unavailable', 'Incomplete class layout', function)
+        entries.append((current, offset, path))
+        fields = current.fields()
+        if any((f.name or '').startswith('_vptr') for f in fields):
+            reject(virtual_error, 'Polymorphic/virtual layout is not supported', function)
+        for field in fields:
+            if not getattr(field, 'is_base_class', False):
+                continue
+            bits = getattr(field, 'bitpos', None)
+            if getattr(field, 'is_virtual_base_class', False):
+                reject('unsupported_inheritance', 'Virtual base is not supported', function)
+            if type(bits) is not int or bits < 0 or bits % 8:
+                reject('base_layout_unavailable', 'Base offset must be a constant nonnegative byte offset', function)
+            base = field.type.strip_typedefs().unqualified()
+            delta = bits // 8
+            if (type(base.sizeof) is not int or base.sizeof <= 0 or base.alignof <= 0
+                    or delta + base.sizeof > current.sizeof or delta % base.alignof):
+                reject('base_layout_unavailable', 'Base range/alignment exceeds containing class', function)
+            visit(base, offset + delta, path + [str(base)], ancestors + [current])
+    try:
+        visit(kind, 0, [str(kind.strip_typedefs().unqualified())], [])
+    except (AttributeError, TypeError, ValueError, getattr(gdb, 'error', RuntimeError)) as cause:
+        fail('call', 'validation', 'none', 'base_layout_unavailable',
+             'Cannot read complete static class layout', cause=cause, function=function)
+    return entries
+
+
+def base_adjustment(gdb, actual, expected, function, mismatch):
+    actual, expected = actual.strip_typedefs(), expected.strip_typedefs()
+    if actual.code != gdb.TYPE_CODE_STRUCT or expected.code != gdb.TYPE_CODE_STRUCT:
+        if actual.unqualified() != expected.unqualified():
+            reject(mismatch, 'Exact type or an unambiguous base is required', function)
+        return 0, []
+    entries = class_layout(gdb, actual, function)
+    matches = [(offset, path) for kind, offset, path in entries if kind == expected.unqualified()]
+    if not matches:
+        reject(mismatch, 'Expected class is not a base of the supplied static type', function)
+    if len(matches) != 1:
+        reject('ambiguous_base', 'Multiple paths to the requested base', function)
+    return matches[0]

@@ -21,7 +21,7 @@ out.mkdir(parents=True)
 suffix = '.exe' if sys.platform == 'win32' else ''
 bin = a.toolchain / 'bin'
 elf = out / 'firmware.elf'
-cmd = [str(bin / ('arm-none-eabi-g++' + suffix)), '-mcpu=cortex-m3', '-mthumb', '-O0', '-g3', '-nostdlib', '-ffreestanding', '-fno-exceptions', '-fno-rtti', '-Wl,--build-id=none', '-T', str(b/'startup.ld'), str(ROOT/'tests/renode-startup/cpp_contracts.cpp'), '-o', str(elf)]
+cmd = [str(bin / ('arm-none-eabi-g++' + suffix)), '-mcpu=cortex-m3', '-mthumb', '-O0', '-g3', '-fno-eliminate-unused-debug-types', '-femit-class-debug-always', '-nostdlib', '-ffreestanding', '-fno-exceptions', '-fno-rtti', '-Wl,--build-id=none', '-T', str(b/'startup.ld'), str(ROOT/'tests/renode-startup/cpp_contracts.cpp'), '-o', str(elf)]
 subprocess.run(cmd, check=True)
 stand = out / 'stand.toml'
 stand.write_text((b/'stand.example.toml').read_text().replace('executable = "renode"', 'executable = '+json.dumps(Path(a.renode).as_posix())).replace('"platform.repl"', json.dumps((b/'platform.repl').as_posix())), encoding='utf-8')
@@ -29,7 +29,7 @@ session = dict(root=str(ROOT), elf=str(elf), profile=str(b/'target.toml'), sessi
 (out/'session.json').write_text(json.dumps(session), encoding='utf-8')
 cases = {t['id']:t for t in collect([b])}
 results = []
-for name in ('HW_CPP_SYNC', 'HW_CPP_ASYNC', 'HW_CPP_OBJECT_SYNC', 'HW_CPP_OBJECT_ASYNC', 'HW_CPP_OBJECT_BREAK', 'HW_CPP_ARGUMENTS_SYNC', 'HW_CPP_ARGUMENTS_ASYNC'):
+for name in ('HW_CPP_SYNC', 'HW_CPP_ASYNC', 'HW_CPP_OBJECT_SYNC', 'HW_CPP_OBJECT_ASYNC', 'HW_CPP_OBJECT_BREAK', 'HW_CPP_ARGUMENTS_SYNC', 'HW_CPP_ARGUMENTS_ASYNC', 'HW_CPP_INHERITANCE_SYNC', 'HW_CPP_INHERITANCE_ASYNC'):
     code = run(session, cases[name])
     path = sorted((out/'runs').glob('*/result.json'))[-1]
     result = json.loads(path.read_text())

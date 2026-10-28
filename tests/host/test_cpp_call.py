@@ -161,9 +161,10 @@ class ObjectTests(unittest.TestCase):
         self.refuse('this_type_mismatch')
 
     def test_bases_virtual_and_reference_qualifier(self):
-        for field in (NS(is_base_class=True, name='Base'), NS(is_base_class=False, name='_vptr.Probe')):
+        for field, code in ((NS(is_base_class=True, name='Base'), 'base_layout_unavailable'),
+                            (NS(is_base_class=False, name='_vptr.Probe'), 'unsupported_method')):
             self.pointer = PointerKind(ObjectKind(fields=[field]))
-            self.refuse('unsupported_method')
+            self.refuse(code)
         self.pointer = PointerKind(self.obj)
         self.method.name = 'Probe::add(unsigned int) &'
         self.refuse('unsupported_method')
