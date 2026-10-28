@@ -40,7 +40,7 @@ OpenOCD 0.12.0, для AT32 — OpenOCD Artery с J-Link). Linux — облач�
 | C1 | PASS | BluePill F103C8/F103CB: сборка и host 31/31 на каждом — Windows и Linux |
 | C2 | PASS | BlackPill F411CE/F401CC: сборка и host 25/25 на каждом — Windows и Linux |
 | C3 | PASS | Потребители на платах с модулем на кандидате: F411CE 22/22, F401CC 22/22, F103CB 28/28 (всего 72/72 PASS, по 44/44/56 записей) |
-| R1 | PLANNED | Удалённый стенд по SSH: владелец переключит стенды на узел стенда, повтор run_hw и пакета |
+| R1 | PASS (AT32 — NOT_RUN) | Удалённый стенд по SSH, main с версией 0.6.0, 29.10.2026 00:20–00:31 UTC+5: runner и GDB на рабочем месте Windows, OpenOCD xPack на узле стенда; F411CE, F401CC, F429ZI, F103, F030R8 — по 10/10 этапов, пакет на F411 — 10/10. Копии Flash пяти плат сняты до прогона, возвращены и сверены по SHA-256 |
 | R2 | PLANNED | CI выпускного SHA — владелец |
 
 Восстановление стендов: до кампании сняты полные копии Flash шести плат (AT32 — обе половины
@@ -53,7 +53,7 @@ OpenOCD 0.12.0, для AT32 — OpenOCD Artery с J-Link). Linux — облач�
   прошивкой; физический сигнал, периферия и модель GPIO (A5.2) — только Renode.
 - Привязка снимка GDB ко времени записи ROS (A6) по-прежнему не подтверждена (нет опоры после
   чтения); импорт и анализ — офлайн.
-- Точка останова внутри `call` — только Renode; удалённый J-Link и AT32 в run_hw не проверялись.
+- Точка останова внутри `call` — только Renode; AT32 в run_hw (локально и через J-Link узла) не проверялся.
 - Интерактивный режим проверен на локальных стендах OpenOCD (ST-Link) в Windows; remote, Linux,
   J-Link и ST-LINK GDB Server — нет.
 - ST-LINK GDB Server, SEGGER GDB Server и st-util сохраняют прежнюю приёмку.
@@ -72,7 +72,7 @@ renode-backend 25/25, CI-прошивка F411CE 10/10; образ F411 посл
 
 ## Свидетельства
 
-Сводки лежат локально (не в Git): задания моста 367–389, `build/a8-hw/` (копии Flash и сверка),
+Сводки лежат локально (не в Git): задания моста 367–395, `build/a8-hw/` (копии Flash и сверка),
 комплекты `tests/sandbox/04-release-042/p3-hardware/pilot-060`, `tests/sandbox/08-release-060`
 (H5), `build/live-observer-hw/a8-01`, `tests/hal-f030/build/validation/20261028T180305.655611Z`,
 `build/hw/<профиль>-<профиль>-openocd/`, `build/a74-consumers/out/*-a8`. Компактный обзор и
