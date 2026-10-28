@@ -424,3 +424,5 @@ A compact collection's `complete=true` confirms intact stored rows, not absence 
 lost observations; consult `evidence.stores` for that. Analyze records.json together
 with result.json, which carries completeness and outcomes. Check counts include
 runner checks as well as user checks.
+
+[Journaling](JOURNALING.md): sources, budgets, completeness, routes and schema 3 availability (configuration only for now).

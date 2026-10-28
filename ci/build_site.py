@@ -47,6 +47,7 @@ TEXT = {
         'skills_note': 'Каждый навык — каталог с SKILL.md в формате Agent Skills; версия навыка совпадает с версией модуля.',
         'companions': 'Навыки-спутники', 'companions_note': 'Из demo-stm32-skills: требования, эмуляторы, '
                       'наблюдение без остановки ядра, сигналы на выводах.',
+        'journal_title': 'Журналирование', 'journal_card': 'Записи, квоты, полнота и поведение на маршрутах сценариев.',
         'api_title': 'Справочник API', 'api_lead': f'Target API выпуска {VERSION}, API_VERSION={API_VERSION}. '
                      'Для каждой группы — сигнатуры, первый выпуск, изменения API 3 и примеры.',
         'groups': 'Группы методов', 'removed': 'Удалённые имена',
@@ -85,6 +86,7 @@ TEXT = {
         'skills_note': 'Each skill is a directory with SKILL.md in the Agent Skills format; the skill version matches the module.',
         'companions': 'Companion skills', 'companions_note': 'From demo-stm32-skills: requirements, emulators, '
                       'observation without halting the core, signals on pins.',
+        'journal_title': 'Journaling', 'journal_card': 'Records, budgets, completeness and scenario routes.',
         'api_title': 'API reference', 'api_lead': f'Target API of release {VERSION}, API_VERSION={API_VERSION}. '
                      'Each group gives signatures, the first release, API 3 changes and examples.',
         'groups': 'Method groups', 'removed': 'Removed names',
@@ -253,9 +255,42 @@ def home_page(lang):
              f'<div class="meta"><span class="label offline">TTDD</span><span class="label live">DDTT</span></div></a>'
              f'<a class="card" href="api/{suffix}"><h3>{t["api_title"]}</h3><p>{t["api_card"]}</p>'
              f'<div class="meta"><span class="label alt">API_VERSION={API_VERSION}</span><span class="label">{len(content.API)}</span></div></a>'
+             f'<a class="card" href="journal/{suffix}"><h3>{t["journal_title"]}</h3><p>{t["journal_card"]}</p></a>'
              f'</div></div>\n')
     body += f'<div class="callout view"><h2 id="api3">{t["api3"]}</h2><p>{esc(content.API3_GENERAL[lang])}</p></div>'
     return shell(lang, 'stm32-gdbtest', t['intro'], body, 0, 'home')
+
+
+def journal_page(lang):
+    t = TEXT[lang]
+    body = crumb(lang, 1, ('', t['journal_title']))
+    body += f'<h1>{t["journal_title"]}</h1><p class="lead">{t["journal_card"]}</p>'
+    if lang == 'ru':
+        status = 'Кандидат 0.6.0: schema 3 пока только inspect/prepare/pack. Исполнение отклоняется; truncate ещё не реализован. Для запуска используйте schema 1/2.'
+        title, columns = 'Маршруты и ограничения', ('Маршрут', 'Что учитывать')
+        rows = [('records / result', 'Первичные данные и исход; SAVED не означает полноту.'),
+                ('summary / console', 'Представление, не замена первичных свидетельств.'),
+                ('def / async def', 'FAIL учитывается независимо от хранения; wait timeout не означает halt.'),
+                ('MMIO', 'Attempt без result не доказывает успех или отсутствие воздействия.'),
+                ('cleanup / DDTT', 'Проверить восстановление, полноту и применимость раздельно.')]
+        good, bad = 'Используйте общий читатель, проверяйте evidence и cleanup вместе с исходом сценария.', 'Не считайте пустой журнал нулём операций и не подменяйте свидетельства сводкой.'
+        reference = 'Полное руководство: настройки, квоты, форматы и отказы'
+    else:
+        status = '0.6.0 candidate: schema 3 currently supports inspect/prepare/pack only. Execution is rejected; truncation is not implemented. Use schema 1/2 for runs.'
+        title, columns = 'Routes and boundaries', ('Route', 'Considerations')
+        rows = [('records / result', 'Primary data and outcomes; SAVED does not imply completeness.'),
+                ('summary / console', 'Presentation, not a substitute for primary evidence.'),
+                ('def / async def', 'FAIL is independent of storage; wait timeout does not halt.'),
+                ('MMIO', 'Attempt without result proves neither success nor absence of effects.'),
+                ('cleanup / DDTT', 'Assess restoration, completeness and applicability separately.')]
+        good, bad = 'Use shared readers; inspect evidence and cleanup alongside the scenario outcome.', 'Do not treat empty records as zero operations or replace evidence with summaries.'
+        reference = 'Full guide: settings, budgets, formats and failures'
+    body += f'<div class="callout view"><p>{esc(status)}</p></div>'
+    body += f'<div class="box"><h2 id="routes">{title}</h2>{table(columns, rows)}</div>'
+    body += f'<div class="box"><h2 id="good">{t["good"]}</h2><p>{esc(good)}</p></div>'
+    body += f'<div class="box"><h2 id="bad">{t["bad"]}</h2><p>{esc(bad)}</p></div>'
+    body += f'<a class="btn primary" href="{REPO}/blob/main/docs/{lang}/JOURNALING.md">{reference}</a>'
+    return shell(lang, t['journal_title'], t['journal_card'], body, 1, 'journal')
 
 
 def routes_page(lang):
@@ -382,6 +417,7 @@ def build(destination):
         write(destination / suffix, home_page(lang))
         write(destination / 'routes' / suffix, routes_page(lang))
         write(destination / 'api' / suffix, api_index(lang))
+        write(destination / 'journal' / suffix, journal_page(lang))
         for position, group in enumerate(content.API):
             write(destination / 'api' / group['id'] / suffix, group_page(position, lang))
     (destination / '.nojekyll').touch()

@@ -38,6 +38,18 @@ DEFAULTS_V2 = dict(max_records=4096, max_nodes=131072, max_text_bytes=1048576,
 MAXIMUMS_V2 = dict(max_records=65536, max_nodes=2097152, max_text_bytes=16777216,
                    max_depth=32, max_integer_bits=1024)
 QUERY_NODES = 2097152
+# Schema 3 describes policies; execution admission is gated until storage implements them.
+JOURNAL_V3 = MappingProxyType(dict(representation='full', on_limit='error'))
+REPORT_V3 = MappingProxyType(dict(representation='full', console='full', on_limit='error',
+                                max_rows_per_collection=65536))
+REPORT_ROWS_MAX = 65536
+
+
+def require_execution_supported(configuration):
+    if configuration.config['api']['schema'] == 3:
+        raise ConfigError('api_execution_unsupported',
+                          'API schema 3 currently supports inspect/prepare/pack only; storage policies are not implemented')
+
 
 
 class ConfigError(ValueError):
@@ -169,20 +181,20 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
     api = documents["api"]
     if api is None:
         api = {"schema": 1}
-    if type(api.get("schema")) is not int or api["schema"] not in (1, 2):
-        raise ConfigError("api_schema", "expected integer schema=1 or 2")
+    if type(api.get("schema")) is not int or api["schema"] not in (1, 2, 3):
+        raise ConfigError("api_schema", "expected integer schema=1, 2 or 3")
     records = api.get("records", {})
     if type(records) is not dict:
         raise ConfigError("api_parameter", "records must be a table")
     defaults, maxima = (DEFAULTS, MAXIMUMS) if api['schema'] == 1 else (DEFAULTS_V2, MAXIMUMS_V2)
     policy = api.get('journal', {})
-    if (type(policy) is not dict or set(policy) - {'representation'}
+    if (type(policy) is not dict or set(policy) - ({'representation', 'on_limit'} if api['schema'] == 3 else {'representation'})
             or policy.get('representation', 'full') not in ('full', 'compact')):
         raise ConfigError('api_parameter', 'journal.representation must be full or compact')
     if api['schema'] == 1 and policy:
         raise ConfigError('api_schema', 'journal requires schema=2')
     report_policy = api.get('report', {})
-    if (type(report_policy) is not dict or set(report_policy) - {'representation', 'console'}
+    if (type(report_policy) is not dict or set(report_policy) - ({'representation', 'console', 'on_limit', 'max_rows_per_collection'} if api['schema'] == 3 else {'representation', 'console'})
             or report_policy.get('representation', 'full') not in ('full', 'compact')
             or report_policy.get('console', 'full') not in ('full', 'failures', 'summary')):
         raise ConfigError('api_parameter', 'invalid report representation/console')
@@ -192,7 +204,18 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
         if name in records and (type(records[name]) is not int or
                                 not 1 <= records[name] <= maxima[name]):
             raise ConfigError("api_parameter", f"records.{name}: expected integer 1..{maxima[name]}")
+    if api['schema'] == 3:
+        if set(records) - set(DEFAULTS):
+            raise ConfigError('api_parameter', 'unknown records budget')
+        for section, selected in (('journal', policy), ('report', report_policy)):
+            if selected.get('on_limit', 'error') not in ('error', 'truncate'):
+                raise ConfigError('api_parameter', section + '.on_limit must be error or truncate')
+        rows = report_policy.get('max_rows_per_collection', REPORT_V3['max_rows_per_collection'])
+        if type(rows) is not int or not 1 <= rows <= REPORT_ROWS_MAX:
+            raise ConfigError('api_parameter', f'report.max_rows_per_collection: expected integer 1..{REPORT_ROWS_MAX}')
     effective_api = dict(api, records={**defaults, **records})
+    if api['schema'] == 3:
+        effective_api.update(journal={**JOURNAL_V3, **policy}, report={**REPORT_V3, **report_policy})
     effective = dict(target=target, api=effective_api, image=image, data=data)
     return Configuration(freeze(effective), freeze(props), session_sha,
                          MappingProxyType(dict(raw_documents, session=session_raw)), results.get("capture", False), catalog)

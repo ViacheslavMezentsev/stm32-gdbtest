@@ -10,11 +10,12 @@ from collections.abc import Sequence
 from stm32_gdbtest.report_codec import pack, expand, canonical
 from stm32_gdbtest.errors import ApiError, error_summary
 from stm32_gdbtest import evidence
+from stm32_gdbtest.configuration import REPORT_ROWS_MAX
 
 COLLECTIONS = ('checks', 'stops', 'mutations', 'evaluations', 'executions', 'resets')
 BLOCK_ROWS = 128
 PENDING_BYTES = 1024 * 1024
-MAX_ROWS = 65536
+MAX_ROWS = REPORT_ROWS_MAX
 MAX_DEFERRED = 128
 FILE_BYTES = 16 * 1024 * 1024
 EXPANDED_BYTES = 64 * 1024 * 1024

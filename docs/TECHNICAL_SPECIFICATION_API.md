@@ -5,12 +5,19 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION_API.md |
-| **Ревизия** | 0.3.28 (A3.1: строгая полнота, кандидат 0.6.0) |
+| **Ревизия** | 0.3.29 (A3.2: конфигурация, кандидат 0.6.0) |
 | **Дата формирования** | 28.10.2026 |
 | **Метод формирования** | Обратная разработка неизменённого Target API v0.1.0-rc.2, перенос контрактов из общего ТЗ 0.58 и решения владельца Q1/Q2/Q16–Q20 от 03.10.2026 и Q1–Q5, Q6–Q9, Q10 и Q11 от 05.10.2026; приведение к целевому первому пакету и пакету 0.3.0 |
 | **Целевая платформа** | Python внутри GDB; STM32 Cortex-M по профилю и подтверждённой конфигурации; Windows/Linux |
 | **Связанные документы** | [Общее ТЗ](TECHNICAL_SPECIFICATION.md), [руководство API](ru/API.md), аудит расширений |
 | **Связанные файлы кода** | stm32_gdbtest/target.py, __init__.py, agent.py, collect.py |
+
+### Изменения ревизии 0.3.29
+
+| Пункт | Изменение |
+| --- | --- |
+| 4.9.11 | Schema 3: квоты, политики и перенос конфигурации |
+| Разделы проверок | TC-40: host Windows/Linux, без плат |
 
 ### Изменения ревизии 0.3.28
 
@@ -119,6 +126,7 @@
 | 0.3.26 | 27.10.2026 | A2.2: lossless история, позднее преобразование и независимость проверок от вывода. |
 | 0.3.27 | 28.10.2026 | A2.3: проверяемые сводки без потери исходных событий. |
 | 0.3.28 | 28.10.2026 | A3.1: строгая полнота и независимые счётчики проверок. |
+| 0.3.29 | 28.10.2026 | A3.2: schema 3, runner/pack и граница исполнения. |
 
 ### Изменения ревизии 0.3.22
 
@@ -979,6 +987,18 @@ state и границы потерь по хранилищам, отдельны
 в старом файле НЕ ДОЛЖНО считаться новой гарантией полноты. Усечение и новые квоты
 этим требованием НЕ вводятся. `(р.0.3.28)`
 
+4.9.11. [U] API schema 3 ДОЛЖНА принимать journal/report.on_limit=error|truncate
+(default error) и report.max_rows_per_collection (default/maximum 65536, minimum 1),
+сохраняя бюджеты records схемы 2. Значения квот ДОЛЖНЫ быть целыми без bool, в пределах
+схемы; неизвестные ключи records/journal/report ДОЛЖНЫ отклоняться. Прикладные разделы
+остаются данными. Schema 1/2 НЕ ДОЛЖНЫ получать новые defaults или принимать новые ключи.
+Снимок ДОЛЖЕН содержать применённые defaults; capsule/pack ДОЛЖНЫ переносить исходные
+TOML с хешами и отпечатком defaults/максимумов/политик, повторно проверяя их при чтении.
+Runner ДОЛЖЕН показывать применённые настройки в api_policy. До реализации хранилищ
+исполнение schema 3 ДОЛЖНО отклоняться с api_execution_unsupported до захвата отладчика
+и запуска сервера; inspect/prepare/pack разрешены. Этот этап НЕ реализует усечение
+или применение новой квоты во время исполнения. `(р.0.3.29)`
+
 ### 4.10. Чтение records
 
 4.10.1. `records(name=None) -> list[dict]` ДОЛЖЕН возвращать глубокие независимые
@@ -1456,6 +1476,7 @@ code=unsupported_backend, stage=validation, effect=none. Чистый новый
 | TC-37 | T: tests/host/test_report_data.py; D: tests/renode-backend/run_report.py | Full/compact, завершённые stop/write, средний FAIL, вывод и ошибки аудита; Windows/Linux без плат (р.0.3.26) |
 | TC-38 | T: tests/host/test_report_summary.py; D: tests/renode-backend/run_report.py --summary | Источники, средний FAIL, поколения, неполнота и все уровни вывода (р.0.3.27) |
 | TC-39 | A3.1: потеря строки FAIL, строгий журнал, резерв, повреждение метаданных | Host и Renode Windows/Linux: ожидаемые FAIL/ERROR, cleanup, повтор |
+| TC-40 | Schema 3: квоты, hash/fingerprint, package и prepare | Host Windows/Linux; исполнение отказано до доступа к цели |
 | TC-34 | T: tests/host/test_execution_dispatch.py; D: tests/renode-backend/run.py | Lazy/await, таймаут, вызов, выражения, очистка и sync-регрессии (р.0.3.23) |
 | TC-33 | T: tests/host/test_live_execution.py; D: tests/renode-backend/run.py | Ожидание/interrupt/гонки, ошибки и совместимость; Windows/Linux, без платы (р.0.3.22) |
 | TC-32 | D/I: docs/ru/API_ACCEPTANCE.md, ручная аппаратная квалификация | Шесть MCU, 141 проверка; полные снимки, CPU и recovery; аппаратные отказы транспорта не заявляются (р.0.3.21) |
@@ -1514,6 +1535,7 @@ code=unsupported_backend, stage=validation, effect=none. Чистый новый
 | 4.9.8 | target.py, report_data.py, execution.py | TC-37 (T/D) (р.0.3.26) |
 | 4.9.9 | configuration.py, report_summary.py, agent.py | TC-38 (T/D) (р.0.3.27) |
 | 4.9.10 | `stm32_gdbtest/evidence.py`, `report_data.py`, `scenario.py` | TC-39; `tests/host/test_evidence.py`, `tests/renode-backend/run_report.py` |
+| 4.9.11 | `configuration.py`, `config_transport.py`, `runner.py`, `package.py` | TC-40; `tests/host/test_policy_config.py` |
 | 4.9.7, 4.10.3, 6.3, 6.4 | compact_records.py, configuration.py, result_capture.py | TC-36 (T/D) (р.0.3.25) |
 | 4.23.1, 4.23.2, 4.23.3, 4.23.4, 4.23.5, 4.23.6 | dispatch.py, expression.py, target.py | TC-34 (р.0.3.23) |
 | 4.22.1, 4.22.2, 4.22.3, 4.22.4, 4.22.5, 4.22.6 | execution.py, target.py; test_live_execution.py | TC-33 (р.0.3.22) |

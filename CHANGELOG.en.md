@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- A3.2 configuration: API schema 3 budgets/policies and runner/package transport; execution is gated until storage support lands. Dedicated journaling guide and Pages card.
+
 - A3.1: strict completeness, independent check accounting, bounded diagnostic reserve and reader validation; lost evidence blocks DDTT confirmation, without enabling truncation.
 
 - A2.3: console="summary", verifiable offline views with source hashes, groups and references; partial analysis and summary errors remain separate from scenario verdicts.

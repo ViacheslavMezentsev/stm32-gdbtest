@@ -75,7 +75,12 @@ class SiteBuildTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='stm32-gdbtest-pages-') as temp:
             output = build(Path(temp).resolve())   # Windows: 8.3 temp names differ from resolved ones
             docs = {p: Document(p.read_text(encoding='utf-8')) for p in output.rglob('*.html')}
-            self.assertEqual(len(docs), 2 * (3 + len(content.API)))
+            self.assertEqual(len(docs), 2 * (4 + len(content.API)))
+            for suffix in ('index.html', 'index.en.html'):
+                home=(output/suffix).read_text(encoding='utf-8')
+                self.assertIn(f'href="journal/{suffix}"',home)
+                self.assertLess(home.index(f'href="api/{suffix}"'), home.index(f'href="journal/{suffix}"'))
+                self.assertIn('JOURNALING.md',(output/'journal'/suffix).read_text(encoding='utf-8'))
             for path, doc in docs.items():
                 self.assertEqual(doc.h1, 1, str(path))
                 self.assertEqual(doc.lang, 'en' if path.name == 'index.en.html' else 'ru', str(path))

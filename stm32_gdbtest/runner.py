@@ -14,7 +14,7 @@ import time
 import traceback
 
 from stm32_gdbtest.backends import load_stand, server_spec
-from stm32_gdbtest.configuration import capture, thaw
+from stm32_gdbtest.configuration import capture, thaw, require_execution_supported
 from stm32_gdbtest.config_transport import dumps
 from stm32_gdbtest.processes import FLAGS, probe_identity, probe_lock, spawn_options, stop_tree
 from stm32_gdbtest import remote as remote_host
@@ -111,6 +111,11 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
             if stand.get("remote"):
                 report["server_host"] = stand["remote"]["host"]
         configuration = capture(session, image_policy=image_policy)
+        report['api_policy'] = {key: thaw(configuration.config['api'][key])
+                                for key in ('schema', 'records', 'journal', 'report')
+                                if key in configuration.config['api']}
+        if not prepare_only:
+            require_execution_supported(configuration)
         capture_enabled = configuration.capture_results
         session = dict(session, _configuration=configuration)
         profile = thaw(configuration.config['target'])

@@ -155,3 +155,5 @@ Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
 [Counters and observation cost](../../tests/counter-cost/README.en.md).
 
 [Joint capture and analysis](../../tests/external-capture/README.en.md).
+
+[Journaling](JOURNALING.md): sources, budgets, completeness, routes and schema 3 availability (configuration only for now).

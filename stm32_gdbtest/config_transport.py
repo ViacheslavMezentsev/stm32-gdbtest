@@ -5,11 +5,16 @@ import hashlib
 import json
 from pathlib import Path
 
-from stm32_gdbtest.configuration import ConfigError, DEFAULTS, DEFAULTS_V2, MAXIMUMS_V2, load_session, load_legacy
+from stm32_gdbtest.configuration import ConfigError, DEFAULTS, DEFAULTS_V2, MAXIMUMS_V2, JOURNAL_V3, REPORT_V3, REPORT_ROWS_MAX, load_session, load_legacy
 
 
 def fingerprint(schema=1):
+    if schema not in (1, 2, 3) or type(schema) is not int:
+        raise ConfigError('api_schema', 'unsupported fingerprint schema')
     limits = dict(DEFAULTS) if schema == 1 else dict(current=DEFAULTS_V2, maximum=MAXIMUMS_V2)
+    if schema == 3:
+        limits = dict(api_schema=3, records=limits, journal=dict(JOURNAL_V3), report=dict(REPORT_V3),
+                      report_rows_max=REPORT_ROWS_MAX, policies=['error', 'truncate'])
     return hashlib.sha256(json.dumps(limits, sort_keys=True).encode()).hexdigest()
 
 
@@ -34,7 +39,7 @@ def loads(text):
         data = json.loads(text, object_pairs_hook=unique)
         if (set(data) != {"format", "schema", "defaults", "files", "references"}
                 or data["format"] != "stm32-gdbtest-config" or type(data["schema"]) is not int
-                or data["schema"] not in (1, 2) or data["defaults"] not in (fingerprint(), fingerprint(2))):
+                or data["schema"] not in (1, 2) or data["defaults"] not in (fingerprint(), fingerprint(2), fingerprint(3))):
             raise ValueError("incompatible capsule or defaults")
         files = data["files"]
         if not {"target"} <= set(files) or {name for name in set(files) - {"session", "target", "api", "image", "svd"}

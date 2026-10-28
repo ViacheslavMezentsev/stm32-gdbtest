@@ -22,7 +22,7 @@ from stm32_gdbtest.identity import check_target
 from stm32_gdbtest.image import compare_regions, validate_regions
 from stm32_gdbtest.full_image import compare_full, validate_image
 from stm32_gdbtest.config_transport import loads
-from stm32_gdbtest.configuration import thaw
+from stm32_gdbtest.configuration import thaw, require_execution_supported
 from stm32_gdbtest.result_capture import save as save_records
 from stm32_gdbtest.scenario import ScenarioSkipped, invoke, invoke_async
 from stm32_gdbtest.reports import CODES
@@ -46,6 +46,8 @@ async def main():
     adapter = arch.adapter(session.get("arch"))
     try:
         configuration = loads(session['configuration']) if session.get('configuration') else None
+        if configuration is not None:
+            require_execution_supported(configuration)
         if configuration and (thaw(configuration.config['target']) != profile or
                 (thaw(configuration.config['image']['image']) if configuration.config['image'] else None)
                 != session.get('full_image_policy')):
