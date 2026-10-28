@@ -726,3 +726,13 @@ consumption, the next input and an unaffected neighbour. `override` replaces the
 SVD description, not device behavior: an ignored IDR write may receive an ACK.
 Preserve the false claim as FAIL; separate analysis checks the expected lack of effect.
 Restore both firmware state and external input. The model proves no electrical/timing properties.
+
+## Buffer and repeated consumption (A5.3)
+
+The [executable example](../../tests/buffer-consumption/README.en.md) places a prepared packet
+in an experiment-owned buffer and calls the handler through `Pointer` with the exact length.
+Check the return value and handler state, the order of two packets, a rejected packet and
+the next one, a nested call during ordinary processing and the next ordinary packet.
+Writing the buffer without a call is not consumption: that control stays FAIL. A `Pointer`
+longer than the DWARF array is refused before the call (`argument_range`). Snapshot and
+restore the whole experiment section. DMA, interrupt context and peripheral reception are not tested.

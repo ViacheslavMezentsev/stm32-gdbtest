@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- A5.3: teaching packet buffer with a Pointer handler call, ordering, rejection, re-entry, early bound refusal and full restoration; host/Renode, no core changes or hardware.
+
 - A5.2: teaching GPIO with external input, firmware consumption and override negative control; host/Renode, no core changes or hardware.
 
 - A5.1: neutral SRAM/ret example with consumption checks, negative controls and full restoration; host/Renode, no core changes or hardware.
