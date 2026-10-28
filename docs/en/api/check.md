@@ -127,3 +127,5 @@ scenario independently (TECH-001).
 - [Matchers](matchers.md), [read](read.md), [evaluate](evaluate.md).
 
 Compact result storage and console control do not remove checks; see [result journal](../API.md#result-journal-and-output-060-candidate-a22).
+
+`console="summary"` never drops checks. Middle failures and differing expectations remain visible; summaries do not confirm DDTT claims.

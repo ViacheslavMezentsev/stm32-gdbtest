@@ -201,3 +201,7 @@ A2.1 candidate: the common reader accepts records schema 2 and schema 1. Records
 
 Use `stm32_gdbtest.report_data.read` instead of plain json.load.
 See [API](API.md#result-journal-and-output-060-candidate-a22) for schemas, output policies and budgets.
+
+## A2.3: summary.json
+
+[API: console="summary", offline build/verify](API.md#summaries-and-output-levels-a23-060-candidate).

@@ -5,12 +5,19 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION_API.md |
-| **Ревизия** | 0.3.26 (A2.2: завершённые события, кандидат 0.6.0) |
-| **Дата формирования** | 27.10.2026 |
+| **Ревизия** | 0.3.27 (A2.3: сводки, кандидат 0.6.0) |
+| **Дата формирования** | 28.10.2026 |
 | **Метод формирования** | Обратная разработка неизменённого Target API v0.1.0-rc.2, перенос контрактов из общего ТЗ 0.58 и решения владельца Q1/Q2/Q16–Q20 от 03.10.2026 и Q1–Q5, Q6–Q9, Q10 и Q11 от 05.10.2026; приведение к целевому первому пакету и пакету 0.3.0 |
 | **Целевая платформа** | Python внутри GDB; STM32 Cortex-M по профилю и подтверждённой конфигурации; Windows/Linux |
 | **Связанные документы** | [Общее ТЗ](TECHNICAL_SPECIFICATION.md), [руководство API](ru/API.md), аудит расширений |
 | **Связанные файлы кода** | stm32_gdbtest/target.py, __init__.py, agent.py, collect.py |
+
+### Изменения ревизии 0.3.27
+
+| Пункт | Изменение |
+| --- | --- |
+| 4.9.9 | Производные сводки, уровни вывода и границы свидетельств |
+| Разделы проверок | TC-38: host/Renode Windows/Linux без плат |
 
 ### Изменения ревизии 0.3.26
 
@@ -103,6 +110,7 @@
 | 0.3.24 | 27.10.2026 | A1: диагностика лимитов, независимые ошибки и reason. |
 | 0.3.25 | 27.10.2026 | A2.1: компактный MMIO, раскрытие, бюджеты схемы 2. |
 | 0.3.26 | 27.10.2026 | A2.2: lossless история, позднее преобразование и независимость проверок от вывода. |
+| 0.3.27 | 28.10.2026 | A2.3: проверяемые сводки без потери исходных событий. |
 
 ### Изменения ревизии 0.3.22
 
@@ -940,6 +948,18 @@ path (до 256), maximum, used, attempted, attempted_lower_bound. Used — ра�
 превышение — явный отказ, не усечение. Общий транспорт — общее ТЗ 5.3.12. (р.0.3.26)
 
 
+4.9.9. [U] console="summary" в api schema 2 ДОЛЖЕН менять только представление,
+сохраняя все проверки и исходные события. Сводка ДОЛЖНА строиться общими читателями
+после сохранения result/records, иметь schema=1, derived=true, SHA-256 источников,
+ссылки на события и явное состояние анализа complete/partial; отсутствие данных
+НЕ ДОЛЖНО считаться нулевым исполнением. Ошибка построения ДОЛЖНА сохраняться отдельно,
+не менять исход сценария, давать код команды 2 и представление unavailable. Повторная
+проверка ДОЛЖНА отвергать устаревшую/изменённую сводку. First/last НЕ ДОЛЖНЫ заменять
+историю, wait-timeout НЕ ДОЛЖЕН закрывать окно; поколения не смешиваются. Представление
+ограничено 100 группами коллекции, 20 ссылками группы, 100 окнами и 1 MiB файла;
+скрытая часть ДОЛЖНА обозначаться счётчиком, все исходные данные сохраняются.
+Сводки НЕ ДОЛЖНЫ использоваться как самостоятельное подтверждение DDTT. (р.0.3.27)
+
 ### 4.10. Чтение records
 
 4.10.1. `records(name=None) -> list[dict]` ДОЛЖЕН возвращать глубокие независимые
@@ -1415,6 +1435,7 @@ code=unsupported_backend, stage=validation, effect=none. Чистый новый
 | TC-35 | T: tests/host/test_records.py, test_mmio.py, test_live_execution.py; D: tests/renode-backend/run.py, tests/mmio-renode/run.py | A1: первичный отказ, аудит, лимиты, reason, cleanup (р.0.3.24) |
 | TC-36 | T: tests/host/test_compact_records.py; D: tests/mmio-renode/run.py --compact и --benchmark | Равенство full/compact, границы, ссылки, захват, 1000/10000 операций (р.0.3.25) |
 | TC-37 | T: tests/host/test_report_data.py; D: tests/renode-backend/run_report.py | Full/compact, завершённые stop/write, средний FAIL, вывод и ошибки аудита; Windows/Linux без плат (р.0.3.26) |
+| TC-38 | T: tests/host/test_report_summary.py; D: tests/renode-backend/run_report.py --summary | Источники, средний FAIL, поколения, неполнота и все уровни вывода (р.0.3.27) |
 | TC-34 | T: tests/host/test_execution_dispatch.py; D: tests/renode-backend/run.py | Lazy/await, таймаут, вызов, выражения, очистка и sync-регрессии (р.0.3.23) |
 | TC-33 | T: tests/host/test_live_execution.py; D: tests/renode-backend/run.py | Ожидание/interrupt/гонки, ошибки и совместимость; Windows/Linux, без платы (р.0.3.22) |
 | TC-32 | D/I: docs/ru/API_ACCEPTANCE.md, ручная аппаратная квалификация | Шесть MCU, 141 проверка; полные снимки, CPU и recovery; аппаратные отказы транспорта не заявляются (р.0.3.21) |
@@ -1471,6 +1492,7 @@ code=unsupported_backend, stage=validation, effect=none. Чистый новый
 | 4.21.6 | docs/ru/API_ACCEPTANCE.md; ручная квалификация | TC-32 (р.0.3.21) |
 | 4.9.6, 4.21.3, 4.21.5, 4.22.7 | records.py, mmio.py, execution.py, agent.py | TC-35 (T/D) (р.0.3.24) |
 | 4.9.8 | target.py, report_data.py, execution.py | TC-37 (T/D) (р.0.3.26) |
+| 4.9.9 | configuration.py, report_summary.py, agent.py | TC-38 (T/D) (р.0.3.27) |
 | 4.9.7, 4.10.3, 6.3, 6.4 | compact_records.py, configuration.py, result_capture.py | TC-36 (T/D) (р.0.3.25) |
 | 4.23.1, 4.23.2, 4.23.3, 4.23.4, 4.23.5, 4.23.6 | dispatch.py, expression.py, target.py | TC-34 (р.0.3.23) |
 | 4.22.1, 4.22.2, 4.22.3, 4.22.4, 4.22.5, 4.22.6 | execution.py, target.py; test_live_execution.py | TC-33 (р.0.3.22) |

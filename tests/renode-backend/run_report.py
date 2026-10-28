@@ -15,6 +15,7 @@ p = argparse.ArgumentParser()
 p.add_argument('--toolchain', type=Path, required=True)
 p.add_argument('--renode', required=True)
 p.add_argument('--storage-only', action='store_true')
+p.add_argument('--summary', action='store_true', help='Also compare summary output in full and compact storage')
 a = p.parse_args()
 b = Path(__file__).resolve().parent
 out = ROOT / 'build/report-renode' / datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
@@ -34,10 +35,13 @@ import time
 cases = {t['id']:t for t in collect([b])}
 results=[]
 reference={}
-for representation, console in ([('compact','failures')] if a.storage_only else [('full','full'),('compact','failures')]):
-    api=out/(representation+'-api.toml')
+modes = [('compact','failures')] if a.storage_only else [('full','full'),('compact','failures')]
+if a.summary:
+    modes += [('full','summary'),('compact','summary')]
+for representation, console in modes:
+    api=out/(representation+'-'+console+'-api.toml')
     api.write_text('schema = 2\n[report]\nrepresentation = "'+representation+'"\nconsole = "'+console+'"\n',encoding='utf-8')
-    config=out/(representation+'-session.toml')
+    config=out/(representation+'-'+console+'-session.toml')
     config.write_text('[config]\ntarget = '+json.dumps((b/'target.toml').as_posix())+'\napi = '+json.dumps(api.as_posix())+'\n[results]\ncapture = true\n',encoding='utf-8')
     session['session_config']=str(config)
     for name, expected in [('HW_REPORT_1000','PASS'),('HW_REPORT_10000','PASS'),('HW_REPORT_SWALLOWED','FAIL'),('HW_REPORT_LIVE','PASS'),('HW_REPORT_UNEXPECTED','FAIL'),('HW_REPORT_1000','PASS')] + ([('HW_REPORT_STORAGE','FAIL')] if representation=='compact' else []):
@@ -58,7 +62,16 @@ for representation, console in ([('compact','failures')] if a.storage_only else 
                 ok=ok and result.get('report_audit_error_count')==1 and bool(result.get('report_storage_error')) and 'primary storage control' in result.get('error','')
             log=(latest.parent/'gdb.log').read_text(encoding='utf-8',errors='replace')
             ok=ok and 'PASS sequence' not in log
-        item=dict(case=name,representation=representation,status=result['status'],ok=ok,elapsed_s=elapsed,bytes=latest.stat().st_size,checks=len(result.get('checks',[])),result=str(latest.relative_to(out)))
+        if console == 'summary':
+            from stm32_gdbtest.report_summary import read as read_summary
+            view = read_summary(latest)
+            ok = ok and view['verdicts']['status'] == expected and view['collections']['checks']['total'] == len(result.get('checks', []))
+            if name == 'HW_REPORT_SWALLOWED':
+                ok = ok and view['collections']['checks']['failed'] == 1
+            if name == 'HW_REPORT_STORAGE':
+                ok = ok and view['analysis'] == 'partial'
+            ok = ok and 'PASS sequence' not in (latest.parent/'gdb.log').read_text(encoding='utf-8', errors='replace')
+        item=dict(case=name,console=console,representation=representation,status=result['status'],ok=ok,elapsed_s=elapsed,bytes=latest.stat().st_size,checks=len(result.get('checks',[])),result=str(latest.relative_to(out)))
         results.append(item)
         print(json.dumps(item),flush=True)
         (out/'summary.json').write_text(json.dumps(results,indent=2),encoding='utf-8')

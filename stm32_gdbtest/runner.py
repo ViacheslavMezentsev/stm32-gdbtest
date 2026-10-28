@@ -143,7 +143,9 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
     finalize_capture(out, report, capture_enabled)
     if report.get("report_storage_error") or report.get("report_audit_error_count"):
         report["command_code"] = 2
-    write_reports(out, report)
+    derived = write_reports(out, report)
+    if derived is not None:
+        print(json.dumps(derived, ensure_ascii=False))
     for warning in report.get("warnings", []):
         print("WARNING: " + warning)
     print(f"{report['status']} {test['id']}: {out / 'result.json'}")

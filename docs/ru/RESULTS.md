@@ -206,3 +206,7 @@ UNKNOWN с сохранением исходного значения в под�
 
 Используйте общий читатель `stm32_gdbtest.report_data.read`, а не прямой json.load.
 Схемы, режимы вывода и пределы описаны в [API](API.md#журнал-отчёта-и-вывод-кандидат-060-a22).
+
+## A2.3: summary.json
+
+[API: console="summary", offline build/verify](API.md#сводки-и-уровни-вывода-a23-кандидат-060).

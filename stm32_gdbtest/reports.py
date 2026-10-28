@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from stm32_gdbtest import report_data
+from stm32_gdbtest.errors import error_summary
 
 
 CODES = {"PASS": 0, "FAIL": 1, "ERROR": 2, "SKIP": 77}
@@ -18,8 +19,20 @@ def write_reports(directory, report):
         fallback['checks'] = []
         report_data.write(directory / 'result.json', fallback, compact=False)
     output_report = fallback if "fallback" in locals() else report
+    derived = None
+    if report.get('report_policy', {}).get('console') == 'summary':
+        from stm32_gdbtest import report_summary
+        try:
+            derived = report_summary.write(directory / 'result.json')
+        except Exception as cause:
+            report['summary_error'] = error_summary(cause)
+            report['command_code'] = 2
+            output_report.update(summary_error=report['summary_error'], command_code=2)
+            report_data.write(directory / 'result.json', output_report)
+            derived = dict(schema=1, derived=True, analysis='unavailable',
+                           summary_error=report['summary_error'], status=report['status'], command_code=2)
     status = report["status"]
-    artifact = report.get("artifact_error") or report.get("report_storage_error")
+    artifact = report.get("artifact_error") or report.get("report_storage_error") or report.get("summary_error")
     if not artifact and report.get("report_audit_error_count"):
         artifact = dict(type="ReportAuditError", message="Completed report evidence is incomplete")
     suite = ET.Element("testsuite", name="hwtest", tests=str(1 + int(bool(artifact))),
@@ -33,8 +46,10 @@ def write_reports(directory, report):
     elif status != "PASS":
         node = ET.SubElement(case, "failure" if status == "FAIL" else "error", message=status)
         node.text = report.get("error", "") + "\n" + report.get("teardown_error", "")
-    output = (report_data.summary(output_report) if report.get('report_policy', {}).get('console') == 'failures'
+    output = (report_data.summary(output_report) if report.get('report_policy', {}).get('console') in ('failures', 'summary')
               else report_data.payload(output_report, False))
+    if derived is not None:
+        output = derived
     ET.SubElement(case, "system-out").text = json.dumps(output, indent=2)
     if artifact:
         infrastructure = ET.SubElement(suite, "testcase", classname="infrastructure",
@@ -42,3 +57,4 @@ def write_reports(directory, report):
         node = ET.SubElement(infrastructure, "error", message=artifact["message"], type=artifact["type"])
         node.text = json.dumps(report.get("capture", {}), indent=2)
     ET.ElementTree(suite).write(directory / "junit.xml", encoding="utf-8", xml_declaration=True)
+    return derived

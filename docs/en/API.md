@@ -310,3 +310,67 @@ Primary and audit failures remain separate; incomplete history cannot produce PA
 Tests: `tests/host/test_report_data.py`, `tests/renode-backend/run_report.py`.
 The shared reader and full publication also enforce the 16 MiB file limit.
 Full mode retains its structure; JSON whitespace is not part of the contract.
+
+## Summaries and output levels (A2.3, 0.6.0 candidate)
+
+In API schema 2, `[report] console="summary"` adds grouped terminal/JUnit output.
+Existing full/failures levels and the default full remain unchanged. Storage selection
+(full/compact) is independent: every check executes and every event is retained.
+There are no new Target methods and no journal truncation.
+
+The runner builds summary.json (schema 1, derived=true) after publishing final result,
+using the shared result/records readers. Rebuild or verify offline, without GDB:
+
+```console
+python -m stm32_gdbtest.report_summary build/run/result.json
+python -m stm32_gdbtest.report_summary build/run/result.json --verify
+```
+
+The first command explicitly replaces summary.json beside result; the second checks
+schema, source hashes and equality with recomputation. Both print JSON. Python APIs:
+report_summary.build(path) (no writes), write(path), read(path) (validated saved view).
+Offline commands never change source evidence. A failed rebuild removes the old view.
+
+Scenario, capture, cleanup and command outcomes remain separate. Collections contain
+exact counts of **recorded** events, groups and zero-based collection references;
+execution references use records.sequence (one-based). Missing collections say
+not_recorded, not zero physical operations. User measurements are never implicitly
+averaged. Check groups flag different_expectations; a middle FAIL always contributes
+and failed groups/references are prioritized.
+
+analysis=complete means requested sources are available and verified for this view,
+**not** sufficient for a DDTT claim. Missing/corrupt records, audit errors or insufficient
+generation information produce partial with reasons. Runtime execution_summary is not
+used as proof of persisted events. Wait timeout never closes a window; generations
+remain separate. closed denotes an observed stop; opened=false denotes no recorded
+start for that window. Errors without generation remain unresolved. Host time is not
+converted to MCU time.
+
+Presentation limits: 100 groups per collection, 20 references per group, 100 windows;
+omitted counters disclose hidden presentation. Counts include the entire source.
+Labels/diagnostics have 256-character previews, shortened flags and full-text hashes;
+references identify full result fields, and normal error output retains full errors.
+The summary file limit is 1 MiB; result/records budgets are unchanged. Group display
+limits do not bound builder memory independently of input budgets; constant RSS is
+not promised.
+
+Builder/publication failure adds summary_error without changing the scenario verdict
+or events, sets command code 2 and a JUnit infrastructure error. Terminal/JUnit show
+analysis=unavailable. Invalid source-result makes offline CLI fail without a new summary.
+DDTT export still consumes primary evidence; a summary cannot replace ordering, timing
+or restoration checks.
+
+Correct: navigate from a summary to an event and assess its conditions. Incorrect:
+use first/last as complete history, partial as a full journal, or confirm coverage
+from summary status/success counts alone. Tests: tests/host/test_report_summary.py and
+tests/renode-backend/run_report.py --summary.
+
+A2.3 boundary: mutations do not always carry an independent per-operation verdict.
+For non-check collections failed=null means not classified as a check, not zero
+failures. Consult events and diagnostics; mutation counts do not prove successful
+writes/restoration. --verify can successfully validate a partial view: exit 0 confirms
+integrity, not applicability; inspect analysis and issues. JSON types remain distinct.
+
+Counters describe stored rows, not physical events: one stop may appear in multiple
+diagnostic stop entries. No speculative deduplication is performed; physical event
+counts require a separate analysis.

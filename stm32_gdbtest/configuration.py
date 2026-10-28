@@ -184,7 +184,7 @@ def load_session(path, *, profile=None, image_policy=None, environ=None,
     report_policy = api.get('report', {})
     if (type(report_policy) is not dict or set(report_policy) - {'representation', 'console'}
             or report_policy.get('representation', 'full') not in ('full', 'compact')
-            or report_policy.get('console', 'full') not in ('full', 'failures')):
+            or report_policy.get('console', 'full') not in ('full', 'failures', 'summary')):
         raise ConfigError('api_parameter', 'invalid report representation/console')
     if api['schema'] == 1 and report_policy:
         raise ConfigError('api_schema', 'report policy requires schema=2')

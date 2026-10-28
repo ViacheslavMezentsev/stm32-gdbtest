@@ -192,7 +192,7 @@ async def main():
         # A value a scenario put into its checks must not cost the whole report: it is kept as its repr.
         try:
             report_data.write(session['result'], report)
-            output = (report_data.summary(report) if report.get('report_policy', {}).get('console') == 'failures'
+            output = (report_data.summary(report) if report.get('report_policy', {}).get('console') in ('failures', 'summary')
                       else report_data.payload(report, False))
             print(json.dumps(output, default=repr))
         except Exception as cause:
