@@ -30,6 +30,7 @@
 
 - [Начало работы](GETTING_STARTED.md) — требования, проверка без платы, подключение подмодулем.
 - [Написание тестов](TEST_AUTHORING.md) — процесс для человека и ИИ-агента.
+- [Пошаговый проход сценария](MANUAL_DEBUG.md) — `run --interactive`: точки останова, шаги и Debug Console в VS Code без ограничения по времени, BluePill/BlackPill.
 - [API, CLI и миграция](API.md) — CMake, декоратор `case`, Target API, `run`, переход с hwtest.
 
 ## Механизмы

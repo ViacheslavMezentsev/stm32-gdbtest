@@ -30,6 +30,7 @@ the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
 
 - [Getting started](GETTING_STARTED.md) — requirements, checks without a board, submodule integration.
 - [Writing tests](TEST_AUTHORING.md) — the process for people and AI agents.
+- [Stepping through a scenario](MANUAL_DEBUG.md) — `run --interactive`: breakpoints, stepping and the Debug Console in VS Code with no time limit, BluePill/BlackPill.
 - [API, CLI and migration](API.md) — CMake, the `case` decorator, Target API, `run`, migrating from hwtest.
 
 ## Mechanisms
