@@ -7,7 +7,7 @@ verified software substitution methods, offline ROS1 bag import and an interacti
 walk-through in VS Code. The 0.5.1 preparation material is part of this release.
 
 A8 acceptance at `6530395`: Windows/Linux, Renode/QEMU, six MCUs (including the new C++, journal
-and substitution checks on silicon) and the BluePill/BlackPill consumers.
+and substitution checks on real microcontrollers) and the BluePill/BlackPill consumers.
 [Matrix and limits](../development/release-060-acceptance.md) (Russian),
 [release notes](../releases/v0.6.0.md); previous: [0.5.0 acceptance](../development/release-050-acceptance.md),
 [accepted results](API_ACCEPTANCE.md). Evidence belongs to those revisions, not to every current stand.
