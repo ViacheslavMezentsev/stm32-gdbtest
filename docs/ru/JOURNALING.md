@@ -4,8 +4,8 @@
 
 ## 1. Статус возможностей
 
-Это руководство описывает рабочую ветку кандидата 0.6.0. Выпуск 0.5.0 не содержит
-всех перечисленных расширений. A2, A3.1 и применение квот journal A3.2 реализованы.
+Это руководство описывает выпуск 0.6.0; в 0.5.0 перечисленных расширений нет.
+A2, A3.1 и применение квот journal A3.2 реализованы.
 Schema 3 допускает независимые error/truncate и квоты journal/report при исполнении.
 
 ## 2. Что и где хранится
@@ -121,7 +121,7 @@ Evidence хранит attempted/saved/lost и границы потерь по �
 
 ## 8. Явное усечение journal
 
-В кандидате 0.6.0 API schema 3 исполняет `journal.on_limit="error"|"truncate"`.
+В 0.6.0 API schema 3 исполняет `journal.on_limit="error"|"truncate"`.
 Квоты `[records]` ограничивают накопление. При truncate исчерпание records/nodes/text_bytes
 сохраняет только целые записи префикса; после первой потери подробности до конца сценария
 не добавляются. Проверки, MMIO, живое окно и cleanup продолжаются. Полнота становится
@@ -152,7 +152,7 @@ capture, evidence и cleanup; затем применимость данных �
 Примеры отказов: tests/renode-backend/run_report.py; host: test_evidence.py,
 test_policy_config.py; tests/renode-backend/run_journal.py и test_journal_truncate.py. Намеренный ERROR проверяет контракт инструмента, а не MCU.
 
-## A3.2: квоты и усечение report (кандидат 0.6.0)
+## A3.2: квоты и усечение report (0.6.0)
 
 В API schema 3 `report.max_rows_per_collection` применяется отдельно к checks, stops,
 mutations, evaluations, executions и resets в full и compact. Диапазон 1–65536,

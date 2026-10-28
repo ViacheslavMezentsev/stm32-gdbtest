@@ -1,6 +1,6 @@
 ---
 name: stm32-gdbtest-scenarios
-description: Техника написания тестовых сценариев stm32-gdbtest на API_VERSION=3 линии 0.5.x — требование и контракт, выбор места остановки, таблицы check(rows) и write(rows), подмена возврата ret, инъекции, refused, watch/frames, профиль прогона, стиль сценариев и каталог техник TECH-001…026. Используй, когда просят «написать сценарий/тест для платы», «проверить регистр/периферию/callback через GDB», «добавить HW_-кейс», «перевести сценарии с value/set_value/force_return на новый API», «сделать ревью сценария»; по-английски — write a stm32-gdbtest scenario, hardware test case, migrate scenarios to API 3.
+description: Техника написания тестовых сценариев stm32-gdbtest на API_VERSION=3 (линии 0.5.x и 0.6.x) — требование и контракт, выбор места остановки, таблицы check(rows) и write(rows), подмена возврата ret, инъекции, refused, watch/frames, профиль прогона, стиль сценариев и каталог техник TECH-001…026. Используй, когда просят «написать сценарий/тест для платы», «проверить регистр/периферию/callback через GDB», «добавить HW_-кейс», «перевести сценарии с value/set_value/force_return на новый API», «сделать ревью сценария»; по-английски — write a stm32-gdbtest scenario, hardware test case, migrate scenarios to API 3.
 license: MIT
 compatibility: stm32-gdbtest 0.6.0 (API_VERSION 3); Python 3.11+, GDB с Python 3.11+ (arm-none-eabi-gdb-py3); плата нужна только для прогона, prepare выполняется без неё
 metadata:
@@ -218,7 +218,7 @@ wait и halt требуют await и конечного timeout; timeout wait н
 повтор и полное восстановление объекта. Ресурс также задаёт границы переноса
 на DMA, логическое время и внешние свидетели. Renode подтверждает модель, не плату.
 
-## Нейтральные примеры 0.5.x
+## Нейтральные примеры (0.5.0 и новее)
 
 Для порогов и retry используй logical-time; для wrap счётчика и baseline — counter-cost;
 для записи другого источника — external-capture. [Нейтральные маршруты](references/neutral-workflows.md)
@@ -228,3 +228,5 @@ wait и halt требуют await и конечного timeout; timeout wait н
 ## Маршруты 0.6.0
 
 Карта пакетов A1–A6 с командами, критерием приёмки и парами «правильно/неправильно» — [release-060-routes](references/release-060-routes.md).
+Пошаговый проход сценария в VS Code при его написании — `run --interactive`
+([ручная отладка](../../docs/ru/MANUAL_DEBUG.md)); результат такого прогона не является свидетельством приёмки.

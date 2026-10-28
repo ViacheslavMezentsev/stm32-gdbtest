@@ -3,7 +3,7 @@
 [Documentation](index.md) · [Русский](../ru/DDTT_COVERAGE.md)
 
 The external `tools/ddtt_coverage.py` tool projects saved check results into LCOV.
-This example package targets 0.5.x; the core, Target API and result.json format are unchanged.
+This example package targets 0.5.0 and later; the core, Target API and result.json format are unchanged.
 The developer supplies each association: **scenario → check name → source line**.
 
 ## Colour semantics

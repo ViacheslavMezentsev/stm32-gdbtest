@@ -76,7 +76,7 @@ variants ([checks and CI](testing.md)).
 
 `functions` and `type_context` accept `Probe::add`, `Probe::twice` and
 `demo::increment` when `lookup_global_symbol` finds the function in the selected ELF.
-The 0.6.0 candidate also supports namespace/static through [call](api/call.md); A4.2 adds explicit this and exact signature for a restricted instance-method subset.
+Version 0.6.0 also supports namespace/static through [call](api/call.md); A4.2 adds explicit this and exact signature for a restricted instance-method subset.
 
 Types retain qualifiers at each level: `Probe * const` is a const pointer to a mutable
 object; `const Probe *` points to a const object; `const Probe * const` has both

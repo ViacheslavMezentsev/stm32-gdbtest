@@ -2,11 +2,13 @@
 
 [Документация / Documentation](../index.md) · [API](../API.md) · [Русский](../../ru/api/index.md)
 
-Methods of the `t` object (Target), decorators and errors of release 0.5.0, API_VERSION=3. Each entry gives the first release where it is available and the API 3 changes. Compatible 0.3.x–0.4.x scenarios run unchanged, except for [removed names](#removed-names) and [hidden function calls in expressions](../MIGRATION_050.md).
+Methods of the `t` object (Target), decorators and errors of release 0.6.0, API_VERSION=3. Each entry gives the first release where it is available and the API 3 changes (changes of this release are marked "0.6.0"). Compatible 0.3.x–0.4.x scenarios run unchanged, except for [removed names](#removed-names) and [hidden function calls in expressions](../MIGRATION_050.md).
 
 The same groups with "recommended" and "avoid" examples are on the [reference site](https://viacheslavmezentsev.github.io/stm32-gdbtest/api/index.en.html).
 
 **API 3 in short.** An ordinary def runs operations in order. In async def, navigation (reach, step, until, finish, resume, reset) and call are awaited; resume(sync=False) lets the target go and await wait/halt wait with a timeout. Reads, writes, checks and journal records need no await. Expressions never call target functions.
+
+**What changed in 0.6.0.** API_VERSION stays 3 and new features are opt-in: `call` accepts `this=`, `signature=` and `Pointer`/`Reference` arguments for C++; `records()` refuses an incomplete journal by default (`require_complete=True`); journal/report quotas (api schema 3) and separate execution and audit errors in `resume`/`wait`/`halt` and `mmio`. See [journaling](../JOURNALING.md) and [moving to 0.6.0](../VERSIONING.md#moving-to-060).
 
 ## Scenario: def and async def
 
@@ -34,9 +36,9 @@ Let the target run, wait for a stop with a timeout, halt with confirmation.
 
 | Entry | Signature | Available since | API 3 |
 | --- | --- | --- | --- |
-| [resume](resume.md) | `resume(*, sync=True) -> dict` | 0.3.0 | sync=False — 0.5.0 |
-| [wait](wait.md) | `await wait(*, timeout) -> dict` | 0.5.0 | async only |
-| [halt](halt.md) | `await halt(*, timeout) -> dict` | 0.5.0 | async only |
+| [resume](resume.md) | `resume(*, sync=True) -> dict` | 0.3.0 | sync=False — 0.5.0; separate audit error — 0.6.0 |
+| [wait](wait.md) | `await wait(*, timeout) -> dict` | 0.5.0 | async only; separate audit error — 0.6.0 |
+| [halt](halt.md) | `await halt(*, timeout) -> dict` | 0.5.0 | async only; separate audit error — 0.6.0 |
 
 ## Data: read and write
 
@@ -63,7 +65,7 @@ One direct request to a register named in the SVD snapshot, with access-right an
 
 | Entry | Signature | Available since | API 3 |
 | --- | --- | --- | --- |
-| [mmio.read, mmio.write](mmio.md) | `mmio.read(name, *, allow_effects=False) -> int; mmio.write(name, value, *, allow_effects=False) -> dict` | 0.5.0 | new |
+| [mmio.read, mmio.write](mmio.md) | `mmio.read(name, *, allow_effects=False) -> int; mmio.write(name, value, *, allow_effects=False) -> dict` | 0.5.0 | new; double refusal — 0.6.0 |
 
 ## Checks: check, matchers, refused
 
@@ -71,7 +73,7 @@ A named check or a table of checks; an expected API refusal with its code.
 
 | Entry | Signature | Available since | API 3 |
 | --- | --- | --- | --- |
-| [check](check.md) | `check(name, actual, expected=True); check(rows) -> int` | 0.1.0-rc.1¹ | no calls in expressions |
+| [check](check.md) | `check(name, actual, expected=True); check(rows) -> int` | 0.1.0-rc.1¹ | no calls in expressions; quotas — 0.6.0 |
 | [within, near, one_of, matches](matchers.md) | `within(low, high), near(value, tolerance), one_of(*options), matches(pattern)` | 0.3.0 | unchanged |
 | [refused](refused.md) | `with refused(code, *, name=None, **details) as refusal` | 0.3.0 | unchanged |
 
@@ -82,7 +84,7 @@ Replace the return of the current function; call a firmware function and get its
 | Entry | Signature | Available since | API 3 |
 | --- | --- | --- | --- |
 | [ret](ret.md) | `ret(value=None) -> dict` | 0.3.0 | unchanged |
-| [call](call.md) | `call(function, *args, this=None, signature=None, timeout=None) -> dict` | 0.3.0 | await in async; timeout= |
+| [call](call.md) | `call(function, *args, this=None, signature=None, timeout=None) -> dict` | 0.3.0 | await in async; timeout=; this, signature, Pointer/Reference — 0.6.0 |
 
 ## Points: breakpoint, watch, Point, clear
 
@@ -101,8 +103,8 @@ Arbitrary data into the report; selecting your records; ending a non-applicable 
 
 | Entry | Signature | Available since | API 3 |
 | --- | --- | --- | --- |
-| [record](record.md) | `record(name, data) -> None` | 0.3.0 | unchanged |
-| [records](records.md) | `records(name=None, *, require_complete=True) -> list[dict]` | 0.3.0 | unchanged |
+| [record](record.md) | `record(name, data) -> None` | 0.3.0 | journal quotas — 0.6.0 |
+| [records](records.md) | `records(name=None, *, require_complete=True) -> list[dict]` | 0.3.0 | require_complete — 0.6.0 |
 | [skip](skip.md) | `skip(reason) -> NoReturn` | 0.4.0 | unchanged |
 
 ## Context: profile, registers, frames, locals
@@ -133,7 +135,7 @@ An operation refusal with code, stage and effect; a failed check; a journal erro
 | --- | --- | --- | --- |
 | [ApiError](api-error.md) | `ApiError: details, code, __cause__` | 0.3.0 | new codes |
 | [CheckFailed](check-failed.md) | `CheckFailed(ApiError, AssertionError)` | 0.1.0-rc.1¹ | unchanged |
-| [RecordError](record-error.md) | `RecordError(ValueError)` | 0.3.0 | unchanged |
+| [RecordError](record-error.md) | `RecordError(ValueError)` | 0.3.0 | incomplete_evidence, limits — 0.6.0 |
 
 ¹ Base form; extensions are given in the card (reach waiting and `condition`, check matchers and table, profile sections, public CheckFailed import — 0.3.0).
 

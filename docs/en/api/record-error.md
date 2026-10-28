@@ -36,7 +36,7 @@ Scenario-body fragment (case shows a complete declaration). Symbols/macros must 
 - [Scenario or implementation check](../../../tests/host/test_record_errors.py).
 - [record](record.md), [records](records.md).
 
-## Limit diagnostics (0.6.0 candidate)
+## Limit diagnostics (0.6.0)
 
 For `limit_exceeded`, `details` includes `record_name` (up to 128 characters),
 `path` (up to 256), `maximum`, `used`, `attempted`, `attempted_lower_bound`.
@@ -50,6 +50,6 @@ A2.1: compact storage may report `$definition`/`$definitions` paths.
 A `records()` expansion failure has `details.operation="records"` and
 `details.scope="materialization"`; it does not discard the journal.
 
-## A3.2 (0.6.0 candidate)
+## A3.2 (0.6.0)
 
 `records()` adds `incomplete_evidence` for incomplete journals and `invalid_argument` for non-bool require_complete. Explicit journal truncation suppresses only cumulative records/nodes/text_bytes exhaustion; other errors remain errors. Full contract and formats: [Journaling](../JOURNALING.md#explicit-journal-truncation).

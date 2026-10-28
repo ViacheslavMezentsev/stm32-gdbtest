@@ -119,12 +119,14 @@ RULES = {
            ('Остановки меняют время', 'Время, частоты и джиттер измеряйте свидетелем, который не останавливает ядро; DDTT — конфигурация, ветвления, отказы.'),
            ('Один хозяин SWD', 'Не запускайте два GDB-сервера на один отладчик; анализатор и UART можно вести параллельно.'),
            ('Свидетельства рядом', 'Записи одного опыта связываются по ID сценария или требования и лежат рядом с result.json.'),
-           ('Эмулятор — подготовка', 'Модель сокращает попытки на плате, но вывод «проверено на цели» даёт только плата.')],
+           ('Эмулятор — подготовка', 'Модель сокращает попытки на плате, но вывод «проверено на цели» даёт только плата.'),
+           ('Ручной проход — не приёмка', 'run --interactive (0.6.0) позволяет автору пройти сценарий по шагам в VS Code без ограничения времени; результаты попадают в interactive-runs и не заменяют run.')],
     'en': [('The requirement judges', 'The expectation comes from the requirement; each witness only confirms or refutes it. Disagreeing witnesses are a finding.'),
            ('Stops change timing', 'Measure time, frequency and jitter with a witness that leaves the core running; keep DDTT for configuration, branches and faults.'),
            ('One SWD owner', 'Never start two GDB servers on one probe; an analyzer and UART may run in parallel.'),
            ('Evidence together', 'Records of one experiment share the scenario or requirement ID and sit next to result.json.'),
-           ('An emulator prepares', 'A model saves board attempts, but only the board supports "verified on target".')],
+           ('An emulator prepares', 'A model saves board attempts, but only the board supports "verified on target".'),
+           ('A manual walk-through is not acceptance', 'run --interactive (0.6.0) lets the scenario author step through it in VS Code with no time limit; results go to interactive-runs and do not replace run.')],
 }
 
 ROUTES = [
@@ -154,10 +156,14 @@ ROUTES = [
 API3_GENERAL = {
     'ru': ('Обычный def выполняет операции по очереди. В async def навигация (reach, step, until, finish, resume, reset) '
            'и call ожидаются через await; resume(sync=False) отпускает цель, await wait/halt ждут с таймаутом. '
-           'Чтение, запись, проверки и записи журнала await не требуют. Выражения не вызывают функции цели.'),
+           'Чтение, запись, проверки и записи журнала await не требуют. Выражения не вызывают функции цели. '
+           'В 0.6.0 API_VERSION остаётся 3: call принимает this, signature и Pointer/Reference для C++, records() '
+           'по умолчанию отказывает при неполном журнале, появились квоты journal/report.'),
     'en': ('An ordinary def runs operations in order. In async def, navigation (reach, step, until, finish, resume, reset) '
            'and call are awaited; resume(sync=False) lets the target go and await wait/halt wait with a timeout. '
-           'Reads, writes, checks and journal records need no await. Expressions never call target functions.'),
+           'Reads, writes, checks and journal records need no await. Expressions never call target functions. '
+           'In 0.6.0 API_VERSION stays 3: call accepts this, signature and Pointer/Reference for C++, records() '
+           'refuses an incomplete journal by default, and journal/report quotas are available.'),
 }
 
 # API groups: methods with first release, API 3 notes, recommended and discouraged fragments.
@@ -223,12 +229,12 @@ while t.read("board_adc_sequences") < 3:
          cards=['resume', 'wait', 'halt'],
          ru=dict(title='Живое окно: resume, wait, halt',
                  summary='Отпустить цель, ждать остановки с таймаутом, остановить с подтверждением.',
-                 api3='resume(sync=False), wait и halt — только async def; таймаут обязателен. В def resume() блокирует до остановки.',
+                 api3='resume(sync=False), wait и halt — только async def; таймаут обязателен. В def resume() блокирует до остановки. С 0.6.0 ошибка аудита отделена от ошибки исполнения.',
                  good='halt — в finally: таймаут wait цель не останавливает. Поколение (generation) связывает остановку с окном.',
                  bad='Пока цель работает, доступ к памяти отклоняется (not_stopped). Без finally таймаут оставит цель работающей.'),
          en=dict(title='Live window: resume, wait, halt',
                  summary='Let the target run, wait for a stop with a timeout, halt with confirmation.',
-                 api3='resume(sync=False), wait and halt are async def only; the timeout is mandatory. In def, resume() blocks until a stop.',
+                 api3='resume(sync=False), wait and halt are async def only; the timeout is mandatory. In def, resume() blocks until a stop. Since 0.6.0 an audit error is separate from an execution error.',
                  good='halt goes into finally: a wait timeout does not stop the target. The generation links a stop to its window.',
                  bad='Memory access while the target runs is refused (not_stopped). Without finally, a timeout leaves the target running.'),
          good='''@case("HW_WINDOW")
@@ -287,12 +293,12 @@ t.evaluate("crc32(buffer, 16)")   # hidden call: refused'''),
          cards=['mmio'],
          ru=dict(title='Регистры: mmio.read и mmio.write',
                  summary='Один прямой запрос к регистру по имени из снимка SVD с проверкой прав и эффектов.',
-                 api3='Новое в 0.5.0, await не нужен. Нужен [mmio] svd в session.toml; эффекты чтения и записи — только с allow_effects=True.',
+                 api3='Новое в 0.5.0, await не нужен. Нужен [mmio] svd в session.toml; эффекты чтения и записи — только с allow_effects=True. В 0.6.0 отказ операции и отказ аудита различаются.',
                  good='Атомарная установка через BSRR; флаги W1C — явной маской своих битов. Для входа модели подтвердите источник → IDR → потребление прошивкой, соседний вход и восстановление (tests/modeled-gpio).',
                  bad='RMW всего регистра теряет атомарность; чтение регистра с эффектом без согласия отклоняется. Повтор после потери ACK запрещён. override не делает IDR записываемым; ACK игнорируемой записи не доказывает воздействия.'),
          en=dict(title='Registers: mmio.read and mmio.write',
                  summary='One direct request to a register named in the SVD snapshot, with access-right and effect checks.',
-                 api3='New in 0.5.0, no await. Needs [mmio] svd in session.toml; read and write effects require allow_effects=True.',
+                 api3='New in 0.5.0, no await. Needs [mmio] svd in session.toml; read and write effects require allow_effects=True. In 0.6.0 an operation refusal and an audit refusal are distinguished.',
                  good='Atomic set through BSRR; W1C flags with an explicit mask. For modeled input check source → IDR → firmware consumption, neighbour and restoration (tests/modeled-gpio).',
                  bad='A whole-register RMW loses atomicity; reading a register with an effect without consent is refused. No retry after a lost ACK. Override cannot make IDR writable; an ACK for an ignored write is not evidence of stimulus.'),
          good='''idr = t.mmio.read("GPIOC.IDR")                  # int, one direct read
@@ -338,13 +344,13 @@ t.check("mode", t.read("GPIOA->MODER") & 0xC00, 0x400)    # magic numbers'''),
          cards=['ret', 'call'],
          ru=dict(title='Инъекции: ret и call',
                  summary='Подменить возврат текущей функции; вызвать функцию прошивки и получить результат.',
-                 api3='call в async — await; timeout= ограничивает вызов (0.5.0). ret не исполняет тело функции.',
-                 good='После ret продолжите до обработки возврата и проверьте потребление, пропущенные эффекты и следующий вход (пример tests/controlled-input). Readback SRAM не доказывает потребление. Для буфера: пакет в буфере опыта, call через Pointer с точной длиной, порядок, отказ, повторный вход и следующий штатный пакет (tests/buffer-consumption). ret проверяет реакцию вызывающего кода; call — с явным таймаутом. В кандидате 0.6.0 namespace/static требуют единственного символа; A4.2 допускает явный this и точную signature; A4.3a — Pointer/Reference с проверкой типов и SRAM. A4.3b корректирует this/Pointer/Reference к однозначной невиртуальной базе по DWARF; при преобразовании Pointer count=1. Сравните адрес подобъекта с независимым эталоном. Count не ограничивает тело функции. Сначала outcome/return_state, затем return_value; логическое время задаётся аргументом.',
+                 api3='call в async — await; timeout= ограничивает вызов (0.5.0); this=, signature= и Pointer/Reference — 0.6.0. ret не исполняет тело функции.',
+                 good='После ret продолжите до обработки возврата и проверьте потребление, пропущенные эффекты и следующий вход (пример tests/controlled-input). Readback SRAM не доказывает потребление. Для буфера: пакет в буфере опыта, call через Pointer с точной длиной, порядок, отказ, повторный вход и следующий штатный пакет (tests/buffer-consumption). ret проверяет реакцию вызывающего кода; call — с явным таймаутом. В 0.6.0 namespace/static требуют единственного символа; A4.2 допускает явный this и точную signature; A4.3a — Pointer/Reference с проверкой типов и SRAM. A4.3b корректирует this/Pointer/Reference к однозначной невиртуальной базе по DWARF; при преобразовании Pointer count=1. Сравните адрес подобъекта с независимым эталоном. Count не ограничивает тело функции. Сначала outcome/return_state, затем return_value; логическое время задаётся аргументом.',
                  bad='Вызов внутри выражения отклоняется; вызов без таймаута ограничен только лимитом сценария. ret не восстанавливает прерванный call. Программная подмена не доказывает физическое нажатие или отказ периферии. Запись буфера без вызова — не потребление; вызов обработчика не проверяет DMA и прерывание.'),
          en=dict(title='Injection: ret and call',
                  summary='Replace the return of the current function; call a firmware function and get its result.',
-                 api3='call is awaited in async; timeout= bounds the call (0.5.0). ret does not execute the function body.',
-                 good='After ret, continue to caller processing and check consumption, skipped effects and the next input (tests/controlled-input). SRAM readback does not prove consumption. For a buffer: a packet in an experiment-owned buffer, call through Pointer with the exact length, ordering, rejection, re-entry and the next ordinary packet (tests/buffer-consumption). ret checks the caller; call uses an explicit timeout. In the 0.6.0 candidate namespace/static require one symbol; A4.2 supports explicit this and exact signature; A4.3a adds Pointer/Reference with type/SRAM checks. A4.3b adjusts this/Pointer/Reference to an unambiguous non-virtual DWARF base; converting Pointer requires count=1. Compare the subobject address with an independent oracle. Count does not constrain the function body. Check outcome/return_state before return_value; pass logical time as an argument.',
+                 api3='call is awaited in async; timeout= bounds the call (0.5.0); this=, signature= and Pointer/Reference — 0.6.0. ret does not execute the function body.',
+                 good='After ret, continue to caller processing and check consumption, skipped effects and the next input (tests/controlled-input). SRAM readback does not prove consumption. For a buffer: a packet in an experiment-owned buffer, call through Pointer with the exact length, ordering, rejection, re-entry and the next ordinary packet (tests/buffer-consumption). ret checks the caller; call uses an explicit timeout. In 0.6.0 namespace/static require one symbol; A4.2 supports explicit this and exact signature; A4.3a adds Pointer/Reference with type/SRAM checks. A4.3b adjusts this/Pointer/Reference to an unambiguous non-virtual DWARF base; converting Pointer requires count=1. Compare the subobject address with an independent oracle. Count does not constrain the function body. Check outcome/return_state before return_value; pass logical time as an argument.',
                  bad='A call inside an expression is refused; a call without a timeout is bounded only by the scenario limit. ret does not restore an interrupted call. Software substitution does not establish a physical button press or peripheral failure. Writing a buffer without a call is not consumption; calling a handler does not test DMA or the interrupt.'),
          good='''t.reach("sample_input")
 result = t.ret(1)
@@ -397,12 +403,12 @@ t.clear()                               # also removes fault guards'''),
          cards=['record', 'records', 'skip'],
          ru=dict(title='Журнал и SKIP: record, records, skip',
                  summary='Произвольные данные в отчёт; выборка своих записей; завершение неприменимого сценария.',
-                 api3='Без изменений. Записи на диск — при [results] capture = true; MMIO добавляет записи журнала.',
+                 api3='Записи на диск — при [results] capture = true; MMIO добавляет записи журнала. В 0.6.0: квоты journal и records(require_complete=True) — при неполном журнале отказ incomplete_evidence.',
                  good='Сначала record, затем check: сохраняйте сырые выборки, единицы, прогрев и пригодность. В counter-cost время запроса GDB отделено от учебных тиков; максимум выборки — не WCET. В external-capture отдельно проверяются READY/drain, полнота и временные опоры; анализ не переписывает исход сценария. rosbag-import сверяет bag с индексом и связывает его со снимком GDB только через опоры счётчика МК и измеренную задержку; иначе UNKNOWN.',
                  bad='print не попадает в отчёт. Неполные данные нельзя заменять нулём; расход внутри интервала не равен полному возмущению. SKIP не скрывает ошибки API; exit 0 источника не гарантирует полноту записи.'),
          en=dict(title='Journal and SKIP: record, records, skip',
                  summary='Arbitrary data into the report; selecting your records; ending a non-applicable scenario.',
-                 api3='Unchanged. Records reach disk with [results] capture = true; MMIO adds journal records.',
+                 api3='Records reach disk with [results] capture = true; MMIO adds journal records. In 0.6.0: journal quotas and records(require_complete=True), which refuses an incomplete journal with incomplete_evidence.',
                  good='Record before check: keep raw samples, units, warmup and eligibility. In counter-cost GDB request time is separate from model ticks; a sample maximum is not WCET. external-capture checks READY/drain, completeness and clock anchors separately; analysis never rewrites the scenario outcome. rosbag-import checks the bag against its index and relates it to a GDB snapshot only through MCU counter anchors and a measured latency; otherwise UNKNOWN.',
                  bad='print does not reach the report. Missing data is not zero; in-interval cost is not total perturbation. SKIP must not hide API errors; source exit 0 does not establish capture completeness.'),
          good='''t.record("adc.sample", {"vdda_mv": t.read("board_adc_reading.vdda_mv")})
@@ -485,26 +491,26 @@ CARDS = {
  'step': ('step(count=1, *, unit="source", mode="into") -> dict', '0.3.0', 'await в async', 'await in async'),
  'until': ('until(location=None) -> dict', '0.3.0', 'await в async', 'await in async'),
  'finish': ('finish() -> dict', '0.3.0', 'await в async', 'await in async'),
- 'resume': ('resume(*, sync=True) -> dict', '0.3.0', 'sync=False — 0.5.0', 'sync=False — 0.5.0'),
- 'wait': ('await wait(*, timeout) -> dict', '0.5.0', 'только async', 'async only'),
- 'halt': ('await halt(*, timeout) -> dict', '0.5.0', 'только async', 'async only'),
+ 'resume': ('resume(*, sync=True) -> dict', '0.3.0', 'sync=False — 0.5.0; ошибка аудита отдельно — 0.6.0', 'sync=False — 0.5.0; separate audit error — 0.6.0'),
+ 'wait': ('await wait(*, timeout) -> dict', '0.5.0', 'только async; ошибка аудита отдельно — 0.6.0', 'async only; separate audit error — 0.6.0'),
+ 'halt': ('await halt(*, timeout) -> dict', '0.5.0', 'только async; ошибка аудита отдельно — 0.6.0', 'async only; separate audit error — 0.6.0'),
  'read': ('read(path, *, fields=None, start=0, count=None)', '0.3.0', 'без вызовов в выражении', 'no calls in expressions'),
  'write': ('write(path, value, *, verify=True) -> dict; write(rows) -> list', '0.3.0', 'без вызовов в выражении', 'no calls in expressions'),
  'evaluate': ('evaluate(expression, *, as_type=None)', '0.3.0', 'без вызовов в выражении', 'no calls in expressions'),
  'memory': ('memory(address, size | data, *, verify=None)', '0.3.0', 'без изменений', 'unchanged'),
  'symbol': ('symbol(name) -> dict', '0.3.0', 'без изменений', 'unchanged'),
- 'mmio': ('mmio.read(name, *, allow_effects=False) -> int; mmio.write(name, value, *, allow_effects=False) -> dict', '0.5.0', 'новое', 'new'),
- 'check': ('check(name, actual, expected=True); check(rows) -> int', '0.1.0-rc.1¹', 'без вызовов в выражении', 'no calls in expressions'),
+ 'mmio': ('mmio.read(name, *, allow_effects=False) -> int; mmio.write(name, value, *, allow_effects=False) -> dict', '0.5.0', 'новое; двойной отказ — 0.6.0', 'new; double refusal — 0.6.0'),
+ 'check': ('check(name, actual, expected=True); check(rows) -> int', '0.1.0-rc.1¹', 'без вызовов в выражении; квоты — 0.6.0', 'no calls in expressions; quotas — 0.6.0'),
  'matchers': ('within(low, high), near(value, tolerance), one_of(*options), matches(pattern)', '0.3.0', 'без изменений', 'unchanged'),
  'refused': ('with refused(code, *, name=None, **details) as refusal', '0.3.0', 'без изменений', 'unchanged'),
  'ret': ('ret(value=None) -> dict', '0.3.0', 'без изменений', 'unchanged'),
- 'call': ('call(function, *args, this=None, signature=None, timeout=None) -> dict', '0.3.0', 'await в async; timeout=', 'await in async; timeout='),
+ 'call': ('call(function, *args, this=None, signature=None, timeout=None) -> dict', '0.3.0', 'await в async; timeout=; this, signature, Pointer/Reference — 0.6.0', 'await in async; timeout=; this, signature, Pointer/Reference — 0.6.0'),
  'breakpoint': ('breakpoint(location, temporary=False, *, condition=None, ignore_count=0) -> Point', '0.1.0-rc.1', 'без изменений', 'unchanged'),
  'watch': ('watch(path) -> Point', '0.3.0', 'без изменений', 'unchanged'),
  'point': ('Point: active, hit_count, condition; enable(), disable(), remove(), with', '0.3.0', 'без изменений', 'unchanged'),
  'clear': ('clear() -> None', '0.1.0-rc.1', 'без изменений', 'unchanged'),
- 'record': ('record(name, data) -> None', '0.3.0', 'без изменений', 'unchanged'),
- 'records': ('records(name=None, *, require_complete=True) -> list[dict]', '0.3.0', '0.6.0: явное частичное чтение', '0.6.0: explicit partial reads'),
+ 'record': ('record(name, data) -> None', '0.3.0', 'квоты journal — 0.6.0', 'journal quotas — 0.6.0'),
+ 'records': ('records(name=None, *, require_complete=True) -> list[dict]', '0.3.0', 'require_complete — 0.6.0', 'require_complete — 0.6.0'),
  'skip': ('skip(reason) -> NoReturn', '0.4.0', 'без изменений', 'unchanged'),
  'profile': ('profile: Profile', '0.1.0-rc.1¹', 'без изменений', 'unchanged'),
  'registers': ('registers(*names, frame=None) -> dict', '0.3.0', 'без изменений', 'unchanged'),
@@ -514,7 +520,7 @@ CARDS = {
  'execute': ('execute(command) -> str', '0.3.0', 'отклоняется в async', 'refused in async'),
  'api-error': ('ApiError: details, code, __cause__', '0.3.0', 'новые коды', 'new codes'),
  'check-failed': ('CheckFailed(ApiError, AssertionError)', '0.1.0-rc.1¹', 'без изменений', 'unchanged'),
- 'record-error': ('RecordError(ValueError)', '0.3.0', 'без изменений', 'unchanged'),
+ 'record-error': ('RecordError(ValueError)', '0.3.0', 'incomplete_evidence, лимиты — 0.6.0', 'incomplete_evidence, limits — 0.6.0'),
 }
 
 # Card -> displayed name when it differs from the file name.

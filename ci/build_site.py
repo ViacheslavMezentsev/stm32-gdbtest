@@ -36,7 +36,7 @@ TEXT = {
                   ('live', 'STM32', 'прошивка приложения по SWD'), ('view', 'Отчёт', 'JSON, JUnit, журнал')],
         'parts': 'Разделы сайта',
         'routes_card': 'Как сочетать навыки агента: свидетели цели, правила TTDD, выбор навыка и семь типовых маршрутов.',
-        'api_card': 'Методы Target API 3 по группам: сигнатуры, первый выпуск, изменения 0.5.0, примеры «правильно» '
+        'api_card': 'Методы Target API 3 по группам: сигнатуры, первый выпуск, изменения 0.5.0 и 0.6.0, примеры «правильно» '
                     'и «не рекомендуется».',
         'api3': 'API 3 кратко',
         'routes_title': 'Маршруты навыков', 'routes_lead': 'TTDD = DDTT + другие свидетели цели. Модуль отвечает за '
@@ -54,7 +54,7 @@ TEXT = {
         'removed_note': 'Были доступны с 0.1.0-rc.1 по 0.3.0 (в 0.3.0 с предупреждением deprecated), удалены в 0.4.0.',
         'r_cols': ('Имя', 'Замена'), 'since': 'с', 'methods': 'Методы', 'm_cols': ('Элемент', 'Сигнатура', 'Доступен с', 'API 3'),
         'base_note': '¹ Базовая форма; расширения 0.3.0 описаны в карточке.',
-        'changes': 'Изменения API 3 (0.5.0)', 'good': 'Правильно', 'bad': 'Не рекомендуется',
+        'changes': 'Изменения API 3 (0.5.0–0.6.0)', 'good': 'Правильно', 'bad': 'Не рекомендуется',
         'bad_note': 'Фрагменты показывают отклонённые или нежелательные приёмы, а не рабочий рецепт.',
         'cards': 'Карточки справочника', 'all': 'Все группы',
         'fragment': 'Фрагменты для тела сценария; символы прошивки условные.',
@@ -74,7 +74,7 @@ TEXT = {
                   ('live', 'STM32', 'application firmware over SWD'), ('view', 'Report', 'JSON, JUnit, journal')],
         'parts': 'Site sections',
         'routes_card': 'How to combine agent skills: target witnesses, TTDD rules, choosing a skill and seven typical routes.',
-        'api_card': 'Target API 3 methods by group: signatures, first release, 0.5.0 changes, "recommended" and '
+        'api_card': 'Target API 3 methods by group: signatures, first release, 0.5.0 and 0.6.0 changes, "recommended" and '
                     '"avoid" examples.',
         'api3': 'API 3 in short',
         'routes_title': 'Skill routes', 'routes_lead': 'TTDD = DDTT + other witnesses of the target. The module covers '
@@ -94,7 +94,7 @@ TEXT = {
         'r_cols': ('Name', 'Replacement'), 'since': 'since', 'methods': 'Methods',
         'm_cols': ('Entry', 'Signature', 'Available since', 'API 3'),
         'base_note': '¹ Base form; the 0.3.0 extensions are described in the card.',
-        'changes': 'API 3 changes (0.5.0)', 'good': 'Recommended', 'bad': 'Avoid',
+        'changes': 'API 3 changes (0.5.0–0.6.0)', 'good': 'Recommended', 'bad': 'Avoid',
         'bad_note': 'The fragments show refused or discouraged patterns, not a working recipe.',
         'cards': 'Reference cards', 'all': 'All groups',
         'fragment': 'Fragments for a scenario body; firmware symbols are illustrative.',
@@ -266,7 +266,7 @@ def journal_page(lang):
     body = crumb(lang, 1, ('', t['journal_title']))
     body += f'<h1>{t["journal_title"]}</h1><p class="lead">{t["journal_card"]}</p>'
     if lang == 'ru':
-        status = 'Кандидат 0.6.0: schema 3 применяет независимые квоты и error/truncate для journal/report. Неполнота: command=2, partial-анализ.'
+        status = '0.6.0: schema 3 применяет независимые квоты и error/truncate для journal/report. Неполнота: command=2, partial-анализ.'
         title, columns = 'Маршруты и ограничения', ('Маршрут', 'Что учитывать')
         rows = [('records / result', 'Первичные данные и исход; SAVED не означает полноту.'),
                 ('summary / console', 'Представление, не замена первичных свидетельств.'),
@@ -276,7 +276,7 @@ def journal_page(lang):
         good, bad = 'Используйте общий читатель, проверяйте evidence и cleanup. Для префикса: records(require_complete=False). Все исходы проверок — check_accounting; группы сводки описывают сохранённые строки. CSV-экспорт неполного прогона отклоняется.', 'Не считайте пустой журнал нулём операций и не подменяйте свидетельства сводкой.'
         reference = 'Полное руководство: настройки, квоты, форматы и отказы'
     else:
-        status = '0.6.0 candidate: schema 3 enforces independent journal/report quotas and error/truncate policies. Incompleteness gives command=2 and partial analysis.'
+        status = '0.6.0: schema 3 enforces independent journal/report quotas and error/truncate policies. Incompleteness gives command=2 and partial analysis.'
         title, columns = 'Routes and boundaries', ('Route', 'Considerations')
         rows = [('records / result', 'Primary data and outcomes; SAVED does not imply completeness.'),
                 ('summary / console', 'Presentation, not a substitute for primary evidence.'),

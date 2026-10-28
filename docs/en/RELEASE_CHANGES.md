@@ -22,7 +22,7 @@ char[] evaluate and outer quotes in reach are unnecessary; use the current
 
 ## Historical material
 
-Snapshots remain for reproducibility; their former "current" status does not apply to 0.5.x.
+Snapshots remain for reproducibility; their former "current" status does not apply to 0.6.x.
 
 - [API.md](../archive/pre-050/en/API.md)
 - [STATUS.md](../archive/pre-050/en/STATUS.md)

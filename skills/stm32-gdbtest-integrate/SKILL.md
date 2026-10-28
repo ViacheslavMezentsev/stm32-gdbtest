@@ -44,7 +44,7 @@ git -C modules/stm32-gdbtest checkout <agreed-tag-or-commit>
 git add .gitmodules modules/stm32-gdbtest
 ```
 
-Выбери согласованный тег/коммит и закрепи gitlink. Для линии 0.5.x проверяй API_VERSION=3;
+Выбери согласованный тег/коммит и закрепи gitlink. Для линий 0.5.x и 0.6.x проверяй API_VERSION=3;
 не выдавай рабочую ветку за опубликованный выпуск.
 Gitlink фиксирует проверенный коммит; configure его не обновляет. Обновление версии — отдельный
 коммит: новый gitlink, чтение раздела CHANGELOG модуля (миграция), прогон host и hw.

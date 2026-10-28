@@ -36,7 +36,7 @@ else:
 - [Сценарий или проверка реализации](../../../tests/host/test_record_errors.py).
 - [record](record.md), [records](records.md).
 
-## Диагностика лимитов (кандидат 0.6.0)
+## Диагностика лимитов (0.6.0)
 
 `details` при `limit_exceeded`: `record_name` (до 128 символов), `path` (до 256),
 `maximum`, `used`, `attempted`, `attempted_lower_bound`. Путь начинается с `$name`
@@ -51,6 +51,6 @@ A2.1: компактное хранение может указывать пут
 отказ раскрытия `records()` имеет `details.operation="records"` и
 `details.scope="materialization"`. Он не удаляет накопленный журнал.
 
-## A3.2 (0.6.0 candidate)
+## A3.2 (0.6.0)
 
 `records()` добавляет код `incomplete_evidence` при неполном журнале и `invalid_argument` для не-bool require_complete. Явный journal truncate подавляет только накопительный лимит records/nodes/text_bytes; остальные ошибки остаются ошибками. Полный контракт и форматы: [Журналирование](../JOURNALING.md#8-явное-усечение-journal).

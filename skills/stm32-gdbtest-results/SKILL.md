@@ -116,7 +116,7 @@ shutdown_wait.ready нужен для соответствующего lifecycle
 анализа, применимости и восстановления; ожидаемые FAIL примера
 [stateful-buffer](../../tests/stateful-buffer/README.md) не перекрашиваются в PASS.
 
-## Нейтральные примеры 0.5.x
+## Нейтральные примеры (0.5.0 и новее)
 
 При разборе новых примеров читай [маршруты и критерии](../stm32-gdbtest-scenarios/references/neutral-workflows.md):
 сначала valid/эпоха/полнота, затем значения. Counter-cost требует исходных выборок и

@@ -59,7 +59,7 @@ flowchart LR
 
 ## Requirements
 
-- stm32-gdbtest with `run --interactive` (the 0.6.0 candidate and later). With module 0.5.x
+- stm32-gdbtest with `run --interactive` (0.6.0 and later). With module 0.5.x
   the launcher works in a simplified mode — see [below](#module-05x).
 - VS Code with the extensions from the project's `.vscode/extensions.json`: Python
   (`ms-python.python`, which brings Pylance) and Python Debugger (`ms-python.debugpy`).

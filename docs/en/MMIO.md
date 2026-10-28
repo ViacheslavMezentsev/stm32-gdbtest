@@ -3,7 +3,7 @@
 [Documentation](index.md) · [Русский](../ru/MMIO.md)
 
 **Known limitation: the existing general memory methods are not an MMIO interface
-without hidden accesses.** 0.5.x provides a separate [mmio interface](api/mmio.md). The warnings below about general methods still apply.
+without hidden accesses.** Since 0.5.0 the module provides a separate [mmio interface](api/mmio.md). The warnings below about general methods still apply.
 
 ## What scenario authors need to know
 

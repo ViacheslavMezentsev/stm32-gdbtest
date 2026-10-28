@@ -55,7 +55,7 @@ value = t.read("counter")            # refused: the target is running
 - [API specification](../../TECHNICAL_SPECIFICATION_API.md) (Russian), items 4.5, 4.22.
 - [resume](resume.md), [wait](wait.md), [halt](halt.md).
 
-## Execution versus audit errors (0.6.0 candidate)
+## Execution versus audit errors (0.6.0)
 
 Failure to record `execution` does not replace `fault_stop`, `signal_stop`,
 `state_unknown` or a halt failure. The primary exception retains its type/code and

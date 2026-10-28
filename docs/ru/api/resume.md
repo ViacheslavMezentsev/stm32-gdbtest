@@ -55,7 +55,7 @@ value = t.read("counter")            # refused: the target is running
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md), п. 4.5, 4.22.
 - [resume](resume.md), [wait](wait.md), [halt](halt.md).
 
-## Ошибка исполнения и ошибка аудита (кандидат 0.6.0)
+## Ошибка исполнения и ошибка аудита (0.6.0)
 
 Ошибка записи `execution` не заменяет `fault_stop`, `signal_stop`, `state_unknown`
 или ошибку halt. Первичное исключение сохраняет тип/code и получает

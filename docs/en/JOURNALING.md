@@ -4,7 +4,7 @@
 
 ## Availability
 
-This guide describes the 0.6.0 candidate branch, not everything shipped in 0.5.0.
+This guide describes release 0.6.0; release 0.5.0 lacks these extensions.
 A2, A3.1 and A3.2 journal enforcement are implemented. Schema 3 permits journal error/truncate.
 Schema 3 journal/report quotas and independent error/truncate policies are executable.
 
@@ -72,7 +72,7 @@ A1 fields remain for compatibility. Process/memory/disk failures cannot guarante
 
 ## Explicit journal truncation
 
-In the 0.6.0 candidate, API schema 3 executes `journal.on_limit="error"|"truncate"`.
+In 0.6.0, API schema 3 executes `journal.on_limit="error"|"truncate"`.
 The `[records]` budgets bound accumulation. Exhausting records/nodes/text_bytes under
 truncate preserves whole prefix records and stops detailed storage until scenario end.
 Checks, MMIO, live execution and cleanup continue. Completeness becomes `truncated`,
@@ -99,7 +99,7 @@ command, capture, evidence and cleanup separately before evaluating DDTT applica
 Examples: tests/renode-backend/run_report.py; host tests: test_evidence.py and
  test_policy_config.py; tests/renode-backend/run_journal.py and test_journal_truncate.py. An intentional ERROR checks the tool contract, not MCU behavior.
 
-## A3.2: report quotas and truncation (0.6.0 candidate)
+## A3.2: report quotas and truncation (0.6.0)
 
 API schema 3 applies report.max_rows_per_collection independently to checks, stops,
 mutations, evaluations, executions and resets, in full and compact storage. Range:

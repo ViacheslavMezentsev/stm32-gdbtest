@@ -56,6 +56,6 @@ API schema 2 adds compact MMIO and larger budgets; schema 1 keeps its limits. Lo
 
 A3.1: see [API](../API.md#strict-completeness-a31-060-candidate) for completeness and independent check accounting. Strict mode remains; see explicit truncation below.
 
-## A3.2 (0.6.0 candidate)
+## A3.2 (0.6.0)
 
 Schema 3 permits `journal.on_limit="truncate"`: exhausting records/nodes/text_bytes preserves a whole prefix and stops further details. Checks and input validation continue; command=2. Invalid types, depth, integer width and storage failures remain errors. Full contract and formats: [Journaling](../JOURNALING.md#explicit-journal-truncation).

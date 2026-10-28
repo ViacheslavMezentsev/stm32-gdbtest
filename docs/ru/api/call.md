@@ -15,7 +15,7 @@
 Аргументы передаются по значению: принимаются целые, конечные числа с плавающей точкой, логические значения; строки-выражения GDB не принимаются. Результат описывает `operation`, `function`, `arguments`, построенное `expression`, `outcome`, `return_value` и `return_state` (`available` или `void`), а вызов записывается в `mutations`.
 
 `call(function, *args, this=None, signature=None, timeout=None)` поддерживает
-явный объект и точную перегрузку в кандидате 0.6.0. В async def нужен await.
+явный объект и точную перегрузку в 0.6.0. В async def нужен await.
 `this="&probe"` — адрес именованного объекта; `this="probe_ptr"` — именованный указатель.
 Допускаются квалифицированные имена переменных. Поля, индексы, арифметика, cast и
 вызовы в this пока не поддержаны. Указатель читается один раз; адрес объекта,
@@ -111,7 +111,7 @@ result = await t.call("Probe::choose", 2, this="&probe",
 t.check("selected overload", result["return_value"], 5)
 ```
 
-## A4.3a — Pointer и Reference (кандидат 0.6.0)
+## A4.3a — Pointer и Reference (0.6.0)
 
 `from stm32_gdbtest import Pointer, Reference`. Это неизменяемые описания, не адреса
 и не выражения GDB; создание не обращается к цели. Разрешение происходит при call,
@@ -157,7 +157,7 @@ await t.call("demo::bump", Reference("scalar"), signature="void(unsigned int &)"
 ```
 
 
-## A4.3b — невиртуальное наследование (кандидат 0.6.0)
+## A4.3b — невиртуальное наследование (0.6.0)
 
 `call("Base::step", ..., this="&derived")` явно выбирает реализацию Base::step.
 Допустим точный неполиморфный тип или единственный путь от статического типа объекта

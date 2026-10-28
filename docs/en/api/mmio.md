@@ -86,7 +86,7 @@ The connection must serve exactly one inferior: raw packets do not select a proc
 
 Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](../API_ACCEPTANCE.md).
 
-## Reason and combined failures (0.6.0 candidate)
+## Reason and combined failures (0.6.0)
 
 `reason` is allowed without `override`: a nonblank string is captured in
 `mmio.attempt` without changing SVD permissions or effect consent. Invalid values

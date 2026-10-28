@@ -59,7 +59,7 @@ flowchart LR
 
 ## Что понадобится
 
-- Модуль stm32-gdbtest с `run --interactive` (кандидат 0.6.0 и новее). С модулем 0.5.x
+- Модуль stm32-gdbtest с `run --interactive` (0.6.0 и новее). С модулем 0.5.x
   запускатель работает в упрощённом режиме — см. [ниже](#модуль-05x).
 - VS Code с расширениями из `.vscode/extensions.json` проекта: Python (`ms-python.python`,
   с ним Pylance) и Python Debugger (`ms-python.debugpy`).

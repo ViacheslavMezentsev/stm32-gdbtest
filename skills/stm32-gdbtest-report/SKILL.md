@@ -111,7 +111,7 @@ JSON по schema 2 и прогнать `--check-only`, затем рендер �
 бери из [content.md](references/content.md); не копируй числа и номера разделов из старых PDF —
 генератор вычисляет нумерацию, «Где применён», перечень свидетельств и сводку замечаний сам.
 
-## Нейтральные примеры 0.5.x
+## Нейтральные примеры (0.5.0 и новее)
 
 Для отчёта по logical-time/counter-cost/external-capture проверь
 [область доказательств](../stm32-gdbtest-scenarios/references/neutral-workflows.md). Покажи

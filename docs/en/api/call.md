@@ -15,7 +15,7 @@ Calls a debugged program's function on the halted core and returns the call resu
 Arguments are passed by value: integers, finite floating-point numbers, booleans are accepted; GDB expression strings are rejected. The result describes `operation`, `function`, `arguments`, the built `expression`, `outcome`, `return_value` and `return_state` (`available` or `void`), and the call is recorded in `mutations`.
 
 `call(function, *args, this=None, signature=None, timeout=None)` supports an explicit
-object and exact overload selection in the 0.6.0 candidate. Use await in async def.
+object and exact overload selection in 0.6.0. Use await in async def.
 `this="&probe"` takes the address of a named object; `this="probe_ptr"` uses a named pointer.
 Qualified variable names are allowed. Member/index paths, arithmetic, casts and calls
 in this are not supported yet. The pointer is read once; object address, size and
@@ -112,7 +112,7 @@ result = await t.call("Probe::choose", 2, this="&probe",
 t.check("selected overload", result["return_value"], 5)
 ```
 
-## A4.3a — Pointer and Reference (0.6.0 candidate)
+## A4.3a — Pointer and Reference (0.6.0)
 
 `from stm32_gdbtest import Pointer, Reference`. These are immutable descriptions,
 not addresses or GDB expressions; construction does not access the target. Resolution
@@ -160,7 +160,7 @@ await t.call("demo::bump", Reference("scalar"), signature="void(unsigned int &)"
 ```
 
 
-## A4.3b — non-virtual inheritance (0.6.0 candidate)
+## A4.3b — non-virtual inheritance (0.6.0)
 
 `call("Base::step", ..., this="&derived")` explicitly selects Base::step.
 An exact non-polymorphic type or one unique path from the object's static type to

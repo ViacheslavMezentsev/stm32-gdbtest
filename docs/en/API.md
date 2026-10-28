@@ -2,7 +2,7 @@
 
 [Documentation](index.md) · [Русский](../ru/API.md)
 
-This page describes **0.5.x / API_VERSION=3**. Operation contracts and support limits are
+This page describes **0.6.x / API_VERSION=3**. Operation contracts and support limits are
 in the [reference](api/index.md); user-facing changes are in [release transitions](RELEASE_CHANGES.md).
 
 ## Configuration and execution
@@ -202,7 +202,7 @@ in [resume](api/resume.md), [MMIO](api/mmio.md), and [RecordError](api/record-er
 Failed execution auditing after a successful operation now raises ApiError/journal_unavailable
 instead of bare RecordError. Limits, capture and record format are unchanged.
 
-## A2.1: compact journal (0.6.0 candidate)
+## A2.1: compact journal (0.6.0)
 
 Select API schema 2 in `api.toml`; schema 1 keeps its previous defaults and limits.
 The default representation is `full`; compact MMIO is explicitly enabled:
@@ -259,7 +259,7 @@ summary/truncate are outside this package.
 [Reproducible benchmark](../../tests/mmio-renode/README.md) and
 [A2.1 measurements](../development/journal-a21-measurements.md).
 
-## Result journal and output (0.6.0 candidate, A2.2)
+## Result journal and output (0.6.0, A2.2)
 
 An API schema 2 file can independently select result storage and console output.
 Both options default to `full`:
@@ -320,7 +320,7 @@ Tests: `tests/host/test_report_data.py`, `tests/renode-backend/run_report.py`.
 The shared reader and full publication also enforce the 16 MiB file limit.
 Full mode retains its structure; JSON whitespace is not part of the contract.
 
-## Summaries and output levels (A2.3, 0.6.0 candidate)
+## Summaries and output levels (A2.3, 0.6.0)
 
 In API schema 2, `[report] console="summary"` adds grouped terminal/JUnit output.
 Existing full/failures levels and the default full remain unchanged. Storage selection
@@ -384,7 +384,7 @@ Counters describe stored rows, not physical events: one stop may appear in multi
 diagnostic stop entries. No speculative deduplication is performed; physical event
 counts require a separate analysis.
 
-## Strict completeness (A3.1, 0.6.0 candidate)
+## Strict completeness (A3.1, 0.6.0)
 
 No new settings or truncation are enabled: `on_limit` is not supported yet. API
 schema 1/2, API_VERSION=3 and full/compact formats remain supported. Result gains
@@ -438,7 +438,7 @@ runner checks as well as user checks.
 
 ## A3.2: journal quotas and truncation
 
-In the 0.6.0 candidate, API schema 3 executes `journal.on_limit="error"|"truncate"`.
+In 0.6.0, API schema 3 executes `journal.on_limit="error"|"truncate"`.
 The `[records]` budgets bound accumulation. Exhausting records/nodes/text_bytes under
 truncate preserves whole prefix records and stops detailed storage until scenario end.
 Checks, MMIO, live execution and cleanup continue. Completeness becomes `truncated`,
@@ -460,7 +460,7 @@ Truncate policy uses evidence schema 2, result schema 3 (full/compact), and reco
 schema 3 with completeness checked against result. Old readers reject these formats.
 Use the module shared readers. Report quotas/truncation are executable too; see the section below.
 
-## A3.2: report quotas and truncation (0.6.0 candidate)
+## A3.2: report quotas and truncation (0.6.0)
 
 API schema 3 applies report.max_rows_per_collection independently to checks, stops,
 mutations, evaluations, executions and resets, in full and compact storage. Range:
@@ -528,7 +528,7 @@ unchanged sources and a complete-source positive control).
 ## A4.1 — namespace/static (0.6.0)
 
 The name is a plain identifier or a qualified namespace/static name, such as
-`demo::increment` or `Probe::twice`. In the 0.6.0 candidate, a qualified call requires
+`demo::increment` or `Probe::twice`. In 0.6.0, a qualified call requires
 one symbol with callable code and DWARF. Overloads are refused before execution
 (`ambiguous_function`), instance methods produce `unsupported_method`, missing
 symbols/code produce `function_unavailable`. `object.method` remains `invalid_function`.
@@ -545,7 +545,7 @@ Migration: replace string arguments with previously obtained numbers; execute ad
 ## A4.2 — this / signature (0.6.0)
 
 `call(function, *args, this=None, signature=None, timeout=None)` supports an explicit
-object and exact overload selection in the 0.6.0 candidate. Use await in async def.
+object and exact overload selection in 0.6.0. Use await in async def.
 `this="&probe"` takes the address of a named object; `this="probe_ptr"` uses a named pointer.
 Qualified variable names are allowed. Member/index paths, arithmetic, casts and calls
 in this are not supported yet. The pointer is read once; object address, size and
@@ -580,7 +580,7 @@ result = await t.call("Probe::choose", 2, this="&probe",
 t.check("selected overload", result["return_value"], 5)
 ```
 
-## A4.3a — Pointer and Reference (0.6.0 candidate)
+## A4.3a — Pointer and Reference (0.6.0)
 
 `from stm32_gdbtest import Pointer, Reference`. These are immutable descriptions,
 not addresses or GDB expressions; construction does not access the target. Resolution
@@ -628,7 +628,7 @@ await t.call("demo::bump", Reference("scalar"), signature="void(unsigned int &)"
 ```
 
 
-## A4.3b — non-virtual inheritance (0.6.0 candidate)
+## A4.3b — non-virtual inheritance (0.6.0)
 
 `call("Base::step", ..., this="&derived")` explicitly selects Base::step.
 An exact non-polymorphic type or one unique path from the object's static type to

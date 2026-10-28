@@ -18,7 +18,7 @@ Instructions for AI agents and new contributors ([English](docs/en/maintenance.m
    образы, CMake, CI) и [ТЗ API сценариев](docs/TECHNICAL_SPECIFICATION_API.md) (методы `Target`).
    В каждом смотрите реквизиты (текущая ревизия), блок изменений последней ревизии и раздел вопросов
    и решений владельца. Копии ТЗ вне репозитория не ведутся.
-3. Сценарии пишутся по API_VERSION=3 линии 0.5.x: [справочник методов](docs/ru/api/index.md) и
+3. Сценарии пишутся по API_VERSION=3 (линии 0.5.x и 0.6.x): [справочник методов](docs/ru/api/index.md) и
    [каталог техник со стилем сценариев](docs/ru/TESTING_TECHNIQUES.md). Стиль проверяет тест
    `tests/host/test_scenario_style.py`; образцы — `tests/firmware/common/tests` (общие сценарии-примеры)
    и `tests/firmware/profiles/*/tests`. Что и на каких стендах принято — [API_ACCEPTANCE](docs/ru/API_ACCEPTANCE.md).

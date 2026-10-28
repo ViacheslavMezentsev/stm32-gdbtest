@@ -86,6 +86,7 @@ ctest --preset <profile>-hil-hw       # on the board; the stand is set in hil/<M
 - Peripheral registers by SVD with access-right and effect checks (`t.mmio`).
 - Offline checks (`inspect`, `prepare`, ELF contracts), prepared run packages and stand loops.
 - Renode and QEMU emulators for experiments without a board; JSON/JUnit reports, DDTT export to HTML/LCOV/Cobertura.
+- Since 0.6.0: [journal](docs/en/JOURNALING.md) quotas and strict completeness, C++ calls and [step-by-step scenario debugging in VS Code](docs/en/MANUAL_DEBUG.md).
 
 ## Limitations
 

@@ -327,9 +327,9 @@ to it is then an authenticated channel (section 6.3).
 The abbreviation DDTT should not be confused with DDT — data-driven testing, the Python
 `ddt` library and the Linaro DDT debugger.
 
-## 10. Implementation in stm32-gdbtest 0.5.x (informative)
+## 10. Implementation in stm32-gdbtest 0.5.0 and later (informative)
 
-This map describes **0.5.x / API_VERSION=3**, target schema 3 (hardware schema 1/2
+This map describes **0.5.x–0.6.x / API_VERSION=3**, target schema 3 (hardware schema 1/2
 remain compatible). The DDTT specification version is independent of the package version.
 The basis is released code and accepted reports, not a new hardware run.
 
@@ -357,16 +357,18 @@ on OrangePi without the project; changing firmware needs sources and a compiler.
 
 ### 10.2. Requirements and tools
 
-| Requirements | 0.5.x mechanisms | Evidence to inspect |
+| Requirements | 0.5.0+ mechanisms | Evidence to inspect |
 | --- | --- | --- |
 | 6.1 | `@case`, collect, traceability, contracts | Requirement ID, selected scenario and ELF |
 | 6.2 | Target and GDB-Python; [reference](api/index.md) | Stop reason/location, values, current frame and MCU resources |
 | 6.3 | [Backends](BACKENDS.md), [SSH](LINUX_STAND.md) | Board/profile/probe match; doctor alone does not check the MCU |
 | 6.4 | [runner.py](../../stm32_gdbtest/runner.py), [agent.py](../../stm32_gdbtest/agent.py) | ELF snapshot, identity, image verification, failure phase, teardown/recovery |
 | 6.5 | [reports.py](../../stm32_gdbtest/reports.py), [result_capture.py](../../stm32_gdbtest/result_capture.py) | Verdict, command code, capture and integrity separately |
+| 6.5 (0.6.0) | [Journal](JOURNALING.md) quotas and strict completeness, `records(require_complete=True)` | evidence.stores and check_accounting; a lost record gives command=2, an incomplete journal is not read as complete |
 | 6.6 | [Debugger ownership](DEBUGGER_OWNERSHIP.md) | One owner; stand-host lock; no killing foreign processes |
 | 6.7 | `run --prepare-only`, [contracts](CONTRACTS.md) | No server; NOT_REQUESTED is not a passed contract |
 | 6.8 | CLI, CTest, doctor, [stand_loop.py](../../tools/stand_loop.py) | Same package; separate attempts; explicit SKIP policy |
+| 6.8 (0.6.0) | `run --interactive`, [manual debugging](MANUAL_DEBUG.md) | Results in interactive-runs with execution_kind=interactive; such a run is not acceptance |
 | 7 | [Develop skill](../../skills/stm32-gdbtest-develop/SKILL.md) | Plan, requirement-specific baseline FAIL, fix, regression, restoration |
 
 | Scenario task | Tools | Boundary |
@@ -447,7 +449,7 @@ Hard interruption can prevent capture; unavailable/error does not mean an empty 
 
 stand_loop.py executes a finite TOML plan of accepted packages, retains attempts, handles STOP
 and expected SKIP. This operates an immutable package, not an agent editing firmware.
-All-SKIP does not establish device testing. Version 0.5.x has no dynamic dependency tree or
+All-SKIP does not establish device testing. Versions 0.5.x–0.6.x have no dynamic dependency tree or
 automatic disabling of other branches based on records; scenarios have no automatically shared journal.
 
 Power supplies, loads, telemetry and instruments use external tools under an agreed plan.
@@ -457,7 +459,7 @@ testing. [Stand cycles](STAND_LOOP.md).
 
 ### 10.6. Open conformance boundaries
 
-| Requirement | 0.5.x evidence and further checks |
+| Requirement | 0.6.x evidence and further checks |
 | --- | --- |
 | 6.2-4, 6.5-3: all injections before/after | write/memory and mutations provide partial data; ret, call, side-effecting evaluate and raw GDB do not snapshot every effect. Completeness needs an audit; scenarios explicitly record relevant values meanwhile |
 | 6.5-4: no personal paths | Local tracebacks, configuration and logs can contain paths/addresses. Full sanitization is not guaranteed; inspect before publication. This is a draft gap, not permission to delete original evidence |
