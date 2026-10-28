@@ -571,3 +571,51 @@ result = await t.call("Probe::choose", 2, this="&probe",
                       signature="unsigned int(int)", timeout=2)
 t.check("selected overload", result["return_value"], 5)
 ```
+
+## A4.3a — Pointer and Reference (0.6.0 candidate)
+
+`from stm32_gdbtest import Pointer, Reference`. These are immutable descriptions,
+not addresses or GDB expressions; construction does not access the target. Resolution
+happens at call, and only at await in async, with the core stopped.
+
+- `Pointer("samples", count=4)` starts at a named array; count cannot exceed its DWARF extent.
+- `Pointer("buffer_ptr", count=4)` reads a named pointer variable once per argument.
+- `Pointer("&state")` addresses one named object; count above 1 is refused.
+- `Pointer.null()` explicitly passes null to a pointer parameter; null read from a variable is refused.
+- `Reference("state")` binds an existing named object without temporaries or user conversions.
+
+Count is in elements, defaults to 1, and accepts integers 1..1048576, not bool.
+Explicit null uses count=0. Names are limited to 256 characters and may be qualified.
+Member/index paths, arithmetic, casts and calls are unsupported. Bad descriptors
+produce invalid_argument.
+
+One T*/T& level supports integer, bool and non-polymorphic class/struct types without
+inheritance. Types must match exactly; const/volatile may be added but never removed
+(argument_qualifiers). Signatures accept these types and typedefs; overload selection
+remains explicit. Descriptors also enable DWARF checking for plain C functions.
+T**, void*, function/member pointers, T&&, array references, by-value objects and
+pointer/reference returns remain unsupported. An integer is never inferred as an address.
+
+Before execution, size, alignment and the entire ordinary SRAM range
+0x20000000–0x20100000 are checked; pointer-variable storage is checked before reading
+its value. Errors include argument_range, argument_type_mismatch, argument_qualifiers
+and unsupported_argument. Arrays/objects have extent=known; pointer ranges have
+extent=declared: the stated count does not prove allocation, ownership or lifetime.
+Count does NOT constrain the function body or automatically bind a separate length
+argument. MMIO/Flash are excluded.
+
+Arguments retain JSON descriptions; argument_bindings stores path, actual/expected
+type, address, count, bytes and extent. Null has zero address/size.
+The module adds no post-call content snapshot. Scenarios explicitly check effects,
+neighbouring data and restoration. This is not a guarantee of physical GDB-server
+access counts; Reference uses dereference of the resolved address in the call expression.
+All arguments are checked before the single explicit call; refusal does not invoke it.
+
+```python
+from stm32_gdbtest import Pointer, Reference
+
+result = await t.call("demo::sum", Pointer("samples", count=4), 4,
+                      signature="unsigned int(const unsigned int *, unsigned int)", timeout=2)
+t.check("sum", result["return_value"], 10)
+await t.call("demo::bump", Reference("scalar"), signature="void(unsigned int &)", timeout=2)
+```

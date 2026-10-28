@@ -29,7 +29,7 @@ session = dict(root=str(ROOT), elf=str(elf), profile=str(b/'target.toml'), sessi
 (out/'session.json').write_text(json.dumps(session), encoding='utf-8')
 cases = {t['id']:t for t in collect([b])}
 results = []
-for name in ('HW_CPP_SYNC', 'HW_CPP_ASYNC', 'HW_CPP_OBJECT_SYNC', 'HW_CPP_OBJECT_ASYNC', 'HW_CPP_OBJECT_BREAK'):
+for name in ('HW_CPP_SYNC', 'HW_CPP_ASYNC', 'HW_CPP_OBJECT_SYNC', 'HW_CPP_OBJECT_ASYNC', 'HW_CPP_OBJECT_BREAK', 'HW_CPP_ARGUMENTS_SYNC', 'HW_CPP_ARGUMENTS_ASYNC'):
     code = run(session, cases[name])
     path = sorted((out/'runs').glob('*/result.json'))[-1]
     result = json.loads(path.read_text())

@@ -105,15 +105,92 @@ extern "C" __attribute__( ( noinline ) ) void set_value( unsigned n )
     probe.value = n;
 }
 
+unsigned samples[6];
+unsigned* samples_ptr;
+unsigned* mmio_ptr;
+unsigned* unaligned_ptr;
+unsigned* null_samples;
+const unsigned* readonly_samples;
+typedef const unsigned ReadonlyWord;
+ReadonlyWord* readonly_alias;
+unsigned scalar;
+
+namespace demo
+{
+    unsigned sum( ReadonlyWord* p, unsigned n )
+    {
+        ++calls;
+        unsigned result = 0;
+        for ( unsigned i = 0; i < n; ++i )
+            result += p[i];
+        return result;
+    }
+
+    void fill( unsigned* p, unsigned n )
+    {
+        ++calls;
+        for ( unsigned i = 0; i < n; ++i )
+            p[i] += 10;
+    }
+
+    void bump( unsigned& value )
+    {
+        ++calls;
+        value += 7;
+    }
+
+    unsigned peek( const unsigned& value )
+    {
+        ++calls;
+        return value;
+    }
+
+    void update( Probe& value )
+    {
+        ++calls;
+        value.value += 9;
+    }
+
+    unsigned nullable( const unsigned* p )
+    {
+        ++calls;
+        return p ? *p : 99;
+    }
+
+    void double_pointer( unsigned** p )
+    {
+        ++calls;
+        **p = 1;
+    }
+}
+
+extern "C" unsigned c_sum( const unsigned* p, unsigned n )
+{
+    ++calls;
+    unsigned result = 0;
+    for ( unsigned i = 0; i < n; ++i )
+        result += p[i];
+    return result;
+}
+
 extern "C" void main()
 {
-    probe_ptr      = &probe;
-    const_probe    = &probe;
-    volatile_probe = &probe;
-    cv_probe       = &probe;
-    null_probe     = nullptr;
-    calls          = 0;
-    probe.value    = 3;
+    mmio_ptr      = reinterpret_cast<unsigned*>( 0x40000000 );
+    unaligned_ptr = reinterpret_cast<unsigned*>( 0x20000101 );
+    null_samples  = nullptr;
+    for ( unsigned i = 0; i < 6; ++i )
+        samples[i] = i + 1;
+    samples_ptr      = samples;
+    readonly_samples = samples;
+    readonly_alias   = samples;
+    scalar           = 3;
+    probe_ptr        = &probe;
+    const_probe      = &probe;
+    volatile_probe   = &probe;
+    cv_probe         = &probe;
+    null_probe       = nullptr;
+    calls            = 0;
+    probe.value      = 3;
     ready();
     while ( true )
     {

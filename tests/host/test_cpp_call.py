@@ -59,6 +59,13 @@ class CppCallTests(unittest.TestCase):
         self.assertEqual(caught.exception.code, 'unsupported_method')
         self.gdb.decode_line.assert_not_called()
 
+    def test_exact_extern_c_signature_is_quoted(self):
+        self.symbol.linkage_name = 'demo::f(unsigned int)'
+        result = resolve(self.gdb, 'demo::f', (1,))
+        self.assertEqual(result[0], "'demo::f(unsigned int)'")
+        self.symbol.linkage_name = "demo::f(unsigned int);evil()"
+        self.refuse('unsupported_function')
+
     def test_missing(self):
         self.gdb.decode_line = Mock(side_effect=RuntimeError('absent'))
         self.refuse('function_unavailable')
@@ -182,5 +189,5 @@ class ObjectTests(unittest.TestCase):
         self.assertIs(result, scalar)
         self.assertEqual(args, [scalar])
         self.assertEqual(cv, {'const', 'volatile'})
-        for text in ('int(*)()', 'int(f())', 'int(int*)', 42, 'int() &'):
+        for text in ('int(*)()', 'int(f())', 'int(int**)', 42, 'int() &'):
             with self.assertRaises(ApiError): parse_signature(gdb, text, 'Probe::f')

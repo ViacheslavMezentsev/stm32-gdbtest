@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- A4.3a: Pointer/Reference, exact types, SRAM ranges, early refusals, audit and neutral examples; no inheritance or boards.
+
 - A4.2: explicit this, exact signature, object qualifiers, early refusals and selection audit; host/Renode Windows/Linux, no boards.
 
 - A4.1: unambiguous namespace/static calls, early C++ refusals and rejection of expression-string arguments; host and Renode, no boards.

@@ -1,5 +1,6 @@
 """STM32 runtime testing through GDB-Python; host-safe public metadata API."""
 import sys
+from stm32_gdbtest.call_arguments import Pointer, Reference
 
 from stm32_gdbtest.errors import ApiError, CheckFailed, RecordError
 from stm32_gdbtest.mmio import MMIOError, Register as MMIORegister
@@ -10,7 +11,7 @@ sys.dont_write_bytecode = True
 __version__ = "0.5.0"
 API_VERSION = 3
 __all__ = ["case", "test", "within", "near", "one_of", "matches", "API_VERSION", "__version__", "ApiError", "CheckFailed",
-           "RecordError", "MMIOError", "MMIORegister"]
+           "RecordError", "MMIOError", "MMIORegister", "Pointer", "Reference"]
 
 
 def case(identifier, *, timeout_s=20, labels=(), contracts=()):

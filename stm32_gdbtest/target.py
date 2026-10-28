@@ -1670,19 +1670,25 @@ class Target:
         if type(function) is not str or not _FUNCTION_NAME.fullmatch(function):
             self._fail("call", "validation", "none", "invalid_function",
                        "a plain or qualified function name is required", function=function)
+        from stm32_gdbtest.call_arguments import Pointer, Reference, describe
+        reported_args = [describe(arg) for arg in args]
+        typed = any(type(arg) in (Pointer, Reference) for arg in args)
         literals = []
         for argument in args:
+            if type(argument) in (Pointer, Reference):
+                literals.append(None)
+                continue
             literal = values.argument_literal(argument) if type(argument) in (int, float, bool) else None
             if literal is None:
                 self._fail("call", "validation", "none", "unsupported_argument",
                            "arguments must be finite numbers", function=function,
-                           arguments=list(args))
+                           arguments=reported_args)
             literals.append(literal)
         metadata = {}
-        if '::' in function or this is not None or signature is not None:
+        if typed or '::' in function or this is not None or signature is not None:
             from stm32_gdbtest.cpp_call import resolve
             resolved, kind, implicit, metadata = resolve(gdb, function, args, this=this, signature=signature)
-            literals = implicit + literals
+            literals = implicit + metadata.pop("_argument_literals", literals)
         else:
             resolved, kind = function, self._function_return_type(function)
         expression = f"{resolved}({', '.join(literals)})"
@@ -1693,14 +1699,14 @@ class Target:
         except gdb.error as cause:
             self._fail("call", "command", "unknown", "command_failed",
                        f"{expression} failed", cause=cause, function=function,
-                       arguments=list(args))
+                       arguments=reported_args)
         if getattr(value, "is_optimized_out", False):
             self._fail("call", "observe", "completed", "optimized_out",
                        f"the result of {function} is optimized out", function=function)
         _type_name, _signed, width = values.return_type_shape(kind)
         if not width:
             # A void call has no result to convert; the call itself still happened.
-            result = dict(operation="call", function=function, arguments=list(args),
+            result = dict(operation="call", function=function, arguments=reported_args,
                           expression=expression, outcome="returned", return_value=None,
                           return_state="void", **metadata)
             report_data.append(self.report, "mutations",
@@ -1713,7 +1719,7 @@ class Target:
             self._fail("call", "observe", "completed", "conversion_failed",
                        f"the result of {function} is unavailable", cause=cause, function=function)
         state = "available"
-        result = dict(operation="call", function=function, arguments=list(args),
+        result = dict(operation="call", function=function, arguments=reported_args,
                       expression=expression, outcome="returned", return_value=plain,
                       return_state=state, **metadata)
         report_data.append(self.report, "mutations",

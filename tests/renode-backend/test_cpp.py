@@ -1,5 +1,5 @@
 """Явные C++-вызовы и отказы до исполнения, без периферии."""
-from stm32_gdbtest import case
+from stm32_gdbtest import case, Pointer, Reference
 
 
 @case('HW_CPP_SYNC', timeout_s=20, labels=('emulator',))
@@ -110,3 +110,59 @@ async def cpp_object_break(t):
     t.breakpoint('Probe::add')
     # Остановка внутри вызова не должна считаться завершённым возвратом.
     await t.call('Probe::add', 1, this='&probe', timeout=2)
+
+
+@case('HW_CPP_ARGUMENTS_SYNC', timeout_s=20, labels=('emulator',))
+def cpp_arguments_sync(t):
+    t.reach('ready')
+    result = t.call('demo::sum', Pointer('samples', count=4), 4,
+                    signature='unsigned int(ReadonlyWord *, unsigned int)', timeout=2)
+    t.check('array sum', result['return_value'], 10)
+    t.check('known array extent', result['argument_bindings'][0]['extent'], 'known')
+    result = t.call('c_sum', Pointer('samples_ptr', count=4), 4, timeout=2)
+    t.check('C function uses typed resolution', result['return_value'], 10)
+    t.check('declared pointer extent', result['argument_bindings'][0]['extent'], 'declared')
+    result = t.call('demo::nullable', Pointer.null(), timeout=2)
+    t.check('explicit null', result['return_value'], 99)
+    t.check('three executions', t.read('calls'), 3)
+
+
+@case('HW_CPP_ARGUMENTS_ASYNC', timeout_s=30, labels=('emulator',))
+async def cpp_arguments_async(t):
+    await t.reach('ready')
+    saved = [t.read('samples[' + str(i) + ']') for i in range(6)]
+    old_scalar, old_probe = t.read('scalar'), t.read('probe.value')
+    try:
+        await t.call('demo::fill', Pointer('samples_ptr', count=4), 4, timeout=2)
+        for i, value in enumerate(saved):
+            t.check('buffer and guard ' + str(i), t.read('samples[' + str(i) + ']'), value + (10 if i < 4 else 0))
+        await t.call('demo::bump', Reference('scalar'), signature='void(unsigned int &)', timeout=2)
+        result = await t.call('demo::peek', Reference('scalar'), signature='unsigned int(const unsigned int &)', timeout=2)
+        t.check('reference writes original', result['return_value'], old_scalar + 7)
+        await t.call('demo::update', Reference('probe'), timeout=2)
+        t.check('object reference', t.read('probe.value'), old_probe + 9)
+        for name, args, error in (
+            ('demo::fill', (Pointer('samples', count=7), 7), 'argument_range'),
+            ('demo::fill', (Pointer('mmio_ptr'), 1), 'argument_range'),
+            ('demo::fill', (Pointer('unaligned_ptr'), 1), 'argument_range'),
+            ('demo::fill', (Pointer('null_samples'), 1), 'argument_range'),
+            ('demo::fill', (Pointer('&scalar', count=2), 2), 'argument_range'),
+            ('demo::fill', (Pointer('readonly_samples', count=4), 4), 'argument_qualifiers'),
+            ('demo::sum', (Pointer('&probe'), 1), 'argument_type_mismatch'),
+            ('demo::bump', (Pointer.null(),), 'argument_type_mismatch'),
+            ('demo::bump', (Reference('samples_ptr'),), 'argument_type_mismatch'),
+            ('demo::double_pointer', (Pointer('&samples_ptr'),), 'unsupported_argument'),
+            ('demo::fill', (0, 1), 'unsupported_argument'),
+        ):
+            with t.refused(error):
+                await t.call(name, *args, timeout=2)
+            t.check('no execution after ' + error, t.read('calls'), 4)
+    finally:
+        for i, value in enumerate(saved):
+            t.write('samples[' + str(i) + ']', value)
+        t.write('scalar', old_scalar)
+        t.write('probe.value', old_probe)
+        for i, value in enumerate(saved):
+            t.check('buffer restored ' + str(i), t.read('samples[' + str(i) + ']'), value)
+        t.check('scalar restored', t.read('scalar'), old_scalar)
+        t.check('probe restored', t.read('probe.value'), old_probe)

@@ -1,5 +1,8 @@
 """Conservative namespace/static resolution before inferior execution (ТЗ API 4.23.7)."""
 import re
+from dataclasses import dataclass
+from stm32_gdbtest.call_arguments import Pointer, Reference
+from stm32_gdbtest import values
 
 from stm32_gdbtest.errors import fail
 from stm32_gdbtest.expression import parameters
@@ -45,7 +48,7 @@ def _resolve(gdb, function, arguments, this, signature):
             reject('function_unavailable', 'No exact function with code', function)
         if requested is not None:
             candidates = {key: sym for key, sym in candidates.items()
-                          if matches(sym, requested)}
+                          if matches(sym, requested, gdb)}
             if not candidates:
                 reject('signature_mismatch', 'No exact DWARF signature matches', function)
         if len(candidates) != 1:
@@ -70,8 +73,15 @@ def _resolve(gdb, function, arguments, this, signature):
         result = kind.target().strip_typedefs()
         if result.code not in (gdb.TYPE_CODE_INT, gdb.TYPE_CODE_BOOL, gdb.TYPE_CODE_VOID):
             reject('unsupported_return', 'Only integer, bool and void results are supported', function)
-        for field, value in zip(fields, arguments):
+        literals, bindings = [], []
+        for index, (field, value) in enumerate(zip(fields, arguments)):
             argtype = field.type.strip_typedefs()
+            if type(value) in (Pointer, Reference):
+                literal, binding = bind_argument(gdb, function, argtype, value)
+                literals.append(literal)
+                bindings.append(dict(index=index, **binding))
+                continue
+            literals.append(values.argument_literal(value))
             if argtype.code not in (gdb.TYPE_CODE_INT, gdb.TYPE_CODE_BOOL) or type(value) not in (int, bool):
                 reject('unsupported_argument', 'Only integer and bool arguments are supported', function)
             bits = argtype.sizeof * 8
@@ -81,14 +91,22 @@ def _resolve(gdb, function, arguments, this, signature):
                 (0, (1 << bits) - 1) if unsigned else (-(1 << (bits - 1)), (1 << (bits - 1)) - 1))
             if not low <= value <= high:
                 reject('argument_range', 'Argument does not fit its declared type', function)
+        if bindings:
+            metadata.update(argument_bindings=bindings, _argument_literals=literals)
         linkage = symbol.linkage_name
         if not re.fullmatch(r'[A-Za-z_][A-Za-z_0-9]*', linkage or ''):
-            reject('unsupported_function', 'No supported linkage name', function)
+            # Some extern-C DWARF exposes the full signature as linkage_name.
+            # Quote only the exact selected symbol, never user-supplied GDB text.
+            if (not isinstance(linkage, str) or len(linkage) > 512
+                    or not linkage.startswith(function + '(')
+                    or not re.fullmatch(r'[A-Za-z_0-9: (),*&]+', linkage)):
+                reject('unsupported_function', 'No supported linkage name', function)
+            linkage = "'" + linkage + "'"
         # Bind the call to this symbol, not a second overload-resolution operation.
         value = symbol.value()
         if value.is_optimized_out or value.address is None or int(value.address) == 0:
             reject('function_unavailable', 'Function has no callable address', function)
-        if this is not None or signature is not None:
+        if this is not None or signature is not None or bindings:
             metadata.update(resolved_function=symbol.name, requested_signature=signature,
                             resolved_signature=str(kind))
         return linkage, result, implicit, metadata
@@ -108,10 +126,8 @@ def parse_signature(gdb, text, function):
         reject('invalid_signature', 'Use return_type(argument_types) [const] [volatile]', function)
     result, arguments, quals = match.groups()
     names = [] if not arguments.strip() else arguments.split(',')
-    if any(not re.fullmatch(TYPE, n.strip()) for n in names):
-        reject('invalid_signature', 'Only named scalar types are supported', function)
     try:
-        types = [gdb.lookup_type(n.strip()).strip_typedefs() for n in [result, *names]]
+        types = [parse_type(gdb, n.strip(), function) for n in [result, *names]]
     except gdb.error as cause:
         fail('call', 'validation', 'none', 'invalid_signature', 'Unknown signature type',
              cause=cause, function=function)
@@ -124,7 +140,7 @@ def qualifiers(kind):
     return set(re.findall(r'\b(const|volatile)\b', str(kind)))
 
 
-def matches(symbol, requested):
+def matches(symbol, requested, gdb):
     kind = symbol.type.strip_typedefs()
     fields = list(kind.fields())
     quals = set()
@@ -132,9 +148,9 @@ def matches(symbol, requested):
         quals = qualifiers(fields[0].type.strip_typedefs().target().strip_typedefs())
         fields = fields[1:]
     result, arguments, expected_quals = requested
-    return (kind.target().strip_typedefs() == result and quals == expected_quals
+    return (same_type(gdb, kind.target(), result) and quals == expected_quals
             and len(fields) == len(arguments)
-            and all(not f.artificial and f.type.strip_typedefs() == t
+            and all(not f.artificial and same_type(gdb, f.type, t)
                     for f, t in zip(fields, arguments)))
 
 
@@ -178,3 +194,113 @@ def object_argument(gdb, function, method, pointer_type, path):
     if not re.fullmatch(r'[A-Za-z_][A-Za-z_0-9: ]* \*', spelling):
         reject('unsupported_method', 'Unsupported this type spelling', function)
     return [f'({spelling}){address}'], dict(this=path, this_address=address, this_type=str(actual))
+
+
+@dataclass(frozen=True)
+class TypeSpec:
+    base: object
+    cv: frozenset
+    indirect: str | None
+    outer_cv: frozenset
+
+
+def parse_type(gdb, name, function):
+    match = re.fullmatch(r'([A-Za-z_][A-Za-z_0-9: ]*?)(?:\s*([*&])\s*((?:(?:const|volatile)\s*)*))?', name)
+    if match is None:
+        reject('invalid_signature', 'Only one pointer/reference level and named types are supported', function)
+    base, indirect, outer = match.groups()
+    cv = frozenset(re.findall(r'\b(const|volatile)\b', base))
+    base = re.sub(r'\b(const|volatile)\b', '', base)
+    kind = gdb.lookup_type(' '.join(base.split())).strip_typedefs()
+    if not cv and not indirect:
+        return kind
+    if indirect == '&' and outer:
+        reject('invalid_signature', 'References cannot have outer cv qualifiers', function)
+    return TypeSpec(kind, cv | frozenset(qualifiers(kind)), indirect, frozenset((outer or '').split()))
+
+
+def same_type(gdb, actual, expected):
+    actual = actual.strip_typedefs()
+    if isinstance(expected, TypeSpec):
+        if expected.indirect:
+            code = gdb.TYPE_CODE_PTR if expected.indirect == '*' else gdb.TYPE_CODE_REF
+            if actual.code != code:
+                return False
+            tail = str(actual).rsplit('*', 1)[-1] if code == gdb.TYPE_CODE_PTR else ''
+            if set(re.findall(r'\b(const|volatile)\b', tail)) != expected.outer_cv:
+                return False
+            actual = actual.target().strip_typedefs()
+        return actual.unqualified() == expected.base.unqualified() and qualifiers(actual) == expected.cv
+    expected = expected.strip_typedefs()
+    # GDB equality alone is insufficient for const/volatile combinations.
+    if actual.code != expected.code:
+        return False
+    if actual.code in (getattr(gdb, 'TYPE_CODE_PTR', -1), getattr(gdb, 'TYPE_CODE_REF', -2)):
+        return str(actual) == str(expected) and same_type(gdb, actual.target(), expected.target())
+    return actual == expected and qualifiers(actual) == qualifiers(expected)
+
+
+def argument_sram(address, size, alignment, function):
+    if (size <= 0 or not 0x20000000 <= address < address + size <= 0x20100000
+            or alignment <= 0 or address % alignment):
+        reject('argument_range', 'Argument range/alignment is outside ordinary SRAM', function)
+
+
+def bind_argument(gdb, function, parameter, descriptor):
+    reference = type(descriptor) is Reference
+    code = gdb.TYPE_CODE_REF if reference else gdb.TYPE_CODE_PTR
+    if parameter.code != code:
+        reject('argument_type_mismatch', 'Descriptor kind differs from parameter type', function)
+    expected = parameter.target().strip_typedefs()
+    if expected.code not in (gdb.TYPE_CODE_INT, gdb.TYPE_CODE_BOOL, gdb.TYPE_CODE_STRUCT):
+        reject('unsupported_argument', 'Unsupported pointee/referent type', function)
+    if expected.code == gdb.TYPE_CODE_STRUCT and any(
+            getattr(f, 'is_base_class', False) or (f.name or '').startswith('_vptr')
+            for f in expected.unqualified().fields()):
+        reject('unsupported_argument', 'Inheritance and polymorphic arguments are not supported', function)
+    spelling = str(expected)
+    if not re.fullmatch(TYPE, spelling):
+        reject('unsupported_argument', 'Unsupported pointee spelling', function)
+    if not reference and descriptor.path is None:
+        return f'({spelling} *)0', dict(kind='pointer', path=None, actual_type=None,
+                                       expected_type=str(parameter), address=0, count=0, bytes=0)
+    path = descriptor.path
+    symbol = gdb.lookup_symbol(path.lstrip('&'))[0]
+    if symbol is None or not symbol.is_variable:
+        reject('invalid_argument', 'Argument variable is absent', function)
+    value = symbol.value()
+    actual = value.type.strip_typedefs()
+    count = 1 if reference else descriptor.count
+    known = None
+    if not reference and not path.startswith('&') and actual.code == gdb.TYPE_CODE_ARRAY:
+        low, high = actual.range()
+        if low != 0:
+            reject('unsupported_argument', 'Only zero-based arrays are supported', function)
+        known = high - low + 1
+        actual = actual.target().strip_typedefs()
+        address = int(value.address) if value.address is not None else 0
+    elif not reference and not path.startswith('&') and actual.code == gdb.TYPE_CODE_PTR:
+        if value.address is None:
+            reject('invalid_argument', 'Pointer must be stored in SRAM', function)
+        argument_sram(int(value.address), actual.sizeof, actual.alignof, function)
+        actual = actual.target().strip_typedefs()
+        address = int(value)  # Capture exactly once before any target execution.
+    else:
+        if not reference and not path.startswith('&'):
+            reject('invalid_argument', 'Use &object, a named array, or a named pointer', function)
+        known = 1
+        address = int(value.address) if value.address is not None else 0
+    if actual.unqualified() != expected.unqualified():
+        reject('argument_type_mismatch', 'Exact pointee/referent type required', function)
+    if not qualifiers(actual) <= qualifiers(expected):
+        reject('argument_qualifiers', 'Cannot discard const/volatile', function)
+    if known is not None and count > known:
+        reject('argument_range', 'Count exceeds the named object/array extent', function)
+    size = actual.sizeof * count
+    argument_sram(address, size, actual.alignof, function)
+    expression = f'({spelling} *){address}'
+    if reference:
+        expression = '*(' + expression + ')'
+    return expression, dict(kind='reference' if reference else 'pointer', path=path,
+                            actual_type=str(actual), expected_type=str(parameter), address=address,
+                            count=count, bytes=size, extent='known' if known is not None else 'declared')
