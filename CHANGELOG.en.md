@@ -6,6 +6,11 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-28
+
+0.6.0 release (API_VERSION=3): journal and report quotas and policies, lossless result schema 2, C++ calls, verified software substitution methods, offline ROS1 bag import and an interactive scenario walk-through; the 0.5.1 preparation material. A8 acceptance on candidate `6530395`, including C++, journal and substitution on six MCUs — [release notes](docs/releases/v0.6.0.md), [moving to 0.6.0](docs/en/VERSIONING.md#moving-to-060).
+
+- A8: candidate acceptance — host/docs/format, Renode/QEMU and the A1–A6 examples on Windows and Linux, six MCUs (MMIO, async/call, VTOR/FPB, HAL F030, a new C++/journal/substitution kit), CI firmware and consumers on boards; package version 0.6.0.
 - A7.5: interactive scenario walk-through `run --interactive` (ТЗ API 6.10) — before any MCU access GDB waits for a debugpy debugger (VS Code), with no overall time limit and no async scenario deadline; Ctrl+C cancels the run with board recovery; results go to a separate `interactive-runs` with `execution_kind: interactive` and stay out of automated summaries. Only the run selects the mode: the scenario and its `timeout_s` are unchanged. Guide docs/en/MANUAL_DEBUG.md (RU) with BluePill/BlackPill examples and VS Code setup.
 - A7.1: techniques, the scenario checklist and DDTT (RU/EN) gain "Journal, quotas and completeness (A1–A3)" and "C++ calls (A4)" with right/wrong pairs; the scenarios skill gets a 0.6.0 route map (A1–A6: example, command, accepted outcome) referenced by develop, results, renode, coverage, report and run.
 - The stm32-gdbtest-report skill now follows the release report design: a compact overview (summary, conditions, area tables, what was not checked) and a technical report (acquisition methods, evidence index, cards with a requirement panel, figures and Z-NN remarks, remark summary, exclusions, provenance appendix). Input is neutral JSON schema 2 checked for links, time zones and the absence of serial numbers, addresses and paths; the design contract, section wording and neutrality rules are in references.

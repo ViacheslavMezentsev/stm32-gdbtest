@@ -2,10 +2,10 @@
 name: stm32-gdbtest-coverage
 description: Подключить покрытие ожиданий DDTT к проекту прошивки, связать проверки с исходниками и сформировать LCOV, HTML и аннотации CI по сохранённым свидетельствам.
 license: MIT
-compatibility: stm32-gdbtest 0.5.0 (API_VERSION 3); Python 3.11+, GDB с Python 3.11+ (arm-none-eabi-gdb-py3); плата не нужна для построения отчётов; VS Code с Coverage Gutters или GitLab с отчётом Cobertura по необходимости
+compatibility: stm32-gdbtest 0.6.0 (API_VERSION 3); Python 3.11+, GDB с Python 3.11+ (arm-none-eabi-gdb-py3); плата не нужна для построения отчётов; VS Code с Coverage Gutters или GitLab с отчётом Cobertura по необходимости
 metadata:
   author: Viacheslav Mezentsev
-  version: "0.5.0"
+  version: "0.6.0"
   module: stm32-gdbtest
   api_version: "3"
 ---

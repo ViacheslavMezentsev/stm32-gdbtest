@@ -2,10 +2,10 @@
 name: stm32-gdbtest-renode
 description: Проверить небольшую гипотезу C++, GDB или MMIO в локальной песочнице Renode без платы, сохранить свидетельства и определить ограничения модели перед аппаратным опытом.
 license: MIT
-compatibility: stm32-gdbtest 0.5.0 (API_VERSION 3); Python 3.11+, GDB с Python 3.11+ (arm-none-eabi-gdb-py3); Renode 1.17 на Windows или Linux; плата не нужна
+compatibility: stm32-gdbtest 0.6.0 (API_VERSION 3); Python 3.11+, GDB с Python 3.11+ (arm-none-eabi-gdb-py3); Renode 1.17 на Windows или Linux; плата не нужна
 metadata:
   author: Viacheslav Mezentsev
-  version: "0.5.0"
+  version: "0.6.0"
   module: stm32-gdbtest
   api_version: "3"
 ---

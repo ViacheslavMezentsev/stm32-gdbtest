@@ -2,18 +2,20 @@
 
 [Documentation](index.md) · [Русский](../ru/STATUS.md)
 
-**0.5.0 / API_VERSION=3** is released. **0.5.1** preparation includes documentation and
-neutral examples; runtime version remains 0.5.0.
+Current version: **0.6.0 / API_VERSION=3** — long scenarios with journal quotas, C++ calls,
+verified software substitution methods, offline ROS1 bag import and an interactive scenario
+walk-through in VS Code. The 0.5.1 preparation material is part of this release.
 
-P5b acceptance at `a7b0951`: Windows/Linux, Renode/QEMU, six MCUs, SSH and BluePill/BlackPill
-consumers. [Matrix and limits](../development/release-050-acceptance.md),
-[release notes](../releases/v0.5.0.md), [accepted results](API_ACCEPTANCE.md).
-Evidence belongs to those revisions, not to every current stand.
+A8 acceptance at `6530395`: Windows/Linux, Renode/QEMU, six MCUs (including the new C++, journal
+and substitution checks on silicon) and the BluePill/BlackPill consumers.
+[Matrix and limits](../development/release-060-acceptance.md) (Russian),
+[release notes](../releases/v0.6.0.md); previous: [0.5.0 acceptance](../development/release-050-acceptance.md),
+[accepted results](API_ACCEPTANCE.md). Evidence belongs to those revisions, not to every current stand.
 
 Available: MMIO/SVD, inspect, synchronous and async scenarios, bounded call, live windows,
 local/SSH stands, Renode/QEMU, records and DDTT export with condition qualification.
 [API](API.md), [stands](STANDS.md), [live-window limits](LIVE_EXECUTION.md).
 
 Next: [TODO](../../TODO.md), [ROADMAP](../../ROADMAP.md).
-Python scenario debugging with debugpy remains a separate stage with the developer.
+Stepping through a scenario: [run --interactive](MANUAL_DEBUG.md).
 History and migration: [release transitions](RELEASE_CHANGES.md).

@@ -2,7 +2,7 @@
 
 [Documentation](index.md) · [Русский](../ru/VERSIONING.md)
 
-Current line: **0.5.x / API_VERSION=3**. [Release transitions](RELEASE_CHANGES.md).
+Current line: **0.6.x / API_VERSION=3**. [Release transitions](RELEASE_CHANGES.md).
 Use SemVer MAJOR.MINOR.PATCH with a v-prefixed tag. Before 1.0, compatible fixes and docs
 change PATCH; new features or incompatible APIs change MINOR with migration. Published tags
 are never moved. Package version comes from `__version__`; API and configuration schemas
@@ -55,6 +55,15 @@ contributors) and `#number` into an issue link, so write such fragments only in
 backticks: `` `@case` ``.
 
 Branch and commit rules — [maintenance](maintenance.md).
+
+## Moving to 0.6.0
+
+API_VERSION stays 3; existing scenarios and configurations work unchanged. New features are
+opt-in: `api` schema 3 in session.toml for journal and report quotas and policies
+([journaling](JOURNALING.md)), `call` with `this`, `signature`, `Pointer` and `Reference` for C++
+([call](api/call.md)), and `run --interactive` for a step-by-step walk-through ([guide](MANUAL_DEBUG.md)).
+Result readers understand result schema 2 and records 1/2; incomplete runs are marked instead of
+passing as complete. After updating the submodule, repeat the consumer acceptance.
 
 ## Moving to 0.5.0: emulators
 
