@@ -5,13 +5,20 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.121 (A3.2: применение journal, кандидат 0.6.0) |
+| **Ревизия** | 0.122 (A3.2: применение report, кандидат 0.6.0) |
 | **Дата формирования** | 28.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | Выпуск пакета stm32-gdbtest `0.5.0` (итоговый коммит приёмки `a7b0951`, р.0.114); API_VERSION=3, target schema 3 (schema 1/2 совместимы), ТЗ API 0.3.23; MMIO/SVD (р.0.104), контракты memory/write (р.0.99), Renode и QEMU (р.0.102). Публикация владельцем после CI итогового SHA. |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; docs/archive/SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
+
+### Изменения ревизии 0.122
+
+| Пункт | Изменение |
+| --- | --- |
+| 5.20.18 | Квоты и усечение report, независимые коллекции и исходы |
+| Разделы проверок | TC-191: host/Renode Windows/Linux, без плат |
 
 ### Изменения ревизии 0.121
 
@@ -313,6 +320,7 @@ Runner задаёт режим до сценария и резервирует 2
 | 0.119 | 28.10.2026 | A3.1: строгая полнота и независимые счётчики проверок. |
 | 0.120 | 28.10.2026 | A3.2: schema 3, runner/pack и граница исполнения. |
 | 0.121 | 28.10.2026 | A3.2: применение journal и явное частичное чтение. |
+| 0.122 | 28.10.2026 | A3.2: применение report и сочетания политик. |
 
 ### Изменения ревизии 0.107
 
@@ -2119,9 +2127,7 @@ session.toml без подстановок или сетевой загрузк�
 Снимок ДОЛЖЕН содержать применённые defaults; capsule/pack ДОЛЖНЫ переносить исходные
 TOML с хешами и отпечатком defaults/максимумов/политик, повторно проверяя их при чтении.
 Runner ДОЛЖЕН показывать применённые настройки в api_policy. Исполнение schema 3
-ДОЛЖНО допускать политики journal. Неподдержанные report.on_limit=truncate и
-нестандартная report.max_rows_per_collection ДОЛЖНЫ отклоняться до захвата отладчика
-и запуска сервера; inspect/prepare/pack разрешены. `(р.0.120)` `(р.0.121)`
+ДОЛЖНО допускать политики journal/report и report.max_rows_per_collection. `(р.0.122)` `(р.0.120)` `(р.0.121)`
 
 5.20.17. [U] Journal truncate ДОЛЖЕН сохранять атомарный префикс при исчерпании
 records/nodes/text_bytes и прекращать детализацию до конца сценария, продолжая проверки
@@ -2134,7 +2140,22 @@ attempted/saved/lost и границы потерь; первый лимит с�
 records(require_complete=True) ДОЛЖЕН отказывать при неполноте всего журнала;
 явный False разрешает только просмотр сохранённого префикса с исходным sequence.
 Допущенное усечение НЕ ДОЛЖНО само менять вердикт сценария; command ДОЛЖЕН быть 2,
-анализ partial, подтверждение DDTT заблокировано. Report остаётся строгим. `(р.0.121)`
+анализ partial, подтверждение DDTT заблокировано. Report поддерживает независимую политику по следующему пункту. `(р.0.122)` `(р.0.121)`
+
+5.20.18. [U] API schema 3 ДОЛЖНА применять report.max_rows_per_collection (1–65536,
+default 65536) отдельно к checks/stops/mutations/evaluations/executions/resets в full
+и compact. Error ДОЛЖЕН сохранять строгий отказ; truncate ДОЛЖЕН сохранять префикс
+каждой коллекции независимо от journal и остальных коллекций. Проверки и cleanup
+ДОЛЖНЫ продолжаться; check_accounting ДОЛЖЕН учитывать все исходы, включая потерянный
+FAIL. Счётчики attempted/saved/lost и границы хвоста ДОЛЖНЫ оставаться проверяемыми;
+первая причина каждой коллекции сохраняется в ограниченном резерве. Только квота
+строк допускает усечение: ошибки хранения, сериализации и транспорта НЕ ДОЛЖНЫ
+подавляться. Усечённые значения НЕ ДОЛЖНЫ вызывать repr/ленивое чтение GDB.
+Report truncate ДОЛЖЕН использовать evidence schema 3 с report-truncate/both-truncate;
+result/records schema 3 ДОЛЖНЫ читаться общими читателями, отвергающими неизвестную
+полноту. Исход сценария сохраняется, неполнота ДОЛЖНА давать command=2, partial-анализ
+и блокировку подтверждения DDTT. При потере сохранённого префикса полнота ДОЛЖНА
+стать unavailable с сохранением независимого учёта и первой причины. `(р.0.122)`
 
 ### 5.21. Захват журнала результатов (р.0.72)
 
@@ -2976,6 +2997,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-186 | T: tests/host/test_report_data.py; D: tests/renode-backend/run_report.py | Result reader, журналы, вывод, сохранение отказов; Windows/Linux без плат (р.0.117) |
 | TC-187 | T: tests/host/test_report_summary.py; D: tests/renode-backend/run_report.py --summary | Источники, средний FAIL, поколения, неполнота и все уровни вывода (р.0.118) |
 | TC-188 | A3.1: потеря строки FAIL, строгий журнал, резерв, повреждение метаданных | Host и Renode Windows/Linux: ожидаемые FAIL/ERROR, cleanup, повтор |
+| TC-191 | Квоты report, независимые коллекции, FAIL и сочетания journal | Host/Renode Windows/Linux, без плат |
 | TC-190 | Квоты journal, префикс, MMIO, независимый FAIL и новые форматы | Host и Renode Windows/Linux, без плат |
 | TC-189 | Schema 3: квоты, hash/fingerprint, package и prepare | Host Windows/Linux; исполнение отказано до доступа к цели |
 | TC-182 | T: tests/host/test_hil_inspect.py; CLI Windows/Linux | Связи, SVD/capsule, backend, отказы, AST, cwd/junction/symlink, приватность и коды завершения (р.0.109) |
@@ -3133,6 +3155,7 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | 5.3.14 | `stm32_gdbtest/evidence.py`, `report_data.py`, `scenario.py` | TC-188; `tests/host/test_evidence.py`, `tests/renode-backend/run_report.py` |
 | 5.3.11 | agent.py, execution.py | TC-184 (р.0.115) |
 | 5.20.15, 5.21.2, 5.21.5 | configuration.py, config_transport.py, result_capture.py, compact_records.py | TC-185 (р.0.116) |
+| 5.20.18 | `report_data.py`, `evidence.py`, `result_capture.py` | TC-191; `tests/host/test_report_truncate.py`, `tests/renode-backend/run_report_quota.py` |
 | 5.20.17 | `evidence.py`, `target.py`, `result_capture.py`, `report_data.py` | TC-190; `tests/host/test_journal_truncate.py`, `tests/renode-backend/run_journal.py` |
 | 5.20.16 | `configuration.py`, `config_transport.py`, `runner.py`, `package.py` | TC-189; `tests/host/test_policy_config.py` |
 | 5.3.9, 5.3.10 | CL; MA; RU: `run` | TC-25, I |

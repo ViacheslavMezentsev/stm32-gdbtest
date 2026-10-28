@@ -34,9 +34,9 @@ def save(directory, report, target, completion):
         else:
             records = journal._entries if isinstance(journal, Journal) else target.records()
             payload = dict(schema=1, run_id=report['run_id'], case_id=report['id'], records=records)
-        if report.get('evidence', {}).get('schema') == 2:
+        if report.get('evidence', {}).get('schema') in (2, 3):
             payload = dict(payload, schema=3, source_schema=payload['schema'],
-                           completeness=dict(report['evidence']['stores']['records']))
+                           completeness=dict(report['evidence']['stores'].get('records', evidence.state())))
         digest, size = hashlib.sha256(), 0
         path = Path(directory) / 'records.json'
         if path.exists() or path.is_symlink():
@@ -105,13 +105,13 @@ def read(directory, report, *, materialize=True):
     evidence.validate(report, records_count=len(records))
     if data['schema'] == 3:
         if (type(data.get('source_schema')) is not int or data['source_schema'] not in (1, 2)
-                or report.get('evidence', {}).get('schema') != 2
-                or json.dumps(data.get('completeness'), sort_keys=True) != json.dumps(report['evidence']['stores'].get('records'), sort_keys=True)):
+                or report.get('evidence', {}).get('schema') not in (2, 3)
+                or json.dumps(data.get('completeness'), sort_keys=True) != json.dumps(report['evidence']['stores'].get('records', evidence.state()), sort_keys=True)):
             raise ValueError('capture completeness mismatch')
         data = dict(data)
         data['schema'] = data.pop('source_schema')
         data.pop('completeness')
-    elif report.get('evidence', {}).get('schema') == 2:
+    elif report.get('evidence', {}).get('schema') in (2, 3):
         raise ValueError('policy journal requires capture schema 3')
     if data['schema'] == 2:
         journal = decode(data)

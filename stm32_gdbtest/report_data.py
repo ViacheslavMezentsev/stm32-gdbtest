@@ -170,6 +170,13 @@ def configure(report, api):
         return
     report['report_policy'] = dict(representation=policy.get('representation','full'),
                                  console=policy.get('console','full'))
+    if api.get('schema') == 3:
+        report['report_policy'].update(on_limit=policy.get('on_limit', 'error'),
+            max_rows_per_collection=policy.get('max_rows_per_collection', REPORT_ROWS_MAX))
+        if policy.get('on_limit') == 'truncate':
+            journal_truncate = api.get('journal', {}).get('on_limit') == 'truncate'
+            report['evidence'].update(schema=3,
+                policy='both-truncate' if journal_truncate else 'report-truncate')
     if policy.get('representation') == 'compact':
         for name in COLLECTIONS:
             values = report.setdefault(name, [])
@@ -185,6 +192,25 @@ def append(report, name, row):
     if name == "checks":
         evidence.check(report, row)
     try:
+        policy = report.get('report_policy', {})
+        limit = policy.get('max_rows_per_collection')
+        if limit is not None and meta['saved'] >= limit:
+            if policy.get('on_limit') == 'truncate' and meta['state'] in ('complete', 'truncated'):
+                # Preserve the independent check outcome; retain no opaque payload
+                # and never call repr or evaluate a lazy GDB value for a dropped row.
+                if meta['state'] == 'complete':
+                    cause = ApiError('Report collection quota exhausted', operation='report',
+                        stage='audit', effect='unknown', code='limit_exceeded',
+                        collection=name, maximum=limit, attempted=meta['attempted'])
+                    evidence.lost(report, name, meta, cause)
+                    meta['state'] = 'truncated'
+                else:
+                    meta['lost'] += 1
+                    meta['last_lost'] = meta['attempted']
+                return
+            raise ApiError('Report collection quota exhausted', operation='report',
+                stage='audit', effect='unknown', code='limit_exceeded',
+                collection=name, maximum=limit, attempted=meta['attempted'])
         report.setdefault(name, []).append(row)
         meta["saved"] += 1
     except Exception as cause:
@@ -210,6 +236,8 @@ def summary(report):
     for row in checks:
         total += 1
         failed += row.get('passed') is False
+    counts = report.get('check_accounting', {})
+    total, failed = counts.get('total', total), counts.get('failed', failed)
     result = dict(id=report.get('id'), status=report.get('status'), result='result.json',
                   checks_total=total, checks_failed=failed)
     for key in ('error','primary_error','audit_error','report_storage_error','report_audit_errors',
@@ -250,7 +278,7 @@ def payload(report, compact):
         for name in COLLECTIONS:
             if isinstance(data.get(name), Collection):
                 data[name] = list(data[name])
-    if data.get('evidence', {}).get('schema') == 2:
+    if data.get('evidence', {}).get('schema') in (2, 3):
         data['report_schema'] = 3
         data['report_representation'] = 'compact' if compact else 'full'
     return data
@@ -311,10 +339,10 @@ def decode(data, *, materialize=True):
     schema = data.get('report_schema', 1)
     if type(schema) is not int or schema not in (1,2,3):
         raise ValueError('unsupported report schema')
-    if schema != 3 and data.get('evidence', {}).get('schema') == 2:
+    if schema != 3 and data.get('evidence', {}).get('schema') in (2, 3):
         raise ValueError('policy evidence requires report schema 3')
     if schema == 3:
-        if data.get('evidence', {}).get('schema') != 2 or data.get('report_representation') not in ('full', 'compact'):
+        if data.get('evidence', {}).get('schema') not in (2, 3) or data.get('report_representation') not in ('full', 'compact'):
             raise ValueError('invalid policy report envelope')
         data = dict(data)
         schema = 2 if data.pop('report_representation') == 'compact' else 1

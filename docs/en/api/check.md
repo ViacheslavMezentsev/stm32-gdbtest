@@ -131,3 +131,7 @@ Compact result storage and console control do not remove checks; see [result jou
 `console="summary"` never drops checks. Middle failures and differing expectations remain visible; summaries do not confirm DDTT claims.
 
 A3.1: see [API](../API.md#strict-completeness-a31-060-candidate) for completeness and independent check accounting. Truncation is not enabled.
+
+## A3.2 (0.6.0 candidate)
+
+With report truncation a check row may be absent from the prefix, but check_accounting retains its outcome. FAIL survives caught CheckFailed. Saved-row groups do not replace independent accounting. [Journaling](../JOURNALING.md).

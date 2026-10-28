@@ -266,24 +266,24 @@ def journal_page(lang):
     body = crumb(lang, 1, ('', t['journal_title']))
     body += f'<h1>{t["journal_title"]}</h1><p class="lead">{t["journal_card"]}</p>'
     if lang == 'ru':
-        status = 'Кандидат 0.6.0: schema 3 применяет квоты journal и явное truncate. Усечение report пока не исполняется. Неполнота: command=2, partial-анализ.'
+        status = 'Кандидат 0.6.0: schema 3 применяет независимые квоты и error/truncate для journal/report. Неполнота: command=2, partial-анализ.'
         title, columns = 'Маршруты и ограничения', ('Маршрут', 'Что учитывать')
         rows = [('records / result', 'Первичные данные и исход; SAVED не означает полноту.'),
                 ('summary / console', 'Представление, не замена первичных свидетельств.'),
                 ('def / async def', 'FAIL учитывается независимо от хранения; wait timeout не означает halt.'),
                 ('MMIO', 'Attempt без result не доказывает успех или отсутствие воздействия.'),
                 ('cleanup / DDTT', 'Проверить восстановление, полноту и применимость раздельно.')]
-        good, bad = 'Используйте общий читатель, проверяйте evidence и cleanup. Для осознанного просмотра префикса: records(require_complete=False).', 'Не считайте пустой журнал нулём операций и не подменяйте свидетельства сводкой.'
+        good, bad = 'Используйте общий читатель, проверяйте evidence и cleanup. Для префикса: records(require_complete=False). Все исходы проверок — check_accounting; группы сводки описывают сохранённые строки.', 'Не считайте пустой журнал нулём операций и не подменяйте свидетельства сводкой.'
         reference = 'Полное руководство: настройки, квоты, форматы и отказы'
     else:
-        status = '0.6.0 candidate: schema 3 enforces journal quotas and explicit truncation. Report truncation is not executable yet. Incompleteness gives command=2 and partial analysis.'
+        status = '0.6.0 candidate: schema 3 enforces independent journal/report quotas and error/truncate policies. Incompleteness gives command=2 and partial analysis.'
         title, columns = 'Routes and boundaries', ('Route', 'Considerations')
         rows = [('records / result', 'Primary data and outcomes; SAVED does not imply completeness.'),
                 ('summary / console', 'Presentation, not a substitute for primary evidence.'),
                 ('def / async def', 'FAIL is independent of storage; wait timeout does not halt.'),
                 ('MMIO', 'Attempt without result proves neither success nor absence of effects.'),
                 ('cleanup / DDTT', 'Assess restoration, completeness and applicability separately.')]
-        good, bad = 'Use shared readers; inspect evidence and cleanup. Explicit prefix inspection: records(require_complete=False).', 'Do not treat empty records as zero operations or replace evidence with summaries.'
+        good, bad = 'Use shared readers; inspect evidence and cleanup. Prefix inspection: records(require_complete=False). All outcomes: check_accounting; summary groups describe stored rows.', 'Do not treat empty records as zero operations or replace evidence with summaries.'
         reference = 'Full guide: settings, budgets, formats and failures'
     body += f'<div class="callout view"><p>{esc(status)}</p></div>'
     body += f'<div class="box"><h2 id="routes">{title}</h2>{table(columns, rows)}</div>'

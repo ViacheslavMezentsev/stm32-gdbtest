@@ -80,3 +80,21 @@ python tests/renode-backend/run_journal.py --toolchain /opt/xpack-arm-none-eabi-
 
 Путь Windows задаётся теми же параметрами. Артефакты: build/journal-renode;
 summary.json кампании содержит ожидаемые исходы, не заменяет result/records.
+
+## A3.2: квоты и усечение report
+
+`run_report_quota.py` проверяет 32 сочетания: full/compact × report error/truncate ×
+journal error/truncate × PASS/перехваченный FAIL/смешанные записи/живое окно.
+Квота report — 4 строки на коллекцию; boot выполняет собственные проверки, поэтому
+они входят в сохранённый префикс. Проверка, упавшая за пределом префикса, остаётся FAIL
+в независимом счётчике. В живом окне проверяются усечённые stops и journal: коллекция
+executions относится к execute(), а не к resume/wait/halt.
+
+```sh
+python tests/renode-backend/run_report_quota.py --toolchain /opt/xpack-arm-none-eabi-gcc-14.2.1-1.1 --renode /opt/renode-1.17.0/renode
+```
+
+Артефакты находятся в build/report-quota-renode. Все намеренно неполные прогоны дают
+command=2; ожидаемый PASS/FAIL/ERROR сценария проверяется отдельно. Без плат.
+Все шесть коллекций, атомарность префикса, ошибки spool/сериализации и отсутствие
+repr пропущенных значений проверяет host test_report_truncate.py.

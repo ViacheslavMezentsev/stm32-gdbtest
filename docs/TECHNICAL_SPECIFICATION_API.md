@@ -5,12 +5,19 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION_API.md |
-| **Ревизия** | 0.3.30 (A3.2: применение journal, кандидат 0.6.0) |
+| **Ревизия** | 0.3.31 (A3.2: применение report, кандидат 0.6.0) |
 | **Дата формирования** | 28.10.2026 |
 | **Метод формирования** | Обратная разработка неизменённого Target API v0.1.0-rc.2, перенос контрактов из общего ТЗ 0.58 и решения владельца Q1/Q2/Q16–Q20 от 03.10.2026 и Q1–Q5, Q6–Q9, Q10 и Q11 от 05.10.2026; приведение к целевому первому пакету и пакету 0.3.0 |
 | **Целевая платформа** | Python внутри GDB; STM32 Cortex-M по профилю и подтверждённой конфигурации; Windows/Linux |
 | **Связанные документы** | [Общее ТЗ](TECHNICAL_SPECIFICATION.md), [руководство API](ru/API.md), аудит расширений |
 | **Связанные файлы кода** | stm32_gdbtest/target.py, __init__.py, agent.py, collect.py |
+
+### Изменения ревизии 0.3.31
+
+| Пункт | Изменение |
+| --- | --- |
+| 4.9.13 | Квоты и усечение report, независимые коллекции и исходы |
+| Разделы проверок | TC-42: host/Renode Windows/Linux, без плат |
 
 ### Изменения ревизии 0.3.30
 
@@ -135,6 +142,7 @@
 | 0.3.28 | 28.10.2026 | A3.1: строгая полнота и независимые счётчики проверок. |
 | 0.3.29 | 28.10.2026 | A3.2: schema 3, runner/pack и граница исполнения. |
 | 0.3.30 | 28.10.2026 | A3.2: применение journal и явное частичное чтение. |
+| 0.3.31 | 28.10.2026 | A3.2: применение report и сочетания политик. |
 
 ### Изменения ревизии 0.3.22
 
@@ -1003,9 +1011,7 @@ state и границы потерь по хранилищам, отдельны
 Снимок ДОЛЖЕН содержать применённые defaults; capsule/pack ДОЛЖНЫ переносить исходные
 TOML с хешами и отпечатком defaults/максимумов/политик, повторно проверяя их при чтении.
 Runner ДОЛЖЕН показывать применённые настройки в api_policy. Исполнение schema 3
-ДОЛЖНО допускать политики journal. Неподдержанные report.on_limit=truncate и
-нестандартная report.max_rows_per_collection ДОЛЖНЫ отклоняться до захвата отладчика
-и запуска сервера; inspect/prepare/pack разрешены. `(р.0.3.29)` `(р.0.3.30)`
+ДОЛЖНО допускать политики journal/report и report.max_rows_per_collection. `(р.0.3.31)` `(р.0.3.29)` `(р.0.3.30)`
 
 4.9.12. [U] Journal truncate ДОЛЖЕН сохранять атомарный префикс при исчерпании
 records/nodes/text_bytes и прекращать детализацию до конца сценария, продолжая проверки
@@ -1018,7 +1024,22 @@ attempted/saved/lost и границы потерь; первый лимит с�
 records(require_complete=True) ДОЛЖЕН отказывать при неполноте всего журнала;
 явный False разрешает только просмотр сохранённого префикса с исходным sequence.
 Допущенное усечение НЕ ДОЛЖНО само менять вердикт сценария; command ДОЛЖЕН быть 2,
-анализ partial, подтверждение DDTT заблокировано. Report остаётся строгим. `(р.0.3.30)`
+анализ partial, подтверждение DDTT заблокировано. Report поддерживает независимую политику по следующему пункту. `(р.0.3.31)` `(р.0.3.30)`
+
+4.9.13. [U] API schema 3 ДОЛЖНА применять report.max_rows_per_collection (1–65536,
+default 65536) отдельно к checks/stops/mutations/evaluations/executions/resets в full
+и compact. Error ДОЛЖЕН сохранять строгий отказ; truncate ДОЛЖЕН сохранять префикс
+каждой коллекции независимо от journal и остальных коллекций. Проверки и cleanup
+ДОЛЖНЫ продолжаться; check_accounting ДОЛЖЕН учитывать все исходы, включая потерянный
+FAIL. Счётчики attempted/saved/lost и границы хвоста ДОЛЖНЫ оставаться проверяемыми;
+первая причина каждой коллекции сохраняется в ограниченном резерве. Только квота
+строк допускает усечение: ошибки хранения, сериализации и транспорта НЕ ДОЛЖНЫ
+подавляться. Усечённые значения НЕ ДОЛЖНЫ вызывать repr/ленивое чтение GDB.
+Report truncate ДОЛЖЕН использовать evidence schema 3 с report-truncate/both-truncate;
+result/records schema 3 ДОЛЖНЫ читаться общими читателями, отвергающими неизвестную
+полноту. Исход сценария сохраняется, неполнота ДОЛЖНА давать command=2, partial-анализ
+и блокировку подтверждения DDTT. При потере сохранённого префикса полнота ДОЛЖНА
+стать unavailable с сохранением независимого учёта и первой причины. `(р.0.3.31)`
 
 ### 4.10. Чтение records
 
@@ -1497,6 +1518,7 @@ code=unsupported_backend, stage=validation, effect=none. Чистый новый
 | TC-37 | T: tests/host/test_report_data.py; D: tests/renode-backend/run_report.py | Full/compact, завершённые stop/write, средний FAIL, вывод и ошибки аудита; Windows/Linux без плат (р.0.3.26) |
 | TC-38 | T: tests/host/test_report_summary.py; D: tests/renode-backend/run_report.py --summary | Источники, средний FAIL, поколения, неполнота и все уровни вывода (р.0.3.27) |
 | TC-39 | A3.1: потеря строки FAIL, строгий журнал, резерв, повреждение метаданных | Host и Renode Windows/Linux: ожидаемые FAIL/ERROR, cleanup, повтор |
+| TC-42 | Квоты report, независимые коллекции, FAIL и сочетания journal | Host/Renode Windows/Linux, без плат |
 | TC-41 | Квоты journal, префикс, MMIO, независимый FAIL и новые форматы | Host и Renode Windows/Linux, без плат |
 | TC-40 | Schema 3: квоты, hash/fingerprint, package и prepare | Host Windows/Linux; исполнение отказано до доступа к цели |
 | TC-34 | T: tests/host/test_execution_dispatch.py; D: tests/renode-backend/run.py | Lazy/await, таймаут, вызов, выражения, очистка и sync-регрессии (р.0.3.23) |
@@ -1557,6 +1579,7 @@ code=unsupported_backend, stage=validation, effect=none. Чистый новый
 | 4.9.8 | target.py, report_data.py, execution.py | TC-37 (T/D) (р.0.3.26) |
 | 4.9.9 | configuration.py, report_summary.py, agent.py | TC-38 (T/D) (р.0.3.27) |
 | 4.9.10 | `stm32_gdbtest/evidence.py`, `report_data.py`, `scenario.py` | TC-39; `tests/host/test_evidence.py`, `tests/renode-backend/run_report.py` |
+| 4.9.13 | `report_data.py`, `evidence.py`, `result_capture.py` | TC-42; `tests/host/test_report_truncate.py`, `tests/renode-backend/run_report_quota.py` |
 | 4.9.12 | `evidence.py`, `target.py`, `result_capture.py`, `report_data.py` | TC-41; `tests/host/test_journal_truncate.py`, `tests/renode-backend/run_journal.py` |
 | 4.9.11 | `configuration.py`, `config_transport.py`, `runner.py`, `package.py` | TC-40; `tests/host/test_policy_config.py` |
 | 4.9.7, 4.10.3, 6.3, 6.4 | compact_records.py, configuration.py, result_capture.py | TC-36 (T/D) (р.0.3.25) |

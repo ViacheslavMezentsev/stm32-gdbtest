@@ -70,7 +70,8 @@ def journal(report, callback, name, data):
         # Validate logical values independently of exhausted cumulative storage.
         # Hard resource ceilings still apply and are never silently suppressed.
         callback.__self__.validate_record(name, data)
-        report['evidence'].update(schema=2, policy='journal-truncate')
+        if report['evidence']['schema'] != 3:
+            report['evidence'].update(schema=2, policy='journal-truncate')
         if meta['state'] == 'truncated':
             meta['attempted'] += 1
             meta['lost'] += 1
@@ -114,6 +115,12 @@ def discard_collections(report, error):
     diagnostic(report, 'result', error)
 
 
+def permits_truncation(meta, name):
+    policy = meta.get('policy')
+    return (policy in ('journal-truncate', 'both-truncate') if name == 'records'
+            else policy in ('report-truncate', 'both-truncate'))
+
+
 def validate(report, records_count=None):
     """Legacy results remain readable; absence is not a completeness assertion."""
     meta = report.get('evidence')
@@ -121,7 +128,7 @@ def validate(report, records_count=None):
         return
     if (type(meta) is not dict or set(meta) != {'schema','policy','stores','diagnostics',
             'diagnostics_total','diagnostics_omitted'} or type(meta['schema']) is not int
-            or (meta['schema'], meta['policy']) not in ((1, 'error'), (2, 'journal-truncate'))):
+            or (meta['schema'], meta['policy']) not in ((1, 'error'), (2, 'journal-truncate'), (3, 'report-truncate'), (3, 'both-truncate'))):
         raise ValueError('invalid strict evidence metadata')
     stores = meta['stores']
     if type(stores) is not dict or not set(COLLECTIONS) <= set(stores) or set(stores) - set(COLLECTIONS + ('records',)):
@@ -142,7 +149,7 @@ def validate(report, records_count=None):
               or item['lost'] > item['last_lost'] - item['first_lost'] + 1
               or (item['lost'] == 1 and item['first_lost'] != item['last_lost'])):
             raise ValueError('invalid lost evidence range')
-        if item['state'] == 'truncated' and (meta['schema'] != 2 or name != 'records'
+        if item['state'] == 'truncated' and (not permits_truncation(meta, name)
                 or item['first_lost'] != item['saved'] + 1 or item['last_lost'] != item['attempted']):
             raise ValueError('invalid truncated prefix')
         count = records_count if name == 'records' else len(report.get(name, []))

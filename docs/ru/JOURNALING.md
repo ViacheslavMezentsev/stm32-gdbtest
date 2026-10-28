@@ -6,8 +6,7 @@
 
 Это руководство описывает рабочую ветку кандидата 0.6.0. Выпуск 0.5.0 не содержит
 всех перечисленных расширений. A2, A3.1 и применение квот journal A3.2 реализованы.
-Schema 3 допускает error/truncate для journal. Усечение report и изменение его квоты
-пока отклоняются с api_execution_unsupported до захвата отладчика и запуска сервера.
+Schema 3 допускает независимые error/truncate и квоты journal/report при исполнении.
 
 ## 2. Что и где хранится
 
@@ -143,8 +142,7 @@ attempted/saved/lost, first_lost/last_lost остаются в evidence; рез�
 Для политики truncate применяются evidence schema 2, result schema 3 (full/compact) и
 records schema 3 с полнотой, сверяемой с result. Старые читатели отвергают новые форматы.
 Используйте общие читатели модуля, а не самостоятельное раскрытие JSON.
-Настройки `report.on_limit="truncate"` и нестандартная `report.max_rows_per_collection`
-пока разрешены только для inspect/prepare/pack: исполнение отклоняется до запуска сервера.
+Квоты и усечение report также применяются при исполнении; см. отдельный раздел ниже.
 
 ## 9. Проверка перед применением
 
@@ -153,3 +151,46 @@ capture для нужных измерений. После прогона оце
 capture, evidence и cleanup; затем применимость данных к конкретному утверждению.
 Примеры отказов: tests/renode-backend/run_report.py; host: test_evidence.py,
 test_policy_config.py; tests/renode-backend/run_journal.py и test_journal_truncate.py. Намеренный ERROR проверяет контракт инструмента, а не MCU.
+
+## A3.2: квоты и усечение report (кандидат 0.6.0)
+
+В API schema 3 `report.max_rows_per_collection` применяется отдельно к checks, stops,
+mutations, evaluations, executions и resets в full и compact. Диапазон 1–65536,
+default 65536. `report.on_limit="error"` — строгий отказ; `"truncate"` сохраняет
+префикс каждой коллекции, не мешая другим коллекциям, journal, проверкам и cleanup.
+Политики journal/report независимы; все их проверенные сочетания исполняются.
+
+При truncate счётчик попыток продолжает расти, saved остаётся равен длине префикса,
+lost и first_lost/last_lost описывают пропущенный хвост. Первая причина сохраняется
+для каждой коллекции в ограниченном резерве. Независимый check_accounting считает
+все проверки: FAIL нельзя убрать перехватом исключения или потерей строки. Сводка
+группирует сохранённые строки, а check_accounting показывает полный учёт исходов.
+PASS сценария при усечении допустим, но command=2, анализ partial, DDTT заблокирован.
+
+Подавляется только достижение квоты строк, не ошибка временного файла, сериализации,
+транспорта или восстановления. Если сохранённый префикс невозможно прочитать/записать,
+состояние становится unavailable; причина усечения и независимые счётчики сохраняются.
+Усечённые payload не материализуются: repr и ленивое чтение GDB ради пропущенной строки
+не вызываются. Поэтому отсутствие строки не подтверждает корректность её значений.
+
+Report truncate использует evidence schema 3 (`report-truncate`/`both-truncate`),
+result schema 3 и records schema 3. Старые читатели, не знающие эту evidence schema,
+отвергают результат. Journal-only truncate сохраняет evidence schema 2; прежние
+строгие форматы читаются. Усечение report не делает полный journal неполным:
+records() проверяет полноту journal, но анализ всего прогона учитывает все хранилища.
+
+```toml
+schema = 3
+[journal]
+representation = "compact"
+on_limit = "error"
+[report]
+representation = "compact"
+console = "summary"
+on_limit = "truncate"
+max_rows_per_collection = 1000
+```
+
+Это явный выбор частичного отчёта; для приёмки полного свидетельства оставьте error
+и подберите достаточную квоту. Пример: tests/renode-backend/run_report_quota.py;
+регрессии: tests/host/test_report_truncate.py. Проверки — без физических плат.

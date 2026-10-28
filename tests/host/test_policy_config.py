@@ -1,4 +1,4 @@
-"""Schema 3 configuration is portable; unsupported report policies fail closed."""
+"""Schema 3 configuration is portable and validated report policies are executable."""
 import base64
 import hashlib
 import json
@@ -89,16 +89,12 @@ class PolicyConfigTests(unittest.TestCase):
             opened=open_package(bundle,self.root/'extracted','gdb')
         self.assertEqual(thaw(capture(opened).config),thaw(cfg.config))
 
-    def test_runner_rejects_execution_before_lock_or_tools(self):
-        self.load('schema=3\n[report]\non_limit="truncate"')
-        with patch('stm32_gdbtest.runner.load_stand',return_value=dict(backend='openocd',serial='fixture')), \
-             patch('stm32_gdbtest.runner.probe_lock') as lock, \
-             patch('stm32_gdbtest.runner.execute') as execute:
-            self.assertEqual(run(self.session,self.test,stand_path='fixture'),2)
-            lock.assert_not_called();execute.assert_not_called()
-        report=json.loads(next((self.root/'runs').glob('*/result.json')).read_text(encoding='utf-8'))
-        self.assertIn('api_execution_unsupported',report['error'])
-        self.assertEqual(report['api_policy']['report']['max_rows_per_collection'],65536)
+    def test_all_validated_report_policies_are_executable(self):
+        from stm32_gdbtest.configuration import require_execution_supported
+        for policy in ('error','truncate'):
+            for quota in (1,17,65536):
+                cfg=self.load(f'schema=3\n[report]\non_limit="{policy}"\nmax_rows_per_collection={quota}')
+                self.assertIsNone(require_execution_supported(cfg))
 
     def test_prepare_transports_schema_three_without_server(self):
         cfg=self.load('schema=3\n[report]\non_limit="truncate"\nmax_rows_per_collection=9')

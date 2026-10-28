@@ -38,7 +38,7 @@ DEFAULTS_V2 = dict(max_records=4096, max_nodes=131072, max_text_bytes=1048576,
 MAXIMUMS_V2 = dict(max_records=65536, max_nodes=2097152, max_text_bytes=16777216,
                    max_depth=32, max_integer_bits=1024)
 QUERY_NODES = 2097152
-# Schema 3 describes policies; execution admission is gated until storage implements them.
+# Schema 3 budgets and independent storage policies; validated before execution.
 JOURNAL_V3 = MappingProxyType(dict(representation='full', on_limit='error'))
 REPORT_V3 = MappingProxyType(dict(representation='full', console='full', on_limit='error',
                                 max_rows_per_collection=65536))
@@ -46,11 +46,9 @@ REPORT_ROWS_MAX = 65536
 
 
 def require_execution_supported(configuration):
-    api = configuration.config['api']
-    if api['schema'] == 3 and (api['report']['on_limit'] != 'error' or
-                              api['report']['max_rows_per_collection'] != REPORT_ROWS_MAX):
-        raise ConfigError('api_execution_unsupported',
-                          'Custom report quotas/truncation are not executable yet; journal policies are supported')
+    """All validated schema 1–3 storage policies are executable."""
+    if configuration.config['api']['schema'] not in (1, 2, 3):
+        raise ConfigError('api_execution_unsupported', 'Unsupported API schema')
 
 
 

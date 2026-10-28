@@ -449,6 +449,47 @@ and first_lost/last_lost remain in evidence; diagnostic storage remains bounded.
 
 Truncate policy uses evidence schema 2, result schema 3 (full/compact), and records
 schema 3 with completeness checked against result. Old readers reject these formats.
-Use the module shared readers. `report.on_limit="truncate"` and non-default
-`report.max_rows_per_collection` remain inspect/prepare/pack-only and are refused
-before server startup when execution is requested.
+Use the module shared readers. Report quotas/truncation are executable too; see the section below.
+
+## A3.2: report quotas and truncation (0.6.0 candidate)
+
+API schema 3 applies report.max_rows_per_collection independently to checks, stops,
+mutations, evaluations, executions and resets, in full and compact storage. Range:
+1–65536, default 65536. report.on_limit="error" refuses overflow; "truncate" preserves
+each collection prefix without stopping other collections, journal, checks or cleanup.
+Journal/report policies are independent; all validated combinations are executable.
+
+Attempted continues increasing, saved is the prefix length, lost and first_lost/last_lost
+identify the omitted tail. The bounded reserve retains the first cause per collection.
+Independent check_accounting counts all outcomes: catching exceptions or dropping rows
+cannot erase FAIL. Summary groups describe saved rows; check_accounting retains full
+outcome counts. Scenario PASS is possible, but command=2, analysis=partial and DDTT
+confirmation is blocked.
+
+Only the row quota is suppressed, never spool, serialization, transport or recovery
+errors. If the saved prefix cannot be read/published, state becomes unavailable while
+the initial truncation cause and independent counts remain. Dropped payloads are not
+materialized: no repr or lazy GDB read is invoked for an omitted row. Missing rows
+therefore do not certify the validity of their values.
+
+Report truncation uses evidence schema 3 (report-truncate/both-truncate), result schema 3
+and records schema 3. Readers unaware of this evidence schema reject it. Journal-only
+truncation retains evidence schema 2; legacy strict formats remain readable. Report
+truncation does not make a complete journal incomplete: records() checks journal
+completeness, whereas whole-run analysis considers every store.
+
+```toml
+schema = 3
+[journal]
+representation = "compact"
+on_limit = "error"
+[report]
+representation = "compact"
+console = "summary"
+on_limit = "truncate"
+max_rows_per_collection = 1000
+```
+
+This explicitly selects a partial report. For complete acceptance evidence, keep error
+and choose a sufficient budget. Example: tests/renode-backend/run_report_quota.py;
+regressions: tests/host/test_report_truncate.py. No physical boards are involved.
