@@ -84,17 +84,20 @@ class InteractiveRunTests(unittest.TestCase):
         cases = [(dict(timeout=5), "no time limit"), (dict(prepare_only=True), "needs a stand"),
                  (dict(debug_port=busy.getsockname()[1]), "is busy"),
                  (dict(debugpy=self.root / "empty"), "debugpy not found")]
-        for extra, message in cases:
+        for number, (extra, message) in enumerate(cases):
             with self.subTest(message=message):
+                # A separate output root per case: run directories are named by time and PID,
+                # and the Windows clock may give two quick in-process runs the same stamp.
+                self.session = dict(self.session, out=str(self.root / f"case{number}/runs"))
                 options = dict(interactive=True, debug_port=free_port(), debugpy=self.debugpy)
                 options.update(extra)
                 code, execute, _ = self.run_mocked(**options)
                 self.assertEqual(code, 2)
                 execute.assert_not_called()
-        errors = [result["error"] for result in self.results("interactive-runs")]
-        for _, message in cases:
-            self.assertTrue(any(message in error for error in errors), message)
-        self.assertEqual(self.results("runs"), [])
+                [result] = [json.loads(path.read_text())
+                            for path in (self.root / f"case{number}/interactive-runs").glob("*/result.json")]
+                self.assertIn(message, result["error"])
+                self.assertEqual(list((self.root / f"case{number}/runs").glob("*/result.json")), [])
 
     def test_wait_has_no_limit_and_announces_once(self):
         ready = self.root / "ready.json"
