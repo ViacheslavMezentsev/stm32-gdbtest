@@ -14,9 +14,18 @@ Calls a debugged program's function on the halted core and returns the call resu
 
 Arguments are passed by value: integers, finite floating-point numbers, booleans are accepted; GDB expression strings are rejected. The result describes `operation`, `function`, `arguments`, the built `expression`, `outcome`, `return_value` and `return_state` (`available` or `void`), and the call is recorded in `mutations`.
 
-The function name must be a plain identifier. `Class::method`, `namespace::function`
-and `object.method` produce `invalid_function`; a string argument produces
-`unsupported_argument`. Successful [C++ preflight](../CONTRACTS.md) does not extend this interface.
+The name is a plain identifier or a qualified namespace/static name, such as
+`demo::increment` or `Probe::twice`. In the 0.6.0 candidate, a qualified call requires
+one symbol with callable code and DWARF. Overloads are refused before execution
+(`ambiguous_function`), instance methods produce `unsupported_method`, missing
+symbols/code produce `function_unavailable`. `object.method` remains `invalid_function`.
+Qualified calls support integer/bool arguments and integer/bool/void returns;
+arity, range and types are checked. Pointers, references, float, variadic functions,
+template names and implicit ABI arguments are not supported yet.
+Expression strings produce `unsupported_argument` for plain functions too.
+Preflight does not prove execution safety. Resolution uses `may-call-functions off`,
+then the selected linkage symbol is called; `expression` shows that symbol while
+`function` retains the caller's name. There is no automatic retry.
 
 Limitations: the call runs on the halted core and changes its state — the function's side effects
 are kept; without `timeout=` the call is bounded only by the scenario timeout; pointers, floating-point numbers and
@@ -68,3 +77,12 @@ Do not repeat call merely to inspect its return: every call executes target code
 Timeout uses host seconds; argument 110 is a logical tick in the teaching model.
 An application's zero return is not ApiError: use check, not refused.
 [Example with mutations and restoration](../../../tests/logical-time/README.en.md).
+
+## A4.1 — namespace/static
+
+```python
+result = await t.call("Probe::twice", 6, timeout=2)
+t.check("twice", result["return_value"], 12)
+```
+
+Omit await in def. Board-free regression: [run_cpp.py](../../../tests/renode-backend/run_cpp.py).

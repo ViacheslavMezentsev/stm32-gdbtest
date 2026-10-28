@@ -21,7 +21,7 @@ from stm32_gdbtest.matchers import Matcher
 _OMITTED = object()
 
 _CLONE = re.compile(r"\s*\[clone [^\]]*\]")
-_FUNCTION_NAME = re.compile(r"[A-Za-z_]\w*")
+_FUNCTION_NAME = re.compile(r"[A-Za-z_][A-Za-z_0-9]*(?:::[A-Za-z_][A-Za-z_0-9]*)*")
 _SECTION = re.compile(r" in section (\S+)")
 # Writable SRAM window shared by `write` verification and `memory` writes (ТЗ API 4.6, 4.16).
 SRAM_WINDOW = (0x20000000, 0x20100000)
@@ -1669,17 +1669,21 @@ class Target:
         self._require_stopped('call')
         if type(function) is not str or not _FUNCTION_NAME.fullmatch(function):
             self._fail("call", "validation", "none", "invalid_function",
-                       "a plain function name is required", function=function)
+                       "a plain or qualified function name is required", function=function)
         literals = []
         for argument in args:
-            literal = values.argument_literal(argument)
+            literal = values.argument_literal(argument) if type(argument) in (int, float, bool) else None
             if literal is None:
                 self._fail("call", "validation", "none", "unsupported_argument",
                            "arguments must be finite numbers", function=function,
                            arguments=list(args))
             literals.append(literal)
-        expression = f"{function}({', '.join(literals)})"
-        kind = self._function_return_type(function)
+        if '::' in function:
+            from stm32_gdbtest.cpp_call import resolve
+            resolved, kind = resolve(gdb, function, args)
+        else:
+            resolved, kind = function, self._function_return_type(function)
+        expression = f"{resolved}({', '.join(literals)})"
         try:
             from stm32_gdbtest.expression import parameters
             with parameters(gdb, {'may-call-functions': True}):

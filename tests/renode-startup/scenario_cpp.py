@@ -70,7 +70,9 @@ try:
             check('Target free C++', t.call('free_cpp', 4)['return_value'], 6)
             check('Target void', t.call('set_value', 12)['return_value'], None)
             check('void effect', int(gdb.parse_and_eval('probe.value')), 12)
-            for symbol in ('Probe::twice', 'demo::increment', 'probe.add'):
+            check('Target static', t.call('Probe::twice', 6)['return_value'], 12)
+            check('Target namespace', t.call('demo::increment', 6)['return_value'], 7)
+            for symbol in ('probe.add',):
                 try:
                     t.call(symbol, 1)
                 except ApiError as error:

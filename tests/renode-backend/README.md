@@ -98,3 +98,15 @@ python tests/renode-backend/run_report_quota.py --toolchain /opt/xpack-arm-none-
 command=2; ожидаемый PASS/FAIL/ERROR сценария проверяется отдельно. Без плат.
 Все шесть коллекций, атомарность префикса, ошибки spool/сериализации и отсутствие
 repr пропущенных значений проверяет host test_report_truncate.py.
+
+## A4.1: квалифицированные вызовы C++
+
+```powershell
+python tests/renode-backend/run_cpp.py --toolchain <gcc-root> --renode <renode-executable>
+```
+
+Собирает нейтральный ELF tests/renode-startup/cpp_contracts.cpp, запускает sync/async
+через штатный runner. Проверяет namespace/static, void, точное число вызовов и ранние
+отказы: перегрузка, this, отсутствующий/inline-код, тип/диапазон/число аргументов,
+строки-выражения и guard read. Результаты и cleanup — build/cpp-call/<run>/.
+На Linux используются те же параметры и исходники. Плата не нужна.

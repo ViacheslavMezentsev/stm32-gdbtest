@@ -141,10 +141,12 @@ class CallTests(unittest.TestCase):
                     target.call(function)
                 self.assertEqual(caught.exception.code, "invalid_function")
 
-    def test_call_passes_a_gdb_expression_argument(self):
+    def test_call_refuses_a_gdb_expression_argument(self):
         target = self.target()
-        target.call("app_step", "&app_state", 1)
-        self.assertEqual(self.expressions[-1], "app_step(&app_state, 1)")
+        with self.assertRaises(ApiError) as caught:
+            target.call("app_step", "&app_state", 1)
+        self.assertEqual(caught.exception.code, "unsupported_argument")
+        self.assertEqual(self.expressions, [])
 
     def test_call_refuses_an_unsupported_argument(self):
         target = self.target()

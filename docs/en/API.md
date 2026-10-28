@@ -515,3 +515,20 @@ transferring measurements into its input document.
 Offline replay: `python tests/renode-backend/replay_consumers.py --runs <campaign>/runs --output <new-directory>`.
 Host matrix: test_partial_consumers.py (full/compact, journal/report/both, PASS/FAIL,
 unchanged sources and a complete-source positive control).
+
+## A4.1 — namespace/static (0.6.0)
+
+The name is a plain identifier or a qualified namespace/static name, such as
+`demo::increment` or `Probe::twice`. In the 0.6.0 candidate, a qualified call requires
+one symbol with callable code and DWARF. Overloads are refused before execution
+(`ambiguous_function`), instance methods produce `unsupported_method`, missing
+symbols/code produce `function_unavailable`. `object.method` remains `invalid_function`.
+Qualified calls support integer/bool arguments and integer/bool/void returns;
+arity, range and types are checked. Pointers, references, float, variadic functions,
+template names and implicit ABI arguments are not supported yet.
+Expression strings produce `unsupported_argument` for plain functions too.
+Preflight does not prove execution safety. Resolution uses `may-call-functions off`,
+then the selected linkage symbol is called; `expression` shows that symbol while
+`function` retains the caller's name. There is no automatic retry.
+
+Migration: replace string arguments with previously obtained numbers; execute additional calls explicitly and use return_value. this/signature are not implemented yet.

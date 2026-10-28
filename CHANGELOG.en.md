@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- A4.1: unambiguous namespace/static calls, early C++ refusals and rejection of expression-string arguments; host and Renode, no boards.
+
 - A3.3: refuse incomplete-run CSV projections; index, HTML and summaries expose incompleteness without changing scenario verdicts. Offline DDTT/replay regressions.
 
 - Enforce schema 3 report quotas and error/truncate per collection; independent FAIL, diagnostic reserve, full/compact readers, journal combinations and updated journaling Pages.

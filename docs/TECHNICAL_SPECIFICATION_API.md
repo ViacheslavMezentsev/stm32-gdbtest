@@ -5,12 +5,19 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION_API.md |
-| **Ревизия** | 0.3.31 (A3.2: применение report, кандидат 0.6.0) |
+| **Ревизия** | 0.3.32 (A4.1: namespace/static, кандидат 0.6.0) |
 | **Дата формирования** | 28.10.2026 |
 | **Метод формирования** | Обратная разработка неизменённого Target API v0.1.0-rc.2, перенос контрактов из общего ТЗ 0.58 и решения владельца Q1/Q2/Q16–Q20 от 03.10.2026 и Q1–Q5, Q6–Q9, Q10 и Q11 от 05.10.2026; приведение к целевому первому пакету и пакету 0.3.0 |
 | **Целевая платформа** | Python внутри GDB; STM32 Cortex-M по профилю и подтверждённой конфигурации; Windows/Linux |
 | **Связанные документы** | [Общее ТЗ](TECHNICAL_SPECIFICATION.md), [руководство API](ru/API.md), аудит расширений |
 | **Связанные файлы кода** | stm32_gdbtest/target.py, __init__.py, agent.py, collect.py |
+
+### Изменения ревизии 0.3.32
+
+| Пункт | Изменение |
+| --- | --- |
+| 4.23.7 | Namespace/static, ранние отказы и запрет строковых аргументов |
+| Раздел проверок | TC-43: host и Renode Windows/Linux; без плат |
 
 ### Изменения ревизии 0.3.31
 
@@ -143,6 +150,7 @@
 | 0.3.29 | 28.10.2026 | A3.2: schema 3, runner/pack и граница исполнения. |
 | 0.3.30 | 28.10.2026 | A3.2: применение journal и явное частичное чтение. |
 | 0.3.31 | 28.10.2026 | A3.2: применение report и сочетания политик. |
+| 0.3.32 | 28.10.2026 | A4.1: квалифицированные namespace/static и ранние отказы, без аппаратной приёмки. |
 
 ### Изменения ревизии 0.3.22
 
@@ -1300,6 +1308,17 @@ boot ДОЛЖЕН выполняться до входа в сценарий. О
 описана на RU/EN. Host/Renode Windows/Linux НЕ ДОЛЖНЫ заменять новую аппаратную
 приёмку изменённого контракта. `[U]` (р.0.3.23)
 
+4.23.7. [U] call ДОЛЖЕН принимать квалифицированные имена namespace/static из ASCII
+идентификаторов, разделённых ::, без выражений. До исполнения ДОЛЖНЫ проверяться
+единственность символа, вызываемый код/DWARF, отсутствие скрытых аргументов и variadic,
+число и типы аргументов. Перегрузки ДОЛЖНЫ давать ambiguous_function; методы с this —
+unsupported_method; отсутствие кода — function_unavailable. Поднабор: целые/bool,
+результат целое/bool/void; выход из диапазона — argument_range. Разрешение ДОЛЖНО
+запрещать inferior calls; исполнение ДОЛЖНО использовать выбранный linkage-символ.
+Строковые аргументы НЕ ДОЛЖНЫ исполняться и ДОЛЖНЫ отклоняться также для простых имён.
+Обычные числовые вызовы, sync/async/deadline и блокировка dummy frame сохраняются.
+this/signature, виртуальные методы, ссылки/указатели не входят в A4.1. (р.0.3.32)
+
 ## 5. Требования к интерфейсам
 
 5.1. Сценарий ДОЛЖЕН пользоваться метаданными case и соглашением вызова Target,
@@ -1519,6 +1538,7 @@ code=unsupported_backend, stage=validation, effect=none. Чистый новый
 | TC-38 | T: tests/host/test_report_summary.py; D: tests/renode-backend/run_report.py --summary | Источники, средний FAIL, поколения, неполнота и все уровни вывода (р.0.3.27) |
 | TC-39 | A3.1: потеря строки FAIL, строгий журнал, резерв, повреждение метаданных | Host и Renode Windows/Linux: ожидаемые FAIL/ERROR, cleanup, повтор |
 | TC-42 | Квоты report, независимые коллекции, FAIL и сочетания journal | Host/Renode Windows/Linux, без плат |
+| TC-43 | Namespace/static, перегрузки, отсутствующий код, типы, строки и счётчик исполнения | Host и Renode Windows/Linux, без плат |
 | TC-41 | Квоты journal, префикс, MMIO, независимый FAIL и новые форматы | Host и Renode Windows/Linux, без плат |
 | TC-40 | Schema 3: квоты, hash/fingerprint, package и prepare | Host Windows/Linux; исполнение отказано до доступа к цели |
 | TC-34 | T: tests/host/test_execution_dispatch.py; D: tests/renode-backend/run.py | Lazy/await, таймаут, вызов, выражения, очистка и sync-регрессии (р.0.3.23) |
@@ -1580,6 +1600,7 @@ code=unsupported_backend, stage=validation, effect=none. Чистый новый
 | 4.9.9 | configuration.py, report_summary.py, agent.py | TC-38 (T/D) (р.0.3.27) |
 | 4.9.10 | `stm32_gdbtest/evidence.py`, `report_data.py`, `scenario.py` | TC-39; `tests/host/test_evidence.py`, `tests/renode-backend/run_report.py` |
 | 4.9.13 | `report_data.py`, `evidence.py`, `result_capture.py` | TC-42; `tests/host/test_report_truncate.py`, `tests/renode-backend/run_report_quota.py` |
+| 4.23.7 | `target.py`, `cpp_call.py` | TC-43; `tests/host/test_cpp_call.py`, `tests/renode-backend/run_cpp.py` |
 | 4.9.12 | `evidence.py`, `target.py`, `result_capture.py`, `report_data.py` | TC-41; `tests/host/test_journal_truncate.py`, `tests/renode-backend/run_journal.py` |
 | 4.9.11 | `configuration.py`, `config_transport.py`, `runner.py`, `package.py` | TC-40; `tests/host/test_policy_config.py` |
 | 4.9.7, 4.10.3, 6.3, 6.4 | compact_records.py, configuration.py, result_capture.py | TC-36 (T/D) (р.0.3.25) |

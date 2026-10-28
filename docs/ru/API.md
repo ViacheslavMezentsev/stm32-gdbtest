@@ -531,3 +531,20 @@ check_accounting — все исходы. DDTT/LCOV оставляют UNKNOWN �
 `python tests/renode-backend/replay_consumers.py --runs <campaign>/runs --output <new-directory>`.
 Host-матрица: test_partial_consumers.py (full/compact, journal/report/both, PASS/FAIL,
 сохранение исходных файлов, положительный контроль полного источника).
+
+## A4.1 — namespace/static (0.6.0)
+
+Имя — простой идентификатор либо квалифицированное имя namespace/static, например
+`demo::increment` или `Probe::twice`. В кандидате 0.6.0 квалифицированный вызов требует
+единственного символа с вызываемым кодом и DWARF. Перегрузки отклоняются до исполнения
+(`ambiguous_function`), нестатический метод — `unsupported_method`, отсутствующий
+символ/код — `function_unavailable`. `object.method` остаётся `invalid_function`.
+Для квалифицированного вызова поддержаны целые/bool и результат целое/bool/void;
+проверяются число аргументов, диапазон и типы. Указатели, ссылки, float, variadic,
+шаблонные имена и скрытые ABI-аргументы пока отклоняются.
+Строки-выражения дают `unsupported_argument` также для обычной функции.
+Preflight не доказывает безопасность исполнения. Квалифицированный вызов разрешается
+при `may-call-functions off`, затем исполняется выбранный linkage-символ; его имя видно
+в `expression`, а `function` сохраняет имя сценариста. Автоматического повтора нет.
+
+Миграция: строковые аргументы замените заранее полученными числами; дополнительные вызовы выполняйте явно через call и используйте return_value. this/signature ещё не реализованы.

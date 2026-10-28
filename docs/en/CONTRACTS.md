@@ -76,7 +76,7 @@ variants ([checks and CI](testing.md)).
 
 `functions` and `type_context` accept `Probe::add`, `Probe::twice` and
 `demo::increment` when `lookup_global_symbol` finds the function in the selected ELF.
-This is contract inspection, not a new form of `Target.call()`.
+The 0.6.0 candidate also supports namespace/static through [call](api/call.md); instance methods remain preflight-only.
 
 Types retain qualifiers at each level: `Probe * const` is a const pointer to a mutable
 object; `const Probe *` points to a const object; `const Probe * const` has both
@@ -108,3 +108,5 @@ Repeatable check: `tests/renode-startup/run_cpp.py --cxx <arm-g++> --gdb <gdb-py
 --renode <renode>`. A separate batch GDB without an inferior runs first, then Renode;
 results, negative contracts and input hashes are in `build/cpp-preflight/<run>/`.
 `--module-root` compares the same ELF fixture with an earlier core.
+
+[A4.1: current call restrictions](api/call.md). Earlier direct GDB object experiments do not imply Target.call instance-method support.
