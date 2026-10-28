@@ -749,3 +749,27 @@ UNKNOWN. Truncation, an incomplete index, a foreign type, other units or NaN giv
 UNKNOWN, not a zero measurement. ROS and GDB read the same firmware state, so they are
 not independent sensors; sequential rostopic samples are not treated as simultaneous.
 MCAP and the radio simulator are the next sources for the same neutral format.
+
+## Journal, quotas and completeness (A1–A3)
+
+A journal error does not hide the original one: execution, transport and audit are recorded
+separately, and a limit shows the record name, path and used/maximum/attempted. Strict mode is
+the default; `truncate` is acceptable only when the volume is known in advance and a partial
+journal suits the specific claim, then use `records(require_complete=False)` with an explicit
+mark. An incomplete run ends with command 2 and the scenario outcome is checked separately; CSV
+refuses an incomplete source, HTML and summaries show incompleteness, DDTT stays UNKNOWN.
+The output level (`failures`, `summary`) does not change the check collections; verify a summary
+by recalculation, not by comparing the first and last lines. Wrong: raising a limit or switching
+to `truncate` to get PASS, catching RecordError, feeding a summary to DDTT.
+Examples: `tests/renode-backend/run.py`, `run_report.py --summary`, `run_journal.py`,
+`run_report_quota.py`; [journaling guide](JOURNALING.md).
+
+## C++ calls (A4)
+
+One explicit `call`: a qualified name, `this=` as a named object or pointer in SRAM, `signature=`
+for the exact overload, buffers as `Pointer`/`Reference`. Check `outcome`, `return_state`, then
+`return_value`; confirm a refusal before execution with the target call counter. Prefer a public
+method to writing private fields by hand. Wrong: a call inside `read`/`evaluate`/`write`
+(`expression_call_forbidden`), an overload without `signature` (`ambiguous_function`), a field or
+expression in `this`, a virtual method, a handler called as a method presented as a hardware IRQ.
+Example: `tests/renode-backend/run_cpp.py`; contract: [call](api/call.md).

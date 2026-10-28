@@ -85,3 +85,7 @@ host сначала, затем ELF/GDB в Renode с исходными FAIL, п
 восстановлением POD. Учебные тики не циклы MCU, время call на ПК не WCET.
 External-capture из того же ресурса запускается только на host; его успешный прогон
 не подтверждает Renode live-окно или реальные источники ROS/MCAP.
+
+## Маршруты 0.6.0
+
+Карта пакетов A1–A6 с командами, критерием приёмки и парами «правильно/неправильно» — [release-060-routes](../stm32-gdbtest-scenarios/references/release-060-routes.md).
