@@ -702,3 +702,18 @@ transport, analysis and cleanup outcomes using a host fixture. Missing or inelig
 records block dependent claims as UNKNOWN; complete eligible contradictory evidence
 yields analysis FAIL while preserving the scenario PASS. Fixture clock anchors are
 not a calibration of physical clocks.
+
+
+## Controlled software intervention and evidence scope
+
+Applying an intervention and consuming its value are separate facts. For write/ret,
+record the intervention point, independent expectation, observed processing, negative
+control, next input and restoration of all resources. ret skips producer code and does
+not resume the caller; SRAM readback does not rule out a normal overwrite before use.
+
+In [A5.1](../../tests/controlled-input/README.en.md), the too-early write remains FAIL
+and the intentional exception remains ERROR. Separate analysis PASS confirms the expected
+matrix and restoration, not a change to scenario outcomes. software-input evidence supports
+code-response claims, not physical signals or peripheral acquisition. Missing mandatory
+records cause analysis refusal. The host model does not test actual GDB ret; Renode on
+Windows/Linux does so separately.

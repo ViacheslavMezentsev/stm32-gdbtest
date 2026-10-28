@@ -27,11 +27,25 @@ outside the verified scope.
 ## Example
 
 ```python
-t.reach("app_step")
-result = t.ret(42)
-t.check("the caller received the value", t.read("app_received.produced"), result["applied"])
+await t.reach("sample_input")
+result = t.ret(1)  # ret does not resume the caller; no await here.
+t.check("forced return", result["outcome"], "forced")
+await t.reach("after_processing")
+t.check("caller consumed the value", t.read("input_state.consumed"), 1)
 ```
 
 ## References
 
 - [API specification](../../TECHNICAL_SPECIFICATION_API.md).
+
+
+## Confirm consumption (A5.1)
+
+The example uses async def; omit await in def. ret does not resume the caller:
+checking its destination immediately after ret is premature. Stop before relevant
+side effects, force the value, then continue to observable processing. Check the
+caller branch, skipped producer effects, next ordinary input and restoration.
+applied confirms substitution, not consumption. The [neutral example](../../../tests/controlled-input/README.en.md)
+checks both values, too-early SRAM substitution (intentional FAIL) and restoration
+after an exception. Host modeling does not replace real GDB/Renode ret. No physical
+failure is established.

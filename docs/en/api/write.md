@@ -25,22 +25,19 @@ operation failure; an already applied effect is not rolled back.
 ### An expression as the value and a table of writes
 
 A string value is a C expression that GDB evaluates **before** the write: it may use operators (`|`,
-`&`, `~`, `<<`, `>>`, `+`, `-`, comparisons) and firmware macros, so a read-modify-write of a register
-is one line. A line break, `;` and assignments (`=`, `|=`, `<<=`, `++`, `--`) are refused: the destination assignment
-appears in `mutations`, but an RHS function can change other objects (`unsupported_value`).
+`&`, `~`, `<<`, `>>`, `+`, `-`, comparisons) and firmware macros, for ordinary software data; use the dedicated contract for MMIO. A line break, `;` and assignments (`=`, `|=`, `<<=`, `++`, `--`) are refused: invalid syntax produces `unsupported_value`. Function calls are forbidden
+(`expression_call_forbidden`); completed assignments appear in `mutations`.
 
 `write(rows)` with a single list argument performs the `(path, value)` writes in order and returns the
 list of results. The structure of every row is validated before the first write; a refused row stops
 the rest, and writes already done are not undone. `verify` applies to every row.
 
 ```python
-# Start continuous conversions while the core is halted: the order of the rows matters.
+# Ordinary SRAM only; not peripheral registers.
 t.write([
-    ("ADC1->CFGR1", "ADC1->CFGR1 | ADC_CFGR1_CONT"),
-    ("ADC1->CR", "ADC1->CR | ADC_CR_ADSTART"),
+    ("input_state.source", 0),
+    ("input_state.level", 1)
 ])
-t.write("ADC1->CR2", "ADC1->CR2 & ~ADC_CR2_ADON")        # clear a bit with an expression
-t.write([("SysTick->CTRL", control), ("NVIC->ISER[0]", enabled)])   # restore saved values
 ```
 
 ## Example
@@ -50,8 +47,8 @@ t.write("app_state.ticks", 41)
 t.write("app_delay", 100)
 ```
 
-A write into an immutable area (Flash, read-only registers) ends with diagnostics, not with a silent
-success.
+A target may ignore a read-only register write without a transport error. Command success
+does not prove its effect; an SVD override does not make hardware writable.
 
 ## References
 
@@ -76,3 +73,12 @@ Assignment-result conversion failures: conversion_failed / readback / applied.
 Readback mismatches retain verification_failed. No retries or rollback.
 
 Compact result storage and console control do not remove checks; see [result journal](../API.md#result-journal-and-output-060-candidate-a22).
+
+
+## Application and consumption are separate checks
+
+SRAM readback confirms the write, but normal code can overwrite it before use.
+Continue to processing and check the consumed value and branch. Include a baseline,
+the next input and restoration of all changed resources. [Executable A5.1](../../../tests/controlled-input/README.en.md)
+preserves a too-early write as an intentional FAIL. This is software-input
+substitution, not GPIO or physical signal verification.

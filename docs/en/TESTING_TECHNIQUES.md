@@ -191,6 +191,14 @@ a positive run.
 
 The [injection scenario](../../tests/firmware/common/tests/board/test_event_injection.py) compares two paths to a zero result: natural counter wrap and `ret("0")`. The latter skips producer side effects. Check both the receiver branch and producer state; the same result does not imply the same execution.
 
+**A5.1: application is not consumption.**
+The [neutral example](../../tests/controlled-input/README.en.md) compares SRAM write
+and ret with independent caller expectations. A too-early write reads back successfully
+but is overwritten; its original FAIL is preserved. Both forced return values use an
+opposite source, skipped producer effects and the next ordinary input. The full POD is
+restored even after FAIL or a Python exception. Include a baseline, software-input scope
+and separate campaign analysis; this does not establish physical GPIO/button operation.
+
 <a id="tech-005"></a>
 ## TECH-005 — Injecting an argument
 

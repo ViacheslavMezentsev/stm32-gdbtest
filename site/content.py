@@ -339,16 +339,18 @@ t.check("mode", t.read("GPIOA->MODER") & 0xC00, 0x400)    # magic numbers'''),
          ru=dict(title='Инъекции: ret и call',
                  summary='Подменить возврат текущей функции; вызвать функцию прошивки и получить результат.',
                  api3='call в async — await; timeout= ограничивает вызов (0.5.0). ret не исполняет тело функции.',
-                 good='ret проверяет реакцию вызывающего кода; call — с явным таймаутом. В кандидате 0.6.0 namespace/static требуют единственного символа; A4.2 допускает явный this и точную signature; A4.3a — Pointer/Reference с проверкой типов и SRAM. A4.3b корректирует this/Pointer/Reference к однозначной невиртуальной базе по DWARF; при преобразовании Pointer count=1. Сравните адрес подобъекта с независимым эталоном. Count не ограничивает тело функции. Сначала outcome/return_state, затем return_value; логическое время задаётся аргументом.',
-                 bad='Вызов внутри выражения отклоняется; вызов без таймаута ограничен только лимитом сценария. ret не восстанавливает прерванный call.'),
+                 good='После ret продолжите до обработки возврата и проверьте потребление, пропущенные эффекты и следующий вход (пример tests/controlled-input). Readback SRAM не доказывает потребление. ret проверяет реакцию вызывающего кода; call — с явным таймаутом. В кандидате 0.6.0 namespace/static требуют единственного символа; A4.2 допускает явный this и точную signature; A4.3a — Pointer/Reference с проверкой типов и SRAM. A4.3b корректирует this/Pointer/Reference к однозначной невиртуальной базе по DWARF; при преобразовании Pointer count=1. Сравните адрес подобъекта с независимым эталоном. Count не ограничивает тело функции. Сначала outcome/return_state, затем return_value; логическое время задаётся аргументом.',
+                 bad='Вызов внутри выражения отклоняется; вызов без таймаута ограничен только лимитом сценария. ret не восстанавливает прерванный call. Программная подмена не доказывает физическое нажатие или отказ периферии.'),
          en=dict(title='Injection: ret and call',
                  summary='Replace the return of the current function; call a firmware function and get its result.',
                  api3='call is awaited in async; timeout= bounds the call (0.5.0). ret does not execute the function body.',
-                 good='ret checks the caller; call uses an explicit timeout. In the 0.6.0 candidate namespace/static require one symbol; A4.2 supports explicit this and exact signature; A4.3a adds Pointer/Reference with type/SRAM checks. A4.3b adjusts this/Pointer/Reference to an unambiguous non-virtual DWARF base; converting Pointer requires count=1. Compare the subobject address with an independent oracle. Count does not constrain the function body. Check outcome/return_state before return_value; pass logical time as an argument.',
-                 bad='A call inside an expression is refused; a call without a timeout is bounded only by the scenario limit. ret does not restore an interrupted call.'),
-         good='''t.reach("app_step")
-result = t.ret(42)
-t.check("caller got the value", t.read("app_received.produced"), result["applied"])
+                 good='After ret, continue to caller processing and check consumption, skipped effects and the next input (tests/controlled-input). SRAM readback does not prove consumption. ret checks the caller; call uses an explicit timeout. In the 0.6.0 candidate namespace/static require one symbol; A4.2 supports explicit this and exact signature; A4.3a adds Pointer/Reference with type/SRAM checks. A4.3b adjusts this/Pointer/Reference to an unambiguous non-virtual DWARF base; converting Pointer requires count=1. Compare the subobject address with an independent oracle. Count does not constrain the function body. Check outcome/return_state before return_value; pass logical time as an argument.',
+                 bad='A call inside an expression is refused; a call without a timeout is bounded only by the scenario limit. ret does not restore an interrupted call. Software substitution does not establish a physical button press or peripheral failure.'),
+         good='''t.reach("sample_input")
+result = t.ret(1)
+t.check("forced", result["outcome"], "forced")
+t.reach("after_processing")  # Caller must run before checking consumption.
+t.check("caller consumed the value", t.read("input_state.consumed"), 1)
 
 value = t.call("app_checksum", 7, timeout=2)       # async def: await t.call(...)
 t.check("returned", value["outcome"], "returned")

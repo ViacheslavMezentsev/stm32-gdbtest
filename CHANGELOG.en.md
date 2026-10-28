@@ -6,6 +6,8 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- A5.1: neutral SRAM/ret example with consumption checks, negative controls and full restoration; host/Renode, no core changes or hardware.
+
 - A4.3b (0.6.0 candidate): unambiguous non-virtual bases for this/Pointer/Reference, checked offsets and subobject audit; host/Renode, no hardware.
 
 - A4.3a: Pointer/Reference, exact types, SRAM ranges, early refusals, audit and neutral examples; no inheritance or boards.

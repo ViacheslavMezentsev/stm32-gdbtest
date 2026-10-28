@@ -1,0 +1,8 @@
+schema = 1
+[emulator]
+backend = "renode"
+executable = "renode"
+startup_timeout_s = 15
+shutdown_timeout_s = 5
+[renode]
+platform = "platform.repl"

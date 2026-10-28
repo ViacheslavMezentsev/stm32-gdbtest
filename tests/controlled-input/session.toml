@@ -1,0 +1,4 @@
+[config]
+target = "target.toml"
+[results]
+capture = true

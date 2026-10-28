@@ -664,3 +664,12 @@ Omit await in ordinary def. Do compare the address with an independent oracle,
 check neighbouring fields and restore changes explicitly. Do not assume a second
 base has offset zero, pass Derived[] as Base[], or bypass ambiguity with a cast
 expression. Examples/refusals: tests/renode-backend/test_cpp.py, HW_CPP_INHERITANCE_*.
+
+
+## A5.1 — applying and consuming substitutions
+
+No API extension. Existing write/ret are exercised by the [neutral example](../../tests/controlled-input/README.en.md).
+SRAM readback and ret.applied do not confirm consumption: continue to processing,
+check the consumed value, branch, skipped effects and next ordinary input. ret is
+not awaited; async navigation is. Include negative controls and explicit restoration.
+Model PASS does not establish physical input or peripheral acquisition.

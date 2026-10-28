@@ -158,3 +158,15 @@ These are manual review questions; current automated checks do not establish the
 - Raw data/hashes retained; offline reanalysis possible without another experiment?
 
 [Example](../../tests/external-capture/README.en.md).
+
+
+## Software substitution (A5.1)
+
+- Verify consumption, not only readback/applied.
+- Resume to caller processing after ret.
+- Include baseline, opposite value and next ordinary input.
+- Identify skipped producer effects and excluded hardware layers.
+- Detect too-early writes through consumption checks.
+- Verify restoration on PASS, FAIL and exception.
+
+[Executable example](../../tests/controlled-input/README.en.md).

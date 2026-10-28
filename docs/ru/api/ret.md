@@ -27,11 +27,25 @@
 ## Пример
 
 ```python
-t.reach("app_step")
-result = t.ret(42)
-t.check("the caller received the value", t.read("app_received.produced"), result["applied"])
+await t.reach("sample_input")
+result = t.ret(1)  # ret не продолжает вызывающий код; await здесь не нужен.
+t.check("forced return", result["outcome"], "forced")
+await t.reach("after_processing")
+t.check("caller consumed the value", t.read("input_state.consumed"), 1)
 ```
 
 ## Ссылки
 
 - [ТЗ API / API specification](../../TECHNICAL_SPECIFICATION_API.md).
+
+
+## Подтверждение потребления (A5.1)
+
+Пример выше — async def; в def уберите await. Ret не продолжает вызывающий код:
+проверять его переменные сразу после ret преждевременно. Остановитесь до нужных
+побочных эффектов, подставьте значение, продолжите до наблюдаемой обработки.
+Проверяйте ветку получателя, пропущенные эффекты производителя, следующий штатный
+вход и восстановление. Значение applied подтверждает подмену, а не потребление.
+[Нейтральный пример](../../../tests/controlled-input/README.md) проверяет оба значения,
+слишком раннюю SRAM-запись (намеренный FAIL) и восстановление после исключения.
+Host-модель не заменяет настоящий ret через GDB/Renode. Физический отказ не доказан.
