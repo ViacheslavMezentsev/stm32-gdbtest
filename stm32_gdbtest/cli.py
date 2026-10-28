@@ -44,6 +44,12 @@ def main():
     run_parser.add_argument("--image-policy", type=Path)
     run_parser.add_argument("--prepare-only", action="store_true",
                             help="run every host-side step before the GDB server, without hardware access")
+    run_parser.add_argument("--interactive", action="store_true",
+                            help="step through the scenario in a Python debugger: waits for debugpy on 127.0.0.1, "
+                                 "no time limit, results in interactive-runs (excluded from automated reports)")
+    run_parser.add_argument("--debug-port", type=int, help="debugpy port for --interactive (default 5678)")
+    run_parser.add_argument("--debugpy", type=Path,
+                            help="directory with the debugpy package for --interactive (default: VS Code extension)")
     packer = subs.add_parser("pack", help="prepare scenarios here and write a package to run on a stand")
     packer.add_argument("--session", type=Path, required=True)
     packer.add_argument("--output", type=Path, required=True, help="package file, *.zip")
@@ -95,14 +101,21 @@ def main():
             return 2
         print(f"Package {args.output}: {len(manifest['tests'])} scenarios, ELF {manifest['elf_sha256'][:12]}")
         return 0
+    if not args.interactive and (args.debug_port is not None or args.debugpy is not None):
+        parser.error("--debug-port and --debugpy require --interactive")
+    if args.interactive and (args.timeout is not None or args.prepare_only):
+        parser.error("--interactive has no time limit and needs a stand: drop --timeout and --prepare-only")
     if args.package:
         from stm32_gdbtest.package import open_package
         session = open_package(args.package, args.workdir, args.gdb and str(args.gdb))
     else:
         session = json.loads(args.session.read_text(encoding="utf-8"))
     tests = {t["id"]: t for t in collect(scenario_dirs(session))}
+    from stm32_gdbtest.interactive import DEFAULT_PORT
+    options = dict(interactive=True, debug_port=DEFAULT_PORT if args.debug_port is None else args.debug_port,
+                   debugpy=args.debugpy) if args.interactive else {}
     return run(session, tests[args.test], args.stand, args.timeout, args.identity_policy, args.image_policy,
-               args.prepare_only)
+               args.prepare_only, **options)
 
 
 if __name__ == "__main__":

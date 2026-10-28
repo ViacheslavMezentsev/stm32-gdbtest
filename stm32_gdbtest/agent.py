@@ -27,6 +27,7 @@ from stm32_gdbtest.result_capture import save as save_records
 from stm32_gdbtest.scenario import ScenarioSkipped, invoke, invoke_async
 from stm32_gdbtest.reports import CODES
 from stm32_gdbtest import report_data
+from stm32_gdbtest import interactive
 
 
 async def main():
@@ -71,6 +72,9 @@ async def main():
             raise ValueError("BIN differs from host snapshot")
         report["gdb_api_checks"] = inspect_gdb_api(gdb)
         require_gdb_api(report["gdb_api_checks"])
+        if session.get("interactive"):
+            # ТЗ API 6.10: the person attaches before the first access to the MCU.
+            interactive.attach(session["interactive"], session["interactive"]["ready"])
         report["connection_attempted"] = True
         gdb.execute(("target remote " if emulator else "target extended-remote ") + session["endpoint"])
         connected = True
@@ -125,7 +129,9 @@ async def main():
         if inspect.iscoroutinefunction(function):
             from stm32_gdbtest.execution import LiveExecution
             target._execution = LiveExecution(target, gdb)
-            target._deadline = started + max(0, case["timeout_s"] - 2.0)
+            if not session.get("interactive"):
+                # An interactive run has no scenario deadline: a person may stay at a breakpoint.
+                target._deadline = started + max(0, case["timeout_s"] - 2.0)
             await invoke_async(function, target)
             target._assert_awaited()
         else:

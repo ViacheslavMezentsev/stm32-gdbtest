@@ -132,12 +132,21 @@ python -B -m stm32_gdbtest doctor --stand path/to/stand.local.toml
 | `--identity-policy warn\|strict` | Политика DEV_ID; порядок: CLI → `STM32_GDBTEST_IDENTITY_POLICY` → `warn` |
 | `--image-policy` | Политика полного образа; альтернатива — абсолютный `STM32_GDBTEST_IMAGE_POLICY` |
 | `--prepare-only` | Только шаги до GDB-сервера, без оборудования |
+| `--interactive` | Пошаговый проход в отладчике Python: ожидание debugpy, без предела времени, результаты в `interactive-runs` ([подробно](MANUAL_DEBUG.md)) |
+| `--debug-port`, `--debugpy` | Для `--interactive`: порт на 127.0.0.1 (по умолчанию 5678) и каталог пакета debugpy (по умолчанию из расширения VS Code или `STM32_GDBTEST_DEBUGPY`) |
 
 `--prepare-only` выполняет все шаги до GDB-сервера: стенд (если выбран), профиль,
 снимок ELF, build manifest, запрошенные контракты, секции и образ, включая полный
 режим. Блокировка отладчика, сервер и подключение не используются; отчёт получает
 `mode: prepare` и `hardware_accessed: false`. Стенд в этом режиме необязателен,
 а если выбран — проверяется целиком, включая mapping J-Link.
+
+`--interactive` выбирает режим только для этого запуска; сценарий, его `timeout_s` и
+регистрация CTest не меняются. GDB до первого обращения к MCU ждёт отладчик на
+`127.0.0.1:<порт>`, общий предел времени и предел async-сценария не действуют, Ctrl+C
+отменяет запуск с восстановлением платы. Результат пишется в `interactive-runs` рядом с
+`runs` с полем `execution_kind: "interactive"` и в автоматические сводки не попадает.
+С `--timeout` и `--prepare-only` не сочетается.
 
 `doctor [--gdb PATH] [--stand TOML] [--json]` проверяет окружение без обращения к
 отладчику: host Python, GDB-Python ≥ 3.11 и binutils рядом с ним, CMake и Ninja,

@@ -8,6 +8,7 @@ import os
 from pathlib import Path, PurePosixPath
 import random
 import re
+import signal
 import socket
 import subprocess
 import time
@@ -28,6 +29,7 @@ from stm32_gdbtest.full_image import load_policy, canonical_image
 from stm32_gdbtest.toolchain import binutil
 from stm32_gdbtest.probes import family as probe_family
 from stm32_gdbtest import arch, emulators, openocd
+from stm32_gdbtest import interactive as interactive_run
 from stm32_gdbtest.stutil_lifecycle import IdleLog, wait_idle
 from stm32_gdbtest.result_capture import finalize as finalize_capture
 
@@ -77,15 +79,43 @@ def tool(gdb, name):
     return binutil(gdb, name)
 
 
+def wait_interactive(client, ready, port):
+    """ТЗ API 6.10: no wall-clock limit; announce once the agent listens.
+
+    Ctrl+C (and Ctrl+Break on Windows) raises KeyboardInterrupt here, so the regular cleanup
+    stops GDB, releases the stand and restores the board.
+    """
+    previous = signal.signal(signal.SIGBREAK, signal.default_int_handler) if hasattr(signal, "SIGBREAK") else None
+    announced = False
+    try:
+        while client.poll() is None:
+            if not announced and ready.exists():
+                print(f"Interactive: attach the debugger to 127.0.0.1:{port} "
+                      "(no time limit; Ctrl+C cancels the run)", flush=True)
+                announced = True
+            time.sleep(0.1)
+    except KeyboardInterrupt:
+        print("Interactive run cancelled: stopping GDB and restoring the board", flush=True)
+        raise
+    finally:
+        if previous is not None:
+            signal.signal(signal.SIGBREAK, previous)
+    return client.returncode
+
+
 def run(session, test, stand_path=None, timeout=None, identity_policy=None, image_policy=None,
-        prepare_only=False):
+        prepare_only=False, interactive=False, debug_port=interactive_run.DEFAULT_PORT, debugpy=None):
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
     project_root = Path(session.get("root", ROOT)).resolve()
-    out = local_directory(Path(session["out"]) / f"{stamp}-{test['id']}-{os.getpid()}", project_root)
+    # ТЗ API 6.10: an interactive attempt never lands where automated readers look for results.
+    results = interactive_run.results_root(session["out"]) if interactive else Path(session["out"])
+    out = local_directory(results / f"{stamp}-{test['id']}-{os.getpid()}", project_root)
     capture_enabled = False
     started = time.monotonic()
     report = {"id": test["id"], "status": "ERROR", "checks": [], "started_utc": stamp,
               "mode": "prepare" if prepare_only else "hardware", "run_id": out.name}
+    if interactive:
+        report["execution_kind"] = interactive_run.KIND
     if session.get("package"):
         report["package"] = session["package"]  # ТЗ 5.19.3: provenance of a prepared run
     try:
@@ -98,9 +128,18 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
         session = dict(session, identity_policy=policy,
                        image_policy_path=image_policy or os.environ.get("STM32_GDBTEST_IMAGE_POLICY"))
         report["identity_policy"] = policy
-        limit = test["timeout_s"] if timeout is None else timeout
-        if not math.isfinite(limit) or not 0 < limit <= 300:
-            raise ValueError("Timeout must be positive and <= 300 seconds")
+        if interactive:
+            if prepare_only:
+                raise ValueError("An interactive run needs a stand; it cannot be prepare-only")
+            if timeout is not None:
+                raise ValueError("An interactive run has no time limit; do not pass a timeout")
+            limit = None
+            session = dict(session, _interactive=interactive_run.settings(debug_port, debugpy))
+            print(f"Interactive run {test['id']}: results in {out}", flush=True)
+        else:
+            limit = test["timeout_s"] if timeout is None else timeout
+            if not math.isfinite(limit) or not 0 < limit <= 300:
+                raise ValueError("Timeout must be positive and <= 300 seconds")
         path = stand_path or os.environ.get("STM32_GDBTEST_STAND") or session.get("stand")
         if not path and not prepare_only:
             raise RuntimeError("Select a local stand with STM32_GDBTEST_STAND or --stand")
@@ -154,6 +193,8 @@ def run(session, test, stand_path=None, timeout=None, identity_policy=None, imag
     for warning in report.get("warnings", []):
         print("WARNING: " + warning)
     print(f"{report['status']} {test['id']}: {out / 'result.json'}")
+    if interactive:
+        print("Interactive run: diagnostic result, excluded from automated runs and reports")
     if report["status"] != "PASS":
         print(report.get("error", "") + report.get("teardown_error", ""))
     if capture_enabled and not prepare_only:
@@ -332,6 +373,8 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
                                         reset_command=backend["reset_halt"]),
                         # ТЗ API 4.14.8: the build as the scenario sees it; None without a build manifest.
                         build_info=build_summary(report["build_manifest"]) if report.get("build_manifest") else None)
+        if session.get("_interactive"):
+            run_data["interactive"] = dict(session["_interactive"], ready=str(out / interactive_run.READY_FILE))
         run_file = out / "run.json"
         run_file.write_text(json.dumps(run_data), encoding="utf-8")
         env["STM32_GDBTEST_RUN"] = str(run_file)
@@ -412,7 +455,10 @@ def execute(session, test, stand, out, report, timeout, profile, prepare_only=Fa
             client = subprocess.Popen([arg for arg in gdb_base if arg != "-batch"] + [str(elf), "-x", str(ROOT / "stm32_gdbtest/agent.py")],
                                       env=env, cwd=project_root, stdin=subprocess.PIPE, stdout=gdb_log, stderr=subprocess.STDOUT,
                                       **spawn_options())
-            returncode = client.wait(timeout=timeout)
+            if session.get("_interactive"):
+                returncode = wait_interactive(client, out / interactive_run.READY_FILE, session["_interactive"]["port"])
+            else:
+                returncode = client.wait(timeout=timeout)
         if not agent_result.exists():
             raise RuntimeError(f"GDB exited {returncode} without report; see gdb.log")
         result = read_report(agent_result, materialize=False)

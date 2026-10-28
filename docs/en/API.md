@@ -134,12 +134,21 @@ The logical CLI name is `stm32-gdbtest`; a separate executable will come with pa
 | `--identity-policy warn\|strict` | DEV_ID policy; order: CLI → `STM32_GDBTEST_IDENTITY_POLICY` → `warn` |
 | `--image-policy` | Full-image policy; alternative — an absolute `STM32_GDBTEST_IMAGE_POLICY` |
 | `--prepare-only` | Only the steps before the GDB server, no hardware |
+| `--interactive` | Step through in a Python debugger: waits for debugpy, no time limit, results in `interactive-runs` ([details](MANUAL_DEBUG.md)) |
+| `--debug-port`, `--debugpy` | For `--interactive`: port on 127.0.0.1 (default 5678) and the debugpy package directory (default: the VS Code extension or `STM32_GDBTEST_DEBUGPY`) |
 
 `--prepare-only` runs every step before the GDB server: stand (if selected),
 profile, ELF snapshot, build manifest, requested contracts, sections and image,
 including full mode. The debugger lock, server and connection are not used; the
 report gets `mode: prepare` and `hardware_accessed: false`. A stand is optional in
 this mode; if one is selected, it is validated completely, including the J-Link mapping.
+
+`--interactive` selects the mode for this run only; the scenario, its `timeout_s` and the
+CTest registration do not change. Before the first MCU access GDB waits for a debugger on
+`127.0.0.1:<port>`; neither the overall time limit nor the async scenario deadline applies,
+and Ctrl+C cancels the run with board recovery. The result goes to `interactive-runs` next
+to `runs` with `execution_kind: "interactive"` and stays out of automated summaries. It
+cannot be combined with `--timeout` or `--prepare-only`.
 
 `doctor [--gdb PATH] [--stand TOML] [--json]` checks the environment without accessing
 the debugger: host Python, GDB-Python ≥ 3.11 and binutils next to it, CMake and Ninja,
