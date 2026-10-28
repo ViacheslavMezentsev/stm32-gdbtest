@@ -6,6 +6,7 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+- The stm32-gdbtest-report skill now follows the release report design: a compact overview (summary, conditions, area tables, what was not checked) and a technical report (acquisition methods, evidence index, cards with a requirement panel, figures and Z-NN remarks, remark summary, exclusions, provenance appendix). Input is neutral JSON schema 2 checked for links, time zones and the absence of serial numbers, addresses and paths; the design contract, section wording and neutrality rules are in references.
 - A6: offline ROS1 bag v2 adapter (tests/rosbag-import) — strict reader with index cross-check, neutral channels and samples, separate analysis of clock anchors and the debugger snapshot, 23 synthetic experiments with corrupted copies; a real recording checked locally, no core changes.
 - A5.3: teaching packet buffer with a Pointer handler call, ordering, rejection, re-entry, early bound refusal and full restoration; host/Renode, no core changes or hardware.
 
