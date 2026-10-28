@@ -218,8 +218,9 @@ python -B modules/stm32-gdbtest/stm32_gdbtest/cli.py run --session build/f103c8-
 ## Что проверено
 
 28.10.2026, Windows, Python 3.12.8 внутри `arm-none-eabi-gdb-py3` (xPack 14.2.1),
-debugpy из `ms-python.debugpy` 2026.6.0, локальный OpenOCD 0.12.0. Действия VS Code
-моделировал программный DAP-клиент: attach, точки, `stackTrace`, `evaluate`, `next`, `continue`.
+debugpy из `ms-python.debugpy` 2026.6.0, локальный OpenOCD 0.12.0. Аппаратные опыты вёл
+программный DAP-клиент (attach, точки, `stackTrace`, `evaluate`, `next`, `continue`); проход
+в самом VS Code подтверждён отдельно.
 
 | Опыт | Итог |
 | :--- | :--- |
@@ -230,5 +231,6 @@ debugpy из `ms-python.debugpy` 2026.6.0, локальный OpenOCD 0.12.0. Д
 | F411CE, те же сценарии автоматически | PASS в `runs`, без `execution_kind` |
 | BluePill F103C8, `HW_SYSTICK_PROGRESS`: две точки, `t.read`, шаг, пауза 15 с | PASS |
 | F411CE, модуль 0.5.0 (упрощённый режим запускателя) | PASS в `manual-runs` |
+| VS Code: BlackPill F411CE, `HW_BOOT` — задача, F5, остановка на точке, Variables, стек вызовов, Debug Console | работает |
 
 На всех платах перед опытом снималась копия Flash, после — возвращалась со сверкой SHA-256.

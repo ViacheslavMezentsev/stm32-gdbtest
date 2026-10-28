@@ -218,8 +218,9 @@ interactive mode itself.
 ## What was checked
 
 28.10.2026, Windows, Python 3.12.8 inside `arm-none-eabi-gdb-py3` (xPack 14.2.1), debugpy from
-`ms-python.debugpy` 2026.6.0, local OpenOCD 0.12.0. VS Code actions were modelled by a
-programmatic DAP client: attach, breakpoints, `stackTrace`, `evaluate`, `next`, `continue`.
+`ms-python.debugpy` 2026.6.0, local OpenOCD 0.12.0. The hardware experiments were driven by a
+programmatic DAP client (attach, breakpoints, `stackTrace`, `evaluate`, `next`, `continue`); a
+walk-through in VS Code itself was confirmed separately.
 
 | Experiment | Result |
 | :--- | :--- |
@@ -230,6 +231,7 @@ programmatic DAP client: attach, breakpoints, `stackTrace`, `evaluate`, `next`, 
 | F411CE, the same scenarios automated | PASS in `runs`, no `execution_kind` |
 | BluePill F103C8, `HW_SYSTICK_PROGRESS`: two breakpoints, `t.read`, step, 15 s pause | PASS |
 | F411CE, module 0.5.0 (simplified launcher mode) | PASS in `manual-runs` |
+| VS Code: BlackPill F411CE, `HW_BOOT` — task, F5, stop at a breakpoint, Variables, call stack, Debug Console | works |
 
 On every board a Flash copy was taken before the experiment and written back afterwards with a
 SHA-256 check.
