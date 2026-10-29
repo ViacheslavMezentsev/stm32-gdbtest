@@ -171,11 +171,16 @@ async def main():
         if report["status"] != "PASS" and connected and (execution is None or execution.state() == "stopped"):
             diagnostics = report["diagnostics"] = {}
             diagnostic_errors = {}
+            register_names = {}
             for name in adapter.diagnostic_registers(profile):
                 try:
-                    diagnostics[name] = int(gdb.newest_frame().read_register(name))
+                    diagnostics[name], actual = arch.read_named_register(gdb.newest_frame(), name)
+                    if actual != name:
+                        register_names[name] = actual
                 except Exception as exc:
                     diagnostic_errors[name] = str(exc)
+            if register_names:
+                report["diagnostic_register_names"] = register_names
             for name, address in adapter.diagnostic_memory(profile).items():
                 try:
                     diagnostics[name] = int.from_bytes(

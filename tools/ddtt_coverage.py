@@ -44,6 +44,18 @@ def validate(mapping):
 
     qualification.validate(mapping)
 
+def report_reader():
+    """The stm32_gdbtest result reader; a copied tool needs the package next to its tools/ directory."""
+    try:
+        from stm32_gdbtest.report_data import read
+    except ModuleNotFoundError as exc:
+        if exc.name not in ("stm32_gdbtest", "stm32_gdbtest.report_data"):
+            raise
+        raise ValueError("stm32_gdbtest package not found: keep tools/ next to stm32_gdbtest/ "
+                         "or add the module root to sys.path") from exc
+    return read
+
+
 def project(root, mapping, results):
     """Latest selected automated attempt wins, including incompatible/error attempts."""
     validate(mapping)
@@ -51,8 +63,7 @@ def project(root, mapping, results):
     by_case = defaultdict(list)
     for path in sorted(set(Path(p).resolve() for p in results)):
         # Import after project bootstrap; report schemas are separate from map schemas.
-        from stm32_gdbtest.report_data import read as read_report
-        data = read_report(path)
+        data = report_reader()(path)
         if data.get("mode") != mapping.get("environment", "hardware") or data.get("purpose", "automated") != "automated":
             continue
         stamp = datetime.fromisoformat(data["started_utc"].replace("Z", "+00:00"))

@@ -25,5 +25,44 @@ class ArchitectureAdapterTests(unittest.TestCase):
             arch.adapter("riscv")
 
 
+class Register:
+    def __init__(self, name):
+        self.name = name
+
+
+class Frame:
+    """GDB frame stand-in: registers by exact name, like the target description of the server."""
+    def __init__(self, values, broken_architecture=False):
+        self.values, self.broken = values, broken_architecture
+
+    def read_register(self, name):
+        if name not in self.values:
+            raise ValueError(f"Bad register: {name}")
+        return self.values[name]
+
+    def architecture(self):
+        if self.broken:
+            raise RuntimeError("no architecture")
+        values = self.values
+        return type("Arch", (), {"registers": lambda self: [Register(n) for n in values]})()
+
+
+class NamedRegisterTests(unittest.TestCase):
+    def test_exact_name_is_read_as_is(self):
+        self.assertEqual(arch.read_named_register(Frame({"xPSR": 0x2100000F}), "xPSR"), (0x2100000F, "xPSR"))
+
+    def test_name_differing_in_case_is_resolved(self):
+        self.assertEqual(arch.read_named_register(Frame({"xpsr": 0x2100000F, "pc": 4}), "xPSR"), (0x2100000F, "xpsr"))
+
+    def test_signed_register_type_is_read_as_unsigned(self):
+        value = type("Value", (), {"type": type("Type", (), {"sizeof": 4})(), "__int__": lambda self: -0x7F000000})()
+        self.assertEqual(arch.read_named_register(Frame({"xPSR": value}), "xPSR"), (0x81000000, "xPSR"))
+
+    def test_missing_or_ambiguous_register_keeps_the_original_error(self):
+        for frame in (Frame({"pc": 4}), Frame({"xpsr": 1, "XPSR": 2}), Frame({"xpsr": 1}, broken_architecture=True)):
+            with self.subTest(names=sorted(frame.values)), self.assertRaisesRegex(ValueError, "Bad register: xPSR"):
+                arch.read_named_register(frame, "xPSR")
+
+
 if __name__ == "__main__":
     unittest.main()

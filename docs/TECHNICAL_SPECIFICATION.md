@@ -5,13 +5,21 @@
 | Реквизит | Значение |
 | :--- | :--- |
 | **Документ** | TECHNICAL_SPECIFICATION.md |
-| **Ревизия** | 0.123 (A3.3: потребители, кандидат 0.6.0) |
-| **Дата формирования** | 28.10.2026 |
+| **Ревизия** | 0.124 (Р5 выпуска 0.6.1: имя диагностического регистра и отказ копии ddtt_coverage) |
+| **Дата формирования** | 29.10.2026 |
 | **Метод формирования** | Обратная разработка по исходному коду `main` @ `a371d80` (ядро совпадает с `b76d909` от 25.09.2026, закреплённым в стендовом проекте), host-тестам `tests/host`, примеру `examples/minimal-consumer` и документации `docs/`. Назначение и практика применения — по проекту stm32-hwtest-blackpill (`main` @ `060d8e4`) |
 | **Целевая версия** | Выпуск пакета stm32-gdbtest `0.5.0` (итоговый коммит приёмки `a7b0951`, р.0.114); API_VERSION=3, target schema 3 (schema 1/2 совместимы), ТЗ API 0.3.23; MMIO/SVD (р.0.104), контракты memory/write (р.0.99), Renode и QEMU (р.0.102). Публикация владельцем после CI итогового SHA. |
 | **Целевая платформа** | Хост Windows или Linux `(р.0.8)`; Python ≥ 3.11; ARM GCC с GDB-Python (проверены xPack 13.3.1-1.1, GDB 14.2.90, встроенный Python 3.11.4); CMake ≥ 3.25, Ninja; GDB-серверы OpenOCD 0.12.0, ST-LINK GDB Server 7.14.0 (CubeCLT 1.22.0), SEGGER J-Link GDB Server 8.32; MCU STM32 Cortex-M0/M3/M4 по профилю потребителя. Аппаратный запуск — Windows и Linux x86_64/aarch64 с glibc ≥ 2.31 (в том числе Ubuntu 20.04 на Orange Pi 5) `(р.0.7)`; сборка, manifest и подготовка — Windows и Linux. CI — GitHub Actions и Docker-образ `ci/docker` (Ubuntu 24.04, xPack GCC 13.3.1-1.1, 14.2.1-1.1, 15.2.1-1.1, CMake 3.28.3, Ninja 1.12.1) `(р.0.3)` |
 | **Связанные документы** | README.md, README.en.md; AGENTS.md; `docs/ru/*.md` и `docs/en/*.md`: index, API, BACKENDS, CONTRACTS, DDTT, DEBUGGER_OWNERSHIP, GETTING_STARTED, HAL_MACRO_GUIDE, HOWTO, IMAGES, LINUX_STAND, MANIFESTS, STATUS, TARGET_IDENTITY, TEST_AUTHORING, VERSIONING, maintenance, testing `(р.0.10)`; TODO.md; CHANGELOG.md, CHANGELOG.en.md; docs/archive/SOURCE.md; stm32-hwtest-blackpill: docs/HWTEST_ARCHITECTURE_V2.md, STATUS.md, PERIPHERAL_PLAN.md, F429_SERVER_STABILITY.md; stm32-cmake-yml: README.md (профили сборки) |
 | **Связанные файлы кода** | `stm32_gdbtest/*.py` (24 модуля `(р.0.12)`, `(р.0.9)`), `stm32_gdbtest/cmake/STM32GDBTest.cmake`, `tests/host/*.py`, `examples/minimal-consumer/*`; `tests/firmware/*`, `ci/*`, `.github/workflows/*` `(р.0.3)`; `tools/linux_stand.py`, `tools/linux-stand.lock.json` `(р.0.7)` |
+
+### Изменения ревизии 0.124
+
+| Пункт | Изменение |
+| --- | --- |
+| 5.11.1 | Имя регистра из `core_registers` разрешается без учёта регистра букв по описанию архитектуры GDB; фактическое имя — в `diagnostic_register_names`; значение маскируется по ширине регистра |
+| 5.26.6 | Копия tools/ddtt_coverage.py без пакета stm32_gdbtest отказывает понятным сообщением с кодом 2 |
+| Разделы проверок | TC-193: host Windows/Linux; намеренный FAIL на стенде с OpenOCD xPack |
 
 ### Изменения ревизии 0.123
 
@@ -329,6 +337,7 @@ Runner задаёт режим до сценария и резервирует 2
 | 0.121 | 28.10.2026 | A3.2: применение journal и явное частичное чтение. |
 | 0.122 | 28.10.2026 | A3.2: применение report и сочетания политик. |
 | 0.123 | 28.10.2026 | A3.3: потребители неполных свидетельств. |
+| 0.124 | 29.10.2026 | Р5 выпуска 0.6.1: имя диагностического регистра без учёта регистра букв, отказ копии ddtt_coverage без пакета. |
 
 ### Изменения ревизии 0.107
 
@@ -1917,7 +1926,7 @@ state и границы потерь по хранилищам, отдельны
 
 ### 5.11. Диагностика и завершение в агенте
 
-5.11.1. При исходе не PASS и выполненном подключении агент ДОЛЖЕН прочитать `core_registers` текущего кадра, 32-битные `diagnostic_registers` (little-endian) и backtrace; ошибки чтения ДОЛЖНЫ сохраняться в `diagnostic_errors` без изменения исхода. `[R]`
+5.11.1. При исходе не PASS и выполненном подключении агент ДОЛЖЕН прочитать `core_registers` текущего кадра, 32-битные `diagnostic_registers` (little-endian) и backtrace; ошибки чтения ДОЛЖНЫ сохраняться в `diagnostic_errors` без изменения исхода. `[R]` Если регистр с именем из профиля не читается, агент ДОЛЖЕН прочитать единственный регистр архитектуры кадра, имя которого отличается только регистром букв (описание цели сервера может называть `xPSR` как `xpsr`), сохранить значение под именем профиля и записать фактическое имя в `diagnostic_register_names`; при отсутствии или неоднозначности совпадения сохраняется исходная ошибка. Значение ДОЛЖНО маскироваться по ширине типа регистра, чтобы установленный старший бит не давал отрицательного числа. `[R]` (р.0.124)
 
 5.11.2. Агент ДОЛЖЕН закрыть Target и выполнить команды `finish` диалекта; при успехе `teardown = reset_run`; ошибка завершения ДОЛЖНА давать ERROR с `teardown_error`. `[R]`
 
@@ -2336,6 +2345,9 @@ Prepare и явно ручные попытки НЕ ДОЛЖНЫ давать �
 очищать принадлежащий запуску процесс Renode и сохранять ERROR при неполном результате или
 ошибке очистки. Результат ДОЛЖЕН обозначать emulator; он НЕ ДОЛЖЕН считаться аппаратной
 приёмкой или расширением схемы штатного runner/Target. `[N]` (р.0.98)
+
+5.26.6. Копия tools/ddtt_coverage.py, рядом с которой нет пакета stm32_gdbtest, ДОЛЖНА
+завершаться кодом 2 с сообщением о ненайденном пакете, без трассировки Python. `[N]` (р.0.124)
 
 ### 5.27. Офлайн-проверка связей HIL (р.0.109)
 
@@ -3013,6 +3025,7 @@ TC-01…TC-65, TC-74…TC-78, TC-87, TC-90…TC-95, TC-98…TC-102, TC-104…TC-
 | TC-186 | T: tests/host/test_report_data.py; D: tests/renode-backend/run_report.py | Result reader, журналы, вывод, сохранение отказов; Windows/Linux без плат (р.0.117) |
 | TC-187 | T: tests/host/test_report_summary.py; D: tests/renode-backend/run_report.py --summary | Источники, средний FAIL, поколения, неполнота и все уровни вывода (р.0.118) |
 | TC-188 | A3.1: потеря строки FAIL, строгий журнал, резерв, повреждение метаданных | Host и Renode Windows/Linux: ожидаемые FAIL/ERROR, cleanup, повтор |
+| TC-193 | Имя диагностического регистра без учёта регистра букв; копия ddtt_coverage без пакета | Host Windows/Linux: tests/host/test_arch.py, test_ddtt_coverage.py; намеренный FAIL на стенде с OpenOCD xPack — xPSR в diagnostics |
 | TC-192 | Неполные источники: export/index/HTML/summary/DDTT | Host Windows/Linux, повторный анализ Renode без запуска цели |
 | TC-191 | Квоты report, независимые коллекции, FAIL и сочетания journal | Host/Renode Windows/Linux, без плат |
 | TC-190 | Квоты journal, префикс, MMIO, независимый FAIL и новые форматы | Host и Renode Windows/Linux, без плат |
@@ -3203,7 +3216,7 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | 5.9.8 | ID: `check_target` | TC-49 |
 | 5.9.9 | AG; RU: печать `warnings` | TC-40, TC-48 |
 | 5.10.1–5.10.13 | TG: `Target`, `function_name`; AG: `main` | TC-68, TC-72, TC-114, TC-115, TC-147, I |
-| 5.11.1–5.11.3 | AG: `finally` | TC-70, TC-72, I |
+| 5.11.1–5.11.3 | AG: `finally`; arch.py: `read_named_register` | TC-70, TC-72, TC-193, I |
 | 5.12.1–5.12.6 | RU: `execute` (`finally`); PS: `stop_tree` | TC-70 |
 | 5.13.1–5.13.13 | CK: `stm32_gdbtest_attach`, `stm32_gdbtest_register` | A, TC-66, TC-67, TC-72, TC-116 |
 | 5.13.14 | CK: `stm32_gdbtest_register` (`prepare.${id}`) | TC-80, TC-114 |
@@ -3228,6 +3241,7 @@ Timeout запуска инфраструктуры ДОЛЖЕН иметь от
 | 5.28.1, 5.28.2, 5.28.3, 5.28.4, 5.28.5 | tools/ddtt_qualification.py, ddtt_coverage.py, ddtt_provenance.py, ddtt_report.py, ddtt_view.py | TC-183 (р.0.110) |
 | 5.27.1, 5.27.2, 5.27.3, 5.27.4, 5.27.5 | hil_inspect.py, cli.py; tests/host/test_hil_inspect.py | TC-182 (р.0.109) |
 | 5.26.1, 5.26.2, 5.26.3 | tools/ddtt_coverage.py, tools/ddtt_guard.py; tests/host/test_ddtt_coverage.py, test_ddtt_portable.py | TC-172, TC-173 (р.0.98) |
+| 5.26.6 | tools/ddtt_coverage.py: `report_reader`; tests/host/test_ddtt_coverage.py | TC-193 (р.0.124) |
 | 5.26.4 | tools/ddtt_provenance.py, tools/ddtt_report.py, tools/ddtt_view.py | TC-173 (р.0.98) |
 | 5.26.5 | tools/renode_probe.py; tests/renode-startup | TC-174 (р.0.98) |
 | 5.25.1, 5.25.2, 5.25.3, 5.25.4, 5.25.5 | tools/stand_loop.py; tests/host/test_stand_loop.py | TC-171 (р.0.92) |

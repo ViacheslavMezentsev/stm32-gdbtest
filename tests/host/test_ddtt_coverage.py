@@ -1,5 +1,6 @@
 """DDTT projection contract, without GDB or a board (TC-172)."""
 import json
+import os
 from pathlib import Path
 import tempfile
 import subprocess
@@ -125,6 +126,24 @@ class DdttCoverageTests(unittest.TestCase):
 
     def test_empty_campaign(self):
         self.assertEqual(self.run_export()[0]['state'], 'UNKNOWN')
+
+    def test_copied_tool_without_the_package_explains_the_error(self):
+        import shutil
+        tools = self.root / 'copy' / 'tools'
+        tools.mkdir(parents=True)
+        source = Path(coverage.__file__).parent
+        for name in ('ddtt_coverage.py', 'ddtt_guard.py', 'ddtt_qualification.py'):
+            shutil.copyfile(source / name, tools / name)
+        mapping = self.root / 'map.json'
+        mapping.write_text(json.dumps(self.mapping), encoding='utf-8')
+        self.save(self.result)
+        env = {key: value for key, value in os.environ.items() if key != 'PYTHONPATH'}
+        done = subprocess.run([sys.executable, str(tools / 'ddtt_coverage.py'), '--project', str(self.root),
+                               '--map', str(mapping), '--runs', str(self.root / 'runs'), '--out', str(self.out)],
+                              capture_output=True, text=True, cwd=self.root, env=env)
+        self.assertEqual(done.returncode, 2, done.stderr)
+        self.assertIn('stm32_gdbtest package not found', done.stderr)
+        self.assertNotIn('Traceback', done.stderr)
 
     def test_cli_error_invalidates_previous_output(self):
         self.run_export(self.save(self.result))

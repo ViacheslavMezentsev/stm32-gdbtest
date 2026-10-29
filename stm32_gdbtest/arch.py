@@ -20,6 +20,34 @@ class CortexM:
         return dict(profile["diagnostic_registers"])
 
 
+def read_named_register(frame, name):
+    """Value and GDB name of a diagnostic register.
+
+    The name comes from the profile; the GDB server's target description may spell it differently
+    (`xPSR` on OpenOCD 0.12.0, `xpsr` on the xPack OpenOCD build). If the exact name fails, the one
+    register of the frame architecture whose name differs only in letter case is read instead;
+    otherwise the original error is raised. The value is masked by the register width, so a signed
+    32-bit type in the target description does not turn a set bit 31 into a negative number.
+    """
+    try:
+        return _unsigned(frame.read_register(name)), name
+    except Exception as exact:
+        try:
+            names = [register.name for register in frame.architecture().registers()]
+        except Exception:
+            raise exact from None
+        matches = sorted({other for other in names if other != name and other.lower() == name.lower()})
+        if len(matches) != 1:
+            raise exact
+        return _unsigned(frame.read_register(matches[0])), matches[0]
+
+
+def _unsigned(value):
+    size = getattr(getattr(value, "type", None), "sizeof", None)
+    number = int(value)
+    return number & ((1 << (8 * int(size))) - 1) if size else number
+
+
 ADAPTERS = {"arm": CortexM()}
 DEFAULT_MACHINE = "arm"
 
