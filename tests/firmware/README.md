@@ -19,10 +19,10 @@ WeAct AT32F4 Core Board PC13 (active low).
 C sources follow the repository `.clang-format`.
 
 F030 also provides CLOCK/BLINK scenarios through the regular CLI. Its LED interval
-is 500 SysTick milliseconds; see [baseline evidence](../../docs/en/F030_CMSIS_BASELINE.md).
+is 500 SysTick milliseconds; see [baseline evidence](../../docs/evidence/en/F030_CMSIS_BASELINE.md).
 
 F030 RTC owns and resets the calendar on boot, but never resets the backup domain.
-See [RTC evidence and limitations](../../docs/en/F030_CMSIS_RTC.md).
+See [RTC evidence and limitations](../../docs/evidence/en/F030_CMSIS_RTC.md).
 
 ## Current example scope
 
@@ -46,20 +46,20 @@ be repeated after a package transfer; `src/app_receiver.c` is an ordinary applic
 module, not a test hook.
 
 F103 RTC uses a counter/alarm and thread-mode rearming, unlike the F030 calendar.
-See [RTC/Sleep evidence and limits](../../docs/en/F103_CMSIS_RTC_SLEEP.md).
+See [RTC/Sleep evidence and limits](../../docs/evidence/en/F103_CMSIS_RTC_SLEEP.md).
 
-[F411 ADC/DMA evidence](../../docs/en/F411_CMSIS_ADC_DMA.md) covers stream DMA and factory calibration.
+[F411 ADC/DMA evidence](../../docs/evidence/en/F411_CMSIS_ADC_DMA.md) covers stream DMA and factory calibration.
 
-[F411 RTC/Sleep evidence](../../docs/en/F411_CMSIS_RTC_SLEEP.md) covers calendar alarms, WFI and recovery.
+[F411 RTC/Sleep evidence](../../docs/evidence/en/F411_CMSIS_RTC_SLEEP.md) covers calendar alarms, WFI and recovery.
 
-[F401 baseline evidence](../../docs/en/F401_CMSIS_BASELINE.md): seven clocks/GPIO/TIM2/SysTick cases. F401 uses the regular CLI, not the three-profile run_hw.py helper.
+[F401 baseline evidence](../../docs/evidence/en/F401_CMSIS_BASELINE.md): seven clocks/GPIO/TIM2/SysTick cases. F401 uses the regular CLI, not the three-profile run_hw.py helper.
 
-[F401 ADC/DMA evidence](../../docs/en/F401_CMSIS_ADC_DMA.md):15 cases, CH16/17 and shared adc_convert_f4_factory arithmetic.
+[F401 ADC/DMA evidence](../../docs/evidence/en/F401_CMSIS_ADC_DMA.md):15 cases, CH16/17 and shared adc_convert_f4_factory arithmetic.
 
-[F401 RTC/Sleep evidence](../../docs/en/F401_CMSIS_RTC_SLEEP.md):20 cases, deadline and host recovery; rtc_f4.c and vectors are shared with F411.
+[F401 RTC/Sleep evidence](../../docs/evidence/en/F401_CMSIS_RTC_SLEEP.md):20 cases, deadline and host recovery; rtc_f4.c and vectors are shared with F411.
 
-[F429 baseline](../../docs/en/F429_CMSIS_BASELINE.md): seven startup/clocks/GPIO/TIM2/SysTick cases, HSI16 MHz, SRAM192 KiB without CCM. RTC covered by the subsequent group below.
+[F429 baseline](../../docs/evidence/en/F429_CMSIS_BASELINE.md): seven startup/clocks/GPIO/TIM2/SysTick cases, HSI16 MHz, SRAM192 KiB without CCM. RTC covered by the subsequent group below.
 
-[F429 ADC/DMA](../../docs/en/F429_CMSIS_ADC_DMA.md):15 cases, SRAM bounds, factory units and state faults.
+[F429 ADC/DMA](../../docs/evidence/en/F429_CMSIS_ADC_DMA.md):15 cases, SRAM bounds, factory units and state faults.
 
-[F429 RTC/Sleep](../../docs/en/F429_CMSIS_RTC_SLEEP.md):20 cases, deadlines and host recovery; RTC code/vectors shared with F401/F411.
+[F429 RTC/Sleep](../../docs/evidence/en/F429_CMSIS_RTC_SLEEP.md):20 cases, deadlines and host recovery; RTC code/vectors shared with F401/F411.

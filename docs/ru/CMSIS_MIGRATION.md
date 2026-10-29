@@ -15,10 +15,10 @@ F401 перенесён; F429 прошёл три группы, ожидаетс
 
 ## F030: актуальная сверка
 
-[Итоговая таблица 17 HAL → 18 CMSIS-сценариев](F030_CMSIS_ACCEPTANCE.md)
+[Итоговая таблица 17 HAL → 18 CMSIS-сценариев](../evidence/ru/F030_CMSIS_ACCEPTANCE.md)
 заменяет исходную инвентаризацию. Базовые функции проверены на Nucleo/ST-Link;
 HAL-specific handles/macros/force_return сохранены в отдельном
-[HAL F030 fixture с аппаратной приёмкой](F030_HAL_VALIDATION.md).
+[HAL F030 fixture с аппаратной приёмкой](../evidence/ru/F030_HAL_VALIDATION.md).
 Полная миграция всех MCU не завершена, активный HAL-профиль пока сохраняется.
 
 ## Порядок приёмки
@@ -39,19 +39,19 @@ API/схемы/версия пока не меняются. Это план, н�
 стенд К1921 не возобновляется. F411-приложение остаётся независимым consumer,
 а небольшая F411 fixture модуля проверяет инфраструктуру.
 
-Этап TIM3/IRQ выполнен: [6/6 HW PASS, mapping and limitations](F030_CMSIS_TIMER.md).
+Этап TIM3/IRQ выполнен: [6/6 HW PASS, mapping and limitations](../evidence/ru/F030_CMSIS_TIMER.md).
 
-ADC/DMA F030: сырые отсчёты и timeout, API ядра без изменений. [ADC/DMA](F030_CMSIS_ADC_DMA.md).
+ADC/DMA F030: сырые отсчёты и timeout, API ядра без изменений. [ADC/DMA](../evidence/ru/F030_CMSIS_ADC_DMA.md).
 
-F030: преобразование ADC и численные сценарии, API ядра без изменений. [ADC units](F030_CMSIS_ADC_UNITS.md).
+F030: преобразование ADC и численные сценарии, API ядра без изменений. [ADC units](../evidence/ru/F030_CMSIS_ADC_UNITS.md).
 
-F030 Sleep/WFI: профильные сценарии через GDB unwind, API ядра не меняется. [Sleep evidence](F030_CMSIS_SLEEP.md).
+F030 Sleep/WFI: профильные сценарии через GDB unwind, API ядра не меняется. [Sleep evidence](../evidence/ru/F030_CMSIS_SLEEP.md).
 
-F030 RTC: Alarm A на LSI, 16/16 HW PASS, HAL восстановлен. API ядра без изменений. [RTC](F030_CMSIS_RTC.md).
+F030 RTC: Alarm A на LSI, 16/16 HW PASS, HAL восстановлен. API ядра без изменений. [RTC](../evidence/ru/F030_CMSIS_RTC.md).
 
-F030: проверка занятого ADC, API без изменений. [Протокол](F030_ADC_BUSY.md).
+F030: проверка занятого ADC, API без изменений. [Протокол](../evidence/ru/F030_ADC_BUSY.md).
 
-F030: RTC deadline через инъекцию аргумента, API без изменений. [Протокол](F030_RTC_DEADLINE.md).
+F030: RTC deadline через инъекцию аргумента, API без изменений. [Протокол](../evidence/ru/F030_RTC_DEADLINE.md).
 
 ## Группы дальнейшей работы
 
@@ -59,20 +59,20 @@ F030: RTC deadline через инъекцию аргумента, API без и
 один push после общей проверки, затем полный CI и land. Группы: clocks/GPIO/
 таймер/IRQ; ADC/DMA/арифметика/отказы; RTC/Sleep/deadlines/recovery. Сначала F103,
 затем F411; gitlink потребителя обновлять после нескольких групп при необходимости.
-Первая группа F103: [7/7 HW и восстановление HAL](F103_CMSIS_BASELINE.md).
+Первая группа F103: [7/7 HW и восстановление HAL](../evidence/ru/F103_CMSIS_BASELINE.md).
 
-F103 ADC/DMA: [15/15 HW, units and failure paths](F103_CMSIS_ADC_DMA.md).
+F103 ADC/DMA: [15/15 HW, units and failure paths](../evidence/ru/F103_CMSIS_ADC_DMA.md).
 
-[F401 baseline](F401_CMSIS_BASELINE.md): 7/7 HW на первом этапе; ADC/DMA и RTC/Sleep завершены последующими группами.
+[F401 baseline](../evidence/ru/F401_CMSIS_BASELINE.md): 7/7 HW на первом этапе; ADC/DMA и RTC/Sleep завершены последующими группами.
 
-[F401 ADC/DMA](F401_CMSIS_ADC_DMA.md):15/15 HW и повторы после инъекций; продолжение — [RTC/Sleep/recovery,20/20 HW](F401_CMSIS_RTC_SLEEP.md).
+[F401 ADC/DMA](../evidence/ru/F401_CMSIS_ADC_DMA.md):15/15 HW и повторы после инъекций; продолжение — [RTC/Sleep/recovery,20/20 HW](../evidence/ru/F401_CMSIS_RTC_SLEEP.md).
 
-[F429 CMSIS baseline:7/7 HW, HAL восстановлена; ТЗ0.55. Пятый профиль в CI, ADC/RTC ещё впереди.](F429_CMSIS_BASELINE.md)
+[F429 CMSIS baseline:7/7 HW, HAL восстановлена; ТЗ0.55. Пятый профиль в CI, ADC/RTC ещё впереди.](../evidence/ru/F429_CMSIS_BASELINE.md)
 
-[F429 ADC/DMA/units/failures:15/15 HW +3 повтора, HAL восстановлена; ТЗ0.56.](F429_CMSIS_ADC_DMA.md)
+[F429 ADC/DMA/units/failures:15/15 HW +3 повтора, HAL восстановлена; ТЗ0.56.](../evidence/ru/F429_CMSIS_ADC_DMA.md)
 
-[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.](F429_CMSIS_RTC_SLEEP.md)
+[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.](../evidence/ru/F429_CMSIS_RTC_SLEEP.md)
 
-[Итоговая сверка пяти профилей и оставшиеся HAL-проверки](CMSIS_ACCEPTANCE.md).
+[Итоговая сверка пяти профилей и оставшиеся HAL-проверки](../evidence/ru/CMSIS_ACCEPTANCE.md).
 
-[HAL F030: пять GPIO/RCC-техник и варианты исходников](F030_HAL_GPIO_RCC.md).
+[HAL F030: пять GPIO/RCC-техник и варианты исходников](../evidence/ru/F030_HAL_GPIO_RCC.md).

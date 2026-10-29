@@ -69,11 +69,11 @@ Hardware workflow по-прежнему не запускает автомати
 
 | Модель платы / MCU | Отладчик и backend | Сценарии с подтверждением | Протокол и ревизия принятого этапа |
 | --- | --- | ---: | --- |
-| NUCLEO-F030R8 / STM32F030R8T6 | Встроенный ST-Link, OpenOCD/SWD | 18 | [HAL → CMSIS](../../../ru/F030_CMSIS_ACCEPTANCE.md), пакет принят в `cea01f9`; 16 + 1 + 1 на одном ELF, не единая серия 18/18 |
-| WeAct BluePill-Plus / STM32F103C8T6 | J-Link, SWD | 20 | [RTC/Sleep и предыдущие группы](../../../ru/F103_CMSIS_RTC_SLEEP.md), `d97903c`, 01.10.2026 |
-| WeAct BlackPill V3.1 / STM32F411CEU6 | ST-Link, OpenOCD/SWD | 20 | [RTC/Sleep и предыдущие группы](../../../ru/F411_CMSIS_RTC_SLEEP.md), `91a7cd4`, 01.10.2026 |
-| WeAct BlackPill v3.0 / STM32F401CCU6 | ST-Link, OpenOCD/SWD | 20 | [RTC/Sleep/recovery](../../../ru/F401_CMSIS_RTC_SLEEP.md), рабочая копия от `87a23be`, 01.10.2026 |
-| STM32F429I-DISCO / STM32F429ZIT6 | ST-Link/V2, OpenOCD/SWD | 20 | [RTC/Sleep/recovery](../../../ru/F429_CMSIS_RTC_SLEEP.md), рабочая копия от `52c49fd`, 2026-10-01 |
+| NUCLEO-F030R8 / STM32F030R8T6 | Встроенный ST-Link, OpenOCD/SWD | 18 | [HAL → CMSIS](../../../evidence/ru/F030_CMSIS_ACCEPTANCE.md), пакет принят в `cea01f9`; 16 + 1 + 1 на одном ELF, не единая серия 18/18 |
+| WeAct BluePill-Plus / STM32F103C8T6 | J-Link, SWD | 20 | [RTC/Sleep и предыдущие группы](../../../evidence/ru/F103_CMSIS_RTC_SLEEP.md), `d97903c`, 01.10.2026 |
+| WeAct BlackPill V3.1 / STM32F411CEU6 | ST-Link, OpenOCD/SWD | 20 | [RTC/Sleep и предыдущие группы](../../../evidence/ru/F411_CMSIS_RTC_SLEEP.md), `91a7cd4`, 01.10.2026 |
+| WeAct BlackPill v3.0 / STM32F401CCU6 | ST-Link, OpenOCD/SWD | 20 | [RTC/Sleep/recovery](../../../evidence/ru/F401_CMSIS_RTC_SLEEP.md), рабочая копия от `87a23be`, 01.10.2026 |
+| STM32F429I-DISCO / STM32F429ZIT6 | ST-Link/V2, OpenOCD/SWD | 20 | [RTC/Sleep/recovery](../../../evidence/ru/F429_CMSIS_RTC_SLEEP.md), рабочая копия от `52c49fd`, 2026-10-01 |
 | **Итого** | **5 моделей плат** | **98** | **Исторический срез разных ревизий** |
 
 Все строки относятся к Windows, xPack GCC13.3.1-1.1/GDB14.2.90; точные ELF,

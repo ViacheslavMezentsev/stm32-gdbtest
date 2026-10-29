@@ -15,10 +15,10 @@ RISC-V needs its own startup/BSP.
 
 ## F030: current mapping
 
-The [17 HAL →18 CMSIS acceptance table](F030_CMSIS_ACCEPTANCE.md) replaces the
+The [17 HAL →18 CMSIS acceptance table](../evidence/en/F030_CMSIS_ACCEPTANCE.md) replaces the
 initial inventory. Basic functions passed on Nucleo/ST-Link; HAL-specific
 handles/macros/force_return are preserved in the separate
-[HAL F030 fixture with hardware acceptance](F030_HAL_VALIDATION.md). Migration of all
+[HAL F030 fixture with hardware acceptance](../evidence/en/F030_HAL_VALIDATION.md). Migration of all
 MCUs is incomplete; retain the active HAL profile for now.
 
 ## Acceptance sequence
@@ -39,19 +39,19 @@ No API/schema/version changes yet. This plan does not confirm new MCU support
 or resume the K1921 stand. The F411 application remains an independent consumer;
 the module's small F411 fixture exercises infrastructure.
 
-TIM3/IRQ stage completed: [6/6 HW PASS, mapping and limitations](F030_CMSIS_TIMER.md).
+TIM3/IRQ stage completed: [6/6 HW PASS, mapping and limitations](../evidence/en/F030_CMSIS_TIMER.md).
 
-F030 ADC/DMA: raw samples and timeout, core API unchanged. [ADC/DMA](F030_CMSIS_ADC_DMA.md).
+F030 ADC/DMA: raw samples and timeout, core API unchanged. [ADC/DMA](../evidence/en/F030_CMSIS_ADC_DMA.md).
 
-F030 ADC conversion and numeric scenarios; core API unchanged. [ADC units](F030_CMSIS_ADC_UNITS.md).
+F030 ADC conversion and numeric scenarios; core API unchanged. [ADC units](../evidence/en/F030_CMSIS_ADC_UNITS.md).
 
-F030 Sleep/WFI: profile scenarios using GDB unwind; core API unchanged. [Sleep evidence](F030_CMSIS_SLEEP.md).
+F030 Sleep/WFI: profile scenarios using GDB unwind; core API unchanged. [Sleep evidence](../evidence/en/F030_CMSIS_SLEEP.md).
 
-F030 RTC: LSI Alarm A, 16/16 HW PASS, HAL restored. Core API unchanged. [RTC](F030_CMSIS_RTC.md).
+F030 RTC: LSI Alarm A, 16/16 HW PASS, HAL restored. Core API unchanged. [RTC](../evidence/en/F030_CMSIS_RTC.md).
 
-F030 busy ADC check; API unchanged. [Report](F030_ADC_BUSY.md).
+F030 busy ADC check; API unchanged. [Report](../evidence/en/F030_ADC_BUSY.md).
 
-F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_DEADLINE.md).
+F030 RTC deadline through argument injection; API unchanged. [Report](../evidence/en/F030_RTC_DEADLINE.md).
 
 ## Next work groups
 
@@ -59,20 +59,20 @@ After rc.2: one branch per 3–4 related capabilities, several local commits,
 one push after combined validation, then full CI and land. Groups: clocks/GPIO/
 timer/IRQ; ADC/DMA/arithmetic/failures; RTC/Sleep/deadlines/recovery. F103 first,
 then F411; update the consumer gitlink after multiple groups as needed.
-First F103 group: [7/7 HW and HAL restoration](F103_CMSIS_BASELINE.md).
+First F103 group: [7/7 HW and HAL restoration](../evidence/en/F103_CMSIS_BASELINE.md).
 
-F103 ADC/DMA: [15/15 HW, units and failure paths](F103_CMSIS_ADC_DMA.md).
+F103 ADC/DMA: [15/15 HW, units and failure paths](../evidence/en/F103_CMSIS_ADC_DMA.md).
 
-[F401 baseline](F401_CMSIS_BASELINE.md): 7/7 HW in the first group; ADC/DMA and RTC/Sleep completed in subsequent groups.
+[F401 baseline](../evidence/en/F401_CMSIS_BASELINE.md): 7/7 HW in the first group; ADC/DMA and RTC/Sleep completed in subsequent groups.
 
-[F401 ADC/DMA](F401_CMSIS_ADC_DMA.md):15/15 HW and post-injection repeats; continued by [RTC/Sleep/recovery,20/20 HW](F401_CMSIS_RTC_SLEEP.md).
+[F401 ADC/DMA](../evidence/en/F401_CMSIS_ADC_DMA.md):15/15 HW and post-injection repeats; continued by [RTC/Sleep/recovery,20/20 HW](../evidence/en/F401_CMSIS_RTC_SLEEP.md).
 
-[F429 CMSIS baseline:7/7 HW, HAL restored; specification0.55. Fifth CI profile; ADC/RTC remain pending.](F429_CMSIS_BASELINE.md)
+[F429 CMSIS baseline:7/7 HW, HAL restored; specification0.55. Fifth CI profile; ADC/RTC remain pending.](../evidence/en/F429_CMSIS_BASELINE.md)
 
-[F429 ADC/DMA/units/failures:15/15 HW +3 repeats, HAL restored; specification0.56.](F429_CMSIS_ADC_DMA.md)
+[F429 ADC/DMA/units/failures:15/15 HW +3 repeats, HAL restored; specification0.56.](../evidence/en/F429_CMSIS_ADC_DMA.md)
 
-[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](F429_CMSIS_RTC_SLEEP.md)
+[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](../evidence/en/F429_CMSIS_RTC_SLEEP.md)
 
-[Five-profile acceptance review and remaining HAL checks](CMSIS_ACCEPTANCE.md).
+[Five-profile acceptance review and remaining HAL checks](../evidence/en/CMSIS_ACCEPTANCE.md).
 
-[HAL F030: five GPIO/RCC techniques and source variants](F030_HAL_GPIO_RCC.md).
+[HAL F030: five GPIO/RCC techniques and source variants](../evidence/en/F030_HAL_GPIO_RCC.md).

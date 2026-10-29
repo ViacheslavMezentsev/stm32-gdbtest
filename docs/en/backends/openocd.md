@@ -56,7 +56,7 @@ reset/halt overrides do not change that sequence.
   cause unknown. Inspect `server.log`/`gdb.log`, not just `result.warnings`.
 
 OpenOCD restored BOOT/GPIO after other servers failed. Inaccessible USB first requires restored access
-to the debugger itself. [Matrix and limits](../API_ACCEPTANCE.md).
+to the debugger itself. [Matrix and limits](../../evidence/en/API_ACCEPTANCE.md).
 
 ## Graceful local OpenOCD/J-Link shutdown
 

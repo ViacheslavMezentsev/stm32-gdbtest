@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Помогает расширить [список проверенных сочетаний](https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/API_ACCEPTANCE.md); полезны и удачные, и неудачные результаты. Helps extend the list of verified combinations; both successful and failed results are useful.
+        Помогает расширить [список проверенных сочетаний](https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/evidence/ru/API_ACCEPTANCE.md); полезны и удачные, и неудачные результаты. Helps extend the list of verified combinations; both successful and failed results are useful.
 
         Подключение и профиль MCU — [первый прогон](https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/GETTING_STARTED.md), [профили MCU](https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/MCU_PROFILES.md), [совместимые МК](https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/COMPATIBLE_MCU.md). Не снимайте защиту и не меняйте option bytes ради проверки. Do not remove protection or change option bytes for a test.
   - type: dropdown

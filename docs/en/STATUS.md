@@ -10,7 +10,7 @@ A8 acceptance at `6530395`: Windows/Linux, Renode/QEMU, six MCUs (including the 
 and substitution checks on real microcontrollers) and the BluePill/BlackPill consumers.
 [Matrix and limits](../development/release-060-acceptance.md) (Russian),
 [release notes](../releases/v0.6.0.md); previous: [0.5.0 acceptance](../development/release-050-acceptance.md),
-[accepted results](API_ACCEPTANCE.md). Evidence belongs to those revisions, not to every current stand.
+[accepted results](../evidence/en/API_ACCEPTANCE.md). Evidence belongs to those revisions, not to every current stand.
 
 Available: MMIO/SVD, inspect, synchronous and async scenarios, bounded call, live windows,
 local/SSH stands, Renode/QEMU, records and DDTT export with condition qualification.

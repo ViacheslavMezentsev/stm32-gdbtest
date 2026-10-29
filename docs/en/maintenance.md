@@ -22,7 +22,7 @@ current revision is stated in its header.
    discrepancies (appendix F). [API specification](../TECHNICAL_SPECIFICATION_API.md): the same for the
    `Target` methods; owner decisions are in section 10.2. Both are Russian.
 5. Scenarios and API: [method reference](api/index.md), [techniques catalogue and scenario style](TESTING_TECHNIQUES.md)
-   (the style is checked by `tests/host/test_scenario_style.py`), [accepted results](API_ACCEPTANCE.md) and
+   (the style is checked by `tests/host/test_scenario_style.py`), [accepted results](../evidence/en/API_ACCEPTANCE.md) and
    [hardware metrics](HARDWARE_METRICS.md).
 6. For a specific task — the mechanism description in `docs/` ([API](API.md),
    [contracts](CONTRACTS.md), [images](IMAGES.md), [backends](BACKENDS.md), [Linux stand](LINUX_STAND.md), etc.),

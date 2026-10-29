@@ -90,7 +90,7 @@ to OpenOCD. Schema versions and migration: [API](API.md).
 
 Individual pages cover TOML, dependencies, startup/shutdown, fixes and limits. The st-util page also
 covers 1.6.0/1.9.0 results and building 1.9.0 with private libusb on Ubuntu 20.04.
-Acceptance is version/stand-specific: [matrix](API_ACCEPTANCE.md).
+Acceptance is version/stand-specific: [matrix](../evidence/en/API_ACCEPTANCE.md).
 
 ## Limits and extension
 

@@ -320,25 +320,25 @@ configure и build. Старый CTest без configure содержит пут�
 ОС кроме Windows и Linux для аппаратного запуска или автоматической остановки
 процессов после аварии host.
 
-CMSIS fixture F030: API ядра не изменён. `app_delay` в этом примере теперь задаёт миллисекунды SysTick (500), `app_state.ticks` остаётся счётчиком циклов. Четыре сценария описаны в [протоколе](../../../ru/F030_CMSIS_BASELINE.md).
+CMSIS fixture F030: API ядра не изменён. `app_delay` в этом примере теперь задаёт миллисекунды SysTick (500), `app_state.ticks` остаётся счётчиком циклов. Четыре сценария описаны в [протоколе](../../../evidence/ru/F030_CMSIS_BASELINE.md).
 
-API ядра не изменён. Счётчик board_timer_events — состояние F030 fixture, не публичный API. [TIM3/IRQ](../../../ru/F030_CMSIS_TIMER.md).
+API ядра не изменён. Счётчик board_timer_events — состояние F030 fixture, не публичный API. [TIM3/IRQ](../../../evidence/ru/F030_CMSIS_TIMER.md).
 
-ADC/DMA F030: сырые отсчёты и timeout, API ядра без изменений. [ADC/DMA](../../../ru/F030_CMSIS_ADC_DMA.md).
+ADC/DMA F030: сырые отсчёты и timeout, API ядра без изменений. [ADC/DMA](../../../evidence/ru/F030_CMSIS_ADC_DMA.md).
 
-F030: преобразование ADC и численные сценарии, API ядра без изменений. [ADC units](../../../ru/F030_CMSIS_ADC_UNITS.md).
+F030: преобразование ADC и численные сценарии, API ядра без изменений. [ADC units](../../../evidence/ru/F030_CMSIS_ADC_UNITS.md).
 
-F030 Sleep/WFI: профильные сценарии через GDB unwind, API ядра не меняется. [Sleep evidence](../../../ru/F030_CMSIS_SLEEP.md).
+F030 Sleep/WFI: профильные сценарии через GDB unwind, API ядра не меняется. [Sleep evidence](../../../evidence/ru/F030_CMSIS_SLEEP.md).
 
-F030 RTC: Alarm A на LSI, 16/16 HW PASS, HAL восстановлен. API ядра без изменений. [RTC](../../../ru/F030_CMSIS_RTC.md).
+F030 RTC: Alarm A на LSI, 16/16 HW PASS, HAL восстановлен. API ядра без изменений. [RTC](../../../evidence/ru/F030_CMSIS_RTC.md).
 
-F030: проверка занятого ADC, API без изменений. [Протокол](../../../ru/F030_ADC_BUSY.md).
+F030: проверка занятого ADC, API без изменений. [Протокол](../../../evidence/ru/F030_ADC_BUSY.md).
 
-F030: RTC deadline через инъекцию аргумента, API без изменений. [Протокол](../../../ru/F030_RTC_DEADLINE.md).
+F030: RTC deadline через инъекцию аргумента, API без изменений. [Протокол](../../../evidence/ru/F030_RTC_DEADLINE.md).
 
 Собственные профили/примеры и новые пакеты используют `tests`; чтение старых `Tests` сохранено. Локальные remote-стенды — `<profile>-<backend>.remote.toml` (`openocd`, `jlink`, `stlink`), исключённые из Git. После переименования повторить configure. [Соглашения](../../../ru/maintenance.md).
 
-[Автономная HAL-регрессия F030](../../../ru/F030_HAL_REGRESSION.md): тестовый consumer, без изменения API.
+[Автономная HAL-регрессия F030](../../../evidence/ru/F030_HAL_REGRESSION.md): тестовый consumer, без изменения API.
 
 [CI: уровень hal](../../../ru/testing.md) добавляет проверку fixture, публичный API/схемы не меняются.
 
@@ -355,19 +355,19 @@ F030: RTC deadline через инъекцию аргумента, API без и
 До исправления новое открытие пакета удаляло весь каталог хэша, включая runs.
 Утерянные JSON не восстанавливаются из summary: нужен повтор проверки.
 
-F401 baseline добавляет только fixture и offline CI; API_VERSION=1 и схемы без изменений. [F401](../../../ru/F401_CMSIS_BASELINE.md).
+F401 baseline добавляет только fixture и offline CI; API_VERSION=1 и схемы без изменений. [F401](../../../evidence/ru/F401_CMSIS_BASELINE.md).
 
-F401 ADC/DMA изменяет только fixture. Общая функция измерений F4 теперь adc_convert_f4_factory; это символ тестовой firmware, не публичный API модуля. API_VERSION=1, схемы неизменны. [F401 ADC/DMA](../../../ru/F401_CMSIS_ADC_DMA.md).
+F401 ADC/DMA изменяет только fixture. Общая функция измерений F4 теперь adc_convert_f4_factory; это символ тестовой firmware, не публичный API модуля. API_VERSION=1, схемы неизменны. [F401 ADC/DMA](../../../evidence/ru/F401_CMSIS_ADC_DMA.md).
 
-F401 RTC/Sleep расширяет только fixture. rtc_f4.c и векторы общие с F411; публичный API и схемы не изменены. F411 после переноса проверен offline. [F401 RTC/Sleep](../../../ru/F401_CMSIS_RTC_SLEEP.md).
+F401 RTC/Sleep расширяет только fixture. rtc_f4.c и векторы общие с F411; публичный API и схемы не изменены. F411 после переноса проверен offline. [F401 RTC/Sleep](../../../evidence/ru/F401_CMSIS_RTC_SLEEP.md).
 
-Добавлен профиль fixture f429zi с семью сценариями. Публичный API, схемы и версия неизменны. [F429 baseline](../../../ru/F429_CMSIS_BASELINE.md).
+Добавлен профиль fixture f429zi с семью сценариями. Публичный API, схемы и версия неизменны. [F429 baseline](../../../evidence/ru/F429_CMSIS_BASELINE.md).
 
-F429 fixture дополнена ADC/DMA и арифметикой; общий converter, публичный API, схемы и версия неизменны. [F429 ADC/DMA](../../../ru/F429_CMSIS_ADC_DMA.md).
+F429 fixture дополнена ADC/DMA и арифметикой; общий converter, публичный API, схемы и версия неизменны. [F429 ADC/DMA](../../../evidence/ru/F429_CMSIS_ADC_DMA.md).
 
-F429 подключён к общей RTC-реализации F4 и таблице векторов; алгоритм RTC, публичный API и схемы не меняются. [F429 RTC/Sleep](../../../ru/F429_CMSIS_RTC_SLEEP.md).
+F429 подключён к общей RTC-реализации F4 и таблице векторов; алгоритм RTC, публичный API и схемы не меняются. [F429 RTC/Sleep](../../../evidence/ru/F429_CMSIS_RTC_SLEEP.md).
 
-[HAL F030: пять GPIO/RCC-техник и варианты исходников](../../../ru/F030_HAL_GPIO_RCC.md).
+[HAL F030: пять GPIO/RCC-техник и варианты исходников](../../../evidence/ru/F030_HAL_GPIO_RCC.md).
 
 ## Захват журнала результатов (Unreleased)
 

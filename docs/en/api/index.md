@@ -152,4 +152,4 @@ Available from 0.1.0-rc.1 to 0.3.0 (with a `deprecated` warning in 0.3.0), remov
 
 Target is passed by the agent; do not create it. GDB calls run only on the main GDB thread; `boot`, `close`, `on_stop`, `report`, `owned`, `stops` are internal details. Examples need the named firmware and stop location.
 
-Related pages: [technique catalogue](../TESTING_TECHNIQUES.md) · [configuration and migration](../API.md) · [live window](../LIVE_EXECUTION.md) · [MMIO registers](../MMIO.md) and [SVD](../SVD.md) · [moving to 0.5.0](../MIGRATION_050.md) · [acceptance](../API_ACCEPTANCE.md) · [API specification](../../TECHNICAL_SPECIFICATION_API.md) (Russian). Offline link checks: [CLI inspect](../HIL_INSPECT.md), not a Target method.
+Related pages: [technique catalogue](../TESTING_TECHNIQUES.md) · [configuration and migration](../API.md) · [live window](../LIVE_EXECUTION.md) · [MMIO registers](../MMIO.md) and [SVD](../SVD.md) · [moving to 0.5.0](../MIGRATION_050.md) · [acceptance](../../evidence/en/API_ACCEPTANCE.md) · [API specification](../../TECHNICAL_SPECIFICATION_API.md) (Russian). Offline link checks: [CLI inspect](../HIL_INSPECT.md), not a Target method.

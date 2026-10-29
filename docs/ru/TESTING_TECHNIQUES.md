@@ -138,7 +138,7 @@ t.check("thread resumes", t.read(f"*(unsigned int*){icsr_address} & {active_mask
 периферии. Не заменять потерю контекста случайной константой адреса.
 **Окружение:** 32-битная карта памяти STM32; адрес действителен в той же сессии и ELF.
 **Граница:** это обход потери контекста макросов, а не доказательство безопасности чтения регистра.
-[RTC deadline: исходный ERROR и исправление](F030_RTC_DEADLINE.md),
+[RTC deadline: исходный ERROR и исправление](../evidence/ru/F030_RTC_DEADLINE.md),
 [rtc_alarm, rtc_deadline](../../tests/firmware/profiles/f030r8/tests/board/test_rtc.py).
 
 <a id="tech-003"></a>
@@ -158,7 +158,7 @@ CMSIS: `t.reach("RTC_IRQHandler")`, таблица `SCB->ICSR & SCB_ICSR_VECTACT
 флаги и не доказывает физический источник IRQ.
 RTC адаптируется по семейству: F103 — counter/alarm с перевооружением в основном потоке, F4 —
 masked calendar Alarm A; не переносить делители F030 (LSI 40 кГц) на F4 (32 кГц).
-[CMSIS RTC](F030_CMSIS_RTC.md), [RTC/Sleep F411](F411_CMSIS_RTC_SLEEP.md),
+[CMSIS RTC](../evidence/ru/F030_CMSIS_RTC.md), [RTC/Sleep F411](../evidence/ru/F411_CMSIS_RTC_SLEEP.md),
 [rtc_alarm](../../tests/firmware/profiles/f030r8/tests/board/test_rtc.py),
 [HAL power](../../tests/hal-f030/hal_scenarios/power.py).
 
@@ -186,7 +186,7 @@ t.check("no sequence published", t.read("app_state.adc_sequences"), 0)
 **Граница:** тело функции не проверено, физический отказ не воспроизведён. Для void callback DMA
 уже завершился — это не тайм-аут DMA на шине. После инъекции — `reset_run` и положительный прогон.
 [ret](api/ret.md), [inject_zero](../../tests/firmware/common/tests/board/test_inject_zero.py),
-[HAL runtime](../../tests/hal-f030/hal_scenarios/peripheral_runtime.py), [HAL-фикстура](F030_HAL_REGRESSION.md).
+[HAL runtime](../../tests/hal-f030/hal_scenarios/peripheral_runtime.py), [HAL-фикстура](../evidence/ru/F030_HAL_REGRESSION.md).
 
 В [сценарии инъекции](../../tests/firmware/common/tests/board/test_event_injection.py) сравниваются два пути к нулевому результату: естественный переход счётчика через границу и `ret("0")`. Второй пропускает побочные эффекты производителя. Проверяйте и ветвь получателя, и состояние производителя; одинаковый результат не означает одинаковое исполнение.
 
@@ -221,7 +221,7 @@ t.reach("board_rtc_fault")
 внешний тайм-аут runner обязателен.
 **Граница:** проверен программный deadline одной стадии, не физический отказ LSI и не точность
 1000 мс. После инъекции — `reset_run` и положительный `HW_CI_RTC_ALARM`.
-[rtc_deadline](../../tests/firmware/profiles/f030r8/tests/board/test_rtc.py), [протокол](F030_RTC_DEADLINE.md).
+[rtc_deadline](../../tests/firmware/profiles/f030r8/tests/board/test_rtc.py), [протокол](../evidence/ru/F030_RTC_DEADLINE.md).
 
 Входные данные можно временно менять через контекстный менеджер с восстановлением в `finally`. [Пример](../../tests/firmware/common/tests/board/test_event_injection.py) восстанавливает только объявленные поля ticks/led, включая выход по исключению. Это не откат PC, периферии, времени или всего состояния программы.
 
@@ -244,7 +244,7 @@ write. Для командного регистра, W1C или FIFO испол�
 
 Старые сценарии ADC используют обычный write; это исторические реализации, а не образцы
 MMIO-контракта API 3. Для нового кода ориентируйтесь на [MMIO/SVD](MMIO.md),
-[согласованность драйвера](#tech-023) и [границы приёмки](API_ACCEPTANCE.md).
+[согласованность драйвера](#tech-023) и [границы приёмки](../evidence/ru/API_ACCEPTANCE.md).
 
 **Проверка модели перед использованием.** Установите, какие свойства периферии воспроизводятся:
 доступ к регистрам, побочные эффекты, защита, завершение операции и ошибки. В ограниченной модели
@@ -274,7 +274,7 @@ t.check([(f"board_adc_reading.{field}", f"board_adc_reading.{field}", value)
 **Окружение:** доступные аргументы, размеры и знаковость C-типов, калибровочные данные MCU.
 **Граница:** проверяется арифметика, не точность датчика; m°C не обещает точности 0,001 °C.
 Не переносить двухточечную калибровку F4 на F030.
-[Векторы F030](F030_CMSIS_ADC_UNITS.md), [adc_vectors F030](../../tests/firmware/profiles/f030r8/tests/board/test_ci.py),
+[Векторы F030](../evidence/ru/F030_CMSIS_ADC_UNITS.md), [adc_vectors F030](../../tests/firmware/profiles/f030r8/tests/board/test_ci.py),
 [adc F103](../../tests/firmware/profiles/f103c8/tests/board/test_adc.py).
 
 <a id="tech-008"></a>
@@ -298,8 +298,8 @@ F103: RTC Alarm (IRQ41) — во втором банке NVIC; сохранят�
 RTC в thread mode, где работает SysTick.
 **Граница:** это не измерение тока, длительности сна и не проверка Stop/Standby. Изоляция IRQ меняет
 среду: восстановление в `finally`, затем `reset_run`; ошибка восстановления не скрывается.
-[sleep F030](../../tests/firmware/profiles/f030r8/tests/board/test_sleep.py), [протокол](F030_CMSIS_SLEEP.md),
-[F103](F103_CMSIS_RTC_SLEEP.md).
+[sleep F030](../../tests/firmware/profiles/f030r8/tests/board/test_sleep.py), [протокол](../evidence/ru/F030_CMSIS_SLEEP.md),
+[F103](../evidence/ru/F103_CMSIS_RTC_SLEEP.md).
 
 <a id="tech-009"></a>
 ## TECH-009 — HAL-аргументы и проверенный вариант исходника
@@ -311,7 +311,7 @@ RTC в thread mode, где работает SysTick.
 `"GPIO_MODE_OUTPUT_PP"`), после вызова отдельно проверяется регистр. NULL-инъекция допустима
 только после просмотра защиты до разыменования. Имя пакета HAL не заменяет хеш исходника:
 изменяемый и `const`-вариант RCC требуют разных строгих контрактов; неизвестный хеш — ошибка.
-[Сценарии и границы](F030_HAL_GPIO_RCC.md), [hal_methods](../../tests/hal-f030/profile/tests/board/test_hal_methods.py).
+[Сценарии и границы](../evidence/ru/F030_HAL_GPIO_RCC.md), [hal_methods](../../tests/hal-f030/profile/tests/board/test_hal_methods.py).
 Просмотр исходника не доказывает поведение на железе.
 
 <a id="tech-010"></a>

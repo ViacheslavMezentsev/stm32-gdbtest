@@ -55,4 +55,4 @@ ST отвергал её как `Protocol error with Rcmd`. Это привел�
   в проверенной справке нет. Учитывайте доступность портов в сети стенда.
 - Firmware берётся из журнала; API отладчика не угадывается и может оставаться `null`.
 
-[Приёмка](../API_ACCEPTANCE.md) · [Руководство ST](https://www.st.com/resource/en/user_manual/dm00613038-stm32cubeide-stlink-gdb-server-stmicroelectronics.pdf).
+[Приёмка](../../evidence/ru/API_ACCEPTANCE.md) · [Руководство ST](https://www.st.com/resource/en/user_manual/dm00613038-stm32cubeide-stlink-gdb-server-stmicroelectronics.pdf).

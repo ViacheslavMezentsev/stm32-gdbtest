@@ -106,7 +106,7 @@ API_VERSION=3 release: live window and async scenarios, bounded `call`, MMIO/SVD
 
 - P3: optional async scenarios, resume(sync=False), await wait/halt, completion halt and access guards for running/unknown; ordinary scenarios remain compatible. No hardware acceptance.
 
-- Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](docs/en/API_ACCEPTANCE.md).
+- Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](docs/evidence/en/API_ACCEPTANCE.md).
 
 - Public Target.mmio.read/write: SVD permissions/effects, explicit override, one direct RSP request without readback/retry, MMIOError and audit; host and Renode; the hardware matrix and its scope are recorded above.
 
@@ -393,7 +393,7 @@ Extended scenario API. Candidate 0.3.0-rc.1 was never published; the owner sets 
 - Some combinations deliver no stop event for a watch point: the stop is marked `inferred` and confirmed by the changed object.
 - `finish()` does not publish the staged stack copy.
 - Hardware verification covered five stands; native DAP stands were not used.
-- The full scenario suite is accepted on five boards in six run layouts ([accepted results](docs/en/API_ACCEPTANCE.md)).
+- The full scenario suite is accepted on five boards in six run layouts ([accepted results](docs/evidence/en/API_ACCEPTANCE.md)).
 - The fault-handler points the agent sets at boot take slots of `breakpoint_limit`.
 
 ## [0.2.0-rc.1] - 2026-10-03
@@ -404,7 +404,7 @@ Candidate agreed; local preparation, not published. [Acceptance and migration](d
 
 - Standardized the teaching style of 35 production scenario/helper files: RU/EN headers, English explanations, 120-character lines and no optional trailing commas. Executable ASTs match the previous revision.
 
-- Migrated production scenarios: 44 table blocks / 282 checks; session.toml and VDDA/temperature series on five CMSIS profiles. HW 103/103 CMSIS, 22/22 HAL F030, 1/1 minimal consumer; separate recovery/restoration checks. Main specification 0.63; API 0.2.2 unchanged. [accepted results](docs/en/API_ACCEPTANCE.md).
+- Migrated production scenarios: 44 table blocks / 282 checks; session.toml and VDDA/temperature series on five CMSIS profiles. HW 103/103 CMSIS, 22/22 HAL F030, 1/1 minimal consumer; separate recovery/restoration checks. Main specification 0.63; API 0.2.2 unchanged. [accepted results](docs/evidence/en/API_ACCEPTANCE.md).
 
 - Integrated the first package: record/records, public RecordError, config/config_props, explicit SESSION_CONFIG and TOML snapshot transport to GDB/packages. Legacy mode retained. Development version 0.2.0.dev0, API_VERSION=1; API spec 0.2.2, system spec 0.62. Paired scenarios checked on F030/F103/F411; release remains separate.
 
@@ -519,15 +519,15 @@ server limitation: manual USB reconnection was required. Signed tag published at
 
 - [Techniques catalogue TECH-001…008](docs/en/TESTING_TECHNIQUES.md) with CMSIS scenario references. HAL techniques preserved independently of migration; documentation/comments only, API/specification0.37 unchanged.
 
-- Prepared the [separate F030 HAL regression plan](docs/en/F030_HAL_REGRESSION.md): sources,17 scenarios, limits and four stages. Documentation only; specification0.37/G.13 and API unchanged.
+- Prepared the [separate F030 HAL regression plan](docs/evidence/en/F030_HAL_REGRESSION.md): sources,17 scenarios, limits and four stages. Documentation only; specification0.37/G.13 and API unchanged.
 
 - Owned profiles/examples and new packages use `tests`; old `Tests` inputs remain supported. Local remote stands use ignored `remote.toml` / `<profile>-remote.toml`. Reconfigure after renaming. [Conventions](docs/en/maintenance.md). Specification0.37.
 
-- [F030 HAL→CMSIS mapping and branch batch order](docs/en/F030_CMSIS_ACCEPTANCE.md).
+- [F030 HAL→CMSIS mapping and branch batch order](docs/evidence/en/F030_CMSIS_ACCEPTANCE.md).
 
-- F030 RTC deadline through argument injection; API unchanged. [Report](docs/en/F030_RTC_DEADLINE.md). Specification0.35.
+- F030 RTC deadline through argument injection; API unchanged. [Report](docs/evidence/en/F030_RTC_DEADLINE.md). Specification0.35.
 
-- F030 busy ADC check; API unchanged. [Report](docs/en/F030_ADC_BUSY.md). Specification 0.34.
+- F030 busy ADC check; API unchanged. [Report](docs/evidence/en/F030_ADC_BUSY.md). Specification 0.34.
 
 - F030 CMSIS RTC: Alarm A/LSI, bounded waits, EXTI17/IRQ; 16/16 HW PASS, HAL restored. Specification0.33; core API unchanged.
 

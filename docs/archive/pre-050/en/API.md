@@ -323,25 +323,25 @@ no firmware test hooks and does not imply support for an arbitrary STM32, operat
 systems other than Windows and Linux for hardware runs or automatic cleanup of
 processes after a host crash.
 
-F030 CMSIS fixture: the core API is unchanged. `app_delay` now specifies SysTick milliseconds (500); `app_state.ticks` remains a loop counter. See the four scenarios in the [baseline report](../../../en/F030_CMSIS_BASELINE.md).
+F030 CMSIS fixture: the core API is unchanged. `app_delay` now specifies SysTick milliseconds (500); `app_state.ticks` remains a loop counter. See the four scenarios in the [baseline report](../../../evidence/en/F030_CMSIS_BASELINE.md).
 
-Core API unchanged. board_timer_events is F030 fixture state, not public API. [TIM3/IRQ](../../../en/F030_CMSIS_TIMER.md).
+Core API unchanged. board_timer_events is F030 fixture state, not public API. [TIM3/IRQ](../../../evidence/en/F030_CMSIS_TIMER.md).
 
-F030 ADC/DMA: raw samples and timeout, core API unchanged. [ADC/DMA](../../../en/F030_CMSIS_ADC_DMA.md).
+F030 ADC/DMA: raw samples and timeout, core API unchanged. [ADC/DMA](../../../evidence/en/F030_CMSIS_ADC_DMA.md).
 
-F030 ADC conversion and numeric scenarios; core API unchanged. [ADC units](../../../en/F030_CMSIS_ADC_UNITS.md).
+F030 ADC conversion and numeric scenarios; core API unchanged. [ADC units](../../../evidence/en/F030_CMSIS_ADC_UNITS.md).
 
-F030 Sleep/WFI: profile scenarios using GDB unwind; core API unchanged. [Sleep evidence](../../../en/F030_CMSIS_SLEEP.md).
+F030 Sleep/WFI: profile scenarios using GDB unwind; core API unchanged. [Sleep evidence](../../../evidence/en/F030_CMSIS_SLEEP.md).
 
-F030 RTC: LSI Alarm A, 16/16 HW PASS, HAL restored. Core API unchanged. [RTC](../../../en/F030_CMSIS_RTC.md).
+F030 RTC: LSI Alarm A, 16/16 HW PASS, HAL restored. Core API unchanged. [RTC](../../../evidence/en/F030_CMSIS_RTC.md).
 
-F030 busy ADC check; API unchanged. [Report](../../../en/F030_ADC_BUSY.md).
+F030 busy ADC check; API unchanged. [Report](../../../evidence/en/F030_ADC_BUSY.md).
 
-F030 RTC deadline through argument injection; API unchanged. [Report](../../../en/F030_RTC_DEADLINE.md).
+F030 RTC deadline through argument injection; API unchanged. [Report](../../../evidence/en/F030_RTC_DEADLINE.md).
 
 Owned profiles/examples and new packages use `tests`; old `Tests` inputs remain supported. Local remote stands use ignored `<profile>-<backend>.remote.toml` (`openocd`, `jlink`, `stlink`). Reconfigure after renaming. [Conventions](../../../en/maintenance.md).
 
-[Standalone F030 HAL regression](../../../en/F030_HAL_REGRESSION.md): test consumer, no API changes.
+[Standalone F030 HAL regression](../../../evidence/en/F030_HAL_REGRESSION.md): test consumer, no API changes.
 
 [CI hal level](../../../en/testing.md) validates the fixture; public APIs/schemas are unchanged.
 
@@ -358,19 +358,19 @@ required evidence and completing all runs that use those directories.
 Previously, reopening a package removed the entire hash directory, including runs.
 Lost JSON reports cannot be recovered from summary: verification must be repeated.
 
-F401 baseline adds only a fixture and offline CI; API_VERSION=1 and schemas are unchanged. [F401](../../../en/F401_CMSIS_BASELINE.md).
+F401 baseline adds only a fixture and offline CI; API_VERSION=1 and schemas are unchanged. [F401](../../../evidence/en/F401_CMSIS_BASELINE.md).
 
-F401 ADC/DMA changes only the fixture. The shared F4 measurement function is now adc_convert_f4_factory, a test firmware symbol rather than public module API. API_VERSION=1 and schemas are unchanged. [F401 ADC/DMA](../../../en/F401_CMSIS_ADC_DMA.md).
+F401 ADC/DMA changes only the fixture. The shared F4 measurement function is now adc_convert_f4_factory, a test firmware symbol rather than public module API. API_VERSION=1 and schemas are unchanged. [F401 ADC/DMA](../../../evidence/en/F401_CMSIS_ADC_DMA.md).
 
-F401 RTC/Sleep extends only the fixture. rtc_f4.c and vectors are shared with F411; public API and schemas are unchanged. F411 was checked offline after the move. [F401 RTC/Sleep](../../../en/F401_CMSIS_RTC_SLEEP.md).
+F401 RTC/Sleep extends only the fixture. rtc_f4.c and vectors are shared with F411; public API and schemas are unchanged. F411 was checked offline after the move. [F401 RTC/Sleep](../../../evidence/en/F401_CMSIS_RTC_SLEEP.md).
 
-Added fixture profile f429zi with seven cases. Public API, schemas and version are unchanged. [F429 baseline](../../../en/F429_CMSIS_BASELINE.md).
+Added fixture profile f429zi with seven cases. Public API, schemas and version are unchanged. [F429 baseline](../../../evidence/en/F429_CMSIS_BASELINE.md).
 
-F429 fixture adds ADC/DMA and arithmetic; shared converter, public API, schemas and version are unchanged. [F429 ADC/DMA](../../../en/F429_CMSIS_ADC_DMA.md).
+F429 fixture adds ADC/DMA and arithmetic; shared converter, public API, schemas and version are unchanged. [F429 ADC/DMA](../../../evidence/en/F429_CMSIS_ADC_DMA.md).
 
-F429 uses the shared F4 RTC implementation and vectors; RTC algorithm, public API and schemas are unchanged. [F429 RTC/Sleep](../../../en/F429_CMSIS_RTC_SLEEP.md).
+F429 uses the shared F4 RTC implementation and vectors; RTC algorithm, public API and schemas are unchanged. [F429 RTC/Sleep](../../../evidence/en/F429_CMSIS_RTC_SLEEP.md).
 
-[HAL F030: five GPIO/RCC techniques and source variants](../../../en/F030_HAL_GPIO_RCC.md).
+[HAL F030: five GPIO/RCC techniques and source variants](../../../evidence/en/F030_HAL_GPIO_RCC.md).
 
 ## Result journal capture (Unreleased)
 

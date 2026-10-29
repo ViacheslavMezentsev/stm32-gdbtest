@@ -4,7 +4,7 @@
 
 For 0.6.x use the [release matrix](../development/release-060-acceptance.md)
 (for 0.5.x, the [0.5.0 matrix](../development/release-050-acceptance.md)) and
-[API_ACCEPTANCE](API_ACCEPTANCE.md). Scenario counts are not coverage percentages.
+[API_ACCEPTANCE](../evidence/en/API_ACCEPTANCE.md). Scenario counts are not coverage percentages.
 Compare expected/actual outcomes at one SHA and configuration. Prepare, hardware PASS,
 intentional FAIL/ERROR and verified restoration are distinct metrics. Repetition does not
 increase unique requirements. SKIP and missing data are not PASS; evidence transfers

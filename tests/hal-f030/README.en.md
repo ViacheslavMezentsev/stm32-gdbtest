@@ -1,6 +1,6 @@
 # NUCLEO-F030R8 HAL regression
 
-[Русский](README.md) · [Plan and acceptance](../../docs/en/F030_HAL_REGRESSION.md)
+[Русский](README.md) · [Plan and acceptance](../../docs/evidence/en/F030_HAL_REGRESSION.md)
 
 Standalone stm32-gdbtest fixture for HAL macros, handles/callbacks and force_return.
 Preserves the original17 F030 scenarios; the CMSIS fixture stays in tests/firmware.
@@ -36,6 +36,6 @@ HAL/CMSIS libraries retain their own licenses. Format checking covers owned
 src/app.h and src/*.cpp using src/.clang-format; Core and preserved platform.c
 are excluded from formatting.
 
-HW reproduction and limits: [protocol](../../docs/en/F030_HAL_VALIDATION.md).
+HW reproduction and limits: [protocol](../../docs/evidence/en/F030_HAL_VALIDATION.md).
 
-[Five added GPIO/RCC cases, reviewed HAL variants and current evidence](../../docs/en/F030_HAL_GPIO_RCC.md). The original 17 cases are retained; total 22.
+[Five added GPIO/RCC cases, reviewed HAL variants and current evidence](../../docs/evidence/en/F030_HAL_GPIO_RCC.md). The original 17 cases are retained; total 22.

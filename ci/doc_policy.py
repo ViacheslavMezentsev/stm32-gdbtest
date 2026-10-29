@@ -34,6 +34,7 @@ def check(root):
 
 
 LINK = re.compile(r"\]\(([^)#\s]+\.md)(?:#[^)]*)?\)")
+GROUPS = ("evidence", "guides")
 POINTER_TITLE = ("документ перенесён", "document moved")
 
 
@@ -44,14 +45,17 @@ def is_pointer(page):
 
 
 def check_reachable(root):
-    """Every page of docs/ru and docs/en is linked from the map: top-level pages directly, nested ones transitively."""
+    """Every page of docs/<lang> and docs/{evidence,guides}/<lang> is linked from the map of its language:
+    top-level pages directly, nested ones transitively; pointer pages at old addresses are exempt."""
     errors = []
     for lang in ("ru", "en"):
         base = root / "docs" / lang
         index = base / "index.md"
         if not index.is_file():
             continue
-        pages = {p.resolve() for p in base.rglob("*.md")} - {index.resolve()}
+        bases = [base] + [root / "docs" / group / lang for group in GROUPS if (root / "docs" / group / lang).is_dir()]
+        pages = {p.resolve() for b in bases for p in b.rglob("*.md")} - {index.resolve()}
+        tops = {p.resolve() for b in bases for p in b.glob("*.md")}
         direct = {(base / m).resolve() for m in LINK.findall(index.read_text(encoding="utf-8"))}
         seen, queue = set(direct), [p for p in direct if p.is_file()]
         while queue:
@@ -62,13 +66,13 @@ def check_reachable(root):
                     seen.add(path)
                     queue.append(path)
         for page in sorted(pages):
-            name = page.relative_to(base.resolve()).as_posix()
+            name = page.relative_to((root / "docs").resolve()).as_posix()
             if is_pointer(page):
                 continue
-            if "/" not in name and page not in direct:
-                errors.append(f"docs/{lang}/{name} not linked from index.md")
+            if page in tops and page not in direct:
+                errors.append(f"docs/{name} not linked from docs/{lang}/index.md")
             elif page not in seen:
-                errors.append(f"docs/{lang}/{name} not reachable from index.md")
+                errors.append(f"docs/{name} not reachable from docs/{lang}/index.md")
     return errors
 
 

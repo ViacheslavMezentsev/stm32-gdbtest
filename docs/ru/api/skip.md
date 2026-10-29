@@ -38,6 +38,6 @@ skip не отменяет действия. Не вызывайте его из
 раздельны; все SKIP — nothing_tested. requires не поддерживается.
 
 Проверки: [host](../../../tests/host/test_skip.py). Принятые границы практики —
-[API_ACCEPTANCE](../API_ACCEPTANCE.md). Выпуск с методом ещё не опубликован.
+[API_ACCEPTANCE](../../evidence/ru/API_ACCEPTANCE.md). Выпуск с методом ещё не опубликован.
 
 Новый выборочный прогон: [сценарии API 0.4.0](../../archive/pre-050/ru/API040_SCENARIOS.md), пять STM32, включая ожидаемый SKIP.

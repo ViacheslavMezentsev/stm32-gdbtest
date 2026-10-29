@@ -33,17 +33,17 @@ stm32-gdbtest 0.4.0, API_VERSION=2, target schema 2; общее ТЗ 0.94, ТЗ 
 
 Ниже — история предыдущих этапов; [подготовка v0.2.0-rc.1](RC020_READINESS.md) сохраняется для справки.
 
-[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.](../../../ru/F429_CMSIS_RTC_SLEEP.md)
+[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.](../../../evidence/ru/F429_CMSIS_RTC_SLEEP.md)
 
-[F429 ADC/DMA/units/failures:15/15 HW +3 повтора, HAL восстановлена; ТЗ0.56.](../../../ru/F429_CMSIS_ADC_DMA.md)
+[F429 ADC/DMA/units/failures:15/15 HW +3 повтора, HAL восстановлена; ТЗ0.56.](../../../evidence/ru/F429_CMSIS_ADC_DMA.md)
 
-[F429 CMSIS baseline:7/7 HW, HAL восстановлена; ТЗ0.55. Пятый профиль в CI, ADC/RTC ещё впереди.](../../../ru/F429_CMSIS_BASELINE.md)
+[F429 CMSIS baseline:7/7 HW, HAL восстановлена; ТЗ0.55. Пятый профиль в CI, ADC/RTC ещё впереди.](../../../evidence/ru/F429_CMSIS_BASELINE.md)
 
-[F401 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.54.](../../../ru/F401_CMSIS_RTC_SLEEP.md)
+[F401 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.54.](../../../evidence/ru/F401_CMSIS_RTC_SLEEP.md)
 
-[F401 ADC/DMA/units/failures:15/15 HW и три положительных повтора, HAL восстановлен; ТЗ0.53.](../../../ru/F401_CMSIS_ADC_DMA.md)
+[F401 ADC/DMA/units/failures:15/15 HW и три положительных повтора, HAL восстановлен; ТЗ0.53.](../../../evidence/ru/F401_CMSIS_ADC_DMA.md)
 
-[F401 CMSIS baseline: 7/7 HW через ST-Link/OpenOCD, HAL boot/blink восстановлены. Flash256/RAM64; ADC/RTC ещё не перенесены.](../../../ru/F401_CMSIS_BASELINE.md)
+[F401 CMSIS baseline: 7/7 HW через ST-Link/OpenOCD, HAL boot/blink восстановлены. Flash256/RAM64; ADC/RTC ещё не перенесены.](../../../evidence/ru/F401_CMSIS_BASELINE.md)
 
 Срез rc.2: 5b7b466. Docs/Offline/Hardware SUCCESS; все 27 JSON из GitHub проверены.
 Windows: F030 CMSIS 18/18, HAL 17/17 с повторами/recovery; циклы F030/OpenOCD,
@@ -52,7 +52,7 @@ F103/J-Link, F411/OpenOCD — по 10/10. ST server завершён после 
 восстановлены. [Подробный протокол и оставшиеся условия](RC2_READINESS.md).
 
 Опубликован rc.2 на a0d6547. После тега приняты группы F103 baseline (352417c)
-и ADC/DMA (3e123ad). Новая [RTC/Sleep](../../../ru/F103_CMSIS_RTC_SLEEP.md):
+и ADC/DMA (3e123ad). Новая [RTC/Sleep](../../../evidence/ru/F103_CMSIS_RTC_SLEEP.md):
 20/20 HW, пять положительных повторов, timeout/recovery и HAL restore PASS.
 Первоначальные ошибки ACL при восстановлении сохранены в протоколе.
 
@@ -68,7 +68,7 @@ F103/J-Link, F411/OpenOCD — по 10/10. ST server завершён после 
 | minimal-consumer F411 | Отдельный пример подключения CMake без YAML; проверяет подключение модуля, не полную периферию платы |
 | Потребитель BlackPill | fb2d186 / модуль 67b7431: Offline SUCCESS, пять профилей/120 CTest; Windows 25/25, F411/OpenOCD 22/22 + timeout/recovery/restore. Итоговый gitlink обновляется после land модуля |
 
-Источники: [HAL→CMSIS](../../../ru/F030_CMSIS_ACCEPTANCE.md), [HAL-протокол](../../../ru/F030_HAL_VALIDATION.md),
+Источники: [HAL→CMSIS](../../../evidence/ru/F030_CMSIS_ACCEPTANCE.md), [HAL-протокол](../../../evidence/ru/F030_HAL_VALIDATION.md),
 [техники](../../../ru/TESTING_TECHNIQUES.md), [CI](../../../ru/testing.md).
 Текущий Nucleo-стенд — родной ST-Link/OpenOCD; результаты J-Link STLink ниже исторические.
 F103 — WeAct BluePill-Plus/J-Link; F411 — BlackPill/ST-Link с OpenOCD и ST server.
@@ -212,15 +212,15 @@ F103C8/J-Link проверены полные 16 KiB: запись хвоста 
 комбинаций backend для F0.
 [Протокол потребителя](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/F030_JLINK_VALIDATION.md).
 
-[F411 CMSIS baseline](../../../ru/F411_CMSIS_BASELINE.md): HSI16, PC13, SysTick, TIM2; post-rc.2.
+[F411 CMSIS baseline](../../../evidence/ru/F411_CMSIS_BASELINE.md): HSI16, PC13, SysTick, TIM2; post-rc.2.
 
-[F411 ADC/DMA](../../../ru/F411_CMSIS_ADC_DMA.md): factory calibration, numerical vectors and state faults.
+[F411 ADC/DMA](../../../evidence/ru/F411_CMSIS_ADC_DMA.md): factory calibration, numerical vectors and state faults.
 
-[F411 RTC/Sleep](../../../ru/F411_CMSIS_RTC_SLEEP.md): calendar Alarm A, WFI and recovery.
+[F411 RTC/Sleep](../../../evidence/ru/F411_CMSIS_RTC_SLEEP.md): calendar Alarm A, WFI and recovery.
 
-[Итоговая сверка пяти профилей и оставшиеся HAL-проверки](../../../ru/CMSIS_ACCEPTANCE.md).
+[Итоговая сверка пяти профилей и оставшиеся HAL-проверки](../../../evidence/ru/CMSIS_ACCEPTANCE.md).
 
-[HAL F030: пять GPIO/RCC-техник и варианты исходников](../../../ru/F030_HAL_GPIO_RCC.md).
+[HAL F030: пять GPIO/RCC-техник и варианты исходников](../../../evidence/ru/F030_HAL_GPIO_RCC.md).
 
 ## Финальная передача выпуска
 

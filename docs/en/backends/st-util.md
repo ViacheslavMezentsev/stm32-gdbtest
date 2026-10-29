@@ -4,7 +4,7 @@
 
 Open-source GDB server from [stlink](https://github.com/stlink-org/stlink), backend `st-util`.
 This is distinct from ST-LINK GDB Server; CubeProgrammer is not required. Windows/Scoop and
-Ubuntu 20.04/aarch64 on OrangePi were checked. The [matrix](../API_ACCEPTANCE.md) defines acceptance boundaries.
+Ubuntu 20.04/aarch64 on OrangePi were checked. The [matrix](../../evidence/en/API_ACCEPTANCE.md) defines acceptance boundaries.
 
 ## Two versions encountered
 

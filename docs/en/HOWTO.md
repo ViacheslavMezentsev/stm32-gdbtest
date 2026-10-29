@@ -268,7 +268,7 @@ runner" in [hardware CI](HARDWARE_CI.md).
 
 ## Do not compare reserved MMIO bits
 
-F030 ADC CFGR2 read 0x1000 with CKMODE=0 in this experiment. Check the documented field `ADC1->CFGR2 & ADC_CFGR2_CKMODE`, not the whole register. Verify masks against the selected MCU header/RM; do not mask unexpected results without analysis. [Report](F030_CMSIS_ADC_DMA.md).
+F030 ADC CFGR2 read 0x1000 with CKMODE=0 in this experiment. Check the documented field `ADC1->CFGR2 & ADC_CFGR2_CKMODE`, not the whole register. Verify masks against the selected MCU header/RM; do not mask unexpected results without analysis. [Report](../evidence/en/F030_CMSIS_ADC_DMA.md).
 
 Owned profiles/examples and new packages use `tests`; old `Tests` inputs remain supported. Local remote stands use ignored `<profile>-<backend>.remote.toml` (`openocd`, `jlink`, `stlink`). Reconfigure after renaming. [Conventions](maintenance.md).
 
@@ -338,7 +338,7 @@ If summary references missing JSON from earlier runs, check the module version: 
 ## Same Cube package name, different RCC signatures
 
 Do not select HAL contracts by Windows/Linux or CubeF0 V1.11.6 directory name.
-The [F030 investigation](F030_HAL_GPIO_RCC.md) found mutable/const differences
+The [F030 investigation](../evidence/en/F030_HAL_GPIO_RCC.md) found mutable/const differences
 between the installed package and CI gitlink. Use reviewed source hashes and
 strict ELF types. Unknown hashes need review, not disabled preflight.
 Do not reuse a CMake cache containing /workspace paths on Windows: use a separate

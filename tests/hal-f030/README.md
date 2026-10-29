@@ -1,6 +1,6 @@
 # HAL-регрессия NUCLEO-F030R8
 
-[English](README.en.md) · [План и приёмка](../../docs/ru/F030_HAL_REGRESSION.md)
+[English](README.en.md) · [План и приёмка](../../docs/evidence/ru/F030_HAL_REGRESSION.md)
 
 Автономный пример для проверки HAL-макросов, handles/callbacks и force_return
 через stm32-gdbtest. Сохраняет 17 сценариев исходного F030-приложения; CMSIS-пример
@@ -35,6 +35,6 @@ Python-импорты локализованы, добавлены ссылки 
 Форматируются только собственные src/app.h и src/*.cpp по src/.clang-format;
 Core и сохранённый platform.c исключены из проверки формата.
 
-Повторение HW и границы проверки: [protocol](../../docs/ru/F030_HAL_VALIDATION.md).
+Повторение HW и границы проверки: [protocol](../../docs/evidence/ru/F030_HAL_VALIDATION.md).
 
-[Пять новых GPIO/RCC cases, варианты HAL и текущие результаты](../../docs/ru/F030_HAL_GPIO_RCC.md). Исходные 17 сохранены; всего 22.
+[Пять новых GPIO/RCC cases, варианты HAL и текущие результаты](../../docs/evidence/ru/F030_HAL_GPIO_RCC.md). Исходные 17 сохранены; всего 22.

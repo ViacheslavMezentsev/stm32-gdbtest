@@ -4,7 +4,7 @@
 
 Открытый сервер проекта [stlink](https://github.com/stlink-org/stlink), backend `st-util`.
 Это отдельный продукт от ST-LINK GDB Server: CubeProgrammer не нужен. Проверены Windows/Scoop
-и Ubuntu 20.04/aarch64 на OrangePi. [Матрица](../API_ACCEPTANCE.md) задаёт точные границы приёмки.
+и Ubuntu 20.04/aarch64 на OrangePi. [Матрица](../../evidence/ru/API_ACCEPTANCE.md) задаёт точные границы приёмки.
 
 ## Две версии из практики
 

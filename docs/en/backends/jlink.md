@@ -7,7 +7,7 @@ Shared session files and stand options: [TOML map](../BACKENDS.md#toml). Target 
 ## Configuration
 
 `jlink` uses SEGGER J-Link GDB Server on Windows/Linux, including the arm64 stands used here.
-SEGGER device support is not module acceptance: verified versions/MCUs are in the [matrix](../API_ACCEPTANCE.md).
+SEGGER device support is not module acceptance: verified versions/MCUs are in the [matrix](../../evidence/en/API_ACCEPTANCE.md).
 
 ```toml
 [probe]

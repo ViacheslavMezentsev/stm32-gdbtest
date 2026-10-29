@@ -55,4 +55,4 @@ become part of the `Target.reset()` contract.
   `bindto` equivalent. Account for stand network port accessibility.
 - Firmware is obtained from logs; the debugger API is not guessed and can remain `null`.
 
-[Acceptance](../API_ACCEPTANCE.md) · [ST manual](https://www.st.com/resource/en/user_manual/dm00613038-stm32cubeide-stlink-gdb-server-stmicroelectronics.pdf).
+[Acceptance](../../evidence/en/API_ACCEPTANCE.md) · [ST manual](https://www.st.com/resource/en/user_manual/dm00613038-stm32cubeide-stlink-gdb-server-stmicroelectronics.pdf).

@@ -21,7 +21,7 @@ Instructions for AI agents and new contributors ([English](docs/en/maintenance.m
 3. Сценарии пишутся по API_VERSION=3 (линии 0.5.x и 0.6.x): [справочник методов](docs/ru/api/index.md) и
    [каталог техник со стилем сценариев](docs/ru/TESTING_TECHNIQUES.md). Стиль проверяет тест
    `tests/host/test_scenario_style.py`; образцы — `tests/firmware/common/tests` (общие сценарии-примеры)
-   и `tests/firmware/profiles/*/tests`. Что и на каких стендах принято — [API_ACCEPTANCE](docs/ru/API_ACCEPTANCE.md).
+   и `tests/firmware/profiles/*/tests`. Что и на каких стендах принято — [API_ACCEPTANCE](docs/evidence/ru/API_ACCEPTANCE.md).
    Навыки для агентов проектов-потребителей — [skills](skills/README.md); правило сценариев меняется сначала
    в каталоге техник и тесте стиля, затем в навыке.
 4. Работайте в ветке `<агент>/<задача>` от актуального main; префикс — имя
@@ -46,7 +46,7 @@ Instructions for AI agents and new contributors ([English](docs/en/maintenance.m
    Правила структуры, переводов и памятки — [docs/development](docs/development/README.md).
 8. Сборка и host PASS не означают HW PASS. Аппаратный запуск — только на
    согласованном стенде, без mass erase, option bytes и shared mode; ERROR не скрывать.
-   Схемы запуска и их приёмка — [RUN_LAYOUTS](docs/ru/RUN_LAYOUTS.md) и [API_ACCEPTANCE](docs/ru/API_ACCEPTANCE.md).
+   Схемы запуска и их приёмка — [RUN_LAYOUTS](docs/ru/RUN_LAYOUTS.md) и [API_ACCEPTANCE](docs/evidence/ru/API_ACCEPTANCE.md).
 9. MCU, платы, ожидания и тесты приложения — в проекте потребителя; тестовые
    hooks в прошивку не добавлять; GDB API — только из основного потока GDB.
 10. Не коммитить локальные TOML стендов, серийные номера, персональные пути,

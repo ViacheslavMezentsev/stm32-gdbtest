@@ -36,6 +36,6 @@ Old reports remain readable. `run_hw.py --allow-skip HW_ID` permits a particular
 SKIP is rejected by default. skipped/passed counters remain separate; all SKIP means nothing_tested.
 requires is unsupported. No published release includes this method yet.
 
-Tests: [host](../../../tests/host/test_skip.py); [API_ACCEPTANCE](../API_ACCEPTANCE.md).
+Tests: [host](../../../tests/host/test_skip.py); [API_ACCEPTANCE](../../evidence/en/API_ACCEPTANCE.md).
 
 New selective campaign: [API 0.4.0 scenarios](../../archive/pre-050/en/API040_SCENARIOS.md), five STM32 boards including expected SKIP.

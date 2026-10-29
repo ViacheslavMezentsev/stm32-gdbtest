@@ -469,7 +469,7 @@ testing. [Stand cycles](STAND_LOOP.md).
 | Complete hardware acceptance | Specific combinations are accepted; extended F411/F030/ST-LINK GDB Server suites are limited by USB ERROR |
 
 These are audit tasks, not new API promises or proof that all other MUSTs have been met.
-[Acceptance](API_ACCEPTANCE.md), [release history](RELEASE_CHANGES.md) and [metrics](HARDWARE_METRICS.md)
+[Acceptance](../evidence/en/API_ACCEPTANCE.md), [release history](RELEASE_CHANGES.md) and [metrics](HARDWARE_METRICS.md)
 retain versions, configurations and limitations.
 
 ## 11. Development with target feedback (informative)

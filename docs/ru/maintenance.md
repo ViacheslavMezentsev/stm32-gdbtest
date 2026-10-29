@@ -17,7 +17,7 @@
    ревизии, открытые вопросы (раздел 11) и расхождения с кодом (приложение F).
    [ТЗ API](../TECHNICAL_SPECIFICATION_API.md): то же для методов `Target`, решения владельца — раздел 10.2.
 5. Сценарии и API: [справочник методов](api/index.md), [каталог техник и стиль сценариев](TESTING_TECHNIQUES.md)
-   (стиль проверяет `tests/host/test_scenario_style.py`), [принятые результаты](API_ACCEPTANCE.md) и
+   (стиль проверяет `tests/host/test_scenario_style.py`), [принятые результаты](../evidence/ru/API_ACCEPTANCE.md) и
    [метрики аппаратных проверок](HARDWARE_METRICS.md).
 6. Для конкретной задачи — описание механизма в `docs/` ([API](API.md),
    [контракты](CONTRACTS.md), [образы](IMAGES.md), [backend](BACKENDS.md), [Linux-стенд](LINUX_STAND.md) и др.),

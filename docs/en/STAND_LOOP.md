@@ -120,4 +120,4 @@ before steps do not reserve disk space or replace quotas. A manual hardware run 
 the service or model integration.
 
 
-[Accepted results](API_ACCEPTANCE.md).
+[Accepted results](../evidence/en/API_ACCEPTANCE.md).

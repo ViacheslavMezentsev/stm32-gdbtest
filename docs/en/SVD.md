@@ -48,4 +48,4 @@ This validates a description, not a board, Renode model or physical MMIO transac
 See the [MMIO reference](api/mmio.md) for operations, override and transport guarantees.
 
 
-Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](API_ACCEPTANCE.md).
+Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](../evidence/en/API_ACCEPTANCE.md).

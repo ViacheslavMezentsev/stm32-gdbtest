@@ -73,16 +73,16 @@ Neutral examples: [simulated input: write and ret](../../tests/controlled-input/
 
 ## Board evidence
 
-Summaries: [accepted API and results](API_ACCEPTANCE.md) · [five-profile CMSIS acceptance review](CMSIS_ACCEPTANCE.md).
+Summaries: [accepted API and results](../evidence/en/API_ACCEPTANCE.md) · [five-profile CMSIS acceptance review](../evidence/en/CMSIS_ACCEPTANCE.md).
 
-- **F030:** [CMSIS baseline](F030_CMSIS_BASELINE.md) · [TIM3/IRQ](F030_CMSIS_TIMER.md) · [ADC/DMA](F030_CMSIS_ADC_DMA.md) ·
-  [ADC units](F030_CMSIS_ADC_UNITS.md) · [busy ADC](F030_ADC_BUSY.md) · [Sleep/WFI](F030_CMSIS_SLEEP.md) ·
-  [RTC](F030_CMSIS_RTC.md) · [RTC deadline](F030_RTC_DEADLINE.md) · [HAL→CMSIS mapping](F030_CMSIS_ACCEPTANCE.md) ·
-  [HAL: GPIO/RCC](F030_HAL_GPIO_RCC.md) · [HAL regression](F030_HAL_REGRESSION.md) · [HAL hardware acceptance](F030_HAL_VALIDATION.md).
-- **F103:** [clocks/GPIO/SysTick/TIM2](F103_CMSIS_BASELINE.md) · [ADC/DMA](F103_CMSIS_ADC_DMA.md) · [RTC/Sleep](F103_CMSIS_RTC_SLEEP.md).
-- **F401:** [clocks/GPIO/SysTick/TIM2](F401_CMSIS_BASELINE.md) · [ADC/DMA](F401_CMSIS_ADC_DMA.md) · [RTC/Sleep](F401_CMSIS_RTC_SLEEP.md).
-- **F411:** [clocks/GPIO/SysTick/TIM2](F411_CMSIS_BASELINE.md) · [ADC/DMA](F411_CMSIS_ADC_DMA.md) · [RTC/Sleep](F411_CMSIS_RTC_SLEEP.md).
-- **F429:** [clocks/GPIO/SysTick/TIM2](F429_CMSIS_BASELINE.md) · [ADC/DMA](F429_CMSIS_ADC_DMA.md) · [RTC/Sleep](F429_CMSIS_RTC_SLEEP.md).
+- **F030:** [CMSIS baseline](../evidence/en/F030_CMSIS_BASELINE.md) · [TIM3/IRQ](../evidence/en/F030_CMSIS_TIMER.md) · [ADC/DMA](../evidence/en/F030_CMSIS_ADC_DMA.md) ·
+  [ADC units](../evidence/en/F030_CMSIS_ADC_UNITS.md) · [busy ADC](../evidence/en/F030_ADC_BUSY.md) · [Sleep/WFI](../evidence/en/F030_CMSIS_SLEEP.md) ·
+  [RTC](../evidence/en/F030_CMSIS_RTC.md) · [RTC deadline](../evidence/en/F030_RTC_DEADLINE.md) · [HAL→CMSIS mapping](../evidence/en/F030_CMSIS_ACCEPTANCE.md) ·
+  [HAL: GPIO/RCC](../evidence/en/F030_HAL_GPIO_RCC.md) · [HAL regression](../evidence/en/F030_HAL_REGRESSION.md) · [HAL hardware acceptance](../evidence/en/F030_HAL_VALIDATION.md).
+- **F103:** [clocks/GPIO/SysTick/TIM2](../evidence/en/F103_CMSIS_BASELINE.md) · [ADC/DMA](../evidence/en/F103_CMSIS_ADC_DMA.md) · [RTC/Sleep](../evidence/en/F103_CMSIS_RTC_SLEEP.md).
+- **F401:** [clocks/GPIO/SysTick/TIM2](../evidence/en/F401_CMSIS_BASELINE.md) · [ADC/DMA](../evidence/en/F401_CMSIS_ADC_DMA.md) · [RTC/Sleep](../evidence/en/F401_CMSIS_RTC_SLEEP.md).
+- **F411:** [clocks/GPIO/SysTick/TIM2](../evidence/en/F411_CMSIS_BASELINE.md) · [ADC/DMA](../evidence/en/F411_CMSIS_ADC_DMA.md) · [RTC/Sleep](../evidence/en/F411_CMSIS_RTC_SLEEP.md).
+- **F429:** [clocks/GPIO/SysTick/TIM2](../evidence/en/F429_CMSIS_BASELINE.md) · [ADC/DMA](../evidence/en/F429_CMSIS_ADC_DMA.md) · [RTC/Sleep](../evidence/en/F429_CMSIS_RTC_SLEEP.md).
 
 These are historical acceptance stages: counts belong to their revisions; the current state is in [STATUS](STATUS.md).
 

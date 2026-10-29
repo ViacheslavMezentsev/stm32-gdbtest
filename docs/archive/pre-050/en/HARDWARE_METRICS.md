@@ -68,11 +68,11 @@ This is a bounded historical set, not every board or execution in project histor
 
 | Board model / MCU | Debugger and backend | Cases with evidence | Report and accepted stage revision |
 | --- | --- | ---: | --- |
-| NUCLEO-F030R8 / STM32F030R8T6 | Onboard ST-Link, OpenOCD/SWD | 18 | [HAL → CMSIS](../../../en/F030_CMSIS_ACCEPTANCE.md), batch accepted at `cea01f9`; 16 + 1 + 1 on one ELF, not one 18/18 series |
-| WeAct BluePill-Plus / STM32F103C8T6 | J-Link, SWD | 20 | [RTC/Sleep and preceding groups](../../../en/F103_CMSIS_RTC_SLEEP.md), `d97903c`, 2026-10-01 |
-| WeAct BlackPill V3.1 / STM32F411CEU6 | ST-Link, OpenOCD/SWD | 20 | [RTC/Sleep and preceding groups](../../../en/F411_CMSIS_RTC_SLEEP.md), `91a7cd4`, 2026-10-01 |
-| WeAct BlackPill v3.0 / STM32F401CCU6 | ST-Link, OpenOCD/SWD | 20 | [RTC/Sleep/recovery](../../../en/F401_CMSIS_RTC_SLEEP.md), working tree from `87a23be`, 2026-10-01 |
-| STM32F429I-DISCO / STM32F429ZIT6 | ST-Link/V2, OpenOCD/SWD | 20 | [RTC/Sleep/recovery](../../../en/F429_CMSIS_RTC_SLEEP.md), working tree from `52c49fd`, 2026-10-01 |
+| NUCLEO-F030R8 / STM32F030R8T6 | Onboard ST-Link, OpenOCD/SWD | 18 | [HAL → CMSIS](../../../evidence/en/F030_CMSIS_ACCEPTANCE.md), batch accepted at `cea01f9`; 16 + 1 + 1 on one ELF, not one 18/18 series |
+| WeAct BluePill-Plus / STM32F103C8T6 | J-Link, SWD | 20 | [RTC/Sleep and preceding groups](../../../evidence/en/F103_CMSIS_RTC_SLEEP.md), `d97903c`, 2026-10-01 |
+| WeAct BlackPill V3.1 / STM32F411CEU6 | ST-Link, OpenOCD/SWD | 20 | [RTC/Sleep and preceding groups](../../../evidence/en/F411_CMSIS_RTC_SLEEP.md), `91a7cd4`, 2026-10-01 |
+| WeAct BlackPill v3.0 / STM32F401CCU6 | ST-Link, OpenOCD/SWD | 20 | [RTC/Sleep/recovery](../../../evidence/en/F401_CMSIS_RTC_SLEEP.md), working tree from `87a23be`, 2026-10-01 |
+| STM32F429I-DISCO / STM32F429ZIT6 | ST-Link/V2, OpenOCD/SWD | 20 | [RTC/Sleep/recovery](../../../evidence/en/F429_CMSIS_RTC_SLEEP.md), working tree from `52c49fd`, 2026-10-01 |
 | **Total** | **5 board models** | **98** | **Historical snapshot across revisions** |
 
 All rows refer to Windows, xPack GCC13.3.1-1.1/GDB14.2.90. Reports provide

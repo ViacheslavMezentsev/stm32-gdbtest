@@ -72,16 +72,16 @@ stm32-gdbtest — реализация [DDTT](DDTT.md) для STM32: сцена�
 
 ## Свидетельства по платам
 
-Сводки: [принятый API и результаты](API_ACCEPTANCE.md) · [итоговая сверка пяти профилей CMSIS](CMSIS_ACCEPTANCE.md).
+Сводки: [принятый API и результаты](../evidence/ru/API_ACCEPTANCE.md) · [итоговая сверка пяти профилей CMSIS](../evidence/ru/CMSIS_ACCEPTANCE.md).
 
-- **F030:** [база CMSIS](F030_CMSIS_BASELINE.md) · [TIM3/IRQ](F030_CMSIS_TIMER.md) · [ADC/DMA](F030_CMSIS_ADC_DMA.md) ·
-  [единицы ADC](F030_CMSIS_ADC_UNITS.md) · [занятый ADC](F030_ADC_BUSY.md) · [Sleep/WFI](F030_CMSIS_SLEEP.md) ·
-  [RTC](F030_CMSIS_RTC.md) · [RTC deadline](F030_RTC_DEADLINE.md) · [сверка HAL→CMSIS](F030_CMSIS_ACCEPTANCE.md) ·
-  [HAL: GPIO/RCC](F030_HAL_GPIO_RCC.md) · [HAL-регрессия](F030_HAL_REGRESSION.md) · [аппаратная приёмка HAL](F030_HAL_VALIDATION.md).
-- **F103:** [clocks/GPIO/SysTick/TIM2](F103_CMSIS_BASELINE.md) · [ADC/DMA](F103_CMSIS_ADC_DMA.md) · [RTC/Sleep](F103_CMSIS_RTC_SLEEP.md).
-- **F401:** [clocks/GPIO/SysTick/TIM2](F401_CMSIS_BASELINE.md) · [ADC/DMA](F401_CMSIS_ADC_DMA.md) · [RTC/Sleep](F401_CMSIS_RTC_SLEEP.md).
-- **F411:** [clocks/GPIO/SysTick/TIM2](F411_CMSIS_BASELINE.md) · [ADC/DMA](F411_CMSIS_ADC_DMA.md) · [RTC/Sleep](F411_CMSIS_RTC_SLEEP.md).
-- **F429:** [clocks/GPIO/SysTick/TIM2](F429_CMSIS_BASELINE.md) · [ADC/DMA](F429_CMSIS_ADC_DMA.md) · [RTC/Sleep](F429_CMSIS_RTC_SLEEP.md).
+- **F030:** [база CMSIS](../evidence/ru/F030_CMSIS_BASELINE.md) · [TIM3/IRQ](../evidence/ru/F030_CMSIS_TIMER.md) · [ADC/DMA](../evidence/ru/F030_CMSIS_ADC_DMA.md) ·
+  [единицы ADC](../evidence/ru/F030_CMSIS_ADC_UNITS.md) · [занятый ADC](../evidence/ru/F030_ADC_BUSY.md) · [Sleep/WFI](../evidence/ru/F030_CMSIS_SLEEP.md) ·
+  [RTC](../evidence/ru/F030_CMSIS_RTC.md) · [RTC deadline](../evidence/ru/F030_RTC_DEADLINE.md) · [сверка HAL→CMSIS](../evidence/ru/F030_CMSIS_ACCEPTANCE.md) ·
+  [HAL: GPIO/RCC](../evidence/ru/F030_HAL_GPIO_RCC.md) · [HAL-регрессия](../evidence/ru/F030_HAL_REGRESSION.md) · [аппаратная приёмка HAL](../evidence/ru/F030_HAL_VALIDATION.md).
+- **F103:** [clocks/GPIO/SysTick/TIM2](../evidence/ru/F103_CMSIS_BASELINE.md) · [ADC/DMA](../evidence/ru/F103_CMSIS_ADC_DMA.md) · [RTC/Sleep](../evidence/ru/F103_CMSIS_RTC_SLEEP.md).
+- **F401:** [clocks/GPIO/SysTick/TIM2](../evidence/ru/F401_CMSIS_BASELINE.md) · [ADC/DMA](../evidence/ru/F401_CMSIS_ADC_DMA.md) · [RTC/Sleep](../evidence/ru/F401_CMSIS_RTC_SLEEP.md).
+- **F411:** [clocks/GPIO/SysTick/TIM2](../evidence/ru/F411_CMSIS_BASELINE.md) · [ADC/DMA](../evidence/ru/F411_CMSIS_ADC_DMA.md) · [RTC/Sleep](../evidence/ru/F411_CMSIS_RTC_SLEEP.md).
+- **F429:** [clocks/GPIO/SysTick/TIM2](../evidence/ru/F429_CMSIS_BASELINE.md) · [ADC/DMA](../evidence/ru/F429_CMSIS_ADC_DMA.md) · [RTC/Sleep](../evidence/ru/F429_CMSIS_RTC_SLEEP.md).
 
 Это исторические этапы приёмки: числа относятся к своим ревизиям, текущее состояние — в [STATUS](STATUS.md).
 

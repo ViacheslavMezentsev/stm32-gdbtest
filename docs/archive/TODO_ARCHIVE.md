@@ -166,7 +166,7 @@ A3.3 проверен: неполный источник не экспортир
   608 этапов; Linux-пакеты F411/F429 на Windows и независимый потребитель проверены.
   Это свидетельства разных срезов, не итоговый CI последнего SHA.
 - После remote lifecycle: Docker docs+host 6/6, 426 host-тестов. Длительной ADC-матрице
-  F4 выделено 120 с; исходный ERROR сохранён. [Матрица и ограничения](../ru/API_ACCEPTANCE.md).
+  F4 выделено 120 с; исходный ERROR сохранён. [Матрица и ограничения](../evidence/ru/API_ACCEPTANCE.md).
 
 - В `codex/release-040` подготовлены отдельные страницы четырёх backend с TOML и рецептом st-util 1.9.0;
   Docker docs 5/5, синтаксис 20 TOML/bash-фрагментов проверен. Новых аппаратных запусков для этой правки нет.
@@ -495,7 +495,7 @@ Offline SUCCESS. Незакрытые отметки в исходном пла�
   Сначала land плана, затем руководства; fixture/CI/HW остаются следующими этапами.
 
 - Предыдущая ветка `codex/f030-hal-regression-plan` от `cea01f9`: подготовлен
-  [план HAL fixture](../ru/F030_HAL_REGRESSION.md), исходная база потребителя
+  [план HAL fixture](../evidence/ru/F030_HAL_REGRESSION.md), исходная база потребителя
   `0c8c966`, полный начальный набор 17 сценариев. Только документация;
   новые HW-проверки не выполнялись. Windows/Linux docs 3/3 PASS.
   Далее зависимые ветки fixture → CI →
@@ -507,7 +507,7 @@ Offline SUCCESS. Незакрытые отметки в исходном пла�
   Прежние16 +2 новых HW-сценария выполнены на одном ELF, HAL восстановлен.
 
 - `codex/f030-cmsis-rtc` от `f494ab1`: RTC Alarm A/LSI и два сценария;
-  16/16 HW PASS на новом ELF, HAL восстановлен. [Протокол](../ru/F030_CMSIS_RTC.md).
+  16/16 HW PASS на новом ELF, HAL восстановлен. [Протокол](../evidence/ru/F030_CMSIS_RTC.md).
   Далее отказные ветви и итоговая приёмка HAL→CMSIS для F030.
   API ядра без изменений; ТЗ 0.33. F030 CTest 17/17, Windows host 96
   (8 skips), Linux docs/host/9 firmware pairs 13/13 PASS; strict ТЗ и формат PASS.
@@ -516,18 +516,18 @@ Offline SUCCESS. Незакрытые отметки в исходном пла�
   2/2 HW PASS; прежние 12 не повторялись, ELF тот же. HAL восстановлен.
   Проверки: F030 CTest 15/15, Windows host 96 (8 skips), Linux docs/host/
   9 пар firmware 13/13 PASS; strict ТЗ PASS.
-  [Протокол](../ru/F030_CMSIS_SLEEP.md). Далее RTC и оставшиеся отказы.
+  [Протокол](../evidence/ru/F030_CMSIS_SLEEP.md). Далее RTC и оставшиеся отказы.
 
 
 - `codex/f030-cmsis-adc-units` от `a6c0426`: преобразование F030 ADC и
   7 численных/14 невалидных наборов; 12/12 HW PASS, HAL восстановлен.
   Проверки: F030 CTest 13/13, Windows host 96 (8 skips), Linux docs/host/
   9 пар firmware 13/13 PASS; strict ТЗ и формат PASS.
-  [Протокол](../ru/F030_CMSIS_ADC_UNITS.md). Далее RTC/Sleep и отказы.
+  [Протокол](../evidence/ru/F030_CMSIS_ADC_UNITS.md). Далее RTC/Sleep и отказы.
 
 
 - `codex/f030-cmsis-adc-dma` от `5883316`: ADC/DMA raw и timeout F030,
-  9/9 HW PASS, HAL восстановлен. [Протокол](../ru/F030_CMSIS_ADC_DMA.md).
+  9/9 HW PASS, HAL восстановлен. [Протокол](../evidence/ru/F030_CMSIS_ADC_DMA.md).
   Проверки: host Windows 96 (8 skips), F030 CTest 10/10; Linux три профиля
   × GCC13/14/15 подтверждены первоначальным и исправленным F030-прогонами.
   Далее преобразование в физические единицы и численные векторы, RTC/Sleep.
@@ -537,14 +537,14 @@ Offline SUCCESS. Незакрытые отметки в исходном пла�
   6/6 HW PASS на Nucleo/ST-Link/OpenOCD; HAL восстановлен.
   Offline: Windows host 96 (8 skips), Linux docs/host/9 firmware pairs 13/13 PASS,
   F030 CTest 7/7; strict ТЗ и формат PASS.
-  [Протокол](../ru/F030_CMSIS_TIMER.md). Далее ADC/DMA/арифметика, RTC, Sleep.
+  [Протокол](../evidence/ru/F030_CMSIS_TIMER.md). Далее ADC/DMA/арифметика, RTC, Sleep.
 
 
 - `codex/f030-cmsis-baseline` от `4601888`: первый этап CMSIS F030,
   boot/clock/GPIO/blink — 4/4 HW PASS (ST-Link/OpenOCD), HAL восстановлен.
   Windows host: 96 тестов, 8 skips; Linux docs/host/firmware: 13/13 PASS,
   F030/F103/F411 × GCC13/14/15; strict ТЗ: 0 ошибок/предупреждений.
-  [Протокол](../ru/F030_CMSIS_BASELINE.md). Следующий этап — таймер/IRQ,
+  [Протокол](../evidence/ru/F030_CMSIS_BASELINE.md). Следующий этап — таймер/IRQ,
   далее ADC/DMA/RTC. Оптимизация CI остаётся после переноса примеров.
 
 
@@ -715,7 +715,7 @@ Host Windows/Linux: 596 тестов; отдельные проверки при
 Исследовательский пилот P4 F411 на API 3: 12/12 ожидаемых исходов, Flash/SRAM и
 сохранённые регистры независимо сверены. Это происхождение публичного примера,
 не аппаратная приёмка его нового коммита. Новых запусков плат при переносе нет.
-Границы — [пример](../ru/LIVE_OBSERVER.md) и [приёмка](../ru/API_ACCEPTANCE.md).
+Границы — [пример](../ru/LIVE_OBSERVER.md) и [приёмка](../evidence/ru/API_ACCEPTANCE.md).
 
 Далее inspect/HIL и квалификация платы/условия свидетельств DDTT; P5 на одном
 кандидате (Windows/Linux, Renode/QEMU, шесть стендов по возможностям, потребители);

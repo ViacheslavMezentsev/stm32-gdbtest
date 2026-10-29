@@ -7,7 +7,7 @@
 ## Настройка
 
 Backend `jlink` использует SEGGER J-Link GDB Server для Windows/Linux, включая используемые arm64-стенды.
-Наличие устройства у SEGGER не означает его приёмку модулем: версии и MCU — в [матрице](../API_ACCEPTANCE.md).
+Наличие устройства у SEGGER не означает его приёмку модулем: версии и MCU — в [матрице](../../evidence/ru/API_ACCEPTANCE.md).
 
 ```toml
 [probe]

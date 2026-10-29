@@ -138,7 +138,7 @@ t.check("thread resumes", t.read(f"*(unsigned int*){icsr_address} & {active_mask
 addresses. Do not replace the lost context with an arbitrary address constant.
 **Environment:** the 32-bit STM32 memory map; the address is valid within the same session and ELF.
 **Boundary:** this works around a lost macro context; it does not prove that reading the register is safe.
-[RTC deadline: the original ERROR and the fix](F030_RTC_DEADLINE.md),
+[RTC deadline: the original ERROR and the fix](../evidence/en/F030_RTC_DEADLINE.md),
 [rtc_alarm, rtc_deadline](../../tests/firmware/profiles/f030r8/tests/board/test_rtc.py).
 
 <a id="tech-003"></a>
@@ -158,7 +158,7 @@ debugger does not measure performance; a software IRQ does not prove a physical 
 not clear flags and does not prove the physical IRQ source.
 RTC is adapted per family: F103 uses counter/alarm with re-arming in the main thread, F4 a masked
 calendar Alarm A; do not move the F030 dividers (LSI 40 kHz) to F4 (32 kHz).
-[CMSIS RTC](F030_CMSIS_RTC.md), [RTC/Sleep F411](F411_CMSIS_RTC_SLEEP.md),
+[CMSIS RTC](../evidence/en/F030_CMSIS_RTC.md), [RTC/Sleep F411](../evidence/en/F411_CMSIS_RTC_SLEEP.md),
 [rtc_alarm](../../tests/firmware/profiles/f030r8/tests/board/test_rtc.py),
 [HAL power](../../tests/hal-f030/hal_scenarios/power.py).
 
@@ -187,7 +187,7 @@ the receiver takes the forced 0 and enters its zero-result branch, which is visi
 DMA has already completed — this is not a DMA timeout on the bus. After the injection, `reset_run` and
 a positive run.
 [ret](api/ret.md), [inject_zero](../../tests/firmware/common/tests/board/test_inject_zero.py),
-[HAL runtime](../../tests/hal-f030/hal_scenarios/peripheral_runtime.py), [HAL fixture](F030_HAL_REGRESSION.md).
+[HAL runtime](../../tests/hal-f030/hal_scenarios/peripheral_runtime.py), [HAL fixture](../evidence/en/F030_HAL_REGRESSION.md).
 
 The [injection scenario](../../tests/firmware/common/tests/board/test_event_injection.py) compares two paths to a zero result: natural counter wrap and `ret("0")`. The latter skips producer side effects. Check both the receiver branch and producer state; the same result does not imply the same execution.
 
@@ -221,7 +221,7 @@ guard in the source before the dereference ([TECH-009](#tech-009)).
 SysTick runs, the external runner timeout is mandatory.
 **Boundary:** the software deadline of one stage is checked, not a physical LSI failure and not the
 accuracy of 1000 ms. After the injection, `reset_run` and a positive `HW_CI_RTC_ALARM`.
-[rtc_deadline](../../tests/firmware/profiles/f030r8/tests/board/test_rtc.py), [protocol](F030_RTC_DEADLINE.md).
+[rtc_deadline](../../tests/firmware/profiles/f030r8/tests/board/test_rtc.py), [protocol](../evidence/en/F030_RTC_DEADLINE.md).
 
 Temporarily change inputs through a context manager restoring them in `finally`. The [example](../../tests/firmware/common/tests/board/test_event_injection.py) restores only declared ticks/led fields, including exceptional exit. This does not roll back the PC, peripherals, time or the entire program state.
 
@@ -243,7 +243,7 @@ Finish planned restoration with a normal acquisition repeat. Unknown restoration
 
 Older ADC scenarios use ordinary write; they are historical implementations, not examples
 of the API 3 MMIO contract. For new code use [MMIO/SVD](MMIO.md),
-[driver consistency](#tech-023) and [acceptance limits](API_ACCEPTANCE.md).
+[driver consistency](#tech-023) and [acceptance limits](../evidence/en/API_ACCEPTANCE.md).
 
 **Check the model before using it.** Establish which peripheral properties are modeled:
 register access, side effects, protection, completion and errors. A limited Flash model used with
@@ -273,7 +273,7 @@ t.check([(f"board_adc_reading.{field}", f"board_adc_reading.{field}", value)
 **Environment:** available arguments, sizes and signedness of the C types, MCU calibration data.
 **Boundary:** arithmetic is checked, not sensor accuracy; mdegC does not promise 0.001 °C accuracy.
 Do not move the F4 two-point calibration to F030.
-[F030 vectors](F030_CMSIS_ADC_UNITS.md), [adc_vectors F030](../../tests/firmware/profiles/f030r8/tests/board/test_ci.py),
+[F030 vectors](../evidence/en/F030_CMSIS_ADC_UNITS.md), [adc_vectors F030](../../tests/firmware/profiles/f030r8/tests/board/test_ci.py),
 [adc F103](../../tests/firmware/profiles/f103c8/tests/board/test_adc.py).
 
 <a id="tech-008"></a>
@@ -297,8 +297,8 @@ kept in the report. F103: RTC Alarm (IRQ41) is in the second NVIC bank; save and
 Re-arm the RTC in thread mode, where SysTick runs.
 **Boundary:** this is not a current or sleep-duration measurement and not a Stop/Standby check. IRQ
 isolation changes the environment: restore in `finally`, then `reset_run`; a failed restore is not hidden.
-[sleep F030](../../tests/firmware/profiles/f030r8/tests/board/test_sleep.py), [protocol](F030_CMSIS_SLEEP.md),
-[F103](F103_CMSIS_RTC_SLEEP.md).
+[sleep F030](../../tests/firmware/profiles/f030r8/tests/board/test_sleep.py), [protocol](../evidence/en/F030_CMSIS_SLEEP.md),
+[F103](../evidence/en/F103_CMSIS_RTC_SLEEP.md).
 
 <a id="tech-009"></a>
 ## TECH-009 — HAL arguments and the verified source variant
@@ -310,7 +310,7 @@ argument fields are checked with a table in its frame using HAL identifiers (`"G
 against `"GPIO_MODE_OUTPUT_PP"`); the register is checked separately after the call. A NULL injection
 is allowed only after reviewing the guard before the dereference. The HAL package name does not replace
 the source hash: the mutable and the `const` RCC variants need different strict contracts; an unknown
-hash is an error. [Scenarios and boundaries](F030_HAL_GPIO_RCC.md),
+hash is an error. [Scenarios and boundaries](../evidence/en/F030_HAL_GPIO_RCC.md),
 [hal_methods](../../tests/hal-f030/profile/tests/board/test_hal_methods.py).
 A source review does not prove the behavior on hardware.
 

@@ -206,7 +206,7 @@ Ubuntu 20.04/OrangePi was checked with a separate 1.9.0 build and libusb 1.0.27.
 is not accepted for the public backend. The [dedicated page](backends/st-util.md) includes comparison,
 a complete build recipe without replacing system libraries, remote TOML and diagnosis.
 `tools/linux_stand.py` does not install st-util yet; CMake comes from the stand environment.
-Full SSH suites and recovery on five STM32 boards passed; see the [matrix](API_ACCEPTANCE.md).
+Full SSH suites and recovery on five STM32 boards passed; see the [matrix](../evidence/en/API_ACCEPTANCE.md).
 
 ## Shutdown diagnostics
 

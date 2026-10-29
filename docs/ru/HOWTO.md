@@ -274,7 +274,7 @@ Windows PowerShell 5.1 (`powershell`) при `$ErrorActionPreference = 'Stop'` �
 
 ## Не сравнивайте зарезервированные биты MMIO
 
-F030 ADC CFGR2 в опыте читался как 0x1000 при CKMODE=0. Проверяйте документированное поле `ADC1->CFGR2 & ADC_CFGR2_CKMODE`, не весь регистр. Сверяйте маску с header/RM нужного MCU; не маскируйте неожиданный результат без анализа. [Протокол](F030_CMSIS_ADC_DMA.md).
+F030 ADC CFGR2 в опыте читался как 0x1000 при CKMODE=0. Проверяйте документированное поле `ADC1->CFGR2 & ADC_CFGR2_CKMODE`, не весь регистр. Сверяйте маску с header/RM нужного MCU; не маскируйте неожиданный результат без анализа. [Протокол](../evidence/ru/F030_CMSIS_ADC_DMA.md).
 
 Собственные профили/примеры и новые пакеты используют `tests`; чтение старых `Tests` сохранено. Локальные remote-стенды — `<profile>-<backend>.remote.toml` (`openocd`, `jlink`, `stlink`), исключённые из Git. После переименования повторить configure. [Соглашения](maintenance.md).
 
@@ -345,7 +345,7 @@ CTest prepare и CLI run пишут result.json в session.out. Выполняй
 ## Одинаковое имя Cube-пакета, разные RCC сигнатуры
 
 Не выбирайте HAL contracts по Windows/Linux или имени CubeF0 V1.11.6.
-[Разбор F030](F030_HAL_GPIO_RCC.md) показывает mutable/const различие между
+[Разбор F030](../evidence/ru/F030_HAL_GPIO_RCC.md) показывает mutable/const различие между
 установленным пакетом и gitlink CI. Используйте reviewed source hash и строгие
 ELF-типы. Неизвестный hash требует review, а не отключения preflight.
 CMake build с путями /workspace нельзя использовать как Windows cache:

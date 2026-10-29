@@ -7,7 +7,7 @@ the live-observer example and the demo consumers
 [stm32-hwtest-bluepill](https://github.com/ViacheslavMezentsev/stm32-hwtest-bluepill) and
 [stm32-hwtest-blackpill](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill).
 MCU profiles are described in [MCU profiles](MCU_PROFILES.md), debug servers in [GDB servers](BACKENDS.md),
-process placement in [run layouts](RUN_LAYOUTS.md), results in [acceptance](API_ACCEPTANCE.md).
+process placement in [run layouts](RUN_LAYOUTS.md), results in [acceptance](../evidence/en/API_ACCEPTANCE.md).
 
 The drawings are schematic top views at one scale (1 mm = 6 pixels), oriented as in the stand photos.
 They show only what matters for a stand: MCU, connectors, buttons, LEDs, crystals, pin headers and SWD.

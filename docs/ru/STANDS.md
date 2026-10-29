@@ -7,7 +7,7 @@
 [stm32-hwtest-bluepill](https://github.com/ViacheslavMezentsev/stm32-hwtest-bluepill) и
 [stm32-hwtest-blackpill](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill).
 Профиль MCU описан в [профилях](MCU_PROFILES.md), отладчики — в [GDB-серверах](BACKENDS.md),
-размещение процессов — в [схемах запуска](RUN_LAYOUTS.md), результаты — в [приёмке](API_ACCEPTANCE.md).
+размещение процессов — в [схемах запуска](RUN_LAYOUTS.md), результаты — в [приёмке](../evidence/ru/API_ACCEPTANCE.md).
 
 Рисунки — схематичный вид сверху в одном масштабе (1 мм = 6 пикселей), ориентация как на снимках стендов.
 Показаны только детали, важные для стенда: MCU, разъёмы, кнопки, светодиоды, кварцы, гребёнки и SWD.

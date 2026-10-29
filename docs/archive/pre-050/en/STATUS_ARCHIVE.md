@@ -33,17 +33,17 @@ Selected API040 GitHub/WSL/Windows checks each yielded 20 PASS + 5 SKIP; details
 
 Historical stages follow; [v0.2.0-rc.1 preparation](RC020_READINESS.md) is kept for reference.
 
-[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](../../../en/F429_CMSIS_RTC_SLEEP.md)
+[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](../../../evidence/en/F429_CMSIS_RTC_SLEEP.md)
 
-[F429 ADC/DMA/units/failures:15/15 HW +3 repeats, HAL restored; specification0.56.](../../../en/F429_CMSIS_ADC_DMA.md)
+[F429 ADC/DMA/units/failures:15/15 HW +3 repeats, HAL restored; specification0.56.](../../../evidence/en/F429_CMSIS_ADC_DMA.md)
 
-[F429 CMSIS baseline:7/7 HW, HAL restored; specification0.55. Fifth CI profile; ADC/RTC remain pending.](../../../en/F429_CMSIS_BASELINE.md)
+[F429 CMSIS baseline:7/7 HW, HAL restored; specification0.55. Fifth CI profile; ADC/RTC remain pending.](../../../evidence/en/F429_CMSIS_BASELINE.md)
 
-[F401 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.54.](../../../en/F401_CMSIS_RTC_SLEEP.md)
+[F401 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.54.](../../../evidence/en/F401_CMSIS_RTC_SLEEP.md)
 
-[F401 ADC/DMA/units/failures:15/15 HW and three positive repeats, HAL restored; specification0.53.](../../../en/F401_CMSIS_ADC_DMA.md)
+[F401 ADC/DMA/units/failures:15/15 HW and three positive repeats, HAL restored; specification0.53.](../../../evidence/en/F401_CMSIS_ADC_DMA.md)
 
-[F401 CMSIS baseline: 7/7 HW through ST-Link/OpenOCD, HAL boot/blink restored. Flash256/RAM64; ADC/RTC are not migrated yet.](../../../en/F401_CMSIS_BASELINE.md)
+[F401 CMSIS baseline: 7/7 HW through ST-Link/OpenOCD, HAL boot/blink restored. Flash256/RAM64; ADC/RTC are not migrated yet.](../../../evidence/en/F401_CMSIS_BASELINE.md)
 
 rc.2 snapshot: 5b7b466. Docs/Offline/Hardware SUCCESS; all 27 GitHub JSON reports verified.
 Windows: F030 CMSIS 18/18, HAL 17/17 with repeats/recovery; F030/OpenOCD,
@@ -52,7 +52,7 @@ USB reconnect, not an uninterrupted 10/10; the USB failure cause is unknown.
 All original HAL images restored. [Evidence and remaining gates](RC2_READINESS.md).
 
 rc.2 published at a0d6547. Post-tag F103 baseline (352417c) and ADC/DMA
-(3e123ad) landed. New [RTC/Sleep](../../../en/F103_CMSIS_RTC_SLEEP.md):
+(3e123ad) landed. New [RTC/Sleep](../../../evidence/en/F103_CMSIS_RTC_SLEEP.md):
 20/20 HW, five positive repeats, timeout/recovery and HAL restore PASS.
 Initial restore ACL errors are preserved in the evidence.
 
@@ -68,7 +68,7 @@ Initial restore ACL errors are preserved in the evidence.
 | minimal-consumer F411 | Separate CMake integration example without YAML; demonstrates module integration, not complete board peripherals |
 | BlackPill consumer | fb2d186 / module 67b7431: Offline SUCCESS, five profiles/120 CTest; Windows 25/25, F411/OpenOCD 22/22 + timeout/recovery/restore. Final gitlink follows module land |
 
-Sources: [HAL→CMSIS](../../../en/F030_CMSIS_ACCEPTANCE.md), [HAL protocol](../../../en/F030_HAL_VALIDATION.md),
+Sources: [HAL→CMSIS](../../../evidence/en/F030_CMSIS_ACCEPTANCE.md), [HAL protocol](../../../evidence/en/F030_HAL_VALIDATION.md),
 [techniques](../../../en/TESTING_TECHNIQUES.md), [CI](../../../en/testing.md).
 The current Nucleo stand uses native ST-Link/OpenOCD; J-Link STLink results below are historical.
 F103 is WeAct BluePill-Plus/J-Link; F411 is BlackPill/ST-Link with OpenOCD and ST server.
@@ -212,15 +212,15 @@ diagnostic registers available on M0, without CFSR/HFSR. This does not check eve
 Cortex-M0 or every F0 backend combination.
 [Consumer protocol](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/F030_JLINK_VALIDATION.md) (Russian).
 
-[F411 CMSIS baseline](../../../en/F411_CMSIS_BASELINE.md): HSI16, PC13, SysTick, TIM2; post-rc.2.
+[F411 CMSIS baseline](../../../evidence/en/F411_CMSIS_BASELINE.md): HSI16, PC13, SysTick, TIM2; post-rc.2.
 
-[F411 ADC/DMA](../../../en/F411_CMSIS_ADC_DMA.md): factory calibration, numerical vectors and state faults.
+[F411 ADC/DMA](../../../evidence/en/F411_CMSIS_ADC_DMA.md): factory calibration, numerical vectors and state faults.
 
-[F411 RTC/Sleep](../../../en/F411_CMSIS_RTC_SLEEP.md): calendar Alarm A, WFI and recovery.
+[F411 RTC/Sleep](../../../evidence/en/F411_CMSIS_RTC_SLEEP.md): calendar Alarm A, WFI and recovery.
 
-[Five-profile acceptance review and remaining HAL checks](../../../en/CMSIS_ACCEPTANCE.md).
+[Five-profile acceptance review and remaining HAL checks](../../../evidence/en/CMSIS_ACCEPTANCE.md).
 
-[HAL F030: five GPIO/RCC techniques and source variants](../../../en/F030_HAL_GPIO_RCC.md).
+[HAL F030: five GPIO/RCC techniques and source variants](../../../evidence/en/F030_HAL_GPIO_RCC.md).
 
 ## Final release handoff
 

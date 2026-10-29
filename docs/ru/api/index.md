@@ -152,4 +152,4 @@
 
 Target передаётся агентом; создавать его не нужно. Вызовы GDB выполняются только в основном потоке GDB; `boot`, `close`, `on_stop`, `report`, `owned`, `stops` — внутренние детали. Примеры требуют указанной прошивки и места остановки.
 
-Связанные страницы: [каталог техник](../TESTING_TECHNIQUES.md) · [конфигурация и миграция](../API.md) · [живое окно](../LIVE_EXECUTION.md) · [регистры MMIO](../MMIO.md) и [SVD](../SVD.md) · [переход на 0.5.0](../MIGRATION_050.md) · [приёмка](../API_ACCEPTANCE.md) · [ТЗ API](../../TECHNICAL_SPECIFICATION_API.md). Офлайн-проверка связей — [CLI inspect](../HIL_INSPECT.md), не метод Target.
+Связанные страницы: [каталог техник](../TESTING_TECHNIQUES.md) · [конфигурация и миграция](../API.md) · [живое окно](../LIVE_EXECUTION.md) · [регистры MMIO](../MMIO.md) и [SVD](../SVD.md) · [переход на 0.5.0](../MIGRATION_050.md) · [приёмка](../../evidence/ru/API_ACCEPTANCE.md) · [ТЗ API](../../TECHNICAL_SPECIFICATION_API.md). Офлайн-проверка связей — [CLI inspect](../HIL_INSPECT.md), не метод Target.

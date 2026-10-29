@@ -49,4 +49,4 @@ svd.integrity (хеш/проверка сохранённого снимка), s
 Контракт операций, override и граница гарантии описаны в [справочнике MMIO](api/mmio.md).
 
 
-Аппаратная приёмка 16.10.2026: шесть MCU, 141 проверка выбранного 32-битного GPIO/DMA маршрута, recovery VERIFIED. Границы и матрица — [API_ACCEPTANCE](API_ACCEPTANCE.md).
+Аппаратная приёмка 16.10.2026: шесть MCU, 141 проверка выбранного 32-битного GPIO/DMA маршрута, recovery VERIFIED. Границы и матрица — [API_ACCEPTANCE](../evidence/ru/API_ACCEPTANCE.md).

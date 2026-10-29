@@ -84,7 +84,7 @@ W1C, 8/16/32 bits, inheritance, lost ACK and incorrect SVD. Host regression:
 
 The connection must serve exactly one inferior: raw packets do not select a process on a multiprocess remote server.
 
-Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](../API_ACCEPTANCE.md).
+Hardware acceptance on 2026-10-16: six MCUs, 141 assertions for the selected 32-bit GPIO/DMA route, recovery VERIFIED. Scope and matrix: [API_ACCEPTANCE](../../evidence/en/API_ACCEPTANCE.md).
 
 ## Reason and combined failures (0.6.0)
 
