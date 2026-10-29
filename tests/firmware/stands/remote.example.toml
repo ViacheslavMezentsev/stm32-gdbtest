@@ -1,6 +1,6 @@
 # GDB server and debugger on a Linux stand host (e.g. Orange Pi 5), runner on this computer.
 # Copy to <profile>-<backend>.remote.toml, e.g. f411ce-openocd.remote.toml or f411ce-jlink.remote.toml
-# (Git ignores *.remote.toml). SSH keys only: no passwords here (docs/en/LINUX_STAND.md).
+# (Git ignores *.remote.toml). SSH keys only: no passwords here (docs/guides/en/LINUX_STAND.md).
 [probe]
 # GDB server backend: "openocd", "stlink", "jlink" or "st-util"; required. Backend-specific fields differ.
 backend = "openocd"                      # or "jlink" / "st-util" on arm64; "stlink" requires x86_64

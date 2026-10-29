@@ -15,7 +15,7 @@ The scenario and the report are the same in every layout; only the local stand f
 
 Verified scope per route: [0.5.0 matrix](../development/release-050-acceptance.md).
 A diagram does not establish hardware acceptance for every OS/backend/MCU.
-[Renode](RENODE.md), [QEMU](QEMU.md).
+[Renode](../guides/en/RENODE.md), [QEMU](../guides/en/QEMU.md).
 
 ### Local run: Windows or Linux
 
@@ -110,6 +110,6 @@ flowchart LR
 Remote mode uses SSH keys only; the debugger lock is held on the stand host and the
 link is watched by a heartbeat. ST-LINK GDB Server is not available on Linux aarch64
 (ST does not ship it for arm64), so OpenOCD, J-Link and st-util are used on Orange Pi.
-Details: [Linux stand](LINUX_STAND.md), [GDB servers](BACKENDS.md).
+Details: [Linux stand](../guides/en/LINUX_STAND.md), [GDB servers](../guides/en/BACKENDS.md).
 
 [Reading metrics](HARDWARE_METRICS.md).

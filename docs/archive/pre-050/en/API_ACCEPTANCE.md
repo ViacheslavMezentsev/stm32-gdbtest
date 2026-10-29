@@ -99,7 +99,7 @@ Unaccepted results and limits:
   reconnection passed 10/10 and the full suite. The original failure is retained.
 - A direct bind mount of the Windows working directory hit the 600-second host
   timeout. A clean Linux volume passed in 26 seconds. These are different storage
-  layouts; no speedup ratio is established. Use the [volume recipe](../../../en/local-ci.md).
+  layouts; no speedup ratio is established. Use the [volume recipe](../../../guides/en/local-ci.md).
 - GitHub Hardware 38008347735: F429 passed 10/10; F103 strict failed after reading
   AT32 ID `0x70050347` instead of STM32 ID `0x410`. Fix the remote profile/probe
   mapping before the next run; strict identity remains enabled.
@@ -137,7 +137,7 @@ Runtime server version may be `null` when stdout is not flushed before terminati
 doctor confirms 1.9.0 separately. st-util and ST-LINK GDB Server are distinct backends:
 this PASS does not close question 11.2.27 about the ST server. OrangePi/Linux/SSH for
 st-util has configuration host tests only, without a hardware run.
-[Setup and limits](../../../en/BACKENDS.md#st-util-v040), [installation](../../../en/LINUX_STAND.md#st-util).
+[Setup and limits](../../../guides/en/BACKENDS.md#st-util-v040), [installation](../../../guides/en/LINUX_STAND.md#st-util).
 
 ### Comparing GDB clients on F411/ST-LINK
 
@@ -307,7 +307,7 @@ st-util40 exit0 completions with helper idle; OpenOCD30 requested SIGTERM/exit-1
 
 The first run on previous runtime stopped on F030: parser did not recognize the Listening ellipsis.
 After2/2 restoration checks the format was fixed and host regression passed (426 tests, Docker docs+host6/6).
-Redirected Windows doctor required explicit UTF-8 ([HOWTO](../../../en/HOWTO.md)). Disconnect, GDB encoding, missing
+Redirected Windows doctor required explicit UTF-8 ([HOWTO](../../../guides/en/HOWTO.md)). Disconnect, GDB encoding, missing
 recovery ELF, SWD speed and F103 Flash capacity diagnostics are retained. F429 SP/SRAM anomaly did not
 recur in this series; its previous cause remains unknown. This is a short lifecycle check; full suites
 on new runtime, long series and deliberate SSH loss with real USB remain separate checks. Absence of
@@ -369,7 +369,7 @@ the sixth board new scenarios are verified on Windows and Linux/GitHub. [API040]
 - Existing neutral startup/DDTT example: 3/3. Docs/host/format: 7/7 groups.
 
 Repeat with `tests/renode-startup/run_contracts.py`; arguments and revision comparison are documented in
-[Renode](../../../en/RENODE_PROBES.md#memorywrite-regression). ELF -O0/-g3; ordinary RAM, Cortex-M3 model.
+[Renode](../../../guides/en/RENODE_PROBES.md#memorywrite-regression). ELF -O0/-g3; ordinary RAM, Cortex-M3 model.
 This is not P5 hardware acceptance; an actual short GDB response was not reproduced. Signatures and
 API_VERSION=2 remain unchanged; normative contract: API specification 0.3.17.
 
@@ -452,7 +452,7 @@ retained; the final repeat passed without increasing timeout.
 
 Host injections are not hardware faults. Physical MCU exceptions, USB loss, FPB/VTOR
 restoration and debugpy are not accepted by this package. No boards were used.
-Commands and semantics: [live execution](../../../en/LIVE_EXECUTION.md), [Renode](../../../en/RENODE.md).
+Commands and semantics: [live execution](../../../en/LIVE_EXECUTION.md), [Renode](../../../guides/en/RENODE.md).
 
 ## 2026-10-19 — local OpenOCD/J-Link graceful shutdown
 

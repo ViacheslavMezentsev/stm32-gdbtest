@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         Спасибо за сообщение! Перед отправкой / Before submitting:
-        1. Найдите метод в [справочнике API](https://viacheslavmezentsev.github.io/stm32-gdbtest/api/) и проверьте [памятку](https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/HOWTO.md) и [текущее состояние](https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/STATUS.md): отказ API с кодом (`ApiError`) часто описан там. Check the API reference, HOWTO and status first: an `ApiError` code is often documented there.
+        1. Найдите метод в [справочнике API](https://viacheslavmezentsev.github.io/stm32-gdbtest/api/) и проверьте [памятку](https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/guides/ru/HOWTO.md) и [текущее состояние](https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/STATUS.md): отказ API с кодом (`ApiError`) часто описан там. Check the API reference, HOWTO and status first: an `ApiError` code is often documented there.
         2. Запустите `python -m stm32_gdbtest doctor` для того же стенда. Run `doctor` for the same stand.
         3. **Замените серийные номера отладчиков, адреса хостов и личные пути** на `XXXX`, `stand-host` и `C:\project`. **Mask probe serial numbers, host addresses and personal paths.**
         4. Не прикладывайте ELF, закрытые исходники и локальные `*.local.toml` / `*.remote.toml`. Do not attach ELF files, private sources or local stand files.

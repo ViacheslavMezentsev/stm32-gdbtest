@@ -46,4 +46,4 @@ tests pass. Its environment URL or Visit site opens the report. Publication/acco
 are not performed by the tool. Do not replace an existing site without authorization.
 Workflow fragments: [pages.yml](../../examples/ddtt-coverage/pages.yml); not a standalone workflow.
 
-See [Renode](RENODE_PROBES.md) and the [coverage skill](../../skills/stm32-gdbtest-coverage/SKILL.md).
+See [Renode](../guides/en/RENODE_PROBES.md) and the [coverage skill](../../skills/stm32-gdbtest-coverage/SKILL.md).

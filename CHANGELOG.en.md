@@ -245,13 +245,13 @@ Release candidate: publication follows final hardware acceptance and CI at the r
 - Opt-in records.json capture through session.toml: separate command outcome and infrastructure JUnit error on artifact failure.
 
 
-- Cortex-M compatible MCUs from other vendors ([description](docs/en/COMPATIBLE_MCU.md)): the `at32f403a` profile
+- Cortex-M compatible MCUs from other vendors ([description](docs/guides/en/COMPATIBLE_MCU.md)): the `at32f403a` profile
   of the check firmware (WeAct AT32F4 Core Board, AT32F403ACGU7, J-Link) — a port to the Artery CMSIS and 20
   peripheral scenarios through the SDK bit fields; 44/44 on the board together with the shared scenarios. The
   Artery SDK is pinned in `ci/dependencies.lock.json`, `tools/vendor_sdk.py` installs it locally; the build
   manifest records the Artery package.
 - Compatible MCU documentation: the README names AT32F403ACGU7 and the validation limits, [compatible
-  MCUs](docs/en/COMPATIBLE_MCU.md) give the step-by-step procedure for your own chip; the [HOWTO](docs/en/HOWTO.md)
+  MCUs](docs/guides/en/COMPATIBLE_MCU.md) give the step-by-step procedure for your own chip; the [HOWTO](docs/guides/en/HOWTO.md)
   covers branch push order, bundles and cherry-pick, the CTest stand, write-only registers and the CI failures of the
   recent changes.
 
@@ -521,7 +521,7 @@ server limitation: manual USB reconnection was required. Signed tag published at
 
 - Prepared the [separate F030 HAL regression plan](docs/evidence/en/F030_HAL_REGRESSION.md): sources,17 scenarios, limits and four stages. Documentation only; specification0.37/G.13 and API unchanged.
 
-- Owned profiles/examples and new packages use `tests`; old `Tests` inputs remain supported. Local remote stands use ignored `remote.toml` / `<profile>-remote.toml`. Reconfigure after renaming. [Conventions](docs/en/maintenance.md). Specification0.37.
+- Owned profiles/examples and new packages use `tests`; old `Tests` inputs remain supported. Local remote stands use ignored `remote.toml` / `<profile>-remote.toml`. Reconfigure after renaming. [Conventions](docs/guides/en/maintenance.md). Specification0.37.
 
 - [F030 HAL→CMSIS mapping and branch batch order](docs/evidence/en/F030_CMSIS_ACCEPTANCE.md).
 

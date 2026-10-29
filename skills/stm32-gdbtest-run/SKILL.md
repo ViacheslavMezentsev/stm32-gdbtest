@@ -14,9 +14,9 @@ metadata:
 
 Пути — от корня модуля (`modules/stm32-gdbtest/` у потребителя); CLI из любого каталога —
 `python -B <модуль>/stm32_gdbtest/cli.py`, из корня модуля — `python -B -m stm32_gdbtest`.
-Подробности: [проверки и CI](../../docs/ru/testing.md), [памятка](../../docs/ru/HOWTO.md),
-[Linux-стенд](../../docs/ru/LINUX_STAND.md), [аппаратный CI](../../docs/ru/HARDWARE_CI.md),
-[владение отладчиком](../../docs/ru/DEBUGGER_OWNERSHIP.md).
+Подробности: [проверки и CI](../../docs/guides/ru/testing.md), [памятка](../../docs/guides/ru/HOWTO.md),
+[Linux-стенд](../../docs/guides/ru/LINUX_STAND.md), [аппаратный CI](../../docs/guides/ru/HARDWARE_CI.md),
+[владение отладчиком](../../docs/guides/ru/DEBUGGER_OWNERSHIP.md).
 
 ## Правила для агента
 
@@ -87,7 +87,7 @@ metadata:
 общий журнал/проекции, независимые исходы export/verify/report. В session.toml `[results] capture = true`
 включает сохранение records; отсутствие capture не означает пустой журнал.
 
-Для каждого backend читай [отдельную страницу](../../docs/ru/BACKENDS.md). st-util 1.6.0 и 1.9.0
+Для каждого backend читай [отдельную страницу](../../docs/guides/ru/BACKENDS.md). st-util 1.6.0 и 1.9.0
 не взаимозаменяемы по подтверждённым результатам. На OrangePi GitHub self-hosted job с локальным
 [probe] исполняет runner/GDB/server на одном хосте; это не SSH-схема.
 Создавай новый каталог для каждой попытки. На Windows выбирай короткий --workdir/--output:
@@ -112,7 +112,7 @@ metadata:
 | `reach` ждёт до таймаута | функция встроена (LTO) или уже выполнена; сборка без LTO, другое место остановки |
 | Макрос не найден | остановка вне единицы трансляции с заголовком устройства или сборка без `-g3` |
 
-Полный список — [памятка](../../docs/ru/HOWTO.md).
+Полный список — [памятка](../../docs/guides/ru/HOWTO.md).
 
 ## Отчёт владельцу
 

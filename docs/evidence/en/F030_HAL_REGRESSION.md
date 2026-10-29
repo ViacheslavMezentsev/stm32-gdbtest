@@ -114,7 +114,7 @@ the connected board firmware was not changed.
 ## CI stage (2026-10-01)
 
 codex/f030-hal-ci from a3898ff adds the mandatory hal level to Offline.
-[Checks and local invocation](../../en/testing.md#f030-hal-in-offline-ci).
+[Checks and local invocation](../../guides/en/testing.md#f030-hal-in-offline-ci).
 HAL F0 uses the CubeF0 gitlink:0cf0218694f30a90d11ff9e53c1908bf9e745443.
 The new pinned Docker image built successfully and passed environment verification.
 An isolated Linux filesystem, network disabled: full15/15 PASS — docs3 + format1 +

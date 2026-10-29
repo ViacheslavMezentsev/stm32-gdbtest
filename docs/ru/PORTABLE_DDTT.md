@@ -47,5 +47,5 @@ id-token:write, только после успешных тестов. Его en
 Автоматическая публикация и настройки аккаунта не входят в инструмент. Сайт репозитория может
 уже иметь содержимое — не заменяйте его без поручения. Фрагменты для включения в свой workflow: [pages.yml](../../examples/ddtt-coverage/pages.yml); это не самостоятельный workflow.
 
-Короткая проверка без платы — [Renode](RENODE_PROBES.md). Навык —
+Короткая проверка без платы — [Renode](../guides/ru/RENODE_PROBES.md). Навык —
 [coverage](../../skills/stm32-gdbtest-coverage/SKILL.md).

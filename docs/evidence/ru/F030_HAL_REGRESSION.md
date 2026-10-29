@@ -115,7 +115,7 @@ docs/format/host5/5 PASS (host97,8 skips). Linux GCC13: изолированны
 ## CI-этап (01.10.2026)
 
 codex/f030-hal-ci от a3898ff добавляет обязательный уровень hal в Offline.
-[Состав проверки и локальный запуск](../../ru/testing.md#hal-f030-в-offline-ci).
+[Состав проверки и локальный запуск](../../guides/ru/testing.md#hal-f030-в-offline-ci).
 HAL F0 взят из gitlink CubeF0: 0cf0218694f30a90d11ff9e53c1908bf9e745443.
 Новый закреплённый Docker-образ успешно собран и прошёл verify environment.
 В изолированной Linux-файловой системе без сети полный набор15/15 PASS:

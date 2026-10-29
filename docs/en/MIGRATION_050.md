@@ -19,7 +19,7 @@ registers through GDB expressions. The steps below follow the migration of the d
 | Peripheral registers | GDB expressions over addresses and macros | `t.mmio.read/write` over an SVD snapshot with access rights and effects ([mmio](api/mmio.md)) | `[mmio] svd` in `session.toml`, replace accesses, explicit `allow_effects` |
 | Package | Configuration capsule schema 1 | Schema 2 when an SVD is set (schema 1 without it) | The package receiver must support schema 2 |
 | Configuration | Checked at run time | Offline `inspect` command ([guide](HIL_INSPECT.md)) | Check every profile before prepare |
-| Emulators | — | target schema 3 for Renode/QEMU ([Renode](RENODE.md), [QEMU](QEMU.md)) | Only for the new route; do not move hardware targets |
+| Emulators | — | target schema 3 for Renode/QEMU ([Renode](../guides/en/RENODE.md), [QEMU](../guides/en/QEMU.md)) | Only for the new route; do not move hardware targets |
 | Skills | Previous header | Agent Skills format, `metadata.version` 0.5.0 ([skills](../../skills/README.en.md)) | Refresh `.claude/skills` copies together with the gitlink |
 
 ## Steps

@@ -67,7 +67,7 @@ OpenOCD, ST-LINK GDB Server, st-util и J-Link. API содержит навиг�
 
 - Длительные F411/F030-прогоны ST-LINK GDB Server не приняты из-за повторяемого USB ERROR.
   Владелец принял v0.4.0 с этим ограничением; успешный OpenOCD/st-util его не закрывает.
-- st-util 1.6.0 и 1.9.0 имеют разные подтверждённые границы; см. [backend st-util](../../../ru/backends/st-util.md).
+- st-util 1.6.0 и 1.9.0 имеют разные подтверждённые границы; см. [backend st-util](../../../guides/ru/backends/st-util.md).
 - Linux x86_64 с локальным USB и WSL2/usbipd аппаратно не приняты; поддержка новой платы
   требует проверки конкретного MCU, GDB, сборки и backend. H503 не принят.
 - Открыты диагностика бинарного USB serial, причина прежней аномалии F429 SP/SRAM и границы

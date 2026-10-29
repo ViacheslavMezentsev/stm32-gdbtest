@@ -40,7 +40,7 @@ stm32_gdbtest_attach(firmware_target
   the firmware target before `stm32_gdbtest_attach`.
 - One firmware target of the top-level CMake directory, the Ninja generator and a
   build directory inside `PROJECT_SOURCE_DIR` are supported. Build, build manifest
-  preparation and hardware runs work on Windows and Linux ([Linux stand](LINUX_STAND.md)).
+  preparation and hardware runs work on Windows and Linux ([Linux stand](../guides/en/LINUX_STAND.md)).
 - `PROFILE_DIR`, `PROFILE` and `MANIFEST_INPUTS` paths are absolute. `PROFILE_DIR`
   contains `tests/board/test_*.py`, `tests/requirements.md`, `tests/contracts.json`
   when contracts are used, and `target.toml`. Use `tests` for new projects; legacy `Tests` remains supported.
@@ -106,7 +106,7 @@ imported only inside GDB):
 
 `boot`, `close`, `on_stop`, `report`, `owned`, `stops` and Target creation are the
 agent's internal lifecycle. GDB calls are allowed only on its main thread. `-g3`
-keeps macros but not unused functions and symbols; see [HAL macros](HAL_MACRO_GUIDE.md)
+keeps macros but not unused functions and symbols; see [HAL macros](../guides/en/HAL_MACRO_GUIDE.md)
 and [contracts](CONTRACTS.md).
 
 ## CLI
@@ -163,7 +163,7 @@ checks of the stand host over SSH (`remote`, `remote-server`, `remote-lock`, `re
 
 `pack --session S --output P.zip [--test ID …] [--include PATH …]` prepares scenarios without
 hardware and writes a prepared run package; `run --package` checks the SHA-256 of every
-package file and adds a `package` field to the report ([hardware CI](HARDWARE_CI.md)).
+package file and adds a `package` field to the report ([hardware CI](../guides/en/HARDWARE_CI.md)).
 
 `collect --cmake/--workspace` is the CMake generation interface and is rarely used by hand.
 
@@ -176,8 +176,8 @@ compatibility 1, image policy 1, prepared run package 1. `session.json` is an in
 stable schema promise. Direct calls into `runner`, `contracts`, `processes` are an
 internal development API; consumers use CMake, the CLI and the Target operations.
 Details: [getting started](GETTING_STARTED.md), [manifest](MANIFESTS.md),
-[identity](TARGET_IDENTITY.md), [GDB servers](BACKENDS.md),
-[debugger ownership](DEBUGGER_OWNERSHIP.md). On Linux `STM32_GDBTEST_LOCK_DIR` sets the
+[identity](TARGET_IDENTITY.md), [GDB servers](../guides/en/BACKENDS.md),
+[debugger ownership](../guides/en/DEBUGGER_OWNERSHIP.md). On Linux `STM32_GDBTEST_LOCK_DIR` sets the
 base directory of the locks: by default the system temporary directory (`/tmp` or
 `TMPDIR`), with `stm32-gdbtest-locks` inside.
 

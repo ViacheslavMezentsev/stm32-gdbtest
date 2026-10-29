@@ -361,11 +361,11 @@ on OrangePi without the project; changing firmware needs sources and a compiler.
 | --- | --- | --- |
 | 6.1 | `@case`, collect, traceability, contracts | Requirement ID, selected scenario and ELF |
 | 6.2 | Target and GDB-Python; [reference](api/index.md) | Stop reason/location, values, current frame and MCU resources |
-| 6.3 | [Backends](BACKENDS.md), [SSH](LINUX_STAND.md) | Board/profile/probe match; doctor alone does not check the MCU |
+| 6.3 | [Backends](../guides/en/BACKENDS.md), [SSH](../guides/en/LINUX_STAND.md) | Board/profile/probe match; doctor alone does not check the MCU |
 | 6.4 | [runner.py](../../stm32_gdbtest/runner.py), [agent.py](../../stm32_gdbtest/agent.py) | ELF snapshot, identity, image verification, failure phase, teardown/recovery |
 | 6.5 | [reports.py](../../stm32_gdbtest/reports.py), [result_capture.py](../../stm32_gdbtest/result_capture.py) | Verdict, command code, capture and integrity separately |
 | 6.5 (0.6.0) | [Journal](JOURNALING.md) quotas and strict completeness, `records(require_complete=True)` | evidence.stores and check_accounting; a lost record gives command=2, an incomplete journal is not read as complete |
-| 6.6 | [Debugger ownership](DEBUGGER_OWNERSHIP.md) | One owner; stand-host lock; no killing foreign processes |
+| 6.6 | [Debugger ownership](../guides/en/DEBUGGER_OWNERSHIP.md) | One owner; stand-host lock; no killing foreign processes |
 | 6.7 | `run --prepare-only`, [contracts](CONTRACTS.md) | No server; NOT_REQUESTED is not a passed contract |
 | 6.8 | CLI, CTest, doctor, [stand_loop.py](../../tools/stand_loop.py) | Same package; separate attempts; explicit SKIP policy |
 | 6.8 (0.6.0) | `run --interactive`, [manual debugging](MANUAL_DEBUG.md) | Results in interactive-runs with execution_kind=interactive; such a run is not acceptance |
@@ -413,7 +413,7 @@ bounded live windows. [Execution](LIVE_EXECUTION.md), [MMIO](MMIO.md).
 These are responsibilities; runner/agent define exact failure branches. Prepare bypasses
 the hardware lock and server. Early failures leave some fields/logs absent. Power loss,
 USB failure or forced termination can leave the target state unknown.
-Commands, run passports and restoration: [local CI, L6](local-ci.md).
+Commands, run passports and restoration: [local CI, L6](../guides/en/local-ci.md).
 
 ### 10.4. Outcomes and artifacts
 

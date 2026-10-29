@@ -15,7 +15,7 @@
 
 Проверенный объём каждого маршрута — [матрица 0.5.0](../development/release-050-acceptance.md).
 Наличие схемы не означает аппаратную приёмку любого ОС/backend/MCU.
-[Renode](RENODE.md), [QEMU](QEMU.md).
+[Renode](../guides/ru/RENODE.md), [QEMU](../guides/ru/QEMU.md).
 
 ### Локальный запуск: Windows или Linux
 
@@ -110,7 +110,7 @@ flowchart LR
 Удалённый режим работает только по ключам SSH; блокировка отладчика действует на
 хосте стенда, связь контролируется сигналом присутствия. ST-LINK GDB Server на
 Linux aarch64 недоступен (ST не выпускает его для arm64), поэтому на Orange Pi
-используются OpenOCD, J-Link и st-util. Подробности: [Linux-стенд](LINUX_STAND.md),
-[GDB-серверы](BACKENDS.md).
+используются OpenOCD, J-Link и st-util. Подробности: [Linux-стенд](../guides/ru/LINUX_STAND.md),
+[GDB-серверы](../guides/ru/BACKENDS.md).
 
 [Как читать метрики](HARDWARE_METRICS.md).

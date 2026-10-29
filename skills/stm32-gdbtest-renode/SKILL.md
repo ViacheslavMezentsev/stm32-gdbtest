@@ -14,7 +14,7 @@ metadata:
 
 Найдите путь модуля и прочитайте `docs/ru/RENODE_PROBES.md`. Начинайте с готового примера
 `tests/renode-startup`; для отложенной записи и ограниченной модели Flash — `tests/renode-cache`.
-Выбери маршрут: [штатный backend](../../docs/ru/RENODE.md) и `tests/renode-backend`
+Выбери маршрут: [штатный backend](../../docs/guides/ru/RENODE.md) и `tests/renode-backend`
 для обычных @case либо tools/renode_probe.py для экспертной модели. Это разные
 запуски; probe не является приёмкой backend. debugpy в этот навык не входит.
 

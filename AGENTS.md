@@ -1,12 +1,12 @@
 # AGENTS.md
 
 Инструкция для ИИ-агентов и новых участников проекта **stm32-gdbtest**.
-Instructions for AI agents and new contributors ([English](docs/en/maintenance.md#working-with-the-project)).
+Instructions for AI agents and new contributors ([English](docs/guides/en/maintenance.md#working-with-the-project)).
 
 Порядок ознакомления, рабочий цикл, правила веток, коммитов, ТЗ и двуязычной
-документации описаны в [docs/ru/maintenance.md → «Порядок работы с проектом»](docs/ru/maintenance.md#порядок-работы-с-проектом).
+документации описаны в [docs/ru/maintenance.md → «Порядок работы с проектом»](docs/guides/ru/maintenance.md#порядок-работы-с-проектом).
 Начните с него. При проблеме с git, стендом, отладчиком или Docker сначала загляните
-в [памятку](docs/ru/HOWTO.md) ([English](docs/en/HOWTO.md)) и только потом ищите новое решение.
+в [памятку](docs/guides/ru/HOWTO.md) ([English](docs/guides/en/HOWTO.md)) и только потом ищите новое решение.
 
 Кратко:
 
@@ -27,11 +27,11 @@ Instructions for AI agents and new contributors ([English](docs/en/maintenance.m
 4. Работайте в ветке `<агент>/<задача>` от актуального main; префикс — имя
    создающего ветку агента или участника (`claude/`, `codex/`, `gemini/`, `dev/`, …).
    PR не используются: проверенная ветка сливается в main перемоткой (`git land`,
-   [памятка](docs/ru/HOWTO.md#git-рабочий-цикл-без-pr)), после чего удаляется.
+   [памятка](docs/guides/ru/HOWTO.md#git-рабочий-цикл-без-pr)), после чего удаляется.
 5. Изменение поведения или интерфейса — с host-регрессией, обновлением docs/ru/API.md и docs/en/API.md,
    карточки справочника `docs/*/api` и миграции, записью в CHANGELOG (RU и EN) и новой ревизией ТЗ
    (общего или ТЗ API — по месту требования). Проверки до
-   GDB-сервера — по [единому руководству локального CI](docs/ru/local-ci.md): прочитайте его
+   GDB-сервера — по [единому руководству локального CI](docs/guides/ru/local-ci.md): прочитайте его
    до запуска. На Windows исходники и сборки размещайте в одном Docker volume; bind mount
    используйте только для передачи архива. Выберите docs/host/матрицу по изменению,
    сохраняйте exit code и отчёты даже при ошибке; не увеличивайте таймауты вместо исправления I/O.

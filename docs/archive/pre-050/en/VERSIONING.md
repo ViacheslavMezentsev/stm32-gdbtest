@@ -38,7 +38,7 @@ Interpreter versions are listed separately for host Python and Python embedded i
 
 ## Before a release
 
-1. Host and offline checks: CI is green on the final commit ([checks and CI](../../../en/testing.md)).
+1. Host and offline checks: CI is green on the final commit ([checks and CI](../../../guides/en/testing.md)).
 2. Hardware acceptance on the final SHA: F030R8, F103, F401CC, F411CE and
    F429ZI with ST-Link/OpenOCD, plus AT32F403A with OpenOCD/J-Link WinUSB.
    A second F411 backend does not replace F103. Scope, authorization and restoration
@@ -81,7 +81,7 @@ contributors) and `#number` into an issue link, so write such fragments only in
 backticks: `` `@case` ``.
 Example — [v0.3.0](../../../releases/v0.3.0.md); the former `---` format — [v0.1.0-rc.1](../../../releases/v0.1.0-rc.1.md).
 
-Branch and commit rules — [maintenance](../../../en/maintenance.md).
+Branch and commit rules — [maintenance](../../../guides/en/maintenance.md).
 
 ## Moving to 0.5.0: emulators
 
@@ -90,4 +90,4 @@ Existing hardware target schemas 1/2 and stands need no migration. For a new loc
 emulator route, create a separate schema 3 target with environment=emulator and
 a stand with [emulator] and [qemu] or [renode]. Do not carry over hardware identity
 or full Flash programming policy. reset currently refuses before a command.
-Configuration and limits: [QEMU](../../../en/QEMU.md), [Renode](../../../en/RENODE.md).
+Configuration and limits: [QEMU](../../../guides/en/QEMU.md), [Renode](../../../guides/en/RENODE.md).

@@ -6,7 +6,7 @@ Boards on which the module is verified: the CI firmware in `tests/firmware/profi
 the live-observer example and the demo consumers
 [stm32-hwtest-bluepill](https://github.com/ViacheslavMezentsev/stm32-hwtest-bluepill) and
 [stm32-hwtest-blackpill](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill).
-MCU profiles are described in [MCU profiles](MCU_PROFILES.md), debug servers in [GDB servers](BACKENDS.md),
+MCU profiles are described in [MCU profiles](MCU_PROFILES.md), debug servers in [GDB servers](../guides/en/BACKENDS.md),
 process placement in [run layouts](RUN_LAYOUTS.md), results in [acceptance](../evidence/en/API_ACCEPTANCE.md).
 
 The drawings are schematic top views at one scale (1 mm = 6 pixels), oriented as in the stand photos.
@@ -32,7 +32,7 @@ the module's `f103c8` CI profile runs on it too. The MiniF4 revision with the F4
 micro-USB, a UKEY button, D2/D3 LEDs and four mounting holes.
 
 Hosts: Windows (runner, GDB, OpenOCD, ST-LINK GDB Server, J-Link) and an Orange Pi 5 Linux stand
-(Ubuntu 20.04) for layouts with the GDB server over SSH ([Linux stand](LINUX_STAND.md)).
+(Ubuntu 20.04) for layouts with the GDB server over SSH ([Linux stand](../guides/en/LINUX_STAND.md)).
 
 ## Boards
 
@@ -80,5 +80,5 @@ Onboard ST-LINK/V2 (right, USB Mini-B), P1/P2 headers. Source:
 ![WeAct AT32F403A](../images/stands/weact-at32f403a.svg)
 
 Same footprint and layout as the BlackPill: USB-C, NRST, BOOT0, KEY, C13, PWR, SWD. Connecting a compatible
-MCU: [compatible MCUs](COMPATIBLE_MCU.md). Source:
+MCU: [compatible MCUs](../guides/en/COMPATIBLE_MCU.md). Source:
 [WeActStudio.BlackPill](https://github.com/WeActStudio/WeActStudio.BlackPill).

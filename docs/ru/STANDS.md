@@ -6,7 +6,7 @@
 пример live-observer и демонстрационные потребители
 [stm32-hwtest-bluepill](https://github.com/ViacheslavMezentsev/stm32-hwtest-bluepill) и
 [stm32-hwtest-blackpill](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill).
-Профиль MCU описан в [профилях](MCU_PROFILES.md), отладчики — в [GDB-серверах](BACKENDS.md),
+Профиль MCU описан в [профилях](MCU_PROFILES.md), отладчики — в [GDB-серверах](../guides/ru/BACKENDS.md),
 размещение процессов — в [схемах запуска](RUN_LAYOUTS.md), результаты — в [приёмке](../evidence/ru/API_ACCEPTANCE.md).
 
 Рисунки — схематичный вид сверху в одном масштабе (1 мм = 6 пикселей), ориентация как на снимках стендов.
@@ -32,7 +32,7 @@ CI-профиль `f103c8` модуля запускается на ней же.
 micro-USB, кнопка UKEY, светодиоды D2/D3 и четыре крепёжных отверстия.
 
 Хосты: Windows (runner, GDB, OpenOCD, ST-LINK GDB Server, J-Link) и Linux-стенд Orange Pi 5
-(Ubuntu 20.04) для схем с GDB-сервером по SSH ([Linux-стенд](LINUX_STAND.md)).
+(Ubuntu 20.04) для схем с GDB-сервером по SSH ([Linux-стенд](../guides/ru/LINUX_STAND.md)).
 
 ## Платы
 
@@ -80,5 +80,5 @@ ST-LINK/V2 встроен (справа, USB Mini-B), гребёнки P1/P2. И
 ![WeAct AT32F403A](../images/stands/weact-at32f403a.svg)
 
 Посадочное место и расположение деталей как у BlackPill: USB-C, NRST, BOOT0, KEY, C13, PWR, SWD.
-Подключение совместимого МК — [совместимые МК](COMPATIBLE_MCU.md). Источник:
+Подключение совместимого МК — [совместимые МК](../guides/ru/COMPATIBLE_MCU.md). Источник:
 [WeActStudio.BlackPill](https://github.com/WeActStudio/WeActStudio.BlackPill).

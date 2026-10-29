@@ -41,7 +41,7 @@ python3 tests/modeled-gpio/run.py --toolchain <root> --renode <executable>
 
 On Windows use `python`. Requires ARM GCC/GDB with Python, Renode 1.17 and host g++.
 Linux paths used: `/opt/xpack-arm-none-eabi-gcc-14.2.1-1.1`, `/opt/renode-1.17.0/renode`.
-Use a Docker volume for source and builds, as described in [local CI](../../docs/ru/local-ci.md).
+Use a Docker volume for source and builds, as described in [local CI](../../docs/guides/ru/local-ci.md).
 
 `build/modeled-gpio/<run>/` preserves source hashes, ELF, compiler/debugger versions,
 build command, independent `accesses.jsonl`, Renode version/log and GDB log.

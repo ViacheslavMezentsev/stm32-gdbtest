@@ -28,9 +28,9 @@ stm32-gdbtest — реализация [DDTT](DDTT.md) для STM32: сцена�
 - [Регистры MMIO](MMIO.md) — известные ограничения и рекомендуемый маршрут проверки.
 - [SVD](SVD.md) — описание периферии для `t.mmio`, захват в пакет и границы.
 - [ELF/HAL-контракты](CONTRACTS.md) — офлайн-проверка функций, типов, enum и хешей исходников.
-- [HAL-макросы](HAL_MACRO_GUIDE.md) — выбор макросов, контекст и контракт макросов.
+- [HAL-макросы](../guides/ru/HAL_MACRO_GUIDE.md) — выбор макросов, контекст и контракт макросов.
 - [Переход к 0.5.0](MIGRATION_050.md) — порядок миграции потребителя на API 3.
-- [Миграция примеров на CMSIS](CMSIS_MIGRATION.md) — исходная база, пробелы F030 и приёмка.
+- [Миграция примеров на CMSIS](../guides/ru/CMSIS_MIGRATION.md) — исходная база, пробелы F030 и приёмка.
 
 Нейтральные примеры: [имитируемый вход: write и ret](../../tests/controlled-input/README.md) ·
 [моделируемый GPIO](../../tests/modeled-gpio/README.md) · [буфер и повторное потребление](../../tests/buffer-consumption/README.md) ·
@@ -50,25 +50,25 @@ stm32-gdbtest — реализация [DDTT](DDTT.md) для STM32: сцена�
 
 ## Стенды, GDB-серверы и CI
 
-- [GDB-серверы](BACKENDS.md) — OpenOCD, ST-LINK GDB Server, J-Link, st-util: [OpenOCD](backends/openocd.md) ·
-  [ST-LINK GDB Server](backends/stlink.md) · [J-Link](backends/jlink.md) · [st-util](backends/st-util.md).
-- [Владение отладчиком](DEBUGGER_OWNERSHIP.md) — межпроектная блокировка на Windows и Linux.
-- [Linux-стенд](LINUX_STAND.md) — окружение без root, USB, J-Link, удалённый GDB-сервер по SSH, WSL2.
-- [Аппаратный CI](HARDWARE_CI.md) — пакеты подготовленного запуска, self-hosted раннер, прогоны 24/7.
+- [GDB-серверы](../guides/ru/BACKENDS.md) — OpenOCD, ST-LINK GDB Server, J-Link, st-util: [OpenOCD](../guides/ru/backends/openocd.md) ·
+  [ST-LINK GDB Server](../guides/ru/backends/stlink.md) · [J-Link](../guides/ru/backends/jlink.md) · [st-util](../guides/ru/backends/st-util.md).
+- [Владение отладчиком](../guides/ru/DEBUGGER_OWNERSHIP.md) — межпроектная блокировка на Windows и Linux.
+- [Linux-стенд](../guides/ru/LINUX_STAND.md) — окружение без root, USB, J-Link, удалённый GDB-сервер по SSH, WSL2.
+- [Аппаратный CI](../guides/ru/HARDWARE_CI.md) — пакеты подготовленного запуска, self-hosted раннер, прогоны 24/7.
 - [Стендовый цикл](STAND_LOOP.md) — конечный план из принятых пакетов, попытки, STOP и SKIP.
 - [Проверка связей HIL](HIL_INSPECT.md) — HIL, backend и SVD без запуска инструментов.
 - [Идентификация MCU](TARGET_IDENTITY.md) — DEV_ID и заводской размер Flash.
 - [Образы и CRC](IMAGES.md) — секции ELF, BIN, полный образ и область проверки Flash.
 - [Manifest](MANIFESTS.md) — метаданные совместимости и происхождения сборки.
-- [Совместимые МК](COMPATIBLE_MCU.md) — Cortex-M других производителей (AT32): профиль, CMSIS, сценарии.
-- [Проверки и CI](testing.md) — уровни CI, Docker-образ, аппаратная проверка CI-прошивок.
-- [Локальный CI](local-ci.md) — Docker и L6: снимок, volume, отчёты и восстановление стенда.
+- [Совместимые МК](../guides/ru/COMPATIBLE_MCU.md) — Cortex-M других производителей (AT32): профиль, CMSIS, сценарии.
+- [Проверки и CI](../guides/ru/testing.md) — уровни CI, Docker-образ, аппаратная проверка CI-прошивок.
+- [Локальный CI](../guides/ru/local-ci.md) — Docker и L6: снимок, volume, отчёты и восстановление стенда.
 
 ## Эмуляторы
 
-- [Renode](RENODE.md) — конфигурация, процесс на сценарий, ограничения модели.
-- [QEMU](QEMU.md) — конфигурация и ограничения.
-- [Проверки Renode](RENODE_PROBES.md) — короткие опыты на модели и их границы.
+- [Renode](../guides/ru/RENODE.md) — конфигурация, процесс на сценарий, ограничения модели.
+- [QEMU](../guides/ru/QEMU.md) — конфигурация и ограничения.
+- [Проверки Renode](../guides/ru/RENODE_PROBES.md) — короткие опыты на модели и их границы.
 
 ## Свидетельства по платам
 
@@ -92,8 +92,8 @@ stm32-gdbtest — реализация [DDTT](DDTT.md) для STM32: сцена�
 - [Изменения между выпусками](RELEASE_CHANGES.md) — что меняется для пользователя и что сделать.
 - [Описание выпуска 0.6.0](../releases/v0.6.0.md) · [матрица приёмки 0.6.0](../development/release-060-acceptance.md) ·
   [приёмка 0.5.0](../development/release-050-acceptance.md) · [CHANGELOG](../../CHANGELOG.md).
-- [Сопровождение](maintenance.md) — порядок работы, ветки, коммиты, двуязычная документация.
-- [Памятка команд](HOWTO.md) — git (включая `git land`), частые проблемы стенда, отладчиков и Docker.
+- [Сопровождение](../guides/ru/maintenance.md) — порядок работы, ветки, коммиты, двуязычная документация.
+- [Памятка команд](../guides/ru/HOWTO.md) — git (включая `git land`), частые проблемы стенда, отладчиков и Docker.
 - [Структура документации](../development/README.md) — разделы, обязательные переводы, оформление README.
 - Планирование: [памятка](../../TODO.md) · [дорожная карта](../../ROADMAP.md) · [история](../archive/TODO_ARCHIVE.md) ·
   [AGENTS.md](../../AGENTS.md).

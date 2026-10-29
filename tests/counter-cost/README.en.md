@@ -34,7 +34,7 @@ in finally using the ELF symbol size, including failures. No peripheral recovery
 Run `python tests/counter-cost/run.py --host-only`, or add `--toolchain <ARM GCC root>`
 and `--renode <Renode executable>`. Requires g++, Python 3.11+, GDB-Python, Renode 1.17.
 Artifacts and hashes are in build/counter-cost/<id>. Windows Docker uses a source/build
-volume, as described in [local CI](../../docs/en/local-ci.md).
+volume, as described in [local CI](../../docs/guides/en/local-ci.md).
 
 API guidance: call once and inspect outcome/return_state/return_value (await in async).
 Record raw data before check, including units, warmup and eligibility. Do not substitute

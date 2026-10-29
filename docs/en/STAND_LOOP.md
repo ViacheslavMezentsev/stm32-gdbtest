@@ -9,7 +9,7 @@ a server and a local stand TOML. No firmware build occurs on the stand.
 
 ## Bundle and plan
 
-Prepare packages using [pack](HARDWARE_CI.md); enable `[results] capture = true` in session.toml
+Prepare packages using [pack](../guides/en/HARDWARE_CI.md); enable `[results] capture = true` in session.toml
 before packing. Add firmware sources with `--include` when needed for code analysis; scenarios,
 requirements and contracts are already packaged. This does not imply a full source repository.
 Package configuration is fixed; a different configuration requires a new package.

@@ -32,4 +32,4 @@ of MCU, HAL, GDB and backend, not by the family: [current status](STATUS.md).
 GDB server that connects to the chip. Such an MCU (Artery AT32, GigaDevice GD32, Geehy APM32, etc.) is
 attached with its own profile and the vendor CMSIS, without module changes. One is verified so far —
 AT32F403ACGU7 on WeAct AT32F4 Core Board: see API_ACCEPTANCE for current acceptance. The profile, SDK and integration procedure are in
-[compatible MCUs](COMPATIBLE_MCU.md). Every new chip needs its own acceptance on a board.
+[compatible MCUs](../guides/en/COMPATIBLE_MCU.md). Every new chip needs its own acceptance on a board.

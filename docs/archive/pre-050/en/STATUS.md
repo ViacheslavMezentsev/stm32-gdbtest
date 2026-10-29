@@ -67,7 +67,7 @@ Process placement: [run layouts](RUN_LAYOUTS.md); MCU/backend: [profiles](../../
 
 - Long F411/F030 runs with ST-LINK GDB Server remain unaccepted due to repeated USB ERROR.
   The owner accepted v0.4.0 with this limit; passing OpenOCD/st-util does not resolve it.
-- st-util 1.6.0 and 1.9.0 have different verified limits; see [st-util backend](../../../en/backends/st-util.md).
+- st-util 1.6.0 and 1.9.0 have different verified limits; see [st-util backend](../../../guides/en/backends/st-util.md).
 - Linux x86_64 with local USB and WSL2/usbipd are not hardware-accepted. Each new board needs
   verification of the actual MCU, GDB, build and backend combination. H503 is not accepted.
 - Binary USB serial diagnostics, the former F429 SP/SRAM anomaly and forced cleanup boundaries

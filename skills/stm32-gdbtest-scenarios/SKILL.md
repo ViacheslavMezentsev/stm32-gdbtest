@@ -20,7 +20,7 @@ metadata:
 
 Пути — от корня модуля (`modules/stm32-gdbtest/` у потребителя). Источники истины:
 [справочник API](../../docs/ru/api/index.md), [каталог техник](../../docs/ru/TESTING_TECHNIQUES.md),
-[автору тестов](../../docs/ru/TEST_AUTHORING.md), [HAL-макросы](../../docs/ru/HAL_MACRO_GUIDE.md).
+[автору тестов](../../docs/ru/TEST_AUTHORING.md), [HAL-макросы](../../docs/guides/ru/HAL_MACRO_GUIDE.md).
 Образцы — `tests/firmware/common/tests/board/*.py` и `tests/firmware/profiles/*/tests/board/*.py`.
 
 ## Порядок работы

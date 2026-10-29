@@ -5,7 +5,7 @@ build, build manifest, collection, traceability, offline ELF contracts and
 `run --prepare-only`. Profiles `f030r8` (Cortex-M0), `f103c8` (Cortex-M3),
 `f401cc`, `f411ce` and `f429zi` (Cortex-M4) mirror boards validated in stm32-hwtest-blackpill;
 `at32f403a` (Artery AT32F403ACGU7, Cortex-M4 compatible) checks a non-ST MCU with the vendor CMSIS
-([compatible MCUs](../../docs/en/COMPATIBLE_MCU.md)). The scenarios check register state and are not evidence of
+([compatible MCUs](../../docs/guides/en/COMPATIBLE_MCU.md)). The scenarios check register state and are not evidence of
 HAL behaviour.
 
 Toolchain: `ARM_TOOLCHAIN_ROOT`; CMSIS: `STM32CUBE_REPOSITORY` with

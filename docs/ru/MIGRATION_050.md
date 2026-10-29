@@ -19,7 +19,7 @@ target schema 1/2 и стенды менять не нужно. Переход �
 | Регистры периферии | Выражения GDB по адресам и макросам | `t.mmio.read/write` по снимку SVD с правами и эффектами ([mmio](api/mmio.md)) | `[mmio] svd` в `session.toml`, замена обращений, явные `allow_effects` |
 | Пакет | Капсула конфигурации schema 1 | Schema 2, если задан SVD (без SVD — schema 1) | Получатель пакета должен поддерживать schema 2 |
 | Конфигурация | Проверялась при запуске | Офлайн-команда `inspect` ([руководство](HIL_INSPECT.md)) | Проверить каждый профиль до prepare |
-| Эмуляторы | — | target schema 3 для Renode/QEMU ([Renode](RENODE.md), [QEMU](QEMU.md)) | Только для нового маршрута; аппаратные target не переносить |
+| Эмуляторы | — | target schema 3 для Renode/QEMU ([Renode](../guides/ru/RENODE.md), [QEMU](../guides/ru/QEMU.md)) | Только для нового маршрута; аппаратные target не переносить |
 | Навыки | Прежний заголовок | Формат Agent Skills, `metadata.version` 0.5.0 ([навыки](../../skills/README.md)) | Обновить копии `.claude/skills` вместе с gitlink |
 
 ## Порядок перехода

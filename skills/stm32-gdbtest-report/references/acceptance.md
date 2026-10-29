@@ -33,7 +33,7 @@ python tests/mmio-renode/run.py --toolchain TOOLCHAIN --renode RENODE
 ```
 
 Используй реальные пути, GCC/GDB и Renode 1.17 по README этих примеров. Host: docs+host
-через [локальный CI](../../../docs/ru/local-ci.md), источник и сборка в одном Docker volume.
+через [локальный CI](../../../docs/guides/ru/local-ci.md), источник и сборка в одном Docker volume.
 Сохраняй exit code, исходные ERROR и контрольные суммы. У live-observer обычный
 all-PASS критерий неверен: три отрицательных исхода обязательны. Четыре FPB-случая
 не поддерживаются моделью, их нельзя приписывать эмулятору.

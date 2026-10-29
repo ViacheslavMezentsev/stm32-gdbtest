@@ -19,8 +19,8 @@ stm32-gdbtest проверяет работающую прошивку на на
 
 Пути ниже — от корня модуля (`modules/stm32-gdbtest/` в проекте потребителя). Подробности:
 [начало работы](../../docs/ru/GETTING_STARTED.md), [API и конфигурация](../../docs/ru/API.md),
-[identity и Flash](../../docs/ru/TARGET_IDENTITY.md), [GDB-серверы](../../docs/ru/BACKENDS.md),
-[памятка](../../docs/ru/HOWTO.md). Сценарии — навык `stm32-gdbtest-scenarios`, запуски и разбор
+[identity и Flash](../../docs/ru/TARGET_IDENTITY.md), [GDB-серверы](../../docs/guides/ru/BACKENDS.md),
+[памятка](../../docs/guides/ru/HOWTO.md). Сценарии — навык `stm32-gdbtest-scenarios`, запуски и разбор
 отчётов — `stm32-gdbtest-run`.
 
 ## Что выяснить до начала
@@ -89,7 +89,7 @@ hil/
 
 Точки fault handlers занимают слоты `breakpoint_limit` — сценарию остаётся меньше. Cortex-M-совместимый МК
 другого производителя (Artery AT32, GD32, APM32) подключается своим профилем и CMSIS производителя; образец —
-профиль `at32f403a` ([совместимые МК](../../docs/ru/COMPATIBLE_MCU.md)).
+профиль `at32f403a` ([совместимые МК](../../docs/guides/ru/COMPATIBLE_MCU.md)).
 
 ### 4. Конфигурация сессии
 
@@ -113,7 +113,7 @@ board = "board.toml"
 Для Renode/QEMU нужна schema 3 с environment="emulator" и architecture="cortex-m".
 Бери профиль соответствующего backend из текущего примера, включая backend-specific
 команды reset/setup; не переноси monitor-команды OpenOCD в st-util или ST-LINK GDB Server.
-[Страницы backend](../../docs/ru/BACKENDS.md) описывают различия и установку st-util на Ubuntu 20.04.
+[Страницы backend](../../docs/guides/ru/BACKENDS.md) описывают различия и установку st-util на Ubuntu 20.04.
 Если нужны записи после запуска, добавь в session.toml:
 
 ```toml
@@ -178,9 +178,9 @@ endif()
 шаблон в `hil/stands/<board>-<backend>.local.toml` (удалённый стенд из `remote.example.toml` —
 `hil/stands/<board>-<backend>.remote.toml`) и вписывает серийный номер; агент серийные номера в
 коммиты и документы не переносит. Другой зонд для OpenOCD — ключи `interface` и `transport`, J-Link по JTAG —
-`interface = "JTAG"` ([GDB-серверы](../../docs/ru/BACKENDS.md)). `flash = "if-different"` пишет Flash только при отличии образа,
+`interface = "JTAG"` ([GDB-серверы](../../docs/guides/ru/BACKENDS.md)). `flash = "if-different"` пишет Flash только при отличии образа,
 `verify-only` — только сверяет. Удалённый стенд — таблица `[remote]` с SSH-ключом; пароли не
-поддерживаются ([Linux-стенд](../../docs/ru/LINUX_STAND.md)).
+поддерживаются ([Linux-стенд](../../docs/guides/ru/LINUX_STAND.md)).
 
 ### 8. Первый сценарий
 
@@ -233,7 +233,7 @@ inspect не запускает инструменты и не проверяе�
 Для MMIO добавь `[mmio] svd="device.svd"` в session.toml: путь от этого файла,
 описание захватывается в пакет. Получатель должен поддерживать капсулу schema 2.
 Без MMIO SVD не обязателен. Читай [SVD](../../docs/ru/SVD.md).
-Для эмулятора используй [Renode](../../docs/ru/RENODE.md) или [QEMU](../../docs/ru/QEMU.md):
+Для эмулятора используй [Renode](../../docs/guides/ru/RENODE.md) или [QEMU](../../docs/guides/ru/QEMU.md):
 новый собственный процесс на сценарий, без keep/attach/SSH и аппаратной identity.
 Синхронные def сохраняются; async-помощники и скрытые вызовы функций мигрируются
 по [контракту API 3](../../docs/ru/LIVE_EXECUTION.md). prepare не доказывает эту миграцию.

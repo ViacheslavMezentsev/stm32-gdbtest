@@ -9,7 +9,7 @@ Levels (spec 8.11):
             tests (traceability, prepare with offline contracts), full-image prepare,
             negative contract and image-policy cases
 
-Usage inside the CI image (see docs/ru/testing.md):
+Usage inside the CI image (see docs/guides/ru/testing.md):
   python3 ci/run_checks.py [docs] [format] [host] [firmware] [hal] [--gcc VERSION ...] [--profile NAME ...]
 Without levels all of them run. Results: build/ci/<run>/summary.json.
 """

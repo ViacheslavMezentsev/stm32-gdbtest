@@ -46,7 +46,7 @@ python tests/modeled-gpio/run.py --toolchain <toolchain-root> --renode <renode-e
 Linux: те же команды с `python3`; пример Renode 1.17.0 —
 `--toolchain /opt/xpack-arm-none-eabi-gcc-14.2.1-1.1 --renode /opt/renode-1.17.0/renode`.
 Нужны ARM GCC/GDB с Python, Renode 1.17 и host g++ для проверки общего C++ обработчика.
-Для Docker соблюдайте [локальный CI](../../docs/ru/local-ci.md): исходники и сборки в volume.
+Для Docker соблюдайте [локальный CI](../../docs/guides/ru/local-ci.md): исходники и сборки в volume.
 
 В `build/modeled-gpio/<run>/`: входы и SHA-256, ELF, версии GCC/GDB, команда сборки,
 `accesses.jsonl` независимой модели, лог Renode с версией, GDB log;

@@ -38,8 +38,8 @@ python3 tests/stateful-buffer/run.py --toolchain /opt/xpack-arm-none-eabi-gcc-14
 
 `--host-cxx` selects the host compiler. Requires Python 3.11+, GDB with Python, ARM GCC and
 Renode 1.17. On Windows Docker keep source and build in one volume following
-[local CI](../../docs/en/local-ci.md). The runner owns Renode and never attaches to an
-existing endpoint; see the [backend](../../docs/en/RENODE.md) for its listening-port limitation.
+[local CI](../../docs/guides/en/local-ci.md). The runner owns Renode and never attaches to an
+existing endpoint; see the [backend](../../docs/guides/en/RENODE.md) for its listening-port limitation.
 
 ## Red control, fix and repeat
 

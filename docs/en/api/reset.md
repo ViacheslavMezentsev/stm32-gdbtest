@@ -45,4 +45,4 @@ invalidation steps; link state after a failure is not guaranteed.
 
 Since v0.4.0, backend `st-util` uses `monitor reset`; the optional `[st-util]` section belongs to schema 2. The method contract is unchanged.
 
-Renode / [QEMU](../QEMU.md): `reset()` currently refuses before a command (`unsupported_backend`, `validation`, `none`). A fresh run uses a new process; [backend contract](../RENODE.md).
+Renode / [QEMU](../../guides/en/QEMU.md): `reset()` currently refuses before a command (`unsupported_backend`, `validation`, `none`). A fresh run uses a new process; [backend contract](../../guides/en/RENODE.md).

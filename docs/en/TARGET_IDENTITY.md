@@ -10,7 +10,7 @@ mismatch never switches the profile, HAL, linker script or expectations automati
 
 `[identity]` sets the address, mask and value; the width is not limited to the 12-bit DEV_ID. On AT32F403ACGU7 the
 same address `0xE0042000` holds the 32-bit Artery PID: mask `0xFFFFFFFF`, value `0x70050347` per the RM
-([compatible MCUs](COMPATIBLE_MCU.md)).
+([compatible MCUs](../guides/en/COMPATIBLE_MCU.md)).
 
 ## Identity policy
 

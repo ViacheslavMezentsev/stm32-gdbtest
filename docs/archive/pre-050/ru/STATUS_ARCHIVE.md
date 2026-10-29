@@ -69,7 +69,7 @@ F103/J-Link, F411/OpenOCD — по 10/10. ST server завершён после 
 | Потребитель BlackPill | fb2d186 / модуль 67b7431: Offline SUCCESS, пять профилей/120 CTest; Windows 25/25, F411/OpenOCD 22/22 + timeout/recovery/restore. Итоговый gitlink обновляется после land модуля |
 
 Источники: [HAL→CMSIS](../../../evidence/ru/F030_CMSIS_ACCEPTANCE.md), [HAL-протокол](../../../evidence/ru/F030_HAL_VALIDATION.md),
-[техники](../../../ru/TESTING_TECHNIQUES.md), [CI](../../../ru/testing.md).
+[техники](../../../ru/TESTING_TECHNIQUES.md), [CI](../../../guides/ru/testing.md).
 Текущий Nucleo-стенд — родной ST-Link/OpenOCD; результаты J-Link STLink ниже исторические.
 F103 — WeAct BluePill-Plus/J-Link; F411 — BlackPill/ST-Link с OpenOCD и ST server.
 Удалённые запуски, пакеты и Hardware workflow повторены при приёмке rc.2;
@@ -162,12 +162,12 @@ stm32-hwtest-blackpill на этих коммитах не повторялся.
 
 | Область | Доказанный объём |
 | --- | --- |
-| CI (GitHub Actions, Docker) | Docs, format, host на Windows и Linux; CI-прошивки F030R8/F103C8/F411CE на GCC 13.3.1, 14.2.1, 15.2.1 с CMake 3.28.3: build manifest, `prepare`, полный образ, 10 отрицательных контрактов, выравнивание секций загрузки, пустая секция в RAM; окружение Linux-стенда в `ubuntu:20.04` на x86_64 и aarch64 ([проверки и CI](../../../ru/testing.md)) |
+| CI (GitHub Actions, Docker) | Docs, format, host на Windows и Linux; CI-прошивки F030R8/F103C8/F411CE на GCC 13.3.1, 14.2.1, 15.2.1 с CMake 3.28.3: build manifest, `prepare`, полный образ, 10 отрицательных контрактов, выравнивание секций загрузки, пустая секция в RAM; окружение Linux-стенда в `ubuntu:20.04` на x86_64 и aarch64 ([проверки и CI](../../../guides/ru/testing.md)) |
 | CI-прошивки на оборудовании | Итоговая проверка на `2143665`: 4 стенда на Windows, 3 стенда с Windows на Orange Pi 5, 3 стенда в workflow Hardware — по 10/10 шагов; ранее 4 стенда на `fbc103d` (разделы ниже) |
 | Linux-стенд без оборудования | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) в контейнере: установка окружения, host-тесты (79 на ревизии 0.7), `doctor`, `build` и `prepare` CI-прошивок; аппаратный путь без отладчика — блокировка, запуск OpenOCD, ERROR «exited before ready», процессы остановлены |
 | Удалённый GDB-сервер на оборудовании | Runner и GDB на Windows 10, GDB-серверы на Orange Pi 5 по SSH: F411CE / OpenOCD, F103C8 / J-Link CE, F030R8 / J-Link STLink — по 10/10 (`run_hw.py`) |
 | Удалённый GDB-сервер без оборудования | Петля SSH (OpenSSH, ключ, `known_hosts`) и фиктивный J-Link сервер: проброс порта, подключение GDB через туннель, recovery, остановка сервера и передача журнала, отказ при занятой блокировке хоста стенда, очистка после обрыва сессии |
-| Linux-стенд на оборудовании | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 / J-Link GDB Server 9.80 arm64 — 10/10 после подтверждения окна условий J-Link STLink в графическом сеансе; без этого подключение ждёт около 10 с, первый прогон — 2/10 ([Linux-стенд](../../../ru/LINUX_STAND.md)) |
+| Linux-стенд на оборудовании | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 / J-Link GDB Server 9.80 arm64 — 10/10 после подтверждения окна условий J-Link STLink в графическом сеансе; без этого подключение ждёт около 10 с, первый прогон — 2/10 ([Linux-стенд](../../../guides/ru/LINUX_STAND.md)) |
 | ELF/HAL preflight | Положительный случай и 11 отрицательных вариантов на ELF F103C8/F401CC/F411CE стендового проекта |
 | Стендовый проект, F411CE / ST-Link / OpenOCD | 24/24 CTest (22 HW + 2 host) после отделения модуля |
 | Стендовый проект, F103C8 / J-Link | 24/24 CTest (22 HW + 2 host) |

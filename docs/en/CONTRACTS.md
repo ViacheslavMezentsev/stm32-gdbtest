@@ -39,7 +39,7 @@ snapshot is stored separately from the build.
 - `type_context`: a function from `functions` whose block resolves `fields` and `enums`.
 - `fields`: required structure fields and their types; extra fields are allowed.
 - `enums`: required enum constants and values; extra values are allowed.
-- `macros`: `context` (a function) and `expressions` — see [HAL macros](HAL_MACRO_GUIDE.md).
+- `macros`: `context` (a function) and `expressions` — see [HAL macros](../guides/en/HAL_MACRO_GUIDE.md).
   Each expression is checked for its definition, expansion and the type of the expansion
   (`whatis` on the expansion text, no memory reads; a command-line macro `-DNAME` also counts
   as defined). If the expansion refers to a type missing from the debug info
@@ -68,7 +68,7 @@ universal C/C++ parser for arrays, templates and function pointers.
   rely on the [build manifest](MANIFESTS.md).
 
 CI exercises the mechanism on the CI firmware, including 10 negative contract
-variants ([checks and CI](testing.md)).
+variants ([checks and CI](../guides/en/testing.md)).
 [Profile contracts and offline regression](https://github.com/ViacheslavMezentsev/stm32-hwtest-blackpill/blob/main/docs/HAL_CONTRACTS.md)
 (Russian) stay with the stand project.
 

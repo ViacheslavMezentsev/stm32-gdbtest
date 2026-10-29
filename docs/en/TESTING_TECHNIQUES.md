@@ -116,7 +116,7 @@ error (`-g3` in the right translation unit) or a contract error.
 context. A definition in an installed header does not prove its presence in the ELF.
 **Boundary:** a getter may read a FIFO or take part in an SR/DR sequence; a read with an effect needs
 a recovery defined in advance. Clock enabled does not prove that a particular macro was called.
-[HAL macro guidance](HAL_MACRO_GUIDE.md),
+[HAL macro guidance](../guides/en/HAL_MACRO_GUIDE.md),
 [clock/gpio F030](../../tests/firmware/profiles/f030r8/tests/board/test_ci.py).
 
 <a id="tech-002"></a>

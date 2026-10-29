@@ -12,7 +12,7 @@ Commands below are templates for a future accepted release, not authorization to
 
 ## Before a release
 
-1. Host and offline checks: CI is green on the final commit ([checks and CI](testing.md)).
+1. Host and offline checks: CI is green on the final commit ([checks and CI](../guides/en/testing.md)).
 2. Hardware acceptance on the final SHA: F030R8, F103, F401CC, F411CE and
    F429ZI with ST-Link/OpenOCD, plus AT32F403A with OpenOCD/J-Link WinUSB.
    A second F411 backend does not replace F103. Scope, authorization and restoration
@@ -54,7 +54,7 @@ GitHub turns `@name` into a user mention (the user appears among the release
 contributors) and `#number` into an issue link, so write such fragments only in
 backticks: `` `@case` ``.
 
-Branch and commit rules — [maintenance](maintenance.md).
+Branch and commit rules — [maintenance](../guides/en/maintenance.md).
 
 ## Moving to 0.6.0
 
@@ -72,4 +72,4 @@ Existing hardware target schemas 1/2 and stands need no migration. For a new loc
 emulator route, create a separate schema 3 target with environment=emulator and
 a stand with [emulator] and [qemu] or [renode]. Do not carry over hardware identity
 or full Flash programming policy. reset currently refuses before a command.
-Configuration and limits: [QEMU](QEMU.md), [Renode](RENODE.md).
+Configuration and limits: [QEMU](../guides/en/QEMU.md), [Renode](../guides/en/RENODE.md).

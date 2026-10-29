@@ -2,7 +2,7 @@
 
 [Documentation](../../../en/index.md) → API · [Русский](../ru/API.md)
 
-For 0.5.0: [Renode and target schema 3](../../../en/RENODE.md), [QEMU](../../../en/QEMU.md); schemas 1/2 remain supported.
+For 0.5.0: [Renode and target schema 3](../../../guides/en/RENODE.md), [QEMU](../../../guides/en/QEMU.md); schemas 1/2 remain supported.
 **Peripheral registers:** [known MMIO limitations and recommended validation route](../../../en/MMIO.md).
 
 [Release v0.3.0](../../../releases/v0.3.0.md): stm32-gdbtest 0.3.0; candidate v0.2.0-rc.1 was never published. Historical evidence follows.
@@ -153,7 +153,7 @@ stm32_gdbtest_attach(firmware_target
   the firmware target before `stm32_gdbtest_attach`.
 - One firmware target of the top-level CMake directory, the Ninja generator and a
   build directory inside `PROJECT_SOURCE_DIR` are supported. Build, build manifest
-  preparation and hardware runs work on Windows and Linux ([Linux stand](../../../en/LINUX_STAND.md)).
+  preparation and hardware runs work on Windows and Linux ([Linux stand](../../../guides/en/LINUX_STAND.md)).
 - `PROFILE_DIR`, `PROFILE` and `MANIFEST_INPUTS` paths are absolute. `PROFILE_DIR`
   contains `tests/board/test_*.py`, `tests/requirements.md`, `tests/contracts.json`
   when contracts are used, and `target.toml`. Use `tests` for new projects; legacy `Tests` remains supported.
@@ -219,7 +219,7 @@ imported only inside GDB):
 
 `boot`, `close`, `on_stop`, `report`, `owned`, `stops` and Target creation are the
 agent's internal lifecycle. GDB calls are allowed only on its main thread. `-g3`
-keeps macros but not unused functions and symbols; see [HAL macros](../../../en/HAL_MACRO_GUIDE.md)
+keeps macros but not unused functions and symbols; see [HAL macros](../../../guides/en/HAL_MACRO_GUIDE.md)
 and [contracts](../../../en/CONTRACTS.md).
 
 ## CLI
@@ -267,7 +267,7 @@ checks of the stand host over SSH (`remote`, `remote-server`, `remote-lock`, `re
 
 `pack --session S --output P.zip [--test ID …] [--include PATH …]` prepares scenarios without
 hardware and writes a prepared run package; `run --package` checks the SHA-256 of every
-package file and adds a `package` field to the report ([hardware CI](../../../en/HARDWARE_CI.md)).
+package file and adds a `package` field to the report ([hardware CI](../../../guides/en/HARDWARE_CI.md)).
 
 `collect --cmake/--workspace` is the CMake generation interface and is rarely used by hand.
 
@@ -280,8 +280,8 @@ compatibility 1, image policy 1, prepared run package 1. `session.json` is an in
 stable schema promise. Direct calls into `runner`, `contracts`, `processes` are an
 internal development API; consumers use CMake, the CLI and the Target operations.
 Details: [getting started](../../../en/GETTING_STARTED.md), [manifest](../../../en/MANIFESTS.md),
-[identity](../../../en/TARGET_IDENTITY.md), [GDB servers](../../../en/BACKENDS.md),
-[debugger ownership](../../../en/DEBUGGER_OWNERSHIP.md). On Linux `STM32_GDBTEST_LOCK_DIR` sets the
+[identity](../../../en/TARGET_IDENTITY.md), [GDB servers](../../../guides/en/BACKENDS.md),
+[debugger ownership](../../../guides/en/DEBUGGER_OWNERSHIP.md). On Linux `STM32_GDBTEST_LOCK_DIR` sets the
 base directory of the locks: by default the system temporary directory (`/tmp` or
 `TMPDIR`), with `stm32-gdbtest-locks` inside.
 
@@ -339,11 +339,11 @@ F030 busy ADC check; API unchanged. [Report](../../../evidence/en/F030_ADC_BUSY.
 
 F030 RTC deadline through argument injection; API unchanged. [Report](../../../evidence/en/F030_RTC_DEADLINE.md).
 
-Owned profiles/examples and new packages use `tests`; old `Tests` inputs remain supported. Local remote stands use ignored `<profile>-<backend>.remote.toml` (`openocd`, `jlink`, `stlink`). Reconfigure after renaming. [Conventions](../../../en/maintenance.md).
+Owned profiles/examples and new packages use `tests`; old `Tests` inputs remain supported. Local remote stands use ignored `<profile>-<backend>.remote.toml` (`openocd`, `jlink`, `stlink`). Reconfigure after renaming. [Conventions](../../../guides/en/maintenance.md).
 
 [Standalone F030 HAL regression](../../../evidence/en/F030_HAL_REGRESSION.md): test consumer, no API changes.
 
-[CI hal level](../../../en/testing.md) validates the fixture; public APIs/schemas are unchanged.
+[CI hal level](../../../guides/en/testing.md) validates the fixture; public APIs/schemas are unchanged.
 
 ## Package evidence retention (rc.2)
 
@@ -426,7 +426,7 @@ Select `backend = "st-util"` in the stand; target.toml schema 2 may include
 `[st-util]` with `reset_halt = "monitor reset"`, or use the default.
 Existing sections and scenarios need no changes. `profile.stand["backend"]` may
 now be `st-util`; update consumer allowlists. Target methods and API_VERSION=2
-are unchanged. [Configuration and limits](../../../en/BACKENDS.md#st-util-v040).
+are unchanged. [Configuration and limits](../../../guides/en/BACKENDS.md#st-util-v040).
 
 ## Remote server completion (v0.4.0)
 
@@ -442,7 +442,7 @@ st-util adds `recovery_wait` (when recovery was needed), `shutdown_wait` and `re
 each with `ready`, `reason`, `elapsed_s`, `limit_s`. The latter confirms idle observation on the stand
 host; exit0 alone is insufficient. Listening waits are limited to5s, host recovery to10s, and the final
 SSH wait to25s including cleanup. These fields are diagnostic: use final status for acceptance.
-[Lifecycle](../../../en/LINUX_STAND.md#shutdown-diagnostics).
+[Lifecycle](../../../guides/en/LINUX_STAND.md#shutdown-diagnostics).
 
 st-util may end its marker with an ellipsis: `Listening at *:port...`. The parser accepts it; an incomplete line without a newline does not establish readiness.
 
@@ -458,7 +458,7 @@ Local board acceptance does not replace running the updated workflow on GitHub.
 
 Check-evidence colouring: [DDTT in VS Code](../../../en/DDTT_COVERAGE.md); external exporter, no Target API changes.
 
-[Portable HTML/LCOV/Cobertura](../../../en/PORTABLE_DDTT.md) and [Renode probes](../../../en/RENODE_PROBES.md) are external tools, not new Target methods.
+[Portable HTML/LCOV/Cobertura](../../../en/PORTABLE_DDTT.md) and [Renode probes](../../../guides/en/RENODE_PROBES.md) are external tools, not new Target methods.
 
 ## Migrating memory/write to 0.4.2
 
@@ -490,7 +490,7 @@ Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
 
 ## OpenOCD/J-Link shutdown migration for 0.5.0
 
-Local OpenOCD/J-Link now releases its server gracefully; shutdown failure produces ERROR without changing the scenario API. No TOML migration is needed. See [OpenOCD](../../../en/backends/openocd.md#graceful-local-openocdj-link-shutdown).
+Local OpenOCD/J-Link now releases its server gracefully; shutdown failure produces ERROR without changing the scenario API. No TOML migration is needed. See [OpenOCD](../../../guides/en/backends/openocd.md#graceful-local-openocdj-link-shutdown).
 
 
 ## Execution in API_VERSION=3 (0.5.0 candidate)

@@ -85,7 +85,7 @@ This fixes campaign setup without relaxing validation or changing the core. Exis
 were not run in this campaign; it does not close ST-LINK GDB Server or AT32 limitations.
 
 
-GitHub and prepared packages use [Hardware api040 mode](../../../en/HARDWARE_CI.md#selecting-the-new-api-040-suite).
+GitHub and prepared packages use [Hardware api040 mode](../../../guides/en/HARDWARE_CI.md#selecting-the-new-api-040-suite).
 
 ## GitHub Hardware: the new 0.4.0 suite
 
@@ -135,7 +135,7 @@ no st-util processes remain after the campaign. No USB failures occurred. Inferr
 The first attempt is retained separately: 10 PASS and 5 contract preflight ERRORs before MCU connection.
 GDB's embedded Python could not open an existing contract-request.json with a path longer than 260 characters;
 shortening the results directory made the same packages pass completely. Original ERRORs and unavailable capture
-were not relabelled PASS. [Path limitation workaround](../../../en/HOWTO.md). This campaign does not establish arbitrary
+were not relabelled PASS. [Path limitation workaround](../../../guides/en/HOWTO.md). This campaign does not establish arbitrary
 long-path support; automatic early diagnostics remain a proposal.
 Core and scenarios were unchanged; this is a selected new-scenario campaign, not the entire API.
 
@@ -161,7 +161,7 @@ the corrected path built successfully. Shell CRLF was corrected before hardware 
 The new scenarios are therefore verified on **six models**, across different layouts:
 five STM32 in earlier campaigns, AT32 in a separate local Linux/J-Link campaign.
 This is not a six-board GitHub Hardware result. AT32 was subsequently added to its profile list;
-the first updated workflow result is recorded below. [Operation](../../../en/HARDWARE_CI.md).
+the first updated workflow result is recorded below. [Operation](../../../guides/en/HARDWARE_CI.md).
 
 ## GitHub Hardware: AT32
 

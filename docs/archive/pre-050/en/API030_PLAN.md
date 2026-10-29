@@ -106,6 +106,6 @@ resources, predictable errors, no hidden resume/retry and sufficient positive/ne
 coverage. Shorter names or fewer lines alone do not justify replacement. Explicitly agree
 any lost capability.
 
-Research plans, prototypes and raw results stay local under [maintenance](../../../en/maintenance.md).
+Research plans, prototypes and raw results stay local under [maintenance](../../../guides/en/maintenance.md).
 This public plan records the accepted target and design surface; public contracts and
 accepted conclusions must not link to local research material.

@@ -29,9 +29,9 @@ routes — [skills](../../skills/README.en.md). Where a page exists in both lang
 - [MMIO registers](MMIO.md) — known limitations and the recommended validation route.
 - [SVD](SVD.md) — peripheral description for `t.mmio`, capture into the package and limits.
 - [ELF/HAL contracts](CONTRACTS.md) — offline checks of functions, types, enums and source hashes.
-- [HAL macros](HAL_MACRO_GUIDE.md) — choosing macros, context and the macro contract.
+- [HAL macros](../guides/en/HAL_MACRO_GUIDE.md) — choosing macros, context and the macro contract.
 - [Moving to 0.5.0](MIGRATION_050.md) — consumer migration to API 3.
-- [CMSIS example migration](CMSIS_MIGRATION.md) — baseline, F030 gaps and acceptance.
+- [CMSIS example migration](../guides/en/CMSIS_MIGRATION.md) — baseline, F030 gaps and acceptance.
 
 Neutral examples: [simulated input: write and ret](../../tests/controlled-input/README.en.md) ·
 [modeled GPIO](../../tests/modeled-gpio/README.en.md) · [buffer and repeated consumption](../../tests/buffer-consumption/README.en.md) ·
@@ -51,25 +51,25 @@ Neutral examples: [simulated input: write and ret](../../tests/controlled-input/
 
 ## Stands, GDB servers and CI
 
-- [GDB servers](BACKENDS.md) — OpenOCD, ST-LINK GDB Server, J-Link, st-util: [OpenOCD](backends/openocd.md) ·
-  [ST-LINK GDB Server](backends/stlink.md) · [J-Link](backends/jlink.md) · [st-util](backends/st-util.md).
-- [Debugger ownership](DEBUGGER_OWNERSHIP.md) — cross-project locking on Windows and Linux.
-- [Linux stand](LINUX_STAND.md) — environment without root, USB, J-Link, remote GDB server over SSH, WSL2.
-- [Hardware CI](HARDWARE_CI.md) — prepared run packages, a self-hosted runner, 24/7 runs.
+- [GDB servers](../guides/en/BACKENDS.md) — OpenOCD, ST-LINK GDB Server, J-Link, st-util: [OpenOCD](../guides/en/backends/openocd.md) ·
+  [ST-LINK GDB Server](../guides/en/backends/stlink.md) · [J-Link](../guides/en/backends/jlink.md) · [st-util](../guides/en/backends/st-util.md).
+- [Debugger ownership](../guides/en/DEBUGGER_OWNERSHIP.md) — cross-project locking on Windows and Linux.
+- [Linux stand](../guides/en/LINUX_STAND.md) — environment without root, USB, J-Link, remote GDB server over SSH, WSL2.
+- [Hardware CI](../guides/en/HARDWARE_CI.md) — prepared run packages, a self-hosted runner, 24/7 runs.
 - [Stand loop](STAND_LOOP.md) — a finite plan of accepted packages, attempts, STOP and SKIP.
 - [HIL link check](HIL_INSPECT.md) — HIL, backend and SVD without starting tools.
 - [MCU identity](TARGET_IDENTITY.md) — DEV_ID and the factory Flash size.
 - [Images and CRC](IMAGES.md) — ELF sections, BIN, full image and the Flash check range.
 - [Manifest](MANIFESTS.md) — compatibility and build provenance metadata.
-- [Compatible MCUs](COMPATIBLE_MCU.md) — Cortex-M from other vendors (AT32): profile, CMSIS, scenarios.
-- [Checks and CI](testing.md) — CI levels, Docker image, hardware check of the CI firmware.
-- [Local CI](local-ci.md) — Docker and L6: snapshot, volume, evidence and stand restoration.
+- [Compatible MCUs](../guides/en/COMPATIBLE_MCU.md) — Cortex-M from other vendors (AT32): profile, CMSIS, scenarios.
+- [Checks and CI](../guides/en/testing.md) — CI levels, Docker image, hardware check of the CI firmware.
+- [Local CI](../guides/en/local-ci.md) — Docker and L6: snapshot, volume, evidence and stand restoration.
 
 ## Emulators
 
-- [Renode](RENODE.md) — configuration, one process per scenario, model limits.
-- [QEMU](QEMU.md) — configuration and limits.
-- [Renode probes](RENODE_PROBES.md) — short experiments on the model and their limits.
+- [Renode](../guides/en/RENODE.md) — configuration, one process per scenario, model limits.
+- [QEMU](../guides/en/QEMU.md) — configuration and limits.
+- [Renode probes](../guides/en/RENODE_PROBES.md) — short experiments on the model and their limits.
 
 ## Board evidence
 
@@ -93,8 +93,8 @@ These are historical acceptance stages: counts belong to their revisions; the cu
 - [Release transitions](RELEASE_CHANGES.md) — what changes for users and what to do.
 - [0.6.0 release notes](../releases/v0.6.0.md) · [0.6.0 acceptance matrix](../development/release-060-acceptance.md) (Russian) ·
   [0.5.0 acceptance](../development/release-050-acceptance.md) (Russian) · [CHANGELOG](../../CHANGELOG.en.md).
-- [Maintenance](maintenance.md) — workflow, branches, commits, bilingual documentation.
-- [HOWTO](HOWTO.md) — git commands (including `git land`), common stand, debugger and Docker problems.
+- [Maintenance](../guides/en/maintenance.md) — workflow, branches, commits, bilingual documentation.
+- [HOWTO](../guides/en/HOWTO.md) — git commands (including `git land`), common stand, debugger and Docker problems.
 - [Documentation structure](../development/README.md) (Russian) — sections, required translations, README rules.
 - Planning (Russian): [TODO](../../TODO.md) · [ROADMAP](../../ROADMAP.md) · [archive](../archive/TODO_ARCHIVE.md) ·
   [AGENTS.md](../../AGENTS.md).

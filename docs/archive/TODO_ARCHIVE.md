@@ -548,8 +548,8 @@ Offline SUCCESS. Незакрытые отметки в исходном пла�
   далее ADC/DMA/RTC. Оптимизация CI остаётся после переноса примеров.
 
 
-- `codex/cmsis-migration-inventory` от `bc07625` — [миграция примеров](../ru/CMSIS_MIGRATION.md)
-  ([English](../en/CMSIS_MIGRATION.md)): сопоставлены 17 HAL-сценариев F030
+- `codex/cmsis-migration-inventory` от `bc07625` — [миграция примеров](../guides/ru/CMSIS_MIGRATION.md)
+  ([English](../guides/en/CMSIS_MIGRATION.md)): сопоставлены 17 HAL-сценариев F030
   с двумя CMSIS-сценариями. Build/offline 3/3 PASS, без HW. Далее F030
   boot/clock/GPIO/blink, затем периферия и другие профили. Оптимизация CI — после переноса.
   Также переименован корневой Tests → tests; вложенные каталоги потребителей

@@ -2,7 +2,7 @@
 
 [Документация](../../../ru/index.md) → API · [English](../en/API.md)
 
-Для 0.5.0: [Renode и target schema 3](../../../ru/RENODE.md), [QEMU](../../../ru/QEMU.md); schema 1/2 сохраняются.
+Для 0.5.0: [Renode и target schema 3](../../../guides/ru/RENODE.md), [QEMU](../../../guides/ru/QEMU.md); schema 1/2 сохраняются.
 **Регистры периферии:** [известные ограничения MMIO и рекомендуемый маршрут проверки](../../../ru/MMIO.md).
 
 [Выпуск v0.3.0](../../../releases/v0.3.0.md): версия пакета 0.3.0; кандидат v0.2.0-rc.1 не публиковался. Исторические сведения ниже сохраняются.
@@ -152,7 +152,7 @@ stm32_gdbtest_attach(firmware_target
   firmware target до вызова `stm32_gdbtest_attach`.
 - Поддерживается один firmware target верхнего каталога CMake, генератор Ninja,
   каталог сборки внутри `PROJECT_SOURCE_DIR`. Сборка, build manifest и подготовка
-  и аппаратный запуск работают на Windows и Linux ([Linux-стенд](../../../ru/LINUX_STAND.md)).
+  и аппаратный запуск работают на Windows и Linux ([Linux-стенд](../../../guides/ru/LINUX_STAND.md)).
 - `PROFILE_DIR`, `PROFILE` и пути `MANIFEST_INPUTS` задаются абсолютными. В
   `PROFILE_DIR` находятся `tests/board/test_*.py`, `tests/requirements.md`, при
   использовании контрактов `tests/contracts.json` и `target.toml`. Каталог сценариев
@@ -218,7 +218,7 @@ def gpio(t):
 `boot`, `close`, `on_stop`, `report`, `owned`, `stops` и создание Target —
 внутренний жизненный цикл агента. Вызовы GDB допустимы только в его основном
 потоке. `-g3` сохраняет макросы, но не неиспользуемые функции и символы;
-см. [HAL-макросы](../../../ru/HAL_MACRO_GUIDE.md) и [контракты](../../../ru/CONTRACTS.md).
+см. [HAL-макросы](../../../guides/ru/HAL_MACRO_GUIDE.md) и [контракты](../../../ru/CONTRACTS.md).
 
 ## CLI
 
@@ -264,7 +264,7 @@ Windows каталог xPack по умолчанию в профиле поль�
 `pack --session S --output P.zip [--test ID …] [--include PATH …]` готовит сценарии без
 оборудования и пишет пакет подготовленного запуска; `run --package` проверяет SHA-256
 каждого файла пакета и добавляет в отчёт поле `package`
-([аппаратный CI](../../../ru/HARDWARE_CI.md)).
+([аппаратный CI](../../../guides/ru/HARDWARE_CI.md)).
 
 `collect --cmake/--workspace` — интерфейс генерации CMake, вручную обычно не нужен.
 
@@ -277,8 +277,8 @@ compatibility 1, политика образа 1, пакет подготовл�
 обещания стабильной схемы. Прямые вызовы `runner`, `contracts`, `processes` —
 внутренний API разработки; потребители используют CMake, CLI и операции Target.
 Подробности: [подключение](../../../ru/GETTING_STARTED.md), [manifest](../../../ru/MANIFESTS.md),
-[identity](../../../ru/TARGET_IDENTITY.md), [GDB-серверы](../../../ru/BACKENDS.md),
-[владение отладчиком](../../../ru/DEBUGGER_OWNERSHIP.md). `STM32_GDBTEST_LOCK_DIR` задаёт на Linux
+[identity](../../../ru/TARGET_IDENTITY.md), [GDB-серверы](../../../guides/ru/BACKENDS.md),
+[владение отладчиком](../../../guides/ru/DEBUGGER_OWNERSHIP.md). `STM32_GDBTEST_LOCK_DIR` задаёт на Linux
 базовый каталог блокировок: по умолчанию системный каталог временных файлов (`/tmp`
 или `TMPDIR`), внутри — `stm32-gdbtest-locks`.
 
@@ -336,11 +336,11 @@ F030: проверка занятого ADC, API без изменений. [П�
 
 F030: RTC deadline через инъекцию аргумента, API без изменений. [Протокол](../../../evidence/ru/F030_RTC_DEADLINE.md).
 
-Собственные профили/примеры и новые пакеты используют `tests`; чтение старых `Tests` сохранено. Локальные remote-стенды — `<profile>-<backend>.remote.toml` (`openocd`, `jlink`, `stlink`), исключённые из Git. После переименования повторить configure. [Соглашения](../../../ru/maintenance.md).
+Собственные профили/примеры и новые пакеты используют `tests`; чтение старых `Tests` сохранено. Локальные remote-стенды — `<profile>-<backend>.remote.toml` (`openocd`, `jlink`, `stlink`), исключённые из Git. После переименования повторить configure. [Соглашения](../../../guides/ru/maintenance.md).
 
 [Автономная HAL-регрессия F030](../../../evidence/ru/F030_HAL_REGRESSION.md): тестовый consumer, без изменения API.
 
-[CI: уровень hal](../../../ru/testing.md) добавляет проверку fixture, публичный API/схемы не меняются.
+[CI: уровень hal](../../../guides/ru/testing.md) добавляет проверку fixture, публичный API/схемы не меняются.
 
 ## Сохранение результатов пакетов (rc.2)
 
@@ -423,7 +423,7 @@ result.status сохраняет исходный вердикт. command_code: 
 `[st-util]` с `reset_halt = "monitor reset"` либо оставить встроенное значение.
 Существующие секции и сценарии менять не требуется. `profile.stand["backend"]`
 теперь может быть `st-util`; обновите собственные списки допустимых серверов.
-Методы Target и API_VERSION=2 не меняются. [Конфигурация и ограничения](../../../ru/BACKENDS.md#st-util-v040).
+Методы Target и API_VERSION=2 не меняются. [Конфигурация и ограничения](../../../guides/ru/BACKENDS.md#st-util-v040).
 
 ## Завершение удалённого сервера (v0.4.0)
 
@@ -439,7 +439,7 @@ SIGKILL, heartbeat timeout или отсутствие подтверждени�
 `remote_server.idle`: `ready`, `reason`, `elapsed_s`, `limit_s`. Последнее поле подтверждает
 наблюдение idle на хосте стенда; без него exit0 недостаточно. Ожидание Listening ограничено5с,
 host recovery —10с; итоговое ожидание SSH —25с с учётом cleanup. Эти поля диагностические:
-для принятия результата используйте итоговый status. [Жизненный цикл](../../../ru/LINUX_STAND.md#диагностика-завершения).
+для принятия результата используйте итоговый status. [Жизненный цикл](../../../guides/ru/LINUX_STAND.md#диагностика-завершения).
 
 Маркер st-util может завершаться многоточием: `Listening at *:порт...`. Оно учитывается парсером; неполная строка без перевода строки не подтверждает готовность.
 
@@ -455,7 +455,7 @@ Prepare устанавливает закреплённый SDK через `tool
 
 Раскраска свидетельств проверок: [DDTT в VS Code](../../../ru/DDTT_COVERAGE.md); внешний экспортёр, без изменения Target API.
 
-[Переносимый HTML/LCOV/Cobertura](../../../ru/PORTABLE_DDTT.md) и [Renode-пробы](../../../ru/RENODE_PROBES.md) — внешние инструменты, не новые методы Target.
+[Переносимый HTML/LCOV/Cobertura](../../../ru/PORTABLE_DDTT.md) и [Renode-пробы](../../../guides/ru/RENODE_PROBES.md) — внешние инструменты, не новые методы Target.
 
 ## Миграция memory/write к 0.4.2
 
@@ -487,7 +487,7 @@ Schema 1 и API_VERSION=2 сохраняются. Контракт может я
 
 ## Миграция завершения OpenOCD/J-Link к 0.5.0
 
-Локальный OpenOCD/J-Link теперь освобождает сервер штатно; ошибка его завершения даёт ERROR при неизменном API сценария. TOML менять не нужно. Подробности: [OpenOCD](../../../ru/backends/openocd.md#штатное-завершение-локального-openocdj-link).
+Локальный OpenOCD/J-Link теперь освобождает сервер штатно; ошибка его завершения даёт ERROR при неизменном API сценария. TOML менять не нужно. Подробности: [OpenOCD](../../../guides/ru/backends/openocd.md#штатное-завершение-локального-openocdj-link).
 
 
 ## Исполнение в API_VERSION=3 (кандидат 0.5.0)

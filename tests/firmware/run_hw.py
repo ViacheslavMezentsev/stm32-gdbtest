@@ -21,7 +21,7 @@ Results: build/hw/<profile>-<stand name>/<run>/summary.json and the runner repor
 
 A package from `python -m stm32_gdbtest pack` replaces the build here (--package; built and
 prepared elsewhere, e.g. in CI). --repeat N repeats the steps (0: until Ctrl+C) and writes
-soak.json with counters plus iterations/NNNNN.json (docs/en/HARDWARE_CI.md).
+soak.json with counters plus iterations/NNNNN.json (docs/guides/en/HARDWARE_CI.md).
 """
 
 import argparse

@@ -369,11 +369,11 @@ flowchart LR
 | --- | --- | --- |
 | 6.1 | `@case`, collect, traceability, contracts | ID в требованиях; выбранные сценарий и ELF |
 | 6.2 | Target и GDB-Python; [справочник](api/index.md) | Причина/место остановки, значения, текущий кадр и ресурсы MCU |
-| 6.3 | [Backend](BACKENDS.md), [SSH](LINUX_STAND.md) | Соответствие платы, профиля и probe; doctor сам по себе MCU не проверяет |
+| 6.3 | [Backend](../guides/ru/BACKENDS.md), [SSH](../guides/ru/LINUX_STAND.md) | Соответствие платы, профиля и probe; doctor сам по себе MCU не проверяет |
 | 6.4 | [runner.py](../../stm32_gdbtest/runner.py), [agent.py](../../stm32_gdbtest/agent.py) | Снимок ELF, identity, image verification, фаза ошибки, teardown/recovery |
 | 6.5 | [reports.py](../../stm32_gdbtest/reports.py), [result_capture.py](../../stm32_gdbtest/result_capture.py) | Вердикт, код команды, capture и целостность отдельно |
 | 6.5 (0.6.0) | Квоты и строгая полнота [журнала](JOURNALING.md), `records(require_complete=True)` | evidence.stores и check_accounting; потеря записи даёт command=2, неполный журнал не читается как полный |
-| 6.6 | [Владение отладчиком](DEBUGGER_OWNERSHIP.md) | Один владелец; lock на удалённом хосте; чужие процессы не завершаются |
+| 6.6 | [Владение отладчиком](../guides/ru/DEBUGGER_OWNERSHIP.md) | Один владелец; lock на удалённом хосте; чужие процессы не завершаются |
 | 6.7 | `run --prepare-only`, [контракты](CONTRACTS.md) | Сервер не запускается; NOT_REQUESTED не является PASS контракта |
 | 6.8 | CLI, CTest, doctor, [stand_loop.py](../../tools/stand_loop.py) | Тот же комплект; отдельная попытка на каждом запуске; явная политика SKIP |
 | 6.8 (0.6.0) | `run --interactive`, [ручная отладка](MANUAL_DEBUG.md) | Результаты в interactive-runs с execution_kind=interactive; такой прогон не входит в приёмку |
@@ -421,7 +421,7 @@ flowchart LR
 Это порядок ответственности; точные ветви отказа определены runner/agent. Prepare обходит
 аппаратный lock и сервер. При ранней ошибке часть полей/логов отсутствует. Потеря питания,
 USB или принудительное завершение могут оставить состояние цели неизвестным.
-Команды, паспорт прогона и восстановление — [локальный CI, L6](local-ci.md).
+Команды, паспорт прогона и восстановление — [локальный CI, L6](../guides/ru/local-ci.md).
 
 ### 10.4. Исходы и артефакты
 

@@ -10,7 +10,7 @@ repository, checks it without hardware (`run --prepare-only`), runs it on a stan
 reads `result.json`. The result is not an answer in a chat but a test case of the
 project that later runs again manually, in CI or on a stand in a loop. An agent does
 not change the stand, the debugger firmware or dangerous Flash settings without the
-owner's agreement ([maintenance](maintenance.md#working-with-hardware)).
+owner's agreement ([maintenance](../guides/en/maintenance.md#working-with-hardware)).
 
 1. Write the observable requirement and its ID in `tests/requirements.md`. Define the
    acceptable effect of halt/reset and the failure criterion.
@@ -21,7 +21,7 @@ owner's agreement ([maintenance](maintenance.md#working-with-hardware)).
 4. When HAL or CMSIS macros are used, choose pure getter and predicate expressions
    and a context — a function from the compilation unit where the macro is defined;
    add `contracts.json`. Do not present a setter as a read; mind read-to-clear, W1C,
-   FIFO and SR/DR sequences ([HAL macros](HAL_MACRO_GUIDE.md)).
+   FIFO and SR/DR sequences ([HAL macros](../guides/en/HAL_MACRO_GUIDE.md)).
 5. Without a board: collection and traceability, then `run --prepare-only` — it runs
    the offline contract, manifest and image checks before the GDB server.
 6. Name the exact stand, run one test, study JSON, JUnit and GDB logs; only then

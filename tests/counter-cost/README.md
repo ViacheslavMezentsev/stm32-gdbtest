@@ -67,7 +67,7 @@ python3 tests/counter-cost/run.py --toolchain /opt/xpack-arm-none-eabi-gcc-14.2.
 
 Нужны host g++, Python 3.11+, ARM GCC/GDB-Python, Renode 1.17. Входы, SHA-256,
 исходные result/records, версии и summary сохраняются в build/counter-cost/<id>.
-Docker на Windows: исходники и сборки в volume, см. [локальный CI](../../docs/ru/local-ci.md).
+Docker на Windows: исходники и сборки в volume, см. [локальный CI](../../docs/guides/ru/local-ci.md).
 
 ## API: правильно и неправильно
 

@@ -116,7 +116,7 @@ flowchart LR
 Remote mode uses SSH keys only; the debugger lock is held on the stand host and the
 link is watched by a heartbeat. ST-LINK GDB Server is not available on Linux aarch64
 (ST does not ship it for arm64), so OpenOCD, J-Link and st-util are used on Orange Pi.
-Details: [Linux stand](../../../en/LINUX_STAND.md), [GDB servers](../../../en/BACKENDS.md).
+Details: [Linux stand](../../../guides/en/LINUX_STAND.md), [GDB servers](../../../guides/en/BACKENDS.md).
 
 **Reading the counters.** The Hardware badge describes the recorded full 0.4.0 SSH campaign:
 five STM32 boards, 233 profile/scenario combinations, dated 2026-10-10. It does not add selected-suite

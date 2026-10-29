@@ -10,7 +10,7 @@ enough; the module itself then runs on the installed Python 3.11.
 
 Requirements: curl, tar, git; x86_64 or aarch64 with glibc >= 2.31.
 J-Link software, udev rules and dialout/plugdev membership are installed by the
-owner of the machine (see docs/en/LINUX_STAND.md).
+owner of the machine (see docs/guides/en/LINUX_STAND.md).
 
 Usage (repository root):
   python3 tools/linux_stand.py install [--prefix DIR] [--only NAME ...]

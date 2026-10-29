@@ -8,8 +8,8 @@ contact_links:
     url: https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/index.md
     about: Подключение, первый прогон, GDB-серверы, стенды, результаты. Integration, first run, GDB servers, stands, results. English — docs/en/index.md.
   - name: "Памятка: частые проблемы / HOWTO: common problems"
-    url: https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/HOWTO.md
-    about: Стенд, отладчики, удалённый сервер, Docker, CMake. Stand, probes, remote server, Docker, CMake. English — docs/en/HOWTO.md.
+    url: https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/guides/ru/HOWTO.md
+    about: Стенд, отладчики, удалённый сервер, Docker, CMake. Stand, probes, remote server, Docker, CMake. English — docs/guides/en/HOWTO.md.
   - name: "Текущее состояние и ограничения / Current status and limitations"
     url: https://github.com/ViacheslavMezentsev/stm32-gdbtest/blob/main/docs/ru/STATUS.md
     about: Что проверено на каких MCU, серверах и стендах, известные границы. What is verified on which MCUs, servers and stands; known limits.

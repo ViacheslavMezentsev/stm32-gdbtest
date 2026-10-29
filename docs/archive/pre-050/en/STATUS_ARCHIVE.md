@@ -69,7 +69,7 @@ Initial restore ACL errors are preserved in the evidence.
 | BlackPill consumer | fb2d186 / module 67b7431: Offline SUCCESS, five profiles/120 CTest; Windows 25/25, F411/OpenOCD 22/22 + timeout/recovery/restore. Final gitlink follows module land |
 
 Sources: [HAL→CMSIS](../../../evidence/en/F030_CMSIS_ACCEPTANCE.md), [HAL protocol](../../../evidence/en/F030_HAL_VALIDATION.md),
-[techniques](../../../en/TESTING_TECHNIQUES.md), [CI](../../../en/testing.md).
+[techniques](../../../en/TESTING_TECHNIQUES.md), [CI](../../../guides/en/testing.md).
 The current Nucleo stand uses native ST-Link/OpenOCD; J-Link STLink results below are historical.
 F103 is WeAct BluePill-Plus/J-Link; F411 is BlackPill/ST-Link with OpenOCD and ST server.
 Remote runs, packages and the Hardware workflow were repeated for rc.2;
@@ -162,12 +162,12 @@ remain planned work.
 
 | Area | Verified scope |
 | --- | --- |
-| CI (GitHub Actions, Docker) | Docs, format, host on Windows and Linux; F030R8/F103C8/F411CE CI firmware with GCC 13.3.1, 14.2.1, 15.2.1 and CMake 3.28.3: build manifest, `prepare`, full image, 10 negative contracts, load section alignment, empty RAM section; the Linux stand environment in `ubuntu:20.04` on x86_64 and aarch64 ([checks and CI](../../../en/testing.md)) |
+| CI (GitHub Actions, Docker) | Docs, format, host on Windows and Linux; F030R8/F103C8/F411CE CI firmware with GCC 13.3.1, 14.2.1, 15.2.1 and CMake 3.28.3: build manifest, `prepare`, full image, 10 negative contracts, load section alignment, empty RAM section; the Linux stand environment in `ubuntu:20.04` on x86_64 and aarch64 ([checks and CI](../../../guides/en/testing.md)) |
 | CI firmware on hardware | Final check at `2143665`: 4 stands on Windows, 3 stands from Windows to Orange Pi 5, 3 stands in the Hardware workflow — 10/10 steps each; earlier 4 stands at `fbc103d` (sections below) |
 | Linux stand without hardware | Ubuntu 20.04 x86_64 (glibc 2.31, Python 3.8, git 2.25) in a container: environment installation, host tests (79 at revision 0.7), `doctor`, `build` and `prepare` of the CI firmware; the hardware path without a debugger — lock, OpenOCD start, ERROR "exited before ready", processes stopped |
 | Remote GDB server on hardware | Runner and GDB on Windows 10, GDB servers on Orange Pi 5 over SSH: F411CE / OpenOCD, F103C8 / J-Link CE, F030R8 / J-Link STLink — 10/10 each (`run_hw.py`) |
 | Remote GDB server without hardware | SSH loopback (OpenSSH, key, `known_hosts`) and a fake J-Link server: port forwarding, GDB connecting through the tunnel, recovery, stopping the server and returning its log, refusal on a busy stand host lock, cleanup after a broken session |
-| Linux stand on hardware | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 / J-Link GDB Server 9.80 arm64 — 10/10 after confirming the J-Link STLink terms window in a graphical session; without it the connection waits about 10 s, the first run gave 2/10 ([Linux stand](../../../en/LINUX_STAND.md)) |
+| Linux stand on hardware | Orange Pi 5, Ubuntu 20.04 aarch64, `run_hw.py`: F411CE / ST-Link V2J43M28 / xPack OpenOCD 0.12.0-7 — 10/10; F103C8 / J-Link CE V9 / J-Link GDB Server 8.32 arm64 — 10/10; F030R8 / J-Link STLink V21 / J-Link GDB Server 9.80 arm64 — 10/10 after confirming the J-Link STLink terms window in a graphical session; without it the connection waits about 10 s, the first run gave 2/10 ([Linux stand](../../../guides/en/LINUX_STAND.md)) |
 | ELF/HAL preflight | Positive case and 11 negative variants on F103C8/F401CC/F411CE ELF files of the stand project |
 | Stand project, F411CE / ST-Link / OpenOCD | 24/24 CTest (22 HW + 2 host) after the module split |
 | Stand project, F103C8 / J-Link | 24/24 CTest (22 HW + 2 host) |

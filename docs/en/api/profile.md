@@ -70,4 +70,4 @@ t.record("run", t.profile)
 - [API specification](../../TECHNICAL_SPECIFICATION_API.md), items 4.14.1–4.14.8.
 - [record](record.md), [reset](reset.md).
 
-Since v0.4.0, `stand.backend` also accepts `st-util`; see its [backend configuration](../BACKENDS.md#st-util-v040).
+Since v0.4.0, `stand.backend` also accepts `st-util`; see its [backend configuration](../../guides/en/BACKENDS.md#st-util-v040).

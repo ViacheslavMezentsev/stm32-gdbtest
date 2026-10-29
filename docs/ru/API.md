@@ -40,7 +40,7 @@ stm32_gdbtest_attach(firmware_target
   firmware target до вызова `stm32_gdbtest_attach`.
 - Поддерживается один firmware target верхнего каталога CMake, генератор Ninja,
   каталог сборки внутри `PROJECT_SOURCE_DIR`. Сборка, build manifest и подготовка
-  и аппаратный запуск работают на Windows и Linux ([Linux-стенд](LINUX_STAND.md)).
+  и аппаратный запуск работают на Windows и Linux ([Linux-стенд](../guides/ru/LINUX_STAND.md)).
 - `PROFILE_DIR`, `PROFILE` и пути `MANIFEST_INPUTS` задаются абсолютными. В
   `PROFILE_DIR` находятся `tests/board/test_*.py`, `tests/requirements.md`, при
   использовании контрактов `tests/contracts.json` и `target.toml`. Каталог сценариев
@@ -106,7 +106,7 @@ def gpio(t):
 `boot`, `close`, `on_stop`, `report`, `owned`, `stops` и создание Target —
 внутренний жизненный цикл агента. Вызовы GDB допустимы только в его основном
 потоке. `-g3` сохраняет макросы, но не неиспользуемые функции и символы;
-см. [HAL-макросы](HAL_MACRO_GUIDE.md) и [контракты](CONTRACTS.md).
+см. [HAL-макросы](../guides/ru/HAL_MACRO_GUIDE.md) и [контракты](CONTRACTS.md).
 
 ## CLI
 
@@ -161,7 +161,7 @@ Windows каталог xPack по умолчанию в профиле поль�
 `pack --session S --output P.zip [--test ID …] [--include PATH …]` готовит сценарии без
 оборудования и пишет пакет подготовленного запуска; `run --package` проверяет SHA-256
 каждого файла пакета и добавляет в отчёт поле `package`
-([аппаратный CI](HARDWARE_CI.md)).
+([аппаратный CI](../guides/ru/HARDWARE_CI.md)).
 
 `collect --cmake/--workspace` — интерфейс генерации CMake, вручную обычно не нужен.
 
@@ -174,8 +174,8 @@ compatibility 1, политика образа 1, пакет подготовл�
 обещания стабильной схемы. Прямые вызовы `runner`, `contracts`, `processes` —
 внутренний API разработки; потребители используют CMake, CLI и операции Target.
 Подробности: [подключение](GETTING_STARTED.md), [manifest](MANIFESTS.md),
-[identity](TARGET_IDENTITY.md), [GDB-серверы](BACKENDS.md),
-[владение отладчиком](DEBUGGER_OWNERSHIP.md). `STM32_GDBTEST_LOCK_DIR` задаёт на Linux
+[identity](TARGET_IDENTITY.md), [GDB-серверы](../guides/ru/BACKENDS.md),
+[владение отладчиком](../guides/ru/DEBUGGER_OWNERSHIP.md). `STM32_GDBTEST_LOCK_DIR` задаёт на Linux
 базовый каталог блокировок: по умолчанию системный каталог временных файлов (`/tmp`
 или `TMPDIR`), внутри — `stm32-gdbtest-locks`.
 

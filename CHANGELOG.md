@@ -244,12 +244,12 @@
 - Опциональный захват records.json через session.toml: отдельный итог команды и инфраструктурная ошибка JUnit при отказе артефакта.
 
 
-- Cortex-M-совместимые МК других производителей ([описание](docs/ru/COMPATIBLE_MCU.md)): профиль `at32f403a`
+- Cortex-M-совместимые МК других производителей ([описание](docs/guides/ru/COMPATIBLE_MCU.md)): профиль `at32f403a`
   проверочной прошивки (WeAct AT32F4 Core Board, AT32F403ACGU7, J-Link) — порт на CMSIS Artery и 20 сценариев
   периферии через битовые поля SDK; на плате 44/44 вместе с общими сценариями. SDK Artery закреплён в
   `ci/dependencies.lock.json`, `tools/vendor_sdk.py` ставит его локально; build manifest записывает пакет Artery.
-- Документация совместимых МК: README называет AT32F403ACGU7 и границы проверки, [совместимые МК](docs/ru/COMPATIBLE_MCU.md)
-  дают пошаговое подключение своего кристалла; [памятка](docs/ru/HOWTO.md) — порядок push веток, bundle и
+- Документация совместимых МК: README называет AT32F403ACGU7 и границы проверки, [совместимые МК](docs/guides/ru/COMPATIBLE_MCU.md)
+  дают пошаговое подключение своего кристалла; [памятка](docs/guides/ru/HOWTO.md) — порядок push веток, bundle и
   cherry-pick, стенд CTest, регистры только для записи, сбои CI последних изменений.
 
 ### Изменено
@@ -506,7 +506,7 @@
 
 - Подготовлен [план отдельной HAL-регрессии F030](docs/evidence/ru/F030_HAL_REGRESSION.md): источники, 17 сценариев, границы и четыре этапа. Только документация; ТЗ 0.37/G.13 и API без изменений.
 
-- Собственные профили/примеры и новые пакеты используют `tests`; чтение старых `Tests` сохранено. Локальные remote-стенды — `remote.toml` / `<profile>-remote.toml`, исключённые из Git. После переименования повторить configure. [Соглашения](docs/ru/maintenance.md). ТЗ 0.37.
+- Собственные профили/примеры и новые пакеты используют `tests`; чтение старых `Tests` сохранено. Локальные remote-стенды — `remote.toml` / `<profile>-remote.toml`, исключённые из Git. После переименования повторить configure. [Соглашения](docs/guides/ru/maintenance.md). ТЗ 0.37.
 
 - [Сверка HAL→CMSIS F030 и порядок пакета веток](docs/evidence/ru/F030_CMSIS_ACCEPTANCE.md).
 

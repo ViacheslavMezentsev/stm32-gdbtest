@@ -14,9 +14,9 @@ project dependency run them in a separate working copy.
   Python ≥ 3.11), an SWD debugger and its GDB server (OpenOCD, ST-LINK GDB Server or
   J-Link GDB Server).
 - On Linux everything except the J-Link software and udev rules is installed without
-  root by `tools/linux_stand.py`, including Ubuntu 20.04 ([Linux stand](LINUX_STAND.md)).
+  root by `tools/linux_stand.py`, including Ubuntu 20.04 ([Linux stand](../guides/en/LINUX_STAND.md)).
 - Build, build manifest and preparation without hardware (`run --prepare-only`) also
-  run in the CI Docker image ([checks and CI](testing.md)).
+  run in the CI Docker image ([checks and CI](../guides/en/testing.md)).
 - `python -B -m stm32_gdbtest doctor [--stand <stand>]` checks the environment without
   accessing the debugger.
 - Verified versions and boards — [status](STATUS.md). Other MCUs and versions need
@@ -28,11 +28,11 @@ Scenarios do not depend on where the debugger is connected; the local stand file
 defines the layout:
 
 - the debugger at the workstation (Windows or Linux) — `[probe]` with the server on this
-  computer ([GDB servers](BACKENDS.md));
+  computer ([GDB servers](../guides/en/BACKENDS.md));
 - the debugger on a Linux stand, everything runs there — the `tools/linux_stand.py`
-  environment ([Linux stand](LINUX_STAND.md));
+  environment ([Linux stand](../guides/en/LINUX_STAND.md));
 - the debugger on a Linux stand, the runner at the workstation — `[probe]` plus
-  `[remote]` with an SSH key ([remote GDB server](LINUX_STAND.md#remote-gdb-server-windows-or-wsl--orange-pi)).
+  `[remote]` with an SSH key ([remote GDB server](../guides/en/LINUX_STAND.md#remote-gdb-server-windows-or-wsl--orange-pi)).
 
 Checked layouts are in the [status](STATUS.md#stand-layouts).
 
@@ -60,7 +60,7 @@ For a copy of the example with a real submodule, pass
 resolved from the consumer source root, and CTest receives an absolute value.
 
 The full CI check set (Windows and Linux, three GCC versions, three MCUs) runs with
-one command in the Docker image — [checks and CI](testing.md).
+one command in the Docker image — [checks and CI](../guides/en/testing.md).
 
 ## Adding the module to a project
 
@@ -96,5 +96,5 @@ checks the stand, profile, manifest, contracts and image without accessing the d
 
 - [Writing tests](TEST_AUTHORING.md) — the process for people and AI agents.
 - [API and CLI](API.md) — public operations and limits.
-- [Maintenance](maintenance.md) and [AGENTS.md](../../AGENTS.md) — rules for changing the core.
+- [Maintenance](../guides/en/maintenance.md) and [AGENTS.md](../../AGENTS.md) — rules for changing the core.
 - Profile and contract formats — examples and the `profile.py`, `contracts.py` validators.

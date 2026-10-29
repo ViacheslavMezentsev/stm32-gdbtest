@@ -37,9 +37,9 @@ python3 tests/stateful-buffer/run.py --toolchain /opt/xpack-arm-none-eabi-gcc-14
 ```
 
 `--host-cxx` выбирает host-компилятор. Нужны Python 3.11+, GDB с Python, ARM GCC и Renode 1.17.
-Windows Docker: снимок исходников и сборки в одном volume по [локальному CI](../../docs/ru/local-ci.md).
+Windows Docker: снимок исходников и сборки в одном volume по [локальному CI](../../docs/guides/ru/local-ci.md).
 Runner использует выделенный Renode, не подключается к имеющемуся endpoint; ограничение
-слушающего GDB-порта Renode описано в [backend](../../docs/ru/RENODE.md).
+слушающего GDB-порта Renode описано в [backend](../../docs/guides/ru/RENODE.md).
 
 ## Красный контроль, исправление, повтор
 

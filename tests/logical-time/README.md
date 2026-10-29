@@ -52,7 +52,7 @@ python3 tests/logical-time/run.py --toolchain /opt/xpack-arm-none-eabi-gcc-14.2.
 
 Нужны g++ для host, ARM GCC/GDB-Python, Python 3.11+, Renode 1.17. Пути выбирайте
 по установленным инструментам. Логи, входы, SHA-256 и summary — `build/logical-time/<id>`.
-Linux на Windows: исходники и сборки в Docker volume, как в [локальном CI](../../docs/ru/local-ci.md).
+Linux на Windows: исходники и сборки в Docker volume, как в [локальном CI](../../docs/guides/ru/local-ci.md).
 
 ## Правильно и неправильно: API
 

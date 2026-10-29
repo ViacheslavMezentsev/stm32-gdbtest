@@ -1,6 +1,6 @@
 # Renode runner example
 
-[Русский](../../docs/ru/RENODE.md) · [English](../../docs/en/RENODE.md)
+[Русский](../../docs/guides/ru/RENODE.md) · [English](../../docs/guides/en/RENODE.md)
 
 
 ```sh

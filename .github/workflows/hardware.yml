@@ -1,6 +1,6 @@
 name: Hardware
 
-# Hardware runs on the owner's self-hosted stand (docs/en/HARDWARE_CI.md). Manual only:
+# Hardware runs on the owner's self-hosted stand (docs/guides/en/HARDWARE_CI.md). Manual only:
 # a public repository must never start a self-hosted runner from pull requests.
 on:
   workflow_dispatch:

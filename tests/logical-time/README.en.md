@@ -27,7 +27,7 @@ using ELF symbol size and verified cleanup are required. Campaign PASS never rew
 Run `python tests/logical-time/run.py --host-only`, or add `--toolchain <ARM GCC root>`
 and `--renode <executable>`. Requires host g++, Python 3.11+, GDB-Python and Renode 1.17.
 Inputs, hashes, logs and summary are in build/logical-time/<id>. Windows Docker uses
-one volume for source and builds; see [local CI](../../docs/en/local-ci.md).
+one volume for source and builds; see [local CI](../../docs/guides/en/local-ci.md).
 
 Correct: call returns an operation dictionary; check outcome/return_state, then compare
 return_value. In async def, await call. Record observations before check; restore in finally.

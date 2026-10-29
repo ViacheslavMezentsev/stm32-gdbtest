@@ -14,9 +14,9 @@ Python-сценарии и настройки платы находятся в �
   Python ≥ 3.11), SWD-отладчик и его GDB-сервер (OpenOCD, ST-LINK GDB Server или
   J-Link GDB Server).
 - На Linux всё, кроме ПО J-Link и правил udev, ставится без root сценарием
-  `tools/linux_stand.py`, в том числе на Ubuntu 20.04 ([Linux-стенд](LINUX_STAND.md)).
+  `tools/linux_stand.py`, в том числе на Ubuntu 20.04 ([Linux-стенд](../guides/ru/LINUX_STAND.md)).
 - Сборка, build manifest и подготовка без оборудования (`run --prepare-only`) —
-  также в Docker-образе CI ([проверки и CI](testing.md)).
+  также в Docker-образе CI ([проверки и CI](../guides/ru/testing.md)).
 - `python -B -m stm32_gdbtest doctor [--stand <стенд>]` проверяет окружение без
   обращения к отладчику.
 - Проверенные версии и платы — [текущее состояние](STATUS.md). Другие MCU и
@@ -28,11 +28,11 @@ Python-сценарии и настройки платы находятся в �
 стенда:
 
 - отладчик у рабочего компьютера (Windows или Linux) — `[probe]` с сервером на этом
-  компьютере ([GDB-серверы](BACKENDS.md));
+  компьютере ([GDB-серверы](../guides/ru/BACKENDS.md));
 - отладчик на Linux-стенде, всё запускается на нём — окружение `tools/linux_stand.py`
-  ([Linux-стенд](LINUX_STAND.md));
+  ([Linux-стенд](../guides/ru/LINUX_STAND.md));
 - отладчик на Linux-стенде, runner на рабочем компьютере — `[probe]` плюс `[remote]`
-  с SSH-ключом ([удалённый GDB-сервер](LINUX_STAND.md#удалённый-gdb-сервер-windows-или-wsl--orange-pi)).
+  с SSH-ключом ([удалённый GDB-сервер](../guides/ru/LINUX_STAND.md#удалённый-gdb-сервер-windows-или-wsl--orange-pi)).
 
 Проверенные схемы — в [текущем состоянии](STATUS.md#схемы-размещения-стенда).
 
@@ -60,7 +60,7 @@ GDB-Python и установленный STM32CubeF4 V1.28.3. Пути зада�
 исходников потребителя, в CTest передаётся абсолютное значение.
 
 Полный набор проверок CI (Windows и Linux, три GCC, три MCU) запускается одной
-командой в Docker-образе — [проверки и CI](testing.md).
+командой в Docker-образе — [проверки и CI](../guides/ru/testing.md).
 
 ## Подключение к проекту
 
@@ -97,5 +97,5 @@ stm32_gdbtest_attach(firmware_target
 
 - [Написание тестов](TEST_AUTHORING.md) — процесс для человека и ИИ-агента.
 - [API и CLI](API.md) — публичные операции и ограничения.
-- [Сопровождение](maintenance.md) и [AGENTS.md](../../AGENTS.md) — правила изменения ядра.
+- [Сопровождение](../guides/ru/maintenance.md) и [AGENTS.md](../../AGENTS.md) — правила изменения ядра.
 - Форматы профиля и контрактов — примеры и валидаторы `profile.py`, `contracts.py`.
