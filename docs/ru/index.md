@@ -2,160 +2,98 @@
 
 Документация · [English](../en/index.md)
 
-Планирование: [Памятка](../../TODO.md), [Дорожная карта](../../ROADMAP.md), [История](../archive/TODO_ARCHIVE.md).
-[Структура и обязательные переводы](../development/README.md): сопровождение преимущественно на русском.
-
-
-[Нейтральный пример VTOR/FPB](LIVE_OBSERVER.md) — живое окно, эталон, очистка и перенос прикладных приёмов на API 3.
-**Регистры периферии:** [известные ограничения MMIO и рекомендуемый маршрут проверки](MMIO.md).
-
-
-Введение — [README](../../README.md): реализация [DDTT](DDTT.md) для STM32 — проверки
-работающей прошивки на реальной плате через GDB и SWD-отладчик сценариями в
-репозитории проекта. Требования — [ТЗ](../TECHNICAL_SPECIFICATION.md)
-(ведётся только на русском).
-
-[Практический порядок Docker и L6](local-ci.md): снимок, volume, отчёты и восстановление стенда.
+stm32-gdbtest — реализация [DDTT](DDTT.md) для STM32: сценарии в репозитории проекта проверяют
+работающую прошивку на реальной плате через GDB и SWD-отладчик. Введение — [README](../../README.md),
+требования — [ТЗ](../TECHNICAL_SPECIFICATION.md) и [ТЗ API](../TECHNICAL_SPECIFICATION_API.md)
+(только на русском). Навыки для ИИ-агентов и маршруты TTDD — [skills](../../skills/README.md).
 
 ## Начало работы
 
+- [Начало работы](GETTING_STARTED.md) — требования, проверка без платы, подключение подмодулем.
+- [Написание тестов](TEST_AUTHORING.md) — процесс для человека и ИИ-агента.
 - [Шпаргалка сценариста](SCENARIO_CHECKLIST.md) — осмотр до запуска, перед изменением состояния и после опыта.
-
+- [Пошаговый проход сценария](MANUAL_DEBUG.md) — `run --interactive`: точки останова и Debug Console в VS Code без ограничения по времени.
 - [Схемы запуска](RUN_LAYOUTS.md) — размещение runner, GDB и отладчика, подтверждённые сочетания.
 - [Профили MCU](MCU_PROFILES.md) — описание target.toml и проверенные платы.
 - [Стенды](STANDS.md) — платы стендов: сводка и схематичный вид сверху.
-- [Текущее состояние](STATUS.md) — версии, свидетельства и ограничения.
+- [Спецификация DDTT](DDTT.md) — метод: термины, принципы, требования к сценариям, стендам и инструментам.
 
-- [Спецификация DDTT](DDTT.md) — метод тестирования через отладчик на целевом устройстве: термины, принципы, требования к сценариям, стендам и инструментам.
+## Сценарии и API
 
-- [Начало работы](GETTING_STARTED.md) — требования, проверка без платы, подключение подмодулем.
-- [Написание тестов](TEST_AUTHORING.md) — процесс для человека и ИИ-агента.
-- [Пошаговый проход сценария](MANUAL_DEBUG.md) — `run --interactive`: точки останова, шаги и Debug Console в VS Code без ограничения по времени, BluePill/BlackPill.
 - [API, CLI и миграция](API.md) — CMake, декоратор `case`, Target API, `run`, переход с hwtest.
-
-## Механизмы
-
-- [ELF/HAL-контракты](CONTRACTS.md) — offline-проверка функций, типов, enum и хэшей исходников.
+- [Справочник методов](api/index.md) — все методы Target с версиями появления и примерами.
+- [Каталог техник TECH-001…026](TESTING_TECHNIQUES.md) — устойчивые приёмы со ссылками из сценариев, условия и восстановление.
+- [Живое окно выполнения](LIVE_EXECUTION.md) — `async def`, `resume(sync=False)`, `await wait/halt`; контракт и миграция.
+- [Наблюдатель VTOR/FPB](LIVE_OBSERVER.md) — нейтральный пример живого окна, эталон и очистка.
+- [Регистры MMIO](MMIO.md) — известные ограничения и рекомендуемый маршрут проверки.
+- [SVD](SVD.md) — описание периферии для `t.mmio`, захват в пакет и границы.
+- [ELF/HAL-контракты](CONTRACTS.md) — офлайн-проверка функций, типов, enum и хешей исходников.
 - [HAL-макросы](HAL_MACRO_GUIDE.md) — выбор макросов, контекст и контракт макросов.
-- [Образы и CRC](IMAGES.md) — секции ELF, BIN, полный образ и CRC-32/ISO-HDLC.
-- [Manifest](MANIFESTS.md) — метаданные среды выполнения и происхождения сборки.
-- [GDB-серверы](BACKENDS.md) — OpenOCD, ST-LINK GDB Server, J-Link, st-util; стенд.
-
-Отдельные backend: [OpenOCD](backends/openocd.md) · [ST-LINK GDB Server](backends/stlink.md) · [J-Link](backends/jlink.md) · [st-util](backends/st-util.md).
-- [Identity и Flash](TARGET_IDENTITY.md) — DEV_ID и заводской размер Flash.
-- [Совместимые МК](COMPATIBLE_MCU.md) — Cortex-M других производителей: профиль, CMSIS производителя, сценарии (AT32).
-- [Владение отладчиком](DEBUGGER_OWNERSHIP.md) — межпроектная блокировка на Windows и Linux.
-- [Linux-стенд](LINUX_STAND.md) — окружение без root (Ubuntu 20.04, Orange Pi 5), USB, J-Link, удалённый GDB-сервер по SSH, WSL2.
-- [Аппаратный CI](HARDWARE_CI.md) — пакеты подготовленного запуска, self-hosted раннер на Orange Pi, прогоны 24/7.
-
-## Состояние и сопровождение
-
-- [База CMSIS F030](F030_CMSIS_BASELINE.md) — четыре аппаратных сценария и ограничения.
-
+- [Переход к 0.5.0](MIGRATION_050.md) — порядок миграции потребителя на API 3.
 - [Миграция примеров на CMSIS](CMSIS_MIGRATION.md) — исходная база, пробелы F030 и приёмка.
 
-- [Текущее состояние](STATUS.md) — проверенный объём, стенды и ограничения.
+Нейтральные примеры: [имитируемый вход: write и ret](../../tests/controlled-input/README.md) ·
+[моделируемый GPIO](../../tests/modeled-gpio/README.md) · [буфер и повторное потребление](../../tests/buffer-consumption/README.md) ·
+[C++-контекст](../../tests/cpp-context/README.md) · [C++, кэш и отложенная запись в Renode](../../tests/renode-cache/README.md) ·
+[остаточное состояние и кольцо](../../tests/stateful-buffer/README.md) · [логическое время](../../tests/logical-time/README.md) ·
+[счётчики и стоимость наблюдения](../../tests/counter-cost/README.md) · [совместный захват](../../tests/external-capture/README.md) ·
+[импорт ROS1 bag](../../tests/rosbag-import/README.md) · [наблюдатель живого окна](../../tests/live-observer/README.md).
+
+## Результаты, журнал и DDTT
+
+- [Журналирование](JOURNALING.md) — источники, квоты, полнота, политики error/truncate.
+- [Экспорт результатов](RESULTS.md) — индекс свидетельств, CSV/HTML и проверка целостности.
+- [DDTT в VS Code](DDTT_COVERAGE.md) — раскраска исходников по свидетельствам проверок.
+- [Переносимый DDTT](PORTABLE_DDTT.md) — публичный отчёт с привязкой к ревизии, без локальных данных.
+- [Квалификация условий](DDTT_QUALIFICATION.md) — сырой исход отдельно от допуска и итоговой раскраски.
+- [Метрики проверок](HARDWARE_METRICS.md) — как читать числа исходов и чем они не являются.
+
+## Стенды, GDB-серверы и CI
+
+- [GDB-серверы](BACKENDS.md) — OpenOCD, ST-LINK GDB Server, J-Link, st-util: [OpenOCD](backends/openocd.md) ·
+  [ST-LINK GDB Server](backends/stlink.md) · [J-Link](backends/jlink.md) · [st-util](backends/st-util.md).
+- [Владение отладчиком](DEBUGGER_OWNERSHIP.md) — межпроектная блокировка на Windows и Linux.
+- [Linux-стенд](LINUX_STAND.md) — окружение без root, USB, J-Link, удалённый GDB-сервер по SSH, WSL2.
+- [Аппаратный CI](HARDWARE_CI.md) — пакеты подготовленного запуска, self-hosted раннер, прогоны 24/7.
+- [Стендовый цикл](STAND_LOOP.md) — конечный план из принятых пакетов, попытки, STOP и SKIP.
+- [Проверка связей HIL](HIL_INSPECT.md) — HIL, backend и SVD без запуска инструментов.
+- [Идентификация MCU](TARGET_IDENTITY.md) — DEV_ID и заводской размер Flash.
+- [Образы и CRC](IMAGES.md) — секции ELF, BIN, полный образ и область проверки Flash.
+- [Manifest](MANIFESTS.md) — метаданные совместимости и происхождения сборки.
+- [Совместимые МК](COMPATIBLE_MCU.md) — Cortex-M других производителей (AT32): профиль, CMSIS, сценарии.
 - [Проверки и CI](testing.md) — уровни CI, Docker-образ, аппаратная проверка CI-прошивок.
-- [Версии и релизы](VERSIONING.md) — SemVer, теги, подготовка релиза.
+- [Локальный CI](local-ci.md) — Docker и L6: снимок, volume, отчёты и восстановление стенда.
+
+## Эмуляторы
+
+- [Renode](RENODE.md) — конфигурация, процесс на сценарий, ограничения модели.
+- [QEMU](QEMU.md) — конфигурация и ограничения.
+- [Проверки Renode](RENODE_PROBES.md) — короткие опыты на модели и их границы.
+
+## Свидетельства по платам
+
+Сводки: [принятый API и результаты](API_ACCEPTANCE.md) · [итоговая сверка пяти профилей CMSIS](CMSIS_ACCEPTANCE.md).
+
+- **F030:** [база CMSIS](F030_CMSIS_BASELINE.md) · [TIM3/IRQ](F030_CMSIS_TIMER.md) · [ADC/DMA](F030_CMSIS_ADC_DMA.md) ·
+  [единицы ADC](F030_CMSIS_ADC_UNITS.md) · [занятый ADC](F030_ADC_BUSY.md) · [Sleep/WFI](F030_CMSIS_SLEEP.md) ·
+  [RTC](F030_CMSIS_RTC.md) · [RTC deadline](F030_RTC_DEADLINE.md) · [сверка HAL→CMSIS](F030_CMSIS_ACCEPTANCE.md) ·
+  [HAL: GPIO/RCC](F030_HAL_GPIO_RCC.md) · [HAL-регрессия](F030_HAL_REGRESSION.md) · [аппаратная приёмка HAL](F030_HAL_VALIDATION.md).
+- **F103:** [clocks/GPIO/SysTick/TIM2](F103_CMSIS_BASELINE.md) · [ADC/DMA](F103_CMSIS_ADC_DMA.md) · [RTC/Sleep](F103_CMSIS_RTC_SLEEP.md).
+- **F401:** [clocks/GPIO/SysTick/TIM2](F401_CMSIS_BASELINE.md) · [ADC/DMA](F401_CMSIS_ADC_DMA.md) · [RTC/Sleep](F401_CMSIS_RTC_SLEEP.md).
+- **F411:** [clocks/GPIO/SysTick/TIM2](F411_CMSIS_BASELINE.md) · [ADC/DMA](F411_CMSIS_ADC_DMA.md) · [RTC/Sleep](F411_CMSIS_RTC_SLEEP.md).
+- **F429:** [clocks/GPIO/SysTick/TIM2](F429_CMSIS_BASELINE.md) · [ADC/DMA](F429_CMSIS_ADC_DMA.md) · [RTC/Sleep](F429_CMSIS_RTC_SLEEP.md).
+
+Это исторические этапы приёмки: числа относятся к своим ревизиям, текущее состояние — в [STATUS](STATUS.md).
+
+## Выпуски и сопровождение
+
+- [Текущее состояние](STATUS.md) — версия, проверенный объём, стенды и ограничения.
+- [Версии и релизы](VERSIONING.md) — SemVer, теги, переходы между выпусками.
+- [Изменения между выпусками](RELEASE_CHANGES.md) — что меняется для пользователя и что сделать.
+- [Описание выпуска 0.6.0](../releases/v0.6.0.md) · [матрица приёмки 0.6.0](../development/release-060-acceptance.md) ·
+  [приёмка 0.5.0](../development/release-050-acceptance.md) · [CHANGELOG](../../CHANGELOG.md).
 - [Сопровождение](maintenance.md) — порядок работы, ветки, коммиты, двуязычная документация.
-- [Памятка](HOWTO.md) — команды git (включая `git land`), частые проблемы стенда, отладчиков и Docker, возврат состояния.
-- [CHANGELOG](../../CHANGELOG.md), [дорожная карта](../../TODO.md), [AGENTS.md](../../AGENTS.md).
-
-[F030 CMSIS: TIM3/IRQ](F030_CMSIS_TIMER.md).
-
-ADC/DMA F030: сырые отсчёты и timeout, API ядра без изменений. [ADC/DMA](F030_CMSIS_ADC_DMA.md).
-
-F030: преобразование ADC и численные сценарии, API ядра без изменений. [ADC units](F030_CMSIS_ADC_UNITS.md).
-
-F030 Sleep/WFI: профильные сценарии через GDB unwind, API ядра не меняется. [Sleep evidence](F030_CMSIS_SLEEP.md).
-
-F030 RTC: Alarm A на LSI, 16/16 HW PASS, HAL восстановлен. API ядра без изменений. [RTC](F030_CMSIS_RTC.md).
-
-F030: проверка занятого ADC, API без изменений. [Протокол](F030_ADC_BUSY.md).
-
-F030: RTC deadline через инъекцию аргумента, API без изменений. [Протокол](F030_RTC_DEADLINE.md).
-
-[Сверка HAL→CMSIS F030 и порядок пакета веток](F030_CMSIS_ACCEPTANCE.md).
-
-- [F030 HAL regression: план переноса и приёмка](F030_HAL_REGRESSION.md).
-
-[Каталог техник TECH-001…026](TESTING_TECHNIQUES.md) — устойчивые ссылки из сценариев, условия сборки, ограничения и восстановление. При переносе HAL-сценариев сохранить ссылки TECH-001/003/004.
-
-[Автономная HAL-регрессия F030](F030_HAL_REGRESSION.md): тестовый consumer, без изменения API.
-
-- [F103 CMSIS: clocks/GPIO/SysTick/TIM2](F103_CMSIS_BASELINE.md).
-
-- [F103 CMSIS: ADC/DMA/units/failures](F103_CMSIS_ADC_DMA.md).
-
-- [F103 CMSIS: RTC/Sleep/deadlines/recovery](F103_CMSIS_RTC_SLEEP.md).
-
-- [F411 CMSIS: clocks/GPIO/SysTick/TIM2](F411_CMSIS_BASELINE.md).
-
-- [F411 CMSIS: ADC/DMA/units/failures](F411_CMSIS_ADC_DMA.md).
-
-- [F411 CMSIS: RTC/Sleep/deadlines/recovery](F411_CMSIS_RTC_SLEEP.md).
-
-[Итоговая сверка пяти профилей и оставшиеся HAL-проверки](CMSIS_ACCEPTANCE.md).
-
-[HAL F030: пять GPIO/RCC-техник и варианты исходников](F030_HAL_GPIO_RCC.md).
-
-
-[Принятый API и результаты](API_ACCEPTANCE.md).
-
-[Справочник методов и свойств](api/index.md).
-
-
-[Экспорт результатов и индекс свидетельств](RESULTS.md).
-
-
-- Внешний конечный диспетчер пакетов: [stand_loop](STAND_LOOP.md). Target API не меняется; старые команды run/pack остаются прежними.
-
-## Исторические этапы приёмки
-
-[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.57.](F429_CMSIS_RTC_SLEEP.md)
-
-[F429 ADC/DMA/units/failures:15/15 HW +3 повтора, HAL восстановлена; ТЗ0.56.](F429_CMSIS_ADC_DMA.md)
-
-[F429 CMSIS baseline:7/7 HW, HAL восстановлена; ТЗ0.55. Пятый профиль в CI, ADC/RTC ещё впереди.](F429_CMSIS_BASELINE.md)
-
-[F401 RTC/Sleep/deadline/recovery:20/20 HW +5 повторов, внешний timeout/recovery и HAL restore PASS; ТЗ0.54.](F401_CMSIS_RTC_SLEEP.md)
-
-[F401 ADC/DMA/units/failures:15/15 HW и три положительных повтора, HAL восстановлен; ТЗ0.53.](F401_CMSIS_ADC_DMA.md)
-
-[F401 CMSIS baseline: 7/7 HW через ST-Link/OpenOCD, HAL boot/blink восстановлены. Flash256/RAM64; ADC/RTC ещё не перенесены.](F401_CMSIS_BASELINE.md)
-
-[Метрики аппаратных проверок и таблица результатов](HARDWARE_METRICS.md).
-
-
-[Аппаратная приёмка HAL F030](F030_HAL_VALIDATION.md): 17/17, шесть повторов, timeout/recovery и восстановление исходной прошивки проверены на Windows/ST-Link/OpenOCD; ТЗ 0.40. API без изменений.
-
-Нейтральный пример без платы: [C++/GDB/Renode, кэш и отложенная запись](../../tests/renode-cache/README.md).
-
-
-Раскраска свидетельств проверок: [DDTT в VS Code](DDTT_COVERAGE.md); внешний экспортёр, без изменения Target API.
-
-- [Portable DDTT / Переносимый DDTT](PORTABLE_DDTT.md)
-- [Renode probes / Проверки Renode](RENODE_PROBES.md)
-
-
-Живое окно 0.5.0: обычные сценарии сохраняются; `async def`, `resume(sync=False)`,
-`await wait()` и `await halt()` — [контракт и миграция](LIVE_EXECUTION.md).
-
-[Проверка связей HIL/backend/SVD без запуска](HIL_INSPECT.md).
-
-## Применимость свидетельств в 0.5.0
-
-[Квалификация условий](DDTT_QUALIFICATION.md): сырой исход отделён от допуска и итоговой раскраски. Первый пакет — внешний экспортёр и синтетический host-пример, без изменения Target API. Карта schema 1 совместима, квалификация требует schema 2. Измерительная цепочка и аппаратный пилот ещё не проверены.
-
-[План выпускной приёмки 0.5.0 и миграции потребителей](../development/release-050-acceptance.md).
-[Матрица приёмки 0.6.0](../development/release-060-acceptance.md) и [описание выпуска](../releases/v0.6.0.md).
-
-[Изменения между выпусками](RELEASE_CHANGES.md) · [Нейтральный пример состояний и кольца](../../tests/stateful-buffer/README.md).
-
-[Автомат с логическим временем](../../tests/logical-time/README.md).
-
-[Счётчики и стоимость наблюдения](../../tests/counter-cost/README.md).
-
-[Совместный захват и анализ](../../tests/external-capture/README.md).
-
-[Журналирование](JOURNALING.md): источники, квоты, полнота, маршруты и статус schema 3 и применения квот journal.
+- [Памятка команд](HOWTO.md) — git (включая `git land`), частые проблемы стенда, отладчиков и Docker.
+- [Структура документации](../development/README.md) — разделы, обязательные переводы, оформление README.
+- Планирование: [памятка](../../TODO.md) · [дорожная карта](../../ROADMAP.md) · [история](../archive/TODO_ARCHIVE.md) ·
+  [AGENTS.md](../../AGENTS.md).

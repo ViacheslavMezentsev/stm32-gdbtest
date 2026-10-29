@@ -2,160 +2,99 @@
 
 Documentation · [Русский](../ru/index.md)
 
-Planning (Russian): [TODO](../../TODO.md), [ROADMAP](../../ROADMAP.md), [archive](../archive/TODO_ARCHIVE.md).
-[Translation policy](../development/README.md): the required bilingual subset is maintained; optional translations may lag Russian sources.
-
-
-[Neutral VTOR/FPB example](LIVE_OBSERVER.md) — live window, oracle, cleanup and application techniques migrated to API 3.
-**Peripheral registers:** [known MMIO limitations and recommended validation route](MMIO.md).
-
-
-Introduction — [README](../../README.en.md): an implementation of [DDTT](DDTT.md) for
-STM32 — checks of running firmware on a real board through GDB and an SWD debugger,
-written as scenarios in the project repository. Requirements —
-the [specification](../TECHNICAL_SPECIFICATION.md) (kept in Russian only).
-
-[Practical Docker and L6 workflow](local-ci.md): snapshot, volume, evidence and stand restoration.
+stm32-gdbtest implements [DDTT](DDTT.md) for STM32: scenarios in the project repository check
+running firmware on a real board through GDB and an SWD debugger. Introduction — [README](../../README.en.md);
+requirements — the [specification](../TECHNICAL_SPECIFICATION.md) and the
+[API specification](../TECHNICAL_SPECIFICATION_API.md) (Russian only). Skills for AI agents and TTDD
+routes — [skills](../../skills/README.en.md). Where a page exists in both languages, Russian is the source.
 
 ## Getting started
 
+- [Getting started](GETTING_STARTED.md) — requirements, checks without a board, submodule integration.
+- [Writing tests](TEST_AUTHORING.md) — the process for people and AI agents.
 - [Scenario checklist](SCENARIO_CHECKLIST.md) — review before a run, before changing state and after the experiment.
-
+- [Stepping through a scenario](MANUAL_DEBUG.md) — `run --interactive`: breakpoints and the Debug Console in VS Code with no time limit.
 - [Run layouts](RUN_LAYOUTS.md) — placement of runner, GDB and probe, verified combinations.
 - [MCU profiles](MCU_PROFILES.md) — target.toml and verified boards.
 - [Stands](STANDS.md) — stand boards: summary and schematic top views.
-- [Current status](STATUS.md) — versions, evidence and limits.
+- [DDTT specification](DDTT.md) — the method: terms, principles, requirements for scenarios, stands and tools.
 
-- [DDTT specification](DDTT.md) — the debugger-driven testing on target method: terms, principles, requirements for scenarios, stands and tools.
+## Scenarios and API
 
-- [Getting started](GETTING_STARTED.md) — requirements, checks without a board, submodule integration.
-- [Writing tests](TEST_AUTHORING.md) — the process for people and AI agents.
-- [Stepping through a scenario](MANUAL_DEBUG.md) — `run --interactive`: breakpoints, stepping and the Debug Console in VS Code with no time limit, BluePill/BlackPill.
 - [API, CLI and migration](API.md) — CMake, the `case` decorator, Target API, `run`, migrating from hwtest.
-
-## Mechanisms
-
+- [Methods reference](api/index.md) — every Target method with its first release and examples.
+- [Techniques catalogue TECH-001…026](TESTING_TECHNIQUES.md) — stable techniques referenced from scenarios, prerequisites and restoration.
+- [Live execution window](LIVE_EXECUTION.md) — `async def`, `resume(sync=False)`, `await wait/halt`; contract and migration.
+- [VTOR/FPB observer](LIVE_OBSERVER.md) — a neutral live-window example, oracle and cleanup.
+- [MMIO registers](MMIO.md) — known limitations and the recommended validation route.
+- [SVD](SVD.md) — peripheral description for `t.mmio`, capture into the package and limits.
 - [ELF/HAL contracts](CONTRACTS.md) — offline checks of functions, types, enums and source hashes.
 - [HAL macros](HAL_MACRO_GUIDE.md) — choosing macros, context and the macro contract.
-- [Images and CRC](IMAGES.md) — ELF sections, BIN, full image and CRC-32/ISO-HDLC.
-- [Manifest](MANIFESTS.md) — runtime and build provenance metadata.
-- [GDB servers](BACKENDS.md) — OpenOCD, ST-LINK GDB Server, J-Link, st-util; the stand.
-
-Backend pages: [OpenOCD](backends/openocd.md) · [ST-LINK GDB Server](backends/stlink.md) · [J-Link](backends/jlink.md) · [st-util](backends/st-util.md).
-- [Identity and Flash](TARGET_IDENTITY.md) — DEV_ID and the factory Flash size.
-- [Compatible MCUs](COMPATIBLE_MCU.md) — Cortex-M from other vendors: profile, vendor CMSIS, scenarios (AT32).
-- [Debugger ownership](DEBUGGER_OWNERSHIP.md) — cross-project locking on Windows and Linux.
-- [Linux stand](LINUX_STAND.md) — environment without root (Ubuntu 20.04, Orange Pi 5), USB, J-Link, remote GDB server over SSH, WSL2.
-- [Hardware CI](HARDWARE_CI.md) — prepared run packages, a self-hosted runner on Orange Pi, 24/7 runs.
-
-## Status and maintenance
-
-- [F030 CMSIS baseline](F030_CMSIS_BASELINE.md) — four hardware scenarios and limitations.
-
+- [Moving to 0.5.0](MIGRATION_050.md) — consumer migration to API 3.
 - [CMSIS example migration](CMSIS_MIGRATION.md) — baseline, F030 gaps and acceptance.
 
-- [Status](STATUS.md) — verified scope, stands and limits.
+Neutral examples: [simulated input: write and ret](../../tests/controlled-input/README.en.md) ·
+[modeled GPIO](../../tests/modeled-gpio/README.en.md) · [buffer and repeated consumption](../../tests/buffer-consumption/README.en.md) ·
+[C++ context](../../tests/cpp-context/README.en.md) · [C++, cache and deferred writes in Renode](../../tests/renode-cache/README.en.md) ·
+[residual state and ring](../../tests/stateful-buffer/README.en.md) · [logical time](../../tests/logical-time/README.en.md) ·
+[counters and observation cost](../../tests/counter-cost/README.en.md) · [joint capture](../../tests/external-capture/README.en.md) ·
+[ROS1 bag import](../../tests/rosbag-import/README.en.md) · [live-window observer](../../tests/live-observer/README.en.md).
+
+## Results, journal and DDTT
+
+- [Journaling](JOURNALING.md) — sources, quotas, completeness, error/truncate policies.
+- [Result export](RESULTS.md) — evidence index, CSV/HTML and integrity checks.
+- [DDTT in VS Code](DDTT_COVERAGE.md) — source colouring from check evidence.
+- [Portable DDTT](PORTABLE_DDTT.md) — a public report bound to a revision, without local data.
+- [Condition qualification](DDTT_QUALIFICATION.md) — raw outcomes separate from admission and final colouring.
+- [Verification metrics](HARDWARE_METRICS.md) — how to read outcome counts and what they are not.
+
+## Stands, GDB servers and CI
+
+- [GDB servers](BACKENDS.md) — OpenOCD, ST-LINK GDB Server, J-Link, st-util: [OpenOCD](backends/openocd.md) ·
+  [ST-LINK GDB Server](backends/stlink.md) · [J-Link](backends/jlink.md) · [st-util](backends/st-util.md).
+- [Debugger ownership](DEBUGGER_OWNERSHIP.md) — cross-project locking on Windows and Linux.
+- [Linux stand](LINUX_STAND.md) — environment without root, USB, J-Link, remote GDB server over SSH, WSL2.
+- [Hardware CI](HARDWARE_CI.md) — prepared run packages, a self-hosted runner, 24/7 runs.
+- [Stand loop](STAND_LOOP.md) — a finite plan of accepted packages, attempts, STOP and SKIP.
+- [HIL link check](HIL_INSPECT.md) — HIL, backend and SVD without starting tools.
+- [MCU identity](TARGET_IDENTITY.md) — DEV_ID and the factory Flash size.
+- [Images and CRC](IMAGES.md) — ELF sections, BIN, full image and the Flash check range.
+- [Manifest](MANIFESTS.md) — compatibility and build provenance metadata.
+- [Compatible MCUs](COMPATIBLE_MCU.md) — Cortex-M from other vendors (AT32): profile, CMSIS, scenarios.
 - [Checks and CI](testing.md) — CI levels, Docker image, hardware check of the CI firmware.
-- [Versions and releases](VERSIONING.md) — SemVer, tags, release preparation.
+- [Local CI](local-ci.md) — Docker and L6: snapshot, volume, evidence and stand restoration.
+
+## Emulators
+
+- [Renode](RENODE.md) — configuration, one process per scenario, model limits.
+- [QEMU](QEMU.md) — configuration and limits.
+- [Renode probes](RENODE_PROBES.md) — short experiments on the model and their limits.
+
+## Board evidence
+
+Summaries: [accepted API and results](API_ACCEPTANCE.md) · [five-profile CMSIS acceptance review](CMSIS_ACCEPTANCE.md).
+
+- **F030:** [CMSIS baseline](F030_CMSIS_BASELINE.md) · [TIM3/IRQ](F030_CMSIS_TIMER.md) · [ADC/DMA](F030_CMSIS_ADC_DMA.md) ·
+  [ADC units](F030_CMSIS_ADC_UNITS.md) · [busy ADC](F030_ADC_BUSY.md) · [Sleep/WFI](F030_CMSIS_SLEEP.md) ·
+  [RTC](F030_CMSIS_RTC.md) · [RTC deadline](F030_RTC_DEADLINE.md) · [HAL→CMSIS mapping](F030_CMSIS_ACCEPTANCE.md) ·
+  [HAL: GPIO/RCC](F030_HAL_GPIO_RCC.md) · [HAL regression](F030_HAL_REGRESSION.md) · [HAL hardware acceptance](F030_HAL_VALIDATION.md).
+- **F103:** [clocks/GPIO/SysTick/TIM2](F103_CMSIS_BASELINE.md) · [ADC/DMA](F103_CMSIS_ADC_DMA.md) · [RTC/Sleep](F103_CMSIS_RTC_SLEEP.md).
+- **F401:** [clocks/GPIO/SysTick/TIM2](F401_CMSIS_BASELINE.md) · [ADC/DMA](F401_CMSIS_ADC_DMA.md) · [RTC/Sleep](F401_CMSIS_RTC_SLEEP.md).
+- **F411:** [clocks/GPIO/SysTick/TIM2](F411_CMSIS_BASELINE.md) · [ADC/DMA](F411_CMSIS_ADC_DMA.md) · [RTC/Sleep](F411_CMSIS_RTC_SLEEP.md).
+- **F429:** [clocks/GPIO/SysTick/TIM2](F429_CMSIS_BASELINE.md) · [ADC/DMA](F429_CMSIS_ADC_DMA.md) · [RTC/Sleep](F429_CMSIS_RTC_SLEEP.md).
+
+These are historical acceptance stages: counts belong to their revisions; the current state is in [STATUS](STATUS.md).
+
+## Releases and maintenance
+
+- [Current status](STATUS.md) — version, verified scope, stands and limits.
+- [Versions and releases](VERSIONING.md) — SemVer, tags, moving between releases.
+- [Release transitions](RELEASE_CHANGES.md) — what changes for users and what to do.
+- [0.6.0 release notes](../releases/v0.6.0.md) · [0.6.0 acceptance matrix](../development/release-060-acceptance.md) (Russian) ·
+  [0.5.0 acceptance](../development/release-050-acceptance.md) (Russian) · [CHANGELOG](../../CHANGELOG.en.md).
 - [Maintenance](maintenance.md) — workflow, branches, commits, bilingual documentation.
-- [HOWTO](HOWTO.md) — git commands (including `git land`), common stand, debugger and Docker problems, undoing changes.
-- [CHANGELOG](../../CHANGELOG.en.md), [roadmap](../../TODO.md) (Russian), [AGENTS.md](../../AGENTS.md).
-
-[F030 CMSIS: TIM3/IRQ](F030_CMSIS_TIMER.md).
-
-F030 ADC/DMA: raw samples and timeout, core API unchanged. [ADC/DMA](F030_CMSIS_ADC_DMA.md).
-
-F030 ADC conversion and numeric scenarios; core API unchanged. [ADC units](F030_CMSIS_ADC_UNITS.md).
-
-F030 Sleep/WFI: profile scenarios using GDB unwind; core API unchanged. [Sleep evidence](F030_CMSIS_SLEEP.md).
-
-F030 RTC: LSI Alarm A, 16/16 HW PASS, HAL restored. Core API unchanged. [RTC](F030_CMSIS_RTC.md).
-
-F030 busy ADC check; API unchanged. [Report](F030_ADC_BUSY.md).
-
-F030 RTC deadline through argument injection; API unchanged. [Report](F030_RTC_DEADLINE.md).
-
-[F030 HAL→CMSIS mapping and branch batch order](F030_CMSIS_ACCEPTANCE.md).
-
-- [F030 HAL regression: migration plan and acceptance](F030_HAL_REGRESSION.md).
-
-[Techniques catalogue TECH-001…026](TESTING_TECHNIQUES.md) — stable scenario references, build prerequisites, limits and restoration. Preserve TECH-001/003/004 references when migrating HAL scenarios.
-
-[Standalone F030 HAL regression](F030_HAL_REGRESSION.md): test consumer, no API changes.
-
-- [F103 CMSIS: clocks/GPIO/SysTick/TIM2](F103_CMSIS_BASELINE.md).
-
-- [F103 CMSIS: ADC/DMA/units/failures](F103_CMSIS_ADC_DMA.md).
-
-- [F103 CMSIS: RTC/Sleep/deadlines/recovery](F103_CMSIS_RTC_SLEEP.md).
-
-- [F411 CMSIS: clocks/GPIO/SysTick/TIM2](F411_CMSIS_BASELINE.md).
-
-- [F411 CMSIS: ADC/DMA/units/failures](F411_CMSIS_ADC_DMA.md).
-
-- [F411 CMSIS: RTC/Sleep/deadlines/recovery](F411_CMSIS_RTC_SLEEP.md).
-
-[Five-profile acceptance review and remaining HAL checks](CMSIS_ACCEPTANCE.md).
-
-[HAL F030: five GPIO/RCC techniques and source variants](F030_HAL_GPIO_RCC.md).
-
-
-[Accepted API and results](API_ACCEPTANCE.md).
-
-[Methods and properties reference](api/index.md).
-
-
-[Result export and evidence index](RESULTS.md).
-
-
-- External finite package dispatcher: [stand_loop](STAND_LOOP.md). Target API and existing run/pack commands are unchanged.
-
-## Historical acceptance stages
-
-[F429 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.57.](F429_CMSIS_RTC_SLEEP.md)
-
-[F429 ADC/DMA/units/failures:15/15 HW +3 repeats, HAL restored; specification0.56.](F429_CMSIS_ADC_DMA.md)
-
-[F429 CMSIS baseline:7/7 HW, HAL restored; specification0.55. Fifth CI profile; ADC/RTC remain pending.](F429_CMSIS_BASELINE.md)
-
-[F401 RTC/Sleep/deadline/recovery:20/20 HW +5 repeats, external timeout/recovery and HAL restore PASS; specification0.54.](F401_CMSIS_RTC_SLEEP.md)
-
-[F401 ADC/DMA/units/failures:15/15 HW and three positive repeats, HAL restored; specification0.53.](F401_CMSIS_ADC_DMA.md)
-
-[F401 CMSIS baseline: 7/7 HW through ST-Link/OpenOCD, HAL boot/blink restored. Flash256/RAM64; ADC/RTC are not migrated yet.](F401_CMSIS_BASELINE.md)
-
-[Hardware metrics and results table](HARDWARE_METRICS.md).
-
-
-[HAL F030 hardware acceptance](F030_HAL_VALIDATION.md): 17/17, six repeats, timeout/recovery and original firmware restoration verified on Windows/ST-Link/OpenOCD; specification 0.40. API unchanged.
-
-Neutral board-free example: [C++/GDB/Renode, cache and deferred writes](../../tests/renode-cache/README.en.md).
-
-
-Check-evidence colouring: [DDTT in VS Code](DDTT_COVERAGE.md); external exporter, no Target API changes.
-
-- [Portable DDTT / Переносимый DDTT](PORTABLE_DDTT.md)
-- [Renode probes / Проверки Renode](RENODE_PROBES.md)
-
-
-Live windows in 0.5.0: ordinary scenarios remain supported; `async def`,
-`resume(sync=False)`, `await wait()` and `await halt()` — [contract and migration](LIVE_EXECUTION.md).
-
-[Inspect HIL/backend/SVD links without execution](HIL_INSPECT.md).
-
-## Evidence applicability in 0.5.0
-
-[Condition qualification](DDTT_QUALIFICATION.md) separates raw outcomes, admission and final coloring. The first package is an external exporter and synthetic host example, with no Target API changes. Map schema 1 remains compatible; qualification requires schema 2. Measurement-chain and hardware validation are pending.
-
-[0.5.0 release acceptance and consumer migration plan (Russian)](../development/release-050-acceptance.md).
-[0.6.0 acceptance matrix (Russian)](../development/release-060-acceptance.md) and [release notes](../releases/v0.6.0.md).
-
-[Release transitions](RELEASE_CHANGES.md) · [Neutral state and ring example](../../tests/stateful-buffer/README.en.md).
-
-[State machine with logical time](../../tests/logical-time/README.en.md).
-
-[Counters and observation cost](../../tests/counter-cost/README.en.md).
-
-[Joint capture and analysis](../../tests/external-capture/README.en.md).
-
-[Journaling](JOURNALING.md): sources, budgets, completeness, routes and schema 3 journal execution availability.
+- [HOWTO](HOWTO.md) — git commands (including `git land`), common stand, debugger and Docker problems.
+- [Documentation structure](../development/README.md) (Russian) — sections, required translations, README rules.
+- Planning (Russian): [TODO](../../TODO.md) · [ROADMAP](../../ROADMAP.md) · [archive](../archive/TODO_ARCHIVE.md) ·
+  [AGENTS.md](../../AGENTS.md).

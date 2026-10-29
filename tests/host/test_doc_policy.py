@@ -15,6 +15,13 @@ class DocumentationPolicyTests(unittest.TestCase):
                 (self.root / name).write_text("# Root", encoding="utf-8")
         for name in (*LOCALIZED, "api/index.md", "api/read.md"):
             self.pair(name)
+        self.link("index.md", "DDTT.md", "API.md", "api/index.md")
+        self.link("api/index.md", "read.md")
+
+    def link(self, name, *targets, langs=("ru", "en")):
+        for lang in langs:
+            page = self.root / "docs" / lang / name
+            page.write_text(page.read_text(encoding="utf-8") + "".join(f"[x]({t})\n" for t in targets), encoding="utf-8")
 
     def pair(self, name):
         import os
@@ -26,6 +33,7 @@ class DocumentationPolicyTests(unittest.TestCase):
 
     def test_optional_russian_only(self):
         (self.root / "docs/ru/new-guide.md").write_text("# Guide", encoding="utf-8")
+        self.link("index.md", "new-guide.md", langs=("ru",))
         check(self.root)
 
     def test_every_required_page(self):
@@ -38,6 +46,7 @@ class DocumentationPolicyTests(unittest.TestCase):
 
     def test_nested_api_and_orphan_english(self):
         self.pair("api/nested/method.md")
+        self.link("api/index.md", "nested/method.md")
         check(self.root)
         (self.root / "docs/ru/api/nested/method.md").unlink()
         with self.assertRaises(ValueError):check(self.root)
@@ -67,3 +76,11 @@ class DocumentationPolicyTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "sections"):check(self.root)
         (self.root / "README.md").write_text(live + "line\n" * 120, encoding="utf-8")
         with self.assertRaisesRegex(ValueError, "longer"):check(self.root)
+
+    def test_every_page_is_reachable_from_the_map(self):
+        (self.root / "docs/ru/orphan.md").write_text("# Orphan", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "orphan.md not linked"):check(self.root)
+        (self.root / "docs/ru/orphan.md").write_text("# Сирота: документ перенесён\n\n[Новый адрес](API.md)\n", encoding="utf-8")
+        check(self.root)
+        self.pair("api/hidden.md")
+        with self.assertRaisesRegex(ValueError, "api/hidden.md not reachable"):check(self.root)
