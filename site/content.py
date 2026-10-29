@@ -27,6 +27,8 @@ SKILLS = {
                        ru='конечные циклы комплекта', en='finite bundle cycles'),
     'hse': dict(name='hse-qualify', kind='live', url=REPO + '/blob/main/skills/stm32-gdbtest-hse-qualify/SKILL.md',
                 ru='частота кварца и допуск', en='crystal frequency and tolerance'),
+    'report': dict(name='report', kind='view', url=REPO + '/blob/main/skills/stm32-gdbtest-report/SKILL.md',
+                   ru='отчёт для читателя в PDF', en='PDF report for a reader'),
     'coverage': dict(name='coverage', kind='view', url=REPO + '/blob/main/skills/stm32-gdbtest-coverage/SKILL.md',
                      ru='карта и переносимые отчёты', en='map and portable reports'),
     'renode': dict(name='renode', kind='alt', url=REPO + '/blob/main/skills/stm32-gdbtest-renode/SKILL.md',
@@ -74,6 +76,11 @@ CHOOSE = [
      'Отдельные исходы сценария, захвата, анализа и очистки. neutral-workflows связывает три примера с критериями; UNKNOWN не ноль, PASS кампании не отменяет намеренные FAIL.',
      'Evidence already exists. Supply the complete attempt or campaign and matching sources; check provenance and integrity before interpreting records.',
      'Separate scenario, capture, analysis and cleanup outcomes. neutral-workflows links three examples to criteria; UNKNOWN is not zero and campaign PASS preserves intended FAILs.'),
+    ('report',
+     'Когда разбор в results закончен и нужен документ для читателя. Дайте каталоги кампаний, выводы results и описание объектов и стендов без серийников; сначала нейтральный JSON, затем генератор.',
+     'Компактный и технический PDF с происхождением данных; вывод не сильнее свидетельств, неполнота и ограничения названы явно.',
+     'The results review is finished and a document for a reader is needed. Supply the campaign directories, the results conclusions and a description of the objects and stands without serials; neutral JSON first, then the generator.',
+     'Compact and technical PDF with data provenance; conclusions no stronger than the evidence, incompleteness and limits stated explicitly.'),
     ('stand-loop',
      'Для повторения принятого неизменяемого комплекта. Задайте конечное число циклов, политику FAIL/SKIP и STOP; при изменении ELF или сценария пересоберите комплект.',
      'Раздельные попытки, сводка цикла и review.json для агента; исходный проект на стенде не обязателен.',
@@ -151,6 +158,9 @@ ROUTES = [
     dict(id='autonomous', nodes=['stand-loop', 'results', 'develop'],
          ru=('Автономный стенд', 'Конечные циклы неизменного комплекта, разбор попыток; найденная проблема — отдельный цикл develop.'),
          en=('Autonomous stand', 'Finite cycles of an immutable bundle and attempt review; a discovered issue becomes a separate develop cycle.')),
+    dict(id='report', nodes=['run', 'results', 'report'],
+         ru=('Отчёт для читателя', 'Из разобранных свидетельств — компактный обзор и технический отчёт в PDF; свои формы отчётности строятся на основе results.'),
+         en=('Report for a reader', 'A compact overview and a technical report as PDF from the reviewed evidence; your own report forms build on results.')),
 ]
 
 API3_GENERAL = {

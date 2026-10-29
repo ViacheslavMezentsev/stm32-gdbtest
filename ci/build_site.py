@@ -35,7 +35,7 @@ TEXT = {
                   ('live', 'GDB-Python', 'сценарий и Target API'), ('live', 'GDB-сервер', 'OpenOCD, ST-LINK, J-Link'),
                   ('live', 'STM32', 'прошивка приложения по SWD'), ('view', 'Отчёт', 'JSON, JUnit, журнал')],
         'parts': 'Разделы сайта',
-        'routes_card': 'Как сочетать навыки агента: свидетели цели, правила TTDD, выбор навыка и семь типовых маршрутов.',
+        'routes_card': 'Как сочетать навыки агента: свидетели цели, правила TTDD, выбор навыка и восемь типовых маршрутов.',
         'api_card': 'Методы Target API 3 по группам: сигнатуры, первый выпуск, изменения 0.5.0 и 0.6.0, примеры «правильно» '
                     'и «не рекомендуется».',
         'api3': 'API 3 кратко',
@@ -73,7 +73,7 @@ TEXT = {
                   ('live', 'GDB-Python', 'scenario and Target API'), ('live', 'GDB server', 'OpenOCD, ST-LINK, J-Link'),
                   ('live', 'STM32', 'application firmware over SWD'), ('view', 'Report', 'JSON, JUnit, journal')],
         'parts': 'Site sections',
-        'routes_card': 'How to combine agent skills: target witnesses, TTDD rules, choosing a skill and seven typical routes.',
+        'routes_card': 'How to combine agent skills: target witnesses, TTDD rules, choosing a skill and eight typical routes.',
         'api_card': 'Target API 3 methods by group: signatures, first release, 0.5.0 and 0.6.0 changes, "recommended" and '
                     '"avoid" examples.',
         'api3': 'API 3 in short',

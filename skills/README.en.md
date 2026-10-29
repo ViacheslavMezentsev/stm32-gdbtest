@@ -18,6 +18,7 @@ same module version as the submodule and link to its documentation.
 | [stm32-gdbtest-scenarios](stm32-gdbtest-scenarios/SKILL.md) | write or rewrite a scenario: requirement and contract, stop location, `check(rows)`, `write(rows)`, `ret`, `refused`, `watch`, `skip`, profile, style, techniques TECH-001…019 |
 | [stm32-gdbtest-run](stm32-gdbtest-run/SKILL.md) | run and read the result: `doctor`, host and hw, CLI, remote server, package, CI, `result.json` and logs, common failures |
 | [stm32-gdbtest-results](stm32-gdbtest-results/SKILL.md) | audit saved evidence without a board: artifact order, scenario source, records, JUnit, integrity, export/HTML and justified conclusions; including a pi agent on OrangePi |
+| [stm32-gdbtest-report](stm32-gdbtest-report/SKILL.md) | present reviewed evidence to a reader: a compact overview and a technical report as PDF, neutral roles instead of serials and addresses, times with a time zone, plain wording |
 | [stm32-gdbtest-stand-loop](stm32-gdbtest-stand-loop/SKILL.md) | deployable stand bundle, finite cycles, FAIL/SKIP policy, STOP and review.json handoff to an agent |
 | [stm32-gdbtest-develop](stm32-gdbtest-develop/SKILL.md) | develop firmware through DDTT: plan, scenario before the fix, baseline FAIL, correction, regression and target evidence review |
 | [stm32-gdbtest-coverage](stm32-gdbtest-coverage/SKILL.md) | map integration, portable reports, provenance and unknown outcomes. |
@@ -77,6 +78,7 @@ and permitted scope; hardware work also needs an up-to-date stand description.
 | `scenarios` | A firmware requirement is already defined. Specify observable behaviour and allowed interventions; derive expectations from the requirement, not the current board response | Scenario, requirement and ELF contract, configuration parameters and consistent style |
 | `run` | Execute a specific attempt. Supply a session/package and stand; start with doctor and prepare. Code changes belong in `develop`, not unexplained retries | Command and scenario outcomes, logs, recovery and an explanation of FAIL/ERROR/SKIP |
 | `results` | Evidence already exists. Supply the complete attempt/campaign and matching sources; check provenance and integrity before interpreting records | Evidence-backed conclusions; arbitrary journal entries are not automatically treated as measurements |
+| `report` | The `results` review is finished and a document for a reader is needed. Supply the campaign directories, the `results` conclusions and a description of the objects and stands without serials; neutral JSON first, then the generator | Compact and technical PDF with data provenance; conclusions no stronger than the evidence, incompleteness and limits stated explicitly |
 | `stand-loop` | Repeat an accepted immutable bundle. Define finite cycles, FAIL/SKIP policy and STOP; rebuild the bundle when the ELF/scenario changes | Separate attempts, cycle summary and review.json handoff; application sources are not required on the stand |
 | `develop` | Change firmware with feedback from the circuit. Supply requirements, sources, stand description and an iteration budget; retain the plan and baseline FAIL before fixing | Requirement → check → fix → regression, preserved failures and explicit evidence boundaries |
 | `hse-qualify` | Supply nominal frequency, tolerance, board and allowed operations; establish clock accuracy before hardware measurement | Frequency interval, IN_TOLERANCE/OUT_OF_TOLERANCE/UNKNOWN, separate recovery verdict and epoch scope |
@@ -99,6 +101,8 @@ and permitted scope; hardware work also needs an up-to-date stand description.
 6. **Diagnostic channel.** [stm32-rtt-console](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-rtt-console) or [stm32-swo-trace](https://github.com/ViacheslavMezentsev/demo-stm32-skills/tree/main/stm32-swo-trace) show what the firmware does between
    stops; they do not replace a DDTT scenario but help explain a FAIL.
 7. **Autonomous stand.** `stand-loop` → `results`; a discovered issue becomes a separate `develop` cycle.
+8. **Report for a reader.** `run` → `results` → `report`: a compact overview and a technical report as PDF
+   from the reviewed evidence. Your own report forms build on `results`.
 
 On OrangePi, result review needs evidence and the matching module version; execution needs a bundle,
 GDB/backend and the stand; development additionally needs sources and a compiler.
