@@ -102,7 +102,7 @@ flowchart LR
 
 1. **Сборка.** Tasks: Run Task → «HIL: F103C8 — собрать».
 2. **Точки останова.** Откройте `hil/common/tests/board/test_startup.py` и поставьте точку
-   на строку `t.check("SysTick exception context", t.read("$xPSR") & 511, 15)` и на
+   на строку `t.check("SysTick exception context", …)` и на
    `t.record("startup.systick", …)`.
 3. **Запуск.** Tasks: Run Task → «HIL: F103C8 — пошаговый проход сценария (VS Code)…» →
    выберите `HW_SYSTICK_PROGRESS`. В терминале:
@@ -116,7 +116,7 @@ flowchart LR
    ```python
    before                        # значение, прочитанное сценарием
    t.read("g_ticks")             # то же поле сейчас
-   t.read("$xPSR") & 511         # номер исключения: 15 — SysTick
+   t.mmio.read("SCB.ICSR") & 0x1FF  # активное исключение: 15 — SysTick
    hex(t.read("$pc"))
    t.mmio.read("SysTick.LOAD")   # регистр через SVD
    t.frames(3)                   # стек прошивки

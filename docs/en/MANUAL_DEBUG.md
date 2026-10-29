@@ -102,7 +102,7 @@ neighbouring entries into `SysTick_Handler`, the `g_ticks` counter grows by exac
 
 1. **Build.** Tasks: Run Task → "HIL: F103C8 — собрать".
 2. **Breakpoints.** Open `hil/common/tests/board/test_startup.py` and set a breakpoint on
-   `t.check("SysTick exception context", t.read("$xPSR") & 511, 15)` and on
+   `t.check("SysTick exception context", …)` and on
    `t.record("startup.systick", …)`.
 3. **Start.** Tasks: Run Task → "HIL: F103C8 — пошаговый проход сценария (VS Code)…" → pick
    `HW_SYSTICK_PROGRESS`. The terminal shows:
@@ -116,7 +116,7 @@ neighbouring entries into `SysTick_Handler`, the `g_ticks` counter grows by exac
    ```python
    before                        # value read by the scenario
    t.read("g_ticks")             # the same field now
-   t.read("$xPSR") & 511         # exception number: 15 is SysTick
+   t.mmio.read("SCB.ICSR") & 0x1FF  # active exception: 15 is SysTick
    hex(t.read("$pc"))
    t.mmio.read("SysTick.LOAD")   # register through SVD
    t.frames(3)                   # firmware stack
