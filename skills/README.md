@@ -14,7 +14,7 @@
 | Навык | Когда нужен |
 | --- | --- |
 | [stm32-gdbtest-integrate](stm32-gdbtest-integrate/SKILL.md) | подключить модуль к проекту: подмодуль, каталог `hil/`, описание MCU, `session.toml`, CMake, пресеты, стенд, первый прогон; миграция потребителя на API 3 (линии 0.5.x и 0.6.x) |
-| [stm32-gdbtest-scenarios](stm32-gdbtest-scenarios/SKILL.md) | написать или переписать сценарий: требование и контракт, место остановки, `check(rows)`, `write(rows)`, `ret`, `refused`, `watch`, `skip`, вызовы C++, квоты журнала, имитируемые входы, профиль, стиль, техники TECH-001…026 |
+| [stm32-gdbtest-scenarios](stm32-gdbtest-scenarios/SKILL.md) | написать или переписать сценарий: требование и контракт, место остановки, `check(rows)`, `write(rows)`, `ret`, `refused`, `watch`, `skip`, вызовы C++, квоты журнала, имитируемые входы, профиль, стиль, техники TECH-001…027 |
 | [stm32-gdbtest-run](stm32-gdbtest-run/SKILL.md) | запустить и разобрать результат: `doctor`, host и hw, CLI, удалённый сервер, пакет, CI, `result.json` и журналы, частые отказы |
 | [stm32-gdbtest-results](stm32-gdbtest-results/SKILL.md) | разобрать сохранённые свидетельства без платы: порядок файлов, код сценария, records, JUnit, целостность, экспорт/HTML и обоснованный вывод; в том числе агентом pi на OrangePi |
 | [stm32-gdbtest-report](stm32-gdbtest-report/SKILL.md) | оформить разобранные свидетельства для читателя: компактный обзор и технический отчёт в PDF, нейтральные роли вместо серийников и адресов, время с часовым поясом, простые формулировки |

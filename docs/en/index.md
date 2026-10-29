@@ -23,7 +23,7 @@ routes — [skills](../../skills/README.en.md). Where a page exists in both lang
 
 - [API, CLI and migration](API.md) — CMake, the `case` decorator, Target API, `run`, migrating from hwtest.
 - [Methods reference](api/index.md) — every Target method with its first release and examples.
-- [Techniques catalogue TECH-001…026](TESTING_TECHNIQUES.md) — stable techniques referenced from scenarios, prerequisites and restoration.
+- [Techniques catalogue TECH-001…027](TESTING_TECHNIQUES.md) — stable techniques referenced from scenarios, prerequisites and restoration.
 - [Live execution window](LIVE_EXECUTION.md) — `async def`, `resume(sync=False)`, `await wait/halt`; contract and migration.
 - [VTOR/FPB observer](LIVE_OBSERVER.md) — a neutral live-window example, oracle and cleanup.
 - [MMIO registers](MMIO.md) — known limitations and the recommended validation route.

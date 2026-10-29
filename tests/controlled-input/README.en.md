@@ -1,8 +1,8 @@
-# Controlled software input: write and ret
+# Simulated input: write and ret
 
 [Русский](README.md) · [TECH-004](../../docs/en/TESTING_TECHNIQUES.md#tech-004)
 
-A5.1, 0.6.0 candidate. The same neutral C++ source runs on host and Cortex-M3 in
+A5.1, release 0.6.0. The same neutral C++ source runs on host and Cortex-M3 in
 Renode. No core changes, boards, GPIO, DMA, RTOS or instruments. Checkpoint functions
 belong only to the educational workload; consumer firmware does not need test hooks.
 Choose existing observation points in a real ELF.

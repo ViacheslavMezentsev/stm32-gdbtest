@@ -185,7 +185,7 @@ not an established cause. Reset commands were not changed to address a USB failu
 
 Full F411/F030/ST-LINK suites remain an open acceptance condition. Latest-SHA CI,
 remote Orange Pi layouts and final release are not yet accepted. The consumer check
-above covers minimal-consumer, not the private mcu_power_board project. Boards are
+above covers minimal-consumer, not the private power board project. Boards are
 currently connected to Windows; historical Linux/SSH results below do not automatically
 apply to this revision. The owner pushes and lands after CI.
 

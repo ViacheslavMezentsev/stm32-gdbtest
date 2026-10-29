@@ -3,7 +3,7 @@
 [Documentation](index.md) · [Русский](../ru/STATUS.md)
 
 Current version: **0.6.0 / API_VERSION=3** — long scenarios with journal quotas, C++ calls,
-verified software substitution methods, offline ROS1 bag import and an interactive scenario
+verified input substitution methods (simulated inputs — substituting data in memory or a function result), offline ROS1 bag import and an interactive scenario
 walk-through in VS Code. The 0.5.1 preparation material is part of this release.
 
 A8 acceptance at `6530395`: Windows/Linux, Renode/QEMU, six MCUs (including the new C++, journal

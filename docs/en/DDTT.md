@@ -588,7 +588,7 @@ limits; normative DDTT IDs remain unchanged.
 <a id="consumer-feedback"></a>
 ### 11.4. Feedback from application scenarios (informative)
 
-mcu_power_board practice suggests a transferable chain: **admission conditions → invariant →
+Practice on a private power board project suggests a transferable chain: **admission conditions → invariant →
 intervention → independent expectation → observation → restoration → applicability**.
 [TECH-021–026](TESTING_TECHNIQUES.md#tech-021) describe the method, not new module acceptance,
 changes to normative DDTT IDs or ready-to-run neutral examples.
@@ -608,8 +608,8 @@ detect an intentionally wrong expectation; it does not replace defect reproducti
 | Cycle counter and sample series | Measured cost under stated conditions | WCET and absolute accuracy without independent clocks |
 | GDB and telemetry of the same variable | Value consistency and delivery | Independent accuracy of the original measurement |
 
-The mcu_gcs_board radio simulator supplies controlled interventions; the hwlivetest-android
-engineering tool can retain MCAP. Both roles are useful, but a file format or a separate
+A radio link simulator supplies controlled interventions; an engineering Android
+application can retain MCAP. Both roles are useful, but a file format or a separate
 device alone does not make an oracle independent: check the origins of values, clocks and
 expectations. Correlate messages by sequence/time with known uncertainty; asynchronous reads
 are not an exact comparison of the same sample.

@@ -2,7 +2,7 @@
 
 [Русский](README.md) · [TECH-004](../../docs/en/TESTING_TECHNIQUES.md#tech-004)
 
-A5.3, 0.6.0 candidate. One neutral C++ module is built for host and for Cortex-M3 in
+A5.3, release 0.6.0. One neutral C++ module is built for host and for Cortex-M3 in
 Renode. The library core is unchanged; no boards, UART, DMA, interrupts, RTOS or
 instruments take part. Checkpoint functions belong to the teaching workload only.
 

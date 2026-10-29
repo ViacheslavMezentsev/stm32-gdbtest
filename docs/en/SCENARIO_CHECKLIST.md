@@ -160,7 +160,12 @@ These are manual review questions; current automated checks do not establish the
 [Example](../../tests/external-capture/README.en.md).
 
 
-## Software substitution (A5.1)
+## Simulated input: substituted data or function result (A5.1)
+
+A simulated input is a value the scenario writes to memory or substitutes for a function result
+through the debugger. It checks the logic after the read point; a physical input (a signal on a pin)
+also passes through the peripheral and the driver and needs an external signal source.
+
 
 - Verify consumption, not only readback/applied.
 - Resume to caller processing after ret.

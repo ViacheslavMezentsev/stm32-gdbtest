@@ -690,7 +690,7 @@ not a new storage API or hardware acceptance of EEPROM/Flash.
 
 ## Techniques from consumer practice
 
-TECH-021–026 generalize mcu_power_board bridge, charging state machine, statistics and
+TECH-021–026 generalize practice on a private power board project: bridge, charging state machine, statistics and
 telemetry scenarios. They are transfer recommendations with a neutral TECH-021 example, not
 repeated hardware acceptance. Application thresholds, addresses, protocols and wiring
 are not transferred. Every application needs its own oracle and admission conditions.
@@ -800,9 +800,9 @@ a physical source, allowed levels and restoration require separate agreement.
 <a id="tech-026"></a>
 ## TECH-026 — Live window and external witness
 
-**Goal:** relate internal state to another stand participant's observation. The mcu_gcs_board
-radio simulator provides controlled input to mcu_power_board; the hwlivetest-android
-engineering tool can record MCAP. These are stand roles, not automatically supported module
+**Goal:** relate internal state to another stand participant's observation. A radio link
+simulator provides controlled input to the power board; an engineering Android
+application can record MCAP. These are stand roles, not automatically supported module
 backends or importers.
 
 Prepare capture and cleanup of all owned processes before resume; confirm receiver readiness.
@@ -823,6 +823,34 @@ READY before the window, drain through EOF, sequences/channels/identity, fixture
 anchors and a separate analysis verdict. Complete contradictory evidence yields FAIL,
 ineligible evidence UNKNOWN; the scenario is unchanged. No GDB/hardware claim.
 
+
+<a id="tech-027"></a>
+## TECH-027 — Exception context through SCB.ICSR
+
+**Goal:** check that code runs in the expected handler (SysTick, a DMA channel IRQ, etc.) the
+same way on any GDB server.
+
+The active exception number is held in the low nine bits of xPSR (IPSR) and in the VECTACTIVE
+field of SCB.ICSR. The GDB name of the xPSR register depends on the target description the server
+supplies: OpenOCD 0.12.0 calls it `xPSR`, the xPack OpenOCD build calls it `xpsr`, and `$xPSR`
+gives ERROR on the second server. VECTACTIVE is read through MMIO at the SVD address and does not
+depend on the server:
+
+```python
+t.reach("SysTick_Handler")
+t.check("SysTick exception context",
+        t.mmio.read("SCB.ICSR") & t.evaluate("SCB_ICSR_VECTACTIVE_Msk"), 15)
+```
+
+Add SCB.ICSR to the project SVD (address 0xE000ED04, reading has no side effects) and the mask to
+the scenario macro contract. A peripheral interrupt number is `<IRQn> + 16`
+(`t.evaluate("DMA1_Channel1_IRQn + 16")`). In thread mode (outside a handler) the value is 0.
+
+**Limit:** VECTACTIVE shows the active exception at the stop, not the entry cause or nesting; read
+CFSR/HFSR and the stack for a fault cause.
+
+**Verified:** the BluePill scenarios HW_DMA_CAPTURE, HW_DMA_ERROR, HW_DMA_ERROR_TC and
+HW_SYSTICK_PROGRESS on a remote F103C8 with xPack OpenOCD: the former 4 ERROR on `$xPSR` became PASS.
 
 ## Extending the catalogue
 

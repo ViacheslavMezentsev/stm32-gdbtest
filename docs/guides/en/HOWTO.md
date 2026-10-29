@@ -429,7 +429,7 @@ This experiment does not prove recovery after fault/timeout.
 
 In recorded checks, a guard intercepted HardFault as a
 BreakpointEvent. Confirm the cause using point identity, xPSR, CFSR/HFSR/BFAR and
-the stack; gdb.error alone is insufficient. This GDB uses xPSR: xpsr gave Bad register.
+the stack; gdb.error alone is insufficient. The xPSR register name depends on the GDB server (OpenOCD 0.12.0 — `xPSR`, xPack OpenOCD — `xpsr`); check the exception context in scenarios through SCB.ICSR ([TECH-027](../../en/TESTING_TECHNIQUES.md#tech-027)).
 On external timeout GDB cannot write its report from finally. Persist verified
 entry into the hazardous operation first, then require TimeoutExpired, successful
 recovery and a separate control. Missing evidence must not count as an expected ERROR.
