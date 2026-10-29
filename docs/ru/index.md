@@ -90,7 +90,7 @@ stm32-gdbtest — реализация [DDTT](DDTT.md) для STM32: сцена�
 - [Текущее состояние](STATUS.md) — версия, проверенный объём, стенды и ограничения.
 - [Версии и релизы](VERSIONING.md) — SemVer, теги, переходы между выпусками.
 - [Изменения между выпусками](RELEASE_CHANGES.md) — что меняется для пользователя и что сделать.
-- [Описание выпуска 0.6.0](../releases/v0.6.0.md) · [матрица приёмки 0.6.0](../development/release-060-acceptance.md) ·
+- [Описание выпуска 0.6.1](../releases/v0.6.1.md) · [план 0.6.1](../development/release-061-plan.md) · [описание выпуска 0.6.0](../releases/v0.6.0.md) · [матрица приёмки 0.6.0](../development/release-060-acceptance.md) ·
   [приёмка 0.5.0](../development/release-050-acceptance.md) · [CHANGELOG](../../CHANGELOG.md).
 - [Сопровождение](../guides/ru/maintenance.md) — порядок работы, ветки, коммиты, двуязычная документация.
 - [Памятка команд](../guides/ru/HOWTO.md) — git (включая `git land`), частые проблемы стенда, отладчиков и Docker.

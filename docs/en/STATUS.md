@@ -2,7 +2,7 @@
 
 [Documentation](index.md) · [Русский](../ru/STATUS.md)
 
-Current version: **0.6.0 / API_VERSION=3** — long scenarios with journal quotas, C++ calls,
+Current version: **0.6.1 / API_VERSION=3** ([release notes](../releases/v0.6.1.md): diagnostics fixes and documentation order). The 0.6.x line provides long scenarios with journal quotas, C++ calls,
 verified input substitution methods (simulated inputs — substituting data in memory or a function result), offline ROS1 bag import and an interactive scenario
 walk-through in VS Code. The 0.5.1 preparation material is part of this release.
 

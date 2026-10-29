@@ -91,7 +91,7 @@ These are historical acceptance stages: counts belong to their revisions; the cu
 - [Current status](STATUS.md) — version, verified scope, stands and limits.
 - [Versions and releases](VERSIONING.md) — SemVer, tags, moving between releases.
 - [Release transitions](RELEASE_CHANGES.md) — what changes for users and what to do.
-- [0.6.0 release notes](../releases/v0.6.0.md) · [0.6.0 acceptance matrix](../development/release-060-acceptance.md) (Russian) ·
+- [0.6.1 release notes](../releases/v0.6.1.md) · [0.6.1 plan](../development/release-061-plan.md) (Russian) · [0.6.0 release notes](../releases/v0.6.0.md) · [0.6.0 acceptance matrix](../development/release-060-acceptance.md) (Russian) ·
   [0.5.0 acceptance](../development/release-050-acceptance.md) (Russian) · [CHANGELOG](../../CHANGELOG.en.md).
 - [Maintenance](../guides/en/maintenance.md) — workflow, branches, commits, bilingual documentation.
 - [HOWTO](../guides/en/HOWTO.md) — git commands (including `git land`), common stand, debugger and Docker problems.

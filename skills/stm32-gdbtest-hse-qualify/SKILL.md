@@ -2,10 +2,10 @@
 name: stm32-gdbtest-hse-qualify
 description: Оценить, находится ли физическая частота кварца HSE в заданном допуске (crystal frequency qualification) — независимая временная опора, интервальная погрешность, GDB/MCU-счётчик, восстановление и область применимости DDTT.
 license: MIT
-compatibility: stm32-gdbtest 0.6.0 (API_VERSION 3); Python 3.11+, GDB с Python 3.11+ (arm-none-eabi-gdb-py3); SWD-отладчик и плата; независимый источник времени ПК (NTP) с оценённой погрешностью
+compatibility: stm32-gdbtest 0.6.x (API_VERSION 3); Python 3.11+, GDB с Python 3.11+ (arm-none-eabi-gdb-py3); SWD-отладчик и плата; независимый источник времени ПК (NTP) с оценённой погрешностью
 metadata:
   author: Viacheslav Mezentsev
-  version: "0.6.0"
+  version: "0.6.1"
   module: stm32-gdbtest
   api_version: "3"
 ---

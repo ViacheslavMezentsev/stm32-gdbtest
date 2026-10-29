@@ -5,7 +5,7 @@ license: MIT
 compatibility: stm32-gdbtest 0.6.x / API_VERSION 3; Python 3.11+, ReportLab и matplotlib; шрифт с кириллицей (DejaVu Sans или Arial); без платы
 metadata:
   author: Viacheslav Mezentsev
-  version: "0.6.0"
+  version: "0.6.1"
   module: stm32-gdbtest
   api_version: "3"
 ---

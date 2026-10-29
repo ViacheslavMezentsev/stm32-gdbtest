@@ -6,6 +6,18 @@ Versions: [policy](docs/en/VERSIONING.md).
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-10-29
+
+Maintenance release: API_VERSION=3, schemas and methods unchanged — [release notes](docs/releases/v0.6.1.md).
+
+- Diagnostics after a non-PASS outcome find a `core_registers` entry that the server spells differently (`xPSR`/`xpsr` on xPack OpenOCD), record the actual name in `diagnostic_register_names` and mask the value by the register width; specification 0.124 (5.11.1, TC-193).
+- A copy of `tools/ddtt_coverage.py` without the `stm32_gdbtest` package exits with code 2 and a clear message (specification 5.26.6).
+- The RU/EN documentation map is organised by section with each page listed once; `ci/doc_policy.py` checks that every page is reachable from the map.
+- Board evidence moved to `docs/evidence/{ru,en}`, guides (HOWTO, CI, stands, GDB servers, emulators, maintenance) to `docs/guides/{ru,en}`, completed contracts and the 0.5.1 plan to `docs/archive/pre-060`; pointer pages remain at addresses linked from outside.
+- Technique TECH-027: the exception context through SCB.ICSR instead of `$xPSR`; "simulated inputs" (substituted memory data or function results) are distinguished from physical inputs in the documentation.
+- Skills: a "0.6.0 features" section in all ten; report, coverage and renode in the choosing tables, routes and on the site; compatibility is the 0.6.x line.
+- Names of private projects in DDTT, the techniques catalogue and the archive replaced with neutral roles.
+
 ## [0.6.0] - 2026-10-28
 
 0.6.0 release (API_VERSION=3): journal and report quotas and policies, lossless result schema 2, C++ calls, verified software substitution methods, offline ROS1 bag import and an interactive scenario walk-through; the 0.5.1 preparation material. A8 acceptance on candidate `6530395`, including C++, journal and substitution on six MCUs — [release notes](docs/releases/v0.6.0.md), [moving to 0.6.0](docs/en/VERSIONING.md#moving-to-060).
