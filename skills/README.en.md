@@ -146,4 +146,4 @@ Use documentation matching the result producer; missing fields in old formats re
 For peripheral investigations use the Renode skill [MMIO resource](stm32-gdbtest-renode/references/mmio.en.md): model access logs, followed by authorized target-board validation. Copy the complete skill directory, including references.
 
 
-[API 3 skill and consumer audit](../docs/development/api3-skills-audit.md) (Russian, P6a, no hardware).
+[API 3 skill and consumer audit](../docs/archive/pre-060/api3-skills-audit.md) (Russian, P6a, no hardware).

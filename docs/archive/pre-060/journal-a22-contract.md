@@ -1,7 +1,7 @@
 # A2.2: коллекции отчёта и вывод
 
 Статус: контракт принят и реализован в рабочей ветке к 0.6.0. Приёмка — host и Renode Windows/Linux, без плат.
-Ниже сохранено обоснование прототипа; актуальный публичный контракт — [API](../ru/API.md#журнал-отчёта-и-вывод-кандидат-060-a22).
+Ниже сохранено обоснование прототипа; актуальный публичный контракт — [API](../../ru/API.md#журнал-отчёта-и-вывод-кандидат-060-a22).
 
 ## Что обнаружено
 
@@ -126,9 +126,9 @@ compact. Default full позволяет мигрировать добровол
    перехваченный CheckFailed, незавершённое окно, ошибка записи/раскрытия и повтор после отказа.
    Измерить runtime-память и время; сохранённые A0 не заменяют эту приёмку. Платы пока не нужны.
 
-Связанные реализации: [Target](../../stm32_gdbtest/target.py),
-[execution](../../stm32_gdbtest/execution.py), [scenario](../../stm32_gdbtest/scenario.py),
-[coverage](../../tools/ddtt_coverage.py), [reports](../../stm32_gdbtest/reports.py).
+Связанные реализации: [Target](../../../stm32_gdbtest/target.py),
+[execution](../../../stm32_gdbtest/execution.py), [scenario](../../../stm32_gdbtest/scenario.py),
+[coverage](../../../tools/ddtt_coverage.py), [reports](../../../stm32_gdbtest/reports.py).
 
 ## Границы реализации
 

@@ -257,7 +257,7 @@ maxima fingerprint. Execution, timeouts and MMIO transport counts do not change;
 summary/truncate are outside this package.
 
 [Reproducible benchmark](../../tests/mmio-renode/README.md) and
-[A2.1 measurements](../development/journal-a21-measurements.md).
+[A2.1 measurements](../archive/pre-060/journal-a21-measurements.md).
 
 ## Result journal and output (0.6.0, A2.2)
 

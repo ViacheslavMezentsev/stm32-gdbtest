@@ -16,7 +16,7 @@ SHA-256 последовательности раскрытых записей f
 и SHA-256. Это одиночные инженерные замеры, не статистическая оценка быстродействия
 и не сравнение ОС. Windows host Python 3.11, Linux host/GDB Python 3.12.
 Исходники и сборки Linux — Docker volume; Windows — локальная файловая система.
-Команды и формат артефактов — [benchmark](../../tests/mmio-renode/README.md).
+Команды и формат артефактов — [benchmark](../../../tests/mmio-renode/README.md).
 
 ## Результаты
 

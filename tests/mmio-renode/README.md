@@ -62,4 +62,4 @@ read — проверку и вычисление хеша логических 
 Compact не обещает ускорения: ссылка экономит повторные описания, но обработка стоит CPU.
 Результаты — summary.json/measurement.json и result/records; ошибка не превращается в PASS.
 
-[Измерения и выводы](../../docs/development/journal-a21-measurements.md).
+[Измерения и выводы](../../docs/archive/pre-060/journal-a21-measurements.md).

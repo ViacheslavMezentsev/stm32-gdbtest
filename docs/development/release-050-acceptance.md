@@ -1,6 +1,6 @@
 # P5 — кандидат и матрица приёмки 0.5.0
 
-[Памятка](../../TODO.md) · [Аудит P6a](api3-skills-audit.md) · [Паспорт кандидата](release-050-candidate.json)
+[Памятка](../../TODO.md) · [Аудит P6a](../archive/pre-060/api3-skills-audit.md) · [Паспорт кандидата](release-050-candidate.json)
 
 ## Зафиксированная база
 

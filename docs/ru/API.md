@@ -258,7 +258,7 @@ records и схема капсулы — разные номера. Схема 2
 таймауты и число обращений к MMIO не меняются; summary/truncate сюда не входят.
 
 [Воспроизводимый benchmark](../../tests/mmio-renode/README.md) и
-[замеры A2.1](../development/journal-a21-measurements.md).
+[замеры A2.1](../archive/pre-060/journal-a21-measurements.md).
 
 ## Журнал отчёта и вывод (0.6.0, A2.2)
 

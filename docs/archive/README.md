@@ -3,6 +3,9 @@
 [Документация](../ru/index.md) · [Памятка](../../TODO.md)
 
 - [История памятки](TODO_ARCHIVE.md) — прежние статусы и завершённые записи.
+- До 0.6.0 (`pre-060/`): завершённые контракты журнала A2–A3 ([A2.1, измерения](pre-060/journal-a21-measurements.md),
+  [A2.2](pre-060/journal-a22-contract.md), [A2.3](pre-060/journal-a23-contract.md), [A3.1](pre-060/journal-a31-contract.md)),
+  [план](pre-060/release-051-plan.md) и [аудит](pre-060/release-051-audit.md) 0.5.1, [аудит навыков API 3](pre-060/api3-skills-audit.md).
 - [Происхождение](SOURCE.md) — источник начального экспорта.
 - [Манифест экспорта](EXPORT_MANIFEST.json) — исторические пути и хеши, сохранены без изменения байтов.
 
