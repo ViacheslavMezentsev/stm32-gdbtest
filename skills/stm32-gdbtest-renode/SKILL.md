@@ -86,6 +86,10 @@ host сначала, затем ELF/GDB в Renode с исходными FAIL, п
 External-capture из того же ресурса запускается только на host; его успешный прогон
 не подтверждает Renode live-окно или реальные источники ROS/MCAP.
 
-## Маршруты 0.6.0
+## Возможности 0.6.0
 
-Карта пакетов A1–A6 с командами, критерием приёмки и парами «правильно/неправильно» — [release-060-routes](../stm32-gdbtest-scenarios/references/release-060-routes.md).
+- Вызовы C++ (`this`, `signature`, `Pointer`/`Reference`, невиртуальные базы) и квоты журнала проверены в Renode на нейтральных ELF: `tests/renode-backend/run_cpp.py`, `run_journal.py`, `run_report_quota.py`.
+- Внешний вход модели GPIO (`tests/modeled-gpio`) — единственный проверенный в 0.6.0 способ задать уровень на выводе; на плате такой вход требует внешнего источника сигнала.
+- Точка останова внутри `call` проверена только в Renode.
+
+[маршруты 0.6.0](../stm32-gdbtest-scenarios/references/release-060-routes.md) — пакеты A1–A6: команды, принимаемый исход, пары «правильно/неправильно».

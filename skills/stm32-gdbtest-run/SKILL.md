@@ -120,6 +120,10 @@ metadata:
 (PASS/FAIL/ERROR/SKIP по сценариям), для не-PASS — проверка, фактическое и ожидаемое значение и вывод.
 Что изменилось на плате (записанный образ, инъекции) и как восстановлено.
 
-## Маршруты 0.6.0
+## Возможности 0.6.0
 
-Карта пакетов A1–A6 с командами, критерием приёмки и парами «правильно/неправильно» — [release-060-routes](../stm32-gdbtest-scenarios/references/release-060-routes.md).
+- `run --interactive` — пошаговый проход для автора сценария: без ограничения по времени, результаты в `hwtest/interactive-runs` с `execution_kind: "interactive"`; не смешивай их с `hwtest/runs` и приёмкой ([ручная отладка](../../docs/ru/MANUAL_DEBUG.md)).
+- Неполный журнал при квотах api schema 3 даёт command code 2 даже при PASS сценария; читай `evidence` в result.json, прежде чем считать прогон завершённым ([журналирование](../../docs/ru/JOURNALING.md)).
+- `[report] console = "summary"` меняет только вывод, а не число проверок; полные события остаются в result.json (result schema 2).
+
+[маршруты 0.6.0](../stm32-gdbtest-scenarios/references/release-060-routes.md) — пакеты A1–A6: команды, принимаемый исход, пары «правильно/неправильно».
